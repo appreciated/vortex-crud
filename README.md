@@ -1,141 +1,45 @@
-# FlowCms
+# My App
 
-**FlowCms** is a flexible, customizable, and dynamic content management system (CMS) built using **Vaadin Flow** and **Spring Boot**. It allows users to configure and manage collections, fields, and views dynamically with ease, providing full control over data structures and UI components. FlowCms is ideal for developers and businesses looking for a customizable solution to manage content and data models without having to adjust the database schema manually.
+This project can be used as a starting point to create your own Vaadin application with Spring Boot.
+It contains all the necessary configuration and some placeholder files to get you started.
 
-## Features
+## Running the application
 
-- **Dynamic Collections**: Create and manage collections (data types) dynamically without schema changes.
-- **Customizable Views**: Configure how collections are displayed using customizable views and layouts.
-- **Role-based Permissions**: Assign user roles and permissions to control access to collections and views.
-- **Vaadin Flow-based UI**: A modern and responsive UI built with Vaadin Flow for fast and intuitive use.
-- **REST API**: Easily extend and integrate FlowCms with other applications using the provided REST API.
-- **JSON Schema for Flexibility**: Use JSON-based configurations to define fields, relationships, and views dynamically.
+The project is a standard Maven project. To run it from the command line,
+type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
+http://localhost:8080 in your browser.
 
-## Getting Started
+You can also import the project to your IDE of choice as you would with any
+Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
 
-These instructions will guide you through setting up and running FlowCms locally on your machine.
+## Deploying to Production
 
-### Prerequisites
+To create a production build, call `mvnw clean package -Pproduction` (Windows),
+or `./mvnw clean package -Pproduction` (Mac & Linux).
+This will build a JAR file with all the dependencies and front-end resources,
+ready to be deployed. The file can be found in the `target` folder after the build completes.
 
-- **Java 17** or higher
-- **Maven** (for building the project)
-- **PostgreSQL** or **MySQL** (for the database)
-- Any modern browser (for accessing the Vaadin-based UI)
+Once the JAR file is built, you can run it using
+`java -jar target/database-viewer-1.0-SNAPSHOT.jar`
 
-### Installation
+## Project structure
 
-1. **Clone the Repository:**
+- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
+  side/top bar and the main menu). This setup uses
+  [App Layout](https://vaadin.com/docs/components/app-layout).
+- `views` package in `src/main/java` contains the server-side Java views of your application.
+- `views` folder in `src/main/frontend` contains the client-side JavaScript views of your application.
+- `themes` folder in `src/main/frontend` contains the custom CSS styles.
 
-   ```bash
-   git clone https://github.com/yourusername/flowcms.git
-   cd flowcms
-   ```
+## Useful links
 
-2. **Configure the Database:**
-
-   - Create a new PostgreSQL or MySQL database for FlowCms.
-   - Update the database connection properties in `src/main/resources/application.properties` with your database credentials:
-
-     ```properties
-     spring.datasource.url=jdbc:postgresql://localhost:5432/flowcms
-     spring.datasource.username=your_db_username
-     spring.datasource.password=your_db_password
-     spring.jpa.hibernate.ddl-auto=update
-     ```
-
-3. **Build and Run the Application:**
-
-   Run the following command to build the project with Maven and start the Spring Boot application:
-
-   ```bash
-   mvn clean install
-   mvn spring-boot:run
-   ```
-
-4. **Access the Application:**
-
-   Once the application is running, you can access the CMS at:
-
-   ```
-   http://localhost:8080
-   ```
-
-   Log in using the default admin credentials:
-
-   ```
-   Username: admin
-   Password: admin123
-   ```
-
-### Running with Docker (Optional)
-
-If you prefer using Docker, you can run FlowCms with the following steps:
-
-1. **Build the Docker Image:**
-
-   ```bash
-   docker build -t flowcms .
-   ```
-
-2. **Run the Docker Container:**
-
-   ```bash
-   docker run -p 8080:8080 flowcms
-   ```
-
-## Usage
-
-### Creating a New Collection
-
-1. Navigate to the **Collections** section in the admin panel.
-2. Click on **Create New Collection**.
-3. Define the fields and their types using the intuitive JSON-based configuration editor.
-4. Save the collection and start adding records.
-
-### Customizing Views
-
-FlowCms allows you to customize the way collections are displayed in the UI. You can define new views for each collection, specifying the layout, field types, and actions available.
-
-1. Go to the **View Configuration** section.
-2. Select a collection and configure its view by specifying how each field should be rendered (text, textarea, dropdown, etc.).
-3. Save the configuration, and the view will be rendered accordingly in the application.
-
-### API Endpoints
-
-FlowCms provides a REST API to manage collections, records, and views programmatically.
-
-- **Get All Collections**: `GET /api/collections`
-- **Get Collection Data**: `GET /api/collections/{collectionId}/data`
-- **Get View Config**: `GET /api/collections/{collectionId}/view-config`
-
-For more detailed API documentation, please refer to the `API.md` file in the repository.
-
-## Built With
-
-- [Vaadin Flow](https://vaadin.com/flow) - For building the modern UI.
-- [Spring Boot](https://spring.io/projects/spring-boot) - For the backend and REST API.
-- [PostgreSQL](https://www.postgresql.org/) / [MySQL](https://www.mysql.com/) - For the database layer.
-
-## Contributing
-
-We welcome contributions to FlowCms! To contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/your-feature-name`).
-3. Commit your changes (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature/your-feature-name`).
-5. Open a Pull Request.
-
-Please ensure your code adheres to the project's coding standards and includes appropriate tests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For any questions or support, please open an issue on GitHub or reach out to the maintainers.
-
----
-
-Feel free to adjust the content based on specific features, customizations, or additional setup steps that your project may require!
+- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
+- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
+- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
+- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
+- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
+- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
+- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
+- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
+- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
+- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
