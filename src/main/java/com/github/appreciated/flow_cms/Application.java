@@ -1,4 +1,4 @@
-package com.github.appreciated;
+package com.github.appreciated.flow_cms;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;

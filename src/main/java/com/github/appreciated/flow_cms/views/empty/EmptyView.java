@@ -1,6 +1,6 @@
-package com.github.appreciated.views.empty;
+package com.github.appreciated.flow_cms.views.empty;
 
-import com.github.appreciated.views.MainLayout;
+import com.github.appreciated.flow_cms.views.MainLayout;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;

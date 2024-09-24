@@ -1,6 +1,6 @@
-package com.github.appreciated.views;
+package com.github.appreciated.flow_cms.views;
 
-import com.github.appreciated.views.empty.EmptyView;
+import com.github.appreciated.flow_cms.views.empty.EmptyView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
