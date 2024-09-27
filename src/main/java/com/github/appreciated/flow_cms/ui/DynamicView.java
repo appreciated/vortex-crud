@@ -25,8 +25,11 @@ public class DynamicView extends VerticalLayout {
     }
 
     private Component createComponentFromConfig(ViewConfig viewConfig) {
-        // Logic to create Vaadin components based on the viewConfig
-        // This is a placeholder and should be implemented based on the actual viewConfig structure
-        return new VerticalLayout(); // Replace with actual component creation logic
+        VerticalLayout layout = new VerticalLayout();
+        viewConfig.getLayout().forEach(config -> {
+            Component component = ComponentListFactory.createComponent(config.getComponent());
+            layout.add(component);
+        });
+        return layout;
     }
 }
