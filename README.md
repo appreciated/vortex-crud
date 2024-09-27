@@ -1,45 +1,165 @@
-# My App
+# FlowCMS
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+This repository contains a dynamic and flexible framework for building project management applications. The framework is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
 
-## Running the application
+## Tech Stack
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+- **Spring Boot** for backend API development
+- **Vaadin** for frontend UI development
+- **HOCON** for flexible configuration
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+## Features
 
-## Deploying to Production
+### Extensibility and Hook Points
+Developers can hook into various parts of the system to add custom logic:
+- **Data Manipulation**: Customize how data is processed and stored.
+- **Validation**: Add custom validation logic before saving or editing data.
+- **Custom Events**: Define events triggered by user actions (e.g., record creation, updates).
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+### UI Component System
+The UI is built modularly, with each component easily replaceable to provide specific implementations for different use cases.
+- **Component List Factory**: Manages all UI components, defining how they should behave and appear.
+- **Standard Implementation**: A set of default UI components is provided, which can be extended or replaced.
 
-Once the JAR file is built, you can run it using
-`java -jar target/database-viewer-1.0-SNAPSHOT.jar`
+### Dynamic UI Rendering
+The UI is dynamically rendered based on view configurations stored in the database. This allows for flexibility in adjusting what fields and components are shown for different collections.
 
-## Project structure
+## Dynamic View Configuration Example
 
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `src/main/frontend` contains the client-side JavaScript views of your application.
-- `themes` folder in `src/main/frontend` contains the custom CSS styles.
+The system supports dynamic view configuration where layouts and fields are defined in JSON schema. Below is an example of a view configuration:
 
-## Useful links
+```json
+{
+  "name": "project_view",
+  "collection": "projects",
+  "layout": [
+    {"component": "text", "field": "name"},
+    {"component": "textarea", "field": "description"},
+    {"component": "date", "field": "start_date"},
+    {"component": "date", "field": "end_date"}
+  ],
+  "access_control": {
+    "roles": ["manager", "admin"]
+  }
+}
+```
 
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
+## Application Configuration (HOCON Format)
+
+Below is a sample configuration for setting up the project management application:
+
+```hocon
+application {
+  name = "Project Management Application"
+
+  user_management {
+    enabled = true
+    access_control = {
+      roles = ["manager", "admin"]
+    }
+    registration = true
+    additional_collection_fields = [{name = "start_date", type = "date"}]
+  }
+
+  selects {
+    task_status {
+       open = { en="Open", de="Offen" }
+       todo = { en="ToDo", de="Zu erledigen" }
+       work_in_progress = { en="Work in progress", de="In Arbeit" }
+       closed = { en="Closed", de="Geschlossen" }
+    }
+  }
+
+  versioning {
+    enabled = true
+    collections = ["projects", "tasks", "employees", "comments"]
+  }
+
+  auditing {
+    enabled = true
+    actions = ["create", "update", "delete", "login", "logout"]
+  }
+
+  collections = [
+    {
+      name = "projects"
+      fields = {
+        id = {type = "id", primary = true},
+        name = {type = "text", required = true, max_length = 255},
+        description = {type = "text", max_length = 500},
+        start_date = {type = "date"},
+        end_date = {type = "date"},
+        created_at = {type = "datetime", default = "now()"},
+        updated_at = {type = "datetime", default = "now()"}
+      }
+    },
+    {
+      name = "tasks"
+      fields = {
+        id = {type = "id", primary = true},
+        title = {type = "text", required = true, max_length = 255},
+        description = {type = "text", max_length = 1000},
+        assigned_to = {type = "number"},
+        status = {type = "task_status"},
+        due_date = {type = "date"},
+        created_at = {type = "datetime", default = "now()"},
+        updated_at = {type = "datetime", default = "now()"}
+      }
+    },
+    {
+      name = "comments"
+      fields = {
+        id = {type = "id", primary = true},
+        comment_text = {type = "text", max_length = 1000},
+        employee_id = {type = "number"},
+        created_at = {type = "datetime", default = "now()"}
+      }
+    }
+  ]
+
+  views = [
+    {
+      name = "project_view"
+      collection = "projects"
+      layout = [
+        {component = "text", field = "name"},
+        {component = "textarea", field = "description"},
+        {component = "date", field = "start_date"},
+        {component = "date", field = "end_date"}
+      ]
+      access_control = {
+        roles = ["manager", "admin"]
+      }
+    }
+  ]
+}
+```
+
+## Authentication with Authentik
+
+The project can be integrated with **Authentik** for authentication and authorization. This setup centralizes user management, OAuth2, and role-based access control.
+
+- **Authentik** manages user roles and authentication (OAuth2, OpenID Connect, WebAuthn).
+- **Spring Boot** acts as the resource server, validating JWTs.
+- **Vaadin** uses JWTs for API access after user authentication through Authentik.
+
+## Getting Started
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/appreciated/flow-cms.git
+   ```
+2. **Run the application**:
+  - Use the provided SQL schema to set up the database.
+  - Configure application properties for H2 or other databases.
+  - Start the Spring Boot server:
+    ```bash
+    ./mvnw spring-boot:run
+    ```
+
+## License
+This project is licensed under the MIT License.
+
+---
+
+This README outlines the key components, architecture, and setup required for running the project management application framework.
