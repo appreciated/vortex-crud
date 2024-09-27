@@ -1,6 +1,9 @@
 package com.github.appreciated.flow_cms.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -11,15 +14,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Username is mandatory")
+    @Size(max = 255, message = "Username must be less than 255 characters")
     @Column(nullable = false, unique = true)
     private String username;
 
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     @Column(nullable = false)
     private String passwordHash;
 
+    @NotBlank(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Role is mandatory")
     @Column(nullable = false)
     private String role;
 
@@ -73,5 +83,4 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
 }

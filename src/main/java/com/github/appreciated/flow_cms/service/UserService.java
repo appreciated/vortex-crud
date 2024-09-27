@@ -2,6 +2,7 @@ package com.github.appreciated.flow_cms.service;
 
 import com.github.appreciated.flow_cms.entity.User;
 import com.github.appreciated.flow_cms.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User save(User user) {
+    public User save(@Valid User user) {
         return userRepository.save(user);
     }
 
