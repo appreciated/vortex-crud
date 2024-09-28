@@ -20,7 +20,7 @@ public class DefaultRouterLayout extends AppLayout {
         this.flowCmsConfigService = flowCmsConfigService;
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1("MyApp");
+        H1 title = new H1(flowCmsConfigService.getApplicationName());
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 

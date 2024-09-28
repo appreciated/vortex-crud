@@ -33,5 +33,7 @@ public class FlowCmsConfigService {
         return (ConfigList)((ConfigObject) viewConfig.get("access_control")).get("roles");
     }
 
-    // Weitere Methoden für Beziehungen, Versionierung, Auditing...
+    public String getApplicationName() {
+        return config.getString("application.name");
+    }
 }
