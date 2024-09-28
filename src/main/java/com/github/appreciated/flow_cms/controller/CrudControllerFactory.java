@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 @RestController
 public class CrudControllerFactory {
-
+/*
     @Autowired
     private ApplicationContext context;
 
@@ -37,6 +37,6 @@ public class CrudControllerFactory {
     @RequestMapping(value = "/{collection}/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable String collection, @PathVariable Long id) {
         getController(collection).delete(id);
-    }
+    }*/
 
 }
