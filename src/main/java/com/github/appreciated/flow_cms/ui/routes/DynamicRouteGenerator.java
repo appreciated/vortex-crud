@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
@@ -24,7 +25,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     public void registerRoute(String collection) {
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
-        configuration.setRoute("/view/"+collection, DynamicRoute.class);
+        configuration.setRoute("/view/"+collection, DynamicRoute.class, ProxyRouterLayout.class);
     }
 
 }

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Depending on the route a different component should be rendered using the {@link FlowCmsComponentFactory}.
  */
 @Component
-@Route(layout = ProxyRouterLayout.class)
+@Route(registerAtStartup = false, layout = ProxyRouterLayout.class)
 public class DynamicRoute extends Div {
 
     public static final String VIEW_PATH_PREFIX = "view/";
