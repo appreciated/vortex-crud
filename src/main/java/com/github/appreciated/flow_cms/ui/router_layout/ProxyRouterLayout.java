@@ -1,12 +1,14 @@
-package com.github.appreciated.flow_cms.ui.app_layout;
+package com.github.appreciated.flow_cms.ui.router_layout;
 
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.RouterLayout;
+import org.springframework.stereotype.Component;
 
-public class RouterLayoutProxy implements RouterLayout {
+@Component
+public class ProxyRouterLayout implements RouterLayout {
     private final RouterLayout routerLayout;
 
-    public RouterLayoutProxy(FlowCmsRouterLayoutFactory factory) {
+    public ProxyRouterLayout(FlowCmsRouterLayoutFactory factory) {
         routerLayout = factory.createAppLayout();
     }
 

@@ -1,9 +1,9 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.app_layout.RouterLayoutProxy;
+import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.github.appreciated.flow_cms.ui.components.FlowCmsComponentFactory;
-import com.github.appreciated.flow_cms.ui.view_container.DefaultViewContainerContainerFactory;
+import com.github.appreciated.flow_cms.ui.view_container.DefaultViewContainerContainerFactoryImpl;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
@@ -17,19 +17,19 @@ import org.springframework.stereotype.Component;
  * Depending on the route a different component should be rendered using the {@link FlowCmsComponentFactory}.
  */
 @Component
-@Route(layout = RouterLayoutProxy.class)
+@Route(layout = ProxyRouterLayout.class)
 public class DynamicRoute extends Div {
 
     public static final String VIEW_PATH_PREFIX = "view/";
     private final FlowCmsConfigService flowCmsConfigService;
-    private final DefaultViewContainerContainerFactory defaultRouteFactory;
+    private final DefaultViewContainerContainerFactoryImpl defaultRouteFactory;
 
     /**
      * Constructor for DynamicView.
      *
      * @param flowCmsConfigService    the service to retrieve configuration for the routes
      */
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, DefaultViewContainerContainerFactory defaultRouteFactory) {
+    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, DefaultViewContainerContainerFactoryImpl defaultRouteFactory) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.defaultRouteFactory = defaultRouteFactory;
     }

@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.app_layout;
+package com.github.appreciated.flow_cms.ui.router_layout;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -12,11 +12,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import java.util.Set;
 
-public class AppLayoutNavbarPlacement extends AppLayout {
+public class DefaultRouterLayout extends AppLayout {
 
     private final FlowCmsConfigService flowCmsConfigService;
 
-    public AppLayoutNavbarPlacement(FlowCmsConfigService flowCmsConfigService) {
+    public DefaultRouterLayout(FlowCmsConfigService flowCmsConfigService) {
         this.flowCmsConfigService = flowCmsConfigService;
         DrawerToggle toggle = new DrawerToggle();
 

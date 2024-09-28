@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Service
-public class DefaultFlowCmsComponentFactory implements FlowCmsComponentFactory {
+public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFactory {
 
     private static final Map<String, Supplier<Component>> componentMap = new HashMap<>();
 

@@ -7,9 +7,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultViewContainerContainerFactory implements FlowCmsViewContainerFactory {
+public class DefaultViewContainerContainerFactoryImpl implements FlowCmsViewContainerFactory {
 
-    public DefaultViewContainerContainerFactory() {
+    public DefaultViewContainerContainerFactoryImpl() {
     }
 
     public Component createViewContainer(ConfigObject config) {
