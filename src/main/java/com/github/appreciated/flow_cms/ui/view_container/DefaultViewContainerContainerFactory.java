@@ -14,7 +14,7 @@ public class DefaultViewContainerContainerFactory implements FlowCmsViewContaine
 
     public Component createViewContainer(ConfigObject config) {
         VerticalLayout layout = new VerticalLayout();
-        layout.add(new Text(config.get("type").render()));
+        layout.add(new Text(config.get("renderer").render()));
         return layout;
     }
 }
