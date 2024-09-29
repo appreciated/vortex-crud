@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.ui.view_container;
 
+import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class MasterDetailComponent<GenericEntity> extends HorizontalLayout {
+public class MasterDetailComponent extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout formLayout = new VerticalLayout();
@@ -41,29 +41,18 @@ public class MasterDetailComponent<GenericEntity> extends HorizontalLayout {
         virtualList.setDataProvider(dataProvider);
 
         // Ereignis für Listenelementauswahl
-        virtualList.setRenderer(new ComponentRenderer<>(
-                person -> {
-                    HorizontalLayout cardLayout = new HorizontalLayout();
-                    cardLayout.setMargin(true);
-/*
-                    VerticalLayout infoLayout = new VerticalLayout();
-                    infoLayout.setSpacing(false);
-                    infoLayout.setPadding(false);
-                    infoLayout.getElement().appendChild(
-                            ElementFactory.createStrong(person.getFullName()));
-                    infoLayout.add(new Div(new Text(person.getProfession())));
+        virtualList.setRenderer(new ComponentRenderer<>(entity -> {
+            HorizontalLayout cardLayout = new HorizontalLayout();
+            cardLayout.setMargin(true);
 
-                    VerticalLayout contactLayout = new VerticalLayout();
-                    contactLayout.setSpacing(false);
-                    contactLayout.setPadding(false);
-                    contactLayout.add(new Div(new Text(person.getEmail())));
-                    contactLayout.add(new Div(new Text(person.getAddress().getPhone())));
-                    infoLayout.add(new Details("Contact information", contactLayout));
-                    cardLayout.add(avatar, infoLayout);
-                    return cardLayout;*/
+            VerticalLayout infoLayout = new VerticalLayout();
+            infoLayout.setSpacing(false);
+            infoLayout.setPadding(false);
+            infoLayout.getElement().appendChild(ElementFactory.createStrong(entity.getFirstProperty()));
+            infoLayout.add(new Div(new Text(entity.getSecondProperty())));
 
-                    return cardLayout;
-                }));
+            return cardLayout;
+        }));
 
         // Formular renderer, um dynamisch das Formular zu generieren
         formRenderer.accept(binder, formLayout);

@@ -11,9 +11,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Import(DynamicEntityManagerService.class)
 @Transactional
-class DynamicEntityManagerServiceTest {
+class DynamicEntityManagerServiceFactoryTest {
 
     @Autowired
     private EntityManager entityManager;
@@ -52,17 +50,17 @@ class DynamicEntityManagerServiceTest {
 
     @Test
     void testInsertRecord() {
-        Map<String, Object> values = new HashMap<>();
+        GenericEntity values = new GenericEntity();
         values.put("name", "John Doe");
         values.put("age", 30);
 
         service.insertRecord("test_table", values);
         entityManager.flush();  // Force the persistence context to synchronize with the database
 
-        List<Map<String, Object>> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
         assertEquals(1, records.size());
 
-        Map<String, Object> record = records.get(0);
+        GenericEntity record = records.get(0);
         assertEquals("John Doe", record.get("name"));
         assertEquals(30, record.get("age"));
     }
@@ -73,14 +71,14 @@ class DynamicEntityManagerServiceTest {
         insertTestRecord("Alice", 25);
         insertTestRecord("Bob", 35);
 
-        List<Map<String, Object>> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
         assertEquals(2, records.size());
 
-        Map<String, Object> firstRecord = records.get(0);
+        GenericEntity firstRecord = records.get(0);
         assertEquals("Alice", firstRecord.get("name"));
         assertEquals(25, firstRecord.get("age"));
 
-        Map<String, Object> secondRecord = records.get(1);
+        GenericEntity secondRecord = records.get(1);
         assertEquals("Bob", secondRecord.get("name"));
         assertEquals(35, secondRecord.get("age"));
     }
@@ -89,7 +87,7 @@ class DynamicEntityManagerServiceTest {
     void testGetRecordById() {
         // Insert a record and retrieve it by ID
         insertTestRecord("Alice", 25);
-        Map<String, Object> record = service.getRecordById("test_table", 1);
+        GenericEntity record = service.getRecordById("test_table", 1);
         assertNotNull(record);
         assertEquals("Alice", record.get("name"));
         assertEquals(25, record.get("age"));
@@ -99,13 +97,13 @@ class DynamicEntityManagerServiceTest {
     void testUpdateRecordById() {
         // Insert and update a record
         insertTestRecord("Alice", 25);
-        Map<String, Object> updatedValues = new HashMap<>();
+        GenericEntity updatedValues = new GenericEntity();
         updatedValues.put("name", "Alice Updated");
         updatedValues.put("age", 30);
 
         service.updateRecordById("test_table", 1, updatedValues);
 
-        Map<String, Object> updatedRecord = service.getRecordById("test_table", 1);
+        GenericEntity updatedRecord = service.getRecordById("test_table", 1);
         assertNotNull(updatedRecord);
         assertEquals("Alice Updated", updatedRecord.get("name"));
         assertEquals(30, updatedRecord.get("age"));
@@ -117,7 +115,7 @@ class DynamicEntityManagerServiceTest {
         insertTestRecord("Alice", 25);
         service.deleteRecordById("test_table", 1);
 
-        Map<String, Object> record = service.getRecordById("test_table", 1);
+        GenericEntity record = service.getRecordById("test_table", 1);
         assertNull(record);
     }
 
@@ -129,13 +127,13 @@ class DynamicEntityManagerServiceTest {
 
         service.deleteAllRecords("test_table");
 
-        List<Map<String, Object>> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
         assertTrue(records.isEmpty());
     }
 
     // Utility method to insert a test record
     private void insertTestRecord(String name, int age) {
-        Map<String, Object> values = new HashMap<>();
+        GenericEntity values = new GenericEntity();
         values.put("name", name);
         values.put("age", age);
         service.insertRecord("test_table", values);

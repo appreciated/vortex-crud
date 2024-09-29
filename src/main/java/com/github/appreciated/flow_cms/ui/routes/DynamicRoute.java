@@ -4,10 +4,8 @@ import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.ui.components.FlowCmsComponentFactory;
 import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.github.appreciated.flow_cms.ui.view_container.DefaultViewContainerContainerFactoryImpl;
-import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterListener;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,16 +36,6 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         path = event.getRouteParameters().get("path").orElse("");
-        add(containerFactory.createViewContainer(getConfigForRoute(path)));
-    }
-
-    /**
-     * Retrieves the configuration for the given route.
-     *
-     * @param route the route for which the configuration is needed
-     * @return the configuration for the route
-     */
-    private ConfigObject getConfigForRoute(String route) {
-        return flowCmsConfigService.getForRoute(route);
+        add(containerFactory.createViewContainer(flowCmsConfigService.getConfigForRoute(path)));
     }
 }

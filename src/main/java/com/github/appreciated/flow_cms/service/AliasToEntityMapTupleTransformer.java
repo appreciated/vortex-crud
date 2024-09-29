@@ -5,14 +5,14 @@ import org.hibernate.query.TupleTransformer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AliasToEntityMapTupleTransformer implements TupleTransformer<Map<String, Object>> {
+public class AliasToEntityMapTupleTransformer implements TupleTransformer<GenericEntity> {
 
     @Override
-    public Map<String, Object> transformTuple(Object[] tuple, String[] aliases) {
+    public GenericEntity transformTuple(Object[] tuple, String[] aliases) {
         Map<String, Object> result = new HashMap<>();
         for (int i = 0; i < aliases.length; i++) {
             result.put(aliases[i].toLowerCase(), tuple[i]);
         }
-        return result;
+        return new GenericEntity(result);
     }
 }

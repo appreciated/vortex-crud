@@ -26,12 +26,12 @@ public class DynamicEntityManagerService {
      * @param values A map of column names and values to be inserted.
      */
     @Transactional
-    public void insertRecord(String tableName, Map<String, Object> values) {
+    public void insertRecord(String tableName, GenericEntity values) {
         StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
         StringBuilder placeholders = new StringBuilder(" VALUES (");
-        List<Object> params = values.values().stream().toList();
+        List<Object> params = values.getProperties().values().stream().toList();
 
-        values.forEach((key, value) -> {
+        values.getProperties().forEach((key, value) -> {
             sql.append(key).append(",");
             placeholders.append("?,");
         });
@@ -54,13 +54,13 @@ public class DynamicEntityManagerService {
      * @param limit The maximum number of results to return.
      * @return A list of records (as a map of column names and values).
      */
-    public List<Map<String, Object>> getRecordsFromTable(String tableName, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) {
         String query = "SELECT * FROM " + tableName + " LIMIT :limit OFFSET :offset";
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter("limit", limit)
                 .setParameter("offset", offset);
 
-        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
+        NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
         hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
         return hibernateQuery.getResultList();
@@ -72,15 +72,15 @@ public class DynamicEntityManagerService {
      * @param id The ID of the record to fetch.
      * @return The record (as a map of column names and values) or null if not found.
      */
-    public Map<String, Object> getRecordById(String tableName, Object id) {
+    public GenericEntity getRecordById(String tableName, Object id) {
         String query = "SELECT * FROM " + tableName + " WHERE id = ?";
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter(1, id);
 
-        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
+        NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
         hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
-        List<Map<String, Object>> result = hibernateQuery.getResultList();
+        List<GenericEntity> result = hibernateQuery.getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
 
@@ -91,11 +91,11 @@ public class DynamicEntityManagerService {
      * @param values A map of column names and new values to update.
      */
     @Transactional
-    public void updateRecordById(String tableName, Object id, Map<String, Object> values) {
+    public void updateRecordById(String tableName, Object id, GenericEntity values) {
         StringBuilder sql = new StringBuilder("UPDATE " + tableName + " SET ");
-        List<Object> params = values.values().stream().toList();
+        List<Object> params = values.getProperties().values().stream().toList();
 
-        values.forEach((key, value) -> {
+        values.getProperties().forEach((key, value) -> {
             sql.append(key).append(" = ?,");
         });
 
@@ -132,21 +132,5 @@ public class DynamicEntityManagerService {
         String sql = "DELETE FROM " + tableName;
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
-    }
-
-    /**
-     * Get column names for a given table using a native query and apply AliasToEntityMapResultTransformer.
-     * @param tableName The name of the table.
-     * @return A list of column names.
-     */
-    private List<String> getColumnNamesFromNativeQuery(String tableName) {
-        String query = "SELECT * FROM " + tableName + " LIMIT 1";
-        Query nativeQuery = entityManager.createNativeQuery(query);
-
-        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
-        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
-
-        List<Map<String, Object>> result = hibernateQuery.getResultList();
-        return result.isEmpty() ? List.of() : result.get(0).keySet().stream().toList();
     }
 }

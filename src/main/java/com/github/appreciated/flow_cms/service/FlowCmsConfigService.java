@@ -15,22 +15,12 @@ public class FlowCmsConfigService {
         }
     }
 
-    public ConfigObject getViews() {
+    public ConfigObject getRoutes() {
         return config.getObject("application.routes");
     }
 
-    public ConfigObject getForRoute(String viewName) {
-        return (ConfigObject) getViews().get(viewName);
-    }
-
-    public ConfigObject getComponentForRoute(String viewName) {
-        ConfigObject viewConfig = getForRoute(viewName);
-        return (ConfigObject) viewConfig.get("component");
-    }
-
-    public ConfigList getViewForRoute(String viewName) {
-        ConfigObject viewConfig = getForRoute(viewName);
-        return (ConfigList)((ConfigObject) viewConfig.get("access_control")).get("roles");
+    public ConfigObject getConfigForRoute(String viewName) {
+        return (ConfigObject) getRoutes().get(viewName);
     }
 
     public String getApplicationName() {
