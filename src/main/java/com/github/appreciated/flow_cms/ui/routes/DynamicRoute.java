@@ -1,50 +1,44 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.github.appreciated.flow_cms.ui.components.FlowCmsComponentFactory;
+import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.github.appreciated.flow_cms.ui.view_container.DefaultViewContainerContainerFactoryImpl;
 import com.typesafe.config.ConfigObject;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterListener;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
- * The {@link DynamicRouteGenerator} forwards all requests matching a view route to this class.
  * Depending on the route a different component should be rendered using the {@link FlowCmsComponentFactory}.
  */
-@Component
-@Route(registerAtStartup = false, layout = ProxyRouterLayout.class)
-public class DynamicRoute extends Div {
 
-    public static final String VIEW_PATH_PREFIX = "view/";
+@Route(value = "view/:path*", layout = ProxyRouterLayout.class)
+public class DynamicRoute extends Div implements BeforeEnterObserver {
+
     private final FlowCmsConfigService flowCmsConfigService;
-    private final DefaultViewContainerContainerFactoryImpl defaultRouteFactory;
+    private final DefaultViewContainerContainerFactoryImpl containerFactory;
+
+    private String path;
 
     /**
      * Constructor for DynamicView.
      *
-     * @param flowCmsConfigService    the service to retrieve configuration for the routes
+     * @param flowCmsConfigService the service to retrieve configuration for the routes
      */
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, DefaultViewContainerContainerFactoryImpl defaultRouteFactory) {
+    public DynamicRoute(@Autowired FlowCmsConfigService flowCmsConfigService, @Autowired DefaultViewContainerContainerFactoryImpl containerFactory) {
         this.flowCmsConfigService = flowCmsConfigService;
-        this.defaultRouteFactory = defaultRouteFactory;
+        this.containerFactory = containerFactory;
     }
 
     @Override
-    protected void onAttach(AttachEvent attachEvent) {
-        // Get the current route location from UI
-        String currentRoute = UI.getCurrent().getInternals().getActiveViewLocation().getPath();
-        if (currentRoute.startsWith(VIEW_PATH_PREFIX)) {
-            currentRoute = currentRoute.substring(VIEW_PATH_PREFIX.length());
-        }
-        removeAll(); // Clear existing components
-        ConfigObject configForRoute = getConfigForRoute(currentRoute);
-        add(defaultRouteFactory.createViewContainer(configForRoute));
-        super.onAttach(attachEvent);
+    public void beforeEnter(BeforeEnterEvent event) {
+        path = event.getRouteParameters().get("path").orElse("");
+        add(containerFactory.createViewContainer(getConfigForRoute(path)));
     }
 
     /**

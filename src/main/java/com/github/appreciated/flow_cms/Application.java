@@ -1,7 +1,10 @@
 package com.github.appreciated.flow_cms;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import jakarta.validation.executable.ValidateOnExecution;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,7 +15,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * and some desktop browsers.
  */
 @SpringBootApplication
-@Theme(value = "flow-cms")
+@Theme(variant = Lumo.DARK)
+@Push
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {

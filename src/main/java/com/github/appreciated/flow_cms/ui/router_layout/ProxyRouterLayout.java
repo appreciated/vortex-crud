@@ -2,9 +2,7 @@ package com.github.appreciated.flow_cms.ui.router_layout;
 
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.RouterLayout;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ProxyRouterLayout implements RouterLayout {
     private final RouterLayout routerLayout;
 
