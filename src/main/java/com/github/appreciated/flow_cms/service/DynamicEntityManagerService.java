@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +14,11 @@ import java.util.Map;
 @Service
 public class DynamicEntityManagerService {
 
-    @PersistenceContext
     private EntityManager entityManager;
+
+    public DynamicEntityManagerService(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     /**
      * Create (Insert) a new record into the given table with the provided values.
@@ -43,26 +48,39 @@ public class DynamicEntityManagerService {
     }
 
     /**
-     * Read (Select) records from a table.
+     * Read (Select) records from a table with pagination for lazy loading.
      * @param tableName The name of the table.
-     * @return A list of records (as Object arrays).
+     * @param offset The starting position of the first result.
+     * @param limit The maximum number of results to return.
+     * @return A list of records (as a map of column names and values).
      */
-    public List<Object[]> getRecordsFromTable(String tableName) {
-        String query = "SELECT * FROM " + tableName;
-        return entityManager.createNativeQuery(query).getResultList();
+    public List<Map<String, Object>> getRecordsFromTable(String tableName, int offset, int limit) {
+        String query = "SELECT * FROM " + tableName + " LIMIT :limit OFFSET :offset";
+        Query nativeQuery = entityManager.createNativeQuery(query)
+                .setParameter("limit", limit)
+                .setParameter("offset", offset);
+
+        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
+        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+
+        return hibernateQuery.getResultList();
     }
 
     /**
      * Read a specific record by ID (assuming the ID column is "id").
      * @param tableName The name of the table.
      * @param id The ID of the record to fetch.
-     * @return The record (as an Object array) or null if not found.
+     * @return The record (as a map of column names and values) or null if not found.
      */
-    public Object[] getRecordById(String tableName, Object id) {
+    public Map<String, Object> getRecordById(String tableName, Object id) {
         String query = "SELECT * FROM " + tableName + " WHERE id = ?";
-        List<Object[]> result = entityManager.createNativeQuery(query)
-                .setParameter(1, id)
-                .getResultList();
+        Query nativeQuery = entityManager.createNativeQuery(query)
+                .setParameter(1, id);
+
+        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
+        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+
+        List<Map<String, Object>> result = hibernateQuery.getResultList();
         return result.isEmpty() ? null : result.get(0);
     }
 
@@ -114,5 +132,21 @@ public class DynamicEntityManagerService {
         String sql = "DELETE FROM " + tableName;
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
+    }
+
+    /**
+     * Get column names for a given table using a native query and apply AliasToEntityMapResultTransformer.
+     * @param tableName The name of the table.
+     * @return A list of column names.
+     */
+    private List<String> getColumnNamesFromNativeQuery(String tableName) {
+        String query = "SELECT * FROM " + tableName + " LIMIT 1";
+        Query nativeQuery = entityManager.createNativeQuery(query);
+
+        NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
+        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+
+        List<Map<String, Object>> result = hibernateQuery.getResultList();
+        return result.isEmpty() ? List.of() : result.get(0).keySet().stream().toList();
     }
 }
