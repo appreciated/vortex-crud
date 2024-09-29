@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -58,6 +57,7 @@ class DynamicEntityManagerServiceTest {
         values.put("age", 30);
 
         service.insertRecord("test_table", values);
+        entityManager.flush();  // Force the persistence context to synchronize with the database
 
         List<Map<String, Object>> records = service.getRecordsFromTable("test_table", 0, 10);
         assertEquals(1, records.size());

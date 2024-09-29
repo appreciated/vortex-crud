@@ -61,7 +61,7 @@ public class DynamicEntityManagerService {
                 .setParameter("offset", offset);
 
         NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
-        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
         return hibernateQuery.getResultList();
     }
@@ -78,7 +78,7 @@ public class DynamicEntityManagerService {
                 .setParameter(1, id);
 
         NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
-        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
         List<Map<String, Object>> result = hibernateQuery.getResultList();
         return result.isEmpty() ? null : result.get(0);
@@ -144,7 +144,7 @@ public class DynamicEntityManagerService {
         Query nativeQuery = entityManager.createNativeQuery(query);
 
         NativeQuery<Map<String, Object>> hibernateQuery = (NativeQuery<Map<String, Object>>) nativeQuery;
-        hibernateQuery.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE);
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
         List<Map<String, Object>> result = hibernateQuery.getResultList();
         return result.isEmpty() ? List.of() : result.get(0).keySet().stream().toList();
