@@ -133,4 +133,8 @@ public class DynamicEntityManagerService {
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
+
+    public int count(String table) {
+        return (int) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + table).getSingleResult();
+    }
 }

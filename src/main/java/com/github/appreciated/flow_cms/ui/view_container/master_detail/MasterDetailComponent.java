@@ -1,6 +1,8 @@
-package com.github.appreciated.flow_cms.ui.view_container;
+package com.github.appreciated.flow_cms.ui.view_container.master_detail;
 
+import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,9 +15,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.dom.ElementFactory;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class MasterDetailComponent extends HorizontalLayout {
 
@@ -23,19 +22,16 @@ public class MasterDetailComponent extends HorizontalLayout {
     private final VerticalLayout formLayout = new VerticalLayout();
     private final Binder<GenericEntity> binder = new Binder<>();
 
-    public MasterDetailComponent(int initialIndex,
-                                 Supplier<List<GenericEntity>> lazyLoadableRepository,
-                                 BiConsumer<Binder<GenericEntity>, VerticalLayout> formRenderer) {
+    public MasterDetailComponent(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+        String table = config.get("table").render();
 
         // Virtual List mit Lazy Loading einrichten
         DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(
                 query -> {
-                    int offset = query.getOffset();
-                    int limit = query.getLimit();
-                    List<GenericEntity> items = lazyLoadableRepository.get().subList(offset, Math.min(offset + limit, lazyLoadableRepository.get().size()));
+                    List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, query.getOffset(), query.getLimit());
                     return items.stream();
                 },
-                query -> lazyLoadableRepository.get().size()
+                query -> entityManagerService.count(table)
         );
 
         virtualList.setDataProvider(dataProvider);
@@ -55,17 +51,11 @@ public class MasterDetailComponent extends HorizontalLayout {
         }));
 
         // Formular renderer, um dynamisch das Formular zu generieren
-        formRenderer.accept(binder, formLayout);
+        //formRenderer.accept(binder, formLayout);
 
         // Layout konfigurieren
         add(virtualList, formLayout);
         setFlexGrow(1, virtualList);
         setFlexGrow(2, formLayout);
-
-        // Optional: Setze den initialen Index (falls vorhanden)
-        if (initialIndex >= 0 && initialIndex < lazyLoadableRepository.get().size()) {
-            Optional<GenericEntity> initialItem = Optional.ofNullable(lazyLoadableRepository.get().get(initialIndex));
-            initialItem.ifPresent(item -> binder.setBean(item));
-        }
     }
 }
