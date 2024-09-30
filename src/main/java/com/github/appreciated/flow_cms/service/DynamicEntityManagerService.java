@@ -134,7 +134,8 @@ public class DynamicEntityManagerService {
         query.executeUpdate();
     }
 
+    @Transactional
     public int count(String table) {
-        return (int) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + table).getSingleResult();
+        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + table).getSingleResult());
     }
 }

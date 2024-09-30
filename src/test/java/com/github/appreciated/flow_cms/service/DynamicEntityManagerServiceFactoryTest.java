@@ -138,4 +138,26 @@ class DynamicEntityManagerServiceFactoryTest {
         values.put("age", age);
         service.insertRecord("test_table", values);
     }
+
+    @Test
+    void testCountRecords() {
+        // Initial count should be 0
+        int initialCount = service.count("test_table");
+        assertEquals(0, initialCount);
+
+        // Insert records
+        insertTestRecord("Alice", 25);
+        insertTestRecord("Bob", 35);
+
+        // Count after inserting records
+        int countAfterInsert = service.count("test_table");
+        assertEquals(2, countAfterInsert);
+
+        // Delete a record
+        service.deleteRecordById("test_table", 1);
+
+        // Count after deletion
+        int countAfterDelete = service.count("test_table");
+        assertEquals(1, countAfterDelete);
+    }
 }
