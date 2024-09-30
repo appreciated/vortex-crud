@@ -25,28 +25,6 @@ CREATE TABLE collections
     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabelle für Felder innerhalb einer Collection
-CREATE TABLE fields
-(
-    id               SERIAL PRIMARY KEY,
-    collection_id    INT REFERENCES collections (id) ON DELETE CASCADE,
-    field_name       VARCHAR(255) NOT NULL,
-    field_type       VARCHAR(50)  NOT NULL,   -- z.B. "text", "textarea",
-    field_definition BOOLEAN   DEFAULT FALSE, -- Falls das Feld eine spezielle definition hat z.B. Dropdown-Werte
-    position         INT          NOT NULL,   -- Position des Feldes in der Ansicht
-    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tabelle für dynamische Datenpunkte innerhalb einer Collection
-CREATE TABLE records
-(
-    id            SERIAL PRIMARY KEY,
-    collection_id INT REFERENCES collections (id) ON DELETE CASCADE,
-    data          JSON NOT NULL, -- Dynamische Daten als JSON
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Tabelle für View-Konfigurationen pro Collection
 CREATE TABLE view_configs
 (
@@ -55,26 +33,6 @@ CREATE TABLE view_configs
     view_name     VARCHAR(255) NOT NULL, -- Name der Ansicht, z.B. "Detailansicht", "Listenansicht"
     config        JSON         NOT NULL, -- JSON-Schema der Ansicht
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tabelle für Beziehungen zwischen Sammlungen (optional, für relationale Verknüpfungen)
-CREATE TABLE relationships
-(
-    id                   SERIAL PRIMARY KEY,
-    source_collection_id INT REFERENCES collections (id) ON DELETE CASCADE,
-    target_collection_id INT REFERENCES collections (id) ON DELETE CASCADE,
-    relation_type        VARCHAR(50) NOT NULL, -- z.B. "one-to-many", "many-to-many"
-    created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tabelle für Benutzer-Collection Berechtigungen (optional, für spezifische  Zugriffsrechte)
-CREATE TABLE user_collection_permissions
-(
-    id              SERIAL PRIMARY KEY,
-    user_id         INT REFERENCES users (id) ON DELETE CASCADE,
-    collection_id   INT REFERENCES collections (id) ON DELETE CASCADE,
-    permission_type VARCHAR(50) NOT NULL, -- z.B. "read", "write", "admin"
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabelle für Audit-Logs

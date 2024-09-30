@@ -16,7 +16,8 @@ public class DefaultViewContainerContainerFactoryImpl implements FlowCmsViewCont
     }
 
     public Component createViewContainer(ConfigObject config) {
-        switch (config.get("renderer").render()){
+        String renderer = config.toConfig().getString("renderer");
+        switch (renderer){
             case "master_detail" -> {
                 return new MasterDetailComponent(0, config, dynamicEntityManagerService);
             }
