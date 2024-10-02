@@ -33,6 +33,7 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
 
     private void initRenderer() {
         setRenderer(new ComponentRenderer<>(item -> {
+            HorizontalLayout wrapper = new HorizontalLayout();
             HorizontalLayout layout = new HorizontalLayout();
             layout.setSpacing(true);
             layout.setWidthFull();
@@ -49,7 +50,9 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
                 card.add(image, label);
                 layout.add(card);
             }
-            return layout;
+            wrapper.add(layout);
+            wrapper.getStyle().set("padding", "10px 10px 0px 10px");
+            return wrapper;
         }));
     }
 
