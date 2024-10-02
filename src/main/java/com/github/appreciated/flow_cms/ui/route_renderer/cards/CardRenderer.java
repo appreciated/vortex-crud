@@ -13,7 +13,7 @@ import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CardRenderer extends VirtualList<CardRendererWrapper> {
@@ -61,22 +61,36 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
                 // Fetching the data from the database for a given offset and limit
                 query -> {
                     int offset = query.getOffset();
-                    int limit = query.getLimit();
+                    int limit = query.getLimit() * getCurrentNumberOfColumns();
                     List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
-                    return items.stream().map(entity -> new CardRendererWrapper(Collections.singletonList(entity)));
+                    // Gruppiere jeweils 3 GenericEntity-Objekte in einen CardRendererWrapper
+                    List<CardRendererWrapper> wrappers = new ArrayList<>();
+                    for (int i = 0; i < items.size() / getCurrentNumberOfColumns(); i ++) {
+                        // Hole drei Elemente oder die verbleibenden, falls weniger als drei übrig sind
+                        List<GenericEntity> group = items.subList(i, Math.min(i + getCurrentNumberOfColumns(), items.size()));
+                        wrappers.add(new CardRendererWrapper(group));
+                    }
+
+                    return wrappers.stream();
                 },
                 // Providing the total number of records for correct pagination
-                query -> entityManagerService.count(table)
+                query -> entityManagerService.count(table) / getCurrentNumberOfColumns()
         );
 
         // Assigning the data provider to the virtual list
         this.setDataProvider(dataProvider);
     }
 
+    private static int getCurrentNumberOfColumns() {
+        return 3;
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        attachEvent.getUI().getPage().addBrowserWindowResizeListener(e -> updateLayout());
+        attachEvent.getUI().getPage().addBrowserWindowResizeListener(e -> {
+            updateLayout();
+        });
     }
 
     /**
@@ -96,6 +110,9 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
      */
     private void updateLayout() {
         PendingJavaScriptResult containerWidth = getElement().executeJs("$0.$server.displaySize($1.clientWidth, $1.clientHeight)", getElement(), getElement());
-        System.out.println();
+        containerWidth.then(jsonValue -> {
+            // NEED the current Element WIdth
+            System.out.println();
+        });
     }
 }
