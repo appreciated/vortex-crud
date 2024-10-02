@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.view_container.master_detail;
+package com.github.appreciated.flow_cms.ui.route_renderer.master_detail;
 
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -16,13 +16,13 @@ import com.vaadin.flow.dom.ElementFactory;
 
 import java.util.List;
 
-public class MasterDetailContainer extends HorizontalLayout {
+public class MasterDetailRenderer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout formLayout = new VerticalLayout();
     private final Binder<GenericEntity> binder = new Binder<>();
 
-    public MasterDetailContainer(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+    public MasterDetailRenderer(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         String table = config.get("table").render();
 
         // Virtual List mit Lazy Loading einrichten

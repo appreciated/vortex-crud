@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.view_container.cards;
+package com.github.appreciated.flow_cms.ui.route_renderer.cards;
 
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -12,12 +12,12 @@ import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-public class CardContainer extends VirtualList<CardContainerWrapper> {
+public class CardRenderer extends VirtualList<CardRendererWrapper> {
 
     private int minWidth = 100;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
 
-    public CardContainer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+    public CardRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         // Setze Flexbox-Layout für die virtuelle Liste
         this.getStyle().set("display", "flex");
         this.getStyle().set("flex-wrap", "wrap");

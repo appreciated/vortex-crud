@@ -3,7 +3,7 @@ package com.github.appreciated.flow_cms.ui.routes;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.ui.components.FlowCmsComponentFactory;
 import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
-import com.github.appreciated.flow_cms.ui.view_container.DefaultViewContainerContainerFactoryImpl;
+import com.github.appreciated.flow_cms.ui.route_renderer.DefaultRouteRendererFactoryImpl;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
     private final FlowCmsConfigService flowCmsConfigService;
-    private final DefaultViewContainerContainerFactoryImpl containerFactory;
+    private final DefaultRouteRendererFactoryImpl containerFactory;
 
     private String path;
 
@@ -28,7 +28,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
      *
      * @param flowCmsConfigService the service to retrieve configuration for the routes
      */
-    public DynamicRoute(@Autowired FlowCmsConfigService flowCmsConfigService, @Autowired DefaultViewContainerContainerFactoryImpl containerFactory) {
+    public DynamicRoute(@Autowired FlowCmsConfigService flowCmsConfigService, @Autowired DefaultRouteRendererFactoryImpl containerFactory) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.containerFactory = containerFactory;
     }
