@@ -10,27 +10,34 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
+import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
+import java.util.Collections;
+import java.util.List;
 
 public class CardRenderer extends VirtualList<CardRendererWrapper> {
 
+    private final String table;
     private int minWidth = 100;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
+    private final DynamicEntityManagerService entityManagerService;
 
     public CardRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
-        // Setze Flexbox-Layout für die virtuelle Liste
-        this.getStyle().set("display", "flex");
-        this.getStyle().set("flex-wrap", "wrap");
-        this.getStyle().set("gap", "10px");  // Optionaler Abstand zwischen den Karten
-        this.getStyle().set("justify-content", "center");  // Karten zentrieren
+        this.entityManagerService = entityManagerService;
+        table = config.toConfig().getString("table");
+        setSizeFull();
+        initRenderer();
+        initLazyLoadingDataProvider();
+    }
 
-        // Größe der Liste auf 100% setzen
-        setWidthFull();
-        setHeightFull();
-
+    private void initRenderer() {
         setRenderer(new ComponentRenderer<>(item -> {
             HorizontalLayout layout = new HorizontalLayout();
-            for (GenericEntity entity : item.getList()) {// Erstelle eine "Karte" für jedes Element
+            layout.setWidthFull();
+            layout.setHeight("172px");
+
+            for (GenericEntity entity : item.getList()) {  // Erstelle eine "Karte" für jedes Element
                 VerticalLayout card = new VerticalLayout();
 
                 card.getStyle().set("width", "var(--card-width)");
@@ -41,13 +48,30 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
                 card.getStyle().set("background-color", "#fff");
 
                 Image image = new Image("https://via.placeholder.com/150", "Placeholder Image");
-                Text label = new Text(item.toString());
+                Text label = new Text("Some Text");
 
                 card.add(image, label);
                 layout.add(card);
             }
             return layout;
         }));
+    }
+
+    private void initLazyLoadingDataProvider() {
+        DataProvider<CardRendererWrapper, ?> dataProvider = DataProvider.fromCallbacks(
+                // Fetching the data from the database for a given offset and limit
+                query -> {
+                    int offset = query.getOffset();
+                    int limit = query.getLimit();
+                    List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
+                    return items.stream().map(entity -> new CardRendererWrapper(Collections.singletonList(entity)));
+                },
+                // Providing the total number of records for correct pagination
+                query -> entityManagerService.count(table)
+        );
+
+        // Assigning the data provider to the virtual list
+        this.setDataProvider(dataProvider);
     }
 
     @Override
