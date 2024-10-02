@@ -19,9 +19,11 @@ import java.util.List;
 public class CardRenderer extends VirtualList<CardRendererWrapper> {
 
     private final String table;
-    private int minWidth = 100;  // Mindestbreite der Karte (in Pixel)
+    private int minWidth = 180;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
+
+    private int currentNumberOfColumns = 3; // Standard-Anzahl der Spalten
 
     public CardRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         this.entityManagerService = entityManagerService;
@@ -61,36 +63,30 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
                 // Fetching the data from the database for a given offset and limit
                 query -> {
                     int offset = query.getOffset();
-                    int limit = query.getLimit() * getCurrentNumberOfColumns();
+                    int limit = query.getLimit() * currentNumberOfColumns;
                     List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
                     // Gruppiere jeweils 3 GenericEntity-Objekte in einen CardRendererWrapper
                     List<CardRendererWrapper> wrappers = new ArrayList<>();
-                    for (int i = 0; i < items.size() / getCurrentNumberOfColumns(); i ++) {
+                    for (int i = 0; i < items.size() / currentNumberOfColumns; i ++) {
                         // Hole drei Elemente oder die verbleibenden, falls weniger als drei übrig sind
-                        List<GenericEntity> group = items.subList(i, Math.min(i + getCurrentNumberOfColumns(), items.size()));
+                        List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
                         wrappers.add(new CardRendererWrapper(group));
                     }
 
                     return wrappers.stream();
                 },
                 // Providing the total number of records for correct pagination
-                query -> entityManagerService.count(table) / getCurrentNumberOfColumns()
+                query -> entityManagerService.count(table) / currentNumberOfColumns
         );
 
         // Assigning the data provider to the virtual list
         this.setDataProvider(dataProvider);
     }
 
-    private static int getCurrentNumberOfColumns() {
-        return 3;
-    }
-
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        attachEvent.getUI().getPage().addBrowserWindowResizeListener(e -> {
-            updateLayout();
-        });
+        attachEvent.getUI().getPage().addBrowserWindowResizeListener(e -> onBrowserWindowResize());
     }
 
     /**
@@ -102,17 +98,23 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
     public void setCardWidth(int minWidth, int maxWidth) {
         this.minWidth = minWidth;
         this.maxWidth = maxWidth;
-        updateLayout();
+        onBrowserWindowResize();
     }
 
     /**
      * Methode zur dynamischen Anpassung des Layouts basierend auf der Breite des Containers.
      */
-    private void updateLayout() {
-        PendingJavaScriptResult containerWidth = getElement().executeJs("$0.$server.displaySize($1.clientWidth, $1.clientHeight)", getElement(), getElement());
-        containerWidth.then(jsonValue -> {
-            // NEED the current Element WIdth
-            System.out.println();
+    private void onBrowserWindowResize() {
+        PendingJavaScriptResult containerWidthResult = getElement().executeJs("return $0.clientWidth;", getElement());
+        containerWidthResult.then(Double.class, containerWidth -> {
+            if (containerWidth != null) {
+                // Berechne die Anzahl der Spalten basierend auf der Breite des Containers
+                int newNumberOfColumns = Math.max(1, (int) Math.floor(containerWidth / minWidth));
+                if (newNumberOfColumns != currentNumberOfColumns) {
+                    currentNumberOfColumns = newNumberOfColumns;
+                    initRenderer();
+                }
+            }
         });
     }
 }
