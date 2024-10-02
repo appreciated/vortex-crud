@@ -34,18 +34,14 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
     private void initRenderer() {
         setRenderer(new ComponentRenderer<>(item -> {
             HorizontalLayout layout = new HorizontalLayout();
+            layout.setSpacing(true);
             layout.setWidthFull();
-            layout.setHeight("172px");
-
             for (GenericEntity entity : item.getList()) {  // Erstelle eine "Karte" für jedes Element
                 VerticalLayout card = new VerticalLayout();
-
-                card.getStyle().set("width", "var(--card-width)");
-                card.getStyle().set("border", "1px solid #ccc");
                 card.getStyle().set("border-radius", "8px");
                 card.getStyle().set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
                 card.getStyle().set("padding", "10px");
-                card.getStyle().set("background-color", "#fff");
+                card.getStyle().set("background-image", "linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct))");
 
                 Image image = new Image("https://via.placeholder.com/150", "Placeholder Image");
                 Text label = new Text("Some Text");
