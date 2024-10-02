@@ -1,3 +1,5 @@
 databaseChangeLog:
   - includeAll:
-      path: db/changelog/version/
+      path: db/changelog/flow-cms/
+  - includeAll:
+      path: db/changelog/database/

@@ -19,12 +19,13 @@ public class DynamicEntityManagerService {
 
     /**
      * Create (Insert) a new record into the given table with the provided values.
+     *
      * @param tableName The name of the table.
-     * @param values A map of column names and values to be inserted.
+     * @param values    A map of column names and values to be inserted.
      */
     @Transactional
     public void insertRecord(String tableName, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
+        StringBuilder sql = new StringBuilder("INSERT INTO " + getTable(tableName) + " (");
         StringBuilder placeholders = new StringBuilder(" VALUES (");
         List<Object> params = values.getProperties().values().stream().toList();
 
@@ -46,13 +47,14 @@ public class DynamicEntityManagerService {
 
     /**
      * Read (Select) records from a table with pagination for lazy loading.
+     *
      * @param tableName The name of the table.
-     * @param offset The starting position of the first result.
-     * @param limit The maximum number of results to return.
+     * @param offset    The starting position of the first result.
+     * @param limit     The maximum number of results to return.
      * @return A list of records (as a map of column names and values).
      */
     public List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) {
-        String query = "SELECT * FROM " + tableName + " LIMIT :limit OFFSET :offset";
+        String query = "SELECT * FROM " + getTable(tableName) + " LIMIT :limit OFFSET :offset";
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter("limit", limit)
                 .setParameter("offset", offset);
@@ -65,12 +67,13 @@ public class DynamicEntityManagerService {
 
     /**
      * Read a specific record by ID (assuming the ID column is "id").
+     *
      * @param tableName The name of the table.
-     * @param id The ID of the record to fetch.
+     * @param id        The ID of the record to fetch.
      * @return The record (as a map of column names and values) or null if not found.
      */
     public GenericEntity getRecordById(String tableName, Object id) {
-        String query = "SELECT * FROM " + tableName + " WHERE id = ?";
+        String query = "SELECT * FROM " + getTable(tableName) + " WHERE id = ?";
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter(1, id);
 
@@ -83,13 +86,14 @@ public class DynamicEntityManagerService {
 
     /**
      * Update a record in the given table by ID.
+     *
      * @param tableName The name of the table.
-     * @param id The ID of the record to update.
-     * @param values A map of column names and new values to update.
+     * @param id        The ID of the record to update.
+     * @param values    A map of column names and new values to update.
      */
     @Transactional
     public void updateRecordById(String tableName, Object id, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("UPDATE " + tableName + " SET ");
+        StringBuilder sql = new StringBuilder("UPDATE " + getTable(tableName) + " SET ");
         List<Object> params = values.getProperties().values().stream().toList();
 
         values.getProperties().forEach((key, value) -> {
@@ -109,12 +113,13 @@ public class DynamicEntityManagerService {
 
     /**
      * Delete a record from the table by ID.
+     *
      * @param tableName The name of the table.
-     * @param id The ID of the record to delete.
+     * @param id        The ID of the record to delete.
      */
     @Transactional
     public void deleteRecordById(String tableName, Object id) {
-        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        String sql = "DELETE FROM " + getTable(tableName) + " WHERE id = ?";
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter(1, id);
         query.executeUpdate();
@@ -122,17 +127,22 @@ public class DynamicEntityManagerService {
 
     /**
      * Delete all records from the table.
+     *
      * @param tableName The name of the table.
      */
     @Transactional
     public void deleteAllRecords(String tableName) {
-        String sql = "DELETE FROM " + tableName;
+        String sql = "DELETE FROM " + getTable(tableName);
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
 
     @Transactional
     public int count(String table) {
-        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + table).getSingleResult());
+        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + getTable(table)).getSingleResult());
+    }
+
+    private static String getTable(String table) {
+        return table.toUpperCase();
     }
 }

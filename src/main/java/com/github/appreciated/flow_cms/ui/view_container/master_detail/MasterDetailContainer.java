@@ -16,13 +16,13 @@ import com.vaadin.flow.dom.ElementFactory;
 
 import java.util.List;
 
-public class MasterDetailComponent extends HorizontalLayout {
+public class MasterDetailContainer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout formLayout = new VerticalLayout();
     private final Binder<GenericEntity> binder = new Binder<>();
 
-    public MasterDetailComponent(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+    public MasterDetailContainer(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         String table = config.get("table").render();
 
         // Virtual List mit Lazy Loading einrichten

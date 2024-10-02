@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.view_container;
+package com.github.appreciated.flow_cms.ui.view_container.grid;
 
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -9,9 +9,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 
 import java.util.List;
 
-public class GridComponent extends Grid<GenericEntity> {
+public class GridContainer extends Grid<GenericEntity> {
 
-    public GridComponent(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+    public GridContainer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         String table = config.get("table").render();
 
         // Virtual List mit Lazy Loading einrichten

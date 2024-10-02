@@ -1,7 +1,8 @@
 package com.github.appreciated.flow_cms.ui.view_container;
 
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
-import com.github.appreciated.flow_cms.ui.view_container.master_detail.MasterDetailComponent;
+import com.github.appreciated.flow_cms.ui.view_container.grid.GridContainer;
+import com.github.appreciated.flow_cms.ui.view_container.master_detail.MasterDetailContainer;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,10 @@ public class DefaultViewContainerContainerFactoryImpl implements FlowCmsViewCont
         String renderer = config.toConfig().getString("renderer");
         switch (renderer){
             case "master_detail" -> {
-                return new MasterDetailComponent(0, config, dynamicEntityManagerService);
+                return new MasterDetailContainer(0, config, dynamicEntityManagerService);
             }
             case "grid" -> {
-                return new GridComponent(0, config, dynamicEntityManagerService);
+                return new GridContainer(0, config, dynamicEntityManagerService);
             }
             default -> throw new IllegalStateException();
         }
