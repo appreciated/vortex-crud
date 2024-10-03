@@ -4,10 +4,10 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 
 import java.util.List;
 
-public class CardRendererWrapper {
+public class CardEntityList {
     private final List<GenericEntity> list;
 
-    public CardRendererWrapper(List<GenericEntity> list) {
+    public CardEntityList(List<GenericEntity> list) {
         this.list = list;
     }
 

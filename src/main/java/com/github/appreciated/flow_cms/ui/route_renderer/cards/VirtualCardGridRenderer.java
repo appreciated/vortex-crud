@@ -16,16 +16,16 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardRenderer extends VirtualList<CardRendererWrapper> {
+public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
 
     private final String table;
-    private int minWidth = 180;  // Mindestbreite der Karte (in Pixel)
+    private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
 
     private int currentNumberOfColumns = 3; // Standard-Anzahl der Spalten
 
-    public CardRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
+    public VirtualCardGridRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
         this.entityManagerService = entityManagerService;
         table = config.toConfig().getString("table");
         setSizeFull();
@@ -41,6 +41,7 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {  // Erstelle eine "Karte" für jedes Element
                 VerticalLayout card = new VerticalLayout();
+                card.setMaxWidth(maxWidth + "px");
                 card.getStyle().set("border-radius", "8px");
                 card.getStyle().set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
                 card.getStyle().set("padding", "10px");
@@ -59,18 +60,17 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
     }
 
     private void initLazyLoadingDataProvider() {
-        DataProvider<CardRendererWrapper, ?> dataProvider = DataProvider.fromCallbacks(
+        DataProvider<CardEntityList, ?> dataProvider = DataProvider.fromCallbacks(
                 // Fetching the data from the database for a given offset and limit
                 query -> {
-                    int offset = query.getOffset();
+                    int offset = query.getOffset() * currentNumberOfColumns;
                     int limit = query.getLimit() * currentNumberOfColumns;
                     List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
-                    // Gruppiere jeweils 3 GenericEntity-Objekte in einen CardRendererWrapper
-                    List<CardRendererWrapper> wrappers = new ArrayList<>();
+
+                    List<CardEntityList> wrappers = new ArrayList<>();
                     for (int i = 0; i < items.size() / currentNumberOfColumns; i ++) {
-                        // Hole drei Elemente oder die verbleibenden, falls weniger als drei übrig sind
                         List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
-                        wrappers.add(new CardRendererWrapper(group));
+                        wrappers.add(new CardEntityList(group));
                     }
 
                     return wrappers.stream();
@@ -87,6 +87,7 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         attachEvent.getUI().getPage().addBrowserWindowResizeListener(e -> onBrowserWindowResize());
+        onBrowserWindowResize();
     }
 
     /**
@@ -113,6 +114,7 @@ public class CardRenderer extends VirtualList<CardRendererWrapper> {
                 if (newNumberOfColumns != currentNumberOfColumns) {
                     currentNumberOfColumns = newNumberOfColumns;
                     initRenderer();
+                    initLazyLoadingDataProvider();
                 }
             }
         });
