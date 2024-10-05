@@ -56,8 +56,8 @@ public class RouteConfig {
         this.access_control = access_control;
     }
 
-    Map<String, String> getTitleConfig() {
-        return toStringMapWithValueType(title, String.class);
+    public Translatable getTitleConfig() {
+        return new Translatable(toStringMapWithValueType(title, String.class));
     }
 }
 

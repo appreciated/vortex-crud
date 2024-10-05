@@ -1,6 +1,9 @@
 package com.github.appreciated.flow_cms.ui.router_layout;
 
+import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -10,6 +13,7 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.util.Map;
 import java.util.Set;
 
 public class DefaultRouterLayout extends AppLayout {
@@ -18,13 +22,19 @@ public class DefaultRouterLayout extends AppLayout {
 
     public DefaultRouterLayout(FlowCmsConfigService flowCmsConfigService) {
         this.flowCmsConfigService = flowCmsConfigService;
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+
         DrawerToggle toggle = new DrawerToggle();
 
         H1 title = new H1(flowCmsConfigService.getApplicationName());
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
-        SideNav nav = getSideNav();
+        SideNav nav = getSideNav(attachEvent.getUI());
 
         Scroller scroller = new Scroller(nav);
         scroller.setClassName(LumoUtility.Padding.SMALL);
@@ -33,10 +43,10 @@ public class DefaultRouterLayout extends AppLayout {
         addToNavbar(toggle, title);
     }
 
-    private SideNav getSideNav() {
+    private SideNav getSideNav(UI ui) {
         SideNav nav = new SideNav();
-        Set<String> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().keySet();
-        keys.forEach(key -> nav.addItem(new SideNavItem(key, "/view/"+key, VaadinIcon.DASHBOARD.create())));
+        Set<Map.Entry<String, RouteConfig>> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().entrySet();
+        keys.forEach(configEntry -> nav.addItem(new SideNavItem(configEntry.getValue().getTitleConfig().getTranslation(ui), "/view/"+configEntry.getKey(), VaadinIcon.DASHBOARD.create())));
         return nav;
     }
 

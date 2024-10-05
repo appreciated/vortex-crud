@@ -3,7 +3,6 @@ package com.github.appreciated.flow_cms.config.model;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,13 +15,13 @@ public class ConfigModelUtil {
         return entries
                 .stream()
                 .map(stringConfigValueEntry -> {
-                    try {
-                        return Map.entry(stringConfigValueEntry.getKey(), ConfigBeanFactory.create(((ConfigObject) stringConfigValueEntry.getValue()).toConfig(), clazz));
-                    } catch (Exception e) {
-                        LoggerFactory.getLogger(clazz.getName()).error(e.getMessage(), e);
-                        LoggerFactory.getLogger(clazz.getName()).error(e.getMessage(), stringConfigValueEntry.getValue().render());
-                        return null;
+                    T value;
+                    if (clazz == String.class) {
+                        value = (T) stringConfigValueEntry.getValue().unwrapped();
+                    } else {
+                        value = ConfigBeanFactory.create(((ConfigObject) stringConfigValueEntry.getValue()).toConfig(), clazz);
                     }
+                    return Map.entry(stringConfigValueEntry.getKey(), value);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
