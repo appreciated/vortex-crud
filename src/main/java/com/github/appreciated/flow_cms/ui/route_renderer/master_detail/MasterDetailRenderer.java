@@ -1,5 +1,6 @@
 package com.github.appreciated.flow_cms.ui.route_renderer.master_detail;
 
+import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.typesafe.config.ConfigObject;
@@ -22,8 +23,8 @@ public class MasterDetailRenderer extends HorizontalLayout {
     private final VerticalLayout formLayout = new VerticalLayout();
     private final Binder<GenericEntity> binder = new Binder<>();
 
-    public MasterDetailRenderer(int initialIndex, ConfigObject config, DynamicEntityManagerService entityManagerService) {
-        String table = config.get("table").render();
+    public MasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+        String table = config.getTable();
 
         // Virtual List mit Lazy Loading einrichten
         DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(

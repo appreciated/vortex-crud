@@ -1,5 +1,6 @@
 package com.github.appreciated.flow_cms.ui.route_renderer.grid;
 
+import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.typesafe.config.ConfigObject;
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class GridRenderer extends Grid<GenericEntity> {
 
-    public GridRenderer(int i, ConfigObject config, DynamicEntityManagerService entityManagerService) {
-        String table = config.get("table").render();
+    public GridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+        String table = config.getTable();
 
         // Virtual List mit Lazy Loading einrichten
         DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(

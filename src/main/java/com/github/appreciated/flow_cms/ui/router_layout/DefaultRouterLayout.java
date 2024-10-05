@@ -35,7 +35,7 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Set<String> keys = flowCmsConfigService.getRoutes().keySet();
+        Set<String> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().keySet();
         keys.forEach(key -> nav.addItem(new SideNavItem(key, "/view/"+key, VaadinIcon.DASHBOARD.create())));
         return nav;
     }
