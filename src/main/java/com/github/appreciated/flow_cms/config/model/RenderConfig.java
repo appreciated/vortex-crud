@@ -8,7 +8,7 @@ public class RenderConfig {
     @Optional
     private boolean inline_edit;
     @Optional
-    private List<ColumnConfig> columns;
+    private CardRenderer card_renderer;
     @Optional
     private DetailRenderer detail_renderer;
 
@@ -20,12 +20,12 @@ public class RenderConfig {
         this.inline_edit = inline_edit;
     }
 
-    public List<ColumnConfig> getColumns() {
-        return columns;
+    public CardRenderer getCard_renderer() {
+        return card_renderer;
     }
 
-    public void setColumns(List<ColumnConfig> columns) {
-        this.columns = columns;
+    public void setCard_renderer(CardRenderer card_renderer) {
+        this.card_renderer = card_renderer;
     }
 
     public DetailRenderer getDetail_renderer() {

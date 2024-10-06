@@ -20,23 +20,16 @@ import java.util.List;
 public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
 
     private final String table;
-    private final List<ColumnConfig> renderColmuns;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
 
-    private int currentNumberOfColumns = 3; // Standard-Anzahl der Spalten
+    private int currentNumberOfColumns = -1;
 
     public VirtualCardGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        renderColmuns = config.getRender_configuration().getColumns();
-        renderColmuns.forEach(configValue -> {
-
-        });
         setSizeFull();
-        initRenderer();
-        initLazyLoadingDataProvider();
         this.addAttachListener(event -> new Thread(() -> {
             try {
                 Thread.sleep(100);
@@ -62,6 +55,7 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
                 card.getStyle().set("background-image", "linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct))");
 
                 Image image = new Image("https://via.placeholder.com/150", "Placeholder Image");
+
                 Text label = new Text("Some Text");
 
                 card.add(image, label);

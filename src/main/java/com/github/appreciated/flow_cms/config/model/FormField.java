@@ -5,20 +5,11 @@ import com.typesafe.config.Optional;
 import java.util.List;
 
 public class FormField {
-    private String type;
     private String field;
     @Optional
     private boolean read_only;
     @Optional
     private List<String> read_only_for_roles;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getField() {
         return field;
