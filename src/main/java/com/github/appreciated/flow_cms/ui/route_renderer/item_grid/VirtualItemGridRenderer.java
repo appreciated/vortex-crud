@@ -1,5 +1,6 @@
 package com.github.appreciated.flow_cms.ui.route_renderer.item_grid;
 
+import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -19,6 +20,7 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
 
     private final String table;
     private final EntityItemRenderer cardRenderer;
+    private final ItemRendererConfig itemRenderer;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
@@ -28,6 +30,7 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
     public VirtualItemGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
+        itemRenderer = config.getRender_configuration().getItem_renderer();
         this.cardRenderer = entityCardRendererFactory.getRenderer(config.getRender_configuration().getItem_renderer());
         setSizeFull();
         this.addAttachListener(event -> new Thread(() -> {
@@ -47,7 +50,7 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                layout.add(cardRenderer.renderItem(entity, maxWidth));
+                layout.add(cardRenderer.renderItem(itemRenderer, entity, maxWidth));
             }
             wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 10px 0px 10px");
