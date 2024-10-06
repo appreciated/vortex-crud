@@ -1,10 +1,10 @@
-package com.github.appreciated.flow_cms.ui.route_renderer.cards;
+package com.github.appreciated.flow_cms.ui.route_renderer.item_grid;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.component_renderer.card.CardRenderer;
-import com.github.appreciated.flow_cms.ui.component_renderer.card.FlowCmsEntityCardRendererFactory;
+import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
+import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
@@ -15,20 +15,20 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
+public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
 
     private final String table;
-    private final CardRenderer cardRenderer;
+    private final EntityItemRenderer cardRenderer;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
 
     private int currentNumberOfColumns = -1;
 
-    public VirtualCardGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityCardRendererFactory entityCardRendererFactory) {
+    public VirtualItemGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        this.cardRenderer = entityCardRendererFactory.getCardRenderer(config.getRender_configuration().getCard_renderer());
+        this.cardRenderer = entityCardRendererFactory.getRenderer(config.getRender_configuration().getItem_renderer());
         setSizeFull();
         this.addAttachListener(event -> new Thread(() -> {
             try {
@@ -47,7 +47,7 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                layout.add(cardRenderer.createCardComponent(entity, maxWidth));
+                layout.add(cardRenderer.renderItem(entity, maxWidth));
             }
             wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 10px 0px 10px");
@@ -63,10 +63,10 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
                             int limit = query.getLimit() * currentNumberOfColumns;
                             List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
 
-                            List<CardEntityList> wrappers = new ArrayList<>();
+                            List<EntityItemList> wrappers = new ArrayList<>();
                             for (int i = 0; i < items.size() / currentNumberOfColumns; i++) {
                                 List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
-                                wrappers.add(new CardEntityList(group));
+                                wrappers.add(new EntityItemList(group));
                             }
 
                             return wrappers.stream();
@@ -74,8 +74,8 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
                         // Providing the total number of records for correct pagination
                         query -> {
                             int count = entityManagerService.count(table);
-                            System.out.println(count);
-                            System.out.println(currentNumberOfColumns);
+                            //System.out.println(count);
+                            //System.out.println(currentNumberOfColumns);
                             return count / currentNumberOfColumns;
                         }
                 )
@@ -106,7 +106,7 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
     private void onBrowserWindowResize() {
         PendingJavaScriptResult containerWidthResult = getElement().executeJs("return $0.clientWidth;", getElement());
         containerWidthResult.then(Double.class, containerWidth -> {
-            System.out.println(containerWidth);
+            //System.out.println(containerWidth);
             if (containerWidth != null) {
                 // Berechne die Anzahl der Spalten basierend auf der Breite des Containers
                 int newNumberOfColumns = Math.max(1, (int) Math.floor(containerWidth / minWidth));

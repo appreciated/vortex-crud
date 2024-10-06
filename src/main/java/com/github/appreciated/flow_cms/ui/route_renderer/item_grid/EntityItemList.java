@@ -1,13 +1,13 @@
-package com.github.appreciated.flow_cms.ui.route_renderer.cards;
+package com.github.appreciated.flow_cms.ui.route_renderer.item_grid;
 
 import com.github.appreciated.flow_cms.service.GenericEntity;
 
 import java.util.List;
 
-public class CardEntityList {
+public class EntityItemList {
     private final List<GenericEntity> list;
 
-    public CardEntityList(List<GenericEntity> list) {
+    public EntityItemList(List<GenericEntity> list) {
         this.list = list;
     }
 

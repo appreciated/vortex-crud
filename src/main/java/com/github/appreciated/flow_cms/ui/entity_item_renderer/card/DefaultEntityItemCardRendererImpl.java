@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.component_renderer.card;
+package com.github.appreciated.flow_cms.ui.entity_item_renderer.card;
 
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Component;
@@ -6,10 +6,10 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-public class CardRendererImpl implements CardRenderer {
+public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
 
     @Override
-    public Component createCardComponent(GenericEntity entity, int maxWidth) {
+    public Component renderItem(GenericEntity entity, int maxWidth) {
         VerticalLayout card = new VerticalLayout();
         card.setMaxWidth(maxWidth + "px");
         card.getStyle().set("border-radius", "8px");

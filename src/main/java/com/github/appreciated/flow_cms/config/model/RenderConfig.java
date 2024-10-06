@@ -6,7 +6,7 @@ public class RenderConfig {
     @Optional
     private boolean inline_edit;
     @Optional
-    private CardRendererConfig card_renderer;
+    private ItemRendererConfig item_renderer;
     @Optional
     private DetailRenderer detail_renderer;
 
@@ -18,12 +18,12 @@ public class RenderConfig {
         this.inline_edit = inline_edit;
     }
 
-    public CardRendererConfig getCard_renderer() {
-        return card_renderer;
+    public ItemRendererConfig getItem_renderer() {
+        return item_renderer;
     }
 
-    public void setCard_renderer(CardRendererConfig card_renderer) {
-        this.card_renderer = card_renderer;
+    public void setItem_renderer(ItemRendererConfig item_renderer) {
+        this.item_renderer = item_renderer;
     }
 
     public DetailRenderer getDetail_renderer() {

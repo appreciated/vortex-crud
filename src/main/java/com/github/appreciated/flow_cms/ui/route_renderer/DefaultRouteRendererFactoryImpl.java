@@ -2,8 +2,8 @@ package com.github.appreciated.flow_cms.ui.route_renderer;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
-import com.github.appreciated.flow_cms.ui.component_renderer.card.FlowCmsEntityCardRendererFactory;
-import com.github.appreciated.flow_cms.ui.route_renderer.cards.VirtualCardGridRenderer;
+import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
+import com.github.appreciated.flow_cms.ui.route_renderer.item_grid.VirtualItemGridRenderer;
 import com.github.appreciated.flow_cms.ui.route_renderer.grid.GridRenderer;
 import com.github.appreciated.flow_cms.ui.route_renderer.master_detail.MasterDetailRenderer;
 import com.vaadin.flow.component.Component;
@@ -18,11 +18,11 @@ public class DefaultRouteRendererFactoryImpl implements FlowCmsRouteRendererFact
 
     private final DynamicEntityManagerService dynamicEntityManager;
 
-    public DefaultRouteRendererFactoryImpl(DynamicEntityManagerService dynamicEntityManager, FlowCmsEntityCardRendererFactory entityCardRendererFactory) {
+    public DefaultRouteRendererFactoryImpl(DynamicEntityManagerService dynamicEntityManager, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.dynamicEntityManager = dynamicEntityManager;
         rendererHashMap.put("master_detail", (i, config, entityManagerService) -> new MasterDetailRenderer(i, config, dynamicEntityManager));
         rendererHashMap.put("grid", (i, config, entityManagerService) -> new GridRenderer(i, config, dynamicEntityManager));
-        rendererHashMap.put("card", (i, config, entityManagerService) -> new VirtualCardGridRenderer(i, config, dynamicEntityManager, entityCardRendererFactory));
+        rendererHashMap.put("item", (i, config, entityManagerService) -> new VirtualItemGridRenderer(i, config, dynamicEntityManager, entityCardRendererFactory));
     }
 
     public Component createViewContainer(RouteConfig routeConfig) {

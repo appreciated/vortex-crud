@@ -1,6 +1,6 @@
 package com.github.appreciated.flow_cms.config.model;
 
-public class CardRendererConfig {
+public class ItemRendererConfig {
     private String type;
     private String title_field;
     private String description_field;
