@@ -1,8 +1,6 @@
 package com.github.appreciated.flow_cms.config.model;
 
-import java.util.List;
-
-public class CardRenderer {
+public class CardRendererConfig {
     private String type;
     private String title_field;
     private String description_field;

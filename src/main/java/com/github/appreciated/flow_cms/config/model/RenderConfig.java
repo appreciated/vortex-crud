@@ -2,13 +2,11 @@ package com.github.appreciated.flow_cms.config.model;
 
 import com.typesafe.config.Optional;
 
-import java.util.List;
-
 public class RenderConfig {
     @Optional
     private boolean inline_edit;
     @Optional
-    private CardRenderer card_renderer;
+    private CardRendererConfig card_renderer;
     @Optional
     private DetailRenderer detail_renderer;
 
@@ -20,11 +18,11 @@ public class RenderConfig {
         this.inline_edit = inline_edit;
     }
 
-    public CardRenderer getCard_renderer() {
+    public CardRendererConfig getCard_renderer() {
         return card_renderer;
     }
 
-    public void setCard_renderer(CardRenderer card_renderer) {
+    public void setCard_renderer(CardRendererConfig card_renderer) {
         this.card_renderer = card_renderer;
     }
 

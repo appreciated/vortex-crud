@@ -1,14 +1,12 @@
 package com.github.appreciated.flow_cms.ui.route_renderer.cards;
 
-import com.github.appreciated.flow_cms.config.model.ColumnConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.component_renderer.card.CardRenderer;
+import com.github.appreciated.flow_cms.ui.component_renderer.card.FlowCmsEntityCardRendererFactory;
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -20,15 +18,17 @@ import java.util.List;
 public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
 
     private final String table;
+    private final CardRenderer cardRenderer;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private final DynamicEntityManagerService entityManagerService;
 
     private int currentNumberOfColumns = -1;
 
-    public VirtualCardGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+    public VirtualCardGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityCardRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
+        this.cardRenderer = entityCardRendererFactory.getCardRenderer(config.getRender_configuration().getCard_renderer());
         setSizeFull();
         this.addAttachListener(event -> new Thread(() -> {
             try {
@@ -46,20 +46,8 @@ public class VirtualCardGridRenderer extends VirtualList<CardEntityList> {
             HorizontalLayout layout = new HorizontalLayout();
             layout.setSpacing(true);
             layout.setWidthFull();
-            for (GenericEntity entity : item.getList()) {  // Erstelle eine "Karte" für jedes Element
-                VerticalLayout card = new VerticalLayout();
-                card.setMaxWidth(maxWidth + "px");
-                card.getStyle().set("border-radius", "8px");
-                card.getStyle().set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
-                card.getStyle().set("padding", "10px");
-                card.getStyle().set("background-image", "linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct))");
-
-                Image image = new Image("https://via.placeholder.com/150", "Placeholder Image");
-
-                Text label = new Text("Some Text");
-
-                card.add(image, label);
-                layout.add(card);
+            for (GenericEntity entity : item.getList()) {
+                layout.add(cardRenderer.createCardComponent(entity, maxWidth));
             }
             wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 10px 0px 10px");
