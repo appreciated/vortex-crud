@@ -19,7 +19,7 @@ import java.util.List;
 public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
 
     private final String table;
-    private final EntityItemRenderer cardRenderer;
+    private final EntityItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
@@ -31,7 +31,7 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
         itemRenderer = config.getRender_configuration().getItem_renderer();
-        this.cardRenderer = entityCardRendererFactory.getRenderer(config.getRender_configuration().getItem_renderer());
+        this.entityItemRenderer = entityCardRendererFactory.getRenderer(config.getRender_configuration().getItem_renderer());
         setSizeFull();
         this.addAttachListener(event -> new Thread(() -> {
             try {
@@ -50,7 +50,7 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                layout.add(cardRenderer.renderItem(itemRenderer, entity, maxWidth));
+                layout.add(entityItemRenderer.renderItem(itemRenderer, entity, maxWidth));
             }
             wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 10px 0px 10px");
@@ -109,7 +109,6 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
     private void onBrowserWindowResize() {
         PendingJavaScriptResult containerWidthResult = getElement().executeJs("return $0.clientWidth;", getElement());
         containerWidthResult.then(Double.class, containerWidth -> {
-            //System.out.println(containerWidth);
             if (containerWidth != null) {
                 // Berechne die Anzahl der Spalten basierend auf der Breite des Containers
                 int newNumberOfColumns = Math.max(1, (int) Math.floor(containerWidth / minWidth));

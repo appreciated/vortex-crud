@@ -20,7 +20,7 @@ public class DefaultRouteRendererFactoryImpl implements FlowCmsRouteRendererFact
 
     public DefaultRouteRendererFactoryImpl(DynamicEntityManagerService dynamicEntityManager, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.dynamicEntityManager = dynamicEntityManager;
-        rendererHashMap.put("master_detail", (i, config, entityManagerService) -> new MasterDetailRenderer(i, config, dynamicEntityManager));
+        rendererHashMap.put("master_detail", (i, config, entityManagerService) -> new MasterDetailRenderer(i, config, dynamicEntityManager, entityCardRendererFactory));
         rendererHashMap.put("grid", (i, config, entityManagerService) -> new GridRenderer(i, config, dynamicEntityManager));
         rendererHashMap.put("item", (i, config, entityManagerService) -> new VirtualItemGridRenderer(i, config, dynamicEntityManager, entityCardRendererFactory));
     }
