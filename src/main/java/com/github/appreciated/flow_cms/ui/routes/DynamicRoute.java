@@ -11,7 +11,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 /**
  * Depending on the route a different component should be rendered using the {@link FlowCmsComponentFactory}.
  */
