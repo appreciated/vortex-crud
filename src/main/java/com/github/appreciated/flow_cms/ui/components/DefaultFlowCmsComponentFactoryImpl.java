@@ -1,7 +1,8 @@
 package com.github.appreciated.flow_cms.ui.components;
 
-import com.typesafe.config.Config;
+import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -26,10 +27,10 @@ public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFacto
     }
 
     @Override
-    public Component createComponent(Config type) {
+    public <Comp extends Component & HasValue> Comp createComponent(FieldConfig type) {
         Supplier<Component> componentSupplier = componentMap.get(type);
         if (componentSupplier != null) {
-            return componentSupplier.get();
+            return (Comp) componentSupplier.get();
         }
         throw new IllegalArgumentException("Unknown component type: " + type);
     }
