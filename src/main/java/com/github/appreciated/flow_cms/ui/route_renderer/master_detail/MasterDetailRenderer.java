@@ -6,6 +6,8 @@ import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.virtuallist.VirtualList;
@@ -48,7 +50,12 @@ public class MasterDetailRenderer extends HorizontalLayout {
     }
 
     public void initVirtualList() {
-        this.virtualList.setRenderer(new ComponentRenderer<>(item -> entityItemRenderer.renderItem(itemRenderer, item, 300)));
+        this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
+            Component component = entityItemRenderer.renderItem(itemRenderer, item, 300);
+            Div div = new Div(component);
+            div.getStyle().set("padding","5px 5px 0px 5px");
+            return div;
+        }));
         this.virtualList.setDataProvider(DataProvider.fromCallbacks(
                 query -> entityManagerService.getRecordsFromTable(table, query.getOffset(), query.getLimit()).stream(),
                 query -> entityManagerService.count(table)
