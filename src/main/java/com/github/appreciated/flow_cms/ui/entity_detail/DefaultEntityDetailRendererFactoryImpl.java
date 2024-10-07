@@ -14,7 +14,7 @@ public class DefaultEntityDetailRendererFactoryImpl implements FlowCmsEntityDeta
     HashMap<String, EntityDetailRenderer> rendererHashMap = new HashMap<>();
 
     public DefaultEntityDetailRendererFactoryImpl(DefaultFlowCmsComponentFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService flowCmsConfigService) {
-        rendererHashMap.put("entity_item_card_renderer", new DefaultEntityDetailRendererImpl(componentFactory, entityManagerService, flowCmsConfigService));
+        rendererHashMap.put("form_detail_renderer", new DefaultEntityDetailRendererImpl(componentFactory, entityManagerService, flowCmsConfigService));
     }
 
     public EntityDetailRenderer getRenderer(DetailRenderer routeConfig) {

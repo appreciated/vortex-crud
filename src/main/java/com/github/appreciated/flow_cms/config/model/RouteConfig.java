@@ -12,7 +12,6 @@ public class RouteConfig {
     private String table;
     private ConfigObject title;
     private String renderer;
-    @Optional
     private RenderConfig render_configuration;
     @Optional
     private AccessControlConfig access_control;

@@ -16,22 +16,22 @@ import java.util.function.Supplier;
 @Service
 public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFactory {
 
-    private static final Map<String, Supplier<Component>> componentMap = new HashMap<>();
+    private final Map<String, Supplier<Component>> componentMap = new HashMap<>();
 
-    static {
+    public DefaultFlowCmsComponentFactoryImpl() {
         componentMap.put("text", TextField::new);
         componentMap.put("textarea", TextArea::new);
         componentMap.put("date", DatePicker::new);
         componentMap.put("dropdown", ComboBox::new);
-        componentMap.put("grid", ComboBox::new);
+        componentMap.put("select", ComboBox::new);
     }
 
     @Override
     public <Comp extends Component & HasValue> Comp createComponent(FieldConfig type) {
-        Supplier<Component> componentSupplier = componentMap.get(type);
+        Supplier<Component> componentSupplier = componentMap.get(type.getType());
         if (componentSupplier != null) {
             return (Comp) componentSupplier.get();
         }
-        throw new IllegalArgumentException("Unknown component type: " + type);
+        throw new IllegalArgumentException("Unknown component type: " + type.getType());
     }
 }

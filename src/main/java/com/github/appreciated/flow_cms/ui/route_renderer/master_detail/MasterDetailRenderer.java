@@ -1,9 +1,13 @@
 package com.github.appreciated.flow_cms.ui.route_renderer.master_detail;
 
+import com.github.appreciated.flow_cms.config.model.DetailRenderer;
 import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
+import com.github.appreciated.flow_cms.config.model.RenderConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.entity_detail.EntityDetailRenderer;
+import com.github.appreciated.flow_cms.ui.entity_detail.FlowCmsEntityDetailRendererFactory;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.Component;
@@ -19,17 +23,25 @@ public class MasterDetailRenderer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final Binder<GenericEntity> binder = new Binder<>();
     private final EntityItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
+
+    private final RouteConfig config;
     private final DynamicEntityManagerService entityManagerService;
     private final String table;
+    private final EntityDetailRenderer detailRenderer;
 
-    public MasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
+    public MasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
+        this.config = config;
+
         this.entityManagerService = entityManagerService;
-        this.itemRenderer = config.getRender_configuration().getItem_renderer();
+        RenderConfig renderConfiguration = config.getRender_configuration();
+        this.itemRenderer = renderConfiguration.getItem_renderer();
         this.entityItemRenderer = entityCardRendererFactory.getRenderer(itemRenderer);
         this.table = config.getTable();
+
+        DetailRenderer detailRendererConfig = renderConfiguration.getDetail_renderer();
+        this.detailRenderer = detailRendererFactory.getRenderer(detailRendererConfig);
 
         detailLayout.setHeightFull();
         detailLayout.setWidth("unset");
@@ -46,7 +58,8 @@ public class MasterDetailRenderer extends HorizontalLayout {
     }
 
     private void onItemClick(GenericEntity entity) {
-        System.out.println(entity.get("id"));
+        this.detailLayout.removeAll();
+        this.detailLayout.add(detailRenderer.renderDetail(config, entity));
     }
 
     public void initVirtualList() {

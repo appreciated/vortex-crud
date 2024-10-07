@@ -49,7 +49,7 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
             String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
 
-            Component component = componentFactory.createComponent(new FieldConfig());
+            Component component = componentFactory.createComponent(fieldConfig);
             binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
 
             form.add(component);
