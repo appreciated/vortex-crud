@@ -8,6 +8,8 @@ public class ItemRendererConfig {
     private String title_field;
     @Optional
     private String description_field;
+    @Optional
+    private String image_field;
 
     public String getType() {
         return type;
@@ -31,5 +33,13 @@ public class ItemRendererConfig {
 
     public void setDescription_field(String description_field) {
         this.description_field = description_field;
+    }
+
+    public String getImage_field() {
+        return image_field;
+    }
+
+    public void setImage_field(String image_field) {
+        this.image_field = image_field;
     }
 }
