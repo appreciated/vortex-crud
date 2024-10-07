@@ -1,68 +1,89 @@
 package com.github.appreciated.flow_cms.config;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
+import com.github.appreciated.flow_cms.config.model.FieldConfig;
+import com.github.appreciated.flow_cms.config.model.TableConfig;
+import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 
+import java.util.*;
+
+@Configuration
 public class DatabaseSchemaChecker {
 
-    private final Connection connection;
+    private final EntityManager entityManager;
+    private final HashMap<Object, Object> typeMappings;
 
-    public DatabaseSchemaChecker(Connection connection) {
-        this.connection = connection;
-    }
+    public DatabaseSchemaChecker(@Autowired EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
+        this.entityManager = entityManager;
 
-    public void checkSchema() throws SQLException {
-        DatabaseMetaData metaData = connection.getMetaData();
-    }
+        typeMappings = new HashMap<>();
+        typeMappings.put("number", List.of("INTEGER", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC"));
+        typeMappings.put("id", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
+        typeMappings.put("text", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
+        typeMappings.put("date", List.of("DATE"));
+        typeMappings.put("datetime", List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME"));
+        typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
+        typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
 
-    private void checkTable(DatabaseMetaData metaData, String tableName,
-                            Map<String, String> expectedColumns) throws SQLException {
-        ResultSet tables = metaData.getTables(null, null, tableName,
-                null);
-        if (!tables.next()) {
-            throw new SQLException("Table " + tableName + " does not exist  in the database.");
+        Map<String, TableConfig> tablesConfig = flowCmsConfigService.getConfiguration().getTablesConfig();
+
+        for (Map.Entry<String, TableConfig> entry : tablesConfig.entrySet()) {
+            checkTable(entry.getKey(), entry.getValue().getFieldsConfig());
         }
+    }
 
-        ResultSet columns = metaData.getColumns(null, null, tableName,
-                null);
-        while (columns.next()) {
-            String columnName = columns.getString("COLUMN_NAME");
-            String columnType = columns.getString("TYPE_NAME");
-            if (!expectedColumns.containsKey(columnName) ||
-                !expectedColumns.get(columnName).equalsIgnoreCase(columnType)) {
-                throw new SQLException("Column " + columnName + " in table  " + tableName + " does not match the expected definition.");
+    public void checkTable(String tableName, Map<String, FieldConfig> expectedColumns) {
+        if (!tableExists(tableName)) {
+            throw new PersistenceException("Table " + tableName + " does not exist in the database.");
+        }
+        checkColumns(tableName, expectedColumns);
+        checkPrimaryKey(tableName);
+        checkForeignKeys(tableName, expectedColumns);
+    }
+
+    private boolean tableExists(String tableName) {
+        String query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = :tableName AND TABLE_SCHEMA = 'PUBLIC'";
+        List<?> result = entityManager.createNativeQuery(query)
+                .setParameter("tableName", tableName.toUpperCase()) // H2 speichert Tabellen normalerweise in Großbuchstaben
+                .getResultList();
+        return !result.isEmpty();
+    }
+
+    private void checkColumns(String tableName, Map<String, FieldConfig> expectedColumns) {
+        String query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = :tableName AND TABLE_SCHEMA = 'PUBLIC'";
+        List<Object[]> columns = entityManager.createNativeQuery(query)
+                .setParameter("tableName", tableName.toUpperCase())
+                .getResultList();
+
+        for (Object[] column : columns) {
+            String columnName = (String) column[0];
+            String columnType = (String) column[1];
+
+            FieldConfig expectedConfig = expectedColumns.get(columnName.toLowerCase());
+            if (expectedConfig == null) {
+                throw new PersistenceException("The column '" + columnName + "' is not expected in table '" + tableName + "'.");
+            }
+
+            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getType().toUpperCase());
+
+            if (!validColumnTypes.contains(columnType)) {
+                throw new PersistenceException("The type of the column '" + columnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + columnType);
             }
         }
-
-        checkPrimaryKey(metaData, tableName);
-        checkForeignKeys(metaData, tableName, expectedColumns);
     }
 
-    private void checkPrimaryKey(DatabaseMetaData metaData, String
-            tableName) throws SQLException {
-        ResultSet primaryKeys = metaData.getPrimaryKeys(null, null,
-                tableName);
-        if (!primaryKeys.next()) {
-            throw new SQLException("Table " + tableName + " does not have  a primary key.");
-        }
+    private Collection<String> getValidDatabaseTypesForExpectedType(String expectedType) {
+        return (Collection<String>) typeMappings.getOrDefault(expectedType.toLowerCase(), Collections.emptyList());
     }
 
-    private void checkForeignKeys(DatabaseMetaData metaData, String
-            tableName, Map<String, String> expectedColumns) throws SQLException {
-        ResultSet foreignKeys = metaData.getImportedKeys(null, null,
-                tableName);
-        while (foreignKeys.next()) {
-            String fkTableName = foreignKeys.getString("PKTABLE_NAME");
-            String fkColumnName = foreignKeys.getString("PKCOLUMN_NAME");
-            String fkName = foreignKeys.getString("FKCOLUMN_NAME");
-            if (!expectedColumns.containsKey(fkName) ||
-                !expectedColumns.get(fkName).equalsIgnoreCase(fkColumnName)) {
-                throw new SQLException("Foreign key " + fkName + " in  table " + tableName + " does not match the expected definition.");
-            }
-        }
+    private void checkPrimaryKey(String tableName) {
+       // TODO
     }
 
+    private void checkForeignKeys(String tableName, Map<String, FieldConfig> expectedColumns) {
+        // TODO
+    }
 }
