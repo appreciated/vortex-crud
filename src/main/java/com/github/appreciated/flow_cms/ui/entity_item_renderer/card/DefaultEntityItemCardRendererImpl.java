@@ -20,6 +20,7 @@ public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
         card.getStyle().set("border-radius", "8px");
         card.getStyle().set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
         card.getStyle().set("padding", "10px");
+        card.getStyle().set("cursor", "pointer");
         card.getStyle().set("background-image", "linear-gradient(var(--lumo-contrast-5pct), var(--lumo-contrast-5pct))");
 
         // Optional image

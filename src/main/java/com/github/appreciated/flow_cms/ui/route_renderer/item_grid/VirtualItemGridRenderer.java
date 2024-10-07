@@ -7,6 +7,7 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
@@ -50,12 +51,18 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                layout.add(entityItemRenderer.renderItem(itemRenderer, entity, maxWidth));
+                Div div = new Div(entityItemRenderer.renderItem(itemRenderer, entity, maxWidth));
+                div.addClickListener(event -> onItemClick(entity));
+                layout.add(div);
             }
             wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 10px 0px 10px");
             return wrapper;
         }));
+    }
+
+    private void onItemClick(GenericEntity entity) {
+        System.out.println(entity.get("id"));
     }
 
     private void initLazyLoadingDataProvider() {

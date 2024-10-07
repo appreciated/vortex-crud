@@ -46,7 +46,7 @@ public class MasterDetailRenderer extends HorizontalLayout {
     }
 
     private void onItemClick(GenericEntity entity) {
-
+        System.out.println(entity.get("id"));
     }
 
     public void initVirtualList() {
@@ -54,6 +54,7 @@ public class MasterDetailRenderer extends HorizontalLayout {
             Component component = entityItemRenderer.renderItem(itemRenderer, item, null);
             Div div = new Div(component);
             div.getStyle().set("padding","5px 5px 0px 5px");
+            div.addClickListener(event -> onItemClick(item));
             return div;
         }));
         this.virtualList.setDataProvider(DataProvider.fromCallbacks(
