@@ -36,6 +36,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         String path = event.getRouteParameters().get("path").orElse("");
         removeAll();
+
         Component viewContainer = containerFactory.createViewContainer(flowCmsConfigService.getConfigForRoute(path));
         add(viewContainer);
     }
