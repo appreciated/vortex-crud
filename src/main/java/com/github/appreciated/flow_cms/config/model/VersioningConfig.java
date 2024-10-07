@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import java.util.List;
 
 public class VersioningConfig {
+
     private boolean enabled;
     private List<String> tables;
 
@@ -22,5 +23,4 @@ public class VersioningConfig {
         this.tables = tables;
     }
 
-// Getters and Setters
 }

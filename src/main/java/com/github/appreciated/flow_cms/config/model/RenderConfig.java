@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import com.typesafe.config.Optional;
 
 public class RenderConfig {
+
     @Optional
     private boolean inline_edit;
     @Optional

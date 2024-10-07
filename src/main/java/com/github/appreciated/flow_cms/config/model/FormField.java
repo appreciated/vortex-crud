@@ -5,6 +5,7 @@ import com.typesafe.config.Optional;
 import java.util.List;
 
 public class FormField {
+
     private String field;
     @Optional
     private boolean read_only;

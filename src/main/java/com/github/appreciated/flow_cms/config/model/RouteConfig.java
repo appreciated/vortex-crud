@@ -8,6 +8,7 @@ import java.util.Map;
 import static com.github.appreciated.flow_cms.config.model.ConfigModelUtil.toStringMapWithValueType;
 
 public class RouteConfig {
+
     private String table;
     private ConfigObject title;
     private String renderer;

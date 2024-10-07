@@ -20,7 +20,6 @@ public class ApplicationConfig {
     private ConfigObject tables;
     private ConfigObject routes;
 
-
     public String getName() {
         return name;
     }

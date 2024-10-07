@@ -5,6 +5,7 @@ import com.typesafe.config.Optional;
 import java.util.List;
 
 public class UserManagementConfig {
+
     private boolean enabled;
     @Optional
     private AccessControlConfig access_control;

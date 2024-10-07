@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.config.model;
 
 public class FieldConfig {
+
     private String type;
     private boolean primary;
     private boolean required;

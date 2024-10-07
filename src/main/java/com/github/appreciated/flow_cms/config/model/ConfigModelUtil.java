@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ConfigModelUtil {
+
     public static <T> Map<String, T> toStringMapWithValueType(ConfigObject config, Class<T> clazz) {
         Set<Map.Entry<String, ConfigValue>> entries = config
                 .entrySet();
@@ -25,4 +26,5 @@ public class ConfigModelUtil {
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
 }

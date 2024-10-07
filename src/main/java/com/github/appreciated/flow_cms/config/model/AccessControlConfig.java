@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import java.util.List;
 
 public class AccessControlConfig {
+
     private List<String> roles;
 
     public List<String> getRoles() {
@@ -12,4 +13,5 @@ public class AccessControlConfig {
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
+
 }

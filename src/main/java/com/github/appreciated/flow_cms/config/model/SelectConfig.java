@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import java.util.Map;
 
 public class SelectConfig {
+
     private Map<String, Translatable> task_status;
 
     public Map<String, Translatable> getTask_status() {

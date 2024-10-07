@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import java.util.Map;
 
 public class TableConfig {
+
     private Map<String, FieldConfig> fields;
 
     public Map<String, FieldConfig> getFields() {

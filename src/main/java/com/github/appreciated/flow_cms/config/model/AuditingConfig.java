@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.config.model;
 import java.util.List;
 
 public class AuditingConfig {
+
     private boolean enabled;
     private List<String> actions;
 

@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.config.model;
 
 public class AdditionalTableField {
+
     private String name;
     private String type;
 
