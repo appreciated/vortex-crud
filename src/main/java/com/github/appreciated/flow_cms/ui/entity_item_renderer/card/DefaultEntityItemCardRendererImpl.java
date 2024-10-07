@@ -12,9 +12,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
 
     @Override
-    public Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, int maxWidth) {
+    public Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, Integer maxWidth) {
         HorizontalLayout card = new HorizontalLayout();
-        card.setMaxWidth(maxWidth + "px");
+        if (maxWidth != null) {
+            card.setMaxWidth(maxWidth + "px");
+        }
         card.getStyle().set("border-radius", "8px");
         card.getStyle().set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
         card.getStyle().set("padding", "10px");

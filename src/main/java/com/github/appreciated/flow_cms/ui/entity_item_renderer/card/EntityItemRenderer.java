@@ -5,5 +5,5 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Component;
 
 public interface EntityItemRenderer {
-    Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, int maxWidth);
+    Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, Integer maxWidth);
 }
