@@ -25,16 +25,6 @@ CREATE TABLE collections
     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabelle für View-Konfigurationen pro Collection
-CREATE TABLE view_configs
-(
-    id            SERIAL PRIMARY KEY,
-    collection_id INT REFERENCES collections (id) ON DELETE CASCADE,
-    view_name     VARCHAR(255) NOT NULL, -- Name der Ansicht, z.B. "Detailansicht", "Listenansicht"
-    config        JSON         NOT NULL, -- JSON-Schema der Ansicht
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Tabelle für Audit-Logs
 CREATE TABLE audit_log
 (

@@ -69,7 +69,7 @@ public class ApplicationConfig {
     }
 
     public Map<String, TableConfig> getTablesConfig(){
-        return toStringMapWithValueType(routes, TableConfig.class);
+        return toStringMapWithValueType(tables, TableConfig.class);
     }
 
     public void setTables(ConfigObject tables) {

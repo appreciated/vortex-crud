@@ -1,11 +1,17 @@
 package com.github.appreciated.flow_cms.config.model;
 
+import com.typesafe.config.Optional;
+
 public class FieldConfig {
 
     private String type;
+    @Optional
     private boolean primary;
+    @Optional
     private boolean required;
+    @Optional
     private int max_length;
+    @Optional
     private String default_value;
 
     public String getType() {
