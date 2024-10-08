@@ -5,7 +5,6 @@ import com.github.appreciated.flow_cms.config.model.TableConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.*;

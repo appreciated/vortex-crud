@@ -1,9 +1,6 @@
 package com.github.appreciated.flow_cms.config.model;
 
-import com.typesafe.config.ConfigObject;
 import com.typesafe.config.Optional;
-
-import static com.github.appreciated.flow_cms.config.model.ConfigModelUtil.toStringMapWithValueType;
 
 public class RouteConfig {
 

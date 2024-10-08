@@ -1,7 +1,6 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.components.FlowCmsComponentFactory;
 import com.github.appreciated.flow_cms.ui.route_renderer.DefaultRouteRendererFactoryImpl;
 import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
 import com.vaadin.flow.component.Component;
@@ -9,7 +8,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A dynamic route component that renders different views based on the route path.
