@@ -10,6 +10,8 @@ public class RouteConfig {
     private String table;
     private ConfigObject title;
     private String renderer;
+    @Optional
+    private boolean is_default;
     private RenderConfig render_configuration;
     @Optional
     private AccessControlConfig access_control;
@@ -56,6 +58,18 @@ public class RouteConfig {
 
     public Translatable getTitleConfig() {
         return new Translatable(toStringMapWithValueType(title, String.class));
+    }
+
+    public boolean isDefault() {
+        return is_default;
+    }
+
+    public boolean isIs_default() {
+        return is_default;
+    }
+
+    public void setIs_default(boolean is_default) {
+        this.is_default = is_default;
     }
 }
 
