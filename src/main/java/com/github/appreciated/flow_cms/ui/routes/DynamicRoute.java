@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * A dynamic route component that renders different views based on the route path.
  * It uses the {@link FlowCmsConfigService} to retrieve configuration details and the {@link DefaultRouteRendererFactoryImpl}
  * to generate the appropriate view container for the specified route.
- * Implements BeforeEnterObserver to handle navigation events and dynamically update the view.
+ * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
 @Route(value = "view/:path*", layout = ProxyRouterLayout.class)
@@ -24,11 +24,6 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     private final FlowCmsConfigService flowCmsConfigService;
     private final DefaultRouteRendererFactoryImpl containerFactory;
 
-    /**
-     * Constructor for DynamicView.
-     *
-     * @param flowCmsConfigService the service to retrieve configuration for the routes
-     */
     public DynamicRoute(@Autowired FlowCmsConfigService flowCmsConfigService, @Autowired DefaultRouteRendererFactoryImpl containerFactory) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.containerFactory = containerFactory;
