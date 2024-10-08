@@ -10,9 +10,9 @@ public class FieldConfig {
     @Optional
     private boolean required;
     @Optional
-    private int max_length;
+    private int maxLength;
     @Optional
-    private String default_value;
+    private String defaultValue;
 
     public String getType() {
         return type;
@@ -38,19 +38,19 @@ public class FieldConfig {
         this.required = required;
     }
 
-    public int getMax_length() {
-        return max_length;
+    public int getMaxLength() {
+        return maxLength;
     }
 
-    public void setMax_length(int max_length) {
-        this.max_length = max_length;
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
     }
 
-    public String getDefault_value() {
-        return default_value;
+    public String getDefaultValue() {
+        return defaultValue;
     }
 
-    public void setDefault_value(String default_value) {
-        this.default_value = default_value;
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 }

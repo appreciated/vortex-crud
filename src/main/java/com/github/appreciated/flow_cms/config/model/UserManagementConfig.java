@@ -8,9 +8,9 @@ public class UserManagementConfig {
 
     private boolean enabled;
     @Optional
-    private AccessControlConfig access_control;
+    private AccessControlConfig accessControl;
     private boolean registration;
-    private List<AdditionalTableField> additional_table_fields;
+    private List<AdditionalTableField> additionalTableFields;
 
     public boolean isEnabled() {
         return enabled;
@@ -20,12 +20,12 @@ public class UserManagementConfig {
         this.enabled = enabled;
     }
 
-    public AccessControlConfig getAccess_control() {
-        return access_control;
+    public AccessControlConfig getAccessControl() {
+        return accessControl;
     }
 
-    public void setAccess_control(AccessControlConfig access_control) {
-        this.access_control = access_control;
+    public void setAccessControl(AccessControlConfig accessControl) {
+        this.accessControl = accessControl;
     }
 
     public boolean isRegistration() {
@@ -36,12 +36,12 @@ public class UserManagementConfig {
         this.registration = registration;
     }
 
-    public List<AdditionalTableField> getAdditional_table_fields() {
-        return additional_table_fields;
+    public List<AdditionalTableField> getAdditionalTableFields() {
+        return additionalTableFields;
     }
 
-    public void setAdditional_table_fields(List<AdditionalTableField> additional_table_fields) {
-        this.additional_table_fields = additional_table_fields;
+    public void setAdditionalTableFields(List<AdditionalTableField> additionalTableFields) {
+        this.additionalTableFields = additionalTableFields;
     }
 }
 

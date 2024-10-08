@@ -16,7 +16,7 @@ public class DefaultEntityItemRendererFactoryImpl implements FlowCmsEntityItemRe
     HashMap<String, EntityItemRenderer> rendererHashMap = new HashMap<>();
 
     public DefaultEntityItemRendererFactoryImpl() {
-        rendererHashMap.put("entity_item_card_renderer", new DefaultEntityItemCardRendererImpl());
+        rendererHashMap.put("entity-item-card-renderer", new DefaultEntityItemCardRendererImpl());
     }
 
     public EntityItemRenderer getRenderer(ItemRendererConfig routeConfig) {

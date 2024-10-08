@@ -10,7 +10,7 @@ import static com.github.appreciated.flow_cms.config.model.ConfigModelUtil.toStr
 public class ApplicationConfig {
     private String name;
     @Optional
-    private UserManagementConfig user_management;
+    private UserManagementConfig userManagement;
     @Optional
     private ConfigObject selects;
     @Optional
@@ -28,12 +28,12 @@ public class ApplicationConfig {
         this.name = name;
     }
 
-    public UserManagementConfig getUser_management() {
-        return user_management;
+    public UserManagementConfig getUserManagement() {
+        return userManagement;
     }
 
-    public void setUser_management(UserManagementConfig user_management) {
-        this.user_management = user_management;
+    public void setUserManagement(UserManagementConfig userManagement) {
+        this.userManagement = userManagement;
     }
 
     public ConfigObject getSelects() {

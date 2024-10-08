@@ -64,7 +64,7 @@ public class DatabaseSchemaChecker {
 
             FieldConfig expectedConfig = expectedColumns.get(columnName.toLowerCase());
             if (expectedConfig == null) {
-                throw new PersistenceException("The column '" + columnName + "' is not expected in table '" + tableName + "'.");
+                throw new PersistenceException("The column '" + columnName + "' was not found in table '" + tableName + "'.");
             }
 
             Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getType().toUpperCase());

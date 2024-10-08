@@ -8,9 +8,9 @@ public class FormField {
 
     private String field;
     @Optional
-    private boolean read_only;
+    private boolean readOnly;
     @Optional
-    private List<String> read_only_for_roles;
+    private List<String> readOnlyForRoles;
 
     public String getField() {
         return field;
@@ -20,19 +20,19 @@ public class FormField {
         this.field = field;
     }
 
-    public boolean isRead_only() {
-        return read_only;
+    public boolean isReadOnly() {
+        return readOnly;
     }
 
-    public void setRead_only(boolean read_only) {
-        this.read_only = read_only;
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
-    public List<String> getRead_only_for_roles() {
-        return read_only_for_roles;
+    public List<String> getReadOnlyForRoles() {
+        return readOnlyForRoles;
     }
 
-    public void setRead_only_for_roles(List<String> read_only_for_roles) {
-        this.read_only_for_roles = read_only_for_roles;
+    public void setReadOnlyForRoles(List<String> readOnlyForRoles) {
+        this.readOnlyForRoles = readOnlyForRoles;
     }
 }

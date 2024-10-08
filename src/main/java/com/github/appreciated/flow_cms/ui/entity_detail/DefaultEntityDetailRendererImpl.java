@@ -44,7 +44,7 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
         VerticalLayout layout = new VerticalLayout();
         FormLayout form = new FormLayout();
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
-        DetailRenderer itemRendererConfig = routeConfig.getRender_configuration().getDetail_renderer();
+        DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
 
         Map<String, Component> fieldComponents = new HashMap<>();
 

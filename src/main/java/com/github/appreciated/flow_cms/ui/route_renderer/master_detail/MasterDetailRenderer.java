@@ -41,12 +41,12 @@ public class MasterDetailRenderer extends HorizontalLayout {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
-        RenderConfig renderConfiguration = config.getRender_configuration();
-        this.itemRenderer = renderConfiguration.getItem_renderer();
+        RenderConfig renderConfiguration = config.getRenderConfiguration();
+        this.itemRenderer = renderConfiguration.getItemRenderer();
         this.entityItemRenderer = entityCardRendererFactory.getRenderer(itemRenderer);
         this.table = config.getTable();
 
-        DetailRenderer detailRendererConfig = renderConfiguration.getDetail_renderer();
+        DetailRenderer detailRendererConfig = renderConfiguration.getDetailRenderer();
         this.detailRenderer = detailRendererFactory.getRenderer(detailRendererConfig);
 
         detailLayout.setHeightFull();

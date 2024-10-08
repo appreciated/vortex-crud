@@ -5,11 +5,11 @@ import com.typesafe.config.Optional;
 public class ItemRendererConfig {
 
     private String type;
-    private String title_field;
+    private String titleField;
     @Optional
-    private String description_field;
+    private String descriptionField;
     @Optional
-    private String image_field;
+    private String imageField;
 
     public String getType() {
         return type;
@@ -19,27 +19,27 @@ public class ItemRendererConfig {
         this.type = type;
     }
 
-    public String getTitle_field() {
-        return title_field;
+    public String getTitleField() {
+        return titleField;
     }
 
-    public void setTitle_field(String title_field) {
-        this.title_field = title_field;
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
     }
 
-    public String getDescription_field() {
-        return description_field;
+    public String getDescriptionField() {
+        return descriptionField;
     }
 
-    public void setDescription_field(String description_field) {
-        this.description_field = description_field;
+    public void setDescriptionField(String descriptionField) {
+        this.descriptionField = descriptionField;
     }
 
-    public String getImage_field() {
-        return image_field;
+    public String getImageField() {
+        return imageField;
     }
 
-    public void setImage_field(String image_field) {
-        this.image_field = image_field;
+    public void setImageField(String imageField) {
+        this.imageField = imageField;
     }
 }

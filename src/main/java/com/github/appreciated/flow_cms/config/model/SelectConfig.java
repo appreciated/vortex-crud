@@ -4,13 +4,13 @@ import java.util.Map;
 
 public class SelectConfig {
 
-    private Map<String, Translatable> task_status;
+    private Map<String, Translatable> taskStatus;
 
-    public Map<String, Translatable> getTask_status() {
-        return task_status;
+    public Map<String, Translatable> getTaskStatus() {
+        return taskStatus;
     }
 
-    public void setTask_status(Map<String, Translatable> task_status) {
-        this.task_status = task_status;
+    public void setTaskStatus(Map<String, Translatable> taskStatus) {
+        this.taskStatus = taskStatus;
     }
 }

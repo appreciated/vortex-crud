@@ -11,10 +11,10 @@ public class RouteConfig {
     private ConfigObject title;
     private String renderer;
     @Optional
-    private boolean is_default;
-    private RenderConfig render_configuration;
+    private boolean defaultRoute;
+    private RenderConfig renderConfiguration;
     @Optional
-    private AccessControlConfig access_control;
+    private AccessControlConfig accessControl;
 
     public String getTable() {
         return table;
@@ -40,36 +40,32 @@ public class RouteConfig {
         this.renderer = renderer;
     }
 
-    public RenderConfig getRender_configuration() {
-        return render_configuration;
+    public RenderConfig getRenderConfiguration() {
+        return renderConfiguration;
     }
 
-    public void setRender_configuration(RenderConfig render_configuration) {
-        this.render_configuration = render_configuration;
+    public void setRenderConfiguration(RenderConfig renderConfiguration) {
+        this.renderConfiguration = renderConfiguration;
     }
 
-    public AccessControlConfig getAccess_control() {
-        return access_control;
+    public AccessControlConfig getAccessControl() {
+        return accessControl;
     }
 
-    public void setAccess_control(AccessControlConfig access_control) {
-        this.access_control = access_control;
+    public void setAccessControl(AccessControlConfig accessControl) {
+        this.accessControl = accessControl;
     }
 
     public Translatable getTitleConfig() {
         return new Translatable(toStringMapWithValueType(title, String.class));
     }
 
-    public boolean isDefault() {
-        return is_default;
+    public boolean isDefaultRoute() {
+        return defaultRoute;
     }
 
-    public boolean isIs_default() {
-        return is_default;
-    }
-
-    public void setIs_default(boolean is_default) {
-        this.is_default = is_default;
+    public void setDefaultRoute(boolean defaultRoute) {
+        this.defaultRoute = defaultRoute;
     }
 }
 

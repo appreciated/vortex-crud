@@ -5,33 +5,33 @@ import com.typesafe.config.Optional;
 public class RenderConfig {
 
     @Optional
-    private boolean inline_edit;
+    private boolean inlineEdit;
     @Optional
-    private ItemRendererConfig item_renderer;
+    private ItemRendererConfig itemRenderer;
     @Optional
-    private DetailRenderer detail_renderer;
+    private DetailRenderer detailRenderer;
 
-    public boolean isInline_edit() {
-        return inline_edit;
+    public boolean isInlineEdit() {
+        return inlineEdit;
     }
 
-    public void setInline_edit(boolean inline_edit) {
-        this.inline_edit = inline_edit;
+    public void setInlineEdit(boolean inlineEdit) {
+        this.inlineEdit = inlineEdit;
     }
 
-    public ItemRendererConfig getItem_renderer() {
-        return item_renderer;
+    public ItemRendererConfig getItemRenderer() {
+        return itemRenderer;
     }
 
-    public void setItem_renderer(ItemRendererConfig item_renderer) {
-        this.item_renderer = item_renderer;
+    public void setItemRenderer(ItemRendererConfig itemRenderer) {
+        this.itemRenderer = itemRenderer;
     }
 
-    public DetailRenderer getDetail_renderer() {
-        return detail_renderer;
+    public DetailRenderer getDetailRenderer() {
+        return detailRenderer;
     }
 
-    public void setDetail_renderer(DetailRenderer detail_renderer) {
-        this.detail_renderer = detail_renderer;
+    public void setDetailRenderer(DetailRenderer detailRenderer) {
+        this.detailRenderer = detailRenderer;
     }
 }

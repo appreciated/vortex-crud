@@ -35,7 +35,7 @@ public class FlowCmsDefaultRouteRedirectConfiguration implements VaadinServiceIn
         List<Map.Entry<String, RouteConfig>> defaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
-                .filter(configEntry -> configEntry.getValue().isDefault()).toList();
+                .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
         if (defaultRoutes.size() > 1) {
             throw new IllegalStateException("More than one default route configured");
         } else {

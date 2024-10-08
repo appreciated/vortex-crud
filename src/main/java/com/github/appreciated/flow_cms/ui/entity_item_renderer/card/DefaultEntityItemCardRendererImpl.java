@@ -30,8 +30,8 @@ public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
 
         // Optional image
         Image image = null;
-        if (itemRendererConfig.getImage_field() != null) {
-            image = new Image(itemRendererConfig.getImage_field(), "Entity Image");
+        if (itemRendererConfig.getImageField() != null) {
+            image = new Image(itemRendererConfig.getImageField(), "Entity Image");
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
@@ -42,12 +42,12 @@ public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        Text title = new Text((String) entity.get(itemRendererConfig.getTitle_field()));
+        Text title = new Text((String) entity.get(itemRendererConfig.getTitleField()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
-        if (itemRendererConfig.getDescription_field() != null) {
-            Text description = new Text((String) entity.get(itemRendererConfig.getDescription_field()));
+        if (itemRendererConfig.getDescriptionField() != null) {
+            Text description = new Text((String) entity.get(itemRendererConfig.getDescriptionField()));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }

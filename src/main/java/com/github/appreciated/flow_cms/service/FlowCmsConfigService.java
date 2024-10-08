@@ -5,6 +5,7 @@ import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigParseOptions;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,7 +19,8 @@ public class FlowCmsConfigService {
     private final ApplicationConfig configuration;
 
     public FlowCmsConfigService() {
-        Config config = ConfigFactory.parseResources(FlowCmsConfigService.class.getClassLoader(), "flow-cms-config.conf");
+        ConfigParseOptions defaults = ConfigParseOptions.defaults();
+        Config config = ConfigFactory.parseResources(FlowCmsConfigService.class.getClassLoader(), "flow-cms-config.conf", defaults);
         this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), ApplicationConfig.class);
         if (config.isEmpty()) {
             throw new IllegalStateException("No flow cms config found");

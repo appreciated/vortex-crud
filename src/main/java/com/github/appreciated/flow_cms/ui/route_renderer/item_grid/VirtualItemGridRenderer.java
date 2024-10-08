@@ -36,8 +36,8 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
     public VirtualItemGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        itemRenderer = config.getRender_configuration().getItem_renderer();
-        this.entityItemRenderer = entityCardRendererFactory.getRenderer(config.getRender_configuration().getItem_renderer());
+        itemRenderer = config.getRenderConfiguration().getItemRenderer();
+        this.entityItemRenderer = entityCardRendererFactory.getRenderer(config.getRenderConfiguration().getItemRenderer());
         setSizeFull();
         this.addAttachListener(event -> new Thread(() -> {
             try {
