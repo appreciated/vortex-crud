@@ -35,11 +35,11 @@ public class DefaultRouterLayout extends AppLayout {
 
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1(flowCmsConfigService.getApplicationName());
+        H1 title = new H1(getTranslation(flowCmsConfigService.getApplicationName()));
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
-        SideNav nav = getSideNav(attachEvent.getUI());
+        SideNav nav = getSideNav();
 
         Scroller scroller = new Scroller(nav);
         scroller.setClassName(LumoUtility.Padding.SMALL);
@@ -48,7 +48,7 @@ public class DefaultRouterLayout extends AppLayout {
         addToNavbar(toggle, title);
     }
 
-    private SideNav getSideNav(UI ui) {
+    private SideNav getSideNav() {
         SideNav nav = new SideNav();
         Set<Map.Entry<String, RouteConfig>> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().entrySet();
         keys.forEach(configEntry -> nav.addItem(new SideNavItem(getTranslation(configEntry.getValue().getTitle()), "/view/" + configEntry.getKey(), VaadinIcon.DASHBOARD.create())));
