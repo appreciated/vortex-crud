@@ -42,11 +42,11 @@ public class FlowCmsDefaultRouteRedirectConfiguration implements VaadinServiceIn
             defaultRoute = defaultRoutes.stream().findFirst();
         }
         if (defaultRoute.isPresent()) {
-            RouteConfiguration.forApplicationScope().setRoute("", ConditionalRedirectView.class);
+            RouteConfiguration.forApplicationScope().setRoute("", FlowCmsDefaultRedirect.class);
         }
     }
 
-    public static class ConditionalRedirectView extends Div implements BeforeEnterObserver {
+    public static class FlowCmsDefaultRedirect extends Div implements BeforeEnterObserver {
 
         @Override
         public void beforeEnter(BeforeEnterEvent event) {
