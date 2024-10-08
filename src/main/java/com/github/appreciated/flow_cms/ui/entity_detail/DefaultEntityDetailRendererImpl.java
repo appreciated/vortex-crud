@@ -17,6 +17,12 @@ import com.vaadin.flow.data.binder.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Default implementation of the EntityDetailRenderer interface.
+ * This class handles rendering entity details in a form layout and provides functionalities
+ * such as saving and deleting entities.
+ */
+
 public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
 
     private final DefaultFlowCmsComponentFactoryImpl componentFactory;

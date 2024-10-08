@@ -8,6 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * Factory implementation for creating entity detail renderers.
+ * It initializes and provides the appropriate renderer based on the DetailRenderer configuration.
+ */
+
 @Service
 public class DefaultEntityDetailRendererFactoryImpl implements FlowCmsEntityDetailRendererFactory {
 
@@ -21,3 +26,5 @@ public class DefaultEntityDetailRendererFactoryImpl implements FlowCmsEntityDeta
         return rendererHashMap.get(routeConfig.getType());
     }
 }
+
+

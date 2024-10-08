@@ -17,6 +17,12 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A custom VirtualList implementation for rendering entity items in a responsive grid layout with lazy loading.
+ * This renderer dynamically adjusts the number of columns based on the browser window size and supports configuring card widths.
+ * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
+ */
+
 public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
 
     private final String table;

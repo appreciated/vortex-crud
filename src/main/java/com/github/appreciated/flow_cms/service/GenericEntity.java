@@ -3,7 +3,13 @@ package com.github.appreciated.flow_cms.service;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A generic entity class representing a map of properties.
+ * Provides methods for accessing, updating, and retrieving properties within the entity.
+ */
+
 public class GenericEntity {
+
     private final Map<String, Object> properties;
 
     public GenericEntity(Map<String, Object> properties) {
@@ -33,4 +39,5 @@ public class GenericEntity {
     public String getFirstProperty() {
         return null;
     }
+
 }

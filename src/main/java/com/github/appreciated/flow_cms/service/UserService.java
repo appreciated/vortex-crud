@@ -9,10 +9,19 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for managing users.
+ * Provides methods for finding, saving, and deleting user entries using the UserRepository.
+ */
+
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public List<User> findAll() {
         return userRepository.findAll();

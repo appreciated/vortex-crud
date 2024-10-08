@@ -13,6 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Default implementation of the FlowCmsComponentFactory interface.
+ * This factory provides components based on the configuration specified in FieldConfig,
+ * supporting various component types like text fields, text areas, date pickers, and dropdowns.
+ */
+
+
 @Service
 public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFactory {
 

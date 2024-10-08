@@ -12,7 +12,10 @@ import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Depending on the route a different component should be rendered using the {@link FlowCmsComponentFactory}.
+ * A dynamic route component that renders different views based on the route path.
+ * It uses the {@link FlowCmsConfigService} to retrieve configuration details and the {@link DefaultRouteRendererFactoryImpl}
+ * to generate the appropriate view container for the specified route.
+ * Implements BeforeEnterObserver to handle navigation events and dynamically update the view.
  */
 
 @Route(value = "view/:path*", layout = ProxyRouterLayout.class)

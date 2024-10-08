@@ -18,6 +18,13 @@ import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+/**
+ * A layout component implementing a Master-Detail pattern using a VirtualList and a detail view.
+ * This renderer dynamically displays a list of entities and their detailed information side by side,
+ * supporting click events to update the detail view based on the selected item.
+ * It uses lazy loading for efficient data retrieval and rendering.
+ */
+
 public class MasterDetailRenderer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();

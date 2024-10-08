@@ -8,10 +8,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for managing dynamic entities using an EntityManager.
+ * Provides methods for CRUD operations and lazy loading data from the database.
+ */
+
 @Service
 public class DynamicEntityManagerService {
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public DynamicEntityManagerService(EntityManager entityManager) {
         this.entityManager = entityManager;

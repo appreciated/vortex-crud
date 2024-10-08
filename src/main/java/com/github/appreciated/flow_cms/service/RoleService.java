@@ -8,10 +8,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for managing roles.
+ * Provides methods for finding, saving, and deleting roles using the RoleRepository.
+ */
+
 @Service
 public class RoleService {
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    public RoleService(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     public List<Role> findAll() {
         return roleRepository.findAll();

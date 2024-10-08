@@ -7,6 +7,11 @@ import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for loading and providing access to the CMS configuration.
+ * Reads configuration from a resource file and offers methods to retrieve route and application settings.
+ */
+
 @Service
 public class FlowCmsConfigService {
 

@@ -12,6 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * Default implementation of the FlowCmsRouteRendererFactory interface.
+ * This factory provides different route renderers such as Master-Detail, Grid, and Item views
+ * based on the RouteConfig configuration.
+ */
+
 @Service
 public class DefaultRouteRendererFactoryImpl implements FlowCmsRouteRendererFactory {
 

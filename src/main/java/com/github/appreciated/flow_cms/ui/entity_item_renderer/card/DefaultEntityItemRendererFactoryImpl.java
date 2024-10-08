@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+/**
+ * Factory implementation for creating entity item renderers.
+ * It initializes and provides the appropriate renderer based on the ItemRendererConfig configuration.
+ */
+
 @Service
 public class DefaultEntityItemRendererFactoryImpl implements FlowCmsEntityItemRendererFactory {
 

@@ -16,6 +16,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Default implementation of an application layout using Vaadin's AppLayout.
+ * It configures the navigation drawer and the application title based on the FlowCmsConfigService configuration.
+ */
+
 public class DefaultRouterLayout extends AppLayout {
 
     private final FlowCmsConfigService flowCmsConfigService;

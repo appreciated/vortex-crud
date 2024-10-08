@@ -9,6 +9,11 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+/**
+ * Default implementation of the EntityItemRenderer interface for rendering entity items as cards.
+ * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
+ */
+
 public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
 
     @Override

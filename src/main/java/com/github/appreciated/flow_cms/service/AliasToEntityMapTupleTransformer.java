@@ -5,6 +5,11 @@ import org.hibernate.query.TupleTransformer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A TupleTransformer implementation that converts query results into a GenericEntity object.
+ * Transforms each tuple into a map where column aliases are used as keys.
+ */
+
 public class AliasToEntityMapTupleTransformer implements TupleTransformer<GenericEntity> {
 
     @Override

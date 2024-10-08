@@ -9,6 +9,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 
 import java.util.List;
 
+/**
+ * A custom Grid component for displaying GenericEntity objects with lazy loading.
+ * This grid is configured with a data provider that retrieves and counts records dynamically based on the specified table in the RouteConfig.
+ */
+
 public class GridRenderer extends Grid<GenericEntity> {
 
     public GridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
