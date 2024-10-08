@@ -16,7 +16,7 @@ public class DatabaseSchemaChecker {
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public DatabaseSchemaChecker(@Autowired EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
+    public DatabaseSchemaChecker(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
         this.entityManager = entityManager;
 
         typeMappings = new HashMap<>();

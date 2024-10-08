@@ -24,7 +24,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     private final FlowCmsConfigService flowCmsConfigService;
     private final DefaultRouteRendererFactoryImpl containerFactory;
 
-    public DynamicRoute(@Autowired FlowCmsConfigService flowCmsConfigService, @Autowired DefaultRouteRendererFactoryImpl containerFactory) {
+    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, DefaultRouteRendererFactoryImpl containerFactory) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.containerFactory = containerFactory;
         setSizeFull();
