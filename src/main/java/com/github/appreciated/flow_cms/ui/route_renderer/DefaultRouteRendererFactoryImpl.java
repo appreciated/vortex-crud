@@ -15,9 +15,8 @@ import java.util.HashMap;
 @Service
 public class DefaultRouteRendererFactoryImpl implements FlowCmsRouteRendererFactory {
 
-    HashMap<String, RouteRenderer> rendererHashMap = new HashMap<>();
-
     private final DynamicEntityManagerService dynamicEntityManager;
+    HashMap<String, RouteRenderer> rendererHashMap = new HashMap<>();
 
     public DefaultRouteRendererFactoryImpl(DynamicEntityManagerService dynamicEntityManager, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
         this.dynamicEntityManager = dynamicEntityManager;

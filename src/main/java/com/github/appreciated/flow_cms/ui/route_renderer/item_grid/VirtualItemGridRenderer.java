@@ -22,10 +22,9 @@ public class VirtualItemGridRenderer extends VirtualList<EntityItemList> {
     private final String table;
     private final EntityItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
+    private final DynamicEntityManagerService entityManagerService;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
-    private final DynamicEntityManagerService entityManagerService;
-
     private int currentNumberOfColumns = -1;
 
     public VirtualItemGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {

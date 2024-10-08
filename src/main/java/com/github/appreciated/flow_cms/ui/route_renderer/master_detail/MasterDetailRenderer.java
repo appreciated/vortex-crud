@@ -65,7 +65,7 @@ public class MasterDetailRenderer extends HorizontalLayout {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
             Component component = entityItemRenderer.renderItem(itemRenderer, item, null);
             Div div = new Div(component);
-            div.getStyle().set("padding","5px 5px 0px 5px");
+            div.getStyle().set("padding", "5px 5px 0px 5px");
             div.addClickListener(event -> onItemClick(item));
             return div;
         }));

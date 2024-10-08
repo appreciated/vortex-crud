@@ -80,7 +80,7 @@ public class DatabaseSchemaChecker {
     }
 
     private void checkPrimaryKey(String tableName) {
-       // TODO
+        // TODO
     }
 
     private void checkForeignKeys(String tableName, Map<String, FieldConfig> expectedColumns) {

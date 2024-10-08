@@ -14,12 +14,12 @@ public class TableConfig {
         return fields;
     }
 
-    public Map<String, FieldConfig>  getFieldsConfig() {
-        return  toStringMapWithValueType(fields, FieldConfig.class);
-    }
-
     public void setFields(ConfigObject fields) {
         this.fields = fields;
+    }
+
+    public Map<String, FieldConfig> getFieldsConfig() {
+        return toStringMapWithValueType(fields, FieldConfig.class);
     }
 }
 

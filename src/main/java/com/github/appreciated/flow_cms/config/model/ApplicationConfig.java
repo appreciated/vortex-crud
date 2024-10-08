@@ -40,12 +40,12 @@ public class ApplicationConfig {
         return selects;
     }
 
-    public Map<String, SelectConfig> getSelectsConfig() {
-        return toStringMapWithValueType(selects, SelectConfig.class);
-    }
-
     public void setSelects(ConfigObject selects) {
         this.selects = selects;
+    }
+
+    public Map<String, SelectConfig> getSelectsConfig() {
+        return toStringMapWithValueType(selects, SelectConfig.class);
     }
 
     public VersioningConfig getVersioning() {
@@ -68,24 +68,24 @@ public class ApplicationConfig {
         return tables;
     }
 
-    public Map<String, TableConfig> getTablesConfig(){
-        return toStringMapWithValueType(tables, TableConfig.class);
-    }
-
     public void setTables(ConfigObject tables) {
         this.tables = tables;
+    }
+
+    public Map<String, TableConfig> getTablesConfig() {
+        return toStringMapWithValueType(tables, TableConfig.class);
     }
 
     public ConfigObject getRoutes() {
         return routes;
     }
 
-    public Map<String, RouteConfig> getRoutesConfig(){
-        return toStringMapWithValueType(routes, RouteConfig.class);
-    }
-
     public void setRoutes(ConfigObject routes) {
         this.routes = routes;
+    }
+
+    public Map<String, RouteConfig> getRoutesConfig() {
+        return toStringMapWithValueType(routes, RouteConfig.class);
     }
 
 }

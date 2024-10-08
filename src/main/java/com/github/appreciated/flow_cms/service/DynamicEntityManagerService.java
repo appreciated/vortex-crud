@@ -17,6 +17,10 @@ public class DynamicEntityManagerService {
         this.entityManager = entityManager;
     }
 
+    private static String getTable(String table) {
+        return table.toUpperCase();
+    }
+
     /**
      * Create (Insert) a new record into the given table with the provided values.
      *
@@ -140,9 +144,5 @@ public class DynamicEntityManagerService {
     @Transactional
     public int count(String table) {
         return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + getTable(table)).getSingleResult());
-    }
-
-    private static String getTable(String table) {
-        return table.toUpperCase();
     }
 }
