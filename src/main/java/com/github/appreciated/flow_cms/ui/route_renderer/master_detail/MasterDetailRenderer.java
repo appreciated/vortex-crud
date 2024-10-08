@@ -51,10 +51,10 @@ public class MasterDetailRenderer extends HorizontalLayout {
 
         detailLayout.setHeightFull();
         detailLayout.setWidth("unset");
-        setFlexGrow(3, detailLayout);
+        detailLayout.getStyle().set("flex", "4 1 400px");
 
         virtualList.setHeightFull();
-        setFlexGrow(1, virtualList);
+        virtualList.getStyle().set("flex", "1 1 200px");
 
         // Layout konfigurieren
         add(virtualList, detailLayout);
