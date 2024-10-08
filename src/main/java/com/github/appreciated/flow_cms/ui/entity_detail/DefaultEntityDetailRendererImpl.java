@@ -63,7 +63,7 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
         }
 
         // Save button
-        Button saveButton = new Button("Save", event -> {
+        Button saveButton = new Button(layout.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
                 entityManagerService.updateRecordById(table, entity.get("id"), entity);
@@ -78,7 +78,7 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
         });
 
         // Delete button
-        Button deleteButton = new Button("Delete", event -> {
+        Button deleteButton = new Button(layout.getTranslation("button.delete.title"), event -> {
             entityManagerService.deleteRecordById(table, entity.get("id"));
             Div notification = new Div();
             notification.setText("Entity deleted successfully.");
