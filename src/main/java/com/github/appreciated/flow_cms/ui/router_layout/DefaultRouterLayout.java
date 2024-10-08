@@ -51,7 +51,7 @@ public class DefaultRouterLayout extends AppLayout {
     private SideNav getSideNav(UI ui) {
         SideNav nav = new SideNav();
         Set<Map.Entry<String, RouteConfig>> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().entrySet();
-        keys.forEach(configEntry -> nav.addItem(new SideNavItem(configEntry.getValue().getTitleConfig().getTranslation(ui), "/view/" + configEntry.getKey(), VaadinIcon.DASHBOARD.create())));
+        keys.forEach(configEntry -> nav.addItem(new SideNavItem(getTranslation(configEntry.getValue().getTitle()), "/view/" + configEntry.getKey(), VaadinIcon.DASHBOARD.create())));
         return nav;
     }
 

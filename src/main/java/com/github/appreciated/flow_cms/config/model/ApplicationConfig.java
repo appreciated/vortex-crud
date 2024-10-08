@@ -20,6 +20,8 @@ public class ApplicationConfig {
     private ConfigObject tables;
     private ConfigObject routes;
 
+    private String i18nBundlePrefix;
+
     public String getName() {
         return name;
     }
@@ -88,4 +90,11 @@ public class ApplicationConfig {
         return toStringMapWithValueType(routes, RouteConfig.class);
     }
 
+    public String getI18nBundlePrefix() {
+        return i18nBundlePrefix;
+    }
+
+    public void setI18nBundlePrefix(String i18nBundlePrefix) {
+        this.i18nBundlePrefix = i18nBundlePrefix;
+    }
 }

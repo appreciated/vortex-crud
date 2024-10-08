@@ -8,7 +8,7 @@ import static com.github.appreciated.flow_cms.config.model.ConfigModelUtil.toStr
 public class RouteConfig {
 
     private String table;
-    private ConfigObject title;
+    private String title;
     private String renderer;
     @Optional
     private boolean defaultRoute;
@@ -24,11 +24,11 @@ public class RouteConfig {
         this.table = table;
     }
 
-    public ConfigObject getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(ConfigObject title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -54,10 +54,6 @@ public class RouteConfig {
 
     public void setAccessControl(AccessControlConfig accessControl) {
         this.accessControl = accessControl;
-    }
-
-    public Translatable getTitleConfig() {
-        return new Translatable(toStringMapWithValueType(title, String.class));
     }
 
     public boolean isDefaultRoute() {
