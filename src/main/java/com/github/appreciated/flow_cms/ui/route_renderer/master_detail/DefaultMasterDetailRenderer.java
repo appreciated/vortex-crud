@@ -25,7 +25,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
  * It uses lazy loading for efficient data retrieval and rendering.
  */
 
-public class MasterDetailRenderer extends HorizontalLayout {
+public class DefaultMasterDetailRenderer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
@@ -37,7 +37,7 @@ public class MasterDetailRenderer extends HorizontalLayout {
     private final String table;
     private final EntityDetailRenderer detailRenderer;
 
-    public MasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
+    public DefaultMasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;

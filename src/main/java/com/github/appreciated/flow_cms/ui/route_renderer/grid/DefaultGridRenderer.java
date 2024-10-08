@@ -14,9 +14,9 @@ import java.util.List;
  * This grid is configured with a data provider that retrieves and counts records dynamically based on the specified table in the RouteConfig.
  */
 
-public class GridRenderer extends Grid<GenericEntity> {
+public class DefaultGridRenderer extends Grid<GenericEntity> {
 
-    public GridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+    public DefaultGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
         String table = config.getTable();
 
         // Virtual List mit Lazy Loading einrichten
