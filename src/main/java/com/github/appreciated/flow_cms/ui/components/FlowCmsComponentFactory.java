@@ -12,6 +12,6 @@ import com.vaadin.flow.component.HasValue;
 
 public interface FlowCmsComponentFactory {
 
-    <Comp extends Component & HasValue> Comp createComponent(FieldConfig type);
+    <Comp extends Component & HasValue> Comp createComponent(String table, String field, FieldConfig type);
 
 }

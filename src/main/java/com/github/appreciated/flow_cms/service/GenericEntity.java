@@ -28,6 +28,10 @@ public class GenericEntity {
         return properties.get(name);
     }
 
+    public String getString(String name) {
+        return (String) properties.get(name);
+    }
+
     public void put(String name, Object value) {
         this.properties.put(name, value);
     }

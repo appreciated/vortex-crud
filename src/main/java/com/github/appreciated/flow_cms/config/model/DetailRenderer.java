@@ -6,6 +6,7 @@ public class DetailRenderer {
 
     private String type;
     private List<FormField> children;
+    public  String titleField;
 
     public String getType() {
         return type;
@@ -21,5 +22,13 @@ public class DetailRenderer {
 
     public void setChildren(List<FormField> children) {
         this.children = children;
+    }
+
+    public String getTitleField() {
+        return titleField;
+    }
+
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
     }
 }

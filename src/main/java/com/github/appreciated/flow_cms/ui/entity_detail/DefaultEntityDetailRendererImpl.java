@@ -10,6 +10,7 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -41,9 +42,20 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
 
         TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
 
+        H2WithHasValue titleComponent = new H2WithHasValue();
+
         VerticalLayout layout = new VerticalLayout();
+        layout.setPadding(false);
         FormLayout form = new FormLayout();
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
+
+        binder.bind(
+                titleComponent,
+                entity1 -> layout.getTranslation(routeConfig.getTitle()) + "/" + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleField()),
+                (entity1, string) -> {
+                }
+        );
+
         DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
 
         Map<String, Component> fieldComponents = new HashMap<>();
@@ -55,12 +67,18 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
             String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
 
-            Component component = componentFactory.createComponent(fieldConfig);
-            binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
+            Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
+            if (fieldConfig.getType().equals("date") || fieldConfig.getType().equals("datetime")) {
+
+            } else {
+                binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
+            }
 
             form.add(component);
             fieldComponents.put(fieldName, component);
         }
+
+        binder.setBean(entity);
 
         // Save button
         Button saveButton = new Button(layout.getTranslation("button.save.title"), event -> {
@@ -86,7 +104,7 @@ public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
         });
 
         // Add the form and buttons to the layout
-        layout.add(form, saveButton, deleteButton);
+        layout.add(new HorizontalLayout(titleComponent, saveButton, deleteButton), form);
         return layout;
     }
 }

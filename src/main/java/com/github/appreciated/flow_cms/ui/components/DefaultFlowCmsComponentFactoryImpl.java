@@ -1,17 +1,16 @@
 package com.github.appreciated.flow_cms.ui.components;
 
+import com.github.appreciated.flow_cms.config.model.ApplicationConfig;
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
+import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Default implementation of the FlowCmsComponentFactory interface.
@@ -23,21 +22,22 @@ import java.util.function.Supplier;
 @Service
 public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFactory {
 
-    private final Map<String, Supplier<Component>> componentMap = new HashMap<>();
+    private final Map<String,ComponentFunction> componentMap = new HashMap<>();
 
-    public DefaultFlowCmsComponentFactoryImpl() {
-        componentMap.put("text", TextField::new);
-        componentMap.put("textarea", TextArea::new);
-        componentMap.put("date", DatePicker::new);
-        componentMap.put("dropdown", ComboBox::new);
-        componentMap.put("select", ComboBox::new);
+    public DefaultFlowCmsComponentFactoryImpl(FlowCmsConfigService flowCmsConfigService) {
+        ApplicationConfig configuration = flowCmsConfigService.getConfiguration();
+        componentMap.put("text", new DefaultTextFieldFunction());
+        componentMap.put("textarea", new DefaultTextAreaFunction());
+        componentMap.put("date", new DefaultDatePickerFunction());
+        componentMap.put("select", new DefaultComboBoxFunction(configuration.getSelects(), configuration.getTablesConfig()));
+        componentMap.put("dropdown", new DefaultComboBoxFunction(configuration.getSelects(), configuration.getTablesConfig()));
     }
 
     @Override
-    public <Comp extends Component & HasValue> Comp createComponent(FieldConfig type) {
-        Supplier<Component> componentSupplier = componentMap.get(type.getType());
+    public <Comp extends Component & HasValue> Comp createComponent(String table, String field, FieldConfig type) {
+        ComponentFunction componentSupplier = componentMap.get(type.getType());
         if (componentSupplier != null) {
-            return (Comp) componentSupplier.get();
+            return (Comp) componentSupplier.createComponent(table, field, type);
         }
         throw new IllegalArgumentException("Unknown component type: " + type.getType());
     }

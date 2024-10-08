@@ -46,10 +46,6 @@ public class ApplicationConfig {
         this.selects = selects;
     }
 
-    public Map<String, SelectConfig> getSelectsConfig() {
-        return toStringMapWithValueType(selects, SelectConfig.class);
-    }
-
     public VersioningConfig getVersioning() {
         return versioning;
     }

@@ -13,6 +13,8 @@ public class FieldConfig {
     private int maxLength;
     @Optional
     private String defaultValue;
+    @Optional
+    private String values;
 
     public String getType() {
         return type;
@@ -52,5 +54,13 @@ public class FieldConfig {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public String getValues() {
+        return values;
+    }
+
+    public void setValues(String values) {
+        this.values = values;
     }
 }
