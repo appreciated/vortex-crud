@@ -9,14 +9,14 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.shared.InputField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -67,7 +67,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
 
             Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
-            if (component instanceof InputField){
+            if (component instanceof InputField) {
                 ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
             }
             binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
@@ -82,22 +82,19 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
             try {
                 binder.writeBean(entity);
                 entityManagerService.updateRecordById(table, entity.get("id"), entity);
-                Div notification = new Div();
-                notification.setText("Entity saved successfully.");
-                layout.add(notification);
+                binder.setBean(entity);
+                Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (ValidationException e) {
-                Div errorNotification = new Div();
-                errorNotification.setText("Failed to save entity: " + e.getMessage());
-                layout.add(errorNotification);
+                Notification notification = Notification.show(layout.getTranslation("form.notification.failed-to-save", e.getMessage()));
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
 
         // Delete button
         Button deleteButton = new Button(layout.getTranslation("button.delete.title"), event -> {
             entityManagerService.deleteRecordById(table, entity.get("id"));
-            Div notification = new Div();
-            notification.setText("Entity deleted successfully.");
-            layout.add(notification);
+            Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         });
 
         // Add the form and buttons to the layout
