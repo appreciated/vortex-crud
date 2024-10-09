@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Configuration;
 import java.util.*;
 
 @Configuration
-public class DatabaseSchemaChecker {
+public class FlowCmsDatabaseSchemaChecker {
 
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public DatabaseSchemaChecker(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
+    public FlowCmsDatabaseSchemaChecker(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
         this.entityManager = entityManager;
 
         typeMappings = new HashMap<>();
