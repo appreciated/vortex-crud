@@ -5,7 +5,7 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -43,7 +43,7 @@ public class DefaultEntityItemCardRendererImpl implements FlowCmsEntityItemRende
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        H3 title = new H3(entity.getString(itemRendererConfig.getTitleField()));
+        H4 title = new H4(entity.getString(itemRendererConfig.getTitleField()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
