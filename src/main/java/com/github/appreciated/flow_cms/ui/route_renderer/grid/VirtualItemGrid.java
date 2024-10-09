@@ -13,6 +13,7 @@ import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.RouteConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        System.out.println(entity.get("id"));
+        getElement().executeJs("location.href=location.href+\"/%s\"".formatted(entity.get("id")));
     }
 
     private void initLazyLoadingDataProvider() {
