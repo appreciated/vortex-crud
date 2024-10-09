@@ -12,6 +12,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.shared.InputField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
@@ -24,13 +25,13 @@ import java.util.Map;
  * such as saving and deleting entities.
  */
 
-public class DefaultEntityDetailRendererImpl implements FlowCmsEntityDetailRenderer {
+public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailRenderer {
 
     private final DefaultFlowCmsFieldFactoryImpl componentFactory;
     private final DynamicEntityManagerService entityManagerService;
     private final FlowCmsConfigService cmsConfigService;
 
-    public DefaultEntityDetailRendererImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
+    public DefaultFormEntityDetailRendererImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
         this.cmsConfigService = cmsConfigService;
@@ -58,8 +59,6 @@ public class DefaultEntityDetailRendererImpl implements FlowCmsEntityDetailRende
 
         DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
 
-        Map<String, Component> fieldComponents = new HashMap<>();
-
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
@@ -68,6 +67,10 @@ public class DefaultEntityDetailRendererImpl implements FlowCmsEntityDetailRende
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
 
             Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
+            if (component instanceof InputField){
+                ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
+            }
+
             if (fieldConfig.getType().equals("date") || fieldConfig.getType().equals("datetime")) {
 
             } else {
@@ -75,7 +78,6 @@ public class DefaultEntityDetailRendererImpl implements FlowCmsEntityDetailRende
             }
 
             form.add(component);
-            fieldComponents.put(fieldName, component);
         }
 
         binder.setBean(entity);

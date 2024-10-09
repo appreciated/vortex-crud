@@ -11,6 +11,8 @@ public class FormField {
     private boolean readOnly;
     @Optional
     private List<String> readOnlyForRoles;
+    @Optional
+    private String label;
 
     public String getField() {
         return field;
@@ -34,5 +36,13 @@ public class FormField {
 
     public void setReadOnlyForRoles(List<String> readOnlyForRoles) {
         this.readOnlyForRoles = readOnlyForRoles;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

@@ -5,6 +5,7 @@ import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.shared.InputField;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
