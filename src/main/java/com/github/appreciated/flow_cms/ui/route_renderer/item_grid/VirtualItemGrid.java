@@ -23,7 +23,7 @@ import java.util.List;
  * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
  */
 
-public class DefaultVirtualItemGridRenderer extends VirtualList<EntityItemList> {
+public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final String table;
     private final FlowCmsEntityItemRenderer entityItemRenderer;
@@ -33,7 +33,7 @@ public class DefaultVirtualItemGridRenderer extends VirtualList<EntityItemList> 
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private int currentNumberOfColumns = -1;
 
-    public DefaultVirtualItemGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
+    public VirtualItemGrid(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
         itemRenderer = config.getRenderConfiguration().getItemRenderer();

@@ -61,6 +61,8 @@ public class DefaultMasterDetailRenderer extends HorizontalLayout {
         setSizeFull();
 
         initVirtualList();
+
+        getStyle().set("overflow", "hidden");
     }
 
     private void onItemClick(GenericEntity entity) {

@@ -48,6 +48,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
+        form.setMaxWidth("1000px");
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
         binder.bind(
