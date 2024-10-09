@@ -1,5 +1,6 @@
-package com.github.appreciated.flow_cms.ui.router_layout;
+package com.github.appreciated.flow_cms.ui.router_layout.components;
 
+import com.github.appreciated.flow_cms.ui.router_layout.FlowCmsRouterLayoutFactory;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.RouterLayout;
 

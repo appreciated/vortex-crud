@@ -8,5 +8,5 @@ import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
  */
 
 public interface FlowCmsEntityItemRendererFactory {
-    EntityItemRenderer getRenderer(ItemRendererConfig routeConfig);
+    FlowCmsEntityItemRenderer getRenderer(ItemRendererConfig routeConfig);
 }

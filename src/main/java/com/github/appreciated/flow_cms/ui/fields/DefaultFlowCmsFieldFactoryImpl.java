@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.components;
+package com.github.appreciated.flow_cms.ui.fields;
 
 import com.github.appreciated.flow_cms.config.model.ApplicationConfig;
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * Default implementation of the FlowCmsComponentFactory interface.
@@ -18,13 +16,12 @@ import java.util.function.Function;
  * supporting various component types like text fields, text areas, date pickers, and dropdowns.
  */
 
-
 @Service
-public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFactory {
+public class DefaultFlowCmsFieldFactoryImpl implements FlowCmsFieldFactory {
 
-    private final Map<String,ComponentFunction> componentMap = new HashMap<>();
+    private final Map<String, FlowCmsFieldFunction> componentMap = new HashMap<>();
 
-    public DefaultFlowCmsComponentFactoryImpl(FlowCmsConfigService flowCmsConfigService) {
+    public DefaultFlowCmsFieldFactoryImpl(FlowCmsConfigService flowCmsConfigService) {
         ApplicationConfig configuration = flowCmsConfigService.getConfiguration();
         componentMap.put("text", new DefaultTextFieldFunction());
         componentMap.put("textarea", new DefaultTextAreaFunction());
@@ -33,9 +30,13 @@ public class DefaultFlowCmsComponentFactoryImpl implements FlowCmsComponentFacto
         componentMap.put("dropdown", new DefaultComboBoxFunction(configuration.getSelects(), configuration.getTablesConfig()));
     }
 
+    public Map<String, FlowCmsFieldFunction> getComponentMap() {
+        return componentMap;
+    }
+
     @Override
     public <Comp extends Component & HasValue> Comp createComponent(String table, String field, FieldConfig type) {
-        ComponentFunction componentSupplier = componentMap.get(type.getType());
+        FlowCmsFieldFunction componentSupplier = componentMap.get(type.getType());
         if (componentSupplier != null) {
             return (Comp) componentSupplier.createComponent(table, field, type);
         }

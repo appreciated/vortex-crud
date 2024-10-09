@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.router_layout;
+package com.github.appreciated.flow_cms.ui.router_layout.components;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;

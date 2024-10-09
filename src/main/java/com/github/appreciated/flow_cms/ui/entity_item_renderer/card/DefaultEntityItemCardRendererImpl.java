@@ -14,7 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class DefaultEntityItemCardRendererImpl implements EntityItemRenderer {
+public class DefaultEntityItemCardRendererImpl implements FlowCmsEntityItemRenderer {
 
     @Override
     public Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, Integer maxWidth) {

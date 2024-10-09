@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.ui.route_renderer.DefaultRouteRendererFactoryImpl;
-import com.github.appreciated.flow_cms.ui.router_layout.ProxyRouterLayout;
+import com.github.appreciated.flow_cms.ui.router_layout.components.ProxyRouterLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;

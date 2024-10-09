@@ -10,6 +10,6 @@ import com.vaadin.flow.component.Component;
  * based on a given route configuration and entity data.
  */
 
-public interface EntityDetailRenderer {
+public interface FlowCmsEntityDetailRenderer {
     Component renderDetail(RouteConfig routeConfig, GenericEntity entity);
 }

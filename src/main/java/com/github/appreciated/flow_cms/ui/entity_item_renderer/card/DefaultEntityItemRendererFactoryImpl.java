@@ -13,13 +13,13 @@ import java.util.HashMap;
 @Service
 public class DefaultEntityItemRendererFactoryImpl implements FlowCmsEntityItemRendererFactory {
 
-    HashMap<String, EntityItemRenderer> rendererHashMap = new HashMap<>();
+    HashMap<String, FlowCmsEntityItemRenderer> rendererHashMap = new HashMap<>();
 
     public DefaultEntityItemRendererFactoryImpl() {
         rendererHashMap.put("entity-item-card-renderer", new DefaultEntityItemCardRendererImpl());
     }
 
-    public EntityItemRenderer getRenderer(ItemRendererConfig routeConfig) {
+    public FlowCmsEntityItemRenderer getRenderer(ItemRendererConfig routeConfig) {
         return rendererHashMap.get(routeConfig.getType());
     }
 }

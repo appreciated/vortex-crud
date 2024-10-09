@@ -8,5 +8,5 @@ import com.github.appreciated.flow_cms.config.model.DetailRenderer;
  */
 
 public interface FlowCmsEntityDetailRendererFactory {
-    EntityDetailRenderer getRenderer(DetailRenderer routeConfig);
+    FlowCmsEntityDetailRenderer getRenderer(DetailRenderer routeConfig);
 }

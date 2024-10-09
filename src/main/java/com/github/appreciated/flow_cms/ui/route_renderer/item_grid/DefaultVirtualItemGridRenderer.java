@@ -4,7 +4,7 @@ import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
+import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
@@ -26,7 +26,7 @@ import java.util.List;
 public class DefaultVirtualItemGridRenderer extends VirtualList<EntityItemList> {
 
     private final String table;
-    private final EntityItemRenderer entityItemRenderer;
+    private final FlowCmsEntityItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
     private final DynamicEntityManagerService entityManagerService;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)

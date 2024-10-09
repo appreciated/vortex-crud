@@ -6,9 +6,9 @@ import com.github.appreciated.flow_cms.config.model.RenderConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.entity_detail.EntityDetailRenderer;
+import com.github.appreciated.flow_cms.ui.entity_detail.FlowCmsEntityDetailRenderer;
 import com.github.appreciated.flow_cms.ui.entity_detail.FlowCmsEntityDetailRendererFactory;
-import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.EntityItemRenderer;
+import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -29,13 +29,13 @@ public class DefaultMasterDetailRenderer extends HorizontalLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final EntityItemRenderer entityItemRenderer;
+    private final FlowCmsEntityItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
 
     private final RouteConfig config;
     private final DynamicEntityManagerService entityManagerService;
     private final String table;
-    private final EntityDetailRenderer detailRenderer;
+    private final FlowCmsEntityDetailRenderer detailRenderer;
 
     public DefaultMasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
         this.config = config;

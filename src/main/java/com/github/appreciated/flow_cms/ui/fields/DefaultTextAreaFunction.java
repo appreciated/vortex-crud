@@ -1,13 +1,10 @@
-package com.github.appreciated.flow_cms.ui.components;
+package com.github.appreciated.flow_cms.ui.fields;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.TextArea;
 
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-public class DefaultTextAreaFunction implements  ComponentFunction {
+public class DefaultTextAreaFunction implements FlowCmsFieldFunction {
 
     @Override
     public Component createComponent(String table, String field, FieldConfig fieldConfig) {

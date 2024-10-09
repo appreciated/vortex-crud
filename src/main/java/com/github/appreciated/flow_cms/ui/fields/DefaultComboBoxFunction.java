@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.components;
+package com.github.appreciated.flow_cms.ui.fields;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultComboBoxFunction implements ComponentFunction {
+public class DefaultComboBoxFunction implements FlowCmsFieldFunction {
 
     private final ConfigObject selectsConfig;
     private final Map<String, TableConfig> tablesConfig;

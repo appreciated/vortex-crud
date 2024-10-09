@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.router_layout;
 
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.ui.router_layout.components.DefaultRouterLayout;
 import com.vaadin.flow.component.applayout.AppLayout;
 import org.springframework.stereotype.Service;
 

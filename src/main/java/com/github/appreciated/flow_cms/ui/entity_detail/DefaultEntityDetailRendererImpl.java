@@ -4,7 +4,7 @@ import com.github.appreciated.flow_cms.config.model.*;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.components.DefaultFlowCmsComponentFactoryImpl;
+import com.github.appreciated.flow_cms.ui.fields.DefaultFlowCmsFieldFactoryImpl;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
@@ -24,13 +24,13 @@ import java.util.Map;
  * such as saving and deleting entities.
  */
 
-public class DefaultEntityDetailRendererImpl implements EntityDetailRenderer {
+public class DefaultEntityDetailRendererImpl implements FlowCmsEntityDetailRenderer {
 
-    private final DefaultFlowCmsComponentFactoryImpl componentFactory;
+    private final DefaultFlowCmsFieldFactoryImpl componentFactory;
     private final DynamicEntityManagerService entityManagerService;
     private final FlowCmsConfigService cmsConfigService;
 
-    public DefaultEntityDetailRendererImpl(DefaultFlowCmsComponentFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
+    public DefaultEntityDetailRendererImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
         this.cmsConfigService = cmsConfigService;
