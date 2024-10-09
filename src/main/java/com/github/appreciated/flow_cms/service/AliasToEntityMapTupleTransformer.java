@@ -2,6 +2,7 @@ package com.github.appreciated.flow_cms.service;
 
 import org.hibernate.query.TupleTransformer;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +17,11 @@ public class AliasToEntityMapTupleTransformer implements TupleTransformer<Generi
     public GenericEntity transformTuple(Object[] tuple, String[] aliases) {
         Map<String, Object> result = new HashMap<>();
         for (int i = 0; i < aliases.length; i++) {
-            result.put(aliases[i].toLowerCase(), tuple[i]);
+            Object value = tuple[i];
+            if (value instanceof java.sql.Date) {
+                value = ((Date) value).toLocalDate();
+            }
+            result.put(aliases[i].toLowerCase(), value);
         }
         return new GenericEntity(result);
     }

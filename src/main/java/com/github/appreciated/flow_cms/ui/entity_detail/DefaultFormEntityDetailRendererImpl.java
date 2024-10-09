@@ -70,12 +70,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
             if (component instanceof InputField){
                 ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
             }
-
-            if (fieldConfig.getType().equals("date") || fieldConfig.getType().equals("datetime")) {
-
-            } else {
-                binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
-            }
+            binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
 
             form.add(component);
         }

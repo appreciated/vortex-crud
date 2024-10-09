@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import org.hibernate.query.NativeQuery;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -49,7 +51,11 @@ public class DynamicEntityManagerService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
         for (int i = 0; i < params.size(); i++) {
-            query.setParameter(i + 1, params.get(i));
+            Object value = params.get(i);
+            if (value instanceof LocalDateTime) {
+                value = new Date(((LocalDateTime) value).getNano());
+            }
+            query.setParameter(i + 1, value);
         }
         query.executeUpdate();
     }
