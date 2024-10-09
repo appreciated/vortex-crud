@@ -1,13 +1,21 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
+import com.github.appreciated.flow_cms.config.model.DetailRenderer;
+import com.github.appreciated.flow_cms.config.model.RouteConfig;
+import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.entity_detail.FlowCmsEntityDetailRendererFactory;
 import com.github.appreciated.flow_cms.ui.route_renderer.DefaultRouteRendererFactoryImpl;
+import com.github.appreciated.flow_cms.ui.route_renderer.FlowCmsRouteRendererFactory;
 import com.github.appreciated.flow_cms.ui.router_layout.components.ProxyRouterLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+
+import java.util.Objects;
 
 /**
  * A dynamic route component that renders different views based on the route path.
@@ -20,11 +28,15 @@ import com.vaadin.flow.router.Route;
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
     private final FlowCmsConfigService flowCmsConfigService;
-    private final DefaultRouteRendererFactoryImpl containerFactory;
+    private final FlowCmsRouteRendererFactory containerFactory;
+    private final FlowCmsEntityDetailRendererFactory detailRendererFactory;
+    private final DynamicEntityManagerService dynamicEntityManagerService;
 
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, DefaultRouteRendererFactoryImpl containerFactory) {
+    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteRendererFactory containerFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory, DynamicEntityManagerService dynamicEntityManagerService) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.containerFactory = containerFactory;
+        this.detailRendererFactory = detailRendererFactory;
+        this.dynamicEntityManagerService = dynamicEntityManagerService;
         setSizeFull();
     }
 
@@ -33,7 +45,14 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         String path = event.getRouteParameters().get("path").orElse("");
         removeAll();
 
-        Component viewContainer = containerFactory.createViewContainer(flowCmsConfigService.getConfigForRoute(path));
-        add(viewContainer);
+        RouteConfig configForRoute = flowCmsConfigService.getConfigForRoute(path);
+        if (path.split("/").length == 1 || Objects.equals(configForRoute.getRenderer(), "master-detail")) {
+            Component viewContainer = containerFactory.createViewContainer(configForRoute);
+            add(viewContainer);
+        } else {
+            DetailRenderer detailRenderer = configForRoute.getRenderConfiguration().getDetailRenderer();
+            GenericEntity recordById = dynamicEntityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
+            add(detailRendererFactory.getRenderer(detailRenderer).renderDetail(configForRoute,recordById));
+        }
     }
 }

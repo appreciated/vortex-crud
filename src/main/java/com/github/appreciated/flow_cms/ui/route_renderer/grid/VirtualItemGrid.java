@@ -6,6 +6,7 @@ import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRenderer;
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
+import com.github.appreciated.flow_cms.ui.routes.DynamicRoute;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -14,6 +15,7 @@ import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.RouteParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +70,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getElement().executeJs("location.href=location.href+\"/%s\"".formatted(entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/projects/"+entity.get("id")));
     }
 
     private void initLazyLoadingDataProvider() {

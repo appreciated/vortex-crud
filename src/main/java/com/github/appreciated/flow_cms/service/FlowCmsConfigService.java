@@ -32,7 +32,7 @@ public class FlowCmsConfigService {
     }
 
     public RouteConfig getConfigForRoute(String viewName) {
-        return configuration.getRoutesConfig().get(viewName);
+        return configuration.getRoutesConfig().get(viewName.split("/")[0]);
     }
 
     public String getApplicationName() {
