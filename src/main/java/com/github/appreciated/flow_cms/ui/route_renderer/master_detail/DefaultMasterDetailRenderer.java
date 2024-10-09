@@ -12,8 +12,10 @@ import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntit
 import com.github.appreciated.flow_cms.ui.entity_item_renderer.card.FlowCmsEntityItemRendererFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -25,7 +27,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
  * It uses lazy loading for efficient data retrieval and rendering.
  */
 
-public class DefaultMasterDetailRenderer extends HorizontalLayout {
+public class DefaultMasterDetailRenderer extends SplitLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
@@ -53,11 +55,21 @@ public class DefaultMasterDetailRenderer extends HorizontalLayout {
         detailLayout.setWidth("unset");
         detailLayout.getStyle().set("flex", "4 1 400px");
 
+        HorizontalLayout header = new HorizontalLayout(new H2(getTranslation(config.getTitle())));
+        header.setPadding(true);
+
         virtualList.setHeightFull();
-        virtualList.getStyle().set("flex", "1 1 200px");
+
+        VerticalLayout listWrapper = new VerticalLayout(header, virtualList);
+        listWrapper.getStyle().set("overflow", "hidden");
+        listWrapper.setPadding(false);
+        listWrapper.setSpacing(false);
+        listWrapper.getStyle().set("flex", "1 1 200px");
 
         // Layout konfigurieren
-        add(virtualList, detailLayout);
+        addToPrimary(listWrapper);
+        addToSecondary(detailLayout);
+
         setSizeFull();
 
         initVirtualList();

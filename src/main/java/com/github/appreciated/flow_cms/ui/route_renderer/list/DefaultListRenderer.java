@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.route_renderer.grid;
+package com.github.appreciated.flow_cms.ui.route_renderer.list;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
@@ -14,9 +14,9 @@ import java.util.List;
  * This grid is configured with a data provider that retrieves and counts records dynamically based on the specified table in the RouteConfig.
  */
 
-public class DefaultGridRenderer extends Grid<GenericEntity> {
+public class DefaultListRenderer extends Grid<GenericEntity> {
 
-    public DefaultGridRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+    public DefaultListRenderer(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
         String table = config.getTable();
 
         // Virtual List mit Lazy Loading einrichten

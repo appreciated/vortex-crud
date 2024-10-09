@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.route_renderer.item_grid;
+package com.github.appreciated.flow_cms.ui.route_renderer.grid;
 
 import com.github.appreciated.flow_cms.service.GenericEntity;
 
