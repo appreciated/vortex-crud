@@ -67,7 +67,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
         for (FormField field : itemRendererConfig.getChildren()) {
             String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null) {
+            if (fieldConfig == null && !field.getType().equals("relationship")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
