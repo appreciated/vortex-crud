@@ -6,7 +6,10 @@ import java.util.List;
 
 public class FormField {
 
+    @Optional
     private String field;
+    @Optional
+    private String type;
     @Optional
     private boolean readOnly;
     @Optional
@@ -44,5 +47,13 @@ public class FormField {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
