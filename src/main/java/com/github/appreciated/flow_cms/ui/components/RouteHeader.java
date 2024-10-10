@@ -8,7 +8,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 public class RouteHeader extends HorizontalLayout {
     public RouteHeader(RouteConfig config, FlowCmsIcon flowCmsIcon) {
         H2 h2 = new H2(getTranslation(config.getTitle()));
-
         if (config.getIcon() != null) {
             add(flowCmsIcon.renderIcon(config.getIcon()));
         }
