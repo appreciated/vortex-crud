@@ -1,4 +1,4 @@
--- Tabelle für Benutzer
+-- Table for users
 CREATE TABLE users
 (
     id            SERIAL PRIMARY KEY,
@@ -9,30 +9,21 @@ CREATE TABLE users
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabelle für Rollen (optional, wenn Rollen dynamisch verwaltet werden sollen)
+-- Table for roles (optional, if roles are to be managed dynamically)
 CREATE TABLE roles
 (
     id   SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Tabelle für Sammlungen (Collections)
-CREATE TABLE collections
-(
-    id                SERIAL PRIMARY KEY,
-    name              VARCHAR(255) NOT NULL UNIQUE,
-    schema_definition JSON         NOT NULL, -- JSON-Schema der Collection
-    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tabelle für Audit-Logs
+-- Table for audit logs
 CREATE TABLE audit_log
 (
     id                SERIAL PRIMARY KEY,
-    user_id           INT         NOT NULL REFERENCES users (id) ON DELETE CASCADE, -- Der Benutzer, der die Aktion durchgeführt hat
-    action            VARCHAR(50) NOT NULL,                                         -- Art der Aktion, z.B. "create", "update", "delete", "login", "logout"
-    target_collection VARCHAR(255),                                                 -- Die Sammlung, auf die die Aktion angewendet wurde
-    target_record_id  INT,                                                          -- ID des Datensatzes, auf den die Aktion angewendet wurde
-    description       TEXT,                                                         -- Beschreibung der Aktion
-    timestamp         TIMESTAMP DEFAULT CURRENT_TIMESTAMP                           -- Zeitpunkt der Aktion
+    user_id           INT         NOT NULL REFERENCES users (id) ON DELETE CASCADE, -- The user who performed the action
+    action            VARCHAR(50) NOT NULL,                                         -- Type of action, e.g., "create", "update", "delete", "login", "logout"
+    target_collection VARCHAR(255),                                                 -- The collection the action was applied to
+    target_record_id  INT,                                                          -- ID of the record the action was applied to
+    description       TEXT,                                                         -- Description of the action
+    timestamp         TIMESTAMP DEFAULT CURRENT_TIMESTAMP                           -- Timestamp of the action
 );
