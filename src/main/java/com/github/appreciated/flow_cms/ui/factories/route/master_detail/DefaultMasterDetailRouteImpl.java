@@ -8,8 +8,8 @@ import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetail;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsEntityDetailFactory;
-import com.github.appreciated.flow_cms.ui.factories.card.FlowCmsEntityItemRenderer;
-import com.github.appreciated.flow_cms.ui.factories.card.FlowCmsEntityItemRendererFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRenderer;
+import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRendererFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -31,7 +31,7 @@ public class DefaultMasterDetailRouteImpl extends SplitLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final FlowCmsEntityItemRenderer entityItemRenderer;
+    private final FlowCmsItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
 
     private final RouteConfig config;
@@ -39,7 +39,7 @@ public class DefaultMasterDetailRouteImpl extends SplitLayout {
     private final String table;
     private final FlowCmsDetail detailRenderer;
 
-    public DefaultMasterDetailRouteImpl(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailFactory detailRendererFactory) {
+    public DefaultMasterDetailRouteImpl(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailFactory detailRendererFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;

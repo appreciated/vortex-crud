@@ -8,7 +8,6 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsEntityDetailFactory;
 import com.github.appreciated.flow_cms.ui.factories.route.DefaultRouteFactoryImpl;
 import com.github.appreciated.flow_cms.ui.factories.route.FlowCmsRouteFactory;
-import com.github.appreciated.flow_cms.ui.factories.router_layout.components.ProxyRouterLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;

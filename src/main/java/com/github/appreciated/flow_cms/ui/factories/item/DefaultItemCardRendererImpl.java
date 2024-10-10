@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.factories.card;
+package com.github.appreciated.flow_cms.ui.factories.item;
 
 import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -15,7 +15,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class DefaultEntityItemCardRendererImpl implements FlowCmsEntityItemRenderer {
+public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
 
     @Override
     public Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, Integer maxWidth) {
