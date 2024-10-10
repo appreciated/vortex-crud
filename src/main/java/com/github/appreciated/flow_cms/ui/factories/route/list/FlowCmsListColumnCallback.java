@@ -10,6 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface FlowCmdListColumnCallback {
+public interface FlowCmsListColumnCallback {
     void addColumn(Grid<GenericEntity> grid, FormField field, String table, String fieldName, FieldConfig fieldConfig);
 }

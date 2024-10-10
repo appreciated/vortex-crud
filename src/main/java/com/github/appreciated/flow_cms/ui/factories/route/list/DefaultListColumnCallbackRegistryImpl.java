@@ -13,19 +13,19 @@ import java.util.HashMap;
 @Service
 public class DefaultListColumnCallbackRegistryImpl implements FlowCmsListColumnCallbackRegistry {
 
-    HashMap<String, FlowCmdListColumnCallback> callbacks = new HashMap<>();
+    HashMap<String, FlowCmsListColumnCallback> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistryImpl() {
         callbacks.put("default", new DefaultListColumnImplCallback());
     }
 
     @Override
-    public FlowCmdListColumnCallback getCallback(RouteConfig config) {
+    public FlowCmsListColumnCallback getCallback(RouteConfig config) {
         return callbacks.get("default");
     }
 
     @Override
-    public void addCallback(String key, FlowCmdListColumnCallback factory) {
+    public void addCallback(String key, FlowCmsListColumnCallback factory) {
         callbacks.put(key, factory);
     }
 }
