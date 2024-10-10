@@ -16,7 +16,7 @@ public class DefaultItemRendererFactoryImpl implements FlowCmsItemRendererFactor
     HashMap<String, FlowCmsItemRenderer> rendererHashMap = new HashMap<>();
 
     public DefaultItemRendererFactoryImpl() {
-        rendererHashMap.put("entity-item-card-renderer", new DefaultItemCardRendererImpl());
+        rendererHashMap.put("item-card-renderer", new DefaultItemCardRendererImpl());
     }
 
     public FlowCmsItemRenderer getRenderer(ItemRendererConfig routeConfig) {

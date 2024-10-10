@@ -72,7 +72,7 @@ application {
          renderer = "grid"
          render-configuration {
             item-renderer = {
-               type = "entity-item-card-renderer"
+               type = "item-card-renderer"
                title-column = "name"
                description-column = "description"
             }
@@ -143,7 +143,7 @@ application {
       icon = "FACTORY"
       render-configuration {
         item-renderer = {
-          type = "entity-item-card-renderer"
+          type = "item-card-renderer"
           title-column = "name"
           description-column = "description"
         }
@@ -168,7 +168,7 @@ application {
       renderer = "master-detail"
       render-configuration = {
         item-renderer = {
-          type = "entity-item-card-renderer"
+          type = "item-card-renderer"
           title-column = "title"
           description-column = "description"
         }
