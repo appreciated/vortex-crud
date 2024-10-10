@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.config.model;
 
 import java.util.List;
 
-public class DetailRenderer {
+public class DetailFactory {
 
     private String type;
     private List<FormField> children;

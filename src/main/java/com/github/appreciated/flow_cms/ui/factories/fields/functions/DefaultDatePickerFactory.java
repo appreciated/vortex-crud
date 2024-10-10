@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.fields.functions;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
-import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFunction;
+import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
 
@@ -9,7 +9,7 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.List;
 
-public class DefaultDatePickerFunction implements FlowCmsFieldFunction {
+public class DefaultDatePickerFactory implements FlowCmsFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, FieldConfig fieldConfig) {

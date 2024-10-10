@@ -1,6 +1,6 @@
 package com.github.appreciated.flow_cms.ui.factories.item;
 
-import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
+import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -15,10 +15,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
+public class DefaultItemCardFactoryImpl implements FlowCmsItemFactory {
 
     @Override
-    public Component renderItem(ItemRendererConfig itemRendererConfig, GenericEntity entity, Integer maxWidth) {
+    public Component renderItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth) {
         HorizontalLayout card = new HorizontalLayout();
         if (maxWidth != null) {
             card.setMaxWidth(maxWidth + "px");
@@ -31,8 +31,8 @@ public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
 
         // Optional image
         Image image = null;
-        if (itemRendererConfig.getImageColumn() != null) {
-            image = new Image(itemRendererConfig.getImageColumn(), "Entity Image");
+        if (itemFactoryConfig.getImageColumn() != null) {
+            image = new Image(itemFactoryConfig.getImageColumn(), "Entity Image");
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
@@ -43,12 +43,12 @@ public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        H4 title = new H4(entity.getString(itemRendererConfig.getTitleColumn()));
+        H4 title = new H4(entity.getString(itemFactoryConfig.getTitleColumn()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
-        if (itemRendererConfig.getDescriptionColumn() != null) {
-            Text description = new Text(entity.getString(itemRendererConfig.getDescriptionColumn()));
+        if (itemFactoryConfig.getDescriptionColumn() != null) {
+            Text description = new Text(entity.getString(itemFactoryConfig.getDescriptionColumn()));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }

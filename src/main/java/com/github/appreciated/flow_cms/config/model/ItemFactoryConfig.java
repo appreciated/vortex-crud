@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class ItemRendererConfig {
+public class ItemFactoryConfig {
 
     private String type;
     private String titleColumn;

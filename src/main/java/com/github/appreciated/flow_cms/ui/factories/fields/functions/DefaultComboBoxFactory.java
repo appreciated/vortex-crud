@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.ui.factories.fields.functions;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
-import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFunction;
+import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultComboBoxFunction implements FlowCmsFieldFunction {
+public class DefaultComboBoxFactory implements FlowCmsFieldFactory {
 
     private final ConfigObject selectsConfig;
     private final Map<String, TableConfig> tablesConfig;
 
-    public DefaultComboBoxFunction(ConfigObject selectsConfig, Map<String, TableConfig> tablesConfig) {
+    public DefaultComboBoxFactory(ConfigObject selectsConfig, Map<String, TableConfig> tablesConfig) {
         this.selectsConfig = selectsConfig;
         this.tablesConfig = tablesConfig;
     }

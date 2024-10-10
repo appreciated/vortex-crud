@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultFlowCmsRouterLayoutFactoryImpl implements FlowCmsRouterLayoutFactory {
+public class DefaultRouterLayoutFactoryImpl implements FlowCmsRouterLayoutFactory {
 
     private final FlowCmsConfigService flowCmsConfigService;
     private final FlowCmsIcon flowCmsIcon;
 
-    public DefaultFlowCmsRouterLayoutFactoryImpl(FlowCmsConfigService flowCmsConfigService, FlowCmsIcon flowCmsIcon) {
+    public DefaultRouterLayoutFactoryImpl(FlowCmsConfigService flowCmsConfigService, FlowCmsIcon flowCmsIcon) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.flowCmsIcon = flowCmsIcon;
     }

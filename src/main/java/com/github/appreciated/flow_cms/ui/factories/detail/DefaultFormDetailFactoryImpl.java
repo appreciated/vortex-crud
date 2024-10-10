@@ -5,7 +5,8 @@ import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
-import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFlowCmsFieldFactoryImpl;
+import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
@@ -28,13 +29,13 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
  * such as saving and deleting entities.
  */
 
-public class DefaultFormDetailImpl implements FlowCmsDetail {
+public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
 
-    private final DefaultFlowCmsFieldFactoryImpl componentFactory;
+    private final DefaultFieldFactoryRegistryImpl componentFactory;
     private final FlowCmsEntityManagerService entityManagerService;
     private final FlowCmsConfigService cmsConfigService;
 
-    public DefaultFormDetailImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
+    public DefaultFormDetailFactoryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
         this.cmsConfigService = cmsConfigService;
@@ -56,13 +57,13 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
 
         binder.bind(
                 titleComponent,
-                entity1 -> prefix + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleColumn()),
+                entity1 -> prefix + entity1.getString(routeConfig.getFactoryConfiguration().getDetailFactory().getTitleColumn()),
                 (entity1, string) -> {
                 }
         );
 
         TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-        DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
+        DetailFactory itemRendererConfig = routeConfig.getFactoryConfiguration().getDetailFactory();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
@@ -73,7 +74,8 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             if (fieldConfig != null){
-                Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
+                FlowCmsFieldFactory factory = componentFactory.getFactory(fieldConfig);
+                Component component = factory.createComponent(table, fieldName, fieldConfig);
                 if (component instanceof InputField) {
                     ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
                 }

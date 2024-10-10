@@ -10,11 +10,11 @@ Note that it is not meant to replace Flow at all, since not everything is CRUD. 
 - **HOCON** for a compact and readable configuration (also imports!)
 
 ## Core architecture and basic functions:
- -  **Modular UI system** - The UI has a modular structure, with renderers and factories working at different levels (e.g. Component List Factory, Renderer System).
+ -  **Modular UI system** - The UI has a modular structure, with factories working at different levels (e.g. Component List Factory, factory System).
  -  **Configuration system** - The use of HOCON for flexible configuration is implemented, which is made clear by the configuration examples provided.
  -  **Database validation** - There is a FlowCmsDatabaseSchemaValidator that validates the database schema against the application configuration.
  -  **Dynamic routing** - The DynamicRoute class enables dynamic routing based on the configuration.
- -  **UI components and renderers** - Several renderers and factories are available, such as DefaultEntityDetailRendererFactoryImpl, DefaultEntityItemCardRendererImpl, and DefaultRouteRendererFactoryImpl...
+ -  **UI components and factories** - Several factories and factories are available, such as DefaultEntityDetailfactoryFactoryImpl, DefaultEntityItemCardfactoryImpl, and DefaultRoutefactoryFactoryImpl...
  -  **Entity management** - The GenericEntity and FlowCmsEntityManagerService classes enable generic entity management.
  -  **Translations** - Translations thought of from the start
  -  **Icons** - Icons are interchangeable
@@ -30,7 +30,7 @@ Note that it is not meant to replace Flow at all, since not everything is CRUD. 
 - **Entity Versioning**
 - **Entity Auditing**
 - **Extensibility and hook points**
-- **Generic Block Route Renderer** - Currently this Framework only supports 
+- **Generic Block Route factory** - Currently this Framework only supports 
   - **Add Generic Blocks**
 - **Custom Repositories**
   
@@ -68,15 +68,14 @@ application {
       projects = {
          name: "project_view",
          table: "projects",
-         renderer = "grid"
-         renderer = "grid"
+         factory = "grid"
          render-configuration {
-            item-renderer = {
-               type = "item-card-renderer"
+            item-factory = {
+               type = "card"
                title-column = "name"
                description-column = "description"
             }
-            detail-renderer {
+            detail-factory {
                title-column = "name"
                type = "form", children = [
                   {column = "name", label = "route.projects.labels.name"},
@@ -139,15 +138,15 @@ application {
       default-route = true
       table = "projects"
       title = "route.projects.title"
-      renderer = "grid"
+      factory = "grid"
       icon = "FACTORY"
       render-configuration {
-        item-renderer = {
-          type = "item-card-renderer"
+        item-factory = {
+          type = "item-card-factory"
           title-column = "name"
           description-column = "description"
         }
-        detail-renderer {
+        detail-factory {
           title-column = "name"
           type = "form", children = [
             {column = "name", label = "route.projects.labels.name"},
@@ -165,14 +164,14 @@ application {
       table = "tasks"
       icon = "TASKS"
       title = "route.tasks.title"
-      renderer = "master-detail"
+      factory = "master-detail"
       render-configuration = {
-        item-renderer = {
-          type = "item-card-renderer"
+        item-factory = {
+          type = "item-card-factory"
           title-column = "title"
           description-column = "description"
         }
-        detail-renderer {
+        detail-factory {
           title-column = "title"
           type = "form", children = [
             {column = "title", label = "route.tasks.labels.title"},

@@ -5,7 +5,7 @@ import com.github.appreciated.flow_cms.config.model.FormField;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.grid.Grid;
 
-public class DefaultListColumImpl implements FlowCmdListColumn {
+public class DefaultListColumnImplCallback implements FlowCmdListColumnCallback {
 
     @Override
     public void addColumn(Grid<GenericEntity> grid, FormField field, String table, String fieldName, FieldConfig fieldConfig) {

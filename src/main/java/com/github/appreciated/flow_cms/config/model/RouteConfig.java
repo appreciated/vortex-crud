@@ -6,12 +6,12 @@ public class RouteConfig {
 
     private String table;
     private String title;
-    private String renderer;
+    private String factory;
     @Optional
     private String icon;
     @Optional
     private boolean defaultRoute;
-    private RenderConfig renderConfiguration;
+    private FactoryConfig factoryConfiguration;
     @Optional
     private AccessControlConfig accessControl;
 
@@ -31,20 +31,20 @@ public class RouteConfig {
         this.title = title;
     }
 
-    public String getRenderer() {
-        return renderer;
+    public String getFactory() {
+        return factory;
     }
 
-    public void setRenderer(String renderer) {
-        this.renderer = renderer;
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 
-    public RenderConfig getRenderConfiguration() {
-        return renderConfiguration;
+    public FactoryConfig getFactoryConfiguration() {
+        return factoryConfiguration;
     }
 
-    public void setRenderConfiguration(RenderConfig renderConfiguration) {
-        this.renderConfiguration = renderConfiguration;
+    public void setFactoryConfiguration(FactoryConfig factoryConfiguration) {
+        this.factoryConfiguration = factoryConfiguration;
     }
 
     public AccessControlConfig getAccessControl() {

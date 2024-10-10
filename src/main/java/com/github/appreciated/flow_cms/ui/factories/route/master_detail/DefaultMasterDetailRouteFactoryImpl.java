@@ -1,17 +1,17 @@
 package com.github.appreciated.flow_cms.ui.factories.route.master_detail;
 
-import com.github.appreciated.flow_cms.config.model.DetailRenderer;
-import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
-import com.github.appreciated.flow_cms.config.model.RenderConfig;
+import com.github.appreciated.flow_cms.config.model.DetailFactory;
+import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
+import com.github.appreciated.flow_cms.config.model.FactoryConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.RouteHeader;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetail;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsEntityDetailFactory;
+import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactory;
+import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRenderer;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRendererFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -28,29 +28,29 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
  * It uses lazy loading for efficient data retrieval and rendering.
  */
 
-public class DefaultMasterDetailRouteImpl extends SplitLayout {
+public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final FlowCmsItemRenderer entityItemRenderer;
-    private final ItemRendererConfig itemRenderer;
+    private final FlowCmsItemFactory entityItemRenderer;
+    private final ItemFactoryConfig itemRenderer;
 
     private final RouteConfig config;
     private final FlowCmsEntityManagerService entityManagerService;
     private final String table;
-    private final FlowCmsDetail detailRenderer;
+    private final FlowCmsDetailFactory detailRenderer;
 
-    public DefaultMasterDetailRouteImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailFactory detailRendererFactory, FlowCmsIcon flowCmsIcon) {
+    public DefaultMasterDetailRouteFactoryImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry entityCardRendererFactory, FlowCmsDetailFactoryRegistry detailRendererFactory, FlowCmsIcon flowCmsIcon) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
-        RenderConfig renderConfiguration = config.getRenderConfiguration();
-        this.itemRenderer = renderConfiguration.getItemRenderer();
-        this.entityItemRenderer = entityCardRendererFactory.getRenderer(itemRenderer);
+        FactoryConfig factoryConfiguration = config.getFactoryConfiguration();
+        this.itemRenderer = factoryConfiguration.getItemFactory();
+        this.entityItemRenderer = entityCardRendererFactory.getFactory(itemRenderer);
         this.table = config.getTable();
 
-        DetailRenderer detailRendererConfig = renderConfiguration.getDetailRenderer();
-        this.detailRenderer = detailRendererFactory.getRenderer(detailRendererConfig);
+        DetailFactory detailFactoryConfig = factoryConfiguration.getDetailFactory();
+        this.detailRenderer = detailRendererFactory.getFactory(detailFactoryConfig);
 
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();

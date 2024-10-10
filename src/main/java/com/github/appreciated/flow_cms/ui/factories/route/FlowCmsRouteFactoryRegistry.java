@@ -8,6 +8,6 @@ import com.vaadin.flow.component.Component;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface FlowCmsRouteFactory {
+public interface FlowCmsRouteFactoryRegistry {
     Component createViewContainer(RouteConfig config);
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class GenericEntityGrid extends Grid<GenericEntity> {
 
-    public GenericEntityGrid(int i, RouteConfig routeConfig, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService, FlowCmsListColumnFactory listColumnFactory) {
+    public GenericEntityGrid(int i, RouteConfig routeConfig, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
         String table = routeConfig.getTable();
 
         // Set up the data provider with lazy loading
@@ -33,17 +33,17 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         );
 
         TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-        ItemRendererConfig itemRendererConfig = routeConfig.getRenderConfiguration().getItemRenderer();
+        ItemFactoryConfig itemFactoryConfig = routeConfig.getFactoryConfiguration().getItemFactory();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormField field : itemRendererConfig.getChildren()) {
+        for (FormField field : itemFactoryConfig.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
-            listColumnFactory.getListColumn(routeConfig).addColumn(this,field,table,fieldName,fieldConfig);
+            listColumnFactory.getCallback(routeConfig).addColumn(this,field,table,fieldName,fieldConfig);
         }
 
         setDataProvider(dataProvider);
