@@ -1,12 +1,13 @@
-# FlowCMS
+# FlowCMS (Current working title)
 <img width="100" alt="image" src="./flow-cms.png"/> 
 
-FlowCMS is a flexible high level extension for building applications using Vaadin Flow. It is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
+FlowCMS is a flexible high level abstraction for creating CRUD-style applications using Vaadin Flow much faster. It is designed to be easily extendable. Below is an overview of the architecture, technologies used, and configuration guidelines.  
+Note that it is not meant to replace Flow at all, since not everything is CRUD. It is meant to speed up specific tasks.
 
 ## Tech-Stack
 - **Spring Boot** for backend API development and dependency injection
 - **Vaadin Flow** for frontend UI components
-- **HOCON** for flexible configuration
+- **HOCON** for a compact and readable configuration (also imports!)
 
 ## Core architecture and basic functions:
  -  **Modular UI system** - The UI has a modular structure, with renderers and factories working at different levels (e.g. Component List Factory, Renderer System).
@@ -32,10 +33,18 @@ FlowCMS is a flexible high level extension for building applications using Vaadi
 - **Extensibility and hook points**
 - **Generic Block Route Renderer** - Currently this Framework only supports 
   - **Add Generic Blocks**
+- **Custom Repositories**
   
+## How is the data problem solved?
+Currently, for fast development purposes an H2 Database is being used. Since Repositories etc. cannot be dynamically create a self written Class `DynamicEntityManagerService` is being used. 
+Also before startup the `FlowCmsDatabaseSchemaValidator` will check if the current database schema matches the HOCON configuration. 
+
+Note: It is planned allow hooking alternative Spring Service implementing an interface to provide the same functionality `DynamicEntityManagerService` but for a specific table. This way pretty much any storage can be attached to FlowCms.
+
 ## Configuration via HOCON
-The system supports view configuration where layouts and fields are defined in a HOCON file. 
-In theory, you could also use Java since the configuration file is simply parsed into Java Classes but this wouldn't be that readable.
+The system supports view configuration where layouts and fields are defined in a HOCON file.   
+
+Note: In theory, you could also use Java Classes to do the same since the configuration file is anyway parsed as Java Classes. But the readability would suffer quite significantly.
 
 Below is an example how a route and the related table is configured:
 
