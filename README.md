@@ -20,7 +20,6 @@ Note that it is not meant to replace Flow at all, since not everything is CRUD. 
  -  **Icons** - Icons are interchangeable
 
 ## Roadmap (in no specific order):
-- **List View Support**
 - **Support Adding, Removing, Viewing relationships between entities (1:1, 1:n, n:n)**
 - **Nested hierarchies**
 - **Field Validation** - Custom hooks for more complex cases

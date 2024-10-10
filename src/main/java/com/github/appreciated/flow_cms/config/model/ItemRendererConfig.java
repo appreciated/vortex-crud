@@ -2,6 +2,8 @@ package com.github.appreciated.flow_cms.config.model;
 
 import com.typesafe.config.Optional;
 
+import java.util.List;
+
 public class ItemRendererConfig {
 
     private String type;
@@ -10,6 +12,8 @@ public class ItemRendererConfig {
     private String descriptionField;
     @Optional
     private String imageField;
+    @Optional
+    private List<FormField> children;
 
     public String getType() {
         return type;
@@ -41,5 +45,13 @@ public class ItemRendererConfig {
 
     public void setImageField(String imageField) {
         this.imageField = imageField;
+    }
+
+    public List<FormField> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<FormField> children) {
+        this.children = children;
     }
 }

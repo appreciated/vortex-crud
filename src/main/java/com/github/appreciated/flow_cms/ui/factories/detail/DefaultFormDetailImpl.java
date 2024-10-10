@@ -42,8 +42,6 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
     public Component renderDetail(RouteConfig routeConfig, GenericEntity entity, boolean isWrapped) {
         String table = routeConfig.getTable();
 
-        TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
@@ -61,6 +59,7 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
                 }
         );
 
+        TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
         DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
