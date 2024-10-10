@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultIconImpl implements FlowCmsIcon {
+public class DefaultFlowCmsIconImpl implements FlowCmsIcon {
 
     @Override
     public Component renderIcon(String iconEnum) {
