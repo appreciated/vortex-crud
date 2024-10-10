@@ -30,13 +30,13 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     private final FlowCmsConfigService flowCmsConfigService;
     private final FlowCmsRouteRendererFactory containerFactory;
     private final FlowCmsEntityDetailRendererFactory detailRendererFactory;
-    private final DynamicEntityManagerService dynamicEntityManagerService;
+    private final DynamicEntityManagerService DynamicEntityManagerService;
 
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteRendererFactory containerFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory, DynamicEntityManagerService dynamicEntityManagerService) {
+    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteRendererFactory containerFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory, DynamicEntityManagerService DynamicEntityManagerService) {
         this.flowCmsConfigService = flowCmsConfigService;
         this.containerFactory = containerFactory;
         this.detailRendererFactory = detailRendererFactory;
-        this.dynamicEntityManagerService = dynamicEntityManagerService;
+        this.DynamicEntityManagerService = DynamicEntityManagerService;
         setSizeFull();
     }
 
@@ -51,7 +51,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
             add(viewContainer);
         } else {
             DetailRenderer detailRenderer = configForRoute.getRenderConfiguration().getDetailRenderer();
-            GenericEntity recordById = dynamicEntityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
+            GenericEntity recordById = DynamicEntityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
             add(detailRendererFactory.getRenderer(detailRenderer).renderDetail(configForRoute, recordById, false));
         }
     }
