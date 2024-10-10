@@ -16,6 +16,10 @@ public class FormField {
     private List<String> readOnlyForRoles;
     @Optional
     private String label;
+    @Optional
+    private String factory;
+    @Optional
+    private FactoryConfig factoryConfiguration;
 
     public String getColumn() {
         return column;
@@ -55,5 +59,21 @@ public class FormField {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public FactoryConfig getFactoryConfiguration() {
+        return factoryConfiguration;
+    }
+
+    public void setFactoryConfiguration(FactoryConfig factoryConfiguration) {
+        this.factoryConfiguration = factoryConfiguration;
     }
 }

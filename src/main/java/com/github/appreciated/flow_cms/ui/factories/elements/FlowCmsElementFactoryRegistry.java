@@ -11,5 +11,6 @@ import com.github.appreciated.flow_cms.config.model.FieldConfig;
 public interface FlowCmsElementFactoryRegistry {
 
    FlowCmsElementFactory getFactory(FieldConfig type);
+   void addFactory(String key, FlowCmsElementFactory factory);
 
 }

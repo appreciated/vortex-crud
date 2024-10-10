@@ -6,11 +6,11 @@ public class RouteConfig {
 
     private String table;
     private String title;
-    private String factory;
     @Optional
     private String icon;
     @Optional
     private boolean defaultRoute;
+    private String factory;
     private FactoryConfig factoryConfiguration;
     @Optional
     private AccessControlConfig accessControl;
