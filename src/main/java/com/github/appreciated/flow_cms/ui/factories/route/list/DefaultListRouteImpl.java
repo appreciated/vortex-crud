@@ -1,0 +1,33 @@
+package com.github.appreciated.flow_cms.ui.factories.route.list;
+
+import com.github.appreciated.flow_cms.config.model.RouteConfig;
+import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
+import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
+
+import java.util.List;
+
+/**
+ * A custom Grid component for displaying GenericEntity objects with lazy loading.
+ * This grid is configured with a data provider that retrieves and counts records dynamically based on the specified table in the RouteConfig.
+ */
+
+public class DefaultListRouteImpl extends Grid<GenericEntity> {
+
+    public DefaultListRouteImpl(int i, RouteConfig config, DynamicEntityManagerService entityManagerService) {
+        String table = config.getTable();
+
+        // Virtual List mit Lazy Loading einrichten
+        DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(
+                query -> {
+                    List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, query.getOffset(), query.getLimit());
+                    return items.stream();
+                },
+                query -> entityManagerService.count(table)
+        );
+
+        setDataProvider(dataProvider);
+    }
+}
