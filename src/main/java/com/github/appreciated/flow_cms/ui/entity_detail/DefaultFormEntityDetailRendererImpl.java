@@ -51,9 +51,11 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
         form.setMaxWidth("1000px");
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
+        String prefix = !isWrapped ? layout.getTranslation(routeConfig.getTitle()) + " / " : "";
+
         binder.bind(
                 titleComponent,
-                entity1 -> layout.getTranslation(routeConfig.getTitle()) + "/" + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleField()),
+                entity1 -> prefix + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleField()),
                 (entity1, string) -> {
                 }
         );
