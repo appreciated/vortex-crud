@@ -21,14 +21,16 @@ FlowCMS is a flexible high level extension for building applications using Vaadi
 ## Roadmap (in no specific order):
 - **List View Support**
 - **Support Adding, Removing, Viewing relationships between entities (1:1, 1:n, n:n)**
+- **Nested hierarchies**
+- **Field Validation** - Custom hooks for more complex cases
 - **Support for media**
 - **User and Role management & Authentication** (optionally with Authentik)
-- **Support more Form controls** Radiobutton Group 
+- **Support more Form controls** Radiobutton Group, Select Group, ... 
 - **RBAC via Configuration**
 - **Entity Versioning**
 - **Entity Auditing**
 - **Extensibility and hook points**
-- **Generic Block Route Renderer**
+- **Generic Block Route Renderer** - Currently this Framework only supports 
   - **Add Generic Blocks**
   
 ## Configuration via HOCON
