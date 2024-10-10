@@ -48,10 +48,10 @@ public class TranslationService implements I18NProvider {
     /**
      * Constructor for the TranslationService.
      *
-     * @param flowCmsConfigService The configuration service to get the i18n bundle prefix.
+     * @param configService The configuration service to get the i18n bundle prefix.
      */
-    public TranslationService(FlowCmsConfigService flowCmsConfigService) {
-        this.i18nBundlePrefix = flowCmsConfigService.getConfiguration().getI18nBundlePrefix();
+    public TranslationService(FlowCmsConfigService configService) {
+        this.i18nBundlePrefix = configService.getConfiguration().getI18nBundlePrefix();
         this.locales = discoverAvailableLocales();
     }
 

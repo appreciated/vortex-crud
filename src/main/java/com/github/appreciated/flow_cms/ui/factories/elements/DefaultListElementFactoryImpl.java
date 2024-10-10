@@ -8,12 +8,12 @@ import com.vaadin.flow.component.Component;
 public class DefaultListElementFactoryImpl implements FlowCmsElementFactory {
 
     private final FlowCmsEntityManagerService entityManagerService;
-    private final FlowCmsConfigService flowCmsConfigService;
+    private final FlowCmsConfigService configService;
 
     public DefaultListElementFactoryImpl(FlowCmsEntityManagerService entityManagerService,
-                                         FlowCmsConfigService flowCmsConfigService) {
+                                         FlowCmsConfigService configService) {
         this.entityManagerService = entityManagerService;
-        this.flowCmsConfigService = flowCmsConfigService;
+        this.configService = configService;
     }
 
     @Override

@@ -18,8 +18,8 @@ public class DefaultDetailFactoryRegistryImpl implements FlowCmsDetailFactoryReg
 
     HashMap<String, FlowCmsDetailFactory> factories = new HashMap<>();
 
-    public DefaultDetailFactoryRegistryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService flowCmsConfigService) {
-        factories.put("form", new DefaultFormDetailFactoryImpl(componentFactory, entityManagerService, flowCmsConfigService));
+    public DefaultDetailFactoryRegistryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService) {
+        factories.put("form", new DefaultFormDetailFactoryImpl(componentFactory, entityManagerService, configService));
     }
 
     public FlowCmsDetailFactory getFactory(DetailFactory routeConfig) {

@@ -26,15 +26,15 @@ import java.util.Objects;
 @Route(value = "view/:path*", layout = ProxyRouterLayout.class)
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
-    private final FlowCmsConfigService flowCmsConfigService;
+    private final FlowCmsConfigService configService;
     private final FlowCmsRouteFactoryRegistry routeFactoryRegistry;
-    private final FlowCmsDetailFactoryRegistry detailRendererFactory;
+    private final FlowCmsDetailFactoryRegistry detailFactoryRegistry;
     private final FlowCmsEntityManagerService entityManagerService;
 
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteFactoryRegistry routeFactoryRegistry, FlowCmsDetailFactoryRegistry detailRendererFactory, FlowCmsEntityManagerService entityManagerService) {
-        this.flowCmsConfigService = flowCmsConfigService;
+    public DynamicRoute(FlowCmsConfigService configService, FlowCmsRouteFactoryRegistry routeFactoryRegistry, FlowCmsDetailFactoryRegistry detailFactoryRegistry, FlowCmsEntityManagerService entityManagerService) {
+        this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
-        this.detailRendererFactory = detailRendererFactory;
+        this.detailFactoryRegistry = detailFactoryRegistry;
         this.entityManagerService = entityManagerService;
         setSizeFull();
     }
@@ -44,14 +44,14 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         String path = event.getRouteParameters().get("path").orElse("");
         removeAll();
 
-        RouteConfig configForRoute = flowCmsConfigService.getConfigForRoute(path);
+        RouteConfig configForRoute = configService.getConfigForRoute(path);
         if (path.split("/").length == 1 || Objects.equals(configForRoute.getFactory(), "master-detail")) {
             Component viewContainer = routeFactoryRegistry.getFactory(configForRoute).renderRoute(0, configForRoute, entityManagerService);
             add(viewContainer);
         } else {
             DetailFactory detailFactory = configForRoute.getFactoryConfiguration().getDetailFactory();
             GenericEntity recordById = entityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
-            add(detailRendererFactory.getFactory(detailFactory).renderDetail(configForRoute, recordById, false));
+            add(detailFactoryRegistry.getFactory(detailFactory).renderDetail(configForRoute, recordById, false));
         }
     }
 }

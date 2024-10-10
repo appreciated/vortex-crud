@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class GenericEntityGrid extends Grid<GenericEntity> {
 
-    public GenericEntityGrid(int i, RouteConfig routeConfig, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
+    public GenericEntityGrid(int i, RouteConfig routeConfig, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
         String table = routeConfig.getTable();
 
         // Set up the data provider with lazy loading
@@ -32,7 +32,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
                 query -> entityManagerService.count(table)
         );
 
-        TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
+        TableConfig tables = configService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
         ItemFactoryConfig itemFactoryConfig = routeConfig.getFactoryConfiguration().getItemFactory();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 

@@ -9,7 +9,7 @@ import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.RouteHeader;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactory;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
+import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -32,32 +32,32 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final FlowCmsItemFactory entityItemRenderer;
-    private final ItemFactoryConfig itemRenderer;
+    private final FlowCmsItemFactory itemFactory;
+    private final ItemFactoryConfig factoryConfig;
 
     private final RouteConfig config;
     private final FlowCmsEntityManagerService entityManagerService;
     private final String table;
-    private final FlowCmsDetailFactory detailRenderer;
+    private final FlowCmsDetailFactory detailFactory;
 
-    public DefaultMasterDetailRouteFactoryImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry entityCardRendererFactory, FlowCmsDetailFactoryRegistry detailRendererFactory, FlowCmsIcon flowCmsIcon) {
+    public DefaultMasterDetailRouteFactoryImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry, FlowCmsDetailFactoryRegistry detailFactoryRegistry, FlowCmsIconFactory iconFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
         FactoryConfig factoryConfiguration = config.getFactoryConfiguration();
-        this.itemRenderer = factoryConfiguration.getItemFactory();
-        this.entityItemRenderer = entityCardRendererFactory.getFactory(itemRenderer);
+        this.factoryConfig = factoryConfiguration.getItemFactory();
+        this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         this.table = config.getTable();
 
         DetailFactory detailFactoryConfig = factoryConfiguration.getDetailFactory();
-        this.detailRenderer = detailRendererFactory.getFactory(detailFactoryConfig);
+        this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig);
 
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();
         detailLayout.setWidth("unset");
         detailLayout.getStyle().set("flex", "4 1 400px");
 
-        HorizontalLayout header = new RouteHeader(config, flowCmsIcon);
+        HorizontalLayout header = new RouteHeader(config, iconFactory);
         header.setPadding(true);
 
         virtualList.setHeightFull();
@@ -81,12 +81,12 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private void onItemClick(GenericEntity entity) {
         this.detailLayout.removeAll();
-        this.detailLayout.add(detailRenderer.renderDetail(config, entity, true));
+        this.detailLayout.add(detailFactory.renderDetail(config, entity, true));
     }
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = entityItemRenderer.renderItem(itemRenderer, item, null);
+            Component component = itemFactory.renderItem(factoryConfig, item, null);
             Div div = new Div(component);
             div.getStyle().set("padding", "5px 5px 0px 5px");
             div.addClickListener(event -> onItemClick(item));

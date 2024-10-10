@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.ui.factories.router_layout;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
+import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -23,12 +23,12 @@ import java.util.Set;
 
 public class DefaultRouterLayout extends AppLayout {
 
-    private final FlowCmsConfigService flowCmsConfigService;
-    private final FlowCmsIcon flowCmsIcon;
+    private final FlowCmsConfigService configService;
+    private final FlowCmsIconFactory iconFactory;
 
-    public DefaultRouterLayout(FlowCmsConfigService flowCmsConfigService, FlowCmsIcon flowCmsIcon) {
-        this.flowCmsConfigService = flowCmsConfigService;
-        this.flowCmsIcon = flowCmsIcon;
+    public DefaultRouterLayout(FlowCmsConfigService configService, FlowCmsIconFactory iconFactory) {
+        this.configService = configService;
+        this.iconFactory = iconFactory;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DefaultRouterLayout extends AppLayout {
 
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1(getTranslation(flowCmsConfigService.getApplicationName()));
+        H1 title = new H1(getTranslation(configService.getApplicationName()));
         title.getStyle().set("font-size", "var(--lumo-font-size-l)")
                 .set("margin", "0");
 
@@ -52,13 +52,13 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Set<Map.Entry<String, RouteConfig>> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().entrySet();
+        Set<Map.Entry<String, RouteConfig>> keys = configService.getConfiguration().getRoutesConfig().entrySet();
         keys.forEach(configEntry -> {
             String translation = getTranslation(configEntry.getValue().getTitle());
             String path = "/view/" + configEntry.getKey();
             Component icon = null;
             if (configEntry.getValue().getIcon() != null) {
-                icon = flowCmsIcon.renderIcon(configEntry.getValue().getIcon());
+                icon = iconFactory.renderIcon(configEntry.getValue().getIcon());
             }
             nav.addItem(new SideNavItem(translation, path, icon));
         });

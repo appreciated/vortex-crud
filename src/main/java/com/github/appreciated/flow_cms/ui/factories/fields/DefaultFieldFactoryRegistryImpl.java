@@ -24,8 +24,8 @@ public class DefaultFieldFactoryRegistryImpl implements FlowCmsFieldFactoryRegis
 
     private final Map<String, FlowCmsFieldFactory> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistryImpl(FlowCmsConfigService flowCmsConfigService) {
-        ApplicationConfig configuration = flowCmsConfigService.getConfiguration();
+    public DefaultFieldFactoryRegistryImpl(FlowCmsConfigService configService) {
+        ApplicationConfig configuration = configService.getConfiguration();
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());

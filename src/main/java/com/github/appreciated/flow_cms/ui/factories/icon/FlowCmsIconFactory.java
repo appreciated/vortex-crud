@@ -7,6 +7,6 @@ import com.vaadin.flow.component.Component;
  * Implementations of this interface are responsible for providing
  * a UI component based on the given icon identifier.
  */
-public interface FlowCmsIcon {
+public interface FlowCmsIconFactory {
     Component renderIcon(String iconEnum);
 }

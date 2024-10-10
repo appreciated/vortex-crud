@@ -29,7 +29,7 @@ public class FlowCmsDatabaseSchemaValidator {
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public FlowCmsDatabaseSchemaValidator(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
+    public FlowCmsDatabaseSchemaValidator(EntityManager entityManager, FlowCmsConfigService configService) {
         this.entityManager = entityManager;
 
         typeMappings = new HashMap<>();
@@ -41,7 +41,7 @@ public class FlowCmsDatabaseSchemaValidator {
         typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
         typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
 
-        Map<String, TableConfig> tablesConfig = flowCmsConfigService.getConfiguration().getTablesConfig();
+        Map<String, TableConfig> tablesConfig = configService.getConfiguration().getTablesConfig();
 
         for (Map.Entry<String, TableConfig> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFieldsConfig());

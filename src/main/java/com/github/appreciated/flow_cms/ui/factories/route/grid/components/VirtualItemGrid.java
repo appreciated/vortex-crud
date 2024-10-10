@@ -27,17 +27,17 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final String table;
     private final FlowCmsItemFactory itemFactory;
-    private final ItemFactoryConfig itemRenderer;
+    private final ItemFactoryConfig factoryConfig;
     private final FlowCmsEntityManagerService entityManagerService;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(int i, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry entityCardRendererFactory) {
+    public VirtualItemGrid(int i, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        itemRenderer = config.getFactoryConfiguration().getItemFactory();
-        this.itemFactory = entityCardRendererFactory.getFactory(config.getFactoryConfiguration().getItemFactory());
+        factoryConfig = config.getFactoryConfiguration().getItemFactory();
+        this.itemFactory = itemFactoryRegistry.getFactory(config.getFactoryConfiguration().getItemFactory());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -60,7 +60,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(itemRenderer, entity, maxWidth));
+                Div div = new Div(itemFactory.renderItem(factoryConfig, entity, maxWidth));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);

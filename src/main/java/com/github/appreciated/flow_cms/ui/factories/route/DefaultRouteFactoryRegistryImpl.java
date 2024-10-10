@@ -4,14 +4,12 @@ import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.elements.FlowCmsElementFactory;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
+import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.route.grid.DefaultGridRouteFactoryImpl;
 import com.github.appreciated.flow_cms.ui.factories.route.list.DefaultListRouteFactoryImpl;
 import com.github.appreciated.flow_cms.ui.factories.route.list.FlowCmsListColumnCallbackRegistry;
 import com.github.appreciated.flow_cms.ui.factories.route.master_detail.DefaultMasterDetailRouteFactoryImpl;
-import com.vaadin.flow.component.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -28,15 +26,15 @@ public class DefaultRouteFactoryRegistryImpl implements FlowCmsRouteFactoryRegis
     HashMap<String, FlowCmsRouteFactory> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistryImpl(FlowCmsEntityManagerService dynamicEntityManager,
-                                           FlowCmsItemFactoryRegistry entityCardRendererFactory,
-                                           FlowCmsDetailFactoryRegistry detailRendererFactory,
-                                           FlowCmsConfigService flowCmsConfigService,
-                                           FlowCmsListColumnCallbackRegistry flowCmsListColumnCallbackRegistry,
-                                           FlowCmsIcon flowCmsIcon
+                                           FlowCmsItemFactoryRegistry itemFactoryRegistry,
+                                           FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                           FlowCmsConfigService configService,
+                                           FlowCmsListColumnCallbackRegistry listColumnCallbackRegistry,
+                                           FlowCmsIconFactory iconFactory
     ) {
-        factories.put("master-detail", (i, config, entityManagerService) -> new DefaultMasterDetailRouteFactoryImpl(i, config, dynamicEntityManager, entityCardRendererFactory, detailRendererFactory, flowCmsIcon));
-        factories.put("list", (i, config, entityManagerService) -> new DefaultListRouteFactoryImpl(i, config, dynamicEntityManager, flowCmsConfigService, flowCmsListColumnCallbackRegistry, flowCmsIcon));
-        factories.put("grid", (i, config, entityManagerService) -> new DefaultGridRouteFactoryImpl(i, config, dynamicEntityManager, entityCardRendererFactory, flowCmsIcon));
+        factories.put("master-detail", (i, config, entityManagerService) -> new DefaultMasterDetailRouteFactoryImpl(i, config, dynamicEntityManager, itemFactoryRegistry, detailFactoryRegistry, iconFactory));
+        factories.put("list", (i, config, entityManagerService) -> new DefaultListRouteFactoryImpl(i, config, dynamicEntityManager, configService, listColumnCallbackRegistry, iconFactory));
+        factories.put("grid", (i, config, entityManagerService) -> new DefaultGridRouteFactoryImpl(i, config, dynamicEntityManager, itemFactoryRegistry, iconFactory));
     }
 
     public FlowCmsRouteFactory getFactory(RouteConfig routeConfig) {

@@ -33,12 +33,12 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
 
     private final DefaultFieldFactoryRegistryImpl componentFactory;
     private final FlowCmsEntityManagerService entityManagerService;
-    private final FlowCmsConfigService cmsConfigService;
+    private final FlowCmsConfigService configService;
 
-    public DefaultFormDetailFactoryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
+    public DefaultFormDetailFactoryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
-        this.cmsConfigService = cmsConfigService;
+        this.configService = configService;
     }
 
     @Override
@@ -62,12 +62,12 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                 }
         );
 
-        TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-        DetailFactory itemRendererConfig = routeConfig.getFactoryConfiguration().getDetailFactory();
+        TableConfig tables = configService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
+        DetailFactory detailFactory = routeConfig.getFactoryConfiguration().getDetailFactory();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormField field : itemRendererConfig.getChildren()) {
+        for (FormField field : detailFactory.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null && !field.getType().equals("relationship")) {

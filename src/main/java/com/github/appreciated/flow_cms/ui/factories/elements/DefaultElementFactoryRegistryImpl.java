@@ -20,9 +20,9 @@ public class DefaultElementFactoryRegistryImpl implements FlowCmsElementFactoryR
 
     private final Map<String, FlowCmsElementFactory> factories = new HashMap<>();
 
-    public DefaultElementFactoryRegistryImpl(FlowCmsConfigService flowCmsConfigService) {
-        ApplicationConfig configuration = flowCmsConfigService.getConfiguration();
-        //factories.put("list", new DefaultListElementFactoryImpl(componentFactory, entityManagerService, flowCmsConfigService));
+    public DefaultElementFactoryRegistryImpl(FlowCmsConfigService configService) {
+        ApplicationConfig configuration = configService.getConfiguration();
+        //factories.put("list", new DefaultListElementFactoryImpl(componentFactory, entityManagerService, configService));
     }
 
     public Map<String, FlowCmsElementFactory> getFactories() {

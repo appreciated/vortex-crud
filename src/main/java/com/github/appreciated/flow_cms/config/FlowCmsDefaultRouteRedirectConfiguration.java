@@ -26,8 +26,8 @@ public class FlowCmsDefaultRouteRedirectConfiguration implements VaadinServiceIn
     private final Map<String, RouteConfig> routeConfigs;
     private static Optional<Map.Entry<String, RouteConfig>> defaultRoute;
 
-    public FlowCmsDefaultRouteRedirectConfiguration(FlowCmsConfigService flowCmsConfigService) {
-        this.routeConfigs = flowCmsConfigService.getConfiguration().getRoutesConfig();
+    public FlowCmsDefaultRouteRedirectConfiguration(FlowCmsConfigService configService) {
+        this.routeConfigs = configService.getConfiguration().getRoutesConfig();
     }
 
     @Override
