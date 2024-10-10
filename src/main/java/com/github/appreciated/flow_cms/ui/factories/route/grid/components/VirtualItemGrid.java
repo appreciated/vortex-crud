@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.ui.factories.route.grid.components;
 
 import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRenderer;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRendererFactory;
@@ -28,12 +28,12 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final String table;
     private final FlowCmsItemRenderer entityItemRenderer;
     private final ItemRendererConfig itemRenderer;
-    private final DynamicEntityManagerService entityManagerService;
+    private final FlowCmsEntityManagerService entityManagerService;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(int i, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory) {
+    public VirtualItemGrid(int i, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory) {
         this.entityManagerService = entityManagerService;
         table = config.getTable();
         itemRenderer = config.getRenderConfiguration().getItemRenderer();

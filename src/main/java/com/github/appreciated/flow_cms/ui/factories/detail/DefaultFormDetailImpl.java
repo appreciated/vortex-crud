@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
 import com.github.appreciated.flow_cms.config.model.*;
-import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
@@ -31,10 +31,10 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 public class DefaultFormDetailImpl implements FlowCmsDetail {
 
     private final DefaultFlowCmsFieldFactoryImpl componentFactory;
-    private final DynamicEntityManagerService entityManagerService;
+    private final FlowCmsEntityManagerService entityManagerService;
     private final FlowCmsConfigService cmsConfigService;
 
-    public DefaultFormDetailImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, DynamicEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
+    public DefaultFormDetailImpl(DefaultFlowCmsFieldFactoryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService cmsConfigService) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
         this.cmsConfigService = cmsConfigService;

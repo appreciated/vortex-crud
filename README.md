@@ -15,7 +15,7 @@ Note that it is not meant to replace Flow at all, since not everything is CRUD. 
  -  **Database validation** - There is a FlowCmsDatabaseSchemaValidator that validates the database schema against the application configuration.
  -  **Dynamic routing** - The DynamicRoute class enables dynamic routing based on the configuration.
  -  **UI components and renderers** - Several renderers and factories are available, such as DefaultEntityDetailRendererFactoryImpl, DefaultEntityItemCardRendererImpl, and DefaultRouteRendererFactoryImpl...
- -  **Entity management** - The GenericEntity and DynamicEntityManagerService classes indicate generic entity management.
+ -  **Entity management** - The GenericEntity and FlowCmsEntityManagerService classes enable generic entity management.
  -  **Translations** - Translations thought of from the start
  -  **Icons** - Icons are interchangeable
 
@@ -35,10 +35,10 @@ Note that it is not meant to replace Flow at all, since not everything is CRUD. 
 - **Custom Repositories**
   
 ## How is the data problem solved?
-Currently, for fast development purposes an H2 Database is being used. Since Repositories etc. cannot be dynamically create a self written Class `DynamicEntityManagerService` is being used. 
+Currently, for fast development purposes an H2 Database is being used. Since Repositories etc. cannot be dynamically create a self written Class `FlowCmsEntityManagerService` is being used. 
 Also before startup the `FlowCmsDatabaseSchemaValidator` will check if the current database schema matches the HOCON configuration. 
 
-Note: It is planned allow hooking alternative Spring Service implementing an interface to provide the same functionality `DynamicEntityManagerService` but for a specific table. This way pretty much any storage can be attached to FlowCms.
+Note: It is planned allow hooking alternative Spring Service implementing an interface to provide the same functionality `FlowCmsEntityManagerService` but for a specific table. This way pretty much any storage can be attached to FlowCms.
 
 ## Configuration via HOCON
 The system supports view configuration where routes and tables are defined in a HOCON file.   

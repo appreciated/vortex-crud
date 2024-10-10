@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.route;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -10,5 +10,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface FlowCmdRoute {
-    Component renderRoute(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService);
+    Component renderRoute(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService);
 }

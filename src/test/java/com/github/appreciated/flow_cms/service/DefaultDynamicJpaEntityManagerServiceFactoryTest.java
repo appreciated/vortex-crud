@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@Import(DefaultDynamicJpaEntityManagerService.class)
+@Import(DefaultJpaEntityManagerService.class)
 @Transactional
 class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
@@ -25,7 +25,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     private EntityManager entityManager;
 
     @Autowired
-    private DefaultDynamicJpaEntityManagerService service;
+    private DefaultJpaEntityManagerService service;
 
     @BeforeEach
     void setUp() {

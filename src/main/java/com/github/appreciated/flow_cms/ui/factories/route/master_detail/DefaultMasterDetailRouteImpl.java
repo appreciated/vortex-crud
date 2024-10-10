@@ -4,15 +4,16 @@ import com.github.appreciated.flow_cms.config.model.DetailRenderer;
 import com.github.appreciated.flow_cms.config.model.ItemRendererConfig;
 import com.github.appreciated.flow_cms.config.model.RenderConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.components.RouteHeader;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetail;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsEntityDetailFactory;
+import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRenderer;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemRendererFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -35,11 +36,11 @@ public class DefaultMasterDetailRouteImpl extends SplitLayout {
     private final ItemRendererConfig itemRenderer;
 
     private final RouteConfig config;
-    private final DynamicEntityManagerService entityManagerService;
+    private final FlowCmsEntityManagerService entityManagerService;
     private final String table;
     private final FlowCmsDetail detailRenderer;
 
-    public DefaultMasterDetailRouteImpl(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailFactory detailRendererFactory) {
+    public DefaultMasterDetailRouteImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailFactory detailRendererFactory, FlowCmsIcon flowCmsIcon) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
@@ -56,7 +57,7 @@ public class DefaultMasterDetailRouteImpl extends SplitLayout {
         detailLayout.setWidth("unset");
         detailLayout.getStyle().set("flex", "4 1 400px");
 
-        HorizontalLayout header = new HorizontalLayout(new H2(getTranslation(config.getTitle())));
+        HorizontalLayout header = new RouteHeader(config, flowCmsIcon);
         header.setPadding(true);
 
         virtualList.setHeightFull();

@@ -56,11 +56,11 @@ public class DefaultRouterLayout extends AppLayout {
         keys.forEach(configEntry -> {
             String translation = getTranslation(configEntry.getValue().getTitle());
             String path = "/view/" + configEntry.getKey();
-            Component prefixComponent = null;
+            Component icon = null;
             if (configEntry.getValue().getIcon() != null) {
-                prefixComponent = flowCmsIcon.renderIcon(configEntry.getValue().getIcon());
+                icon = flowCmsIcon.renderIcon(configEntry.getValue().getIcon());
             }
-            nav.addItem(new SideNavItem(translation, path, prefixComponent));
+            nav.addItem(new SideNavItem(translation, path, icon));
         });
         return nav;
     }

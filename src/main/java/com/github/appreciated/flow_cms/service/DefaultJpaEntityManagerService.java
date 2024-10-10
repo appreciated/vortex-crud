@@ -16,11 +16,11 @@ import java.util.List;
  */
 
 @Service
-public class DefaultDynamicJpaEntityManagerService implements DynamicEntityManagerService {
+public class DefaultJpaEntityManagerService implements FlowCmsEntityManagerService {
 
     private final EntityManager entityManager;
 
-    public DefaultDynamicJpaEntityManagerService(EntityManager entityManager) {
+    public DefaultJpaEntityManagerService(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
