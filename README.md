@@ -1,7 +1,7 @@
 # FlowCMS
 <img width="100" alt="image" src="./flow-cms.png"/> 
 
-FlowCMS is a flexible framework for building applications of many kinds. The framework is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
+FlowCMS is a flexible high level extension for building applications using Vaadin Flow. It is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
 
 ## Tech-Stack
 - **Spring Boot** for backend API development and dependency injection
@@ -15,13 +15,21 @@ FlowCMS is a flexible framework for building applications of many kinds. The fra
  -  **Dynamic routing** - The DynamicRoute class enables dynamic routing based on the configuration.
  -  **UI components and renderers** - Several renderers and factories are available, such as DefaultEntityDetailRendererFactoryImpl, DefaultEntityItemCardRendererImpl, and DefaultRouteRendererFactoryImpl...
  -  **Entity management** - The GenericEntity and DynamicEntityManagerService classes indicate generic entity management.
+ -  **Translations** - Translations thought of from the start
+ -  **Icons** - Icons are interchangeable
 
-## TODOs:
+## Roadmap (in no specific order):
+- **List View Support**
+- **Support Adding, Removing, Viewing relationships between entities (1:1, 1:n, n:n)**
+- **Support for media**
 - **User and Role management & Authentication** (optionally with Authentik)
+- **Support more Form controls** Radiobutton Group 
 - **RBAC via Configuration**
 - **Entity Versioning**
 - **Entity Auditing**
 - **Extensibility and hook points**
+- **Generic Block Route Renderer**
+  - **Add Generic Blocks**
   
 ## Configuration via HOCON
 The system supports view configuration where layouts and fields are defined in a HOCON file. 
@@ -78,34 +86,17 @@ Below is a more complete sample configuration for setting up the project managem
 
 ```hocon
 application {
-  name = "Project Management Application"
+  name = "application.name"
 
-  user-management {
-    enabled = true
-    access-control = {
-      roles = ["manager", "admin"]
-    }
-    registration = true
-    additional-table-fields = [{name = "start_date", type = "date"}]
-  }
+  i18n-bundle-prefix = "some_i18n"
 
   selects {
     task-status {
-       open = "selects.task-status.open"
-       todo = "selects.task-status.todo"
-       work-in-progress = "selects.task-status.progress"
-       closed = "selects.task-status.closed"
+      open = "selects.task-status.open"
+      todo = "selects.task-status.todo"
+      work-in-progress = "selects.task-status.progress"
+      closed = "selects.task-status.closed"
     }
-  }
-
-  versioning {
-    enabled = true
-    tables = ["projects", "tasks", "employees", "comments"]
-  }
-
-  auditing {
-    enabled = true
-    actions = ["create", "update", "delete", "login", "logout"]
   }
 
   tables = {
@@ -131,23 +122,15 @@ application {
         created_at = {type = "datetime"},
         updated_at = {type = "datetime"}
       }
-    },
-    "comments" = {
-      fields = {
-        id = {type = "id", primary = true},
-        comment_text = {type = "text", max-length = 1000},
-        employee_id = {type = "number"},
-        created_at = {type = "datetime", default = "now()"}
-      }
     }
   }
-
   routes = {
     "projects" = {
       default-route = true
       table = "projects"
       title = "route.projects.title"
       renderer = "grid"
+      icon = "FACTORY"
       render-configuration {
         item-renderer = {
           type = "entity-item-card-renderer"
@@ -166,6 +149,31 @@ application {
         access-control = {
           roles = ["manager", "admin"]
         }
+      }
+    },
+    "tasks" = {
+      table = "tasks"
+      icon = "TASKS"
+      title = "route.tasks.title"
+      renderer = "master-detail"
+      render-configuration = {
+        item-renderer = {
+          type = "entity-item-card-renderer"
+          title-field = "title"
+          description-field = "description"
+        }
+        detail-renderer {
+          title-field = "title"
+          type = "form", children = [
+            {field = "title", label = "route.tasks.labels.title"},
+            {field = "description", label = "route.tasks.labels.description"},
+            {field = "status", label = "route.tasks.labels.status"},
+            {field = "due_date", label = "route.tasks.labels.due_date"}
+          ]
+        }
+      }
+      access-control = {
+        roles = ["developer", "manager", "admin"]
       }
     }
   }
