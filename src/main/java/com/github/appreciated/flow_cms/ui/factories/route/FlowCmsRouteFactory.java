@@ -9,6 +9,6 @@ import com.vaadin.flow.component.Component;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface FlowCmdRouteFactory {
+public interface FlowCmsRouteFactory {
     Component renderRoute(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService);
 }

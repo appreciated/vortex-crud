@@ -7,6 +7,7 @@ import com.github.appreciated.flow_cms.ui.factories.fields.functions.DefaultComb
 import com.github.appreciated.flow_cms.ui.factories.fields.functions.DefaultDatePickerFactory;
 import com.github.appreciated.flow_cms.ui.factories.fields.functions.DefaultTextAreaFactory;
 import com.github.appreciated.flow_cms.ui.factories.fields.functions.DefaultTextFieldFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -39,5 +40,10 @@ public class DefaultFieldFactoryRegistryImpl implements FlowCmsFieldFactoryRegis
     @Override
     public FlowCmsFieldFactory getFactory(FieldConfig type) {
         return factories.get(type.getType());
+    }
+
+    @Override
+    public void addFactory(String key, FlowCmsFieldFactory factory) {
+        factories.put(key, factory);
     }
 }

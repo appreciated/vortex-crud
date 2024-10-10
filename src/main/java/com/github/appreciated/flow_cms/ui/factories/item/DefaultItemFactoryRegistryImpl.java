@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.item;
 
 import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
+import com.github.appreciated.flow_cms.ui.factories.elements.FlowCmsElementFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,5 +22,10 @@ public class DefaultItemFactoryRegistryImpl implements FlowCmsItemFactoryRegistr
 
     public FlowCmsItemFactory getFactory(ItemFactoryConfig routeConfig) {
         return factories.get(routeConfig.getType());
+    }
+
+    @Override
+    public void addFactory(String key, FlowCmsItemFactory factory) {
+        factories.put(key, factory);
     }
 }

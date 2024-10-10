@@ -4,6 +4,7 @@ import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.elements.FlowCmsElementFactory;
 import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIcon;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.route.grid.DefaultGridRouteFactoryImpl;
@@ -24,8 +25,7 @@ import java.util.HashMap;
 @Service
 public class DefaultRouteFactoryRegistryImpl implements FlowCmsRouteFactoryRegistry {
 
-    private final FlowCmsEntityManagerService dynamicEntityManager;
-    HashMap<String, FlowCmdRouteFactory> factories = new HashMap<>();
+    HashMap<String, FlowCmsRouteFactory> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistryImpl(FlowCmsEntityManagerService dynamicEntityManager,
                                            FlowCmsItemFactoryRegistry entityCardRendererFactory,
@@ -34,13 +34,17 @@ public class DefaultRouteFactoryRegistryImpl implements FlowCmsRouteFactoryRegis
                                            FlowCmsListColumnCallbackRegistry flowCmsListColumnCallbackRegistry,
                                            FlowCmsIcon flowCmsIcon
     ) {
-        this.dynamicEntityManager = dynamicEntityManager;
         factories.put("master-detail", (i, config, entityManagerService) -> new DefaultMasterDetailRouteFactoryImpl(i, config, dynamicEntityManager, entityCardRendererFactory, detailRendererFactory, flowCmsIcon));
         factories.put("list", (i, config, entityManagerService) -> new DefaultListRouteFactoryImpl(i, config, dynamicEntityManager, flowCmsConfigService, flowCmsListColumnCallbackRegistry, flowCmsIcon));
         factories.put("grid", (i, config, entityManagerService) -> new DefaultGridRouteFactoryImpl(i, config, dynamicEntityManager, entityCardRendererFactory, flowCmsIcon));
     }
 
-    public Component createViewContainer(RouteConfig routeConfig) {
-        return factories.get(routeConfig.getFactory()).renderRoute(0, routeConfig, dynamicEntityManager);
+    public FlowCmsRouteFactory getFactory(RouteConfig routeConfig) {
+        return factories.get(routeConfig.getFactory());
+    }
+
+    @Override
+    public void addFactory(String key, FlowCmsRouteFactory factory) {
+        factories.put(key, factory);
     }
 }

@@ -27,15 +27,15 @@ import java.util.Objects;
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
     private final FlowCmsConfigService flowCmsConfigService;
-    private final FlowCmsRouteFactoryRegistry containerFactory;
+    private final FlowCmsRouteFactoryRegistry routeFactoryRegistry;
     private final FlowCmsDetailFactoryRegistry detailRendererFactory;
-    private final FlowCmsEntityManagerService FlowCmsEntityManagerService;
+    private final FlowCmsEntityManagerService entityManagerService;
 
-    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteFactoryRegistry containerFactory, FlowCmsDetailFactoryRegistry detailRendererFactory, FlowCmsEntityManagerService FlowCmsEntityManagerService) {
+    public DynamicRoute(FlowCmsConfigService flowCmsConfigService, FlowCmsRouteFactoryRegistry routeFactoryRegistry, FlowCmsDetailFactoryRegistry detailRendererFactory, FlowCmsEntityManagerService entityManagerService) {
         this.flowCmsConfigService = flowCmsConfigService;
-        this.containerFactory = containerFactory;
+        this.routeFactoryRegistry = routeFactoryRegistry;
         this.detailRendererFactory = detailRendererFactory;
-        this.FlowCmsEntityManagerService = FlowCmsEntityManagerService;
+        this.entityManagerService = entityManagerService;
         setSizeFull();
     }
 
@@ -46,11 +46,11 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
 
         RouteConfig configForRoute = flowCmsConfigService.getConfigForRoute(path);
         if (path.split("/").length == 1 || Objects.equals(configForRoute.getFactory(), "master-detail")) {
-            Component viewContainer = containerFactory.createViewContainer(configForRoute);
+            Component viewContainer = routeFactoryRegistry.getFactory(configForRoute).renderRoute(0, configForRoute, entityManagerService);
             add(viewContainer);
         } else {
             DetailFactory detailFactory = configForRoute.getFactoryConfiguration().getDetailFactory();
-            GenericEntity recordById = FlowCmsEntityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
+            GenericEntity recordById = entityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
             add(detailRendererFactory.getFactory(detailFactory).renderDetail(configForRoute, recordById, false));
         }
     }
