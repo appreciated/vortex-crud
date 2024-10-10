@@ -20,6 +20,8 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 import java.util.Map;
 
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
+
 /**
  * Default implementation of the EntityDetailRenderer interface.
  * This class handles rendering entity details in a form layout and provides functionalities
@@ -105,7 +107,9 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
         });
 
         // Add the form and buttons to the layout
-        layout.add(new HorizontalLayout(titleComponent, saveButton, deleteButton), form);
+        HorizontalLayout headerBar = new HorizontalLayout(titleComponent, saveButton, deleteButton);
+        headerBar.setAlignItems(CENTER);
+        layout.add(headerBar, form);
         layout.setPadding(true);
         return layout;
     }
