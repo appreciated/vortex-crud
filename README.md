@@ -41,7 +41,7 @@ Also before startup the `FlowCmsDatabaseSchemaValidator` will check if the curre
 Note: It is planned allow hooking alternative Spring Service implementing an interface to provide the same functionality `DynamicEntityManagerService` but for a specific table. This way pretty much any storage can be attached to FlowCms.
 
 ## Configuration via HOCON
-The system supports view configuration where layouts and fields are defined in a HOCON file.   
+The system supports view configuration where routes and tables are defined in a HOCON file.   
 
 Note: In theory, you could also use Java Classes to do the same since the configuration file is anyway parsed as Java Classes. But the readability would suffer quite significantly.
 
@@ -52,7 +52,7 @@ application {
    #...
    tables = {
       "projects" = {
-         fields = {
+         columns = {
             id = {type = "id", primary = true},
             name = {type = "text", required = true, max-length = 255},
             description = {type = "text", max-length = 500},
@@ -73,16 +73,16 @@ application {
          render-configuration {
             item-renderer = {
                type = "entity-item-card-renderer"
-               title-field = "name"
-               description-field = "description"
+               title-column = "name"
+               description-column = "description"
             }
             detail-renderer {
-               title-field = "name"
+               title-column = "name"
                type = "form", children = [
-                  {field = "name", label = "route.projects.labels.name"},
-                  {field = "description", label = "route.projects.labels.description"},
-                  {field = "start_date", label = "route.projects.labels.start_date"},
-                  {field = "end_date", label = "route.projects.labels.end_date"},
+                  {column = "name", label = "route.projects.labels.name"},
+                  {column = "description", label = "route.projects.labels.description"},
+                  {column = "start_date", label = "route.projects.labels.start_date"},
+                  {column = "end_date", label = "route.projects.labels.end_date"},
                ]
             }
          }
@@ -144,16 +144,16 @@ application {
       render-configuration {
         item-renderer = {
           type = "entity-item-card-renderer"
-          title-field = "name"
-          description-field = "description"
+          title-column = "name"
+          description-column = "description"
         }
         detail-renderer {
-          title-field = "name"
+          title-column = "name"
           type = "form", children = [
-            {field = "name", label = "route.projects.labels.name"},
-            {field = "description", label = "route.projects.labels.description"},
-            {field = "start_date", label = "route.projects.labels.start_date"},
-            {field = "end_date", label = "route.projects.labels.end_date"},
+            {column = "name", label = "route.projects.labels.name"},
+            {column = "description", label = "route.projects.labels.description"},
+            {column = "start_date", label = "route.projects.labels.start_date"},
+            {column = "end_date", label = "route.projects.labels.end_date"},
           ]
         }
         access-control = {
@@ -169,16 +169,16 @@ application {
       render-configuration = {
         item-renderer = {
           type = "entity-item-card-renderer"
-          title-field = "title"
-          description-field = "description"
+          title-column = "title"
+          description-column = "description"
         }
         detail-renderer {
-          title-field = "title"
+          title-column = "title"
           type = "form", children = [
-            {field = "title", label = "route.tasks.labels.title"},
-            {field = "description", label = "route.tasks.labels.description"},
-            {field = "status", label = "route.tasks.labels.status"},
-            {field = "due_date", label = "route.tasks.labels.due_date"}
+            {column = "title", label = "route.tasks.labels.title"},
+            {column = "description", label = "route.tasks.labels.description"},
+            {column = "status", label = "route.tasks.labels.status"},
+            {column = "due_date", label = "route.tasks.labels.due_date"}
           ]
         }
       }

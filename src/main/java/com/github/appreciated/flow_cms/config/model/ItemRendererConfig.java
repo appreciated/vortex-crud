@@ -7,11 +7,11 @@ import java.util.List;
 public class ItemRendererConfig {
 
     private String type;
-    private String titleField;
+    private String titleColumn;
     @Optional
-    private String descriptionField;
+    private String descriptionColumn;
     @Optional
-    private String imageField;
+    private String imageColumn;
     @Optional
     private List<FormField> children;
 
@@ -23,28 +23,28 @@ public class ItemRendererConfig {
         this.type = type;
     }
 
-    public String getTitleField() {
-        return titleField;
+    public String getTitleColumn() {
+        return titleColumn;
     }
 
-    public void setTitleField(String titleField) {
-        this.titleField = titleField;
+    public void setTitleColumn(String titleColumn) {
+        this.titleColumn = titleColumn;
     }
 
-    public String getDescriptionField() {
-        return descriptionField;
+    public String getDescriptionColumn() {
+        return descriptionColumn;
     }
 
-    public void setDescriptionField(String descriptionField) {
-        this.descriptionField = descriptionField;
+    public void setDescriptionColumn(String descriptionColumn) {
+        this.descriptionColumn = descriptionColumn;
     }
 
-    public String getImageField() {
-        return imageField;
+    public String getImageColumn() {
+        return imageColumn;
     }
 
-    public void setImageField(String imageField) {
-        this.imageField = imageField;
+    public void setImageColumn(String imageColumn) {
+        this.imageColumn = imageColumn;
     }
 
     public List<FormField> getChildren() {

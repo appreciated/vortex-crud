@@ -8,18 +8,18 @@ import static com.github.appreciated.flow_cms.config.model.ConfigModelUtil.toStr
 
 public class TableConfig {
 
-    private ConfigObject fields;
+    private ConfigObject columns;
 
-    public ConfigObject getFields() {
-        return fields;
+    public ConfigObject getColumns() {
+        return columns;
     }
 
-    public void setFields(ConfigObject fields) {
-        this.fields = fields;
+    public void setColumns(ConfigObject columns) {
+        this.columns = columns;
     }
 
     public Map<String, FieldConfig> getFieldsConfig() {
-        return toStringMapWithValueType(fields, FieldConfig.class);
+        return toStringMapWithValueType(columns, FieldConfig.class);
     }
 }
 

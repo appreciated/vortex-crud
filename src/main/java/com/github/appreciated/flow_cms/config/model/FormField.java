@@ -7,7 +7,7 @@ import java.util.List;
 public class FormField {
 
     @Optional
-    private String field;
+    private String column;
     @Optional
     private String type;
     @Optional
@@ -17,12 +17,12 @@ public class FormField {
     @Optional
     private String label;
 
-    public String getField() {
-        return field;
+    public String getColumn() {
+        return column;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     public boolean isReadOnly() {

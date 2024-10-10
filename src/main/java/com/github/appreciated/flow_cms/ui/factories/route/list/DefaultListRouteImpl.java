@@ -4,9 +4,6 @@ import com.github.appreciated.flow_cms.config.model.*;
 import com.github.appreciated.flow_cms.service.DynamicEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -41,7 +38,7 @@ public class DefaultListRouteImpl extends Grid<GenericEntity> {
 
         // Iterate over the fields defined in the configuration
         for (FormField field : itemRendererConfig.getChildren()) {
-            String fieldName = field.getField();
+            String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");

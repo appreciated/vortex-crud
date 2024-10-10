@@ -54,7 +54,7 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
 
         binder.bind(
                 titleComponent,
-                entity1 -> prefix + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleField()),
+                entity1 -> prefix + entity1.getString(routeConfig.getRenderConfiguration().getDetailRenderer().getTitleColumn()),
                 (entity1, string) -> {
                 }
         );
@@ -65,7 +65,7 @@ public class DefaultFormDetailImpl implements FlowCmsDetail {
 
         // Iterate over the fields defined in the configuration
         for (FormField field : itemRendererConfig.getChildren()) {
-            String fieldName = field.getField();
+            String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null && !field.getType().equals("relationship")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");

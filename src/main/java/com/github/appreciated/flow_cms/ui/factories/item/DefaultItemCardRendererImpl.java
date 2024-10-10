@@ -31,8 +31,8 @@ public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
 
         // Optional image
         Image image = null;
-        if (itemRendererConfig.getImageField() != null) {
-            image = new Image(itemRendererConfig.getImageField(), "Entity Image");
+        if (itemRendererConfig.getImageColumn() != null) {
+            image = new Image(itemRendererConfig.getImageColumn(), "Entity Image");
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
@@ -43,12 +43,12 @@ public class DefaultItemCardRendererImpl implements FlowCmsItemRenderer {
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        H4 title = new H4(entity.getString(itemRendererConfig.getTitleField()));
+        H4 title = new H4(entity.getString(itemRendererConfig.getTitleColumn()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
-        if (itemRendererConfig.getDescriptionField() != null) {
-            Text description = new Text(entity.getString(itemRendererConfig.getDescriptionField()));
+        if (itemRendererConfig.getDescriptionColumn() != null) {
+            Text description = new Text(entity.getString(itemRendererConfig.getDescriptionColumn()));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }
