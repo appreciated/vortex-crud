@@ -22,12 +22,23 @@ CREATE TABLE tasks (
 );
 
 -- Table: comments
-CREATE TABLE comments (
-                          id SERIAL PRIMARY KEY,
-                          comment_text VARCHAR(1000),
-                          employee_id INT,
-                          created_at TIMESTAMP DEFAULT NOW()
+-- Table: task_comments
+CREATE TABLE task_comments (
+                       id SERIAL PRIMARY KEY,
+                       comment_text VARCHAR(1000),
+                       user_id INT,
+                       FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT,
+                       created_at TIMESTAMP DEFAULT NOW(),
+                       task_id INT,
+                       FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE RESTRICT
 );
+
+INSERT INTO users (id, username)
+VALUES
+    (1, 'max@mustermann.de'),
+    (2, 'erika@musterfrau.de'),
+    (3, 'john@doe.com'),
+    (4, 'jane@doe.com');
 
 -- Insert example data into projects table
 INSERT INTO projects (name, description, start_date, end_date, created_at, updated_at)
@@ -92,7 +103,7 @@ VALUES
     ('Cloud Migration', 'Migrate services to the new cloud provider', 6, 'work-in-progress', '2024-02-10', NOW(), NOW());
 
 -- Insert example data into comments table
-INSERT INTO comments (comment_text, employee_id, created_at)
+INSERT INTO task_comments (comment_text, user_id, created_at)
 VALUES
     ('We need to finalize the design by the end of the week.', 1, NOW()),
     ('The database structure is ready for review.', 2, NOW()),

@@ -71,19 +71,28 @@ public class FlowCmsDatabaseSchemaValidator {
                 .setParameter("tableName", tableName.toUpperCase())
                 .getResultList();
 
+        // Eine Map erstellen, die die tatsächlichen Spaltennamen und Typen aus der Datenbank enthält
+        Map<String, String> actualColumns = new HashMap<>();
         for (Object[] column : columns) {
-            String columnName = (String) column[0];
+            String columnName = ((String) column[0]).toLowerCase(); // Kleinbuchstaben zur besseren Vergleichbarkeit
             String columnType = (String) column[1];
+            actualColumns.put(columnName, columnType);
+        }
 
-            FieldConfig expectedConfig = expectedColumns.get(columnName.toLowerCase());
-            if (expectedConfig == null) {
-                throw new PersistenceException("The column '" + columnName + "' was not found in table '" + tableName + "'.");
+        // Jetzt über die erwarteten Spalten iterieren
+        for (Map.Entry<String, FieldConfig> entry : expectedColumns.entrySet()) {
+            String expectedColumnName = entry.getKey().toLowerCase();
+            FieldConfig expectedConfig = entry.getValue();
+
+            String actualColumnType = actualColumns.get(expectedColumnName);
+            if (actualColumnType == null) {
+                throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
             }
 
             Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getType().toUpperCase());
 
-            if (!validColumnTypes.contains(columnType)) {
-                throw new PersistenceException("The type of the column '" + columnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + columnType);
+            if (!validColumnTypes.contains(actualColumnType)) {
+                throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
             }
         }
     }
