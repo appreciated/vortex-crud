@@ -19,6 +19,16 @@ The factories are Injected indirectly using CI and can all be replaced with spec
 
 ### User Management (TODO)
 
+## Authentication with Authentik (TODO)
+
+The project can be integrated with **Authentik** for authentication and authorization. This setup centralizes user management, OAuth2, and role-based access control.
+
+### Roles and Access control (TODO)
+
+### Versioning (TODO)
+
+### Auditing (TODO)
+
 ### Extensibility and Hook Points (TODO)
 Developers can hook into various parts of the system to add custom logic:
 - **Data Manipulation**: Customize how data is processed and stored.
@@ -177,9 +187,6 @@ application {
 }
 ```
 
-## Authentication with Authentik (TODO)
-
-The project can be integrated with **Authentik** for authentication and authorization. This setup centralizes user management, OAuth2, and role-based access control.
 
 ## Getting Started with development
 
