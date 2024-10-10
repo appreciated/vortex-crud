@@ -8,6 +8,8 @@ public class RouteConfig {
     private String title;
     private String renderer;
     @Optional
+    private String icon;
+    @Optional
     private boolean defaultRoute;
     private RenderConfig renderConfiguration;
     @Optional
@@ -59,6 +61,14 @@ public class RouteConfig {
 
     public void setDefaultRoute(boolean defaultRoute) {
         this.defaultRoute = defaultRoute;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
 

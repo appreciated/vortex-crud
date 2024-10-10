@@ -10,5 +10,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface RouteRenderer {
-    Component renderRoute(int i, RouteConfig config, DynamicEntityManagerService entityManagerService);
+    Component renderRoute(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService);
 }

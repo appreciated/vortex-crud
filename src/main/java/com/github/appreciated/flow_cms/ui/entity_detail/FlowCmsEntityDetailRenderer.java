@@ -11,5 +11,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface FlowCmsEntityDetailRenderer {
-    Component renderDetail(RouteConfig routeConfig, GenericEntity entity);
+    Component renderDetail(RouteConfig routeConfig, GenericEntity entity, boolean isWrapped);
 }

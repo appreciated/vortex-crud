@@ -39,7 +39,7 @@ public class DefaultMasterDetailRenderer extends SplitLayout {
     private final String table;
     private final FlowCmsEntityDetailRenderer detailRenderer;
 
-    public DefaultMasterDetailRenderer(int initialIndex, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
+    public DefaultMasterDetailRenderer(int currentEntityId, RouteConfig config, DynamicEntityManagerService entityManagerService, FlowCmsEntityItemRendererFactory entityCardRendererFactory, FlowCmsEntityDetailRendererFactory detailRendererFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
@@ -80,7 +80,7 @@ public class DefaultMasterDetailRenderer extends SplitLayout {
 
     private void onItemClick(GenericEntity entity) {
         this.detailLayout.removeAll();
-        this.detailLayout.add(detailRenderer.renderDetail(config, entity));
+        this.detailLayout.add(detailRenderer.renderDetail(config, entity, true));
     }
 
     public void initVirtualList() {

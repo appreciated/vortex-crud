@@ -2,7 +2,9 @@ package com.github.appreciated.flow_cms.ui.router_layout.components;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.ui.icon.FlowCmsIconRenderer;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -23,9 +25,11 @@ import java.util.Set;
 public class DefaultRouterLayout extends AppLayout {
 
     private final FlowCmsConfigService flowCmsConfigService;
+    private final FlowCmsIconRenderer flowCmsIconRenderer;
 
-    public DefaultRouterLayout(FlowCmsConfigService flowCmsConfigService) {
+    public DefaultRouterLayout(FlowCmsConfigService flowCmsConfigService, FlowCmsIconRenderer flowCmsIconRenderer) {
         this.flowCmsConfigService = flowCmsConfigService;
+        this.flowCmsIconRenderer = flowCmsIconRenderer;
     }
 
     @Override
@@ -50,7 +54,15 @@ public class DefaultRouterLayout extends AppLayout {
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
         Set<Map.Entry<String, RouteConfig>> keys = flowCmsConfigService.getConfiguration().getRoutesConfig().entrySet();
-        keys.forEach(configEntry -> nav.addItem(new SideNavItem(getTranslation(configEntry.getValue().getTitle()), "/view/" + configEntry.getKey(), VaadinIcon.DASHBOARD.create())));
+        keys.forEach(configEntry -> {
+            String translation = getTranslation(configEntry.getValue().getTitle());
+            String path = "/view/" + configEntry.getKey();
+            Component prefixComponent = null;
+            if (configEntry.getValue().getIcon() != null) {
+                prefixComponent = flowCmsIconRenderer.renderIcon(configEntry.getValue().getIcon());
+            }
+            nav.addItem(new SideNavItem(translation, path, prefixComponent));
+        });
         return nav;
     }
 

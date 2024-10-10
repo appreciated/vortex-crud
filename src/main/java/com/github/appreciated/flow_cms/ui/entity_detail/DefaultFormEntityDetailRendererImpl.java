@@ -38,7 +38,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
     }
 
     @Override
-    public Component renderDetail(RouteConfig routeConfig, GenericEntity entity) {
+    public Component renderDetail(RouteConfig routeConfig, GenericEntity entity, boolean isWrapped) {
         String table = routeConfig.getTable();
 
         TableConfig tables = cmsConfigService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
@@ -59,7 +59,6 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
         );
 
         DetailRenderer itemRendererConfig = routeConfig.getRenderConfiguration().getDetailRenderer();
-
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
@@ -67,20 +66,19 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
             String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null) {
-                throw new IllegalStateException("Field " + fieldName + " not found in table " + table);
+                throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
             if (component instanceof InputField) {
                 ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
             }
             binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
-
             form.add(component);
         }
 
         binder.setBean(entity);
 
-        // Save button
+        // Generic Save button
         Button saveButton = new Button(layout.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
@@ -94,7 +92,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
             }
         });
 
-        // Delete button
+        // Generic Delete button
         Button deleteButton = new Button(layout.getTranslation("button.delete.title"), event -> {
             entityManagerService.deleteRecordById(table, entity.get("id"));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
