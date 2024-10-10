@@ -1,5 +1,6 @@
 package com.github.appreciated.flow_cms.config;
 
+import com.github.appreciated.flow_cms.config.model.ApplicationConfig;
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
@@ -9,13 +10,26 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.*;
 
+/**
+ * Validates the database schema against the {@link ApplicationConfig}.
+ * <p>
+ * This class checks if tables and columns in the database match the expected
+ * schema based on {@link TableConfig} and {@link FieldConfig} from
+ * {@link FlowCmsConfigService}. It uses JPA's {@link EntityManager} to run
+ * native SQL queries and validate table existence, column names, and data types.
+ * </p>
+ * <p>
+ * Discrepancies throw a {@link PersistenceException} with detailed error messages.
+ * </p>
+ */
+
 @Configuration
-public class FlowCmsDatabaseSchemaChecker {
+public class FlowCmsDatabaseSchemaValidator {
 
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public FlowCmsDatabaseSchemaChecker(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
+    public FlowCmsDatabaseSchemaValidator(EntityManager entityManager, FlowCmsConfigService flowCmsConfigService) {
         this.entityManager = entityManager;
 
         typeMappings = new HashMap<>();
