@@ -60,6 +60,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
                 Div div = new Div(entityItemRenderer.renderItem(itemRenderer, entity, maxWidth));
+                div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);
             }
