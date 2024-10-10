@@ -51,6 +51,7 @@ public class DefaultMasterDetailRenderer extends SplitLayout {
         DetailRenderer detailRendererConfig = renderConfiguration.getDetailRenderer();
         this.detailRenderer = detailRendererFactory.getRenderer(detailRendererConfig);
 
+        detailLayout.setPadding(false);
         detailLayout.setHeightFull();
         detailLayout.setWidth("unset");
         detailLayout.getStyle().set("flex", "4 1 400px");

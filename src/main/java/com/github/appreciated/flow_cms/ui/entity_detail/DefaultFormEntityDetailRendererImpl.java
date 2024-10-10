@@ -66,7 +66,9 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
         for (FormField field : itemRendererConfig.getChildren()) {
             String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-
+            if (fieldConfig == null) {
+                throw new IllegalStateException("Field " + fieldName + " not found in table " + table);
+            }
             Component component = componentFactory.createComponent(table, fieldName, fieldConfig);
             if (component instanceof InputField) {
                 ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
@@ -100,6 +102,7 @@ public class DefaultFormEntityDetailRendererImpl implements FlowCmsEntityDetailR
 
         // Add the form and buttons to the layout
         layout.add(new HorizontalLayout(titleComponent, saveButton, deleteButton), form);
+        layout.setPadding(true);
         return layout;
     }
 }

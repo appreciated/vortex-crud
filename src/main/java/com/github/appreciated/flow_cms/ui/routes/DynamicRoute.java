@@ -52,7 +52,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         } else {
             DetailRenderer detailRenderer = configForRoute.getRenderConfiguration().getDetailRenderer();
             GenericEntity recordById = dynamicEntityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
-            add(detailRendererFactory.getRenderer(detailRenderer).renderDetail(configForRoute,recordById));
+            add(detailRendererFactory.getRenderer(detailRenderer).renderDetail(configForRoute, recordById));
         }
     }
 }
