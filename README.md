@@ -1,31 +1,33 @@
 # FlowCMS
+<img width="100" alt="image" src="./flow-cms.png"/> 
 
-This repository contains a dynamic and flexible framework for building project management applications. The framework is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
-
-## Tech Stack
+FlowCMS is a flexible framework for building applications of many kinds. The framework is designed to be easily extendable, enabling developers to customize both the backend and frontend to meet specific requirements. Below is an overview of the architecture, technologies used, and configuration guidelines.
+Also FlowCMS does not 
+## Tech-Stack
 
 - **Spring Boot** for backend API development
-- **Vaadin** for frontend UI development
-- **HOCON** for flexible configuration
+- **Vaadin Flow** for frontend UI development (subject to change)
+- **HOCON** for flexible configuration (subject to change)
 
 ## Features
+### High Level Components
+//TODO Add list
 
-### Extensibility and Hook Points
+### Extensibility and Hook Points (Todo)
 Developers can hook into various parts of the system to add custom logic:
 - **Data Manipulation**: Customize how data is processed and stored.
 - **Validation**: Add custom validation logic before saving or editing data.
 - **Custom Events**: Define events triggered by user actions (e.g., record creation, updates).
 
 ### UI Component System
-The UI is built modularly, with each component easily replaceable to provide specific implementations for different use cases.
+The UI is built modular, with each component easily replaceable to provide specific implementations for different use cases.
 - **Component List Factory**: Manages all UI components, defining how they should behave and appear.
 - **Standard Implementation**: A set of default UI components is provided, which can be extended or replaced.
 
 ### Dynamic UI Rendering
-The UI is dynamically rendered based on view configurations stored in the database. This allows for flexibility in adjusting what fields and components are shown for different collections.
+The UI is dynamically rendered based on view configurations defined by a configuration. This allows for flexibility in adjusting what fields and components are shown for different tables.
 
-## Dynamic View Configuration Example
-
+## Dynamic View Configuration via HOCON
 The system supports dynamic view configuration where layouts and fields are defined in JSON schema. Below is an example of a view configuration:
 
 ```json
@@ -135,7 +137,7 @@ application {
 }
 ```
 
-## Authentication with Authentik
+## Authentication with Authentik (TODO)
 
 The project can be integrated with **Authentik** for authentication and authorization. This setup centralizes user management, OAuth2, and role-based access control.
 
@@ -143,7 +145,7 @@ The project can be integrated with **Authentik** for authentication and authoriz
 - **Spring Boot** acts as the resource server, validating JWTs.
 - **Vaadin** uses JWTs for API access after user authentication through Authentik.
 
-## Getting Started
+## Getting Started with development
 
 1. **Clone the repository**:
    ```bash
