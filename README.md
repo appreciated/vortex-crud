@@ -8,36 +8,21 @@ FlowCMS is a flexible framework for building applications of many kinds. The fra
 - **Vaadin Flow** for frontend UI components
 - **HOCON** for flexible configuration
 
-## Features
+## Core architecture and basic functions:
+ -  **Modular UI system** - The UI has a modular structure, with renderers and factories working at different levels (e.g. Component List Factory, Renderer System).
+ -  **Configuration system** - The use of HOCON for flexible configuration is implemented, which is made clear by the configuration examples provided.
+ -  **Database validation** - There is a FlowCmsDatabaseSchemaValidator that validates the database schema against the application configuration.
+ -  **Dynamic routing** - The DynamicRoute class enables dynamic routing based on the configuration.
+ -  **UI components and renderers** - Several renderers and factories are available, such as DefaultEntityDetailRendererFactoryImpl, DefaultEntityItemCardRendererImpl, and DefaultRouteRendererFactoryImpl...
+ -  **Entity management** - The GenericEntity and DynamicEntityManagerService classes indicate generic entity management.
 
-### High to Low Level Components
-The UI is built modular, from high (Route Renderer) to low level (Field Renderer), while each renderer on every level is being produced by factories. 
-The factories are Injected indirectly using CI and can all be replaced with specific implementations. If only minor changes to the existing default implementations are wanted these can be extended.
-- **Component List Factory**: Manages all UI components, defining how they should behave and appear.
-- **Renderer System**: Includes default renderers like **grid**, **master-detail**, and **entity-item-card-renderer** and more.
-- **Standard Implementation**: A set of default UI components is provided, which can be extended or replaced.
-
-### User Management (TODO)
-
-## Authentication with Authentik (TODO)
-
-The project can be integrated with **Authentik** for authentication and authorization. This setup centralizes user management, OAuth2, and role-based access control.
-
-### Roles and Access control (TODO)
-
-### Versioning (TODO)
-
-### Auditing (TODO)
-
-### Extensibility and Hook Points (TODO)
-Developers can hook into various parts of the system to add custom logic:
-- **Data Manipulation**: Customize how data is processed and stored.
-- **Validation**: Add custom validation logic before saving or editing data.
-- **Custom Events**: Define events triggered by user actions (e.g., record creation, updates).
-
-### Dynamic UI Rendering
-The UI is dynamically rendered based on view configurations defined in the configuration. This allows for flexibility in adjusting what fields and components are shown for different tables.
-
+## TODOs:
+- **User and Role management & Authentication** (optionally with Authentik)
+- **RBAC via Configuration**
+- **Entity Versioning**
+- **Entity Auditing**
+- **Extensibility and hook points**
+  
 ## Configuration via HOCON
 The system supports view configuration where layouts and fields are defined in a HOCON file. 
 In theory, you could also use Java since the configuration file is simply parsed into Java Classes but this wouldn't be that readable.
@@ -186,7 +171,6 @@ application {
   }
 }
 ```
-
 
 ## Getting Started with development
 
