@@ -39,14 +39,18 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         itemRenderer = config.getRenderConfiguration().getItemRenderer();
         this.entityItemRenderer = entityCardRendererFactory.getRenderer(config.getRenderConfiguration().getItemRenderer());
         setSizeFull();
-        this.addAttachListener(event -> new Thread(() -> {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        this.addAttachListener(event -> {
+            if (event.isInitialAttach()) {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    event.getUI().access(this::onBrowserWindowResize);
+                }).start();
             }
-            event.getUI().access(this::onBrowserWindowResize);
-        }).start());
+        });
     }
 
     private void initRenderer() {
@@ -68,7 +72,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/projects/"+entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/projects/" + entity.get("id")));
     }
 
     private void initLazyLoadingDataProvider() {
