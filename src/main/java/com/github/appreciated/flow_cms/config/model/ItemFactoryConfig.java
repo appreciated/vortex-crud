@@ -6,7 +6,9 @@ import java.util.List;
 
 public class ItemFactoryConfig {
 
+    @Optional
     private String type;
+    @Optional
     private String titleColumn;
     @Optional
     private String descriptionColumn;

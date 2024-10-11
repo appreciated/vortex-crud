@@ -19,7 +19,10 @@ import java.util.Map;
 
 public class GenericEntityGrid extends Grid<GenericEntity> {
 
-    public GenericEntityGrid(int i, RouteConfig routeConfig, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
+    private final String route;
+
+    public GenericEntityGrid(int i, RouteConfig routeConfig, String route, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
+        this.route = route;
         String table = routeConfig.getTable();
 
         // Set up the data provider with lazy loading
@@ -57,6 +60,6 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
      * @param entity the clicked GenericEntity
      */
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/projects/" + entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/"+route+"/" + entity.get("id")));
     }
 }

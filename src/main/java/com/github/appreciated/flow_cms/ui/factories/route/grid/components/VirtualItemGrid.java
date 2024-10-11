@@ -28,12 +28,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final String table;
     private final FlowCmsItemFactory itemFactory;
     private final ItemFactoryConfig factoryConfig;
+    private final String route;
     private final FlowCmsEntityManagerService entityManagerService;
     private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(int i, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry) {
+    public VirtualItemGrid(int i, String route, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry) {
+        this.route = route;
         this.entityManagerService = entityManagerService;
         table = config.getTable();
         factoryConfig = config.getFactoryConfiguration().getItemFactory();
@@ -72,7 +74,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/projects/" + entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/"+route+"/" + entity.get("id")));
     }
 
     private void initLazyLoadingDataProvider() {

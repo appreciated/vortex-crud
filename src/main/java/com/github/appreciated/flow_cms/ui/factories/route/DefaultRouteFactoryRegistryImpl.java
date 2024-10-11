@@ -32,9 +32,9 @@ public class DefaultRouteFactoryRegistryImpl implements FlowCmsRouteFactoryRegis
                                            FlowCmsListColumnCallbackRegistry listColumnCallbackRegistry,
                                            FlowCmsIconFactory iconFactory
     ) {
-        factories.put("master-detail", (i, config, entityManagerService) -> new DefaultMasterDetailRouteFactoryImpl(i, config, dynamicEntityManager, itemFactoryRegistry, detailFactoryRegistry, iconFactory));
-        factories.put("list", (i, config, entityManagerService) -> new DefaultListRouteFactoryImpl(i, config, dynamicEntityManager, configService, listColumnCallbackRegistry, iconFactory));
-        factories.put("grid", (i, config, entityManagerService) -> new DefaultGridRouteFactoryImpl(i, config, dynamicEntityManager, itemFactoryRegistry, iconFactory));
+        factories.put("master-detail", (i, route, config, entityManagerService) -> new DefaultMasterDetailRouteFactoryImpl(i, config, dynamicEntityManager, itemFactoryRegistry, detailFactoryRegistry, iconFactory));
+        factories.put("list", (i, route, config, entityManagerService) -> new DefaultListRouteFactoryImpl(i, config, route, dynamicEntityManager, configService, listColumnCallbackRegistry, iconFactory));
+        factories.put("grid", (i, route, config, entityManagerService) -> new DefaultGridRouteFactoryImpl(i, config, route, dynamicEntityManager, itemFactoryRegistry, iconFactory));
     }
 
     public FlowCmsRouteFactory getFactory(RouteConfig routeConfig) {

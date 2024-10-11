@@ -46,7 +46,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
 
         RouteConfig configForRoute = configService.getConfigForRoute(path);
         if (path.split("/").length == 1 || Objects.equals(configForRoute.getFactory(), "master-detail")) {
-            Component viewContainer = routeFactoryRegistry.getFactory(configForRoute).renderRoute(0, configForRoute, entityManagerService);
+            Component viewContainer = routeFactoryRegistry.getFactory(configForRoute).renderRoute(0, path.split("/")[0], configForRoute, entityManagerService);
             add(viewContainer);
         } else {
             DetailFactory detailFactory = configForRoute.getFactoryConfiguration().getDetailFactory();

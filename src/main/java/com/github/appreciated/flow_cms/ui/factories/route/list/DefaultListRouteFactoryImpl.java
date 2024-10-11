@@ -9,10 +9,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class DefaultListRouteFactoryImpl extends VerticalLayout {
-    public DefaultListRouteFactoryImpl(int i, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry columnCallbackRegistry, FlowCmsIconFactory iconFactory) {
+    public DefaultListRouteFactoryImpl(int i, RouteConfig config, String route, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry columnCallbackRegistry, FlowCmsIconFactory iconFactory) {
         HorizontalLayout header = new RouteHeader(config, iconFactory);
         header.setPadding(true);
-        GenericEntityGrid entityGrid = new GenericEntityGrid(i, config, entityManagerService, configService, columnCallbackRegistry);
+        GenericEntityGrid entityGrid = new GenericEntityGrid(i, config, route, entityManagerService, configService, columnCallbackRegistry);
         add(header, entityGrid);
         setSizeFull();
         setPadding(false);

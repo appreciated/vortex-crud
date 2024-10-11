@@ -49,7 +49,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
             }
         }
         if (recordsFromTableWhereColumnEquals.isEmpty()) {
-            list.add(new Text("Keine Einträge vorhanden, klicken Sie auf '+' um Elemente hinzuzufügen"));
+            list.add(new Text("Keine Kommentare vorhanden, klicken Sie auf '+' um Elemente hinzuzufügen"));
         }
         return list;
     }

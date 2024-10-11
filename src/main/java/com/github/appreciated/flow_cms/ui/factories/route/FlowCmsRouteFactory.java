@@ -10,5 +10,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface FlowCmsRouteFactory {
-    Component renderRoute(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService);
+    Component renderRoute(int currentEntityId, String route, RouteConfig config, FlowCmsEntityManagerService entityManagerService);
 }
