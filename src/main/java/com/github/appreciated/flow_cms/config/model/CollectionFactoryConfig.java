@@ -1,13 +1,13 @@
 package com.github.appreciated.flow_cms.config.model;
 
-import com.typesafe.config.Optional;
-
 import java.util.List;
 
 public class CollectionFactoryConfig {
 
     private String table;
+    private String label;
     private String foreignKeyColumn;
+    private String dialogFactory;
     private List<FormField> children;
 
     public String getTable() {
@@ -32,5 +32,21 @@ public class CollectionFactoryConfig {
 
     public void setChildren(List<FormField> children) {
         this.children = children;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getDialogFactory() {
+        return dialogFactory;
+    }
+
+    public void setDialogFactory(String dialogFactory) {
+        this.dialogFactory = dialogFactory;
     }
 }

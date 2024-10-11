@@ -1,11 +1,10 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
 import com.github.appreciated.flow_cms.config.model.*;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
-import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactory;
 import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
@@ -86,7 +85,9 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
             } else {
-                form.add(collectionFactoryRegistry.getFactory(field).createCollection(""+entity.get("id"), field.getCollectionFactory()));
+                Component collection = collectionFactoryRegistry.getFactory(field).createCollection("" + entity.get("id"), field.getCollectionFactory());
+                form.add(collection);
+                form.setColspan(collection,2);
             }
         }
 
