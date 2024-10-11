@@ -38,6 +38,8 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
   - **Calendar Route**
   - **Kanban Route**
   - **Map Route**
+- **Allow adding custom Routes to the Menu**
+- **Allow navigating from Form to custom Routes**
 
 ## Data Handling and Management
 FlowCMS uses an H2 database for development, managed by the custom class `FlowCmsEntityManagerService`. The `FlowCmsDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
