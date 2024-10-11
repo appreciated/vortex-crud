@@ -23,21 +23,21 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 ## Roadmap (in no specific order)
 - **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, 1:n, n:m)
 - **Nested Hierarchies**: Support navigating nested data structures
-- **Field Validation**: Support for simple cases of validation also custom hooks for complex validation cases
+- **Field Validation**: Support for simple cases of validation also add custom hooks for complex validation cases
 - **Media Support**: Enable media handling in forms and views
 - **User and Role Management & Authentication** (optionally using Authentik)
 - **Additional Form Controls**: Radiobutton Group, Select Group, etc.
 - **Role-Based Access Control (RBAC)**: Configurable via HOCON
 - **Entity Versioning**: Track versions of entities
 - **Entity Auditing**: Support for auditing entity changes
-- **Extensibility and Hook Points**: Additional extension and hook points for customization
-- **Generic Block Route Factory**: Add support for generic blocks and implement a flexible factory system for block routes
+- **Hook Points**: Add hook points for customization
 - **Custom Repositories**: Enable integration with custom repositories
-- **Filters**: The currently available Route Types "grid", "list", "master-detail" cannot be filtered. A possibility to filter needs to be added 
+- **Filters**: The entities shown in the Route Types "grid", "list", "master-detail" cannot be filtered.
 - **Additional Routes** 
   - **Calendar Route**
   - **Kanban Route**
   - **Map Route**
+  - **Generic Block Route**: Add support for generic blocks and implement a flexible factory system for block routes
 - **Allow adding custom Routes to the Menu**
 - **Allow navigating from Form to custom Routes**
 
@@ -107,6 +107,9 @@ classDiagram
    class Collection {
    }
 
+   class Dialog {
+   }
+
    Route <|-- MasterDetailRoute: "extends"
    Route <|-- ListRoute: "extends"
    Route <|-- GridRoute: "extends"
@@ -122,6 +125,7 @@ classDiagram
    Table --> Column: "contains"
    Field --> Column: "references"
    Collection --> Column: "references"
+   Dialog --> Table: "references"
 ```
 
 ## Configuration via HOCON
