@@ -1,97 +1,177 @@
-# FlowCMS (Current working title)
-<img width="100" alt="image" src="./flow-cms.png"/> 
+# FlowCMS (Current Working Title)
+<img width="100" alt="FlowCMS Logo" src="./flow-cms.png"/> 
 
-FlowCMS is a flexible high level abstraction for creating CRUD-style applications using Vaadin Flow much faster. It is designed to be easily extendable. Below is an overview of the architecture, technologies used, and configuration guidelines.  
-Note that it is not meant to replace Flow at all, since not everything is CRUD. It is meant to speed up specific tasks.
+FlowCMS is a powerful framework designed to accelerate the development of CRUD-style applications using Vaadin Flow. By offering a high-level abstraction layer, it allows developers to rapidly build and customize applications while maintaining the flexibility and control Vaadin Flow provides for more advanced use cases. FlowCMS is built with extensibility in mind, making it easy to adapt and expand features as project requirements evolve.
 
-## Tech-Stack
-- **Spring Boot** for backend API development and dependency injection
-- **Vaadin Flow** for frontend UI components
-- **HOCON** for a compact and readable configuration (also imports!)
+FlowCMS is not a replacement for Vaadin Flow but rather an extension that streamlines repetitive tasks, helping developers focus on application-specific logic and customization.
 
-## Core architecture and basic functions:
- -  **Modular UI system** - The UI has a modular structure, with factories working at different levels (e.g. Component List Factory, factory System).
- -  **Configuration system** - The use of HOCON for flexible configuration is implemented, which is made clear by the configuration examples provided.
- -  **Database validation** - There is a FlowCmsDatabaseSchemaValidator that validates the database schema against the application configuration.
- -  **Dynamic routing** - The DynamicRoute class enables dynamic routing based on the configuration.
- -  **UI components and factories** - Several factories and factories are available, such as DefaultEntityDetailfactoryFactoryImpl, DefaultEntityItemCardfactoryImpl, and DefaultRoutefactoryFactoryImpl...
- -  **Entity management** - The GenericEntity and FlowCmsEntityManagerService classes enable generic entity management.
- -  **Translations** - Translations thought of from the start
- -  **Icons** - Icons are interchangeable
+## Tech Stack
+- **Spring Boot**: Backend API development and dependency injection
+- **Vaadin Flow**: Frontend UI components for building interactive applications
+- **HOCON**: Configuration format that is compact, readable, and supports imports
 
-## Roadmap (in no specific order):
-- **Support Adding, Removing, Viewing relationships between entities (1:1, 1:n, n:n)**
-- **Nested hierarchies**
-- **Field Validation** - Custom hooks for more complex cases
-- **Support for media**
-- **User and Role management & Authentication** (optionally with Authentik)
-- **Support more Form controls** Radiobutton Group, Select Group, ... 
-- **RBAC via Configuration**
-- **Entity Versioning**
-- **Entity Auditing**
-- **Extensibility and hook points**
-- **Generic Block Route factory** - Currently this Framework only supports 
-  - **Add Generic Blocks**
-- **Custom Repositories**
-  
-## How is the data problem solved?
-Currently, for fast development purposes an H2 Database is being used. Since Repositories etc. cannot be dynamically create a self written Class `FlowCmsEntityManagerService` is being used. 
-Also before startup the `FlowCmsDatabaseSchemaValidator` will check if the current database schema matches the HOCON configuration. 
+## Core Architecture and Basic Functions
+- **Modular UI System**: The UI follows a modular structure, with factories operating at various levels (e.g., Component List Factory, Factory System).
+- **Flexible Configuration System**: Utilizes HOCON for dynamic configuration. Examples demonstrate how to configure different parts of the application.
+- **Database Schema Validation**: The `FlowCmsDatabaseSchemaValidator` validates the database schema against the application’s configuration at startup.
+- **Dynamic Routing**: The `DynamicRoute` class enables routing based on configuration files, allowing flexible route management.
+- **UI Components and Factories**: Several factory implementations, such as `DefaultEntityDetailFactoryImpl`, `DefaultEntityItemCardFactoryImpl`, and `DefaultRouteFactoryImpl`, are available for configuring UI components dynamically.
+- **Entity Management**: The `GenericEntity` and `FlowCmsEntityManagerService` classes provide generic entity management capabilities.
+- **Internationalization Support**: Translations are integrated from the start for a multi-language experience.
+- **Customizable Icons**: Icons can be easily swapped or customized.
 
-Note: It is planned allow hooking alternative Spring Service implementing an interface to provide the same functionality `FlowCmsEntityManagerService` but for a specific table. This way pretty much any storage can be attached to FlowCms.
+## Roadmap (in no specific order)
+- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, 1:n, n:n)
+- **Nested Hierarchies**: Support navigating nested data structures
+- **Field Validation**: Support for simple cases of validation also custom hooks for complex validation cases
+- **Media Support**: Enable media handling in forms and views
+- **User and Role Management & Authentication** (optionally using Authentik)
+- **Additional Form Controls**: Radiobutton Group, Select Group, etc.
+- **Role-Based Access Control (RBAC)**: Configurable via HOCON
+- **Entity Versioning**: Track versions of entities
+- **Entity Auditing**: Support for auditing entity changes
+- **Extensibility and Hook Points**: Additional extension and hook points for customization
+- **Generic Block Route Factory**: Add support for generic blocks and implement a flexible factory system for block routes
+- **Custom Repositories**: Enable integration with custom repositories
+
+## Data Handling and Management
+FlowCMS uses an H2 database for development, managed by the custom class `FlowCmsEntityManagerService`. The `FlowCmsDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
+
+### Core Concept: User-Defined Database Model
+The database model is defined by the user, and FlowCMS verifies that the view representation fits this model. However, some system-defined tables are exceptions, such as those for auditing, user, and role management:
+
+```sql
+-- Predefined system tables (examples)
+CREATE TABLE users (...);
+CREATE TABLE roles (...);
+CREATE TABLE user_roles (...);
+CREATE TABLE audit_log (...);
+```
+
+### Example User-Defined Tables
+Users can define tables like `projects`, `tasks`, and `task_comments` to fit their needs:
+
+```sql
+CREATE TABLE projects (...);
+CREATE TABLE tasks (...);
+CREATE TABLE task_comments (...);
+```
+
+This version is concise, focusing on the key points while providing essential examples.
+## Architecture
+
+The diagram below presents a simplified version of the architecture, illustrating the relationships between the different components. The main difference between this representation and the actual architecture is that classes are not instantiated directly. Instead, instantiation is determined by the type specified in the configuration (e.g., "factory" = "grid" or "type" = "form"). A FactoryRegistry is used to retrieve and return the appropriate component factory based on this configuration.
+
+```mermaid
+classDiagram
+   class Table {
+   }
+
+   class Column {
+   }
+
+   class Route {
+   }
+
+   class AppLayout {
+   }
+
+   class MenuItem {
+   }
+
+   class MasterDetailRoute {
+   }
+
+   class ListRoute {
+   }
+
+   class GridRoute {
+   }
+
+   class Detail {
+   }
+
+   class Form {
+   }
+
+   class Field {
+   }
+
+   class Collection {
+   }
+
+   Route <|-- MasterDetailRoute: "extends"
+   Route <|-- ListRoute: "extends"
+   Route <|-- GridRoute: "extends"
+   Route --> AppLayout: "contains"
+   AppLayout --> MenuItem: "contains"
+   MasterDetailRoute --> Detail: "is"
+   ListRoute --> Detail: "forwards to"
+   GridRoute --> Detail: "forwards to"
+   Detail --> Form: "contains"
+   Form --> Field: "contains"
+   Form --> Collection: "contains"
+   Route --> Table: "references"
+   Table --> Column: "contains"
+   Field --> Column: "references"
+   Collection --> Column: "references"
+```
 
 ## Configuration via HOCON
-The system supports view configuration where routes and tables are defined in a HOCON file.   
+FlowCMS supports configuration through HOCON files where routes and tables are defined.
 
-Note: In theory, you could also use Java Classes to do the same since the configuration file is anyway parsed as Java Classes. But the readability would suffer quite significantly.
+Note: While Java classes could theoretically be used for configuration, as HOCON files are parsed into Java classes, this approach is not currently supported. HOCON is preferred as it enhances both readability and maintainability.
 
-Below is an example how a route and the related table is configured:
+### Example Configuration
+
+Below is an example of configuring a route and the associated table:
 
 ```hocon
 application {
-   #...
-   tables = {
-      "projects" = {
-         columns = {
-            id = {type = "id", primary = true},
-            name = {type = "text", required = true, max-length = 255},
-            description = {type = "text", max-length = 500},
-            start_date = {type = "date"},
-            end_date = {type = "date"},
-            created_at = {type = "datetime"},
-            updated_at = {type = "datetime"}
-         }
+  #...
+  tables = {
+    "projects" = {
+      columns = {
+        id = {type = "id", primary = true},
+        name = {type = "text", required = true, max-length = 255},
+        description = {type = "text", max-length = 500},
+        start_date = {type = "date"},
+        end_date = {type = "date"},
+        created_at = {type = "datetime"},
+        updated_at = {type = "datetime"}
       }
-   }
-   #...  
-   routes = {
-      projects = {
-         name: "project_view",
-         table: "projects",
-         factory = "grid"
-         render-configuration {
-            item-factory = {
-               type = "card"
-               title-column = "name"
-               description-column = "description"
-            }
-            detail-factory {
-               title-column = "name"
-               type = "form", children = [
-                  {column = "name", label = "route.projects.labels.name"},
-                  {column = "description", label = "route.projects.labels.description"},
-                  {column = "start_date", label = "route.projects.labels.start_date"},
-                  {column = "end_date", label = "route.projects.labels.end_date"},
-               ]
-            }
-         }
+    }
+  }
+  #...  
+  routes = {
+    projects = {
+      name: "project_view",
+      table: "projects",
+      factory = "grid"
+      render-configuration {
+        item-factory = {
+          type = "card"
+          title-column = "name"
+          description-column = "description"
+        }
+        detail-factory {
+          title-column = "name"
+          type = "form"
+          children = [
+            {column = "name", label = "route.projects.labels.name"},
+            {column = "description", label = "route.projects.labels.description"},
+            {column = "start_date", label = "route.projects.labels.start_date"},
+            {column = "end_date", label = "route.projects.labels.end_date"}
+          ]
+        }
       }
-   }
+    }
+  }
 }
 ```
 
 ## Application Configuration (HOCON Format)
-Below is a more complete sample configuration for setting up the project management application:
+Here’s a more complete sample configuration for setting up a project management application:
 
 ```hocon
 application {
@@ -148,11 +228,12 @@ application {
         }
         detail-factory {
           title-column = "name"
-          type = "form", children = [
+          type = "form"
+          children = [
             {column = "name", label = "route.projects.labels.name"},
             {column = "description", label = "route.projects.labels.description"},
             {column = "start_date", label = "route.projects.labels.start_date"},
-            {column = "end_date", label = "route.projects.labels.end_date"},
+            {column = "end_date", label = "route.projects.labels.end_date"}
           ]
         }
         access-control = {
@@ -173,7 +254,8 @@ application {
         }
         detail-factory {
           title-column = "title"
-          type = "form", children = [
+          type = "form"
+          children = [
             {column = "title", label = "route.tasks.labels.title"},
             {column = "description", label = "route.tasks.labels.description"},
             {column = "status", label = "route.tasks.labels.status"},
@@ -189,19 +271,19 @@ application {
 }
 ```
 
-## Getting Started with development
+## Getting Started with Development
 
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/appreciated/flow-cms.git
    ```
 2. **Run the application**:
-    - Use the provided SQL schema to set up the database.
-    - Configure application properties for H2 or other databases.
-    - Start the Spring Boot server:
-      ```bash
-      ./mvnw spring-boot:run
-      ```
+   - Use the provided SQL schema to set up the database.
+   - Configure application properties for H2 or other databases.
+   - Start the Spring Boot server:
+     ```bash
+     ./mvnw spring-boot:run
+     ```
 
 ## License
 This project is licensed under the MIT License.
