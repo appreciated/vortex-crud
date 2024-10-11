@@ -1,23 +1,23 @@
-package com.github.appreciated.flow_cms.ui.factories.elements;
+package com.github.appreciated.flow_cms.ui.factories.collection;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.vaadin.flow.component.Component;
 
-public class DefaultListElementFactoryImpl implements FlowCmsElementFactory {
+public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
 
     private final FlowCmsEntityManagerService entityManagerService;
     private final FlowCmsConfigService configService;
 
-    public DefaultListElementFactoryImpl(FlowCmsEntityManagerService entityManagerService,
-                                         FlowCmsConfigService configService) {
+    public DefaultCollectionFactoryImpl(FlowCmsEntityManagerService entityManagerService,
+                                        FlowCmsConfigService configService) {
         this.entityManagerService = entityManagerService;
         this.configService = configService;
     }
 
     @Override
-    public Component createElement(String id, String field, FieldConfig fieldConfig) {
+    public Component createCollection(String id, String field, FieldConfig fieldConfig) {
         // Create a component that will display a list based on the table and field configurations
        /* List<GenericEntity> records = entityManagerService.getRecordsFromTable(table, 0, 100);
         

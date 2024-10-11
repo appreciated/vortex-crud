@@ -19,7 +19,7 @@ public class FormField {
     @Optional
     private String factory;
     @Optional
-    private FactoryConfig factoryConfiguration;
+    private CollectionFactoryConfig collectionFactory;
 
     public String getColumn() {
         return column;
@@ -69,11 +69,11 @@ public class FormField {
         this.factory = factory;
     }
 
-    public FactoryConfig getFactoryConfiguration() {
-        return factoryConfiguration;
+    public CollectionFactoryConfig getCollectionFactory() {
+        return collectionFactory;
     }
 
-    public void setFactoryConfiguration(FactoryConfig factoryConfiguration) {
-        this.factoryConfiguration = factoryConfiguration;
+    public void setCollectionFactory(CollectionFactoryConfig collectionFactory) {
+        this.collectionFactory = collectionFactory;
     }
 }

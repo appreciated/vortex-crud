@@ -1,7 +1,6 @@
 package com.github.appreciated.flow_cms.ui.factories.item;
 
 import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
-import com.github.appreciated.flow_cms.ui.factories.elements.FlowCmsElementFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

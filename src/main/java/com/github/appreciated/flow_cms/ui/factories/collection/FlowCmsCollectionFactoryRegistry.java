@@ -1,4 +1,4 @@
-package com.github.appreciated.flow_cms.ui.factories.elements;
+package com.github.appreciated.flow_cms.ui.factories.collection;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 
@@ -8,9 +8,9 @@ import com.github.appreciated.flow_cms.config.model.FieldConfig;
  * the specified FieldConfig.
  */
 
-public interface FlowCmsElementFactoryRegistry {
+public interface FlowCmsCollectionFactoryRegistry {
 
-   FlowCmsElementFactory getFactory(FieldConfig type);
-   void addFactory(String key, FlowCmsElementFactory factory);
+   FlowCmsCollectionFactory getFactory(FieldConfig type);
+   void addFactory(String key, FlowCmsCollectionFactory factory);
 
 }
