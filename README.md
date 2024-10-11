@@ -21,7 +21,7 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 - **Customizable Icons**: Icons can be easily swapped or customized.
 
 ## Roadmap (in no specific order)
-- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, 1:n, n:n)
+- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, 1:n, n:m)
 - **Nested Hierarchies**: Support navigating nested data structures
 - **Field Validation**: Support for simple cases of validation also custom hooks for complex validation cases
 - **Media Support**: Enable media handling in forms and views
@@ -33,6 +33,11 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 - **Extensibility and Hook Points**: Additional extension and hook points for customization
 - **Generic Block Route Factory**: Add support for generic blocks and implement a flexible factory system for block routes
 - **Custom Repositories**: Enable integration with custom repositories
+- **Filters**: The currently available Route Types "grid", "list", "master-detail" cannot be filtered. A possibility to filter needs to be added 
+- **Additional Routes** 
+  - **Calendar Route**
+  - **Kanban Route**
+  - **Map Route**
 
 ## Data Handling and Management
 FlowCMS uses an H2 database for development, managed by the custom class `FlowCmsEntityManagerService`. The `FlowCmsDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
