@@ -2,7 +2,9 @@ package com.github.appreciated.flow_cms.ui.factories.collection;
 
 import com.github.appreciated.flow_cms.config.model.ApplicationConfig;
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
+import com.github.appreciated.flow_cms.config.model.FormField;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,9 +21,8 @@ public class DefaultCollectionFactoryRegistryImpl implements FlowCmsCollectionFa
 
     private final Map<String, FlowCmsCollectionFactory> factories = new HashMap<>();
 
-    public DefaultCollectionFactoryRegistryImpl(FlowCmsConfigService configService) {
-        ApplicationConfig configuration = configService.getConfiguration();
-        //factories.put("list", new DefaultListElementFactoryImpl(componentFactory, entityManagerService, configService));
+    public DefaultCollectionFactoryRegistryImpl(FlowCmsEntityManagerService entityManagerService) {
+        factories.put("list", new DefaultCollectionFactoryImpl(entityManagerService));
     }
 
     public Map<String, FlowCmsCollectionFactory> getFactories() {
@@ -29,8 +30,8 @@ public class DefaultCollectionFactoryRegistryImpl implements FlowCmsCollectionFa
     }
 
     @Override
-    public FlowCmsCollectionFactory getFactory(FieldConfig type) {
-        return factories.get(type.getType());
+    public FlowCmsCollectionFactory getFactory(FormField type) {
+        return factories.get(type.getFactory());
     }
 
     @Override

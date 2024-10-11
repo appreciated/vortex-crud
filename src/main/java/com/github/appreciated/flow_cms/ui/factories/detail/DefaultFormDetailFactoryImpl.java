@@ -5,6 +5,8 @@ import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
+import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactory;
+import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
 import com.vaadin.flow.component.Component;
@@ -34,11 +36,13 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
     private final DefaultFieldFactoryRegistryImpl componentFactory;
     private final FlowCmsEntityManagerService entityManagerService;
     private final FlowCmsConfigService configService;
+    private final FlowCmsCollectionFactoryRegistry collectionFactoryRegistry;
 
-    public DefaultFormDetailFactoryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService) {
+    public DefaultFormDetailFactoryImpl(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsCollectionFactoryRegistry collectionFactoryRegistry) {
         this.componentFactory = componentFactory;
         this.entityManagerService = entityManagerService;
         this.configService = configService;
+        this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
 
     @Override
@@ -70,7 +74,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
         for (FormField field : detailFactory.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null && !field.getType().equals("relationship")) {
+            if (fieldConfig == null && !field.getType().equals("collection")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             if (fieldConfig != null){
@@ -82,7 +86,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
             } else {
-
+                form.add(collectionFactoryRegistry.getFactory(field).createCollection(""+entity.get("id"), field.getCollectionFactory()));
             }
         }
 

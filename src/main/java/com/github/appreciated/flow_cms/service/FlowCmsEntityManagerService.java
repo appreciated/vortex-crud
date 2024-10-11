@@ -8,6 +8,8 @@ public interface FlowCmsEntityManagerService {
 
     List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) ;
 
+    List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue) ;
+
     GenericEntity getRecordById(String tableName, Object id) ;
 
     void updateRecordById(String tableName, Object id, GenericEntity values);

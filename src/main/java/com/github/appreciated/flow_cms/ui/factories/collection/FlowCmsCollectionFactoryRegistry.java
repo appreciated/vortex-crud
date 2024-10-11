@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.collection;
 
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
+import com.github.appreciated.flow_cms.config.model.FormField;
 
 /**
  * Interface for a factory that creates form components based on field configuration.
@@ -10,7 +11,7 @@ import com.github.appreciated.flow_cms.config.model.FieldConfig;
 
 public interface FlowCmsCollectionFactoryRegistry {
 
-   FlowCmsCollectionFactory getFactory(FieldConfig type);
+   FlowCmsCollectionFactory getFactory(FormField type);
    void addFactory(String key, FlowCmsCollectionFactory factory);
 
 }

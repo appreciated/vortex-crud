@@ -80,6 +80,23 @@ public class DefaultJpaEntityManagerService implements FlowCmsEntityManagerServi
         return hibernateQuery.getResultList();
     }
 
+    @Override
+    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue) {
+        // Construct the SQL query to select records where the column equals the provided value
+        String query = "SELECT * FROM " + getTable(tableName) + " WHERE " + filterField + " = :filterValue";
+
+        // Create a native query using the entity manager
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter("filterValue", filterValue);
+
+        // Cast to NativeQuery to allow the use of setTupleTransformer
+        NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
+
+        // Return the result list
+        return hibernateQuery.getResultList();
+    }
+
     /**
      * Read a specific record by ID (assuming the ID column is "id").
      *
