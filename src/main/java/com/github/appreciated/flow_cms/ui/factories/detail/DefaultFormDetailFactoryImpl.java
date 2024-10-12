@@ -14,6 +14,7 @@ import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -25,6 +26,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 
 import java.util.Map;
 
+import static com.vaadin.flow.component.button.ButtonVariant.*;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 /**
@@ -107,12 +109,14 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
+        saveButton.addThemeVariants(LUMO_PRIMARY);
 
         // Generic Delete button
         Button deleteButton = new Button(layout.getTranslation("button.delete.title"), event -> {
             entityManagerService.deleteRecordById(table, entity.get("id"));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         });
+        deleteButton.addThemeVariants(LUMO_PRIMARY, LUMO_ERROR);
 
         // Add the form and buttons to the layout
         HorizontalLayout headerBar = new HorizontalLayout(titleComponent, saveButton, deleteButton);
