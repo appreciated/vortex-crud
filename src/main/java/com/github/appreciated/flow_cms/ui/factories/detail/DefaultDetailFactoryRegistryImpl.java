@@ -1,8 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
-import com.github.appreciated.flow_cms.config.model.DetailFactory;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
@@ -23,8 +22,8 @@ public class DefaultDetailFactoryRegistryImpl implements FlowCmsDetailFactoryReg
         factories.put("form", new DefaultFormDetailFactoryImpl(componentFactory, entityManagerService, configService, collectionFactoryRegistry));
     }
 
-    public FlowCmsDetailFactory getFactory(DetailFactory routeConfig) {
-        return factories.get(routeConfig.getType());
+    public FlowCmsDetailFactory getFactory(String type) {
+        return factories.get(type);
     }
 }
 

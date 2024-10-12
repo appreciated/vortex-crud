@@ -4,6 +4,7 @@ import com.github.appreciated.flow_cms.config.model.CollectionFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.FormField;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.dialog.FlowCmsDialogFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -27,7 +28,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
     }
 
     @Override
-    public Component createCollection(String id, CollectionFactoryConfig factoryConfig) {
+    public Component createCollection(String id, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry ) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.getStyle().setMarginTop("calc(var(--lumo-font-size-s) * 1.5)");
@@ -37,7 +38,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         header.setWidthFull();
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
-        button.addClickListener(event -> dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(null, factoryConfig).open());
+        button.addClickListener(event -> dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(null, factoryConfig, detailFactoryRegistry).open());
         header.add(button);
         list.add(header);
         List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), id);

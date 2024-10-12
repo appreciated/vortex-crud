@@ -9,6 +9,7 @@ public class CollectionFactoryConfig {
     private String foreignKeyColumn;
     private String dialogFactory;
     private List<FormField> children;
+    private DetailFactory detailFactory;
 
     public String getTable() {
         return table;
@@ -48,5 +49,13 @@ public class CollectionFactoryConfig {
 
     public void setDialogFactory(String dialogFactory) {
         this.dialogFactory = dialogFactory;
+    }
+
+    public DetailFactory getDetailFactory() {
+        return detailFactory;
+    }
+
+    public void setDetailFactory(DetailFactory detailFactory) {
+        this.detailFactory = detailFactory;
     }
 }

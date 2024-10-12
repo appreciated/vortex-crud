@@ -125,7 +125,8 @@ classDiagram
    Table --> Column: "contains"
    Field --> Column: "references"
    Collection --> Column: "references"
-   Dialog --> Table: "references"
+   Collection --> Dialog: "references"
+   Dialog --> Detail: "references"
 ```
 
 ## Configuration via HOCON

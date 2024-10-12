@@ -1,6 +1,6 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
-import com.github.appreciated.flow_cms.config.model.RouteConfig;
+import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.Component;
 
@@ -11,5 +11,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface FlowCmsDetailFactory {
-    Component renderDetail(RouteConfig routeConfig, GenericEntity entity, boolean isWrapped);
+    Component renderDetail(String table, String title, DetailFactory detailFactory, GenericEntity entity, boolean isWrapped, boolean hideHeader, FlowCmsDetailFactoryRegistry detailFactoryRegistry);
 }

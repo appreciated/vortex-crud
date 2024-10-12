@@ -1,8 +1,8 @@
 package com.github.appreciated.flow_cms.ui.factories.route.master_detail;
 
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
-import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.FactoryConfig;
+import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -37,6 +37,7 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private final RouteConfig config;
     private final FlowCmsEntityManagerService entityManagerService;
+    private final FlowCmsDetailFactoryRegistry detailFactoryRegistry;
     private final String table;
     private final FlowCmsDetailFactory detailFactory;
 
@@ -44,13 +45,14 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
+        this.detailFactoryRegistry = detailFactoryRegistry;
         FactoryConfig factoryConfiguration = config.getFactoryConfiguration();
         this.factoryConfig = factoryConfiguration.getItemFactory();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         this.table = config.getTable();
 
         DetailFactory detailFactoryConfig = factoryConfiguration.getDetailFactory();
-        this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig);
+        this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig.getType());
 
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();
@@ -81,7 +83,15 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private void onItemClick(GenericEntity entity) {
         this.detailLayout.removeAll();
-        this.detailLayout.add(detailFactory.renderDetail(config, entity, true));
+        Component component = detailFactory.renderDetail(config.getTable(),
+                config.getTitle(),
+                config.getFactoryConfiguration().getDetailFactory(),
+                entity,
+                true,
+                false,
+                detailFactoryRegistry
+        );
+        this.detailLayout.add(component);
     }
 
     public void initVirtualList() {

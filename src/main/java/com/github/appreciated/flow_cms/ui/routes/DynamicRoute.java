@@ -2,8 +2,8 @@ package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.route.DefaultRouteFactoryRegistryImpl;
@@ -51,7 +51,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         } else {
             DetailFactory detailFactory = configForRoute.getFactoryConfiguration().getDetailFactory();
             GenericEntity recordById = entityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
-            add(detailFactoryRegistry.getFactory(detailFactory).renderDetail(configForRoute, recordById, false));
+            add(detailFactoryRegistry.getFactory(detailFactory.getType()).renderDetail(configForRoute.getTable(), configForRoute.getTitle(), configForRoute.getFactoryConfiguration().getDetailFactory(), recordById, false,false, detailFactoryRegistry));
         }
     }
 }

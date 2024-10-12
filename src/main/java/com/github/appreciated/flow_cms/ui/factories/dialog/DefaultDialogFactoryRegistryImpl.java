@@ -17,7 +17,7 @@ public class DefaultDialogFactoryRegistryImpl implements FlowCmsDialogFactoryReg
 
     private final Map<String, FlowCmsDialogFactory> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistryImpl(FlowCmsEntityManagerService entityManagerService) {
+    public DefaultDialogFactoryRegistryImpl(FlowCmsEntityManagerService entityManagerService ) {
         factories.put("form", new DefaultDialogFactoryImpl(entityManagerService));
     }
 

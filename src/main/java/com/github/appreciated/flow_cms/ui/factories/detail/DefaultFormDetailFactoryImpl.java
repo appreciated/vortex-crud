@@ -1,6 +1,9 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
-import com.github.appreciated.flow_cms.config.model.*;
+import com.github.appreciated.flow_cms.config.model.DetailFactory;
+import com.github.appreciated.flow_cms.config.model.FieldConfig;
+import com.github.appreciated.flow_cms.config.model.FormField;
+import com.github.appreciated.flow_cms.config.model.TableConfig;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -45,9 +48,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
     }
 
     @Override
-    public Component renderDetail(RouteConfig routeConfig, GenericEntity entity, boolean isWrapped) {
-        String table = routeConfig.getTable();
-
+    public Component renderDetail(String table, String title, DetailFactory detailFactory, GenericEntity entity, boolean isWrapped, boolean hideHeader, FlowCmsDetailFactoryRegistry detailFactoryRegistry) {
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
@@ -56,24 +57,24 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
         form.setMaxWidth("1000px");
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
-        String prefix = !isWrapped ? layout.getTranslation(routeConfig.getTitle()) + " / " : "";
+        String prefix = !isWrapped ? layout.getTranslation(title) + " / " : "";
 
         binder.bind(
                 titleComponent,
-                entity1 -> prefix + entity1.getString(routeConfig.getFactoryConfiguration().getDetailFactory().getTitleColumn()),
+                entity1 -> prefix + entity1.getString(detailFactory.getTitleColumn()),
                 (entity1, string) -> {
                 }
         );
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-        DetailFactory detailFactory = routeConfig.getFactoryConfiguration().getDetailFactory();
+        TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
+
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
         for (FormField field : detailFactory.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null && !field.getType().equals("collection")) {
+            if (fieldConfig == null && field.getType() != null && !field.getType().equals("collection")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             if (fieldConfig != null){
@@ -85,7 +86,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
             } else {
-                Component collection = collectionFactoryRegistry.getFactory(field).createCollection("" + entity.get("id"), field.getCollectionFactory());
+                Component collection = collectionFactoryRegistry.getFactory(field).createCollection("" + entity.get("id"), field.getCollectionFactory(), detailFactoryRegistry);
                 form.add(collection);
                 form.setColspan(collection,2);
             }
@@ -116,7 +117,10 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
         // Add the form and buttons to the layout
         HorizontalLayout headerBar = new HorizontalLayout(titleComponent, saveButton, deleteButton);
         headerBar.setAlignItems(CENTER);
-        layout.add(headerBar, form);
+        if (!hideHeader) {
+            layout.add(headerBar);
+        }
+        layout.add(form);
         layout.setPadding(true);
         return layout;
     }
