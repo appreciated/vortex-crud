@@ -1,5 +1,6 @@
 package com.github.appreciated.flow_cms.ui.factories.dialog;
 
+import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class DefaultDialogFactoryRegistryImpl implements FlowCmsDialogFactoryReg
 
     private final Map<String, FlowCmsDialogFactory> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistryImpl(FlowCmsEntityManagerService entityManagerService ) {
-        factories.put("form", new DefaultDialogFactoryImpl(entityManagerService));
+    public DefaultDialogFactoryRegistryImpl(FlowCmsConfigService configService, FlowCmsEntityManagerService entityManagerService ) {
+        factories.put("form", new DefaultDialogFactoryImpl(configService, entityManagerService));
     }
 
     public Map<String, FlowCmsDialogFactory> getFactories() {
