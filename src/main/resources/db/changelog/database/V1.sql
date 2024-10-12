@@ -103,8 +103,7 @@ VALUES
     ('Cloud Migration', 'Migrate services to the new cloud provider', 6, 'work-in-progress', '2024-02-10', NOW(), NOW());
 
 -- Insert example data into comments table
-INSERT INTO task_comments (comment_text, user_id, created_at)
-VALUES
-    ('We need to finalize the design by the end of the week.', 1, NOW()),
-    ('The database structure is ready for review.', 2, NOW()),
-    ('Waiting for more data to begin AI model training.', 3, NOW());
+INSERT INTO task_comments (comment_text, user_id, created_at, task_id)
+VALUES ('We need to finalize the design by the end of the week.', 1, NOW(), 1),
+       ('The database structure is ready for review.', 2, NOW(), 2),
+       ('Waiting for more data to begin AI model training.', 3, NOW(), 3);

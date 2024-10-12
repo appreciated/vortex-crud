@@ -62,12 +62,13 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         list.removeAll();
         list.add(header);
         List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), id);
-        for (GenericEntity recordsFromTableWhereColumnEqual : recordsFromTableWhereColumnEquals) {
+        for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             HorizontalLayout item = new HorizontalLayout();
             for (FormField child : factoryConfig.getChildren()) {
-                Object o = recordsFromTableWhereColumnEqual.get(child.getColumn());
+                Object o = record.get(child.getColumn());
                 item.add(new Text(o.toString()));
             }
+            list.add(item);
         }
         if (recordsFromTableWhereColumnEquals.isEmpty()) {
             list.add(new Text("Keine Kommentare vorhanden, klicken Sie auf '+' um Elemente hinzuzufügen"));
