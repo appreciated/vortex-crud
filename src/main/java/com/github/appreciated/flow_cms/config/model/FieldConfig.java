@@ -10,7 +10,7 @@ public class FieldConfig {
     @Optional
     private boolean required;
     @Optional
-    private int maxLength;
+    private ValidationConfig validation;
     @Optional
     private String defaultValue;
     @Optional
@@ -40,14 +40,6 @@ public class FieldConfig {
         this.required = required;
     }
 
-    public int getMaxLength() {
-        return maxLength;
-    }
-
-    public void setMaxLength(int maxLength) {
-        this.maxLength = maxLength;
-    }
-
     public String getDefaultValue() {
         return defaultValue;
     }
@@ -62,5 +54,13 @@ public class FieldConfig {
 
     public void setValues(String values) {
         this.values = values;
+    }
+
+    public ValidationConfig getValidation() {
+        return validation;
+    }
+
+    public void setValidation(ValidationConfig validation) {
+        this.validation = validation;
     }
 }

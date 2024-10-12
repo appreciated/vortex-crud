@@ -26,5 +26,3 @@ public class DefaultDetailFactoryRegistryImpl implements FlowCmsDetailFactoryReg
         return factories.get(type);
     }
 }
-
-
