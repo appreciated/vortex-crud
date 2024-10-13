@@ -23,3 +23,5 @@ webpack.generated.js
 /chats/
 /flow-cms-database.trace.db
 /.plandex/
+/src/main/bundles/dev.bundle
+/src/main/bundles/README.md
