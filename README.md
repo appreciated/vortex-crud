@@ -1,46 +1,52 @@
 # TurboCRUD (Current Working Title)
 <img width="100" alt="TurboCRUD Logo" src="./turbo-crud.png"/> 
 
-TurboCRUD is a powerful framework designed to accelerate the development of CRUD-style applications using Vaadin Flow. By offering a high-level abstraction layer, it allows developers to rapidly build and customize applications while maintaining the flexibility and control Vaadin Flow provides for more advanced use cases. TurboCRUD is built with extensibility in mind, making it easy to adapt and expand features as project requirements evolve.
+TurboCRUD is a framework engineered to speed up the development of CRUD-style applications with Vaadin Flow. By introducing a high-level abstraction layer, it empowers developers to quickly build and customize applications while retaining the flexibility for more complex use cases. Designed with extensibility at its core, TurboCRUD makes it simple to adapt and expand features as project needs evolve.
 
-TurboCRUD is not a replacement for Vaadin Flow but rather an extension that streamlines repetitive tasks, helping developers focus on application-specific logic and customization.
+Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetitive tasks and promoting reusability of components. This enables developers to focus more on application-specific logic and customization, maximizing productivity and efficiency.
 
 ## Tech Stack
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 - **HOCON**: Configuration format that is compact, readable, and supports imports
 
-## Core Architecture and Basic Functions
-- **Modular UI System**: The UI follows a modular structure, with factories operating at various levels (e.g., Component List Factory, Factory System).
-- **Flexible Configuration System**: Utilizes HOCON for dynamic configuration. Examples demonstrate how to configure different parts of the application.
-- **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` validates the database schema against the application’s configuration at startup.
+## Core Architecture and Key Features
+- **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture))
+- **Flexible Configuration System**: Uses HOCON for dynamic configuration, making it easy to set up various parts of the application.
+- **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` checks that the database schema matches the configuration at startup.
 - **Dynamic Routing**: The `DynamicRoute` class enables routing based on configuration files, allowing flexible route management.
-- **UI Components and Factories**: Several factory implementations, such as `DefaultEntityDetailFactoryImpl`, `DefaultEntityItemCardFactoryImpl`, and `DefaultRouteFactoryImpl`, are available for configuring UI components dynamically.
-- **Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` classes provide generic entity management capabilities.
-- **Internationalization Support**: Translations are integrated from the start for a multi-language experience.
-- **Customizable Icons**: Icons can be easily swapped or customized.
-- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:n)
+- **UI Components and Factories**: Factory implementations like `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
+- **Low Code Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` handle generic entity management based on the database schema.
+- **i18n Support**
+- **Customizable Icons**
+- **Entity Relationship Support**: Manage relationships between entities (1:n).
 
-## Roadmap (in no specific order)
-- **Additional support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, n:m)
-- **Nested Hierarchies**: Support navigating nested data structures
-- **Field Validation**: Support for simple cases of validation also add custom hooks for complex validation cases
-- **Media Support**: Enable media handling in forms and views
-- **User and Role Management & Authentication** (optionally using Authentik)
-- **Additional Form Controls**: Radiobutton Group, Select Group, etc.
-- **Role-Based Access Control (RBAC)**: Configurable via HOCON
-- **Entity Versioning**: Track versions of entities
-- **Entity Auditing**: Support for auditing entity changes
-- **Hook Points**: Add hook points for customization
-- **Custom Repositories**: Enable integration with custom repositories
-- **Filters**: The entities shown in the Route Types "grid", "list", "master-detail" cannot be filtered.
-- **Additional Routes** 
-  - **Calendar Route**
-  - **Kanban Route**
-  - **Map Route**
-  - **Generic Block Route**: Add support for generic blocks and implement a flexible factory system for block routes
-- **Allow adding custom Routes to the Menu**
-- **Allow navigating from Form to custom Routes**
+## Roadmap (in no particular order)
+- **Extended Entity Relationship Support**: Add, remove, and view relationships (1:1, n:m).
+- **Form Navigation**: Enable navigation in forms to other / custom routes.
+- **Nested Hierarchies**
+- **Field Validation**: Add support for basic and advanced field validation hooks.
+- **Media Support**: Enable adding, removing, and viewing media (as field and as a collection)
+- **User and Role Management & Authentication**: (optionally using Authentik)
+- **Additional Form Controls**: Add controls like Radio Button Groups and Select Groups, Links etc.
+- **Role-Based Access Control (RBAC)**
+- **Entity Versioning**
+- **Entity Auditing**
+- **Hook Points**: Add custom hook points for further flexibility.
+- **Custom Repositories**: Enable integration of custom data repositories.
+- **Route Filters**: Add filtering for entity lists in "grid", "list", and "master-detail" routes.
+- **Prefiltered Routes**: Show only specific items in routes as needed.
+- **Additional Routes**:
+    - **Calendar Route**
+    - **Kanban Route**
+    - **Map Route**
+    - **Generic Block Route**: Support for generic blocks with flexible factory systems.
+- **Custom Menu Routes**: Allow adding custom routes to the menu.
+- **Alternative Collection Editing**: Provide alternative ways to the dialog to edit a Collection (see [Architecture](#Architecture)).
+- **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
+- **Configuration Pre-Checks**: Add checks to validate configuration before runtime.
+- **Styling**: Improve styling options.
+- **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available 
 
 ## Data Handling and Management
 TurboCRUD uses an H2 database for development, managed by the custom class `TurboCRUDEntityManagerService`. The `TurboCRUDDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
