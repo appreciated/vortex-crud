@@ -8,6 +8,7 @@ public class CollectionFactoryConfig {
     private String label;
     private String foreignKeyColumn;
     private String dialogFactory;
+    private String emptyMessage;
     private List<FormField> children;
     private DetailFactory detailFactory;
 
@@ -57,5 +58,13 @@ public class CollectionFactoryConfig {
 
     public void setDetailFactory(DetailFactory detailFactory) {
         this.detailFactory = detailFactory;
+    }
+
+    public String getEmptyMessage() {
+        return emptyMessage;
+    }
+
+    public void setEmptyMessage(String emptyMessage) {
+        this.emptyMessage = emptyMessage;
     }
 }

@@ -75,7 +75,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
             list.add(item);
         }
         if (recordsFromTableWhereColumnEquals.isEmpty()) {
-            list.add(new Text("Keine Kommentare vorhanden, klicken Sie auf '+' um Elemente hinzuzufügen"));
+            list.add(new Text(list.getTranslation(factoryConfig.getEmptyMessage())));
         }
     }
 }
