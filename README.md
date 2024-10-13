@@ -42,7 +42,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
     - **Map Route**: A route with a map where entities are shown on based on a latitude column and a longitude column
     - **Generic Block Route**: Support for generic blocks with flexible factory systems.
 - **Custom Menu Routes**: Allow adding custom routes to the menu.
-- **Alternative Collection Editing**: Provide alternative ways to the dialog to edit a Collection (see [Architecture](#Architecture)).
+- **Alternative Collection Editing**: Provide alternative ways to edit Collections (see [Architecture](#Architecture)).
 - **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
 - **Configuration Pre-Checks**: Add checks to validate configuration before runtime.
 - **Improve ability to validate the Configuration**: The configuration is not designed optimally for validation, requiring improvements to allow an effective validation.
