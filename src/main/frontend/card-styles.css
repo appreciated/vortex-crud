@@ -1,13 +1,14 @@
 .card:hover {
-    background: #3d4f67;
+    background: var(--lumo-contrast-20pct);
     transition: background 0.3s ease;
 }
+
 .card {
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--lumo-box-shadow-xs);
     padding: 10px;
     cursor: pointer;
-    background: #36485f;
+    background: var(--lumo-contrast-10pct);
     border: solid 3px transparent;
 }
 
