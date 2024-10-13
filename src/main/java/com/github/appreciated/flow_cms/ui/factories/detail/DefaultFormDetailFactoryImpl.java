@@ -94,12 +94,12 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudDetailFactory {
             entityManagerService.deleteRecordById(table, EntityUtil.getId(entity));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         });
-        delete.addThemeVariants(LUMO_PRIMARY, LUMO_ERROR);
+        delete.addThemeVariants(LUMO_ERROR);
 
         // Generic Delete button
         Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());
         back.getStyle().set("font-size", "1.5em");
-        back.addThemeVariants(LUMO_TERTIARY_INLINE);
+        back.addThemeVariants(LUMO_TERTIARY);
 
         HorizontalLayout headerBar = new HorizontalLayout();
         if (!isWrapped){
