@@ -45,6 +45,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Alternative Collection Editing**: Provide alternative ways to the dialog to edit a Collection (see [Architecture](#Architecture)).
 - **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
 - **Configuration Pre-Checks**: Add checks to validate configuration before runtime.
+- **Improve ability to validate the Configuration**: The configuration is not designed optimally for validation, requiring improvements to allow an effective validation.
 - **Styling**: Improve styling options.
 - **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available 
 
