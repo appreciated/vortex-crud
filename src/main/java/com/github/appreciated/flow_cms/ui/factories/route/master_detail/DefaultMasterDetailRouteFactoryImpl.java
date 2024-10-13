@@ -42,7 +42,12 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
     private final FlowCmsDetailFactory detailFactory;
     private Component active;
 
-    public DefaultMasterDetailRouteFactoryImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry, FlowCmsDetailFactoryRegistry detailFactoryRegistry, FlowCmsIconFactory iconFactory) {
+    public DefaultMasterDetailRouteFactoryImpl(int currentEntityId,
+                                               RouteConfig config,
+                                               FlowCmsEntityManagerService entityManagerService,
+                                               FlowCmsItemFactoryRegistry itemFactoryRegistry,
+                                               FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                               FlowCmsIconFactory iconFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;
@@ -98,6 +103,7 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
             Component component = itemFactory.renderItem(factoryConfig, item, null);
+            component.addClassName("master");
             Div div = new Div(component);
             div.getStyle().set("padding", "5px 5px 0px 5px");
             div.addClickListener(event -> {

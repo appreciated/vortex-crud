@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.ui.factories.dialog;
 import com.github.appreciated.flow_cms.config.model.CollectionFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -29,7 +30,13 @@ public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
     }
 
     @Override
-    public Dialog createDialog(String entityId, String foreignKeyValue, CollectionFactoryConfig factoryConfig, DetailFactory detailFactory, FlowCmsDetailFactoryRegistry detailFactoryRegistry, OnStoreListener listener, FormCreator formCreator) {
+    public Dialog createDialog(String entityId,
+                               String foreignKeyValue,
+                               CollectionFactoryConfig factoryConfig,
+                               DetailFactory detailFactory,
+                               FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                               OnStoreListener listener,
+                               FormCreator formCreator) {
         String table = factoryConfig.getTable();
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(dialog.getTranslation(factoryConfig.getLabel()));
@@ -60,10 +67,10 @@ public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
             try {
                 binder.writeBean(entity);
                 entity.put(factoryConfig.getForeignKeyColumn(), foreignKeyValue);
-                if (entity.get("id") == null) {
+                if (EntityUtil.isNew(entity)) {
                     entityManagerService.insertRecord(table, entity);
                 } else {
-                    entityManagerService.updateRecordById(table, entity.get("id"), entity);
+                    entityManagerService.updateRecordById(table, EntityUtil.getId(entity), entity);
                 }
                 binder.setBean(entity);
                 dialog.close();

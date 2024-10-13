@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.form;
 
 import com.github.appreciated.flow_cms.config.model.*;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
@@ -26,7 +27,14 @@ public class FormCreator {
         this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
 
-    public void bindAndAddToLayout(String table, DetailFactory detailFactory, GenericEntity entity, FlowCmsDetailFactoryRegistry detailFactoryRegistry, TableConfig tables, Binder<GenericEntity> binder, FormLayout form, FormCreator formCreator) {
+    public void bindAndAddToLayout(String table,
+                                   DetailFactory detailFactory,
+                                   GenericEntity entity,
+                                   FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                   TableConfig tables,
+                                   Binder<GenericEntity> binder,
+                                   FormLayout form,
+                                   FormCreator formCreator) {
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
@@ -36,7 +44,7 @@ public class FormCreator {
             if (fieldConfig == null && field.getType() != null && !field.getType().equals("collection")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
-            if (fieldConfig != null){
+            if (fieldConfig != null) {
                 FlowCmsFieldFactory factory = componentFactory.getFactory(fieldConfig);
                 Component component = factory.createComponent(table, fieldName, fieldConfig);
                 if (component instanceof InputField) {
@@ -46,9 +54,15 @@ public class FormCreator {
                 form.add(component);
             } else {
                 CollectionFactoryConfig collectionFactory = field.getCollectionFactory();
-                Component collection = collectionFactoryRegistry.getFactory(field).createCollection("" + entity.get("id"), collectionFactory,detailFactoryRegistry, collectionFactory.getDetailFactory(),formCreator);
+                Component collection = collectionFactoryRegistry.getFactory(field).createCollection(
+                        EntityUtil.getId(entity),
+                        collectionFactory,
+                        detailFactoryRegistry,
+                        collectionFactory.getDetailFactory(),
+                        formCreator
+                );
                 form.add(collection);
-                form.setColspan(collection,2);
+                form.setColspan(collection, 2);
             }
         }
     }

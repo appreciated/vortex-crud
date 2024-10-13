@@ -4,15 +4,22 @@
 }
 
 .card {
-    border-radius: 8px;
+    border-radius: var(--lumo-border-radius-m);
     box-shadow: 0 2px 5px var(--lumo-box-shadow-xs);
     padding: 10px;
     cursor: pointer;
     background: var(--lumo-contrast-10pct);
+}
+
+.card.collection {
+    padding: 0.4em;
+}
+
+.card.master {
     border: solid 3px transparent;
 }
 
-.card.active {
+.card.master.active {
     transition: border 0.3s ease;
     border: solid 3px var(--lumo-primary-color-50pct);
 }

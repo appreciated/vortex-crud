@@ -3,6 +3,7 @@ package com.github.appreciated.flow_cms.ui.factories.collection;
 import com.github.appreciated.flow_cms.config.model.CollectionFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.FormField;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.collection.item.DefaultCollectionItemImpl;
@@ -21,22 +22,29 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
 
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
+import static com.vaadin.flow.component.button.ButtonVariant.*;
 
 public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
 
     private final FlowCmsEntityManagerService entityManagerService;
     private final FlowCmsDialogFactoryRegistry dialogFactory;
 
-    public DefaultCollectionFactoryImpl(FlowCmsEntityManagerService entityManagerService, FlowCmsDialogFactoryRegistry dialogFactory) {
+    public DefaultCollectionFactoryImpl(FlowCmsEntityManagerService entityManagerService,
+                                        FlowCmsDialogFactoryRegistry dialogFactory) {
         this.entityManagerService = entityManagerService;
         this.dialogFactory = dialogFactory;
     }
 
     @Override
-    public Component createCollection(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator) {
+    public Component createCollection(String foreignKey,
+                                      CollectionFactoryConfig factoryConfig,
+                                      FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                      DetailFactory detailFactory,
+                                      FormCreator formCreator) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
+        list.setSpacing(false);
+        list.getElement().setAttribute("theme", "spacing-s");
         list.getStyle().setMarginTop("calc(var(--lumo-font-size-s) * 1.5)");
         HorizontalLayout header = new HorizontalLayout();
         header.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -47,20 +55,33 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         button.addThemeVariants(LUMO_PRIMARY);
         button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
         header.add(button);
-        init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);
+        loadCollection(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);
         return list;
     }
 
-    private void init(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
+    private void loadCollection(String foreignKey,
+                                CollectionFactoryConfig factoryConfig,
+                                FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                DetailFactory detailFactory,
+                                FormCreator formCreator,
+                                VerticalLayout list,
+                                HorizontalLayout header) {
         list.removeAll();
         list.add(header);
         List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), foreignKey);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.addClickListener(event -> openDialog("" + record.get("id"), foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
             for (FormField child : factoryConfig.getChildren()) {
                 Object o = record.get(child.getColumn());
-                item.add(new Text(o.toString()));
+                item.addContent(new Text(o.toString()));
+                Button remove = new Button(VaadinIcon.TRASH.create());
+                remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL);
+                remove.addClickListener(event -> {
+                    entityManagerService.deleteRecordById(factoryConfig.getTable(), EntityUtil.getId(record));
+                    loadCollection(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);
+                });
+                item.addActions(remove);
             }
             list.add(item);
         }
@@ -69,14 +90,21 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         }
     }
 
-    private void openDialog(String entityId, String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
+    private void openDialog(String entityId,
+                            String foreignKey,
+                            CollectionFactoryConfig factoryConfig,
+                            FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                            DetailFactory detailFactory,
+                            FormCreator formCreator,
+                            VerticalLayout list,
+                            HorizontalLayout header) {
         Dialog dialog = dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(
                 entityId,
                 foreignKey,
                 factoryConfig,
                 detailFactory,
                 detailFactoryRegistry,
-                () -> init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header),
+                () -> loadCollection(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header),
                 formCreator);
         dialog.open();
     }

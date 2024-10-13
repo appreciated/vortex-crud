@@ -2,12 +2,11 @@ package com.github.appreciated.flow_cms.ui.factories.detail;
 
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
-import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -35,14 +34,22 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
     private final FlowCmsConfigService configService;
     private final FormCreator formCreator;
 
-    public DefaultFormDetailFactoryImpl(FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FormCreator formCreator) {
+    public DefaultFormDetailFactoryImpl(FlowCmsEntityManagerService entityManagerService,
+                                        FlowCmsConfigService configService,
+                                        FormCreator formCreator) {
         this.entityManagerService = entityManagerService;
         this.configService = configService;
         this.formCreator = formCreator;
     }
 
     @Override
-    public Component renderDetail(String table, String title, DetailFactory detailFactory, GenericEntity entity, boolean isWrapped, boolean hideHeader, FlowCmsDetailFactoryRegistry detailFactoryRegistry) {
+    public Component renderDetail(String table,
+                                  String title,
+                                  DetailFactory detailFactory,
+                                  GenericEntity entity,
+                                  boolean isWrapped,
+                                  boolean hideHeader,
+                                  FlowCmsDetailFactoryRegistry detailFactoryRegistry) {
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
@@ -70,7 +77,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
         Button saveButton = new Button(layout.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entityManagerService.updateRecordById(table, entity.get("id"), entity);
+                entityManagerService.updateRecordById(table, EntityUtil.getId(entity), entity);
                 binder.setBean(entity);
                 Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -83,7 +90,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
 
         // Generic Delete button
         Button deleteButton = new Button(layout.getTranslation("button.delete.title"), event -> {
-            entityManagerService.deleteRecordById(table, entity.get("id"));
+            entityManagerService.deleteRecordById(table, EntityUtil.getId(entity));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         });
         deleteButton.addThemeVariants(LUMO_PRIMARY, LUMO_ERROR);

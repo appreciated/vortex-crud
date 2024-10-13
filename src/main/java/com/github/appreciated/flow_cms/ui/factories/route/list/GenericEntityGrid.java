@@ -1,6 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.route.list;
 
 import com.github.appreciated.flow_cms.config.model.*;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
@@ -22,7 +23,12 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
 
     private final String route;
 
-    public GenericEntityGrid(int i, RouteConfig routeConfig, String route, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
+    public GenericEntityGrid(int i,
+                             RouteConfig routeConfig,
+                             String route,
+                             FlowCmsEntityManagerService entityManagerService,
+                             FlowCmsConfigService configService,
+                             FlowCmsListColumnCallbackRegistry listColumnFactory) {
         this.route = route;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         String table = routeConfig.getTable();
@@ -62,6 +68,6 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
      * @param entity the clicked GenericEntity
      */
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/"+route+"/" + entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + route + "/" + EntityUtil.getId(entity)));
     }
 }

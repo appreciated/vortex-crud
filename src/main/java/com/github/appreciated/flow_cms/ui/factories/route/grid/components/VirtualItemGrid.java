@@ -2,6 +2,7 @@ package com.github.appreciated.flow_cms.ui.factories.route.grid.components;
 
 import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
+import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
@@ -34,7 +35,11 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(int i, String route, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry) {
+    public VirtualItemGrid(int i,
+                           String route,
+                           RouteConfig config,
+                           FlowCmsEntityManagerService entityManagerService,
+                           FlowCmsItemFactoryRegistry itemFactoryRegistry) {
         this.route = route;
         this.entityManagerService = entityManagerService;
         table = config.getTable();
@@ -74,7 +79,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/"+route+"/" + entity.get("id")));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + route + "/" + EntityUtil.getId(entity)));
     }
 
     private void initLazyLoadingDataProvider() {
