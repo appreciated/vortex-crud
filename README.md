@@ -37,9 +37,9 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Route Filters**: Add filtering for entity lists in "grid", "list", and "master-detail" routes.
 - **Prefiltered Routes**: Show only specific items in routes as needed.
 - **Additional Routes**:
-    - **Calendar Route**
-    - **Kanban Route**
-    - **Map Route**
+    - **Calendar Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=45)
+    - **Kanban Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=44)
+    - **Map Route**: A route with a map where entities are shown on based on a latitude column and a longitude column
     - **Generic Block Route**: Support for generic blocks with flexible factory systems.
 - **Custom Menu Routes**: Allow adding custom routes to the menu.
 - **Alternative Collection Editing**: Provide alternative ways to the dialog to edit a Collection (see [Architecture](#Architecture)).
