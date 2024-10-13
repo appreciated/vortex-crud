@@ -45,20 +45,10 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
         header.add(button);
         init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);
         return list;
-    }
-
-    private void openDialog(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
-        Dialog dialog = dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(null,
-                factoryConfig,
-                detailFactory,
-                detailFactoryRegistry,
-                () -> init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header),
-                formCreator);
-        dialog.open();
     }
 
     private void init(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
@@ -67,7 +57,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), foreignKey);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.addClickListener(event -> openDialog(""+record.get("id"), factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
+            item.addClickListener(event -> openDialog("" + record.get("id"), foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
             for (FormField child : factoryConfig.getChildren()) {
                 Object o = record.get(child.getColumn());
                 item.add(new Text(o.toString()));
@@ -77,5 +67,17 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         if (recordsFromTableWhereColumnEquals.isEmpty()) {
             list.add(new Text(list.getTranslation(factoryConfig.getEmptyMessage())));
         }
+    }
+
+    private void openDialog(String entityId, String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
+        Dialog dialog = dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(
+                entityId,
+                foreignKey,
+                factoryConfig,
+                detailFactory,
+                detailFactoryRegistry,
+                () -> init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header),
+                formCreator);
+        dialog.open();
     }
 }

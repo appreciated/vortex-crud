@@ -7,5 +7,5 @@ import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.dialog.Dialog;
 
 public interface FlowCmsDialogFactory {
-    Dialog createDialog(String id, CollectionFactoryConfig factoryConfig, DetailFactory detailFactory, FlowCmsDetailFactoryRegistry detailFactoryRegistry, OnStoreListener listener, FormCreator formCreator);
+    Dialog createDialog(String entityId, String foreignKeyValue, CollectionFactoryConfig factoryConfig, DetailFactory detailFactory, FlowCmsDetailFactoryRegistry detailFactoryRegistry, OnStoreListener listener, FormCreator formCreator);
 }

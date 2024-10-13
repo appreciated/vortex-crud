@@ -29,18 +29,19 @@ public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
     }
 
     @Override
-    public Dialog createDialog(String id, CollectionFactoryConfig factoryConfig, DetailFactory detailFactory, FlowCmsDetailFactoryRegistry detailFactoryRegistry, OnStoreListener listener, FormCreator formCreator) {
+    public Dialog createDialog(String entityId, String foreignKeyValue, CollectionFactoryConfig factoryConfig, DetailFactory detailFactory, FlowCmsDetailFactoryRegistry detailFactoryRegistry, OnStoreListener listener, FormCreator formCreator) {
         String table = factoryConfig.getTable();
         Dialog dialog = new Dialog();
         dialog.setHeaderTitle(dialog.getTranslation(factoryConfig.getLabel()));
 
-        GenericEntity recordById = entityManagerService.getRecordById(table, id);
+        GenericEntity recordById = entityManagerService.getRecordById(table, entityId);
         if (recordById == null) {
             recordById = new GenericEntity();
         }
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
-        createFooter(table, binder, recordById, dialog, listener);
+        binder.setBean(recordById);
+        createFooter(table, foreignKeyValue, factoryConfig, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
@@ -53,12 +54,17 @@ public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
         return dialog;
     }
 
-    private void createFooter(String table, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String table, String foreignKeyValue, CollectionFactoryConfig factoryConfig, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entityManagerService.updateRecordById(table, entity.get("id"), entity);
+                entity.put(factoryConfig.getForeignKeyColumn(), foreignKeyValue);
+                if (entity.get("id") == null) {
+                    entityManagerService.insertRecord(table, entity);
+                } else {
+                    entityManagerService.updateRecordById(table, entity.get("id"), entity);
+                }
                 binder.setBean(entity);
                 dialog.close();
                 listener.onStore();
