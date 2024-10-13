@@ -5,6 +5,7 @@ import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.FormField;
 import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
+import com.github.appreciated.flow_cms.ui.factories.collection.item.DefaultCollectionItemImpl;
 import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.dialog.FlowCmsDialogFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
@@ -33,7 +34,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
     }
 
     @Override
-    public Component createCollection(String id, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator) {
+    public Component createCollection(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.getStyle().setMarginTop("calc(var(--lumo-font-size-s) * 1.5)");
@@ -44,26 +45,29 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> {
-            Dialog dialog = dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(null,
-                    factoryConfig,
-                    detailFactory,
-                    detailFactoryRegistry,
-                    () -> init(id, factoryConfig, list, header),
-                    formCreator);
-            dialog.open();
-        });
+        button.addClickListener(event -> openDialog(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
         header.add(button);
-        init(id, factoryConfig, list, header);
+        init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);
         return list;
     }
 
-    private void init(String id, CollectionFactoryConfig factoryConfig, VerticalLayout list, HorizontalLayout header) {
+    private void openDialog(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
+        Dialog dialog = dialogFactory.getFactory(factoryConfig.getDialogFactory()).createDialog(null,
+                factoryConfig,
+                detailFactory,
+                detailFactoryRegistry,
+                () -> init(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header),
+                formCreator);
+        dialog.open();
+    }
+
+    private void init(String foreignKey, CollectionFactoryConfig factoryConfig, FlowCmsDetailFactoryRegistry detailFactoryRegistry, DetailFactory detailFactory, FormCreator formCreator, VerticalLayout list, HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), id);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(factoryConfig.getTable(), factoryConfig.getForeignKeyColumn(), foreignKey);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-            HorizontalLayout item = new HorizontalLayout();
+            DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
+            item.addClickListener(event -> openDialog(""+record.get("id"), factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header));
             for (FormField child : factoryConfig.getChildren()) {
                 Object o = record.get(child.getColumn());
                 item.add(new Text(o.toString()));

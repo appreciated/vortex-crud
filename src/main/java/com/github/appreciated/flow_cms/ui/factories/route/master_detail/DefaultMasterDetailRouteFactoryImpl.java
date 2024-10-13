@@ -40,6 +40,7 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
     private final FlowCmsDetailFactoryRegistry detailFactoryRegistry;
     private final String table;
     private final FlowCmsDetailFactory detailFactory;
+    private Component active;
 
     public DefaultMasterDetailRouteFactoryImpl(int currentEntityId, RouteConfig config, FlowCmsEntityManagerService entityManagerService, FlowCmsItemFactoryRegistry itemFactoryRegistry, FlowCmsDetailFactoryRegistry detailFactoryRegistry, FlowCmsIconFactory iconFactory) {
         this.config = config;
@@ -99,7 +100,14 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
             Component component = itemFactory.renderItem(factoryConfig, item, null);
             Div div = new Div(component);
             div.getStyle().set("padding", "5px 5px 0px 5px");
-            div.addClickListener(event -> onItemClick(item));
+            div.addClickListener(event -> {
+                if (active != null) {
+                    active.removeClassName("active");
+                }
+                component.addClassName("active");
+                active = component;
+                onItemClick(item);
+            });
             return div;
         }));
         this.virtualList.setDataProvider(DataProvider.fromCallbacks(

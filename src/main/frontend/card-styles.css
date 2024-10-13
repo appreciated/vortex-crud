@@ -1,0 +1,17 @@
+.card:hover {
+    background: #3d4f67;
+    transition: background 0.3s ease;
+}
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    cursor: pointer;
+    background: #36485f;
+    border: solid 3px transparent;
+}
+
+.card.active {
+    transition: border 0.3s ease;
+    border: solid 3px var(--lumo-primary-color-50pct);
+}

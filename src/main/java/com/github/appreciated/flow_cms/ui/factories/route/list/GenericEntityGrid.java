@@ -5,6 +5,7 @@ import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
 import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
@@ -23,6 +24,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
 
     public GenericEntityGrid(int i, RouteConfig routeConfig, String route, FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FlowCmsListColumnCallbackRegistry listColumnFactory) {
         this.route = route;
+        addThemeVariants(GridVariant.LUMO_NO_BORDER);
         String table = routeConfig.getTable();
 
         // Set up the data provider with lazy loading
