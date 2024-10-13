@@ -1,0 +1,18 @@
+package com.github.appreciated.turbo_crud.ui.factories.item;
+
+import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
+import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.vaadin.flow.component.Component;
+
+/**
+ * Default implementation of the {@link TurboCrudItemFactory} interface for rendering entity items as cards.
+ * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
+ */
+
+public class DefaultItemCardFactoryImpl implements TurboCrudItemFactory {
+
+    @Override
+    public Component renderItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth) {
+        return new DefaultItem(itemFactoryConfig, entity, maxWidth);
+    }
+}
