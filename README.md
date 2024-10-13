@@ -19,9 +19,10 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 - **Entity Management**: The `GenericEntity` and `FlowCmsEntityManagerService` classes provide generic entity management capabilities.
 - **Internationalization Support**: Translations are integrated from the start for a multi-language experience.
 - **Customizable Icons**: Icons can be easily swapped or customized.
+- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:n)
 
 ## Roadmap (in no specific order)
-- **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, 1:n, n:m)
+- **Additional support for Entity Relationships**: Add, remove, and view relationships between entities (1:1, n:m)
 - **Nested Hierarchies**: Support navigating nested data structures
 - **Field Validation**: Support for simple cases of validation also add custom hooks for complex validation cases
 - **Media Support**: Enable media handling in forms and views
