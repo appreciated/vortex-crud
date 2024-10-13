@@ -10,6 +10,6 @@ import com.vaadin.flow.component.Component;
  * based on a given route configuration and entity data.
  */
 
-public interface FlowCmsDetailFactory {
-    Component renderDetail(String table, String title, DetailFactory detailFactory, GenericEntity entity, boolean isWrapped, boolean hideHeader, FlowCmsDetailFactoryRegistry detailFactoryRegistry);
+public interface TurboCrudDetailFactory {
+    Component renderDetail(String table, String title, DetailFactory detailFactory, GenericEntity entity, boolean isWrapped, boolean hideHeader, TurboCrudDetailFactoryRegistry detailFactoryRegistry);
 }

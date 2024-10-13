@@ -9,6 +9,6 @@ import com.vaadin.flow.component.Component;
  * Classes implementing this interface should provide a method for rendering items based on a given configuration and entity data.
  */
 
-public interface FlowCmsItemFactory {
+public interface TurboCrudItemFactory {
     Component renderItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth);
 }

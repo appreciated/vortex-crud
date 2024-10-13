@@ -7,7 +7,7 @@ import com.vaadin.flow.router.RouterLayout;
  * Implementations should provide a method for generating application layouts compatible with Vaadin's RouterLayout.
  */
 
-public interface FlowCmsRouterLayoutFactory {
+public interface TurboCrudRouterLayoutFactory {
 
     RouterLayout createAppLayout();
 

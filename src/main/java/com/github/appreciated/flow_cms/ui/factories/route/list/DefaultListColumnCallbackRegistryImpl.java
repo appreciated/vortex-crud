@@ -6,26 +6,26 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 /**
- * Factory implementation for creating entity item renderers.
+ * Standard factory implementation for creating {@link TurboCrudListColumnCallback}'s.
  * It initializes and provides the appropriate renderer based on the ItemRendererConfig configuration.
  */
 
 @Service
-public class DefaultListColumnCallbackRegistryImpl implements FlowCmsListColumnCallbackRegistry {
+public class DefaultListColumnCallbackRegistryImpl implements TurboCrudListColumnCallbackRegistry {
 
-    HashMap<String, FlowCmsListColumnCallback> callbacks = new HashMap<>();
+    HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistryImpl() {
         callbacks.put("default", new DefaultListColumnImplCallback());
     }
 
     @Override
-    public FlowCmsListColumnCallback getCallback(RouteConfig config) {
+    public TurboCrudListColumnCallback getCallback(RouteConfig config) {
         return callbacks.get("default");
     }
 
     @Override
-    public void addCallback(String key, FlowCmsListColumnCallback factory) {
+    public void addCallback(String key, TurboCrudListColumnCallback factory) {
         callbacks.put(key, factory);
     }
 }

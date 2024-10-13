@@ -2,8 +2,8 @@ package com.github.appreciated.flow_cms.ui.factories.route.list;
 
 import com.github.appreciated.flow_cms.config.model.*;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A custom Grid component for displaying GenericEntity objects with lazy loading.
- * This grid is configured with a data provider that retrieves and counts records dynamically based on the specified table in the RouteConfig.
- * It also supports click events for rows to navigate to a detailed view of each entity.
+ * A custom {@link Grid} component for displaying {@link GenericEntity} objects with lazy loading. This grid is
+ * configured with a data provider that retrieves and counts records dynamically based on the specified table in the
+ * {@link RouteConfig}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
 public class GenericEntityGrid extends Grid<GenericEntity> {
@@ -26,9 +26,9 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
     public GenericEntityGrid(int i,
                              RouteConfig routeConfig,
                              String route,
-                             FlowCmsEntityManagerService entityManagerService,
-                             FlowCmsConfigService configService,
-                             FlowCmsListColumnCallbackRegistry listColumnFactory) {
+                             TurboCrudEntityManagerService entityManagerService,
+                             TurboCrudConfigService configService,
+                             TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.route = route;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         String table = routeConfig.getTable();

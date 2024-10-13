@@ -2,7 +2,7 @@ package com.github.appreciated.flow_cms.service;
 
 import java.util.List;
 
-public interface FlowCmsEntityManagerService {
+public interface TurboCrudEntityManagerService {
 
     void insertRecord(String tableName, GenericEntity values) ;
 

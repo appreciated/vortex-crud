@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.ui.factories.route;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -9,6 +9,6 @@ import com.vaadin.flow.component.Component;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface FlowCmsRouteFactory {
-    Component renderRoute(int currentEntityId, String route, RouteConfig config, FlowCmsEntityManagerService entityManagerService);
+public interface TurboCrudRouteFactory {
+    Component renderRoute(int currentEntityId, String route, RouteConfig config, TurboCrudEntityManagerService entityManagerService);
 }

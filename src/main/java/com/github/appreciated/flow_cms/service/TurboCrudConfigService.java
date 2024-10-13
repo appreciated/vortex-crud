@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class FlowCmsConfigService {
+public class TurboCrudConfigService {
 
     private final ApplicationConfig configuration;
 
-    public FlowCmsConfigService() {
+    public TurboCrudConfigService() {
         ConfigParseOptions defaults = ConfigParseOptions.defaults();
-        Config config = ConfigFactory.parseResources(FlowCmsConfigService.class.getClassLoader(), "flow-cms-config.conf", defaults);
+        Config config = ConfigFactory.parseResources(TurboCrudConfigService.class.getClassLoader(), "turbo-crud-config.conf", defaults);
         this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), ApplicationConfig.class);
         if (config.isEmpty()) {
             throw new IllegalStateException("No flow cms config found");

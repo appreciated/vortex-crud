@@ -3,10 +3,10 @@ package com.github.appreciated.flow_cms.ui.factories.form;
 import com.github.appreciated.flow_cms.config.model.*;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.factories.collection.FlowCmsCollectionFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.collection.TurboCrudCollectionFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
-import com.github.appreciated.flow_cms.ui.factories.fields.FlowCmsFieldFactory;
+import com.github.appreciated.flow_cms.ui.factories.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -20,9 +20,9 @@ import java.util.Map;
 public class FormCreator {
 
     private final DefaultFieldFactoryRegistryImpl componentFactory;
-    private final FlowCmsCollectionFactoryRegistry collectionFactoryRegistry;
+    private final TurboCrudCollectionFactoryRegistry collectionFactoryRegistry;
 
-    public FormCreator(DefaultFieldFactoryRegistryImpl componentFactory, FlowCmsCollectionFactoryRegistry collectionFactoryRegistry) {
+    public FormCreator(DefaultFieldFactoryRegistryImpl componentFactory, TurboCrudCollectionFactoryRegistry collectionFactoryRegistry) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
@@ -30,7 +30,7 @@ public class FormCreator {
     public void bindAndAddToLayout(String table,
                                    DetailFactory detailFactory,
                                    GenericEntity entity,
-                                   FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                   TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                    TableConfig tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
@@ -45,7 +45,7 @@ public class FormCreator {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
             if (fieldConfig != null) {
-                FlowCmsFieldFactory factory = componentFactory.getFactory(fieldConfig);
+                TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig);
                 Component component = factory.createComponent(table, fieldName, fieldConfig);
                 if (component instanceof InputField) {
                     ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));

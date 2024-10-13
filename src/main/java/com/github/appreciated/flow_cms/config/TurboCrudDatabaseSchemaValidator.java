@@ -3,7 +3,7 @@ package com.github.appreciated.flow_cms.config;
 import com.github.appreciated.flow_cms.config.model.ApplicationConfig;
 import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import java.util.*;
  * <p>
  * This class checks if tables and columns in the database match the expected
  * schema based on {@link TableConfig} and {@link FieldConfig} from
- * {@link FlowCmsConfigService}. It uses JPA's {@link EntityManager} to run
+ * {@link TurboCrudConfigService}. It uses JPA's {@link EntityManager} to run
  * native SQL queries and validate table existence, column names, and data types.
  * </p>
  * <p>
@@ -24,12 +24,12 @@ import java.util.*;
  */
 
 @Configuration
-public class FlowCmsDatabaseSchemaValidator {
+public class TurboCrudDatabaseSchemaValidator {
 
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public FlowCmsDatabaseSchemaValidator(EntityManager entityManager, FlowCmsConfigService configService) {
+    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService) {
         this.entityManager = entityManager;
 
         typeMappings = new HashMap<>();

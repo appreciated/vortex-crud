@@ -11,20 +11,20 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultItemFactoryRegistryImpl implements FlowCmsItemFactoryRegistry {
+public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegistry {
 
-    HashMap<String, FlowCmsItemFactory> factories = new HashMap<>();
+    HashMap<String, TurboCrudItemFactory> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistryImpl() {
         factories.put("card", new DefaultItemCardFactoryImpl());
     }
 
-    public FlowCmsItemFactory getFactory(ItemFactoryConfig routeConfig) {
+    public TurboCrudItemFactory getFactory(ItemFactoryConfig routeConfig) {
         return factories.get(routeConfig.getType());
     }
 
     @Override
-    public void addFactory(String key, FlowCmsItemFactory factory) {
+    public void addFactory(String key, TurboCrudItemFactory factory) {
         factories.put(key, factory);
     }
 }

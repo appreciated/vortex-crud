@@ -8,7 +8,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -23,10 +22,7 @@ import java.util.*;
  *   <li>English (en-EN)</li>
  * </ul>
  */
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -50,7 +46,7 @@ public class TranslationService implements I18NProvider {
      *
      * @param configService The configuration service to get the i18n bundle prefix.
      */
-    public TranslationService(FlowCmsConfigService configService) {
+    public TranslationService(TurboCrudConfigService configService) {
         this.i18nBundlePrefix = configService.getConfiguration().getI18nBundlePrefix();
         this.locales = discoverAvailableLocales();
     }

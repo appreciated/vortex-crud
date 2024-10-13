@@ -1,6 +1,6 @@
 package com.github.appreciated.flow_cms.ui.routes;
 
-import com.github.appreciated.flow_cms.ui.factories.router_layout.FlowCmsRouterLayoutFactory;
+import com.github.appreciated.flow_cms.ui.factories.router_layout.TurboCrudRouterLayoutFactory;
 import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.router.RouterLayout;
 
@@ -12,7 +12,7 @@ import com.vaadin.flow.router.RouterLayout;
 public class ProxyRouterLayout implements RouterLayout {
     private final RouterLayout routerLayout;
 
-    public ProxyRouterLayout(FlowCmsRouterLayoutFactory factory) {
+    public ProxyRouterLayout(TurboCrudRouterLayoutFactory factory) {
         routerLayout = factory.createAppLayout();
     }
 

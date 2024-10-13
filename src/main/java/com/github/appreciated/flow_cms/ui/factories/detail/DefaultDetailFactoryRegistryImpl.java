@@ -1,27 +1,27 @@
 package com.github.appreciated.flow_cms.ui.factories.detail;
 
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 /**
- * Factory implementation for creating entity detail renderers.
+ * Factory implementation of {@link TurboCrudDetailFactoryRegistry} for creating entity detail renderers.
  * It initializes and provides the appropriate renderer based on the DetailRenderer configuration.
  */
 
 @Service
-public class DefaultDetailFactoryRegistryImpl implements FlowCmsDetailFactoryRegistry {
+public class DefaultDetailFactoryRegistryImpl implements TurboCrudDetailFactoryRegistry {
 
-    HashMap<String, FlowCmsDetailFactory> factories = new HashMap<>();
+    HashMap<String, TurboCrudDetailFactory> factories = new HashMap<>();
 
-    public DefaultDetailFactoryRegistryImpl(FlowCmsEntityManagerService entityManagerService, FlowCmsConfigService configService, FormCreator formCreator) {
+    public DefaultDetailFactoryRegistryImpl(TurboCrudEntityManagerService entityManagerService, TurboCrudConfigService configService, FormCreator formCreator) {
         factories.put("form", new DefaultFormDetailFactoryImpl(entityManagerService, configService, formCreator));
     }
 
-    public FlowCmsDetailFactory getFactory(String type) {
+    public TurboCrudDetailFactory getFactory(String type) {
         return factories.get(type);
     }
 }

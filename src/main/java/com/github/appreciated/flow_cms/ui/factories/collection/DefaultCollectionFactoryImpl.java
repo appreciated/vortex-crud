@@ -4,11 +4,11 @@ import com.github.appreciated.flow_cms.config.model.CollectionFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.FormField;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.factories.collection.item.DefaultCollectionItemImpl;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.dialog.FlowCmsDialogFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -24,13 +24,13 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
+public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory {
 
-    private final FlowCmsEntityManagerService entityManagerService;
-    private final FlowCmsDialogFactoryRegistry dialogFactory;
+    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public DefaultCollectionFactoryImpl(FlowCmsEntityManagerService entityManagerService,
-                                        FlowCmsDialogFactoryRegistry dialogFactory) {
+    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+                                        TurboCrudDialogFactoryRegistry dialogFactory) {
         this.entityManagerService = entityManagerService;
         this.dialogFactory = dialogFactory;
     }
@@ -38,7 +38,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
     @Override
     public Component createCollection(String foreignKey,
                                       CollectionFactoryConfig factoryConfig,
-                                      FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                      TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                       DetailFactory detailFactory,
                                       FormCreator formCreator) {
         VerticalLayout list = new VerticalLayout();
@@ -61,7 +61,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
 
     private void loadCollection(String foreignKey,
                                 CollectionFactoryConfig factoryConfig,
-                                FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                                TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                 DetailFactory detailFactory,
                                 FormCreator formCreator,
                                 VerticalLayout list,
@@ -93,7 +93,7 @@ public class DefaultCollectionFactoryImpl implements FlowCmsCollectionFactory {
     private void openDialog(String entityId,
                             String foreignKey,
                             CollectionFactoryConfig factoryConfig,
-                            FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                            TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                             DetailFactory detailFactory,
                             FormCreator formCreator,
                             VerticalLayout list,

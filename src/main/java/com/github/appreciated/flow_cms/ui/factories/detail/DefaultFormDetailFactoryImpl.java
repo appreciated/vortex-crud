@@ -3,8 +3,8 @@ package com.github.appreciated.flow_cms.ui.factories.detail;
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.H2WithHasValue;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
@@ -23,19 +23,19 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 /**
- * Default implementation of the EntityDetailRenderer interface.
+ * Default implementation of the {@link TurboCrudDetailFactory} interface.
  * This class handles rendering entity details in a form layout and provides functionalities
  * such as saving and deleting entities.
  */
 
-public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
+public class DefaultFormDetailFactoryImpl implements TurboCrudDetailFactory {
 
-    private final FlowCmsEntityManagerService entityManagerService;
-    private final FlowCmsConfigService configService;
+    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
 
-    public DefaultFormDetailFactoryImpl(FlowCmsEntityManagerService entityManagerService,
-                                        FlowCmsConfigService configService,
+    public DefaultFormDetailFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+                                        TurboCrudConfigService configService,
                                         FormCreator formCreator) {
         this.entityManagerService = entityManagerService;
         this.configService = configService;
@@ -49,7 +49,7 @@ public class DefaultFormDetailFactoryImpl implements FlowCmsDetailFactory {
                                   GenericEntity entity,
                                   boolean isWrapped,
                                   boolean hideHeader,
-                                  FlowCmsDetailFactoryRegistry detailFactoryRegistry) {
+                                  TurboCrudDetailFactoryRegistry detailFactoryRegistry) {
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();

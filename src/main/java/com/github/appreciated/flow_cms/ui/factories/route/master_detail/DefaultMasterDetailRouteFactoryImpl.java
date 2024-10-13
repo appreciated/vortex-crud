@@ -4,14 +4,14 @@ import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.FactoryConfig;
 import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
 import com.github.appreciated.flow_cms.ui.components.RouteHeader;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactory;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactory;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.icon.TurboCrudIconFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.TurboCrudItemFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -32,22 +32,22 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final FlowCmsItemFactory itemFactory;
+    private final TurboCrudItemFactory itemFactory;
     private final ItemFactoryConfig factoryConfig;
 
     private final RouteConfig config;
-    private final FlowCmsEntityManagerService entityManagerService;
-    private final FlowCmsDetailFactoryRegistry detailFactoryRegistry;
+    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudDetailFactoryRegistry detailFactoryRegistry;
     private final String table;
-    private final FlowCmsDetailFactory detailFactory;
+    private final TurboCrudDetailFactory detailFactory;
     private Component active;
 
     public DefaultMasterDetailRouteFactoryImpl(int currentEntityId,
                                                RouteConfig config,
-                                               FlowCmsEntityManagerService entityManagerService,
-                                               FlowCmsItemFactoryRegistry itemFactoryRegistry,
-                                               FlowCmsDetailFactoryRegistry detailFactoryRegistry,
-                                               FlowCmsIconFactory iconFactory) {
+                                               TurboCrudEntityManagerService entityManagerService,
+                                               TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                                               TurboCrudDetailFactoryRegistry detailFactoryRegistry,
+                                               TurboCrudIconFactory iconFactory) {
         this.config = config;
 
         this.entityManagerService = entityManagerService;

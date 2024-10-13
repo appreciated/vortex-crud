@@ -1,1 +1,1 @@
-rsync -avc --delete --exclude 'node_modules' --exclude 'target' --exclude '.git' /mnt/c/Users/Johannes/IdeaProjects/flow-cms/* ~/flow-cms/
+rsync -avc --delete --exclude 'node_modules' --exclude 'target' --exclude '.git' /mnt/c/Users/Johannes/IdeaProjects/turbo-crud/* ~/turbo-crud/

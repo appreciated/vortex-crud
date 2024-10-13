@@ -7,7 +7,7 @@ import com.github.appreciated.flow_cms.config.model.RouteConfig;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface FlowCmsListColumnCallbackRegistry {
-    FlowCmsListColumnCallback getCallback(RouteConfig config);
-    void addCallback(String key, FlowCmsListColumnCallback factory);
+public interface TurboCrudListColumnCallbackRegistry {
+    TurboCrudListColumnCallback getCallback(RouteConfig config);
+    void addCallback(String key, TurboCrudListColumnCallback factory);
 }

@@ -1,7 +1,7 @@
 package com.github.appreciated.flow_cms.config;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -21,12 +21,12 @@ import java.util.Optional;
  */
 
 @Component
-public class FlowCmsDefaultRouteRedirectConfiguration implements VaadinServiceInitListener {
+public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinServiceInitListener {
 
     private final Map<String, RouteConfig> routeConfigs;
     private static Optional<Map.Entry<String, RouteConfig>> defaultRoute;
 
-    public FlowCmsDefaultRouteRedirectConfiguration(FlowCmsConfigService configService) {
+    public TurboCrudDefaultRouteRedirectConfiguration(TurboCrudConfigService configService) {
         this.routeConfigs = configService.getConfiguration().getRoutesConfig();
     }
 
@@ -42,11 +42,11 @@ public class FlowCmsDefaultRouteRedirectConfiguration implements VaadinServiceIn
             defaultRoute = defaultRoutes.stream().findFirst();
         }
         if (defaultRoute.isPresent()) {
-            RouteConfiguration.forApplicationScope().setRoute("", FlowCmsDefaultRedirect.class);
+            RouteConfiguration.forApplicationScope().setRoute("", TurboCrudDefaultRedirect.class);
         }
     }
 
-    public static class FlowCmsDefaultRedirect extends Div implements BeforeEnterObserver {
+    public static class TurboCrudDefaultRedirect extends Div implements BeforeEnterObserver {
 
         @Override
         public void beforeEnter(BeforeEnterEvent event) {

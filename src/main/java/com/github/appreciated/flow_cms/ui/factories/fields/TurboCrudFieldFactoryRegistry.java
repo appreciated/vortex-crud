@@ -8,9 +8,9 @@ import com.github.appreciated.flow_cms.config.model.FieldConfig;
  * the specified FieldConfig.
  */
 
-public interface FlowCmsFieldFactoryRegistry {
+public interface TurboCrudFieldFactoryRegistry {
 
-   FlowCmsFieldFactory getFactory(FieldConfig type);
+   TurboCrudFieldFactory getFactory(FieldConfig type);
 
-   void addFactory(String key, FlowCmsFieldFactory factory);
+   void addFactory(String key, TurboCrudFieldFactory factory);
 }

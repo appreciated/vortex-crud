@@ -6,9 +6,9 @@ package com.github.appreciated.flow_cms.ui.factories.dialog;
  * the specified FieldConfig.
  */
 
-public interface FlowCmsDialogFactoryRegistry {
+public interface TurboCrudDialogFactoryRegistry {
 
-   FlowCmsDialogFactory getFactory(String type);
-   void addFactory(String key, FlowCmsDialogFactory factory);
+   TurboCrudDialogFactory getFactory(String type);
+   void addFactory(String key, TurboCrudDialogFactory factory);
 
 }

@@ -1,5 +1,5 @@
 databaseChangeLog:
   - includeAll:
-      path: db/changelog/flow-cms/
+      path: db/changelog/turbo-crud/
   - includeAll:
       path: db/changelog/database/

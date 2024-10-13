@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @Service
-public class DefaultJpaEntityManagerService implements FlowCmsEntityManagerService {
+public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerService {
 
     private final EntityManager entityManager;
 

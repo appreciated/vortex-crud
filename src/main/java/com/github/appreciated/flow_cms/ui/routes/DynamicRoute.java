@@ -2,12 +2,12 @@ package com.github.appreciated.flow_cms.ui.routes;
 
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.route.DefaultRouteFactoryRegistryImpl;
-import com.github.appreciated.flow_cms.ui.factories.route.FlowCmsRouteFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 /**
  * A dynamic route component that renders different views based on the route path.
- * It uses the {@link FlowCmsConfigService} to retrieve configuration details and the {@link DefaultRouteFactoryRegistryImpl}
+ * It uses the {@link TurboCrudConfigService} to retrieve configuration details and the {@link DefaultRouteFactoryRegistryImpl}
  * to generate the appropriate view container for the specified route.
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
@@ -26,12 +26,12 @@ import java.util.Objects;
 @Route(value = "view/:path*", layout = ProxyRouterLayout.class)
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
-    private final FlowCmsConfigService configService;
-    private final FlowCmsRouteFactoryRegistry routeFactoryRegistry;
-    private final FlowCmsDetailFactoryRegistry detailFactoryRegistry;
-    private final FlowCmsEntityManagerService entityManagerService;
+    private final TurboCrudConfigService configService;
+    private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
+    private final TurboCrudDetailFactoryRegistry detailFactoryRegistry;
+    private final TurboCrudEntityManagerService entityManagerService;
 
-    public DynamicRoute(FlowCmsConfigService configService, FlowCmsRouteFactoryRegistry routeFactoryRegistry, FlowCmsDetailFactoryRegistry detailFactoryRegistry, FlowCmsEntityManagerService entityManagerService) {
+    public DynamicRoute(TurboCrudConfigService configService, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDetailFactoryRegistry detailFactoryRegistry, TurboCrudEntityManagerService entityManagerService) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.detailFactoryRegistry = detailFactoryRegistry;

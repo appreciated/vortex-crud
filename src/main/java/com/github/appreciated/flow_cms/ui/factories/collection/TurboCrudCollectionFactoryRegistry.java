@@ -1,6 +1,5 @@
 package com.github.appreciated.flow_cms.ui.factories.collection;
 
-import com.github.appreciated.flow_cms.config.model.FieldConfig;
 import com.github.appreciated.flow_cms.config.model.FormField;
 
 /**
@@ -9,9 +8,9 @@ import com.github.appreciated.flow_cms.config.model.FormField;
  * the specified FieldConfig.
  */
 
-public interface FlowCmsCollectionFactoryRegistry {
+public interface TurboCrudCollectionFactoryRegistry {
 
-   FlowCmsCollectionFactory getFactory(FormField type);
-   void addFactory(String key, FlowCmsCollectionFactory factory);
+   TurboCrudCollectionFactory getFactory(FormField type);
+   void addFactory(String key, TurboCrudCollectionFactory factory);
 
 }

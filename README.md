@@ -1,9 +1,9 @@
-# FlowCMS (Current Working Title)
-<img width="100" alt="FlowCMS Logo" src="./flow-cms.png"/> 
+# TurboCRUD (Current Working Title)
+<img width="100" alt="TurboCRUD Logo" src="./turbo-crud.png"/> 
 
-FlowCMS is a powerful framework designed to accelerate the development of CRUD-style applications using Vaadin Flow. By offering a high-level abstraction layer, it allows developers to rapidly build and customize applications while maintaining the flexibility and control Vaadin Flow provides for more advanced use cases. FlowCMS is built with extensibility in mind, making it easy to adapt and expand features as project requirements evolve.
+TurboCRUD is a powerful framework designed to accelerate the development of CRUD-style applications using Vaadin Flow. By offering a high-level abstraction layer, it allows developers to rapidly build and customize applications while maintaining the flexibility and control Vaadin Flow provides for more advanced use cases. TurboCRUD is built with extensibility in mind, making it easy to adapt and expand features as project requirements evolve.
 
-FlowCMS is not a replacement for Vaadin Flow but rather an extension that streamlines repetitive tasks, helping developers focus on application-specific logic and customization.
+TurboCRUD is not a replacement for Vaadin Flow but rather an extension that streamlines repetitive tasks, helping developers focus on application-specific logic and customization.
 
 ## Tech Stack
 - **Spring Boot**: Backend API development and dependency injection
@@ -13,10 +13,10 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 ## Core Architecture and Basic Functions
 - **Modular UI System**: The UI follows a modular structure, with factories operating at various levels (e.g., Component List Factory, Factory System).
 - **Flexible Configuration System**: Utilizes HOCON for dynamic configuration. Examples demonstrate how to configure different parts of the application.
-- **Database Schema Validation**: The `FlowCmsDatabaseSchemaValidator` validates the database schema against the application’s configuration at startup.
+- **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` validates the database schema against the application’s configuration at startup.
 - **Dynamic Routing**: The `DynamicRoute` class enables routing based on configuration files, allowing flexible route management.
 - **UI Components and Factories**: Several factory implementations, such as `DefaultEntityDetailFactoryImpl`, `DefaultEntityItemCardFactoryImpl`, and `DefaultRouteFactoryImpl`, are available for configuring UI components dynamically.
-- **Entity Management**: The `GenericEntity` and `FlowCmsEntityManagerService` classes provide generic entity management capabilities.
+- **Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` classes provide generic entity management capabilities.
 - **Internationalization Support**: Translations are integrated from the start for a multi-language experience.
 - **Customizable Icons**: Icons can be easily swapped or customized.
 - **Support for Entity Relationships**: Add, remove, and view relationships between entities (1:n)
@@ -43,10 +43,10 @@ FlowCMS is not a replacement for Vaadin Flow but rather an extension that stream
 - **Allow navigating from Form to custom Routes**
 
 ## Data Handling and Management
-FlowCMS uses an H2 database for development, managed by the custom class `FlowCmsEntityManagerService`. The `FlowCmsDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
+TurboCRUD uses an H2 database for development, managed by the custom class `TurboCRUDEntityManagerService`. The `TurboCRUDDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
 
 ### Core Concept: User-Defined Database Model
-The database model is defined by the user, and FlowCMS verifies that the view representation fits this model. However, some system-defined tables are exceptions, such as those for auditing, user, and role management:
+The database model is defined by the user, and TurboCRUD verifies that the view representation fits this model. However, some system-defined tables are exceptions, such as those for auditing, user, and role management:
 
 ```sql
 -- Predefined system tables (examples)
@@ -131,7 +131,7 @@ classDiagram
 ```
 
 ## Configuration via HOCON
-FlowCMS supports configuration through HOCON files where routes and tables are defined.
+TurboCRUD supports configuration through HOCON files where routes and tables are defined.
 
 Note: While Java classes could theoretically be used for configuration, as HOCON files are parsed into Java classes, this approach is not currently supported. HOCON is preferred as it enhances both readability and maintainability.
 
@@ -288,7 +288,7 @@ application {
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/appreciated/flow-cms.git
+   git clone https://github.com/appreciated/turbo-crud.git
    ```
 2. **Run the application**:
    - Use the provided SQL schema to set up the database.

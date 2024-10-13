@@ -1,22 +1,22 @@
 package com.github.appreciated.flow_cms.ui.factories.router_layout;
 
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.ui.factories.icon.TurboCrudIconFactory;
 import com.vaadin.flow.component.applayout.AppLayout;
 import org.springframework.stereotype.Service;
 
 /**
- * Default implementation of the FlowCmsRouterLayoutFactory interface.
- * This factory creates application layouts using the configuration provided by FlowCmsConfigService.
+ * Default implementation of the TurboCrudRouterLayoutFactory interface.
+ * This factory creates application layouts using the configuration provided by TurboCrudConfigService.
  */
 
 @Service
-public class DefaultRouterLayoutFactoryImpl implements FlowCmsRouterLayoutFactory {
+public class DefaultRouterLayoutFactoryImpl implements TurboCrudRouterLayoutFactory {
 
-    private final FlowCmsConfigService configService;
-    private final FlowCmsIconFactory iconFactory;
+    private final TurboCrudConfigService configService;
+    private final TurboCrudIconFactory iconFactory;
 
-    public DefaultRouterLayoutFactoryImpl(FlowCmsConfigService configService, FlowCmsIconFactory iconFactory) {
+    public DefaultRouterLayoutFactoryImpl(TurboCrudConfigService configService, TurboCrudIconFactory iconFactory) {
         this.configService = configService;
         this.iconFactory = iconFactory;
     }

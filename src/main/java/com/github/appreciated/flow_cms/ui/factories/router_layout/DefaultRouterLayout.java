@@ -1,8 +1,8 @@
 package com.github.appreciated.flow_cms.ui.factories.router_layout;
 
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.ui.factories.icon.FlowCmsIconFactory;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.ui.factories.icon.TurboCrudIconFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -18,15 +18,15 @@ import java.util.Set;
 
 /**
  * Default implementation of an application layout using Vaadin's AppLayout.
- * It configures the navigation drawer and the application title based on the FlowCmsConfigService configuration.
+ * It configures the navigation drawer and the application title based on the {@link TurboCrudConfigService} configuration.
  */
 
 public class DefaultRouterLayout extends AppLayout {
 
-    private final FlowCmsConfigService configService;
-    private final FlowCmsIconFactory iconFactory;
+    private final TurboCrudConfigService configService;
+    private final TurboCrudIconFactory iconFactory;
 
-    public DefaultRouterLayout(FlowCmsConfigService configService, FlowCmsIconFactory iconFactory) {
+    public DefaultRouterLayout(TurboCrudConfigService configService, TurboCrudIconFactory iconFactory) {
         this.configService = configService;
         this.iconFactory = iconFactory;
     }

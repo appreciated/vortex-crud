@@ -4,10 +4,10 @@ import com.github.appreciated.flow_cms.config.model.CollectionFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.DetailFactory;
 import com.github.appreciated.flow_cms.config.model.TableConfig;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
-import com.github.appreciated.flow_cms.service.FlowCmsConfigService;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudConfigService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.factories.detail.FlowCmsDetailFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.flow_cms.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -19,12 +19,12 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
+public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
-    private final FlowCmsConfigService configService;
-    private final FlowCmsEntityManagerService entityManagerService;
+    private final TurboCrudConfigService configService;
+    private final TurboCrudEntityManagerService entityManagerService;
 
-    public DefaultDialogFactoryImpl(FlowCmsConfigService configService, FlowCmsEntityManagerService entityManagerService) {
+    public DefaultDialogFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerService entityManagerService) {
         this.configService = configService;
         this.entityManagerService = entityManagerService;
     }
@@ -34,7 +34,7 @@ public class DefaultDialogFactoryImpl implements FlowCmsDialogFactory {
                                String foreignKeyValue,
                                CollectionFactoryConfig factoryConfig,
                                DetailFactory detailFactory,
-                               FlowCmsDetailFactoryRegistry detailFactoryRegistry,
+                               TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                OnStoreListener listener,
                                FormCreator formCreator) {
         String table = factoryConfig.getTable();

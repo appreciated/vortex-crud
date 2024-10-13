@@ -5,7 +5,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.stereotype.Service;
 
 /**
- * A default implementation of the {@link FlowCmsIconFactory} interface.
+ * A default implementation of the {@link TurboCrudIconFactory} interface.
  * <p>
  * This implementation uses the {@link VaadinIcon} library to render icons
  * based on the provided icon identifier (as a string). It converts the
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultFlowCmsIconFactoryImpl implements FlowCmsIconFactory {
+public class DefaultTurboCrudIconFactoryImpl implements TurboCrudIconFactory {
 
     @Override
     public Component renderIcon(String iconEnum) {

@@ -3,10 +3,10 @@ package com.github.appreciated.flow_cms.ui.factories.route.grid.components;
 import com.github.appreciated.flow_cms.config.model.ItemFactoryConfig;
 import com.github.appreciated.flow_cms.config.model.RouteConfig;
 import com.github.appreciated.flow_cms.entity.EntityUtil;
-import com.github.appreciated.flow_cms.service.FlowCmsEntityManagerService;
+import com.github.appreciated.flow_cms.service.TurboCrudEntityManagerService;
 import com.github.appreciated.flow_cms.service.GenericEntity;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactory;
-import com.github.appreciated.flow_cms.ui.factories.item.FlowCmsItemFactoryRegistry;
+import com.github.appreciated.flow_cms.ui.factories.item.TurboCrudItemFactory;
+import com.github.appreciated.flow_cms.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,19 +27,19 @@ import java.util.List;
 public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final String table;
-    private final FlowCmsItemFactory itemFactory;
+    private final TurboCrudItemFactory itemFactory;
     private final ItemFactoryConfig factoryConfig;
     private final String route;
-    private final FlowCmsEntityManagerService entityManagerService;
-    private int minWidth = 190;  // Mindestbreite der Karte (in Pixel)
-    private int maxWidth = 300;  // Maximalbreite der Karte (in Pixel)
+    private final TurboCrudEntityManagerService entityManagerService;
+    private int minWidth = 190;  // Minimum width in pixels
+    private int maxWidth = 300;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
     public VirtualItemGrid(int i,
                            String route,
                            RouteConfig config,
-                           FlowCmsEntityManagerService entityManagerService,
-                           FlowCmsItemFactoryRegistry itemFactoryRegistry) {
+                           TurboCrudEntityManagerService entityManagerService,
+                           TurboCrudItemFactoryRegistry itemFactoryRegistry) {
         this.route = route;
         this.entityManagerService = entityManagerService;
         table = config.getTable();
@@ -116,10 +116,10 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     /**
-     * Setzt die minimale und maximale Breite für die Karten.
+     * Sets the minimum and maximum width for the cards.
      *
-     * @param minWidth Mindestbreite in Pixel
-     * @param maxWidth Maximalbreite in Pixel
+     * @param minWidth Minimum width in pixels
+     * @param maxWidth Maximum width in pixels
      */
     public void setCardWidth(int minWidth, int maxWidth) {
         this.minWidth = minWidth;
@@ -128,7 +128,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     /**
-     * Methode zur dynamischen Anpassung des Layouts basierend auf der Breite des Containers.
+     * Method to dynamically adjust the layout based on the width of the container.
      */
     private void onBrowserWindowResize() {
         PendingJavaScriptResult containerWidthResult = getElement().executeJs("return $0.clientWidth;", getElement());
