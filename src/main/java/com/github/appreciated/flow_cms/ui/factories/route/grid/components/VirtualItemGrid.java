@@ -31,8 +31,8 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final ItemFactoryConfig factoryConfig;
     private final String route;
     private final TurboCrudEntityManagerService entityManagerService;
-    private int minWidth = 190;  // Minimum width in pixels
-    private int maxWidth = 300;  // Maximum width in pixels
+    private int minWidth = 250;  // Minimum width in pixels
+    private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
     public VirtualItemGrid(int i,

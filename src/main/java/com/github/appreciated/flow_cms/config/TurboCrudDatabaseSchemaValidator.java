@@ -36,6 +36,7 @@ public class TurboCrudDatabaseSchemaValidator {
         typeMappings.put("number", List.of("INTEGER", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC"));
         typeMappings.put("id", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
         typeMappings.put("text", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
+        typeMappings.put("textarea", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
         typeMappings.put("date", List.of("DATE"));
         typeMappings.put("datetime", List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME"));
         typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
