@@ -153,22 +153,25 @@ application {
     "projects" = {
       columns = {
         id = {type = "id", primary = true},
-        name = {type = "text", required = true, max-length = 255},
-        description = {type = "text", max-length = 500},
+        name = {type = "text", required = true, validation = {max-length = 255}},
+        description = {type = "textarea", validation = {max-length = 500}},
         start_date = {type = "date"},
         end_date = {type = "date"},
         created_at = {type = "datetime"},
         updated_at = {type = "datetime"}
       }
     }
+    # ...
   }
-  #...  
+  # ...  
   routes = {
-    projects = {
-      name: "project_view",
-      table: "projects",
+    "projects" = {
+      default-route = true
+      table = "projects"
+      title = "route.projects.title-card"
       factory = "grid"
-      render-configuration {
+      icon = "FACTORY"
+      factory-configuration {
         item-factory = {
           type = "card"
           title-column = "name"
@@ -176,7 +179,7 @@ application {
         }
         detail-factory {
           title-column = "name"
-          type = "form"
+          type = "form", 
           children = [
             {column = "name", label = "route.projects.labels.name"},
             {column = "description", label = "route.projects.labels.description"},
@@ -184,8 +187,10 @@ application {
             {column = "end_date", label = "route.projects.labels.end_date"}
           ]
         }
+        access-control = { roles = ["manager", "admin"] }
       }
     }
+    # ...
   }
 }
 ```
@@ -232,7 +237,7 @@ application {
       columns = {
         id = {type = "id", primary = true},
         name = {type = "text", required = true, validation = {max-length = 255}},
-        description = {type = "text", validation = {max-length = 500}},
+        description = {type = "textarea", validation = {max-length = 500}},
         start_date = {type = "date"},
         end_date = {type = "date"},
         created_at = {type = "datetime"},
@@ -243,7 +248,7 @@ application {
       columns = {
         id = {type = "id", primary = true},
         title = {type = "text", required = true, validation = {max-length = 255}},
-        description = {type = "text", validation = {max-length = 1000}},
+        description = {type = "textarea", validation = {max-length = 1000}},
         assigned_to = {type = "number"},
         status = {type = "select", values = "task-status"},
         due_date = {type = "date", read-only-for-roles = ["developer"]},
