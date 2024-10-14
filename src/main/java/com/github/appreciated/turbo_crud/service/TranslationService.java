@@ -137,7 +137,7 @@ public class TranslationService implements I18NProvider {
         } catch (final MissingResourceException e) {
             LoggerFactory.getLogger(TranslationService.class.getName())
                     .warn("Missing resource", e);
-            return "!" + locale.getLanguage() + ": " + key;
+            return "!{%s}!".formatted(key);
         }
 
         if (params.length > 0) {
