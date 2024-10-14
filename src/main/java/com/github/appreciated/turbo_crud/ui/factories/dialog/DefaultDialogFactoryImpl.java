@@ -4,9 +4,9 @@ import com.github.appreciated.turbo_crud.config.model.CollectionFactoryConfig;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Unit;
@@ -39,11 +39,16 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
                                FormCreator formCreator) {
         String table = factoryConfig.getTable();
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle(dialog.getTranslation(factoryConfig.getLabel()));
 
         GenericEntity recordById = entityManagerService.getRecordById(table, entityId);
         if (recordById == null) {
             recordById = new GenericEntity();
+        }
+
+        if (EntityUtil.isNew(recordById)) {
+            dialog.setHeaderTitle(dialog.getTranslation("button.create.title"));
+        } else {
+            dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
         }
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
