@@ -23,3 +23,15 @@
     transition: border 0.3s ease;
     border: solid 3px var(--lumo-primary-color-50pct);
 }
+
+.card .content:hover  {
+    text-decoration-line: underline;
+}
+
+.card .actions {
+    opacity: 0;
+}
+
+.card:hover .actions {
+    opacity: 1;
+}

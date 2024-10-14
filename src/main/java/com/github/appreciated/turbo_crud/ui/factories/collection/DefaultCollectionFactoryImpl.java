@@ -76,7 +76,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 Object o = record.get(child.getColumn());
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
-                remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL);
+                remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     entityManagerService.deleteRecordById(factoryConfig.getTable(), EntityUtil.getId(record));
                     loadCollection(foreignKey, factoryConfig, detailFactoryRegistry, detailFactory, formCreator, list, header);

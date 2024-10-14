@@ -98,8 +98,10 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudDetailFactory {
 
         // Generic Delete button
         Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());
-        back.getStyle().set("font-size", "1.5em");
-        back.addThemeVariants(LUMO_TERTIARY);
+        back.getStyle().set("font-size", "1.6em")
+                .set("padding", "calc(var(--lumo-button-size) / 8)")
+                .set("border-radius", "100%")
+                .set("box-sizing", "content-box");
 
         HorizontalLayout headerBar = new HorizontalLayout();
         if (!isWrapped){
