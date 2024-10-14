@@ -62,7 +62,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         dialog.add(layout);
         dialog.setModal(false);
         dialog.setDraggable(false);
-        dialog.setMinWidth(350, Unit.PIXELS);
+        dialog.setMinWidth(500, Unit.PIXELS);
         return dialog;
     }
 
