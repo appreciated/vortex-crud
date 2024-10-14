@@ -9,7 +9,7 @@ public class UserManagementConfig {
     private boolean enabled;
     @Optional
     private AccessControlConfig accessControl;
-    private boolean registration;
+    private boolean signUp;
     private List<AdditionalColumn> additionalColumns;
 
     public boolean isEnabled() {
@@ -28,12 +28,12 @@ public class UserManagementConfig {
         this.accessControl = accessControl;
     }
 
-    public boolean isRegistration() {
-        return registration;
+    public boolean isSignUp() {
+        return signUp;
     }
 
-    public void setRegistration(boolean registration) {
-        this.registration = registration;
+    public void setSignUp(boolean signUp) {
+        this.signUp = signUp;
     }
 
     public List<AdditionalColumn> getAdditionalColumns() {

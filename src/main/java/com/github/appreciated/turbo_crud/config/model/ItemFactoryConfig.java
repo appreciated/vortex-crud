@@ -6,8 +6,7 @@ import java.util.List;
 
 public class ItemFactoryConfig {
 
-    @Optional
-    private String type;
+    private String factory;
     @Optional
     private String titleColumn;
     @Optional
@@ -15,14 +14,16 @@ public class ItemFactoryConfig {
     @Optional
     private String imageColumn;
     @Optional
-    private List<FormField> children;
+    private boolean inlineEdit;
+    @Optional
+    private List<FormElement> children;
 
-    public String getType() {
-        return type;
+    public String getFactory() {
+        return factory;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 
     public String getTitleColumn() {
@@ -49,11 +50,11 @@ public class ItemFactoryConfig {
         this.imageColumn = imageColumn;
     }
 
-    public List<FormField> getChildren() {
+    public List<FormElement> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormField> children) {
+    public void setChildren(List<FormElement> children) {
         this.children = children;
     }
 }

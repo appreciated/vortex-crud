@@ -4,12 +4,12 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class FormField {
+public class FormElement {
 
     @Optional
     private String column;
     @Optional
-    private String type;
+    private String factory;
     @Optional
     private boolean readOnly;
     @Optional
@@ -17,9 +17,15 @@ public class FormField {
     @Optional
     private String label;
     @Optional
-    private String factory;
+    private String table;
+    private String type;
     @Optional
-    private CollectionFactoryConfig collectionFactory;
+    private String foreignKeyColumn;
+    @Optional
+    private String emptyMessage;
+
+    @Optional
+    DialogConfig dialog;
 
     public String getColumn() {
         return column;
@@ -53,14 +59,6 @@ public class FormField {
         this.label = label;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getFactory() {
         return factory;
     }
@@ -69,11 +67,43 @@ public class FormField {
         this.factory = factory;
     }
 
-    public CollectionFactoryConfig getCollectionFactory() {
-        return collectionFactory;
+    public String getTable() {
+        return table;
     }
 
-    public void setCollectionFactory(CollectionFactoryConfig collectionFactory) {
-        this.collectionFactory = collectionFactory;
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getForeignKeyColumn() {
+        return foreignKeyColumn;
+    }
+
+    public void setForeignKeyColumn(String foreignKeyColumn) {
+        this.foreignKeyColumn = foreignKeyColumn;
+    }
+
+    public String getEmptyMessage() {
+        return emptyMessage;
+    }
+
+    public void setEmptyMessage(String emptyMessage) {
+        this.emptyMessage = emptyMessage;
+    }
+
+    public DialogConfig getDialog() {
+        return dialog;
+    }
+
+    public void setDialog(DialogConfig dialog) {
+        this.dialog = dialog;
     }
 }

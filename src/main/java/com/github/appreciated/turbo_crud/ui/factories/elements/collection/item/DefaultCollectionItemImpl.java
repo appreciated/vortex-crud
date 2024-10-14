@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.collection.item;
+package com.github.appreciated.turbo_crud.ui.factories.elements.collection.item;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;

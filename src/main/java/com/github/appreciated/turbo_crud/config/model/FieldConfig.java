@@ -2,9 +2,11 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import com.typesafe.config.Optional;
 
+import java.util.List;
+
 public class FieldConfig {
 
-    private String type;
+    private String factory;
     @Optional
     private boolean primary;
     @Optional
@@ -15,14 +17,12 @@ public class FieldConfig {
     private String defaultValue;
     @Optional
     private String values;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    @Optional
+    private String table;
+    @Optional
+    private String column;
+    @Optional
+    private List<String> items;
 
     public boolean isPrimary() {
         return primary;
@@ -62,5 +62,37 @@ public class FieldConfig {
 
     public void setValidation(ValidationConfig validation) {
         this.validation = validation;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public String getColumn() {
+        return column;
+    }
+
+    public void setColumn(String column) {
+        this.column = column;
+    }
+
+    public List<String> getItems() {
+        return items;
+    }
+
+    public void setItems(List<String> items) {
+        this.items = items;
     }
 }

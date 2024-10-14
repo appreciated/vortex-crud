@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.fields;
+package com.github.appreciated.turbo_crud.ui.factories.elements.fields;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.vaadin.flow.component.Component;

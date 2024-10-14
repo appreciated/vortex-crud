@@ -11,7 +11,14 @@ public class RouteConfig {
     @Optional
     private boolean defaultRoute;
     private String factory;
-    private FactoryConfig factoryConfiguration;
+    @Optional
+    private boolean hideInMenu;
+    @Optional
+    private ItemFactoryConfig items;
+    @Optional
+    private DetailFactory detail;
+
+
     @Optional
     private AccessControlConfig accessControl;
 
@@ -39,13 +46,6 @@ public class RouteConfig {
         this.factory = factory;
     }
 
-    public FactoryConfig getFactoryConfiguration() {
-        return factoryConfiguration;
-    }
-
-    public void setFactoryConfiguration(FactoryConfig factoryConfiguration) {
-        this.factoryConfiguration = factoryConfiguration;
-    }
 
     public AccessControlConfig getAccessControl() {
         return accessControl;
@@ -69,6 +69,30 @@ public class RouteConfig {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public boolean isHideInMenu() {
+        return hideInMenu;
+    }
+
+    public void setHideInMenu(boolean hideInMenu) {
+        this.hideInMenu = hideInMenu;
+    }
+
+    public ItemFactoryConfig getItems() {
+        return items;
+    }
+
+    public void setItems(ItemFactoryConfig items) {
+        this.items = items;
+    }
+
+    public DetailFactory getDetail() {
+        return detail;
+    }
+
+    public void setDetail(DetailFactory detail) {
+        this.detail = detail;
     }
 }
 

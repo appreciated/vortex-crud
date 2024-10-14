@@ -54,13 +54,15 @@ public class DefaultRouterLayout extends AppLayout {
         SideNav nav = new SideNav();
         Set<Map.Entry<String, RouteConfig>> keys = configService.getConfiguration().getRoutesConfig().entrySet();
         keys.forEach(configEntry -> {
-            String translation = getTranslation(configEntry.getValue().getTitle());
-            String path = "/view/" + configEntry.getKey();
-            Component icon = null;
-            if (configEntry.getValue().getIcon() != null) {
-                icon = iconFactory.renderIcon(configEntry.getValue().getIcon());
+            if (!configEntry.getValue().isHideInMenu()) {
+                String translation = getTranslation(configEntry.getValue().getTitle());
+                String path = "/view/" + configEntry.getKey();
+                Component icon = null;
+                if (configEntry.getValue().getIcon() != null) {
+                    icon = iconFactory.renderIcon(configEntry.getValue().getIcon());
+                }
+                nav.addItem(new SideNavItem(translation, path, icon));
             }
-            nav.addItem(new SideNavItem(translation, path, icon));
         });
         return nav;
     }

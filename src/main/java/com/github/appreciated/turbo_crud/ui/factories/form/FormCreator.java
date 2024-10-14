@@ -3,10 +3,10 @@ package com.github.appreciated.turbo_crud.ui.factories.form;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.factories.collection.TurboCrudCollectionFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.fields.DefaultFieldFactoryRegistryImpl;
-import com.github.appreciated.turbo_crud.ui.factories.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.elements.collection.TurboCrudCollectionFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -38,14 +38,14 @@ public class FormCreator {
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormField field : detailFactory.getChildren()) {
+        for (FormElement field : detailFactory.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null && field.getType() != null && !field.getType().equals("collection")) {
+            if (fieldConfig == null && field.getFactory() != null && !field.getType().equals("collection")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
-            if (fieldConfig != null) {
-                TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig);
+            if (fieldConfig != null && !field.getType().equals("collection")) {
+                TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig.getFactory());
                 Component component = factory.createComponent(table, fieldName, fieldConfig);
                 if (component instanceof InputField) {
                     ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
@@ -53,16 +53,16 @@ public class FormCreator {
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
             } else {
-                CollectionFactoryConfig collectionFactory = field.getCollectionFactory();
-                Component collection = collectionFactoryRegistry.getFactory(field).createCollection(
+                DialogConfig collectionFactory = field.getDialog();
+                Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
                         EntityUtil.getId(entity),
-                        collectionFactory,
+                        field,
                         detailFactoryRegistry,
-                        collectionFactory.getDetailFactory(),
+                        collectionFactory.getDetail(),
                         formCreator
                 );
                 form.add(collection);
-                form.setColspan(collection, 2);
+                form.setColspan(collection, detailFactory.getSpan());
             }
         }
     }

@@ -1,13 +1,15 @@
-package com.github.appreciated.turbo_crud.ui.factories.collection;
+package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.FormField;
+import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Default implementation of the {@link TurboCrudCollectionFactoryRegistry} interface.
@@ -29,8 +31,8 @@ public class DefaultCollectionFactoryRegistryImpl implements TurboCrudCollection
     }
 
     @Override
-    public TurboCrudCollectionFactory getFactory(FormField type) {
-        return factories.get(type.getFactory());
+    public TurboCrudCollectionFactory getFactory(String factory) {
+        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
     }
 
     @Override

@@ -49,9 +49,9 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
             Component viewContainer = routeFactoryRegistry.getFactory(configForRoute).renderRoute(0, path.split("/")[0], configForRoute, entityManagerService);
             add(viewContainer);
         } else {
-            DetailFactory detailFactory = configForRoute.getFactoryConfiguration().getDetailFactory();
+            DetailFactory detailFactory = configForRoute.getDetail();
             GenericEntity recordById = entityManagerService.getRecordById(configForRoute.getTable(), path.split("/")[1]);
-            add(detailFactoryRegistry.getFactory(detailFactory.getType()).renderDetail(configForRoute.getTable(), configForRoute.getTitle(), configForRoute.getFactoryConfiguration().getDetailFactory(), recordById, false,false, detailFactoryRegistry));
+            add(detailFactoryRegistry.getFactory(detailFactory.getFactory()).renderDetail(configForRoute.getTable(), configForRoute.getTitle(), configForRoute.getDetail(), recordById, false,false, detailFactoryRegistry));
         }
     }
 }

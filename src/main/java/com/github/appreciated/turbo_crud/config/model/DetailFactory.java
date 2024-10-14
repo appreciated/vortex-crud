@@ -1,26 +1,31 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.typesafe.config.Optional;
+
 import java.util.List;
 
 public class DetailFactory {
 
-    private String type;
-    private List<FormField> children;
+    private String factory;
+    private List<FormElement> children;
     public  String titleColumn;
 
-    public String getType() {
-        return type;
+    @Optional
+    public  int span = 2;
+
+    public String getFactory() {
+        return factory;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 
-    public List<FormField> getChildren() {
+    public List<FormElement> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormField> children) {
+    public void setChildren(List<FormElement> children) {
         this.children = children;
     }
 
@@ -30,5 +35,13 @@ public class DetailFactory {
 
     public void setTitleColumn(String titleColumn) {
         this.titleColumn = titleColumn;
+    }
+
+    public int getSpan() {
+        return span;
+    }
+
+    public void setSpan(int span) {
+        this.span = span;
     }
 }

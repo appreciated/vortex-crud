@@ -41,6 +41,7 @@ public class TurboCrudDatabaseSchemaValidator {
         typeMappings.put("datetime", List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME"));
         typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
         typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
+        typeMappings.put("table", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
 
         Map<String, TableConfig> tablesConfig = configService.getConfiguration().getTablesConfig();
 
@@ -90,7 +91,7 @@ public class TurboCrudDatabaseSchemaValidator {
                 throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
             }
 
-            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getType().toUpperCase());
+            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getFactory().toUpperCase());
 
             if (!validColumnTypes.contains(actualColumnType)) {
                 throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
@@ -99,6 +100,7 @@ public class TurboCrudDatabaseSchemaValidator {
     }
 
     private Collection<String> getValidDatabaseTypesForExpectedType(String expectedType) {
+
         return (Collection<String>) typeMappings.getOrDefault(expectedType.toLowerCase(), Collections.emptyList());
     }
 

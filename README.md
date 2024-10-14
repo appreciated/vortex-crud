@@ -152,43 +152,41 @@ application {
   tables = {
     "projects" = {
       columns = {
-        id = {type = "id", primary = true},
-        name = {type = "text", required = true, validation = {max-length = 255}},
-        description = {type = "textarea", validation = {max-length = 500}},
-        start_date = {type = "date"},
-        end_date = {type = "date"},
-        created_at = {type = "datetime"},
-        updated_at = {type = "datetime"}
+        id = {factory = "id", primary = true},
+        name = {factory = "text", required = true, validation = {max-length = 255}},
+        description = {factory = "textarea", validation = {max-length = 500}},
+        start_date = {factory = "date"},
+        end_date = {factory = "date"},
+        created_at = {factory = "datetime"},
+        updated_at = {factory = "datetime"}
       }
-    }
+    },
     # ...
   }
   # ...  
   routes = {
-    "projects" = {
+    "projects-list" = {
       default-route = true
       table = "projects"
       title = "route.projects.title-card"
       factory = "grid"
       icon = "FACTORY"
-      factory-configuration {
-        item-factory = {
-          type = "card"
-          title-column = "name"
-          description-column = "description"
-        }
-        detail-factory {
-          title-column = "name"
-          type = "form", 
-          children = [
-            {column = "name", label = "route.projects.labels.name"},
-            {column = "description", label = "route.projects.labels.description"},
-            {column = "start_date", label = "route.projects.labels.start_date"},
-            {column = "end_date", label = "route.projects.labels.end_date"}
-          ]
-        }
-        access-control = { roles = ["manager", "admin"] }
+      items = {
+        factory = "card"
+        title-column = "name"
+        description-column = "description"
       }
+      detail = {
+        title-column = "name"
+        factory = "form"
+        children = [
+          {type = "field", column = "name", label = "route.projects.labels.name"},
+          {type = "field", column = "description", label = "route.projects.labels.description"},
+          {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
+          {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+        ]
+      }
+      roles = ["manager", "admin"]
     }
     # ...
   }
@@ -209,7 +207,7 @@ application {
     access-control = {
       roles = ["manager", "admin"]
     }
-    registration = true
+    sign-up = true
     additional-columns = [{name = "start_date", type = "date"}]
   }
 
@@ -235,107 +233,101 @@ application {
   tables = {
     "projects" = {
       columns = {
-        id = {type = "id", primary = true},
-        name = {type = "text", required = true, validation = {max-length = 255}},
-        description = {type = "textarea", validation = {max-length = 500}},
-        start_date = {type = "date"},
-        end_date = {type = "date"},
-        created_at = {type = "datetime"},
-        updated_at = {type = "datetime"}
+        id = {factory = "id", primary = true},
+        name = {factory = "text", required = true, validation = {max-length = 255}},
+        description = {factory = "textarea", validation = {max-length = 500}},
+        start_date = {factory = "date"},
+        end_date = {factory = "date"},
+        created_at = {factory = "datetime"},
+        updated_at = {factory = "datetime"}
       }
     },
     "tasks" = {
       columns = {
-        id = {type = "id", primary = true},
-        title = {type = "text", required = true, validation = {max-length = 255}},
-        description = {type = "textarea", validation = {max-length = 1000}},
-        assigned_to = {type = "number"},
-        status = {type = "select", values = "task-status"},
-        due_date = {type = "date", read-only-for-roles = ["developer"]},
-        created_at = {type = "datetime"},
-        updated_at = {type = "datetime"}
+        id = {factory = "id", primary = true},
+        title = {factory = "text", required = true, validation = {max-length = 255}},
+        description = {factory = "textarea", validation = {max-length = 1000}},
+        assigned_to = {factory = "table", table = "users"},
+        status = {factory = "select", values = "task-status"},
+        due_date = {factory = "date", read-only-for-roles = ["developer"]},
+        created_at = {factory = "datetime"},
+        updated_at = {factory = "datetime"}
       }
     },
     "task_comments" = {
       columns = {
-        id = {type = "id", primary = true},
-        comment_text = {type = "text", validation = {max-length = 1000}},
-        user_id = {type = "number"},
-        created_at = {type = "datetime", default = "now()"}
+        id = {factory = "id", primary = true},
+        comment_text = {factory = "textarea", validation = {max-length = 1000}},
+        user_id = {factory = "number"},
+        created_at = {factory = "datetime", default = "now()"}
       }
     }
   }
   routes = {
-    "projects" = {
+    "projects-list" = {
       default-route = true
       table = "projects"
       title = "route.projects.title-card"
       factory = "grid"
       icon = "FACTORY"
-      factory-configuration {
-        item-factory = {
-          type = "card"
-          title-column = "name"
-          description-column = "description"
-        }
-        detail-factory {
-          title-column = "name"
-          type = "form", children = [
-            {column = "name", label = "route.projects.labels.name"},
-            {column = "description", label = "route.projects.labels.description"},
-            {column = "start_date", label = "route.projects.labels.start_date"},
-            {column = "end_date", label = "route.projects.labels.end_date"},
-          ]
-        }
-        access-control = {
-          roles = ["manager", "admin"]
-        }
+      items = {
+        factory = "card"
+        title-column = "name"
+        description-column = "description"
       }
-    },
+      detail = {
+        title-column = "name"
+        factory = "form"
+        children = [
+          {type = "field", column = "name", label = "route.projects.labels.name"},
+          {type = "field", column = "description", label = "route.projects.labels.description"},
+          {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
+          {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+        ]
+      }
+      roles = ["manager", "admin"]
+    }
     "tasks" = {
       table = "tasks"
       icon = "TASKS"
       title = "route.tasks.title"
       factory = "master-detail"
-      factory-configuration = {
-        item-factory = {
-          type = "card"
-          title-column = "title"
-          description-column = "description"
-        }
-        detail-factory {
-          title-column = "title"
-          type = "form",
-          children = [
-            {column = "title", label = "route.tasks.labels.title"},
-            {column = "description", label = "route.tasks.labels.description"},
-            {column = "status", label = "route.tasks.labels.status"},
-            {column = "due_date", label = "route.tasks.labels.due_date"}
-            {
-              type = "collection", # 1 to n relation
-              factory = "list",
-              collection-factory = {
-                table = "task_comments", 
-                foreign-key-column = "task_id"
-                label = "route.tasks.labels.comments"
-                dialog-factory = "form"
-                empty-message = "route.tasks.labels.comments-empty-message"
-                detail-factory {
-                  title-column = "name"
-                  type = "form", children = [
-                    {column = "comment_text", label = "route.tasks.labels.comment"},
-                  ]
-                }
+      items = {
+        factory = "card"
+        title-column = "title"
+        description-column = "description"
+      }
+      detail = {
+        title-column = "title"
+        factory = "form"
+        children = [
+          {type = "field", column = "title", label = "route.tasks.labels.title"},
+          {type = "field", column = "description", label = "route.tasks.labels.description"},
+          {type = "field", column = "status", label = "route.tasks.labels.status"},
+          {type = "field", column = "due_date", label = "route.tasks.labels.due_date"},
+          {type = "field", column = "assigned_to", label = "route.tasks.labels.due_date"},
+          {
+            type = "collection" # 1 to n relation
+            factory = "list"
+            table = "task_comments"
+            foreign-key-column = "task_id"
+            label = "route.tasks.labels.comments"
+            items = [
+              "comment_text"
+            ]
+            dialog = {
+              factory = "form"
+              empty-message = "route.tasks.labels.comments-empty-message"
+              detail = {
+                title-column = "name"
+                factory = "form"
                 children = [
-                  {column = "comment_text", label = "route.tasks.labels.comment"}
+                  {type = "field", column = "comment_text", label = "route.tasks.labels.comment"}
                 ]
               }
             }
-          ]
-        }
-      }
-      access-control = {
-        roles = ["developer", "manager", "admin"]
+          }
+        ]
       }
     }
   }

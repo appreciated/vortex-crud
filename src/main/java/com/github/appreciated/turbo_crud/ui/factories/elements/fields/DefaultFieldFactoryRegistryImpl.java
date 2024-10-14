@@ -1,16 +1,14 @@
-package com.github.appreciated.turbo_crud.ui.factories.fields;
+package com.github.appreciated.turbo_crud.ui.factories.elements.fields;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.fields.functions.DefaultComboBoxFactory;
-import com.github.appreciated.turbo_crud.ui.factories.fields.functions.DefaultDatePickerFactory;
-import com.github.appreciated.turbo_crud.ui.factories.fields.functions.DefaultTextAreaFactory;
-import com.github.appreciated.turbo_crud.ui.factories.fields.functions.DefaultTextFieldFactory;
+import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Default implementation of the TurboCrudComponentFactory interface.
@@ -23,13 +21,14 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
 
     private final Map<String, TurboCrudFieldFactory> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService) {
+    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerService entityManagerService) {
         ApplicationConfig configuration = configService.getConfiguration();
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());
         factories.put("select", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
         factories.put("dropdown", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
+        factories.put("table", new DefaultEntityPickerFactory(configService.getConfiguration().getTablesConfig(), entityManagerService));
     }
 
     public Map<String, TurboCrudFieldFactory> getFactories() {
@@ -37,8 +36,8 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
     }
 
     @Override
-    public TurboCrudFieldFactory getFactory(FieldConfig type) {
-        return factories.get(type.getType());
+    public TurboCrudFieldFactory getFactory(String type) {
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override

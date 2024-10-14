@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
-import com.github.appreciated.turbo_crud.config.model.FactoryConfig;
 import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.config.model.RouteConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
@@ -52,13 +51,12 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
         this.entityManagerService = entityManagerService;
         this.detailFactoryRegistry = detailFactoryRegistry;
-        FactoryConfig factoryConfiguration = config.getFactoryConfiguration();
-        this.factoryConfig = factoryConfiguration.getItemFactory();
+        this.factoryConfig = config.getItems();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         this.table = config.getTable();
 
-        DetailFactory detailFactoryConfig = factoryConfiguration.getDetailFactory();
-        this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig.getType());
+        DetailFactory detailFactoryConfig = config.getDetail();
+        this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig.getFactory());
 
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();
@@ -91,7 +89,7 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
         this.detailLayout.removeAll();
         Component component = detailFactory.renderDetail(config.getTable(),
                 config.getTitle(),
-                config.getFactoryConfiguration().getDetailFactory(),
+                config.getDetail(),
                 entity,
                 true,
                 false,

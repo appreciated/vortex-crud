@@ -43,14 +43,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         this.route = route;
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        factoryConfig = config.getFactoryConfiguration().getItemFactory();
-        this.itemFactory = itemFactoryRegistry.getFactory(config.getFactoryConfiguration().getItemFactory());
+        factoryConfig = config.getItems();
+        this.itemFactory = itemFactoryRegistry.getFactory(config.getItems());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
                 new Thread(() -> {
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

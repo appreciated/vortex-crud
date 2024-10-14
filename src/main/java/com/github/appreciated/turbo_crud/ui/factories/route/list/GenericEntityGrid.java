@@ -44,11 +44,11 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         );
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(routeConfig.getTable());
-        ItemFactoryConfig itemFactoryConfig = routeConfig.getFactoryConfiguration().getItemFactory();
+        ItemFactoryConfig itemFactoryConfig = routeConfig.getItems();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormField field : itemFactoryConfig.getChildren()) {
+        for (FormElement field : itemFactoryConfig.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null) {

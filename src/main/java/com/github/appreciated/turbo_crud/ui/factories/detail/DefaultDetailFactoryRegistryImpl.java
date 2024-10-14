@@ -2,10 +2,12 @@ package com.github.appreciated.turbo_crud.ui.factories.detail;
 
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * Factory implementation of {@link TurboCrudDetailFactoryRegistry} for creating entity detail renderers.
@@ -22,6 +24,6 @@ public class DefaultDetailFactoryRegistryImpl implements TurboCrudDetailFactoryR
     }
 
     public TurboCrudDetailFactory getFactory(String type) {
-        return factories.get(type);
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 }

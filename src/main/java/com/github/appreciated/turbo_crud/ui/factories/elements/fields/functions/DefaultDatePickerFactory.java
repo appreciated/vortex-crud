@@ -1,7 +1,7 @@
-package com.github.appreciated.turbo_crud.ui.factories.fields.functions;
+package com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.ui.factories.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
 

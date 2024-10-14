@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.fields;
+package com.github.appreciated.turbo_crud.ui.factories.elements.fields;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 
@@ -10,7 +10,7 @@ import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 
 public interface TurboCrudFieldFactoryRegistry {
 
-   TurboCrudFieldFactory getFactory(FieldConfig type);
+    TurboCrudFieldFactory getFactory(String type);
 
-   void addFactory(String key, TurboCrudFieldFactory factory);
+    void addFactory(String key, TurboCrudFieldFactory factory);
 }

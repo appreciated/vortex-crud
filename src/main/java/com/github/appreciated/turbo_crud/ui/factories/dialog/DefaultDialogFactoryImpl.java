@@ -1,7 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.config.model.CollectionFactoryConfig;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
+import com.github.appreciated.turbo_crud.config.model.DialogConfig;
+import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
@@ -32,12 +33,12 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     @Override
     public Dialog createDialog(String entityId,
                                String foreignKeyValue,
-                               CollectionFactoryConfig factoryConfig,
+                               FormElement formElement,
                                DetailFactory detailFactory,
                                TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                OnStoreListener listener,
                                FormCreator formCreator) {
-        String table = factoryConfig.getTable();
+        String table = formElement.getTable();
         Dialog dialog = new Dialog();
 
         GenericEntity recordById = entityManagerService.getRecordById(table, entityId);
@@ -53,7 +54,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
         binder.setBean(recordById);
-        createFooter(table, foreignKeyValue, factoryConfig, binder, recordById, dialog, listener);
+        createFooter(table, foreignKeyValue, formElement, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
@@ -66,12 +67,12 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         return dialog;
     }
 
-    private void createFooter(String table, String foreignKeyValue, CollectionFactoryConfig factoryConfig, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String table, String foreignKeyValue, FormElement formElement, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entity.put(factoryConfig.getForeignKeyColumn(), foreignKeyValue);
+                entity.put(formElement.getForeignKeyColumn(), foreignKeyValue);
                 if (EntityUtil.isNew(entity)) {
                     entityManagerService.insertRecord(table, entity);
                 } else {

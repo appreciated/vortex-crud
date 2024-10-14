@@ -3,10 +3,12 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Default implementation of the {@link TurboCrudDialogFactoryRegistry} interface.
@@ -28,7 +30,7 @@ public class DefaultDialogFactoryRegistryImpl implements TurboCrudDialogFactoryR
 
     @Override
     public TurboCrudDialogFactory getFactory(String type) {
-        return factories.get(type);
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override

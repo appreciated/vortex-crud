@@ -1,6 +1,6 @@
-package com.github.appreciated.turbo_crud.ui.factories.collection;
+package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
 
-import com.github.appreciated.turbo_crud.config.model.FormField;
+import com.github.appreciated.turbo_crud.config.model.FormElement;
 
 /**
  * Interface for a factory that creates form components based on field configuration.
@@ -10,7 +10,7 @@ import com.github.appreciated.turbo_crud.config.model.FormField;
 
 public interface TurboCrudCollectionFactoryRegistry {
 
-   TurboCrudCollectionFactory getFactory(FormField type);
+   TurboCrudCollectionFactory getFactory(String factory);
    void addFactory(String key, TurboCrudCollectionFactory factory);
 
 }

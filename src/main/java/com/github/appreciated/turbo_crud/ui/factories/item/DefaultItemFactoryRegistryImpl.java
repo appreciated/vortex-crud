@@ -20,7 +20,7 @@ public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegis
     }
 
     public TurboCrudItemFactory getFactory(ItemFactoryConfig routeConfig) {
-        return factories.get(routeConfig.getType());
+        return factories.get(routeConfig.getFactory());
     }
 
     @Override
