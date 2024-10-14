@@ -19,10 +19,10 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Low Code Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` handle generic entity management based on the database schema.
 - **i18n Support**
 - **Customizable Icons**
-- **Entity Relationship Support**: Manage relationships between entities (1:n).
+- **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
 
 ## Roadmap (in no particular order)
-- **Extended Entity Relationship Support**: Add, remove, and view relationships (1:1, n:m).
+- **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
 - **Form Navigation**: Enable navigation in forms to other / custom routes.
 - **Nested Hierarchies**
 - **Field Validation**: Add support for basic and advanced field validation hooks.
@@ -247,7 +247,7 @@ application {
         id = {factory = "id", primary = true},
         title = {factory = "text", required = true, validation = {max-length = 255}},
         description = {factory = "textarea", validation = {max-length = 1000}},
-        assigned_to = {factory = "table", table = "users"},
+        assigned_to = {factory = "table", table = "users", column = "id", items = ["username"]},
         status = {factory = "select", values = "task-status"},
         due_date = {factory = "date", read-only-for-roles = ["developer"]},
         created_at = {factory = "datetime"},
@@ -305,9 +305,9 @@ application {
           {type = "field", column = "description", label = "route.tasks.labels.description"},
           {type = "field", column = "status", label = "route.tasks.labels.status"},
           {type = "field", column = "due_date", label = "route.tasks.labels.due_date"},
-          {type = "field", column = "assigned_to", label = "route.tasks.labels.due_date"},
+          {type = "field", column = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
           {
-            type = "collection" # 1 to n relation
+            type = "collection"  # 1:N Relation
             factory = "list"
             table = "task_comments"
             foreign-key-column = "task_id"
