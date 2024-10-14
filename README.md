@@ -344,10 +344,7 @@ application {
 
 ## Getting Started with Development
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/appreciated/turbo-crud.git
-   ```
+1. **Clone the repository**
 2. **Run the application**:
    - Use the provided SQL schema to set up the database.
    - Configure application properties for H2 or other databases.
@@ -357,4 +354,4 @@ application {
      ```
 
 ## License
-This project is licensed under the MIT License.
+This project is currently licensed under the Unlicense
