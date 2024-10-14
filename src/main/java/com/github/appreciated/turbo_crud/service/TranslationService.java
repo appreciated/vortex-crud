@@ -6,6 +6,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -38,7 +39,7 @@ import java.util.regex.Pattern;
 @Service
 public class TranslationService implements I18NProvider {
 
-    private final List<Locale> locales;
+    private final List<Locale> supportedLocales;
     private final String i18nBundlePrefix;
 
     /**
@@ -48,7 +49,7 @@ public class TranslationService implements I18NProvider {
      */
     public TranslationService(TurboCrudConfigService configService) {
         this.i18nBundlePrefix = configService.getConfiguration().getI18nBundlePrefix();
-        this.locales = discoverAvailableLocales();
+        this.supportedLocales = discoverAvailableLocales();
     }
 
     /**
@@ -69,6 +70,16 @@ public class TranslationService implements I18NProvider {
             LoggerFactory.getLogger(TranslationService.class.getName())
                     .warn("Error while discovering resource bundles: ", e);
         }
+
+        availableLocales.sort((locale1, locale2) -> {
+            if (locale1.getLanguage().equals("en") && !locale2.getLanguage().equals("en")) {
+                return -1;
+            } else if (!locale1.getLanguage().equals("en") && locale2.getLanguage().equals("en")) {
+                return 1;
+            } else {
+                return locale1.toString().compareTo(locale2.toString());
+            }
+        });
 
         return availableLocales;
     }
@@ -108,7 +119,7 @@ public class TranslationService implements I18NProvider {
      */
     @Override
     public List<Locale> getProvidedLocales() {
-        return locales;
+        return supportedLocales;
     }
 
     @Override
@@ -134,4 +145,5 @@ public class TranslationService implements I18NProvider {
         }
         return value;
     }
+
 }
