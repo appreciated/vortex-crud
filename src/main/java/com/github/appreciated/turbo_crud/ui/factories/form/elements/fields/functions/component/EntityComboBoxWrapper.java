@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
@@ -26,14 +26,14 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-            (s, i, i1) -> entityManagerService.getRecordsFromTable(fieldConfig.getTable(), i, i1).stream(),
-            s -> entityManagerService.count(fieldConfig.getTable())
+                (filterValue, i, i1) -> entityManagerService.getRecordsFromTableWhereColumnLike(fieldConfig.getTable(), fieldConfig.getFilterColumn(), filterValue, i, i1).stream(),
+                filterValue -> entityManagerService.countWhereColumnLike(fieldConfig.getTable(), fieldConfig.getFilterColumn(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> fieldConfig.getItems().stream()
-            .map(item::getString)
-            .reduce((o, o2) -> o + ", " + o2)
-            .orElse("")
+                .map(item::getString)
+                .reduce((o, o2) -> o + ", " + o2)
+                .orElse("")
         );
 
         // Add a value change listener to handle when a new value is selected
@@ -89,5 +89,15 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     @Override
     public boolean isRequiredIndicatorVisible() {
         return comboBox.isRequiredIndicatorVisible();
+    }
+
+    @Override
+    public void setLabel(String label) {
+        comboBox.setLabel(label);
+    }
+
+    @Override
+    public String getLabel() {
+        return comboBox.getLabel();
     }
 }

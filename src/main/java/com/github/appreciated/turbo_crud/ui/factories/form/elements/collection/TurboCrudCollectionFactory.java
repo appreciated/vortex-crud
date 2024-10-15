@@ -1,6 +1,5 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
-import com.github.appreciated.turbo_crud.config.model.DialogConfig;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;

@@ -22,6 +22,8 @@ public class FieldConfig {
     @Optional
     private String column;
     @Optional
+    private String filterColumn;
+    @Optional
     private List<String> items;
 
     public boolean isPrimary() {
@@ -94,5 +96,13 @@ public class FieldConfig {
 
     public void setItems(List<String> items) {
         this.items = items;
+    }
+
+    public String getFilterColumn() {
+        return filterColumn;
+    }
+
+    public void setFilterColumn(String filterColumn) {
+        this.filterColumn = filterColumn;
     }
 }

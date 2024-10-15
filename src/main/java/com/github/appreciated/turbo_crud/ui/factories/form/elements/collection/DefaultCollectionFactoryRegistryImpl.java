@@ -1,10 +1,9 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

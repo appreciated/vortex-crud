@@ -1,30 +1,31 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.select.Select;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultComboBoxFactory implements TurboCrudFieldFactory {
+public class DefaultSelectFactory implements TurboCrudFieldFactory {
 
     private final ConfigObject selectsConfig;
     private final Map<String, TableConfig> tablesConfig;
 
-    public DefaultComboBoxFactory(ConfigObject selectsConfig, Map<String, TableConfig> tablesConfig) {
+    public DefaultSelectFactory(ConfigObject selectsConfig, Map<String, TableConfig> tablesConfig) {
         this.selectsConfig = selectsConfig;
         this.tablesConfig = tablesConfig;
     }
 
     @Override
     public Component createComponent(String table, String field, FieldConfig fieldConfig) {
-        ComboBox<String> objectComboBox = new ComboBox<>();
+        Select<String> select = new Select<>();
 
         TableConfig tableConfig = tablesConfig.get(table);
         FieldConfig tableFieldConfig = tableConfig.getFieldsConfig().get(field);
@@ -38,9 +39,9 @@ public class DefaultComboBoxFactory implements TurboCrudFieldFactory {
 
         Set<String> strings = selectConfig.keySet();
         Config config = selectConfig.toConfig();
-        objectComboBox.setItems(new ArrayList<>(strings));
-        objectComboBox.setItemLabelGenerator(item -> objectComboBox.getTranslation(config.getString(item)));
+        select.setItems(new ArrayList<>(strings));
+        select.setItemLabelGenerator(item -> select.getTranslation(config.getString(item)));
 
-        return objectComboBox;
+        return select;
     }
 }

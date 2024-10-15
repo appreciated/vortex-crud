@@ -47,7 +47,9 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Configuration Pre-Checks**: Add checks to validate configuration before runtime.
 - **Improve ability to validate the Configuration**: The configuration is not designed optimally for validation, requiring improvements to allow an effective validation.
 - **Styling**: Improve styling options.
-- **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available 
+- **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available
+- **Allow Path designing**: f.e. /cars/${car-id}/motors/${motor-id}/parts/${part-id} and forwarding all variable to the current Route-Renderer (car-id=..., motor-id=..., part-id)**
+- **Allow added sub route**: Sub-Routes which present data from a sub select based on the route (f.e. motors of the car with the id ...)
 
 ## Data Handling and Management
 TurboCRUD uses an H2 database for development, managed by the custom class `TurboCRUDEntityManagerService`. The `TurboCRUDDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.

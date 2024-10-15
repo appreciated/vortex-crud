@@ -1,9 +1,9 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.fields;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions.*;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,8 +26,7 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());
-        factories.put("select", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
-        factories.put("dropdown", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
+        factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getTablesConfig()));
         factories.put("reference", new DefaultReferenceFieldFactory(entityManagerService));
     }
 

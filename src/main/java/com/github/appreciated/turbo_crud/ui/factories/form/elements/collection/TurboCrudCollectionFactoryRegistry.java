@@ -1,6 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
-
-import com.github.appreciated.turbo_crud.config.model.FormElement;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 /**
  * Interface for a factory that creates form components based on field configuration.

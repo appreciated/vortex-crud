@@ -6,28 +6,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
-
-/**
- * TranslationService provides internationalization (i18n) services for the application.
- * This service implements the {@link I18NProvider} interface to support translation
- * functionalities using resource bundles for various locales.
- * <p>
- * Currently supported locales:
- * <ul>
- *   <li>German (de-DE)</li>
- *   <li>English (en-EN)</li>
- * </ul>
- */
-
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

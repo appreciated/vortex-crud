@@ -1,8 +1,9 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.fields.functions;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
 
 public class DefaultReferenceFieldFactory implements TurboCrudFieldFactory {
@@ -15,6 +16,6 @@ public class DefaultReferenceFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, FieldConfig fieldConfig) {
-        return new EntityComboBoxWrapper(entityManagerService,fieldConfig);
+        return new EntityComboBoxWrapper(entityManagerService, fieldConfig);
     }
 }

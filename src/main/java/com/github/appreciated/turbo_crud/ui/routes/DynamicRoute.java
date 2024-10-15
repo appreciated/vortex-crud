@@ -2,9 +2,9 @@ package com.github.appreciated.turbo_crud.ui.routes;
 
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
 import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DefaultRouteFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;

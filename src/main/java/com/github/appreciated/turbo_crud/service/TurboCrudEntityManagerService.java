@@ -8,7 +8,9 @@ public interface TurboCrudEntityManagerService {
 
     List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) ;
 
-    List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue) ;
+    List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue, int offset, int limit) ;
+
+    List<GenericEntity> getRecordsFromTableWhereColumnLike(String tableName, String filterField, String filterValue, int offset, int limit) ;
 
     GenericEntity getRecordById(String tableName, Object id) ;
 
@@ -19,4 +21,6 @@ public interface TurboCrudEntityManagerService {
     void deleteAllRecords(String tableName) ;
 
     int count(String table) ;
+
+    int countWhereColumnLike(String tableName, String filterField, String filterValue);
 }

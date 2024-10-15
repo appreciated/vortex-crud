@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
-import com.github.appreciated.turbo_crud.config.model.DialogConfig;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;

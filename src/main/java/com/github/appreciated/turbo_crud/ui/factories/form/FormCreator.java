@@ -4,13 +4,13 @@ import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.elements.collection.TurboCrudCollectionFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TurboCrudCollectionFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.shared.InputField;
 import com.vaadin.flow.data.binder.Binder;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +47,8 @@ public class FormCreator {
             if (fieldConfig != null && !field.getType().equals("collection")) {
                 TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig.getFactory());
                 Component component = factory.createComponent(table, fieldName, fieldConfig);
-                if (component instanceof InputField) {
-                    ((InputField<?, ?>) component).setLabel(component.getTranslation(field.getLabel()));
+                if (component instanceof HasLabel) {
+                    ((HasLabel) component).setLabel(component.getTranslation(field.getLabel()));
                 }
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);

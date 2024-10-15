@@ -3,8 +3,8 @@ package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
 import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.config.model.RouteConfig;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactory;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
@@ -29,16 +29,17 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
 
-    private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
-    private final VerticalLayout detailLayout = new VerticalLayout();
-    private final TurboCrudItemFactory itemFactory;
-    private final ItemFactoryConfig factoryConfig;
-
     private final RouteConfig config;
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudDetailFactoryRegistry detailFactoryRegistry;
-    private final String table;
+    private final TurboCrudItemFactory itemFactory;
+    private final ItemFactoryConfig factoryConfig;
     private final TurboCrudDetailFactory detailFactory;
+
+    private final String table;
+    private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
+    private final VerticalLayout detailLayout = new VerticalLayout();
+
     private Component active;
 
     public DefaultMasterDetailRouteFactoryImpl(int currentEntityId,
@@ -48,13 +49,11 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
                                                TurboCrudDetailFactoryRegistry detailFactoryRegistry,
                                                TurboCrudIconFactory iconFactory) {
         this.config = config;
-
         this.entityManagerService = entityManagerService;
         this.detailFactoryRegistry = detailFactoryRegistry;
         this.factoryConfig = config.getItems();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         this.table = config.getTable();
-
         DetailFactory detailFactoryConfig = config.getDetail();
         this.detailFactory = detailFactoryRegistry.getFactory(detailFactoryConfig.getFactory());
 

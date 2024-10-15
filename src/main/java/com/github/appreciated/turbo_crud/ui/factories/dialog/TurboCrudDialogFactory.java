@@ -2,7 +2,6 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
-import com.github.appreciated.turbo_crud.config.model.DialogConfig;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;

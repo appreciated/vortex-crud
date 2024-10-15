@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

@@ -3,9 +3,9 @@ package com.github.appreciated.turbo_crud.ui.factories.detail;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Component;
@@ -20,7 +20,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-import static com.vaadin.flow.component.button.ButtonVariant.*;
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
+import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 /**

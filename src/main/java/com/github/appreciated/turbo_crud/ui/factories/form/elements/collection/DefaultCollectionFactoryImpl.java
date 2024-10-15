@@ -1,16 +1,14 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.collection;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
-import com.github.appreciated.turbo_crud.config.model.DialogConfig;
 import com.github.appreciated.turbo_crud.config.model.DetailFactory;
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.elements.collection.item.DefaultCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItemImpl;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -69,7 +67,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getTable(), formElement.getForeignKeyColumn(), foreignKey);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getTable(), formElement.getForeignKeyColumn(), foreignKey,0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formElement, detailFactoryRegistry, detailFactory, formCreator, list, header));

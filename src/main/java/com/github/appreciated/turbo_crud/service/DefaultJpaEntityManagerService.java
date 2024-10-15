@@ -36,7 +36,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      */
     @Transactional
     public void insertRecord(String tableName, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("INSERT INTO " + getTable(tableName) + " (");
+        StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable(tableName)));
         StringBuilder placeholders = new StringBuilder(" VALUES (");
         List<Object> params = values.getProperties().values().stream().toList();
 
@@ -69,7 +69,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      * @return A list of records (as a map of column names and values).
      */
     public List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) {
-        String query = "SELECT * FROM " + getTable(tableName) + " LIMIT :limit OFFSET :offset";
+        String query = "SELECT * FROM %s LIMIT :limit OFFSET :offset".formatted(getTable(tableName));
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter("limit", limit)
                 .setParameter("offset", offset);
@@ -81,13 +81,30 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue, int offset, int limit) {
         // Construct the SQL query to select records where the column equals the provided value
-        String query = "SELECT * FROM " + getTable(tableName) + " WHERE " + filterField + " = :filterValue";
+        String query = "SELECT * FROM %s WHERE %s = :filterValue".formatted(getTable(tableName), filterField);
 
         // Create a native query using the entity manager
         Query nativeQuery = entityManager.createNativeQuery(query);
         nativeQuery.setParameter("filterValue", filterValue);
+
+        // Cast to NativeQuery to allow the use of setTupleTransformer
+        NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
+
+        // Return the result list
+        return hibernateQuery.getResultList();
+    }
+
+    @Override
+    public List<GenericEntity> getRecordsFromTableWhereColumnLike(String tableName, String filterField, String filterValue, int offset, int limit) {
+        // Construct the SQL query to select records where the column equals the provided value
+        String query = "SELECT * FROM %s WHERE %s LIKE :filterValue".formatted(getTable(tableName), filterField);
+
+        // Create a native query using the entity manager
+        Query nativeQuery = entityManager.createNativeQuery(query);
+        nativeQuery.setParameter("filterValue", "%"+filterValue+"%");
 
         // Cast to NativeQuery to allow the use of setTupleTransformer
         NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
@@ -105,7 +122,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      * @return The record (as a map of column names and values) or null if not found.
      */
     public GenericEntity getRecordById(String tableName, Object id) {
-        String query = "SELECT * FROM " + getTable(tableName) + " WHERE id = ?";
+        String query = "SELECT * FROM %s WHERE id = ?".formatted(getTable(tableName));
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter(1, id);
 
@@ -125,12 +142,10 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      */
     @Transactional
     public void updateRecordById(String tableName, Object id, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("UPDATE " + getTable(tableName) + " SET ");
+        StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable(tableName)));
         List<Object> params = values.getProperties().values().stream().toList();
 
-        values.getProperties().forEach((key, value) -> {
-            sql.append(key).append(" = ?,");
-        });
+        values.getProperties().forEach((key, value) -> sql.append(key).append(" = ?,"));
 
         sql.deleteCharAt(sql.length() - 1); // Remove last comma
         sql.append(" WHERE id = ?");
@@ -151,7 +166,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      */
     @Transactional
     public void deleteRecordById(String tableName, Object id) {
-        String sql = "DELETE FROM " + getTable(tableName) + " WHERE id = ?";
+        String sql = "DELETE FROM %s WHERE id = ?".formatted(getTable(tableName));
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter(1, id);
         query.executeUpdate();
@@ -164,13 +179,20 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      */
     @Transactional
     public void deleteAllRecords(String tableName) {
-        String sql = "DELETE FROM " + getTable(tableName);
+        String sql = "DELETE FROM %s".formatted(getTable(tableName));
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
 
     @Transactional
     public int count(String table) {
-        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM " + getTable(table)).getSingleResult());
+        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable(table))).getSingleResult());
     }
+
+    @Override
+    public int countWhereColumnLike(String tableName, String filterField, String filterValue) {
+        String count = "SELECT COUNT(*) FROM %s WHERE %s LIKE '%%%s%%'".formatted(getTable(tableName), filterField, filterValue);
+        return Math.toIntExact((long) entityManager.createNativeQuery(count).getSingleResult());
+    }
+
 }

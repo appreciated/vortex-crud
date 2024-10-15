@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.detail;
 
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.elements.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -21,6 +21,8 @@ public class DefaultDetailFactoryRegistryImpl implements TurboCrudDetailFactoryR
 
     public DefaultDetailFactoryRegistryImpl(TurboCrudEntityManagerService entityManagerService, TurboCrudConfigService configService, FormCreator formCreator) {
         factories.put("form", new DefaultFormDetailFactoryImpl(entityManagerService, configService, formCreator));
+        factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityManagerService, configService, formCreator));
+        factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityManagerService, configService, formCreator));
     }
 
     public TurboCrudDetailFactory getFactory(String type) {

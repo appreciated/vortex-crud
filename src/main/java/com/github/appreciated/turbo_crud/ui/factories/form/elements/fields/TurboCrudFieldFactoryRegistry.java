@@ -1,6 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.elements.fields;
-
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 
 /**
  * Interface for a factory that creates form components based on field configuration.
