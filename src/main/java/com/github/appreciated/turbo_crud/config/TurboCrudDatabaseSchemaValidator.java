@@ -41,7 +41,7 @@ public class TurboCrudDatabaseSchemaValidator {
         typeMappings.put("datetime", List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME"));
         typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
         typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
-        typeMappings.put("table", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
+        typeMappings.put("reference", typeMappings.get("id"));
 
         Map<String, TableConfig> tablesConfig = configService.getConfiguration().getTablesConfig();
 

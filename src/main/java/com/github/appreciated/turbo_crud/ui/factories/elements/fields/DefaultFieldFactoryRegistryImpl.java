@@ -28,7 +28,7 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
         factories.put("date", new DefaultDatePickerFactory());
         factories.put("select", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
         factories.put("dropdown", new DefaultComboBoxFactory(configuration.getSelects(), configuration.getTablesConfig()));
-        factories.put("table", new DefaultEntityPickerFactory(configService.getConfiguration().getTablesConfig(), entityManagerService));
+        factories.put("reference", new DefaultReferenceFieldFactory(entityManagerService));
     }
 
     public Map<String, TurboCrudFieldFactory> getFactories() {

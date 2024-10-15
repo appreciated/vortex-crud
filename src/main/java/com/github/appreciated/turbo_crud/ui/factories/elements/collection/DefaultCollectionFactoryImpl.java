@@ -99,7 +99,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-        Dialog dialog = dialogFactory.getFactory(formElement.getFactory()).createDialog(
+        Dialog dialog = dialogFactory.getFactory(formElement.getDialog().getFactory()).createDialog(
                 entityId,
                 foreignKey,
                 formElement,
