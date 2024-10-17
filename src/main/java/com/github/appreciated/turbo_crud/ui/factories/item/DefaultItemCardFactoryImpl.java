@@ -1,7 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -12,7 +13,7 @@ import com.vaadin.flow.component.Component;
 public class DefaultItemCardFactoryImpl implements TurboCrudItemFactory {
 
     @Override
-    public Component renderItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth) {
+    public Component renderItem(Config itemFactoryConfig, GenericEntity entity, Integer maxWidth){
         return new DefaultItem(itemFactoryConfig, entity, maxWidth);
     }
 }

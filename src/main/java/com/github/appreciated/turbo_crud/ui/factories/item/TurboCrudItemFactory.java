@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.typesafe.config.Config;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -10,5 +10,5 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface TurboCrudItemFactory {
-    Component renderItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth);
+    Component renderItem(Config itemFactoryConfig, GenericEntity entity, Integer maxWidth);
 }

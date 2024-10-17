@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
+import com.typesafe.config.Config;
 
 /**
  * Interface for factories that create EntityItemRenderer instances.
@@ -8,7 +8,7 @@ import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
  */
 
 public interface TurboCrudItemFactoryRegistry {
-    TurboCrudItemFactory getFactory(ItemFactoryConfig routeConfig);
+    TurboCrudItemFactory getFactory(Config routeConfig);
 
     void addFactory(String key, TurboCrudItemFactory factory);
 }

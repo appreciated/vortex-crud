@@ -82,8 +82,8 @@ public class ApplicationConfig {
         this.routes = routes;
     }
 
-    public Map<String, RouteConfig> getRoutesConfig() {
-        return toStringMapWithValueType(routes, RouteConfig.class);
+    public Map<String, Route> getRoutesConfig() {
+        return toStringMapWithValueType(routes, Route.class);
     }
 
     public String getI18nBundlePrefix() {

@@ -1,6 +1,8 @@
-package com.github.appreciated.turbo_crud.ui.factories.detail;
+package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
-import com.github.appreciated.turbo_crud.config.model.DetailFactory;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
@@ -8,6 +10,9 @@ import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -25,53 +30,64 @@ import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 /**
- * Default implementation of the {@link TurboCrudDetailFactory} interface.
+ * Default implementation of the {@link TurboCrudRouteFactory} interface.
  * This class handles rendering entity details in a form layout and provides functionalities
  * such as saving and deleting entities.
  */
 
-public class DefaultFormDetailFactoryImpl implements TurboCrudDetailFactory {
+public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
+    private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
     public DefaultFormDetailFactoryImpl(TurboCrudEntityManagerService entityManagerService,
                                         TurboCrudConfigService configService,
-                                        FormCreator formCreator) {
+                                        FormCreator formCreator,
+                                        TurboCrudRouteFactoryRegistry factoryRegistry
+    ) {
         this.entityManagerService = entityManagerService;
         this.configService = configService;
         this.formCreator = formCreator;
+        this.factoryRegistry = factoryRegistry;
     }
 
     @Override
-    public Component renderDetail(String table,
-                                  String title,
-                                  DetailFactory detailFactory,
-                                  GenericEntity entity,
-                                  boolean isWrapped,
-                                  boolean hideHeader,
-                                  TurboCrudDetailFactoryRegistry detailFactoryRegistry) {
+    public Component renderRoute(
+            TurboCrudPathSegments pathVariables,
+            String table,
+            String title,
+            Route route,
+            boolean isWrapped,
+            boolean hideHeader
+    ) {
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
+
+        FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
+
+        String lastSegment = pathVariables.getLastSegment();
+        GenericEntity entity = entityManagerService.getRecordById(table, lastSegment);
+
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
         String prefix = !isWrapped ? layout.getTranslation(title) + " / " : "";
 
         binder.bind(
                 titleComponent,
-                entity1 -> prefix + entity1.getString(detailFactory.getTitleColumn()),
+                entity1 -> prefix + entity1.getString(formConfiguration.getTitleColumn()),
                 (entity1, string) -> {
                 }
         );
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
 
-        formCreator.bindAndAddToLayout(table, detailFactory, entity, detailFactoryRegistry, tables, binder, form, formCreator);
+        formCreator.bindAndAddToLayout(table, route, entity, factoryRegistry, tables, binder, form, formCreator);
 
         binder.setBean(entity);
 
@@ -105,7 +121,7 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudDetailFactory {
                 .set("box-sizing", "content-box");
 
         HorizontalLayout headerBar = new HorizontalLayout();
-        if (!isWrapped){
+        if (!isWrapped) {
             headerBar.add(back);
         }
 

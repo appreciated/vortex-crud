@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class DefaultListColumnCallbackRegistryImpl implements TurboCrudListColum
     }
 
     @Override
-    public TurboCrudListColumnCallback getCallback(RouteConfig config) {
+    public TurboCrudListColumnCallback getCallback(Route config) {
         return callbacks.get("default");
     }
 

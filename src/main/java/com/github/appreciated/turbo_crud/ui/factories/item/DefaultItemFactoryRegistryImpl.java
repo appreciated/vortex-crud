@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
+import com.typesafe.config.Config;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,8 +19,8 @@ public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegis
         factories.put("card", new DefaultItemCardFactoryImpl());
     }
 
-    public TurboCrudItemFactory getFactory(ItemFactoryConfig routeConfig) {
-        return factories.get(routeConfig.getFactory());
+    public TurboCrudItemFactory getFactory(Config routeConfig) {
+        return factories.get(routeConfig.getString("factory"));
     }
 
     @Override

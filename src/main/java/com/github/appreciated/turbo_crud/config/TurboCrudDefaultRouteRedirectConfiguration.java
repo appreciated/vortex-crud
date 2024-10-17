@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.config;
 
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -23,8 +23,8 @@ import java.util.Optional;
 @Component
 public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinServiceInitListener {
 
-    private final Map<String, RouteConfig> routeConfigs;
-    private static Optional<Map.Entry<String, RouteConfig>> defaultRoute;
+    private final Map<String, Route> routeConfigs;
+    private static Optional<Map.Entry<String, Route>> defaultRoute;
 
     public TurboCrudDefaultRouteRedirectConfiguration(TurboCrudConfigService configService) {
         this.routeConfigs = configService.getConfiguration().getRoutesConfig();
@@ -32,7 +32,7 @@ public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinService
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<Map.Entry<String, RouteConfig>> defaultRoutes = routeConfigs
+        List<Map.Entry<String, Route>> defaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();

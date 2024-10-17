@@ -1,12 +1,13 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.typesafe.config.Config;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,7 +17,9 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A custom VirtualList implementation for rendering entity items in a responsive grid layout with lazy loading.
@@ -28,23 +31,22 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final String table;
     private final TurboCrudItemFactory itemFactory;
-    private final ItemFactoryConfig factoryConfig;
-    private final String route;
+    private final Config factoryConfig;
+    private final TurboCrudPathSegments pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(int i,
-                           String route,
-                           RouteConfig config,
+    public VirtualItemGrid(TurboCrudPathSegments pathVariables,
+                           Route config,
                            TurboCrudEntityManagerService entityManagerService,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry) {
-        this.route = route;
+        this.pathVariables = pathVariables;
         this.entityManagerService = entityManagerService;
         table = config.getTable();
-        factoryConfig = config.getItems();
-        this.itemFactory = itemFactoryRegistry.getFactory(config.getItems());
+        factoryConfig = config.getConfiguration();
+        this.itemFactory = itemFactoryRegistry.getFactory(config.getConfiguration());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -79,7 +81,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + route + "/" + EntityUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate(pathVariables.getPath() + EntityUtil.getId(entity)));
     }
 
     private void initLazyLoadingDataProvider() {

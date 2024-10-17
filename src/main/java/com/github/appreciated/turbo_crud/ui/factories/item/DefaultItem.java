@@ -1,7 +1,10 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
+import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
+import com.github.appreciated.turbo_crud.config.model.ItemConfig;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
@@ -13,7 +16,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @CssImport("card-styles.css")
 public class DefaultItem extends HorizontalLayout {
 
-    public DefaultItem(ItemFactoryConfig itemFactoryConfig, GenericEntity entity, Integer maxWidth) {
+    public DefaultItem(Config config, GenericEntity entity, Integer maxWidth) {
+        ItemConfig formConfiguration = ConfigBeanFactory.create(config, ItemConfig.class);
+
         if (maxWidth != null) {
             setMaxWidth(maxWidth + "px");
         }
@@ -21,8 +26,8 @@ public class DefaultItem extends HorizontalLayout {
 
         // Optional image
         Image image = null;
-        if (itemFactoryConfig.getImageColumn() != null) {
-            image = new Image(itemFactoryConfig.getImageColumn(), "Entity Image");
+        if (formConfiguration.getImageColumn() != null) {
+            image = new Image(formConfiguration.getImageColumn(), "Entity Image");
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
@@ -33,12 +38,12 @@ public class DefaultItem extends HorizontalLayout {
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        H4 title = new H4(entity.getString(itemFactoryConfig.getTitleColumn()));
+        H4 title = new H4(entity.getString(formConfiguration.getTitleColumn()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
-        if (itemFactoryConfig.getDescriptionColumn() != null) {
-            Text description = new Text(entity.getString(itemFactoryConfig.getDescriptionColumn()));
+        if (formConfiguration.getDescriptionColumn() != null) {
+            Text description = new Text(entity.getString(formConfiguration.getDescriptionColumn()));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }

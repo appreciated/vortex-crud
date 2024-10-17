@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
@@ -31,7 +31,7 @@ public class TurboCrudConfigService {
         return configuration;
     }
 
-    public RouteConfig getConfigForRoute(String viewName) {
+    public Route getConfigForRoute(String viewName) {
         return configuration.getRoutesConfig().get(viewName.split("/")[0]);
     }
 

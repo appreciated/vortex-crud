@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.detail.component;
+package com.github.appreciated.turbo_crud.ui.factories.route.component;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;

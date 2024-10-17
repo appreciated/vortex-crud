@@ -30,7 +30,7 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
                 filterValue -> entityManagerService.countWhereColumnLike(fieldConfig.getTable(), fieldConfig.getFilterColumn(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> fieldConfig.getItems().stream()
+        comboBox.setItemLabelGenerator(item -> fieldConfig.getChildren().stream()
                 .map(item::getString)
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 
 /**
  * Interface for factories that create view containers for different route configurations.
@@ -8,6 +8,6 @@ import com.github.appreciated.turbo_crud.config.model.RouteConfig;
  */
 
 public interface TurboCrudListColumnCallbackRegistry {
-    TurboCrudListColumnCallback getCallback(RouteConfig config);
+    TurboCrudListColumnCallback getCallback(Route config);
     void addCallback(String key, TurboCrudListColumnCallback factory);
 }

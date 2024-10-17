@@ -4,7 +4,7 @@ public class DialogConfig {
 
     private String factory;
     private String emptyMessage;
-    private DetailFactory detail;
+    private Route child;
 
     public String getFactory() {
         return factory;
@@ -22,11 +22,11 @@ public class DialogConfig {
         this.emptyMessage = emptyMessage;
     }
 
-    public DetailFactory getDetail() {
-        return detail;
+    public Route getChild() {
+        return child;
     }
 
-    public void setDetail(DetailFactory detail) {
-        this.detail = detail;
+    public void setChild(Route child) {
+        this.child = child;
     }
 }

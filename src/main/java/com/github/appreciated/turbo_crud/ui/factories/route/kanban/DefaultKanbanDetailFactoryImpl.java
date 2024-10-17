@@ -1,13 +1,14 @@
-package com.github.appreciated.turbo_crud.ui.factories.detail;
+package com.github.appreciated.turbo_crud.ui.factories.route.kanban;
 
-import com.github.appreciated.turbo_crud.config.model.DetailFactory;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
-import com.github.appreciated.turbo_crud.ui.factories.detail.component.KanbanView;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.component.KanbanView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -17,7 +18,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-public class DefaultKanbanDetailFactoryImpl implements TurboCrudDetailFactory {
+public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
@@ -31,14 +32,15 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudDetailFactory {
     }
 
 
-    @Override
-    public Component renderDetail(String table,
-                                  String title,
-                                  DetailFactory detailFactory,
-                                  GenericEntity entity,
-                                  boolean isWrapped,
-                                  boolean hideHeader,
-                                  TurboCrudDetailFactoryRegistry detailFactoryRegistry) {
+    public Component renderRoute(
+            TurboCrudPathSegments pathVariables,
+            String table,
+            String title,
+            Route childFactory,
+            boolean isWrapped,
+            boolean hideHeader
+    ) {
+
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
@@ -58,7 +60,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudDetailFactory {
                 .set("box-sizing", "content-box");
 
         HorizontalLayout headerBar = new HorizontalLayout();
-        if (!isWrapped){
+        if (!isWrapped) {
             headerBar.add(back);
         }
 
@@ -72,4 +74,6 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudDetailFactory {
         layout.setPadding(true);
         return layout;
     }
+
+
 }

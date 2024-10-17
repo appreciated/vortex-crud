@@ -23,7 +23,8 @@ public class FormElement {
     private String foreignKeyColumn;
     @Optional
     private String emptyMessage;
-
+    @Optional
+    private int span = 2;
     @Optional
     DialogConfig dialog;
 
@@ -105,5 +106,13 @@ public class FormElement {
 
     public void setDialog(DialogConfig dialog) {
         this.dialog = dialog;
+    }
+
+    public int getSpan() {
+        return span;
+    }
+
+    public void setSpan(int span) {
+        this.span = span;
     }
 }

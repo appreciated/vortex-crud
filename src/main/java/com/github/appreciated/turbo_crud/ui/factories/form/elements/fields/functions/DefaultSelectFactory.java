@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.select.Select;
 
 import java.util.ArrayList;

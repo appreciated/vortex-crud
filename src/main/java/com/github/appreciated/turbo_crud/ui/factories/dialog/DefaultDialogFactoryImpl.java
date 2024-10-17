@@ -1,14 +1,17 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.config.model.DetailFactory;
+
 import com.github.appreciated.turbo_crud.config.model.FormElement;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
+
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -32,9 +35,9 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     @Override
     public Dialog createDialog(String entityId,
                                String foreignKeyValue,
+                               Route route,
                                FormElement formElement,
-                               DetailFactory detailFactory,
-                               TurboCrudDetailFactoryRegistry detailFactoryRegistry,
+                               TurboCrudRouteFactoryRegistry routeFactory,
                                OnStoreListener listener,
                                FormCreator formCreator) {
         String table = formElement.getTable();
@@ -57,7 +60,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         FormLayout layout = new FormLayout();
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
-        formCreator.bindAndAddToLayout(table, detailFactory, recordById, detailFactoryRegistry, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(table, route, recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.router_layout;
 
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.vaadin.flow.component.AttachEvent;
@@ -52,7 +52,7 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Set<Map.Entry<String, RouteConfig>> keys = configService.getConfiguration().getRoutesConfig().entrySet();
+        Set<Map.Entry<String, Route>> keys = configService.getConfiguration().getRoutesConfig().entrySet();
         keys.forEach(configEntry -> {
             if (!configEntry.getValue().isHideInMenu()) {
                 String translation = getTranslation(configEntry.getValue().getTitle());

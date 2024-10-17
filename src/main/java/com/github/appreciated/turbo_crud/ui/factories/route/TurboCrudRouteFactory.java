@@ -1,7 +1,9 @@
 package com.github.appreciated.turbo_crud.ui.factories.route;
 
-import com.github.appreciated.turbo_crud.config.model.RouteConfig;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -10,5 +12,12 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface TurboCrudRouteFactory {
-    Component renderRoute(int currentEntityId, String route, RouteConfig config, TurboCrudEntityManagerService entityManagerService);
+    Component renderRoute(
+            TurboCrudPathSegments pathVariables,
+            String table,
+            String title,
+            Route route,
+            boolean isWrapped,
+            boolean hideHeader
+    );
 }

@@ -3,10 +3,13 @@ package com.github.appreciated.turbo_crud.ui.factories.form;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.factories.detail.TurboCrudDetailFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TurboCrudCollectionFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
+import com.typesafe.config.ConfigFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
@@ -14,6 +17,7 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.Binder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Map;
 
 @Service
@@ -28,9 +32,9 @@ public class FormCreator {
     }
 
     public void bindAndAddToLayout(String table,
-                                   DetailFactory detailFactory,
+                                   Route route,
                                    GenericEntity entity,
-                                   TurboCrudDetailFactoryRegistry detailFactoryRegistry,
+                                   TurboCrudRouteFactoryRegistry routeFactory,
                                    TableConfig tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
@@ -38,7 +42,7 @@ public class FormCreator {
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement field : detailFactory.getChildren()) {
+        for (FormElement field : getFormElements(route)) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null && field.getFactory() != null && !field.getType().equals("collection")) {
@@ -52,18 +56,24 @@ public class FormCreator {
                 }
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
+                form.setColspan(component, field.getSpan());
             } else {
-                DialogConfig collectionFactory = field.getDialog();
                 Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
                         EntityUtil.getId(entity),
+                        route,
                         field,
-                        detailFactoryRegistry,
-                        collectionFactory.getDetail(),
+                        routeFactory,
                         formCreator
                 );
                 form.add(collection);
-                form.setColspan(collection, detailFactory.getSpan());
+                form.setColspan(collection, field.getSpan());
             }
         }
+    }
+
+    private static Collection<FormElement> getFormElements(Route childFactory) {
+        Config configuration = childFactory.getConfiguration();
+        FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
+        return formConfiguration.getChildren();
     }
 }

@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class ItemFactoryConfig {
+public class ItemConfig {
 
     private String factory;
     @Optional
