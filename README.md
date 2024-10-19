@@ -10,7 +10,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 - **HOCON**: Configuration format that is compact, readable, and supports imports
 
-## Core Architecture and Key Features
+## Key Features
 - **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture))
 - **Flexible Configuration System**: Uses HOCON for dynamic configuration, making it easy to set up various parts of the application.
 - **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` checks that the database schema matches the configuration at startup.
