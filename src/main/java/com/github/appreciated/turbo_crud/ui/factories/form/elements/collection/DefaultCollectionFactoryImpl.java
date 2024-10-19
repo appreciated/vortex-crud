@@ -56,7 +56,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(null, foreignKey, route, factoryConfig, routeFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
         header.add(button);
         loadCollection(foreignKey, factoryConfig, route, routeFactory, formCreator, list, header);
         return list;
@@ -74,7 +74,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getTable(), formElement.getForeignKeyColumn(), foreignKey, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, route, formElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formElement, routeFactoryRegistry, formCreator, list, header));
 
             Config configuration = formElement.getDialog().getChild().getConfiguration();
             FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
@@ -86,7 +86,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     entityManagerService.deleteRecordById(formElement.getTable(), EntityUtil.getId(record));
-                    loadCollection(foreignKey, formElement, route, routeFactoryRegistry, formCreator, list, header);
+                    loadCollection(foreignKey, formElement, child.getDialog().getChild(), routeFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
@@ -99,7 +99,6 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
 
     private void openDialog(String entityId,
                             String foreignKey,
-                            Route route,
                             FormElement formElement,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                             FormCreator formCreator,
@@ -109,10 +108,10 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         Dialog dialog = dialogFactory.getFactory(formElement.getDialog().getFactory()).createDialog(
                 entityId,
                 foreignKey,
-                route,
+                formElement.getDialog().getChild(),
                 formElement,
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, formElement,route, routeFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, formElement, formElement.getDialog().getChild(), routeFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }
