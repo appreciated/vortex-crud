@@ -24,7 +24,7 @@ public class FormElement {
     @Optional
     private String emptyMessage;
     @Optional
-    private int span = 2;
+    private Integer span = null;
     @Optional
     DialogConfig dialog;
 
@@ -108,11 +108,11 @@ public class FormElement {
         this.dialog = dialog;
     }
 
-    public int getSpan() {
+    public Integer getSpan() {
         return span;
     }
 
-    public void setSpan(int span) {
+    public void setSpan(Integer span) {
         this.span = span;
     }
 }

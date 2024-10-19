@@ -9,7 +9,6 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
-import com.typesafe.config.ConfigFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
@@ -56,7 +55,7 @@ public class FormCreator {
                 }
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 form.add(component);
-                form.setColspan(component, field.getSpan());
+                form.setColspan(component, (field.getSpan() == null ? 1 : field.getSpan()));
             } else {
                 Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
                         EntityUtil.getId(entity),
@@ -66,7 +65,7 @@ public class FormCreator {
                         formCreator
                 );
                 form.add(collection);
-                form.setColspan(collection, field.getSpan());
+                form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
             }
         }
     }
