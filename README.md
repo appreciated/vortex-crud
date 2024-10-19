@@ -346,6 +346,3 @@ application {
      ```bash
      ./mvnw spring-boot:run
      ```
-
-## License
-This project is currently licensed under the Unlicense
