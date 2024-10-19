@@ -81,7 +81,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate(pathVariables.getPath() + EntityUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + EntityUtil.getId(entity)));
     }
 
     private void initLazyLoadingDataProvider() {

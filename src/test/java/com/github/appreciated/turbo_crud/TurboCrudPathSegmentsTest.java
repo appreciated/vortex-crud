@@ -45,7 +45,7 @@ class TurboCrudPathSegmentsTest {
     @Test
     void testValidPathWithMarkers() {
         // Testpfad mit gültigen Abschnitten
-        String path = "/route/identifier/child1/identifier/child2";
+        String path = "route/identifier/child1/identifier/child2";
         TurboCrudPathSegments turboCrudPath = new TurboCrudPathSegments(path, routesConfig);
 
         // Abrufen der gesetzten Marker
@@ -53,9 +53,9 @@ class TurboCrudPathSegmentsTest {
 
         // Prüfung der Marker
         assertEquals(3, routes.size(), "Es sollten 3 Marker gesetzt sein.");
-        assertEquals("rootRoute", routes.get(1).getTitle(), "Erster Marker sollte 'route' sein.");
-        assertEquals("childRoute1", routes.get(3).getTitle(), "Dritter Marker sollte 'child1' sein.");
-        assertEquals("childRoute2", routes.get(5).getTitle(), "Vierter Marker sollte 'child2' sein.");
+        assertEquals("rootRoute", routes.get(0).getTitle(), "Erster Marker sollte 'route' sein.");
+        assertEquals("childRoute1", routes.get(2).getTitle(), "Dritter Marker sollte 'child1' sein.");
+        assertEquals("childRoute2", routes.get(4).getTitle(), "Vierter Marker sollte 'child2' sein.");
     }
 
 
@@ -70,14 +70,14 @@ class TurboCrudPathSegmentsTest {
 
         // Prüfung der Marker
         assertEquals(1, routes.size(), "Es sollte 1 Marker gesetzt sein.");
-        assertEquals("rootRoute", routes.get(1).getTitle(), "Erster Marker sollte 'route' sein.");
+        assertEquals("rootRoute", routes.get(0).getTitle(), "Erster Marker sollte 'route' sein.");
     }
 
 
     @Test
     void testPathWithInvalidRoute() {
         // Testpfad mit einem ungültigen Abschnitt
-        String path = "/route/identifier/invalid/child2";
+        String path = "route/identifier/invalid/child2";
 
         Assertions.assertThrows( IllegalArgumentException.class, () -> new TurboCrudPathSegments(path, routesConfig));
     }
@@ -85,7 +85,7 @@ class TurboCrudPathSegmentsTest {
     @Test
     void testPathWithIdentifier() {
         // Testpfad mit einem Identifier an zweiter Stelle, der keinen Marker haben sollte
-        String path = "/route/identifier/child1";
+        String path = "route/identifier/child1";
         TurboCrudPathSegments turboCrudPath = new TurboCrudPathSegments(path, routesConfig);
 
         // Abrufen der gesetzten Marker
@@ -93,8 +93,8 @@ class TurboCrudPathSegmentsTest {
 
         // Der Identifier (zweite Position) sollte keinen Marker haben
         assertEquals(2, markers.size(), "Es sollten 2 Marker gesetzt sein.");
-        assertEquals("rootRoute", markers.get(1).getTitle(), "Erster Marker sollte 'rootRoute' sein.");
-        assertEquals("childRoute1", markers.get(3).getTitle(), "Dritter Marker sollte 'childRoute1' sein.");
-        assertNull(markers.get(2), "Zweiter Abschnitt sollte kein Marker haben, da es ein Identifier ist.");
+        assertEquals("rootRoute", markers.get(0).getTitle(), "Erster Marker sollte 'rootRoute' sein.");
+        assertEquals("childRoute1", markers.get(2).getTitle(), "Dritter Marker sollte 'childRoute1' sein.");
+        assertNull(markers.get(1), "Zweiter Abschnitt sollte kein Marker haben, da es ein Identifier ist.");
     }
 }

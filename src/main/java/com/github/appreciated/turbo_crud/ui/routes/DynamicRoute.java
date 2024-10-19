@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -38,32 +37,17 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         String path = event.getRouteParameters().get("path").orElse("");
         removeAll();
 
-
-        TurboCrudPathSegments pathRoutes = new TurboCrudPathSegments("view/"+path, configService.getConfiguration().getRoutesConfig());
+        TurboCrudPathSegments pathRoutes = new TurboCrudPathSegments(path, configService.getConfiguration().getRoutesConfig());
         Route currentRoute = pathRoutes.getCurrentRoute();
 
-        if (Objects.equals(currentRoute.getFactory(), "master-detail")) {
-            Component viewContainer = routeFactoryRegistry.getFactory("master-detail").renderRoute(
-                    pathRoutes,
-                    currentRoute.getTitle(),
-                    currentRoute.getChild().getFactory(),
-                    currentRoute,
-                    false,
-                    false
-            );
-            add(viewContainer);
-        } else {
-            if (pathRoutes.maxPathSegmentIndex() < pathRoutes.getSections().length){
-                currentRoute = currentRoute.getChild();
-            }
-            Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory()).renderRoute(
-                    pathRoutes,
-                    currentRoute.getTable(),
-                    currentRoute.getTitle(),
-                    currentRoute,
-                    false,
-                    false);
-            add(component);
+        if (!Objects.equals(currentRoute.getFactory(), "master-detail") && pathRoutes.isLastPathIdentifier()) {
+            currentRoute = currentRoute.getChild();
         }
+        Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory()).renderRoute(
+                pathRoutes,
+                currentRoute,
+                false,
+                false);
+        add(component);
     }
 }

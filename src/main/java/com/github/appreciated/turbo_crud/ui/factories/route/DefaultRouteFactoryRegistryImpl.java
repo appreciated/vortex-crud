@@ -33,9 +33,9 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
                                            TurboCrudEntityManagerService entityService,
                                            FormCreator formCreatorService
     ) {
-        factories.put("master-detail", (pathVariables, table, title, pathElement, isWrapped, hideHeader) -> new DefaultMasterDetailRouteFactoryImpl(pathVariables, pathElement, entityService, itemFactoryRegistry, this, iconFactory));
-        factories.put("list", (pathVariables, table, title, pathElement, isWrapped, hideHeader) -> new DefaultListRouteFactoryImpl(pathVariables, pathElement, entityService, configService, listColumnCallbackRegistry, iconFactory));
-        factories.put("grid", (pathVariables, table, title, pathElement, isWrapped, hideHeader) -> new DefaultGridRouteFactoryImpl(pathVariables, pathElement, entityService, itemFactoryRegistry, iconFactory));
+        factories.put("master-detail", (pathVariables, route, isWrapped, hideHeader) -> new DefaultMasterDetailRouteFactoryImpl(pathVariables, route, entityService, itemFactoryRegistry, this, iconFactory));
+        factories.put("list", (pathVariables, route, isWrapped, hideHeader) -> new DefaultListRouteFactoryImpl(pathVariables, route, entityService, configService, listColumnCallbackRegistry, iconFactory));
+        factories.put("grid", (pathVariables, route, isWrapped, hideHeader) -> new DefaultGridRouteFactoryImpl(pathVariables, route, entityService, itemFactoryRegistry, iconFactory));
         factories.put("form", new DefaultFormDetailFactoryImpl(entityService, configService, formCreatorService, this));
         factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));
         factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));

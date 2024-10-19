@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.config;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.service.GenericEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class TurboCrudPathSegments {
         this.sections = path.split("/");
 
         // Starte bei Root
-        traverseRoutes(1, routesConfig);
+        traverseRoutes(0, routesConfig);
     }
 
     private void traverseRoutes(int sectionIndex, Map<String, Route> currentRoutes) {
@@ -38,7 +40,7 @@ public class TurboCrudPathSegments {
         String section = sections[sectionIndex];
 
         // Skip identifiers (even index positions should be identifiers)
-        if (sectionIndex % 2 == 0) {
+        if (sectionIndex % 2 == 1) {
             traverseRoutes(sectionIndex + 1, currentRoutes); // Move to the next segment
             return;
         }
@@ -46,7 +48,7 @@ public class TurboCrudPathSegments {
         // Check if the current route exists
         Route currentRoute = currentRoutes.get(section);
         if (currentRoute == null) {
-            throw new IllegalArgumentException("No route found");
+            throw new IllegalArgumentException("No route found for the section '%s'".formatted(section));
         }
 
         pathRoutes.put(sectionIndex, currentRoute);
@@ -65,10 +67,10 @@ public class TurboCrudPathSegments {
     }
 
     public Route getCurrentRoute() {
-        return pathRoutes.get(maxPathSegmentIndex());
+        return pathRoutes.get(maxMapKey());
     }
 
-    public Integer maxPathSegmentIndex() {
+    public Integer maxMapKey() {
         return pathRoutes.keySet().stream().max(Integer::compareTo).orElseThrow();
     }
 
@@ -82,5 +84,17 @@ public class TurboCrudPathSegments {
 
     public String getLastSegment() {
         return sections[sections.length - 1];
+    }
+
+    public boolean isLastPathIdentifier() {
+        return maxMapKey() < sections.length - 1;
+    }
+
+    public String getPathForEntity(GenericEntity entity) {
+        if (!isLastPathIdentifier()) {
+            return getPath() + "/" + EntityUtil.getId(entity);
+        } else {
+            return getPath().substring(0, getPath().lastIndexOf("/")) + "/" + EntityUtil.getId(entity);
+        }
     }
 }

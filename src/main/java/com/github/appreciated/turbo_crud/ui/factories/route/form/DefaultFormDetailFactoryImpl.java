@@ -56,12 +56,12 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
     @Override
     public Component renderRoute(
             TurboCrudPathSegments pathVariables,
-            String table,
-            String title,
             Route route,
             boolean isWrapped,
             boolean hideHeader
     ) {
+        String table = route.getTable();
+
         H2WithHasValue titleComponent = new H2WithHasValue();
 
         VerticalLayout layout = new VerticalLayout();
@@ -76,7 +76,7 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
-        String prefix = !isWrapped ? layout.getTranslation(title) + " / " : "";
+        String prefix = !isWrapped ? layout.getTranslation(route.getTitle()) + " / " : "";
 
         binder.bind(
                 titleComponent,

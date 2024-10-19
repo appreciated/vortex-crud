@@ -34,9 +34,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
 
     public Component renderRoute(
             TurboCrudPathSegments pathVariables,
-            String table,
-            String title,
-            Route childFactory,
+            Route route,
             boolean isWrapped,
             boolean hideHeader
     ) {
@@ -48,7 +46,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
+        TableConfig tables = configService.getConfiguration().getTablesConfig().get(route.getTable());
 
         KanbanView kanbanView = new KanbanView();
 

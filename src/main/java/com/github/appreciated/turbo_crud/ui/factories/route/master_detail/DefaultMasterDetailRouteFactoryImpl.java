@@ -84,20 +84,20 @@ public class DefaultMasterDetailRouteFactoryImpl extends SplitLayout {
         getStyle().set("overflow", "hidden");
 
         this.detailLayout.removeAll();
-        Route child = route.getChild();
-        Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
-                pathVariables,
-                child.getTable(),
-                child.getTitle(),
-                child,
-                true,
-                false
-        );
-        this.detailLayout.add(component);
+        if (pathVariables.isLastPathIdentifier()) {
+            Route child = route.getChild();
+            Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
+                    pathVariables,
+                    child,
+                    true,
+                    false
+            );
+            this.detailLayout.add(component);
+        }
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + EntityUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPathForEntity(entity)));
     }
 
     public void initVirtualList() {

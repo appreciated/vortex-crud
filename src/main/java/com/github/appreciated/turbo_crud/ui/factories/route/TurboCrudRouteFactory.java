@@ -14,8 +14,6 @@ import com.vaadin.flow.component.Component;
 public interface TurboCrudRouteFactory {
     Component renderRoute(
             TurboCrudPathSegments pathVariables,
-            String table,
-            String title,
             Route route,
             boolean isWrapped,
             boolean hideHeader
