@@ -58,13 +58,12 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         button.addThemeVariants(LUMO_PRIMARY);
         button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
         header.add(button);
-        loadCollection(foreignKey, factoryConfig, route, routeFactory, formCreator, list, header);
+        loadCollection(foreignKey, factoryConfig, routeFactory, formCreator, list, header);
         return list;
     }
 
     private void loadCollection(String foreignKey,
                                 FormElement formElement,
-                                Route route,
                                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                                 FormCreator formCreator,
                                 VerticalLayout list,
@@ -86,7 +85,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     entityManagerService.deleteRecordById(formElement.getTable(), EntityUtil.getId(record));
-                    loadCollection(foreignKey, formElement, child.getDialog().getChild(), routeFactoryRegistry, formCreator, list, header);
+                    loadCollection(foreignKey, formElement, routeFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
@@ -111,7 +110,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 formElement.getDialog().getChild(),
                 formElement,
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, formElement, formElement.getDialog().getChild(), routeFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }
