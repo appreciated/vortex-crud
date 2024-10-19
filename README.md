@@ -169,24 +169,28 @@ application {
   routes = {
     "projects-list" = {
       default-route = true
-      table = "projects"
-      title = "route.projects.title-card"
       factory = "grid"
+      table = "projects"
       icon = "FACTORY"
-      items = {
+      title = "route.projects.title-card"
+      configuration = {
         factory = "card"
         title-column = "name"
         description-column = "description"
       }
-      detail = {
-        title-column = "name"
+      child = {
+        table = "projects"
+        title = "route.tasks.title"
         factory = "form"
-        children = [
-          {type = "field", column = "name", label = "route.projects.labels.name"},
-          {type = "field", column = "description", label = "route.projects.labels.description"},
-          {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
-          {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
-        ]
+        configuration = {
+          title-column = "name"
+          children = [
+            {type = "field", column = "name", label = "route.projects.labels.name"},
+            {type = "field", column = "description", label = "route.projects.labels.description"},
+            {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
+            {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+          ]
+        }
       }
       roles = ["manager", "admin"]
     }
@@ -249,7 +253,7 @@ application {
         id = {factory = "id", primary = true},
         title = {factory = "text", required = true, validation = {max-length = 255}},
         description = {factory = "textarea", validation = {max-length = 1000}},
-        assigned_to = {factory = "table", table = "users", column = "id", items = ["username"]},
+        assigned_to = {factory = "reference", table = "users", column = "id", filter-column = "username", children = ["username"]},  # 1:1 Relation
         status = {factory = "select", values = "task-status"},
         due_date = {factory = "date", read-only-for-roles = ["developer"]},
         created_at = {factory = "datetime"},
@@ -268,68 +272,79 @@ application {
   routes = {
     "projects-list" = {
       default-route = true
-      table = "projects"
-      title = "route.projects.title-card"
       factory = "grid"
+      table = "projects"
       icon = "FACTORY"
-      items = {
+      title = "route.projects.title-card"
+      configuration = {
         factory = "card"
         title-column = "name"
         description-column = "description"
       }
-      detail = {
-        title-column = "name"
+      child = {
+        table = "projects"
+        title = "route.tasks.title"
         factory = "form"
-        children = [
-          {type = "field", column = "name", label = "route.projects.labels.name"},
-          {type = "field", column = "description", label = "route.projects.labels.description"},
-          {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
-          {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
-        ]
+        configuration = {
+          title-column = "name"
+          children = [
+            {type = "field", column = "name", label = "route.projects.labels.name"},
+            {type = "field", column = "description", label = "route.projects.labels.description"},
+            {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
+            {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+          ]
+        }
       }
       roles = ["manager", "admin"]
     }
+
     "tasks" = {
-      table = "tasks"
       icon = "TASKS"
+      table = "tasks"
       title = "route.tasks.title"
       factory = "master-detail"
-      items = {
+      configuration = {
         factory = "card"
         title-column = "title"
         description-column = "description"
       }
-      detail = {
-        title-column = "title"
+      child = {
+        table = "tasks"
+        title = "route.tasks.title"
         factory = "form"
-        children = [
-          {type = "field", column = "title", label = "route.tasks.labels.title"},
-          {type = "field", column = "description", label = "route.tasks.labels.description"},
-          {type = "field", column = "status", label = "route.tasks.labels.status"},
-          {type = "field", column = "due_date", label = "route.tasks.labels.due_date"},
-          {type = "field", column = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
-          {
-            type = "collection"  # 1:N Relation
-            factory = "list"
-            table = "task_comments"
-            foreign-key-column = "task_id"
-            label = "route.tasks.labels.comments"
-            items = [
-              "comment_text"
-            ]
-            dialog = {
-              factory = "form"
-              empty-message = "route.tasks.labels.comments-empty-message"
-              detail = {
-                title-column = "name"
+        configuration = {
+          title-column = "title"
+          children = [
+            {type = "field", column = "title", label = "route.tasks.labels.title"},
+            {type = "field", column = "description", label = "route.tasks.labels.description"},
+            {type = "field", column = "status", label = "route.tasks.labels.status"},
+            {type = "field", column = "due_date", label = "route.tasks.labels.due_date"},
+            {type = "field", column = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
+            {
+              type = "collection"  # 1:N Relation
+              factory = "list"
+              table = "task_comments"
+              foreign-key-column = "task_id"
+              label = "route.tasks.labels.comments"
+              children = [
+                "comment_text"
+              ]
+              dialog = {
                 factory = "form"
-                children = [
-                  {type = "field", column = "comment_text", label = "route.tasks.labels.comment"}
-                ]
+                empty-message = "route.tasks.labels.comments-empty-message"
+                child = {
+                  factory = "form"
+                  configuration = {
+                    title-column = "name"
+                    children = [
+                      {type = "field", column = "comment_text", label = "route.tasks.labels.comment"}
+                    ]
+                  }
+                }
               }
             }
-          }
-        ]
+          ]
+        }
       }
     }
   }
