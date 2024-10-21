@@ -40,6 +40,7 @@ public class MasterDetail extends SplitLayout {
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final VerticalLayout detailLayout = new VerticalLayout();
     private final Config factoryConfig;
+    private final Integer currentPathIndex;
 
     private Component active;
 
@@ -49,6 +50,7 @@ public class MasterDetail extends SplitLayout {
                         TurboCrudItemFactoryRegistry itemFactoryRegistry,
                         TurboCrudRouteFactoryRegistry routeFactory,
                         TurboCrudIconFactory iconFactory) {
+        this.currentPathIndex = currentPathIndex;
 
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
@@ -100,7 +102,7 @@ public class MasterDetail extends SplitLayout {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPathForEntity(entity)));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPathForEntity(currentPathIndex, entity)));
     }
 
     public void initVirtualList() {

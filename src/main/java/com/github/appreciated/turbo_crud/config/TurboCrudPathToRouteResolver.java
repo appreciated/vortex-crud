@@ -98,12 +98,8 @@ public class TurboCrudPathToRouteResolver {
         return maxMapKey() < sections.length - 1;
     }
 
-    public String getPathForEntity(GenericEntity entity) {
-        if (!isLastPathIdentifier()) {
-            return getPath() + "/" + EntityUtil.getId(entity);
-        } else {
-            return getPath().substring(0, getPath().lastIndexOf("/")) + "/" + EntityUtil.getId(entity);
-        }
+    public String getPathForEntity(Integer currentPathIndex, GenericEntity entity) {
+        return generateSubRoute(currentPathIndex, EntityUtil.getId(entity));
     }
 
     public Route getRouteForIndex(Integer currentPathIndex) {
