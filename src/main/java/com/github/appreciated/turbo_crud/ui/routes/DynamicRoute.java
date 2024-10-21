@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.routes;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
@@ -10,8 +10,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-
-import java.util.Objects;
 
 /**
  * A dynamic route component that renders different views based on the route path.
@@ -36,18 +34,11 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         String path = event.getRouteParameters().get("path").orElse("");
         removeAll();
-
-        TurboCrudPathSegments pathRoutes = new TurboCrudPathSegments(path, configService.getConfiguration().getRoutesConfig());
+        TurboCrudPathToRouteResolver pathRoutes = new TurboCrudPathToRouteResolver(routeFactoryRegistry, path, configService.getConfiguration().getRoutesConfig());
         Route currentRoute = pathRoutes.getCurrentRoute();
-
-        if (!Objects.equals(currentRoute.getFactory(), "master-detail") && pathRoutes.isLastPathIdentifier()) {
-            currentRoute = currentRoute.getChild();
-        }
-        Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory()).renderRoute(
-                pathRoutes,
-                currentRoute,
-                false,
-                false);
+        Integer currentIndex = pathRoutes.getCurrentIndex();
+        Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
+                .renderRoute(currentIndex, pathRoutes, false, false);
         add(component);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
@@ -35,17 +35,17 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
  * such as saving and deleting entities.
  */
 
-public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
+public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public DefaultFormDetailFactoryImpl(TurboCrudEntityManagerService entityManagerService,
-                                        TurboCrudConfigService configService,
-                                        FormCreator formCreator,
-                                        TurboCrudRouteFactoryRegistry factoryRegistry
+    public DefaultFormRouteFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+                                       TurboCrudConfigService configService,
+                                       FormCreator formCreator,
+                                       TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
         this.entityManagerService = entityManagerService;
         this.configService = configService;
@@ -55,11 +55,12 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
 
     @Override
     public Component renderRoute(
-            TurboCrudPathSegments pathVariables,
-            Route route,
+            Integer currentPathIndex,
+            TurboCrudPathToRouteResolver pathVariables,
             boolean isWrapped,
             boolean hideHeader
     ) {
+        Route route = pathVariables.getRouteForIndex(currentPathIndex);
         String table = route.getTable();
 
         H2WithHasValue titleComponent = new H2WithHasValue();
@@ -134,5 +135,10 @@ public class DefaultFormDetailFactoryImpl implements TurboCrudRouteFactory {
         layout.add(form);
         layout.setPadding(true);
         return layout;
+    }
+
+    @Override
+    public boolean isContainerRoute() {
+        return false;
     }
 }

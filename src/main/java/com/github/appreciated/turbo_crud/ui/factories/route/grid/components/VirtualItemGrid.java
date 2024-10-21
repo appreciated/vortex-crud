@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.service.GenericEntity;
@@ -17,9 +17,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A custom VirtualList implementation for rendering entity items in a responsive grid layout with lazy loading.
@@ -32,13 +30,13 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final String table;
     private final TurboCrudItemFactory itemFactory;
     private final Config factoryConfig;
-    private final TurboCrudPathSegments pathVariables;
+    private final TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(TurboCrudPathSegments pathVariables,
+    public VirtualItemGrid(TurboCrudPathToRouteResolver pathVariables,
                            Route config,
                            TurboCrudEntityManagerService entityManagerService,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry) {

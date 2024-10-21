@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
@@ -14,10 +14,8 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * A custom {@link Grid} component for displaying {@link GenericEntity} objects with lazy loading. This grid is
@@ -27,9 +25,9 @@ import java.util.stream.Collectors;
 
 public class GenericEntityGrid extends Grid<GenericEntity> {
 
-    private final TurboCrudPathSegments pathVariables;
+    private final TurboCrudPathToRouteResolver pathVariables;
 
-    public GenericEntityGrid(TurboCrudPathSegments pathVariables,
+    public GenericEntityGrid(TurboCrudPathToRouteResolver pathVariables,
                              Route route,
                              TurboCrudEntityManagerService entityManagerService,
                              TurboCrudConfigService configService,

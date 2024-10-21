@@ -1,9 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
-import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
-import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -13,9 +10,11 @@ import com.vaadin.flow.component.Component;
 
 public interface TurboCrudRouteFactory {
     Component renderRoute(
-            TurboCrudPathSegments pathVariables,
-            Route route,
+            Integer currentPathIndex,
+            TurboCrudPathToRouteResolver pathVariables,
             boolean isWrapped,
             boolean hideHeader
     );
+
+    boolean isContainerRoute();
 }

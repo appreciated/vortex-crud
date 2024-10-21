@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban;
 
-import com.github.appreciated.turbo_crud.config.TurboCrudPathSegments;
+import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -33,11 +33,12 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
 
 
     public Component renderRoute(
-            TurboCrudPathSegments pathVariables,
-            Route route,
+            Integer currentPathIndex,
+            TurboCrudPathToRouteResolver pathVariables,
             boolean isWrapped,
             boolean hideHeader
     ) {
+        Route route = pathVariables.getRouteForIndex(currentPathIndex);
 
         H2WithHasValue titleComponent = new H2WithHasValue();
 
@@ -73,5 +74,9 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         return layout;
     }
 
+    @Override
+    public boolean isContainerRoute() {
+        return false;
+    }
 
 }

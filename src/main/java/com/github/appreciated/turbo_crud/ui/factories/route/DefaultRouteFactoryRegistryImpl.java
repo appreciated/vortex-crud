@@ -1,16 +1,18 @@
 package com.github.appreciated.turbo_crud.ui.factories.route;
 
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.route.form.DefaultFormDetailFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.form.DefaultFormRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.grid.DefaultGridRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.kanban.DefaultKanbanDetailFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.list.DefaultListRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.list.TurboCrudListColumnCallbackRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.master_detail.DefaultMasterDetailRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.submenu.DefaultSubmenuRouteFactoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -33,12 +35,13 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
                                            TurboCrudEntityManagerService entityService,
                                            FormCreator formCreatorService
     ) {
-        factories.put("master-detail", (pathVariables, route, isWrapped, hideHeader) -> new DefaultMasterDetailRouteFactoryImpl(pathVariables, route, entityService, itemFactoryRegistry, this, iconFactory));
-        factories.put("list", (pathVariables, route, isWrapped, hideHeader) -> new DefaultListRouteFactoryImpl(pathVariables, route, entityService, configService, listColumnCallbackRegistry, iconFactory));
-        factories.put("grid", (pathVariables, route, isWrapped, hideHeader) -> new DefaultGridRouteFactoryImpl(pathVariables, route, entityService, itemFactoryRegistry, iconFactory));
-        factories.put("form", new DefaultFormDetailFactoryImpl(entityService, configService, formCreatorService, this));
+        factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityService,itemFactoryRegistry,this,iconFactory));
+        factories.put("list", new DefaultListRouteFactoryImpl(entityService, configService, listColumnCallbackRegistry, iconFactory));
+        factories.put("grid", new DefaultGridRouteFactoryImpl(entityService, itemFactoryRegistry, iconFactory));
+        factories.put("form", new DefaultFormRouteFactoryImpl(entityService, configService, formCreatorService, this));
         factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));
         factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));
+        factories.put("submenu", new DefaultSubmenuRouteFactoryImpl(this));
     }
 
     public TurboCrudRouteFactory getFactory(String factory) {
@@ -48,6 +51,11 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
     @Override
     public void addFactory(String key, TurboCrudRouteFactory factory) {
         factories.put(key, factory);
+    }
+
+    @Override
+    public boolean isContainerRoute(Route currentRoute) {
+        return factories.get(currentRoute.getFactory()).isContainerRoute();
     }
 }
 

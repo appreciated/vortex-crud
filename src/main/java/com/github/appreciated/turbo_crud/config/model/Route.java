@@ -1,13 +1,16 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigObject;
 import com.typesafe.config.Optional;
 
 import java.util.List;
 import java.util.Map;
 
 public class Route {
+    @Optional
     private String table;
+    @Optional
     private String title;
     @Optional
     private String icon;
@@ -19,7 +22,9 @@ public class Route {
     @Optional
     private Config configuration;
     @Optional
-    private Map<String, Route> children;
+    private ConfigObject children;
+    @Optional
+    private Map<String, Route> childrenMap;
     @Optional
     private Route child;
     @Optional
@@ -83,12 +88,17 @@ public class Route {
         this.configuration = configuration;
     }
 
-    public Map<String, Route> getChildren() {
+    public ConfigObject getChildren() {
         return children;
     }
 
-    public void setChildren(Map<String, Route> children) {
+    public Map<String, Route> getChildrenMap() {
+        return childrenMap;
+    }
+
+    public void setChildren(ConfigObject children) {
         this.children = children;
+        this.childrenMap = ConfigModelUtil.toStringMapWithValueType(this.children, Route.class);
     }
 
     public List<String> getRoles() {
@@ -100,11 +110,11 @@ public class Route {
     }
 
     public Route getChild() {
-        assert children.size() < 2;
-        return children.values().stream().findFirst().orElse(null);
+        assert childrenMap.size() < 2;
+        return childrenMap.values().stream().findFirst().orElse(null);
     }
 
     public void setChild(Route child) {
-        this.children = Map.of("", child);
+        this.childrenMap = Map.of("", child);
     }
 }
