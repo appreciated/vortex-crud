@@ -2,7 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.route;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -32,15 +33,15 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
                                            TurboCrudConfigService configService,
                                            TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
                                            TurboCrudIconFactory iconFactory,
-                                           TurboCrudEntityManagerService entityService,
+                                           TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                            FormCreator formCreatorService
     ) {
-        factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityService,itemFactoryRegistry,this,iconFactory));
-        factories.put("list", new DefaultListRouteFactoryImpl(entityService, configService, listColumnCallbackRegistry, iconFactory));
-        factories.put("grid", new DefaultGridRouteFactoryImpl(entityService, itemFactoryRegistry, iconFactory));
-        factories.put("form", new DefaultFormRouteFactoryImpl(entityService, configService, formCreatorService, this));
-        factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));
-        factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityService, configService, formCreatorService));
+        factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry,itemFactoryRegistry,this,iconFactory));
+        factories.put("list", new DefaultListRouteFactoryImpl(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, iconFactory));
+        factories.put("grid", new DefaultGridRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, iconFactory));
+        factories.put("form", new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
+        factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService));
+        factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService));
         factories.put("submenu", new DefaultSubmenuRouteFactoryImpl(this));
     }
 

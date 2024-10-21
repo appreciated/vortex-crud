@@ -2,7 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,14 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
 
     private final Map<String, TurboCrudFieldFactory> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerService entityManagerService) {
+    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         ApplicationConfig configuration = configService.getConfiguration();
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());
         factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getTablesConfig()));
         factories.put("number", new DefaultNumberFieldFactory());
-        factories.put("reference", new DefaultReferenceFieldFactory(entityManagerService));
+        factories.put("reference", new DefaultReferenceFieldFactory(entityManagerFactoryRegistry));
     }
 
     public Map<String, TurboCrudFieldFactory> getFactories() {

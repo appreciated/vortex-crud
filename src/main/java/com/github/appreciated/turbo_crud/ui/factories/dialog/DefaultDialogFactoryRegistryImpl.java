@@ -2,7 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class DefaultDialogFactoryRegistryImpl implements TurboCrudDialogFactoryR
 
     private final Map<String, TurboCrudDialogFactory> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerService entityManagerService ) {
-        factories.put("form", new DefaultDialogFactoryImpl(configService, entityManagerService));
+    public DefaultDialogFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry ) {
+        factories.put("form", new DefaultDialogFactoryImpl(configService, entityManagerFactoryRegistry));
     }
 
     public Map<String, TurboCrudDialogFactory> getFactories() {

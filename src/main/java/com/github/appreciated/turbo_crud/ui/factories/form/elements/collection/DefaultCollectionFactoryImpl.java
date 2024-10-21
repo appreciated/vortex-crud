@@ -5,9 +5,10 @@ import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -29,12 +30,12 @@ import static com.vaadin.flow.component.button.ButtonVariant.*;
 
 public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory {
 
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                         TurboCrudDialogFactoryRegistry dialogFactory) {
-        this.entityManagerService = entityManagerService;
+        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }
 
@@ -44,6 +45,8 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                       FormElement factoryConfig,
                                       TurboCrudRouteFactoryRegistry routeFactory,
                                       FormCreator formCreator) {
+        String table = factoryConfig.getTable();
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.setSpacing(false);
@@ -56,24 +59,26 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, entityManagerFactoryRegistry, routeFactory, formCreator, list, header));
         header.add(button);
-        loadCollection(foreignKey, factoryConfig, routeFactory, formCreator, list, header);
+        loadCollection(foreignKey, factoryConfig, routeFactory, entityManagerFactoryRegistry, formCreator, list, header);
         return list;
     }
 
     private void loadCollection(String foreignKey,
                                 FormElement formElement,
                                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
+                                TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                 FormCreator formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getTable(), formElement.getForeignKeyColumn(), foreignKey, 0, Integer.MAX_VALUE);
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formElement.getTable());
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getForeignKeyColumn(), foreignKey, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
 
             Config configuration = formElement.getDialog().getChild().getConfiguration();
             FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
@@ -84,8 +89,8 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
-                    entityManagerService.deleteRecordById(formElement.getTable(), EntityUtil.getId(record));
-                    loadCollection(foreignKey, formElement, routeFactoryRegistry, formCreator, list, header);
+                    entityManagerService.deleteRecordById(EntityUtil.getId(record));
+                    loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
@@ -99,6 +104,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
     private void openDialog(String entityId,
                             String foreignKey,
                             FormElement formElement,
+                            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                             FormCreator formCreator,
                             VerticalLayout list,
@@ -110,7 +116,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 formElement.getDialog().getChild(),
                 formElement,
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }

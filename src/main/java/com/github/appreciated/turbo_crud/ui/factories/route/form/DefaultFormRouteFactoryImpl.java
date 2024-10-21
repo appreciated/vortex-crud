@@ -5,10 +5,11 @@ import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -37,17 +38,17 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public DefaultFormRouteFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+    public DefaultFormRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                        TurboCrudConfigService configService,
                                        FormCreator formCreator,
                                        TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
-        this.entityManagerService = entityManagerService;
+        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
@@ -56,12 +57,14 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
     @Override
     public Component renderRoute(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver pathVariables,
+            TurboCrudPathToRouteResolver routeResolver,
             boolean isWrapped,
             boolean hideHeader
     ) {
-        Route route = pathVariables.getRouteForIndex(currentPathIndex);
+        Route route = routeResolver.getRouteForIndex(currentPathIndex);
         String table = route.getTable();
+
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
 
         H2WithHasValue titleComponent = new H2WithHasValue();
 
@@ -72,8 +75,8 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
 
-        String lastSegment = pathVariables.getLastSegment();
-        GenericEntity entity = entityManagerService.getRecordById(table, lastSegment);
+        String lastSegment = routeResolver.getLastSegment();
+        GenericEntity entity = entityManagerService.getRecordById(lastSegment);
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
@@ -96,7 +99,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         Button save = new Button(layout.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entityManagerService.updateRecordById(table, EntityUtil.getId(entity), entity);
+                entityManagerService.updateRecordById(EntityUtil.getId(entity), entity);
                 binder.setBean(entity);
                 Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -109,7 +112,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         // Generic Delete button
         Button delete = new Button(layout.getTranslation("button.delete.title"), event -> {
-            entityManagerService.deleteRecordById(table, EntityUtil.getId(entity));
+            entityManagerService.deleteRecordById(EntityUtil.getId(entity));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         });
         delete.addThemeVariants(LUMO_ERROR);

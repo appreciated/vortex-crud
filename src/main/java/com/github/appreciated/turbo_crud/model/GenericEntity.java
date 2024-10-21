@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.service;
+package com.github.appreciated.turbo_crud.model;
 
 import java.util.HashMap;
 import java.util.Map;

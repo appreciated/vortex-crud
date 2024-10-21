@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.service;
 
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import org.hibernate.query.TupleTransformer;
 
 import java.sql.Date;

@@ -4,7 +4,8 @@ import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -19,14 +20,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
+    private TurboCrudEntityManagerService entityManagerService;
 
-    public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerService entityManagerService,
+    public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                           TurboCrudConfigService configService,
                                           FormCreator formCreator) {
-        this.entityManagerService = entityManagerService;
+        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
     }
@@ -34,11 +36,13 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
 
     public Component renderRoute(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver pathVariables,
+            TurboCrudPathToRouteResolver routeResolver,
             boolean isWrapped,
             boolean hideHeader
     ) {
-        Route route = pathVariables.getRouteForIndex(currentPathIndex);
+        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getTable());
 
         H2WithHasValue titleComponent = new H2WithHasValue();
 

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.typesafe.config.Config;
 import com.vaadin.flow.component.Component;
 

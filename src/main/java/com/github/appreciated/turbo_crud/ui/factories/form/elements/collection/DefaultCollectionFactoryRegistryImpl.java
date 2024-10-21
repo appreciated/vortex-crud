@@ -1,7 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class DefaultCollectionFactoryRegistryImpl implements TurboCrudCollection
 
     private final Map<String, TurboCrudCollectionFactory> factories = new HashMap<>();
 
-    public DefaultCollectionFactoryRegistryImpl(TurboCrudEntityManagerService entityManagerService, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
-        factories.put("list", new DefaultCollectionFactoryImpl(entityManagerService, dialogFactoryRegistry));
+    public DefaultCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
+        factories.put("list", new DefaultCollectionFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
     }
 
     public Map<String, TurboCrudCollectionFactory> getFactories() {

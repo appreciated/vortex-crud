@@ -25,13 +25,13 @@ public class Submenu extends SplitLayout {
     private Component activeRouteComponent;
 
     public Submenu(Integer currentPathIndex,
-                   TurboCrudPathToRouteResolver pathVariables,
+                   TurboCrudPathToRouteResolver routeResolver,
                    TurboCrudRouteFactoryRegistry routeFactory
     ) {
         this.currentPathIndex = currentPathIndex;
-        Route route = pathVariables.getRouteForIndex(currentPathIndex);
+        Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        this.pathVariables = pathVariables;
+        this.pathVariables = routeResolver;
         this.routeFactory = routeFactory;
         // Master
         routeListLayout.setPadding(false);
@@ -51,7 +51,7 @@ public class Submenu extends SplitLayout {
         setSizeFull();
         initializeRouteList(route.getChildrenMap());
 
-        if (!pathVariables.isLastIndex(currentPathIndex)){
+        if (!routeResolver.isLastIndex(currentPathIndex)){
             showRouteDetail(route.getChild());
         }
     }

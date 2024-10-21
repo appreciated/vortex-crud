@@ -5,9 +5,10 @@ import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.typesafe.config.Config;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -27,23 +28,23 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
 
     private final TurboCrudPathToRouteResolver pathVariables;
 
-    public GenericEntityGrid(TurboCrudPathToRouteResolver pathVariables,
+    public GenericEntityGrid(TurboCrudPathToRouteResolver routeResolver,
                              Route route,
-                             TurboCrudEntityManagerService entityManagerService,
+                             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                              TurboCrudConfigService configService,
                              TurboCrudListColumnCallbackRegistry listColumnFactory) {
-        this.pathVariables = pathVariables;
+        this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         String table = route.getTable();
-
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading
         DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(
                 query -> {
                     // Fetch records based on offset and limit
-                    List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, query.getOffset(), query.getLimit());
+                    List<GenericEntity> items = entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit());
                     return items.stream();
                 },
-                query -> entityManagerService.count(table)
+                query -> entityManagerService.count()
         );
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(route.getTable());

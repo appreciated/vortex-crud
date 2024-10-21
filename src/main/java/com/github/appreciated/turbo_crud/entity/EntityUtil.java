@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.entity;
 
-import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 
 public class EntityUtil {
     public static String getId(GenericEntity record) {

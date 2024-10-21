@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
-import com.github.appreciated.turbo_crud.service.GenericEntity;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 
 import java.util.List;
 

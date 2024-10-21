@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.routes;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.route.DefaultRouteFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -24,7 +24,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     private final TurboCrudConfigService configService;
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
 
-    public DynamicRoute(TurboCrudConfigService configService, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudEntityManagerService entityManagerService) {
+    public DynamicRoute(TurboCrudConfigService configService, TurboCrudRouteFactoryRegistry routeFactoryRegistry) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
         setSizeFull();

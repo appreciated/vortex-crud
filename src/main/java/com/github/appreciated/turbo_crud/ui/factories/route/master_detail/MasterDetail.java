@@ -3,8 +3,9 @@ package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
@@ -43,16 +44,16 @@ public class MasterDetail extends SplitLayout {
     private Component active;
 
     public MasterDetail(Integer currentPathIndex,
-                        TurboCrudPathToRouteResolver pathVariables,
-                        TurboCrudEntityManagerService entityManagerService,
+                        TurboCrudPathToRouteResolver routeResolver,
+                        TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                         TurboCrudItemFactoryRegistry itemFactoryRegistry,
                         TurboCrudRouteFactoryRegistry routeFactory,
                         TurboCrudIconFactory iconFactory) {
 
-        Route route = pathVariables.getRouteForIndex(currentPathIndex);
+        Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        this.pathVariables = pathVariables;
-        this.entityManagerService = entityManagerService;
+        this.pathVariables = routeResolver;
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getTable());
         this.factoryConfig = route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         this.table = route.getTable();
@@ -86,11 +87,11 @@ public class MasterDetail extends SplitLayout {
         getStyle().set("overflow", "hidden");
 
         this.detailLayout.removeAll();
-        if (!pathVariables.isLastIndex(currentPathIndex)) {
+        if (!routeResolver.isLastIndex(currentPathIndex)) {
             Route child = route.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
                     currentPathIndex + 1,
-                    pathVariables,
+                    routeResolver,
                     true,
                     false
             );
@@ -122,8 +123,8 @@ public class MasterDetail extends SplitLayout {
             return div;
         }));
         this.virtualList.setDataProvider(DataProvider.fromCallbacks(
-                query -> entityManagerService.getRecordsFromTable(table, query.getOffset(), query.getLimit()).stream(),
-                query -> entityManagerService.count(table)
+                query -> entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit()).stream(),
+                query -> entityManagerService.count()
         ));
     }
 }

@@ -1,5 +1,7 @@
-package com.github.appreciated.turbo_crud.service;
+package com.github.appreciated.turbo_crud.ui.factories.entity_manager;
 
+import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
@@ -15,28 +17,28 @@ import java.util.List;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-@Service
 public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerService {
 
     private final EntityManager entityManager;
+    private final String table;
 
-    public DefaultJpaEntityManagerService(EntityManager entityManager) {
+    public DefaultJpaEntityManagerService(String table, EntityManager entityManager) {
         this.entityManager = entityManager;
+        this.table = table;
     }
 
-    private String getTable(String table) {
+    private String getTable() {
         return table.toUpperCase();
     }
 
     /**
      * Create (Insert) a new record into the given table with the provided values.
      *
-     * @param tableName The name of the table.
      * @param values    A map of column names and values to be inserted.
      */
     @Transactional
-    public void insertRecord(String tableName, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable(tableName)));
+    public void insertRecord(GenericEntity values) {
+        StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable()));
         StringBuilder placeholders = new StringBuilder(" VALUES (");
         List<Object> params = values.getProperties().values().stream().toList();
 
@@ -63,13 +65,12 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Read (Select) records from a table with pagination for lazy loading.
      *
-     * @param tableName The name of the table.
      * @param offset    The starting position of the first result.
      * @param limit     The maximum number of results to return.
      * @return A list of records (as a map of column names and values).
      */
-    public List<GenericEntity> getRecordsFromTable(String tableName, int offset, int limit) {
-        String query = "SELECT * FROM %s LIMIT :limit OFFSET :offset".formatted(getTable(tableName));
+    public List<GenericEntity> getRecordsFromTable(int offset, int limit) {
+        String query = "SELECT * FROM %s LIMIT :limit OFFSET :offset".formatted(getTable());
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter("limit", limit)
                 .setParameter("offset", offset);
@@ -81,9 +82,9 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String tableName, String filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, String filterValue, int offset, int limit) {
         // Construct the SQL query to select records where the column equals the provided value
-        String query = "SELECT * FROM %s WHERE %s = :filterValue".formatted(getTable(tableName), filterField);
+        String query = "SELECT * FROM %s WHERE %s = :filterValue".formatted(getTable(), filterField);
 
         // Create a native query using the entity manager
         Query nativeQuery = entityManager.createNativeQuery(query);
@@ -98,9 +99,9 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnLike(String tableName, String filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, String filterValue, int offset, int limit) {
         // Construct the SQL query to select records where the column equals the provided value
-        String query = "SELECT * FROM %s WHERE %s LIKE :filterValue".formatted(getTable(tableName), filterField);
+        String query = "SELECT * FROM %s WHERE %s LIKE :filterValue".formatted(getTable(), filterField);
 
         // Create a native query using the entity manager
         Query nativeQuery = entityManager.createNativeQuery(query);
@@ -117,12 +118,12 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Read a specific record by ID (assuming the ID column is "id").
      *
-     * @param tableName The name of the table.
+
      * @param id        The ID of the record to fetch.
      * @return The record (as a map of column names and values) or null if not found.
      */
-    public GenericEntity getRecordById(String tableName, Object id) {
-        String query = "SELECT * FROM %s WHERE id = ?".formatted(getTable(tableName));
+    public GenericEntity getRecordById(Object id) {
+        String query = "SELECT * FROM %s WHERE id = ?".formatted(getTable());
         Query nativeQuery = entityManager.createNativeQuery(query)
                 .setParameter(1, id);
 
@@ -136,13 +137,13 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Update a record in the given table by ID.
      *
-     * @param tableName The name of the table.
+
      * @param id        The ID of the record to update.
      * @param values    A map of column names and new values to update.
      */
     @Transactional
-    public void updateRecordById(String tableName, Object id, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable(tableName)));
+    public void updateRecordById(Object id, GenericEntity values) {
+        StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable()));
         List<Object> params = values.getProperties().values().stream().toList();
 
         values.getProperties().forEach((key, value) -> sql.append(key).append(" = ?,"));
@@ -161,12 +162,12 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Delete a record from the table by ID.
      *
-     * @param tableName The name of the table.
+
      * @param id        The ID of the record to delete.
      */
     @Transactional
-    public void deleteRecordById(String tableName, Object id) {
-        String sql = "DELETE FROM %s WHERE id = ?".formatted(getTable(tableName));
+    public void deleteRecordById(Object id) {
+        String sql = "DELETE FROM %s WHERE id = ?".formatted(getTable());
         Query query = entityManager.createNativeQuery(sql);
         query.setParameter(1, id);
         query.executeUpdate();
@@ -175,23 +176,23 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Delete all records from the table.
      *
-     * @param tableName The name of the table.
+
      */
     @Transactional
-    public void deleteAllRecords(String tableName) {
-        String sql = "DELETE FROM %s".formatted(getTable(tableName));
+    public void deleteAllRecords() {
+        String sql = "DELETE FROM %s".formatted(getTable());
         Query query = entityManager.createNativeQuery(sql);
         query.executeUpdate();
     }
 
     @Transactional
-    public int count(String table) {
-        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable(table))).getSingleResult());
+    public int count() {
+        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable())).getSingleResult());
     }
 
     @Override
-    public int countWhereColumnLike(String tableName, String filterField, String filterValue) {
-        String count = "SELECT COUNT(*) FROM %s WHERE %s LIKE '%%%s%%'".formatted(getTable(tableName), filterField, filterValue);
+    public int countWhereColumnLike(String filterField, String filterValue) {
+        String count = "SELECT COUNT(*) FROM %s WHERE %s LIKE '%%%s%%'".formatted(getTable(), filterField, filterValue);
         return Math.toIntExact((long) entityManager.createNativeQuery(count).getSingleResult());
     }
 

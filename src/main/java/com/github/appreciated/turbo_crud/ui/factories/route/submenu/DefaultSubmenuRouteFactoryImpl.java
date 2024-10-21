@@ -15,10 +15,10 @@ public class DefaultSubmenuRouteFactoryImpl implements TurboCrudRouteFactory {
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver pathVariables,
+                                 TurboCrudPathToRouteResolver routeResolver,
                                  boolean isWrapped,
                                  boolean hideHeader) {
-        return  new Submenu(currentPathIndex, pathVariables, routeFactory);
+        return  new Submenu(currentPathIndex, routeResolver, routeFactory);
     }
 
     @Override

@@ -20,11 +20,12 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **i18n Support**
 - **Customizable Icons**
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
+- **Nested Hierarchies**
+- **Custom Repositories**: Enable integration of custom data repositories.
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
 - **Form Navigation**: Enable navigation in forms to other / custom routes.
-- **Nested Hierarchies**
 - **Field Validation**: Add support for basic and advanced field validation hooks.
 - **Media Support**: Enable adding, removing, and viewing media (as field and as a collection)
 - **User and Role Management & Authentication**: (optionally using Authentik)
@@ -33,7 +34,6 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Entity Versioning**
 - **Entity Auditing**
 - **Hook Points**: Add custom hook points for further flexibility.
-- **Custom Repositories**: Enable integration of custom data repositories.
 - **Route Filters**: Add filtering for entity lists in "grid", "list", and "master-detail" routes.
 - **Prefiltered Routes**: Show only specific items in routes as needed.
 - **Additional Routes**:

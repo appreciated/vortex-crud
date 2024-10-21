@@ -1,5 +1,7 @@
 package com.github.appreciated.turbo_crud.service;
 
+import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.DefaultJpaEntityManagerService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,19 +19,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@Import(DefaultJpaEntityManagerService.class)
 @Transactional
 class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
     @Autowired
     private EntityManager entityManager;
 
-    @Autowired
     private DefaultJpaEntityManagerService service;
 
     @BeforeEach
     void setUp() {
         createTestTable();
+        service = new DefaultJpaEntityManagerService("test_table", entityManager);
     }
 
     @AfterEach
@@ -54,10 +55,10 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         values.put("name", "John Doe");
         values.put("age", 30);
 
-        service.insertRecord("test_table", values);
+        service.insertRecord(values);
         entityManager.flush();  // Force the persistence context to synchronize with the database
 
-        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
         assertEquals(1, records.size());
 
         GenericEntity record = records.get(0);
@@ -71,7 +72,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         insertTestRecord("Alice", 25);
         insertTestRecord("Bob", 35);
 
-        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
         assertEquals(2, records.size());
 
         GenericEntity firstRecord = records.get(0);
@@ -87,7 +88,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     void testGetRecordById() {
         // Insert a record and retrieve it by ID
         insertTestRecord("Alice", 25);
-        GenericEntity record = service.getRecordById("test_table", 1);
+        GenericEntity record = service.getRecordById(1);
         assertNotNull(record);
         assertEquals("Alice", record.get("name"));
         assertEquals(25, record.get("age"));
@@ -101,9 +102,9 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         updatedValues.put("name", "Alice Updated");
         updatedValues.put("age", 30);
 
-        service.updateRecordById("test_table", 1, updatedValues);
+        service.updateRecordById(1, updatedValues);
 
-        GenericEntity updatedRecord = service.getRecordById("test_table", 1);
+        GenericEntity updatedRecord = service.getRecordById(1);
         assertNotNull(updatedRecord);
         assertEquals("Alice Updated", updatedRecord.get("name"));
         assertEquals(30, updatedRecord.get("age"));
@@ -113,9 +114,9 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     void testDeleteRecordById() {
         // Insert and delete a record
         insertTestRecord("Alice", 25);
-        service.deleteRecordById("test_table", 1);
+        service.deleteRecordById(1);
 
-        GenericEntity record = service.getRecordById("test_table", 1);
+        GenericEntity record = service.getRecordById(1);
         assertNull(record);
     }
 
@@ -125,9 +126,9 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         insertTestRecord("Alice", 25);
         insertTestRecord("Bob", 35);
 
-        service.deleteAllRecords("test_table");
+        service.deleteAllRecords();
 
-        List<GenericEntity> records = service.getRecordsFromTable("test_table", 0, 10);
+        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
         assertTrue(records.isEmpty());
     }
 
@@ -136,13 +137,13 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         GenericEntity values = new GenericEntity();
         values.put("name", name);
         values.put("age", age);
-        service.insertRecord("test_table", values);
+        service.insertRecord(values);
     }
 
     @Test
     void testCountRecords() {
         // Initial count should be 0
-        int initialCount = service.count("test_table");
+        int initialCount = service.count();
         assertEquals(0, initialCount);
 
         // Insert records
@@ -150,14 +151,14 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         insertTestRecord("Bob", 35);
 
         // Count after inserting records
-        int countAfterInsert = service.count("test_table");
+        int countAfterInsert = service.count();
         assertEquals(2, countAfterInsert);
 
         // Delete a record
-        service.deleteRecordById("test_table", 1);
+        service.deleteRecordById(1);
 
         // Count after deletion
-        int countAfterDelete = service.count("test_table");
+        int countAfterDelete = service.count();
         assertEquals(1, countAfterDelete);
     }
 }

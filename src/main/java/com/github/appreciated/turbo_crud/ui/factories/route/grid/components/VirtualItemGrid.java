@@ -3,8 +3,9 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.service.GenericEntity;
-import com.github.appreciated.turbo_crud.service.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.typesafe.config.Config;
@@ -36,13 +37,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(TurboCrudPathToRouteResolver pathVariables,
+    public VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
                            Route config,
-                           TurboCrudEntityManagerService entityManagerService,
+                           TurboCrudEntityManagerFactoryRegistry entityManagerRegistry,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry) {
-        this.pathVariables = pathVariables;
-        this.entityManagerService = entityManagerService;
+        this.pathVariables = routeResolver;
         table = config.getTable();
+
+        this.entityManagerService = entityManagerRegistry.getFactory(table);
         factoryConfig = config.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(config.getConfiguration());
         setSizeFull();
@@ -88,7 +90,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                         query -> {
                             int offset = query.getOffset() * currentNumberOfColumns;
                             int limit = query.getLimit() * currentNumberOfColumns;
-                            List<GenericEntity> items = entityManagerService.getRecordsFromTable(table, offset, limit);
+                            List<GenericEntity> items = entityManagerService.getRecordsFromTable(offset, limit);
 
                             List<EntityItemList> wrappers = new ArrayList<>();
                             for (int i = 0; i < items.size() / currentNumberOfColumns; i++) {
@@ -100,7 +102,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                         },
                         // Providing the total number of records for correct pagination
                         query -> {
-                            int count = entityManagerService.count(table);
+                            int count = entityManagerService.count();
                             //System.out.println(count);
                             //System.out.println(currentNumberOfColumns);
                             return count / currentNumberOfColumns;
