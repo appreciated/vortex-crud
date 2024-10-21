@@ -1,12 +1,11 @@
 package com.github.appreciated.turbo_crud.ui.factories.entity_manager;
 
-import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import org.hibernate.query.NativeQuery;
-import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -24,6 +23,9 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
 
     public DefaultJpaEntityManagerService(String table, EntityManager entityManager) {
         this.entityManager = entityManager;
+        if (table == null) {
+            throw new IllegalArgumentException("Table name cannot be null");
+        }
         this.table = table;
     }
 

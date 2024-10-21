@@ -2,10 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 
 import com.github.appreciated.turbo_crud.config.model.FormElement;
-
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 

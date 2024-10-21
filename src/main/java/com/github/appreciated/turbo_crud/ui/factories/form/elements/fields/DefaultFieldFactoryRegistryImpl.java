@@ -3,7 +3,6 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 
