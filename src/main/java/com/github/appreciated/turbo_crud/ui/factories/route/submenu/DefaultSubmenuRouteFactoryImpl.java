@@ -18,7 +18,7 @@ public class DefaultSubmenuRouteFactoryImpl implements TurboCrudRouteFactory {
                                  TurboCrudPathToRouteResolver routeResolver,
                                  boolean isWrapped,
                                  boolean hideHeader) {
-        return  new Submenu(currentPathIndex, routeResolver, routeFactory);
+        return new Submenu(currentPathIndex, routeResolver, routeFactory);
     }
 
     @Override

@@ -9,5 +9,6 @@ import com.github.appreciated.turbo_crud.config.model.Route;
 
 public interface TurboCrudListColumnCallbackRegistry {
     TurboCrudListColumnCallback getCallback(Route config);
+
     void addCallback(String key, TurboCrudListColumnCallback factory);
 }

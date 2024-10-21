@@ -12,7 +12,7 @@ import com.vaadin.flow.component.Component;
 public class DefaultItemCardFactoryImpl implements TurboCrudItemFactory {
 
     @Override
-    public Component renderItem(Config itemFactoryConfig, GenericEntity entity, Integer maxWidth){
+    public Component renderItem(Config itemFactoryConfig, GenericEntity entity, Integer maxWidth) {
         return new DefaultItem(itemFactoryConfig, entity, maxWidth);
     }
 }

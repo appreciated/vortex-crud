@@ -23,12 +23,12 @@ public class DefaultTurboCrudEntityManagerFactoryRegistryImpl implements TurboCr
         this.turboCrudConfigService = turboCrudConfigService;
         for (Map.Entry<String, TableConfig> entry : this.turboCrudConfigService.getConfiguration().getTablesConfig().entrySet()) {
             String table = entry.getKey();
-            factories.put(table,new DefaultJpaEntityManagerService(table, entityManager));
+            factories.put(table, new DefaultJpaEntityManagerService(table, entityManager));
         }
-        factories.put("users",new DefaultJpaEntityManagerService("users", entityManager));
-        factories.put("roles",new DefaultJpaEntityManagerService("roles", entityManager));
-        factories.put("user_roles",new DefaultJpaEntityManagerService("user_roles", entityManager));
-        factories.put("audit_log",new DefaultJpaEntityManagerService("audit_log", entityManager));
+        factories.put("users", new DefaultJpaEntityManagerService("users", entityManager));
+        factories.put("roles", new DefaultJpaEntityManagerService("roles", entityManager));
+        factories.put("user_roles", new DefaultJpaEntityManagerService("user_roles", entityManager));
+        factories.put("audit_log", new DefaultJpaEntityManagerService("audit_log", entityManager));
     }
 
     public TurboCrudEntityManagerService getFactory(String table) {

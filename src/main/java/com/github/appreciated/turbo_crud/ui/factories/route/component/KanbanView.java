@@ -35,7 +35,7 @@ public class KanbanView extends VerticalLayout {
         column.setHeightFull();
         column.getStyle().set("border", "1px solid lightgray");
         column.getStyle().set("flex-direction", "column");
-        
+
         // Drop-Ziele definieren, um Drag-and-Drop zu ermöglichen
         DropTarget<FlexLayout> dropTarget = DropTarget.create(column);
         dropTarget.addDropListener(event -> {

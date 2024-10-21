@@ -43,7 +43,7 @@ public class TranslationService implements I18NProvider {
         List<Locale> availableLocales = new ArrayList<>();
         try {
             ResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
-            Resource[] mappingLocations = patternResolver.getResources("classpath:"+i18nBundlePrefix+"*.properties");
+            Resource[] mappingLocations = patternResolver.getResources("classpath:" + i18nBundlePrefix + "*.properties");
 
             for (Resource mappingLocation : mappingLocations) {
                 availableLocales.addAll(parseAvailableLocales(mappingLocation));

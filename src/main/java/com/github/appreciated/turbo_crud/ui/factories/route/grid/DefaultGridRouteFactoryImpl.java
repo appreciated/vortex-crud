@@ -14,7 +14,7 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
     private final TurboCrudIconFactory iconFactory;
 
-    public DefaultGridRouteFactoryImpl( TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public DefaultGridRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                        TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                        TurboCrudIconFactory iconFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;

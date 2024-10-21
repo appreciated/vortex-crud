@@ -55,7 +55,7 @@ public class TurboCrudPathToRouteResolver {
             pathRoutes.put(sectionIndex, currentRoute);
         }
 
-        if (currentRoute == null){
+        if (currentRoute == null) {
             throw new IllegalStateException("Current route is null");
         }
 
@@ -141,7 +141,7 @@ public class TurboCrudPathToRouteResolver {
     }
 
     public boolean isLastIndex(Integer currentPathIndex) {
-        return sections.length-1 <= currentPathIndex;
+        return sections.length - 1 <= currentPathIndex;
     }
 
     public String generateSubRoute(Integer currentPathIndex, String route) {

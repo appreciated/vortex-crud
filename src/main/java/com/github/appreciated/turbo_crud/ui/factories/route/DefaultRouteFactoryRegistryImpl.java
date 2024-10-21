@@ -35,7 +35,7 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
                                            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                            FormCreator formCreatorService
     ) {
-        factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry,itemFactoryRegistry,this,iconFactory));
+        factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, this, iconFactory));
         factories.put("list", new DefaultListRouteFactoryImpl(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, iconFactory));
         factories.put("grid", new DefaultGridRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, iconFactory));
         factories.put("form", new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));

@@ -20,7 +20,7 @@ public class DefaultDialogFactoryRegistryImpl implements TurboCrudDialogFactoryR
 
     private final Map<String, TurboCrudDialogFactory> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry ) {
+    public DefaultDialogFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         factories.put("form", new DefaultDialogFactoryImpl(configService, entityManagerFactoryRegistry));
     }
 

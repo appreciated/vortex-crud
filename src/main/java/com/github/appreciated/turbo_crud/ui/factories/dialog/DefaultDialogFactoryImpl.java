@@ -27,7 +27,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private TurboCrudEntityManagerService entityManagerService;
 
-    public DefaultDialogFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry ) {
+    public DefaultDialogFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.configService = configService;
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
     }

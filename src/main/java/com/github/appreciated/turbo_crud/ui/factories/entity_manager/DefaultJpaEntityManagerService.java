@@ -36,7 +36,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Create (Insert) a new record into the given table with the provided values.
      *
-     * @param values    A map of column names and values to be inserted.
+     * @param values A map of column names and values to be inserted.
      */
     @Transactional
     public void insertRecord(GenericEntity values) {
@@ -67,8 +67,8 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Read (Select) records from a table with pagination for lazy loading.
      *
-     * @param offset    The starting position of the first result.
-     * @param limit     The maximum number of results to return.
+     * @param offset The starting position of the first result.
+     * @param limit  The maximum number of results to return.
      * @return A list of records (as a map of column names and values).
      */
     public List<GenericEntity> getRecordsFromTable(int offset, int limit) {
@@ -107,7 +107,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
 
         // Create a native query using the entity manager
         Query nativeQuery = entityManager.createNativeQuery(query);
-        nativeQuery.setParameter("filterValue", "%"+filterValue+"%");
+        nativeQuery.setParameter("filterValue", "%" + filterValue + "%");
 
         // Cast to NativeQuery to allow the use of setTupleTransformer
         NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
@@ -120,8 +120,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Read a specific record by ID (assuming the ID column is "id").
      *
-
-     * @param id        The ID of the record to fetch.
+     * @param id The ID of the record to fetch.
      * @return The record (as a map of column names and values) or null if not found.
      */
     public GenericEntity getRecordById(Object id) {
@@ -139,9 +138,8 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Update a record in the given table by ID.
      *
-
-     * @param id        The ID of the record to update.
-     * @param values    A map of column names and new values to update.
+     * @param id     The ID of the record to update.
+     * @param values A map of column names and new values to update.
      */
     @Transactional
     public void updateRecordById(Object id, GenericEntity values) {
@@ -164,8 +162,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
     /**
      * Delete a record from the table by ID.
      *
-
-     * @param id        The ID of the record to delete.
+     * @param id The ID of the record to delete.
      */
     @Transactional
     public void deleteRecordById(Object id) {
@@ -177,8 +174,6 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
 
     /**
      * Delete all records from the table.
-     *
-
      */
     @Transactional
     public void deleteAllRecords() {

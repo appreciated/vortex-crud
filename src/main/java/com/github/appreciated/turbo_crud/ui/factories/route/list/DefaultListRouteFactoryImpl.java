@@ -14,7 +14,7 @@ public class DefaultListRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudListColumnCallbackRegistry columnCallbackRegistry;
     private final TurboCrudIconFactory iconFactory;
 
-    public DefaultListRouteFactoryImpl( TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public DefaultListRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                        TurboCrudConfigService configService,
                                        TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                                        TurboCrudIconFactory iconFactory) {

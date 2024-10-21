@@ -51,7 +51,7 @@ public class Submenu extends SplitLayout {
         setSizeFull();
         initializeRouteList(route.getChildrenMap());
 
-        if (!routeResolver.isLastIndex(currentPathIndex)){
+        if (!routeResolver.isLastIndex(currentPathIndex)) {
             showRouteDetail(route.getChild());
         }
     }
@@ -63,7 +63,7 @@ public class Submenu extends SplitLayout {
             routeButton.setWidthFull();
 
             routeButton.addClickListener(event -> {
-                getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.generateSubRoute(currentPathIndex,key)));
+                getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.generateSubRoute(currentPathIndex, key)));
             });
             routeListLayout.add(routeButton);
         });
