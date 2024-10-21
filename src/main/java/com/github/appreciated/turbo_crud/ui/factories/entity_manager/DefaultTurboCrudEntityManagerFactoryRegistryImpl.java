@@ -4,6 +4,7 @@ import com.github.appreciated.turbo_crud.config.model.TableConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,16 +20,16 @@ public class DefaultTurboCrudEntityManagerFactoryRegistryImpl implements TurboCr
     private final TurboCrudConfigService turboCrudConfigService;
     HashMap<String, TurboCrudEntityManagerService> factories = new HashMap<>();
 
-    public DefaultTurboCrudEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager) {
+    public DefaultTurboCrudEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         this.turboCrudConfigService = turboCrudConfigService;
         for (Map.Entry<String, TableConfig> entry : this.turboCrudConfigService.getConfiguration().getTablesConfig().entrySet()) {
             String table = entry.getKey();
-            factories.put(table, new DefaultJpaEntityManagerService(table, entityManager));
+            factories.put(table, new DefaultJpaEntityManagerService(table, entityManager, transactionTemplate));
         }
-        factories.put("users", new DefaultJpaEntityManagerService("users", entityManager));
-        factories.put("roles", new DefaultJpaEntityManagerService("roles", entityManager));
-        factories.put("user_roles", new DefaultJpaEntityManagerService("user_roles", entityManager));
-        factories.put("audit_log", new DefaultJpaEntityManagerService("audit_log", entityManager));
+        factories.put("users", new DefaultJpaEntityManagerService("users", entityManager, transactionTemplate));
+        factories.put("roles", new DefaultJpaEntityManagerService("roles", entityManager, transactionTemplate));
+        factories.put("user_roles", new DefaultJpaEntityManagerService("user_roles", entityManager, transactionTemplate));
+        factories.put("audit_log", new DefaultJpaEntityManagerService("audit_log", entityManager, transactionTemplate));
     }
 
     public TurboCrudEntityManagerService getFactory(String table) {

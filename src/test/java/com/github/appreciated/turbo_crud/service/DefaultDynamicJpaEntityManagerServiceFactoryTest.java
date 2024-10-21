@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 
@@ -25,12 +26,15 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private TransactionTemplate transactionTemplate;
+
     private DefaultJpaEntityManagerService service;
 
     @BeforeEach
     void setUp() {
         createTestTable();
-        service = new DefaultJpaEntityManagerService("test_table", entityManager);
+        service = new DefaultJpaEntityManagerService("test_table", entityManager, transactionTemplate);
     }
 
     @AfterEach

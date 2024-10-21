@@ -4,8 +4,8 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.transaction.Transactional;
 import org.hibernate.query.NativeQuery;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -19,10 +19,12 @@ import java.util.List;
 public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerService {
 
     private final EntityManager entityManager;
+    private final TransactionTemplate transactionTemplate;
     private final String table;
 
-    public DefaultJpaEntityManagerService(String table, EntityManager entityManager) {
+    public DefaultJpaEntityManagerService(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         this.entityManager = entityManager;
+        this.transactionTemplate = transactionTemplate;
         if (table == null) {
             throw new IllegalArgumentException("Table name cannot be null");
         }
@@ -38,30 +40,32 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      *
      * @param values A map of column names and values to be inserted.
      */
-    @Transactional
+
     public void insertRecord(GenericEntity values) {
-        StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable()));
-        StringBuilder placeholders = new StringBuilder(" VALUES (");
-        List<Object> params = values.getProperties().values().stream().toList();
+        transactionTemplate.executeWithoutResult(status -> {
+            StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable()));
+            StringBuilder placeholders = new StringBuilder(" VALUES (");
+            List<Object> params = values.getProperties().values().stream().toList();
 
-        values.getProperties().forEach((key, value) -> {
-            sql.append(key).append(",");
-            placeholders.append("?,");
-        });
+            values.getProperties().forEach((key, value) -> {
+                sql.append(key).append(",");
+                placeholders.append("?,");
+            });
 
-        sql.deleteCharAt(sql.length() - 1); // Remove last comma
-        placeholders.deleteCharAt(placeholders.length() - 1); // Remove last comma
-        sql.append(")").append(placeholders).append(")");
+            sql.deleteCharAt(sql.length() - 1); // Remove last comma
+            placeholders.deleteCharAt(placeholders.length() - 1); // Remove last comma
+            sql.append(")").append(placeholders).append(")");
 
-        Query query = entityManager.createNativeQuery(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            Object value = params.get(i);
-            if (value instanceof LocalDateTime) {
-                value = new Date(((LocalDateTime) value).getNano());
+            Query query = entityManager.createNativeQuery(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                Object value = params.get(i);
+                if (value instanceof LocalDateTime) {
+                    value = new Date(((LocalDateTime) value).getNano());
+                }
+                query.setParameter(i + 1, value);
             }
-            query.setParameter(i + 1, value);
-        }
-        query.executeUpdate();
+            query.executeUpdate();
+        });
     }
 
     /**
@@ -141,22 +145,23 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      * @param id     The ID of the record to update.
      * @param values A map of column names and new values to update.
      */
-    @Transactional
     public void updateRecordById(Object id, GenericEntity values) {
-        StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable()));
-        List<Object> params = values.getProperties().values().stream().toList();
+        transactionTemplate.executeWithoutResult(status -> {
+            StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable()));
+            List<Object> params = values.getProperties().values().stream().toList();
 
-        values.getProperties().forEach((key, value) -> sql.append(key).append(" = ?,"));
+            values.getProperties().forEach((key, value) -> sql.append(key).append(" = ?,"));
 
-        sql.deleteCharAt(sql.length() - 1); // Remove last comma
-        sql.append(" WHERE id = ?");
+            sql.deleteCharAt(sql.length() - 1); // Remove last comma
+            sql.append(" WHERE id = ?");
 
-        Query query = entityManager.createNativeQuery(sql.toString());
-        for (int i = 0; i < params.size(); i++) {
-            query.setParameter(i + 1, params.get(i));
-        }
-        query.setParameter(params.size() + 1, id);
-        query.executeUpdate();
+            Query query = entityManager.createNativeQuery(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                query.setParameter(i + 1, params.get(i));
+            }
+            query.setParameter(params.size() + 1, id);
+            query.executeUpdate();
+        });
     }
 
     /**
@@ -164,25 +169,26 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      *
      * @param id The ID of the record to delete.
      */
-    @Transactional
     public void deleteRecordById(Object id) {
-        String sql = "DELETE FROM %s WHERE id = ?".formatted(getTable());
-        Query query = entityManager.createNativeQuery(sql);
-        query.setParameter(1, id);
-        query.executeUpdate();
+        transactionTemplate.executeWithoutResult(status -> {
+            String sql = "DELETE FROM %s WHERE id = ?".formatted(getTable());
+            Query query = entityManager.createNativeQuery(sql);
+            query.setParameter(1, id);
+            query.executeUpdate();
+        });
     }
 
     /**
      * Delete all records from the table.
      */
-    @Transactional
     public void deleteAllRecords() {
-        String sql = "DELETE FROM %s".formatted(getTable());
-        Query query = entityManager.createNativeQuery(sql);
-        query.executeUpdate();
+        transactionTemplate.executeWithoutResult(status -> {
+            String sql = "DELETE FROM %s".formatted(getTable());
+            Query query = entityManager.createNativeQuery(sql);
+            query.executeUpdate();
+        });
     }
 
-    @Transactional
     public int count() {
         return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable())).getSingleResult());
     }
