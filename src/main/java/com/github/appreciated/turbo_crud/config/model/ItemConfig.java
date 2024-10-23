@@ -16,7 +16,7 @@ public class ItemConfig {
     @Optional
     private boolean inlineEdit;
     @Optional
-    private List<FormElement> children;
+    private List<FormItem> children;
 
     public String getFactory() {
         return factory;
@@ -50,11 +50,11 @@ public class ItemConfig {
         this.imageColumn = imageColumn;
     }
 
-    public List<FormElement> getChildren() {
+    public List<FormItem> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormElement> children) {
+    public void setChildren(List<FormItem> children) {
         this.children = children;
     }
 }

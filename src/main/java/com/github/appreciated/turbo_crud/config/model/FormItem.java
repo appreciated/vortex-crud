@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class FormElement {
+public class FormItem {
 
     @Optional
     private String column;

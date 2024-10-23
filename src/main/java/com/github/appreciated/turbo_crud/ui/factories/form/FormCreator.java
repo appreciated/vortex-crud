@@ -32,6 +32,7 @@ public class FormCreator {
 
     public void bindAndAddToLayout(String table,
                                    Route route,
+                                   FormConfiguration formConfiguration,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
                                    TableConfig tables,
@@ -41,7 +42,7 @@ public class FormCreator {
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement field : getFormElements(route)) {
+        for (FormItem field : formConfiguration.getChildren()) {
             String fieldName = field.getColumn();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null && field.getFactory() != null && !field.getType().equals("collection")) {
@@ -68,11 +69,5 @@ public class FormCreator {
                 form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
             }
         }
-    }
-
-    private static Collection<FormElement> getFormElements(Route childFactory) {
-        Config configuration = childFactory.getConfiguration();
-        FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
-        return formConfiguration.getChildren();
     }
 }

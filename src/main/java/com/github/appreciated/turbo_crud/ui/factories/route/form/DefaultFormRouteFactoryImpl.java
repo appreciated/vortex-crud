@@ -62,6 +62,11 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
             boolean hideHeader
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
+        return getForm(routeResolver, isWrapped, hideHeader, route, formConfiguration);
+    }
+
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean hideHeader, Route route, FormConfiguration formConfiguration) {
         String table = route.getTable();
 
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
@@ -73,7 +78,6 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
 
-        FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
 
         String lastSegment = routeResolver.getLastSegment();
         GenericEntity entity = entityManagerService.getRecordById(lastSegment);
@@ -91,7 +95,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
 
-        formCreator.bindAndAddToLayout(table, route, entity, factoryRegistry, tables, binder, form, formCreator);
+        formCreator.bindAndAddToLayout(table, route, formConfiguration, entity,factoryRegistry, tables, binder, form, formCreator);
 
         binder.setBean(entity);
 

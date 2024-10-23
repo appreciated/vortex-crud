@@ -7,6 +7,7 @@ import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.form.DefaultFormRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.form.DefaultMultiFormRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.grid.DefaultGridRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.kanban.DefaultKanbanDetailFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.list.DefaultListRouteFactoryImpl;
@@ -39,8 +40,8 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
         factories.put("list", new DefaultListRouteFactoryImpl(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, iconFactory));
         factories.put("grid", new DefaultGridRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, iconFactory));
         factories.put("form", new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
+        factories.put("multi-form", new DefaultMultiFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
         factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService));
-        factories.put("multi", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService));
         factories.put("submenu", new DefaultSubmenuRouteFactoryImpl(this));
     }
 
