@@ -1,7 +1,7 @@
 # TurboCRUD (Current Working Title)
 <img width="100" alt="TurboCRUD Logo" src="./turbo-crud.png"/> 
 
-TurboCRUD is a framework engineered to speed up the development of CRUD-style applications with Vaadin Flow. This is archived by providing a high-level abstraction layer, it empowers developers to super fast and while also retaining flexibility. Designed with extensibility at its core, TurboCRUD makes it simple to adapt and expand features as project needs evolve.
+TurboCRUD is a framework engineered to speed up the development of CRUD-style applications utilizing Vaadin Flow. This is archived by providing a high-level abstraction layer, it empowers developers to super fast and while also retaining flexibility. Designed with extensibility at its core, TurboCRUD makes it simple to adapt and expand features as project needs evolve.
 
 Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetitive tasks and promoting reusability of components. This enables developers to focus more on application-specific logic and customization, maximizing productivity and efficiency.
 
