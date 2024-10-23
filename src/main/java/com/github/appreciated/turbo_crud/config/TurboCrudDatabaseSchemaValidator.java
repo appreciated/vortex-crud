@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.config;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.TableConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
@@ -14,7 +14,7 @@ import java.util.*;
  * Validates the database schema against the {@link ApplicationConfig}.
  * <p>
  * This class checks if tables and columns in the database match the expected
- * schema based on {@link TableConfig} and {@link FieldConfig} from
+ * schema based on {@link RepositoryConfig} and {@link FieldConfig} from
  * {@link TurboCrudConfigService}. It uses JPA's {@link EntityManager} to run
  * native SQL queries and validate table existence, column names, and data types.
  * </p>
@@ -43,9 +43,9 @@ public class TurboCrudDatabaseSchemaValidator {
         typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
         typeMappings.put("reference", typeMappings.get("id"));
 
-        Map<String, TableConfig> tablesConfig = configService.getConfiguration().getTablesConfig();
+        Map<String, RepositoryConfig> tablesConfig = configService.getConfiguration().getRepositoriesConfig();
 
-        for (Map.Entry<String, TableConfig> entry : tablesConfig.entrySet()) {
+        for (Map.Entry<String, RepositoryConfig> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFieldsConfig());
         }
     }

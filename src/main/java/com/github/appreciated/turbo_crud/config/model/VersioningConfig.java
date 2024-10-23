@@ -5,7 +5,7 @@ import java.util.List;
 public class VersioningConfig {
 
     private boolean enabled;
-    private List<String> tables;
+    private List<String> repositories;
 
     public boolean isEnabled() {
         return enabled;
@@ -15,12 +15,12 @@ public class VersioningConfig {
         this.enabled = enabled;
     }
 
-    public List<String> getTables() {
-        return tables;
+    public List<String> getRepositories() {
+        return repositories;
     }
 
-    public void setTables(List<String> tables) {
-        this.tables = tables;
+    public void setRepositories(List<String> repositories) {
+        this.repositories = repositories;
     }
 
 }

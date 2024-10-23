@@ -42,7 +42,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                            TurboCrudEntityManagerFactoryRegistry entityManagerRegistry,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry) {
         this.pathVariables = routeResolver;
-        table = config.getTable();
+        table = config.getRepository();
 
         this.entityManagerService = entityManagerRegistry.getFactory(table);
         factoryConfig = config.getConfiguration();

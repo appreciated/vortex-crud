@@ -55,10 +55,10 @@ public class MasterDetail extends SplitLayout {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getTable());
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         this.factoryConfig = route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
-        this.table = route.getTable();
+        this.table = route.getRepository();
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
 

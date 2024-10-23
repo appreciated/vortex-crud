@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Route {
     @Optional
-    private String table;
+    private String repository;
     @Optional
     private String title;
     @Optional
@@ -32,12 +32,12 @@ public class Route {
 
 
     // Getter und Setter
-    public String getTable() {
-        return table;
+    public String getRepository() {
+        return repository;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     public String getTitle() {

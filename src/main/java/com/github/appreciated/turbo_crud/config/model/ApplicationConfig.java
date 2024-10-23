@@ -17,7 +17,7 @@ public class ApplicationConfig {
     private VersioningConfig versioning;
     @Optional
     private AuditingConfig auditing;
-    private ConfigObject tables;
+    private ConfigObject repositories;
     private ConfigObject routes;
 
     private String i18nBundlePrefix;
@@ -62,16 +62,16 @@ public class ApplicationConfig {
         this.auditing = auditing;
     }
 
-    public ConfigObject getTables() {
-        return tables;
+    public ConfigObject getRepositories() {
+        return repositories;
     }
 
-    public void setTables(ConfigObject tables) {
-        this.tables = tables;
+    public void setRepositories(ConfigObject repositories) {
+        this.repositories = repositories;
     }
 
-    public Map<String, TableConfig> getTablesConfig() {
-        return toStringMapWithValueType(tables, TableConfig.class);
+    public Map<String, RepositoryConfig> getRepositoriesConfig() {
+        return toStringMapWithValueType(repositories, RepositoryConfig.class);
     }
 
     public ConfigObject getRoutes() {

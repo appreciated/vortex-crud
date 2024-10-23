@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.kanban;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.config.model.TableConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
@@ -42,7 +42,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getTable());
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
 
         H2WithHasValue titleComponent = new H2WithHasValue();
 
@@ -51,7 +51,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(route.getTable());
+        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
 
         KanbanView kanbanView = new KanbanView();
 

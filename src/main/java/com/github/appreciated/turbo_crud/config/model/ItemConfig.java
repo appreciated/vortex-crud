@@ -8,11 +8,11 @@ public class ItemConfig {
 
     private String factory;
     @Optional
-    private String titleColumn;
+    private String titleField;
     @Optional
-    private String descriptionColumn;
+    private String descriptionField;
     @Optional
-    private String imageColumn;
+    private String imageField;
     @Optional
     private boolean inlineEdit;
     @Optional
@@ -26,28 +26,28 @@ public class ItemConfig {
         this.factory = factory;
     }
 
-    public String getTitleColumn() {
-        return titleColumn;
+    public String getTitleField() {
+        return titleField;
     }
 
-    public void setTitleColumn(String titleColumn) {
-        this.titleColumn = titleColumn;
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
     }
 
-    public String getDescriptionColumn() {
-        return descriptionColumn;
+    public String getDescriptionField() {
+        return descriptionField;
     }
 
-    public void setDescriptionColumn(String descriptionColumn) {
-        this.descriptionColumn = descriptionColumn;
+    public void setDescriptionField(String descriptionField) {
+        this.descriptionField = descriptionField;
     }
 
-    public String getImageColumn() {
-        return imageColumn;
+    public String getImageField() {
+        return imageField;
     }
 
-    public void setImageColumn(String imageColumn) {
-        this.imageColumn = imageColumn;
+    public void setImageField(String imageField) {
+        this.imageField = imageField;
     }
 
     public List<FormItem> getChildren() {

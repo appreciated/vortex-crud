@@ -10,7 +10,7 @@ public class UserManagementConfig {
     @Optional
     private AccessControlConfig accessControl;
     private boolean signUp;
-    private List<AdditionalColumn> additionalColumns;
+    private List<AdditionalField> additionalFields;
 
     public boolean isEnabled() {
         return enabled;
@@ -36,12 +36,12 @@ public class UserManagementConfig {
         this.signUp = signUp;
     }
 
-    public List<AdditionalColumn> getAdditionalColumns() {
-        return additionalColumns;
+    public List<AdditionalField> getAdditionalFields() {
+        return additionalFields;
     }
 
-    public void setAdditionalColumns(List<AdditionalColumn> additionalColumns) {
-        this.additionalColumns = additionalColumns;
+    public void setAdditionalFields(List<AdditionalField> additionalFields) {
+        this.additionalFields = additionalFields;
     }
 }
 

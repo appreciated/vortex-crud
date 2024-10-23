@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MultiFormConfiguration {
 
-    private String titleColumn;
+    private String titleField;
 
     private List<FormConfiguration> children;
 
@@ -16,11 +16,11 @@ public class MultiFormConfiguration {
         this.children = children;
     }
 
-    public String getTitleColumn() {
-        return titleColumn;
+    public String getTitleField() {
+        return titleField;
     }
 
-    public void setTitleColumn(String titleColumn) {
-        this.titleColumn = titleColumn;
+    public void setTitleField(String titleField) {
+        this.titleField = titleField;
     }
 }

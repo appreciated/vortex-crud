@@ -25,8 +25,8 @@ public class DefaultItem extends HorizontalLayout {
 
         // Optional image
         Image image = null;
-        if (formConfiguration.getImageColumn() != null) {
-            image = new Image(formConfiguration.getImageColumn(), "Entity Image");
+        if (formConfiguration.getImageField() != null) {
+            image = new Image(formConfiguration.getImageField(), "Entity Image");
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
@@ -37,12 +37,12 @@ public class DefaultItem extends HorizontalLayout {
         textContainer.setPadding(false);
         textContainer.setSpacing(false);
 
-        H4 title = new H4(entity.getString(formConfiguration.getTitleColumn()));
+        H4 title = new H4(entity.getString(formConfiguration.getTitleField()));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
-        if (formConfiguration.getDescriptionColumn() != null) {
-            Text description = new Text(entity.getString(formConfiguration.getDescriptionColumn()));
+        if (formConfiguration.getDescriptionField() != null) {
+            Text description = new Text(entity.getString(formConfiguration.getDescriptionField()));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }

@@ -7,7 +7,7 @@ import java.util.List;
 public class FormItem {
 
     @Optional
-    private String column;
+    private String field;
     @Optional
     private String factory;
     @Optional
@@ -17,10 +17,10 @@ public class FormItem {
     @Optional
     private String label;
     @Optional
-    private String table;
+    private String repository;
     private String type;
     @Optional
-    private String foreignKeyColumn;
+    private String foreignKeyField;
     @Optional
     private String emptyMessage;
     @Optional
@@ -28,12 +28,12 @@ public class FormItem {
     @Optional
     DialogConfig dialog;
 
-    public String getColumn() {
-        return column;
+    public String getField() {
+        return field;
     }
 
-    public void setColumn(String column) {
-        this.column = column;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public boolean isReadOnly() {
@@ -68,12 +68,12 @@ public class FormItem {
         this.factory = factory;
     }
 
-    public String getTable() {
-        return table;
+    public String getRepository() {
+        return repository;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     public String getType() {
@@ -84,12 +84,12 @@ public class FormItem {
         this.type = type;
     }
 
-    public String getForeignKeyColumn() {
-        return foreignKeyColumn;
+    public String getForeignKeyField() {
+        return foreignKeyField;
     }
 
-    public void setForeignKeyColumn(String foreignKeyColumn) {
-        this.foreignKeyColumn = foreignKeyColumn;
+    public void setForeignKeyField(String foreignKeyField) {
+        this.foreignKeyField = foreignKeyField;
     }
 
     public String getEmptyMessage() {

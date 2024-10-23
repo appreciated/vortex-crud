@@ -6,20 +6,20 @@ import java.util.Map;
 
 import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
 
-public class TableConfig {
+public class RepositoryConfig {
 
-    private ConfigObject columns;
+    private ConfigObject fields;
 
-    public ConfigObject getColumns() {
-        return columns;
+    public ConfigObject getFields() {
+        return fields;
     }
 
-    public void setColumns(ConfigObject columns) {
-        this.columns = columns;
+    public void setFields(ConfigObject fields) {
+        this.fields = fields;
     }
 
     public Map<String, FieldConfig> getFieldsConfig() {
-        return toStringMapWithValueType(columns, FieldConfig.class);
+        return toStringMapWithValueType(fields, FieldConfig.class);
     }
 }
 

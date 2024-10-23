@@ -18,11 +18,11 @@ public class FieldConfig {
     @Optional
     private String values;
     @Optional
-    private String table;
+    private String repository;
     @Optional
-    private String column;
+    private String field;
     @Optional
-    private String filterColumn;
+    private String filterField;
     @Optional
     private List<String> children;
 
@@ -74,20 +74,20 @@ public class FieldConfig {
         this.factory = factory;
     }
 
-    public String getTable() {
-        return table;
+    public String getRepository() {
+        return repository;
     }
 
-    public void setTable(String table) {
-        this.table = table;
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
-    public String getColumn() {
-        return column;
+    public String getField() {
+        return field;
     }
 
-    public void setColumn(String column) {
-        this.column = column;
+    public void setField(String field) {
+        this.field = field;
     }
 
     public List<String> getChildren() {
@@ -98,11 +98,11 @@ public class FieldConfig {
         this.children = children;
     }
 
-    public String getFilterColumn() {
-        return filterColumn;
+    public String getFilterField() {
+        return filterField;
     }
 
-    public void setFilterColumn(String filterColumn) {
-        this.filterColumn = filterColumn;
+    public void setFilterField(String filterField) {
+        this.filterField = filterField;
     }
 }

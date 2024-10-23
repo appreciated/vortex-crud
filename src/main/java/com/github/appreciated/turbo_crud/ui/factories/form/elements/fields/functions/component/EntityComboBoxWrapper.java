@@ -20,13 +20,13 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     private Integer currentValue;
 
     public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FieldConfig fieldConfig) {
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(fieldConfig.getTable());
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(fieldConfig.getRepository());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> entityManagerService.getRecordsFromTableWhereColumnLike(fieldConfig.getFilterColumn(), filterValue, i, i1).stream(),
-                filterValue -> entityManagerService.countWhereColumnLike(fieldConfig.getFilterColumn(), filterValue)
+                (filterValue, i, i1) -> entityManagerService.getRecordsFromTableWhereColumnLike(fieldConfig.getFilterField(), filterValue, i, i1).stream(),
+                filterValue -> entityManagerService.countWhereColumnLike(fieldConfig.getFilterField(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> fieldConfig.getChildren().stream()

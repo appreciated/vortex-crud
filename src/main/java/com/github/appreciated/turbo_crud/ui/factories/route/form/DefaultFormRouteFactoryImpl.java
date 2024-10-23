@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.form;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.config.model.TableConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -67,7 +67,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
     }
 
     public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean hideHeader, Route route, FormConfiguration formConfiguration) {
-        String table = route.getTable();
+        String table = route.getRepository();
 
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
 
@@ -88,12 +88,12 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         binder.bind(
                 titleComponent,
-                entity1 -> prefix + entity1.getString(formConfiguration.getTitleColumn()),
+                entity1 -> prefix + entity1.getString(formConfiguration.getTitleField()),
                 (entity1, string) -> {
                 }
         );
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
+        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(table);
 
         formCreator.bindAndAddToLayout(table, route, formConfiguration, entity,factoryRegistry, tables, binder, form, formCreator);
 

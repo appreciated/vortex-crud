@@ -7,8 +7,6 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.T
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
@@ -16,7 +14,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.Binder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Map;
 
 @Service
@@ -35,7 +32,7 @@ public class FormCreator {
                                    FormConfiguration formConfiguration,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
-                                   TableConfig tables,
+                                   RepositoryConfig tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
@@ -43,7 +40,7 @@ public class FormCreator {
 
         // Iterate over the fields defined in the configuration
         for (FormItem field : formConfiguration.getChildren()) {
-            String fieldName = field.getColumn();
+            String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null && field.getFactory() != null && !field.getType().equals("collection")) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");

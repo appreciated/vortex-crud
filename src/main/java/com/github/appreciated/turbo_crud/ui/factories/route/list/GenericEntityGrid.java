@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.config.model.TableConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -35,7 +35,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
                              TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        String table = route.getTable();
+        String table = route.getRepository();
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading
         DataProvider<GenericEntity, Void> dataProvider = new CallbackDataProvider<>(
@@ -47,7 +47,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
                 query -> entityManagerService.count()
         );
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(route.getTable());
+        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
         Config itemFactoryConfig = route.getConfiguration();
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 

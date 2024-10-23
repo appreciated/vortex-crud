@@ -45,7 +45,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                       FormItem factoryConfig,
                                       TurboCrudRouteFactoryRegistry routeFactory,
                                       FormCreator formCreator) {
-        String table = factoryConfig.getTable();
+        String table = factoryConfig.getRepository();
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
@@ -74,8 +74,8 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formItem.getTable());
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getForeignKeyColumn(), foreignKey, 0, Integer.MAX_VALUE);
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formItem.getRepository());
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getForeignKeyField(), foreignKey, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formItem, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -84,7 +84,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
             FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
 
             for (FormItem child : formConfiguration.getChildren()) {
-                Object o = record.get(child.getColumn());
+                Object o = record.get(child.getField());
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);

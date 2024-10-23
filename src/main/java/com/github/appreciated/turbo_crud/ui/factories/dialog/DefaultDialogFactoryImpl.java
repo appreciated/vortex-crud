@@ -4,7 +4,7 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.FormItem;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.config.model.TableConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -43,7 +43,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
                                TurboCrudRouteFactoryRegistry routeFactory,
                                OnStoreListener listener,
                                FormCreator formCreator) {
-        String table = formItem.getTable();
+        String table = formItem.getRepository();
 
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         Dialog dialog = new Dialog();
@@ -64,7 +64,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, formItem, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        TableConfig tables = configService.getConfiguration().getTablesConfig().get(table);
+        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(table);
 
         Config configuration = route.getConfiguration();
         FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
@@ -83,7 +83,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entity.put(formItem.getForeignKeyColumn(), foreignKeyValue);
+                entity.put(formItem.getForeignKeyField(), foreignKeyValue);
                 if (EntityUtil.isNew(entity)) {
                     entityManagerService.insertRecord(entity);
                 } else {
