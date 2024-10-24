@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.submenu;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -19,17 +20,20 @@ public class Submenu extends SplitLayout {
 
     private final VerticalLayout routeListLayout = new VerticalLayout();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final TurboCrudPathToRouteResolver pathVariables;
+    private final Route route;
+    private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final Integer currentPathIndex;
-    private Component activeRouteComponent;
+    private final TurboCrudConfigService configService;
 
     public Submenu(Integer currentPathIndex,
                    TurboCrudPathToRouteResolver routeResolver,
-                   TurboCrudRouteFactoryRegistry routeFactory
+                   TurboCrudRouteFactoryRegistry routeFactory,
+                   TurboCrudConfigService configService
     ) {
         this.currentPathIndex = currentPathIndex;
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        this.configService = configService;
+        route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.routeFactory = routeFactory;
@@ -51,9 +55,7 @@ public class Submenu extends SplitLayout {
         setSizeFull();
         initializeRouteList(route.getChildrenMap());
 
-        if (!routeResolver.isLastIndex(currentPathIndex)) {
-            showRouteDetail(route.getChild());
-        }
+        showRouteDetail(route.getChild(), routeResolver);
     }
 
     private void initializeRouteList(Map<String, Route> childRoutes) {
@@ -63,16 +65,24 @@ public class Submenu extends SplitLayout {
             routeButton.setWidthFull();
 
             routeButton.addClickListener(event -> {
-                getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.generateSubRoute(currentPathIndex, key)));
+                getUI().ifPresent(ui -> {
+                    String pathForEntity = pathVariables.generateSubRoute(currentPathIndex, key);
+                    pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
+                    showRouteDetail(route.getChild(), pathVariables);
+                    ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
+                });
+
             });
             routeListLayout.add(routeButton);
         });
     }
 
-    private void showRouteDetail(Route route) {
-        detailLayout.removeAll();
-        TurboCrudRouteFactory factory = routeFactory.getFactory(route.getFactory());
-        Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, true, false);
-        detailLayout.add(component);
+    private void showRouteDetail(Route route, TurboCrudPathToRouteResolver routeResolver) {
+        if (!routeResolver.isLastIndex(currentPathIndex)) {
+            detailLayout.removeAll();
+            TurboCrudRouteFactory factory = routeFactory.getFactory(route.getFactory());
+            Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, true, false);
+            detailLayout.add(component);
+        }
     }
 }

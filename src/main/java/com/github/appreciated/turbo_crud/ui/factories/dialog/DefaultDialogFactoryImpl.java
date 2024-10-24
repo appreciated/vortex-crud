@@ -23,6 +23,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import jakarta.annotation.Nullable;
 
 public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
@@ -36,8 +37,8 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     }
 
     @Override
-    public Dialog createDialog(String entityId,
-                               String foreignKeyValue,
+    public Dialog createDialog(@Nullable String entityId,
+                               @Nullable String foreignKeyValue,
                                Route route,
                                FormItem formItem,
                                TurboCrudRouteFactoryRegistry routeFactory,
@@ -83,7 +84,9 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entity.put(formItem.getForeignKeyField(), foreignKeyValue);
+                if (formItem != null && foreignKeyValue != null) {
+                    entity.put(formItem.getForeignKeyField(), foreignKeyValue);
+                }
                 if (EntityUtil.isNew(entity)) {
                     entityManagerService.insertRecord(entity);
                 } else {

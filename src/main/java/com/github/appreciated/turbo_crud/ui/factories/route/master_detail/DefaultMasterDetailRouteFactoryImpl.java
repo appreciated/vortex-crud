@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -14,20 +15,24 @@ public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactor
     private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudIconFactory iconFactory;
+    private final TurboCrudConfigService configService;
 
     public DefaultMasterDetailRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                                TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                                TurboCrudRouteFactoryRegistry routeFactory,
-                                               TurboCrudIconFactory iconFactory) {
+                                               TurboCrudIconFactory iconFactory,
+                                                TurboCrudConfigService configService
+    ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.routeFactory = routeFactory;
         this.iconFactory = iconFactory;
+        this.configService = configService;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean hideHeader) {
-        return new MasterDetail(currentPathIndex, routeResolver, entityManagerFactoryRegistry, itemFactoryRegistry, routeFactory, iconFactory);
+        return new MasterDetail(currentPathIndex, routeResolver, entityManagerFactoryRegistry, itemFactoryRegistry, routeFactory, configService, iconFactory);
     }
 
     @Override
