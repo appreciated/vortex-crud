@@ -83,7 +83,7 @@ public class TranslationService implements I18NProvider {
             if (matcher.matches()) {
                 String language = matcher.group(1);
                 String country = matcher.group(2) != null ? matcher.group(2).substring(1) : "";
-                Locale locale = country.isEmpty() ? new Locale(language) : new Locale(language, country);
+                Locale locale = country.isEmpty() ? Locale.of(language) : Locale.of(language, country);
                 detectedLocales.add(locale);
             }
         } else {

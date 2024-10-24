@@ -17,12 +17,10 @@ import java.util.Map;
 @Service
 public class DefaultTurboCrudEntityManagerFactoryRegistryImpl implements TurboCrudEntityManagerFactoryRegistry {
 
-    private final TurboCrudConfigService turboCrudConfigService;
-    HashMap<String, TurboCrudEntityManagerService> factories = new HashMap<>();
+    private final HashMap<String, TurboCrudEntityManagerService> factories = new HashMap<>();
 
     public DefaultTurboCrudEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        this.turboCrudConfigService = turboCrudConfigService;
-        for (Map.Entry<String, RepositoryConfig> entry : this.turboCrudConfigService.getConfiguration().getRepositoriesConfig().entrySet()) {
+        for (Map.Entry<String, RepositoryConfig> entry : turboCrudConfigService.getConfiguration().getRepositoriesConfig().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new DefaultJpaEntityManagerService(table, entityManager, transactionTemplate));
         }

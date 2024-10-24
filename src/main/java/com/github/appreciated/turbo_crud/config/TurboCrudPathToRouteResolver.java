@@ -15,10 +15,10 @@ import java.util.Map;
 public class TurboCrudPathToRouteResolver {
 
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
-    private String path;
+    private final String path;
     private String[] sections;
-    private Map<Integer, Route> pathRoutes;
-    private Map<String, Route> routesConfig;
+    private final Map<Integer, Route> pathRoutes;
+    private final Map<String, Route> routesConfig;
 
     // Konstruktor
     public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route> routesConfig) {
@@ -137,7 +137,7 @@ public class TurboCrudPathToRouteResolver {
         }
 
         // Falls nur eine Route vorhanden ist oder keine der Bedingungen zutrifft, gib die erste Route zurück
-        return numbers.get(0);
+        return numbers.getFirst();
     }
 
     public boolean isLastIndex(Integer currentPathIndex) {

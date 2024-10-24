@@ -35,10 +35,7 @@ public class MasterDetail extends SplitLayout {
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
 
-    private final String table;
-
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
-    private final VerticalLayout detailLayout = new VerticalLayout();
     private final Config factoryConfig;
     private final Integer currentPathIndex;
 
@@ -58,10 +55,10 @@ public class MasterDetail extends SplitLayout {
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         this.factoryConfig = route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
-        this.table = route.getRepository();
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
 
+        VerticalLayout detailLayout = new VerticalLayout();
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();
         detailLayout.setWidth("unset");
@@ -88,7 +85,7 @@ public class MasterDetail extends SplitLayout {
 
         getStyle().set("overflow", "hidden");
 
-        this.detailLayout.removeAll();
+        detailLayout.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex)) {
             Route child = route.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
@@ -97,7 +94,7 @@ public class MasterDetail extends SplitLayout {
                     true,
                     false
             );
-            this.detailLayout.add(component);
+            detailLayout.add(component);
         }
     }
 

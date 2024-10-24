@@ -13,7 +13,7 @@ import java.util.HashMap;
 @Service
 public class DefaultListColumnCallbackRegistryImpl implements TurboCrudListColumnCallbackRegistry {
 
-    HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
+    private final HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistryImpl() {
         callbacks.put("default", new DefaultListColumnImplCallback());

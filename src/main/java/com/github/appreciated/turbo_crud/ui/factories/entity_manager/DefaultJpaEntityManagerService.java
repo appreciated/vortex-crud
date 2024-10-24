@@ -136,7 +136,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
         hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
 
         List<GenericEntity> result = hibernateQuery.getResultList();
-        return result.isEmpty() ? null : result.get(0);
+        return result.isEmpty() ? null : result.getFirst();
     }
 
     /**

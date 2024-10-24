@@ -28,7 +28,6 @@ import java.util.List;
 
 public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
-    private final String table;
     private final TurboCrudItemFactory itemFactory;
     private final Config factoryConfig;
     private final TurboCrudPathToRouteResolver pathVariables;
@@ -42,7 +41,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                            TurboCrudEntityManagerFactoryRegistry entityManagerRegistry,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry) {
         this.pathVariables = routeResolver;
-        table = config.getRepository();
+        String table = config.getRepository();
 
         this.entityManagerService = entityManagerRegistry.getFactory(table);
         factoryConfig = config.getConfiguration();

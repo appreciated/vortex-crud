@@ -13,7 +13,7 @@ import java.util.HashMap;
 @Service
 public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegistry {
 
-    HashMap<String, TurboCrudItemFactory> factories = new HashMap<>();
+    private final HashMap<String, TurboCrudItemFactory> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistryImpl() {
         factories.put("card", new DefaultItemCardFactoryImpl());

@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
@@ -22,15 +22,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
-    private final FormCreator formCreator;
-    private TurboCrudEntityManagerService entityManagerService;
 
     public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                           TurboCrudConfigService configService,
                                           FormCreator formCreator) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;
-        this.formCreator = formCreator;
     }
 
 
@@ -42,7 +39,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
 
         H2WithHasValue titleComponent = new H2WithHasValue();
 
