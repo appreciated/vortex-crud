@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.typesafe.config.Config;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

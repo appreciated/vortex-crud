@@ -2,7 +2,6 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.GridConfig;
-import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;

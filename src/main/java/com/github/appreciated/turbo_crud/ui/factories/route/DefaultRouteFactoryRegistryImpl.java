@@ -14,7 +14,6 @@ import com.github.appreciated.turbo_crud.ui.factories.route.list.DefaultListRout
 import com.github.appreciated.turbo_crud.ui.factories.route.list.TurboCrudListColumnCallbackRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.master_detail.DefaultMasterDetailRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.submenu.DefaultSubmenuRouteFactoryImpl;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
