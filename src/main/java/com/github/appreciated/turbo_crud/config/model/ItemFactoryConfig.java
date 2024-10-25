@@ -2,11 +2,11 @@ package com.github.appreciated.turbo_crud.config.model;
 
 public interface ItemFactoryConfig {
 
-    public String getFactory();
+    String getFactory();
 
-    public String getTitleField();
+    String getTitleField();
 
-    public String getDescriptionField();
+    String getDescriptionField();
 
-    public String getImageField();
+    String getImageField();
 }
