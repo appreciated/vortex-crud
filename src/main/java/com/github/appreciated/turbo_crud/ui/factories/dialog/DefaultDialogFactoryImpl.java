@@ -84,7 +84,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                if (formItem != null && foreignKeyValue != null) {
+                if (formItem != null && formItem.getForeignKeyField() != null && foreignKeyValue != null) {
                     entity.put(formItem.getForeignKeyField(), foreignKeyValue);
                 }
                 if (EntityUtil.isNew(entity)) {

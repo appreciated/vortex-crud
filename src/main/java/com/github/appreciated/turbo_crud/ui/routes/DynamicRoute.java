@@ -4,6 +4,7 @@ import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.route.DefaultRouteFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -37,7 +38,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         Route currentRoute = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
-                .renderRoute(currentIndex, pathRoutes, false, false);
+                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }
 }

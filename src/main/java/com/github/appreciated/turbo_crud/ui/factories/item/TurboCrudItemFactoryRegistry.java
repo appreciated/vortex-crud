@@ -8,7 +8,7 @@ import com.typesafe.config.Config;
  */
 
 public interface TurboCrudItemFactoryRegistry {
-    TurboCrudItemFactory getFactory(Config routeConfig);
+    TurboCrudItemFactory getFactory(String factory);
 
     void addFactory(String key, TurboCrudItemFactory factory);
 }

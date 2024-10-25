@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.config.model.GridConfig;
+import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -9,6 +11,7 @@ import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEn
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -29,9 +32,9 @@ import java.util.List;
 public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final TurboCrudItemFactory itemFactory;
-    private final Config factoryConfig;
     private final TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
+    private final GridConfig gridConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -44,8 +47,10 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         String table = config.getRepository();
 
         this.entityManagerService = entityManagerRegistry.getFactory(table);
-        factoryConfig = config.getConfiguration();
-        this.itemFactory = itemFactoryRegistry.getFactory(config.getConfiguration());
+        Config factoryConfig = config.getConfiguration();
+
+        gridConfiguration = ConfigBeanFactory.create(factoryConfig, GridConfig.class);
+        this.itemFactory = itemFactoryRegistry.getFactory(gridConfiguration.getFactory());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -68,7 +73,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(factoryConfig, entity, maxWidth));
+                Div div = new Div(itemFactory.renderItem(gridConfiguration, entity, maxWidth));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);

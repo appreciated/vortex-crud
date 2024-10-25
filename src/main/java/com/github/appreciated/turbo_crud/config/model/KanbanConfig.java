@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class ItemConfig {
+public class KanbanConfig implements ItemFactoryConfig{
 
     private String factory;
     @Optional

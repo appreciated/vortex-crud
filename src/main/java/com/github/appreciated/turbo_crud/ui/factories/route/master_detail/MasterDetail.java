@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.ItemConfig;
+import com.github.appreciated.turbo_crud.config.model.GridConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -12,6 +12,7 @@ import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEn
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -23,6 +24,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
@@ -36,7 +38,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
 
 public class MasterDetail extends SplitLayout {
 
-    private final ItemConfig itemConfiguration;
+    private final GridConfig gridConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
@@ -66,9 +68,8 @@ public class MasterDetail extends SplitLayout {
         this.pathVariables = routeResolver;
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         this.factoryConfig = route.getConfiguration();
-        itemConfiguration = ConfigBeanFactory.create(this.factoryConfig, ItemConfig.class);
-
-        this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
+        this.gridConfiguration = ConfigBeanFactory.create(this.factoryConfig, GridConfig.class);
+        this.itemFactory = itemFactoryRegistry.getFactory(gridConfiguration.getFactory());
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
 
@@ -76,7 +77,6 @@ public class MasterDetail extends SplitLayout {
         detailContainer.setPadding(false);
         detailContainer.setHeightFull();
         detailContainer.setWidth("unset");
-        detailContainer.getStyle().set("flex", "4 1 400px");
 
         HorizontalLayout header = new RouteHeader(route, iconFactory);
 
@@ -108,10 +108,10 @@ public class MasterDetail extends SplitLayout {
         masterContainer.getStyle().set("overflow", "hidden");
         masterContainer.setPadding(true);
         masterContainer.setSpacing(true);
-        masterContainer.getStyle().set("flex", "1 1 200px");
 
         // Layout konfigurieren
         addToPrimary(masterContainer);
+
         addToSecondary(detailContainer);
 
         setSizeFull();
@@ -120,39 +120,42 @@ public class MasterDetail extends SplitLayout {
 
         getStyle().set("overflow", "hidden");
 
-        setDetail(pathVariables);
+        setDetail(pathVariables, false);
+
+        setPrimaryStyle("flex", "1 0 400px");
+        setSecondaryStyle("flex", "1 1 100%");
+        addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
     }
 
-    private void setDetail(TurboCrudPathToRouteResolver routeResolver) {
+    private void setDetail(TurboCrudPathToRouteResolver routeResolver, boolean creation) {
         detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex)) {
             Route child = route.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
                     currentPathIndex + 1,
                     routeResolver,
-                    true,
-                    false
+                    new DetailRouteSetting(true, false, creation)
             );
             detailContainer.add(component);
         }
     }
 
     private void onAdd() {
-        entityManagerService.insertRecord(new GenericEntity());
+        setDetail(pathVariables, true);
     }
 
     private void onItemClick(GenericEntity entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
             pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
-            setDetail(pathVariables);
+            setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
         });
     }
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(factoryConfig, item, null);
+            Component component = itemFactory.renderItem(gridConfiguration, item, null);
             component.addClassName("master");
             Div div = new Div(component);
             if (EntityUtil.getId(item).equals(pathVariables.getLastSegment())) {
@@ -171,7 +174,7 @@ public class MasterDetail extends SplitLayout {
                     if (filterText.isEmpty()) {
                         return entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit()).stream();
                     } else {
-                        return entityManagerService.getRecordsFromTableWhereColumnLike(itemConfiguration.getTitleField(), filterText, query.getOffset(), query.getLimit()).stream();
+                        return entityManagerService.getRecordsFromTableWhereColumnLike(gridConfiguration.getTitleField(), filterText, query.getOffset(), query.getLimit()).stream();
                     }
                 },
                 query -> {
@@ -179,7 +182,7 @@ public class MasterDetail extends SplitLayout {
                     if (filterText.isEmpty()) {
                         return entityManagerService.count();
                     } else {
-                        return entityManagerService.countWhereColumnLike(itemConfiguration.getTitleField(), filterText);
+                        return entityManagerService.countWhereColumnLike(gridConfiguration.getTitleField(), filterText);
                     }
                 }
         );

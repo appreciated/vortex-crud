@@ -4,8 +4,10 @@ import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.vaadin.flow.component.Component;
+import jakarta.annotation.Nullable;
 
 public class DefaultListRouteFactoryImpl implements TurboCrudRouteFactory {
 
@@ -27,8 +29,7 @@ public class DefaultListRouteFactoryImpl implements TurboCrudRouteFactory {
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
-                                 boolean isWrapped,
-                                 boolean hideHeader) {
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
 
         return new List(currentPathIndex, routeResolver, entityManagerFactoryRegistry, configService, columnCallbackRegistry, iconFactory);
     }

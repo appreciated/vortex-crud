@@ -19,8 +19,8 @@ public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegis
         factories.put("card", new DefaultItemCardFactoryImpl());
     }
 
-    public TurboCrudItemFactory getFactory(Config routeConfig) {
-        return factories.get(routeConfig.getString("factory"));
+    public TurboCrudItemFactory getFactory(String factory) {
+        return factories.get(factory);
     }
 
     @Override

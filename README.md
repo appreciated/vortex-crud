@@ -22,6 +22,10 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
 - **Nested Hierarchies**
 - **Custom Repositories**: Enable integration of custom data repositories.
+- **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
+- **[WIP] Additional Routes**:
+  - **Kanban Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=44)
+- **Route Filters**: Filter entity lists in "master-detail" routes.
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
@@ -34,20 +38,18 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Entity Versioning**
 - **Entity Auditing**
 - **Hook Points**: Add custom hook points for further flexibility.
-- **Route Filters**: Add filtering for entity lists in "grid", "list", and "master-detail" routes.
 - **Prefiltered Routes**: Show only specific items in routes as needed.
 - **Additional Routes**:
     - **Calendar Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=45)
-    - **Kanban Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=44)
     - **Map Route**: A route with a map where entities are shown on based on a latitude column and a longitude column
     - **Generic Block Route**: Support for generic blocks with flexible factory systems.
 - **Custom Menu Routes**: Allow adding custom routes to the menu.
 - **Alternative Collection Editing**: Provide alternative ways to edit Collections (see [Architecture](#Architecture)).
-- **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
 - **Configuration Pre-Checks**: Add checks to validate configuration before runtime.
 - **Improve ability to validate the Configuration**: The configuration is not designed optimally for validation, requiring improvements to allow an effective validation.
 - **Styling**: Improve styling options.
 - **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available
+- **Route Filters**: Add filtering for entity lists in "grid", "list" routes.
 
 ## Data Handling and Management
 TurboCRUD uses an H2 database for development, managed by the custom class `TurboCRUDEntityManagerService`. The `TurboCRUDDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration at startup.
@@ -208,11 +210,11 @@ application {
 
   user-management {
     enabled = true
-    access-control = {
+    access-control {
       roles = ["manager", "admin"]
     }
     sign-up = true
-    additional-columns = [{name = "start_date", type = "date"}]
+    additional-fields = [{name = "start_date", type = "date"}]
   }
 
   selects {
@@ -226,7 +228,7 @@ application {
 
   versioning {
     enabled = true
-    tables = ["projects", "tasks", "task_comments"]
+    repositories = ["projects", "tasks", "task_comments"]
   }
 
   auditing {
@@ -234,114 +236,172 @@ application {
     actions = ["create", "update", "delete", "login", "logout"]
   }
 
-  tables = {
-    "projects" = {
-      columns = {
-        id = {factory = "id", primary = true},
-        name = {factory = "text", required = true, validation = {max-length = 255}},
-        description = {factory = "textarea", validation = {max-length = 500}},
-        start_date = {factory = "date"},
-        end_date = {factory = "date"},
-        created_at = {factory = "datetime"},
-        updated_at = {factory = "datetime"}
+  repositories {
+    "projects" {
+      fields {
+        id {factory = "id", primary = true},
+        name {factory = "text", required = true, validation {max-length = 255}},
+        description {factory = "textarea", validation {max-length = 500}},
+        start_date {factory = "date"},
+        end_date {factory = "date"},
+        created_at {factory = "datetime"},
+        updated_at {factory = "datetime"}
       }
     },
-    "tasks" = {
-      columns = {
-        id = {factory = "id", primary = true},
-        title = {factory = "text", required = true, validation = {max-length = 255}},
-        description = {factory = "textarea", validation = {max-length = 1000}},
-        assigned_to = {factory = "reference", table = "users", column = "id", filter-column = "username", children = ["username"]},  # 1:1 Relation
-        status = {factory = "select", values = "task-status"},
-        due_date = {factory = "date", read-only-for-roles = ["developer"]},
-        created_at = {factory = "datetime"},
-        updated_at = {factory = "datetime"}
+    "tasks" {
+      fields {
+        id {factory = "id", primary = true},
+        title {factory = "text", required = true, validation {max-length = 255}},
+        description {factory = "textarea", validation {max-length = 1000}},
+        assigned_to {factory = "reference", repository = "users", field = "id", filter-field = "username", children = ["username"]},  # 1:1 Relation
+        status {factory = "select", values = "task-status"},
+        due_date {factory = "date", read-only-for-roles = ["developer"]},
+        created_at {factory = "datetime"},
+        updated_at {factory = "datetime"}
       }
     },
-    "task_comments" = {
-      columns = {
-        id = {factory = "id", primary = true},
-        comment_text = {factory = "textarea", validation = {max-length = 1000}},
-        user_id = {factory = "number"},
-        created_at = {factory = "datetime", default = "now()"}
+    "task_comments" {
+      fields {
+        id {factory = "id", primary = true},
+        comment_text {factory = "textarea", validation {max-length = 1000}},
+        user_id {factory = "number"},
+        created_at {factory = "datetime", default = "now()"}
       }
     }
   }
-  routes = {
-    "projects-list" = {
+  routes {
+    "projects-list" {
       default-route = true
       factory = "grid"
-      table = "projects"
+      repository = "projects"
       icon = "FACTORY"
       title = "route.projects.title-card"
-      configuration = {
+      configuration {
         factory = "card"
-        title-column = "name"
-        description-column = "description"
+        title-field = "name"
+        description-field = "description"
       }
-      child = {
-        table = "projects"
-        title = "route.tasks.title"
+      child {
+        repository = "projects"
         factory = "form"
-        configuration = {
-          title-column = "name"
+        configuration {
+          title-field = "name"
           children = [
-            {type = "field", column = "name", label = "route.projects.labels.name"},
-            {type = "field", column = "description", label = "route.projects.labels.description"},
-            {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
-            {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+            {type = "field", field = "name", label = "route.projects.labels.name"},
+            {type = "field", field = "description", label = "route.projects.labels.description"},
+            {type = "field", field = "start_date", label = "route.projects.labels.start_date"},
+            {type = "field", field = "end_date", label = "route.projects.labels.end_date"}
           ]
         }
       }
       roles = ["manager", "admin"]
     }
-
-    "tasks" = {
+    "tasks" {
       icon = "TASKS"
-      table = "tasks"
+      repository = "tasks"
       title = "route.tasks.title"
-      factory = "master-detail"
-      configuration = {
-        factory = "card"
-        title-column = "title"
-        description-column = "description"
-      }
-      child = {
-        table = "tasks"
-        title = "route.tasks.title"
-        factory = "form"
-        configuration = {
-          title-column = "title"
-          children = [
-            {type = "field", column = "title", label = "route.tasks.labels.title"},
-            {type = "field", column = "description", label = "route.tasks.labels.description"},
-            {type = "field", column = "status", label = "route.tasks.labels.status"},
-            {type = "field", column = "due_date", label = "route.tasks.labels.due_date"},
-            {type = "field", column = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
-            {
-              type = "collection"  # 1:N Relation
-              factory = "list"
-              table = "task_comments"
-              foreign-key-column = "task_id"
-              label = "route.tasks.labels.comments"
+      factory = "submenu"
+      children {
+        "tasks-done" {
+          icon = "CHECK_CIRCLE"
+          repository = "tasks"
+          title = "route.tasks.title"
+          factory = "master-detail"
+          configuration {
+            factory = "card"
+            title-field = "title"
+            description-field = "description"
+          }
+          child {
+            repository = "tasks"
+            factory = "multi-form"
+            configuration {
+              title-field = "title"
               children = [
-                "comment_text"
+                {
+                  title-field = "title"
+                  children = [
+                    {type = "field", field = "title", label = "route.tasks.labels.title"},
+                    {type = "field", field = "description", label = "route.tasks.labels.description"},
+                    {type = "field", field = "status", label = "route.tasks.labels.status"},
+                    {type = "field", field = "due_date", label = "route.tasks.labels.due_date"},
+                    {type = "field", field = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
+                    {
+                      type = "collection"  # 1:N Relation
+                      factory = "list"
+                      repository = "task_comments"
+                      reference = "task_id"
+                      label = "route.tasks.labels.comments"
+                      children = [
+                        "comment_text"
+                      ]
+                      dialog {
+                        factory = "form"
+                        empty-message = "route.tasks.labels.comments-empty-message"
+                        child {
+                          factory = "form"
+                          configuration {
+                            title-field = "name"
+                            children = [
+                              {type = "field", field = "comment_text", label = "route.tasks.labels.comment"}
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
               ]
-              dialog = {
-                factory = "form"
-                empty-message = "route.tasks.labels.comments-empty-message"
-                child = {
-                  factory = "form"
-                  configuration = {
-                    title-column = "name"
-                    children = [
-                      {type = "field", column = "comment_text", label = "route.tasks.labels.comment"}
-                    ]
+            }
+          }
+        }
+        "other-tasks" {
+          icon = "TASKS"
+          repository = "tasks"
+          title = "route.tasks.title"
+          factory = "master-detail"
+          configuration {
+            factory = "card"
+            title-field = "title"
+            description-field = "description"
+          }
+          child {
+            repository = "tasks"
+            factory = "form"
+            configuration {
+              title-field = "title"
+              children = [
+                {type = "field", field = "title", label = "route.tasks.labels.title"},
+                {type = "field", field = "description", label = "route.tasks.labels.description"},
+                {type = "field", field = "status", label = "route.tasks.labels.status"},
+                {type = "field", field = "due_date", label = "route.tasks.labels.due_date"},
+                {type = "field", field = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
+                {
+                  type = "collection"  # 1:N Relation
+                  factory = "list"
+                  repository = "task_comments"
+                  reference = "task_id"
+                  label = "route.tasks.labels.comments"
+                  children = [
+                    "comment_text"
+                  ]
+                  dialog {
+                    factory = "form"
+                    empty-message = "route.tasks.labels.comments-empty-message"
+                    child {
+                      factory = "form"
+                      configuration {
+                        title-field = "name"
+                        children = [
+                          {type = "field", field = "comment_text", label = "route.tasks.labels.comment"}
+                        ]
+                      }
+                    }
                   }
                 }
-              }
+              ]
             }
-          ]
+          }
         }
       }
     }

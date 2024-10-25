@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.vaadin.flow.component.Component;
+import jakarta.annotation.Nullable;
 
 /**
  * Interface for rendering a route based on the provided configuration and entity management service.
@@ -9,12 +10,16 @@ import com.vaadin.flow.component.Component;
  */
 
 public interface TurboCrudRouteFactory {
+
     Component renderRoute(
             Integer currentPathIndex,
             TurboCrudPathToRouteResolver routeResolver,
-            boolean isWrapped,
-            boolean hideHeader
+            @Nullable DetailRouteSetting detailRouteSetting
     );
 
+    /**
+     * Whether the route implementation is able / required to render route children
+     * F.e. The master-detail route is a container route since on the right hand site another route is being rendered
+     */
     boolean isContainerRoute();
 }

@@ -5,8 +5,10 @@ import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.vaadin.flow.component.Component;
+import jakarta.annotation.Nullable;
 
 public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
 
@@ -25,8 +27,7 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
-                                 boolean isWrapped,
-                                 boolean hideHeader) {
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
 
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 

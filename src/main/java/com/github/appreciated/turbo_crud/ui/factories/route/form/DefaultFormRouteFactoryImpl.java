@@ -11,6 +11,7 @@ import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.ConfigBeanFactory;
@@ -25,6 +26,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import jakarta.annotation.Nullable;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
@@ -58,15 +60,15 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
     public Component renderRoute(
             Integer currentPathIndex,
             TurboCrudPathToRouteResolver routeResolver,
-            boolean isWrapped,
-            boolean hideHeader
+            @Nullable DetailRouteSetting detailRouteSetting
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
         FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
-        return getForm(routeResolver, isWrapped, hideHeader, route, formConfiguration);
+        assert detailRouteSetting != null;
+        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, formConfiguration);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean hideHeader, Route route, FormConfiguration formConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, FormConfiguration formConfiguration) {
         String table = route.getRepository();
 
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
@@ -80,7 +82,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
 
         String lastSegment = routeResolver.getLastSegment();
-        GenericEntity entity = entityManagerService.getRecordById(lastSegment);
+        GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
 
@@ -136,7 +138,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         // Add the form and buttons to the layout
         headerBar.add(titleComponent, save, delete);
         headerBar.setAlignItems(CENTER);
-        if (!hideHeader) {
+        if (!isHeaderHidden) {
             layout.add(headerBar);
         }
         layout.add(form);

@@ -3,12 +3,17 @@ package com.github.appreciated.turbo_crud.ui.factories.route.submenu;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
+import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
+import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 
 import java.util.Map;
 
@@ -24,44 +29,62 @@ public class Submenu extends SplitLayout {
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final Integer currentPathIndex;
+    private final TurboCrudIconFactory iconFactory;
     private final TurboCrudConfigService configService;
 
     public Submenu(Integer currentPathIndex,
                    TurboCrudPathToRouteResolver routeResolver,
                    TurboCrudRouteFactoryRegistry routeFactory,
+                   TurboCrudIconFactory iconFactory,
                    TurboCrudConfigService configService
     ) {
         this.currentPathIndex = currentPathIndex;
+        this.iconFactory = iconFactory;
         this.configService = configService;
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.routeFactory = routeFactory;
         // Master
+        VerticalLayout masterLayout = new VerticalLayout();
+        masterLayout.setPadding(true);
+        masterLayout.setSizeFull();
+
+        HorizontalLayout header = new RouteHeader(route, iconFactory);
+        masterLayout.add(header);
+
         routeListLayout.setPadding(false);
-        routeListLayout.setSpacing(true);
-        routeListLayout.setWidth("200px");
+        routeListLayout.setSpacing(false);
+        routeListLayout.setWidthFull();
         routeListLayout.setHeightFull();
+
+        masterLayout.add(routeListLayout);
 
         // Detail
         detailLayout.setPadding(false);
         detailLayout.setHeightFull();
         detailLayout.setWidth("auto");
-        detailLayout.getStyle().set("flex", "4 1 400px");
 
-        addToPrimary(routeListLayout);
+        addToPrimary(masterLayout);
         addToSecondary(detailLayout);
 
         setSizeFull();
         initializeRouteList(route.getChildrenMap());
 
         showRouteDetail(route.getChild(), routeResolver);
+
+        setPrimaryStyle("flex", "1 0 250px");
+        setSecondaryStyle("flex", "1 1 100%");
+        addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
     }
 
     private void initializeRouteList(Map<String, Route> childRoutes) {
         childRoutes.forEach((key, value) -> {
-            Button routeButton = new Button();
-            routeButton.setText(routeButton.getTranslation(value.getTitle()));
+            HorizontalLayout routeButton = new HorizontalLayout();
+            routeButton.addClassNames("card", "master");
+            Component icon = iconFactory.renderIcon(value.getIcon());
+            routeButton.add(icon);
+            routeButton.add(new H4(routeButton.getTranslation(value.getTitle())));
             routeButton.setWidthFull();
 
             routeButton.addClickListener(event -> {
@@ -71,7 +94,6 @@ public class Submenu extends SplitLayout {
                     showRouteDetail(route.getChild(), pathVariables);
                     ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
                 });
-
             });
             routeListLayout.add(routeButton);
         });
@@ -81,7 +103,7 @@ public class Submenu extends SplitLayout {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
             detailLayout.removeAll();
             TurboCrudRouteFactory factory = routeFactory.getFactory(route.getFactory());
-            Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, true, false);
+            Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }
     }

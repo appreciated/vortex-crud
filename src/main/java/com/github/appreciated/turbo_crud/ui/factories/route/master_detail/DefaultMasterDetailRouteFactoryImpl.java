@@ -5,9 +5,11 @@ import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
+import jakarta.annotation.Nullable;
 
 public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactory {
 
@@ -21,7 +23,7 @@ public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactor
                                                TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                                TurboCrudRouteFactoryRegistry routeFactory,
                                                TurboCrudIconFactory iconFactory,
-                                                TurboCrudConfigService configService
+                                               TurboCrudConfigService configService
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
@@ -31,7 +33,9 @@ public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactor
     }
 
     @Override
-    public Component renderRoute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean hideHeader) {
+    public Component renderRoute(Integer currentPathIndex,
+                                 TurboCrudPathToRouteResolver routeResolver,
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
         return new MasterDetail(currentPathIndex, routeResolver, entityManagerFactoryRegistry, itemFactoryRegistry, routeFactory, configService, iconFactory);
     }
 

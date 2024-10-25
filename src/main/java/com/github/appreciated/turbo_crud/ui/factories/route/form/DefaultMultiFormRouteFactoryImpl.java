@@ -2,16 +2,18 @@ package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.MultiFormConfiguration;
+import com.github.appreciated.turbo_crud.config.model.MultiFormConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
+import jakarta.annotation.Nullable;
 
 public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
@@ -28,18 +30,18 @@ public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
         this.formRouteFactory = new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
     }
 
+
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
-                                 boolean isWrapped,
-                                 boolean hideHeader) {
-
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), MultiFormConfiguration.class);
+        MultiFormConfig formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), MultiFormConfig.class);
         Div div = new Div();
         for (FormConfiguration child : formConfiguration.getChildren()) {
-            div.add(formRouteFactory.getForm(routeResolver, isWrapped, hideHeader, route, child));
+            assert detailRouteSetting != null;
+            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
         }
         return div;
     }

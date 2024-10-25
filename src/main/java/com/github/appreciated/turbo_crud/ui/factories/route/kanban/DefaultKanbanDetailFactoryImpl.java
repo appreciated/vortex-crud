@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
 import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -8,35 +9,40 @@ import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
-import com.github.appreciated.turbo_crud.ui.factories.route.component.KanbanView;
+import com.github.appreciated.turbo_crud.ui.factories.route.kanban.component.KanbanView;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import jakarta.annotation.Nullable;
 
 public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
+    private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
 
     public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                           TurboCrudConfigService configService,
+                                          TurboCrudItemFactoryRegistry turboCrudItemFactory,
                                           FormCreator formCreator) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;
+        this.turboCrudItemFactory = turboCrudItemFactory;
     }
 
 
-    public Component renderRoute(
-            Integer currentPathIndex,
-            TurboCrudPathToRouteResolver routeResolver,
-            boolean isWrapped,
-            boolean hideHeader
-    ) {
+    @Override
+    public Component renderRoute(Integer currentPathIndex,
+                                 TurboCrudPathToRouteResolver routeResolver,
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
@@ -45,12 +51,13 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
 
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
-        FormLayout form = new FormLayout();
-        form.setMaxWidth("1000px");
 
         RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
 
-        KanbanView kanbanView = new KanbanView();
+        Config factoryConfig = route.getConfiguration();
+        KanbanConfig gridConfiguration = ConfigBeanFactory.create(factoryConfig, KanbanConfig.class);
+
+        KanbanView kanbanView = new KanbanView(turboCrudItemFactory, gridConfiguration);
 
         // Back button
         Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());
@@ -60,18 +67,20 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
                 .set("box-sizing", "content-box");
 
         HorizontalLayout headerBar = new HorizontalLayout();
-        if (!isWrapped) {
+        assert detailRouteSetting != null;
+        if (!detailRouteSetting.isWrapped()) {
             headerBar.add(back);
         }
 
         // Add the form and buttons to the layout
         headerBar.add(titleComponent);
         headerBar.setAlignItems(FlexComponent.Alignment.CENTER);
-        if (!hideHeader) {
+        if (!detailRouteSetting.isHeaderHidden()) {
             layout.add(headerBar);
         }
-        layout.add(form);
+        layout.add(kanbanView);
         layout.setPadding(true);
+        layout.setSizeFull();
         return layout;
     }
 
