@@ -1,12 +1,12 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.config.model.ItemConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
-import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
@@ -14,21 +14,29 @@ import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.*;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.*;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.BETWEEN;
 
 /**
@@ -38,21 +46,25 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
  * It uses lazy loading for efficient data retrieval and rendering.
  */
 
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.value.ValueChangeMode;
+
+import java.util.List;
+
 public class MasterDetail extends SplitLayout {
 
+    private final ItemConfig itemConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
-
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
-
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final Config factoryConfig;
     private final Integer currentPathIndex;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudConfigService configService;
     private final Route route;
-    private final VerticalLayout detailLayout;
-
+    private final VerticalLayout detailContainer;
+    private ConfigurableFilterDataProvider<GenericEntity, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
 
     public MasterDetail(Integer currentPathIndex,
@@ -71,47 +83,53 @@ public class MasterDetail extends SplitLayout {
         this.pathVariables = routeResolver;
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         this.factoryConfig = route.getConfiguration();
+        itemConfiguration = ConfigBeanFactory.create(this.factoryConfig, ItemConfig.class);
+
         this.itemFactory = itemFactoryRegistry.getFactory(factoryConfig);
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
 
-        detailLayout = new VerticalLayout();
-        detailLayout.setPadding(false);
-        detailLayout.setHeightFull();
-        detailLayout.setWidth("unset");
-        detailLayout.getStyle().set("flex", "4 1 400px");
+        detailContainer = new VerticalLayout();
+        detailContainer.setPadding(false);
+        detailContainer.setHeightFull();
+        detailContainer.setWidth("unset");
+        detailContainer.getStyle().set("flex", "4 1 400px");
 
         HorizontalLayout header = new RouteHeader(route, iconFactory);
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addClickListener(event -> onAdd());
-        addButton.addThemeVariants(LUMO_PRIMARY);
+        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         HorizontalLayout headerContainer = new HorizontalLayout(header, addButton);
-        headerContainer.setPadding(true);
+        headerContainer.setPadding(false);
         headerContainer.setAlignItems(CENTER);
         headerContainer.setWidthFull();
         headerContainer.setJustifyContentMode(BETWEEN);
 
         TextField textField = new TextField();
+        textField.setValueChangeMode(ValueChangeMode.LAZY);
+        textField.setPrefixComponent(VaadinIcon.SEARCH.create());
         textField.setWidthFull();
+        textField.setPlaceholder("Suchen...");
+        textField.addValueChangeListener(event -> applyFilter(event.getValue())); // Suchfunktion hinzufügen
+
         HorizontalLayout searchContainer = new HorizontalLayout(textField);
         searchContainer.setPadding(false);
-        searchContainer.getStyle().set("padding", "0px 5px 0 5px");
         searchContainer.setAlignItems(CENTER);
         searchContainer.setWidthFull();
 
         virtualList.setHeightFull();
 
-        VerticalLayout listWrapper = new VerticalLayout(headerContainer,searchContainer, virtualList);
-        listWrapper.getStyle().set("overflow", "hidden");
-        listWrapper.setPadding(false);
-        listWrapper.setSpacing(false);
-        listWrapper.getStyle().set("flex", "1 1 200px");
+        VerticalLayout masterContainer = new VerticalLayout(headerContainer, searchContainer, virtualList);
+        masterContainer.getStyle().set("overflow", "hidden");
+        masterContainer.setPadding(true);
+        masterContainer.setSpacing(true);
+        masterContainer.getStyle().set("flex", "1 1 200px");
 
         // Layout konfigurieren
-        addToPrimary(listWrapper);
-        addToSecondary(detailLayout);
+        addToPrimary(masterContainer);
+        addToSecondary(detailContainer);
 
         setSizeFull();
 
@@ -123,7 +141,7 @@ public class MasterDetail extends SplitLayout {
     }
 
     private void setDetail(TurboCrudPathToRouteResolver routeResolver) {
-        detailLayout.removeAll();
+        detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex)) {
             Route child = route.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
@@ -132,7 +150,7 @@ public class MasterDetail extends SplitLayout {
                     true,
                     false
             );
-            detailLayout.add(component);
+            detailContainer.add(component);
         }
     }
 
@@ -158,17 +176,32 @@ public class MasterDetail extends SplitLayout {
                 component.addClassName("active");
                 setNewActive(component);
             }
-            div.getStyle().set("padding", "5px 5px 0px 5px");
             div.addClickListener(event -> {
                 setNewActive(component);
                 onItemClick(item);
             });
             return div;
         }));
-        this.virtualList.setDataProvider(DataProvider.fromCallbacks(
-                query -> entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit()).stream(),
-                query -> entityManagerService.count()
-        ));
+        CallbackDataProvider<GenericEntity, String> baseDataProvider = DataProvider.fromFilteringCallbacks(
+                query -> {
+                    String filterText = query.getFilter().orElse("");
+                    if (filterText.isEmpty()) {
+                        return entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit()).stream();
+                    } else {
+                        return entityManagerService.getRecordsFromTableWhereColumnLike(itemConfiguration.getTitleField(), filterText, query.getOffset(), query.getLimit()).stream();
+                    }
+                },
+                query -> {
+                    String filterText = query.getFilter().orElse("");
+                    if (filterText.isEmpty()) {
+                        return entityManagerService.count();
+                    } else {
+                        return entityManagerService.countWhereColumnLike(itemConfiguration.getTitleField(), filterText);
+                    }
+                }
+        );
+        dataProvider = baseDataProvider.withConfigurableFilter();
+        this.virtualList.setDataProvider(dataProvider);
     }
 
     private void setNewActive(Component component) {
@@ -177,5 +210,11 @@ public class MasterDetail extends SplitLayout {
         }
         component.addClassName("active");
         active = component;
+    }
+
+    private void applyFilter(String filterText) {
+        if (virtualList.getDataProvider() != null) {
+            dataProvider.setFilter(filterText);
+        }
     }
 }
