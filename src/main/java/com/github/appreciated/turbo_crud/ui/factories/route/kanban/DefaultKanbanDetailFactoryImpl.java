@@ -38,7 +38,6 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         this.turboCrudItemFactory = turboCrudItemFactory;
     }
 
-
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,

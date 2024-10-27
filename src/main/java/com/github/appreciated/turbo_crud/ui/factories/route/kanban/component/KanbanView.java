@@ -5,24 +5,21 @@ import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
 import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValue;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.dnd.DropTarget;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -51,12 +48,9 @@ public class KanbanView extends VerticalLayout {
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
         for (String string : strings) {
-            VerticalLayout column = createColumn(getTranslation(translations.getString(string)));
+            VerticalLayout column = createColumn(getTranslation(translations.getString(string)), string, entityManagerService);
             kanbanBoard.add(column);
-            List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), string, 0, 1000);
-            for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-                column.add(createCardComponent(record));
-            }
+
         }
         kanbanBoard.setSizeFull();
         add(kanbanBoard);
@@ -64,11 +58,17 @@ public class KanbanView extends VerticalLayout {
     }
 
     // Methode zur Erstellung einer Spalte
-    private VerticalLayout createColumn(String title) {
+    private VerticalLayout createColumn(String title, String string, TurboCrudEntityManagerService entityManagerService) {
         VerticalLayout column = new VerticalLayout();
-        column.setWidth("300px");
+        VerticalLayout wrapper = new VerticalLayout();
+        wrapper.setHeightFull();
+        wrapper.setWidth("300px");
+        wrapper.getStyle().set("overflow", "hidden");
+        wrapper.addClassNames("card", "no-hover");
+        column.setPadding(false);
         column.setHeightFull();
-        column.addClassNames("card", "no-hover");
+        column.setSpacing(false);
+        column.getStyle().set("overflow", "auto");
 
         // Drop-Ziele für Drag-and-Drop ermöglichen
         DropTarget<VerticalLayout> dropTarget = DropTarget.create(column);
@@ -80,12 +80,18 @@ public class KanbanView extends VerticalLayout {
         });
 
         // Titel der Spalte hinzufügen
-        Div titleLabel = new Div(new Text(title));
+        Div titleLabel = new Div(new H4(title));
         titleLabel.getStyle().set("font-weight", "bold");
         titleLabel.getStyle().set("margin-bottom", "10px");
-        column.add(titleLabel);
+        wrapper.add(titleLabel);
+        wrapper.add(column);
 
-        return column;
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), string, 0, 1000);
+        for (GenericEntity record : recordsFromTableWhereColumnEquals) {
+            column.add(createCardComponent(record));
+        }
+
+        return wrapper;
     }
 
     // Methode zur Erstellung einer Karte (Aufgabe) mit TurboCrudItemFactory

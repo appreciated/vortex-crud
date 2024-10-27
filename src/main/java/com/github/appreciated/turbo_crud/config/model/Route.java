@@ -30,7 +30,6 @@ public class Route {
     @Optional
     private List<String> roles;
 
-
     // Getter und Setter
     public String getRepository() {
         return repository;

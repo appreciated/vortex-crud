@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
-
 import com.github.appreciated.turbo_crud.config.model.FormItem;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;

@@ -80,7 +80,6 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
 
-
         String lastSegment = routeResolver.getLastSegment();
         GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);
 

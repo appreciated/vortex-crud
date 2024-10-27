@@ -30,7 +30,6 @@ public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
         this.formRouteFactory = new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
     }
 
-
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
