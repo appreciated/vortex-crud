@@ -63,6 +63,7 @@ public class KanbanView extends VerticalLayout {
                         repository,
                         routeFactory,
                         () -> {
+                            //TODO handle column switch
                             GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
                             cardWrapper.removeAll();
                             cardWrapper.add(  itemFactory.renderItem(kanbanConfig, recordById, null));
