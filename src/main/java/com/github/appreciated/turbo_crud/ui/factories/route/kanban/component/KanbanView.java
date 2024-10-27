@@ -1,16 +1,18 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban.component;
 
-import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.*;
+import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.dnd.DropTarget;
 import com.vaadin.flow.component.html.Div;
@@ -19,6 +21,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +32,15 @@ public class KanbanView extends VerticalLayout {
     private final ComponentRenderer<Component, GenericEntity> itemRenderer;
     private final TurboCrudEntityManagerService entityManagerService;
 
-    public KanbanView(String repository, TurboCrudEntityManagerService entityManagerService, TurboCrudItemFactoryRegistry itemFactoryRegistry, KanbanConfig kanbanConfig, ApplicationConfig configService) {
+    public KanbanView(String repository,
+                      Route route,
+                      TurboCrudEntityManagerService entityManagerService,
+                      TurboCrudRouteFactoryRegistry routeFactory,
+                      TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                      KanbanConfig kanbanConfig,
+                      ApplicationConfig configService,
+                      TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                      FormCreator formCreator) {
         this.entityManagerService = entityManagerService;
         ConfigObject selects = configService.getSelects();
         RepositoryConfig config = configService.getRepositoriesConfig().get(repository);
@@ -38,13 +49,25 @@ public class KanbanView extends VerticalLayout {
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
 
-        itemRenderer = new ComponentRenderer<>(task -> {
+        itemRenderer = new ComponentRenderer<>(entity -> {
             // Create a component for the card via the TurboCrudItemFactory
-            Component card = itemFactory.renderItem(kanbanConfig, task, null);
+            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig, entity, null));
             // Allow dragging the card
-            DragSource<Component> dragSource = DragSource.create(card);
-            dragSource.setDragData(task);
-            return card;
+            DragSource<Component> dragSource = DragSource.create(cardWrapper);
+            dragSource.setDragData(entity);
+            cardWrapper.addClickListener(event -> {
+                Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).createDialog(
+                        EntityUtil.getId(entity),
+                        null,
+                        null,
+                        route.getChild(),
+                        repository,
+                        routeFactory,
+                        () -> {},
+                        formCreator);
+                dialog.open();
+            });
+            return cardWrapper;
         });
 
         String selectName = fieldConfig.getValues();

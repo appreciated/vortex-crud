@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
@@ -34,6 +35,7 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
                                            TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
                                            TurboCrudIconFactory iconFactory,
                                            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                           TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                                            FormCreator formCreatorService
     ) {
         factories.put("master-detail", new DefaultMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, this, iconFactory, configService));
@@ -41,7 +43,7 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
         factories.put("grid", new DefaultGridRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, iconFactory));
         factories.put("form", new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
         factories.put("multi-form", new DefaultMultiFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
-        factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, itemFactoryRegistry, formCreatorService));
+        factories.put("kanban", new DefaultKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry));
         factories.put("submenu", new DefaultSubmenuRouteFactoryImpl(this, configService, iconFactory));
     }
 

@@ -38,14 +38,14 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     @Override
     public Dialog createDialog(@Nullable String entityId,
                                @Nullable String foreignKeyValue,
-                               Route route,
-                               FormItem formItem,
+                               @Nullable String foreignKeyField,
+                               Route formRoute,
+                               String repository,
                                TurboCrudRouteFactoryRegistry routeFactory,
                                OnStoreListener listener,
                                FormCreator formCreator) {
-        String table = formItem.getRepository();
 
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(table);
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
 
         GenericEntity recordById = entityManagerService.getRecordById(entityId);
@@ -61,15 +61,15 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
         binder.setBean(recordById);
-        createFooter(foreignKeyValue, formItem, binder, recordById, dialog, listener);
+        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(table);
+        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(repository);
 
-        Config configuration = route.getConfiguration();
+        Config configuration = formRoute.getConfiguration();
         FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
 
-        formCreator.bindAndAddToLayout(table, route, formConfiguration, recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(repository, formRoute, formConfiguration, recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);
@@ -78,13 +78,13 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, FormItem formItem, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String foreignKeyValue, String foreignKeyField, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                if (formItem != null && formItem.getForeignKeyField() != null && foreignKeyValue != null) {
-                    entity.put(formItem.getForeignKeyField(), foreignKeyValue);
+                if (foreignKeyField != null && foreignKeyValue != null) {
+                    entity.put(foreignKeyField, foreignKeyValue);
                 }
                 if (EntityUtil.isNew(entity)) {
                     entityManagerService.insertRecord(entity);

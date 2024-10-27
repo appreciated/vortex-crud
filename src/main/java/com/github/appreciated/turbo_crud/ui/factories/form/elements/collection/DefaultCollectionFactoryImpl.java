@@ -44,8 +44,6 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                       FormItem factoryConfig,
                                       TurboCrudRouteFactoryRegistry routeFactory,
                                       FormCreator formCreator) {
-        String table = factoryConfig.getRepository();
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.setSpacing(false);
@@ -112,8 +110,9 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         Dialog dialog = dialogFactory.getFactory(formItem.getDialog().getFactory()).createDialog(
                 entityId,
                 foreignKey,
+                formItem.getForeignKeyField(),
                 formItem.getDialog().getChild(),
-                formItem,
+                formItem.getRepository(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKey, formItem, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
                 formCreator);

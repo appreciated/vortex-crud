@@ -6,12 +6,14 @@ import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.kanban.component.KanbanView;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -28,14 +30,22 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
+    private final TurboCrudRouteFactoryRegistry routeFactory;
+    private final FormCreator formCreator;
+    private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
 
     public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                           TurboCrudConfigService configService,
                                           TurboCrudItemFactoryRegistry turboCrudItemFactory,
-                                          FormCreator formCreator) {
+                                          TurboCrudRouteFactoryRegistry routeFactory,
+                                          FormCreator formCreator,
+                                          TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;
         this.turboCrudItemFactory = turboCrudItemFactory;
+        this.routeFactory = routeFactory;
+        this.formCreator = formCreator;
+        this.dialogFactoryRegistry = dialogFactoryRegistry;
     }
 
     @Override
@@ -56,7 +66,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         Config factoryConfig = route.getConfiguration();
         KanbanConfig gridConfiguration = ConfigBeanFactory.create(factoryConfig, KanbanConfig.class);
 
-        KanbanView kanbanView = new KanbanView(route.getRepository(),entityManagerService, turboCrudItemFactory, gridConfiguration, configService.getConfiguration());
+        KanbanView kanbanView = new KanbanView(route.getRepository(), route, entityManagerService, routeFactory, turboCrudItemFactory, gridConfiguration, configService.getConfiguration(), dialogFactoryRegistry, formCreator);
 
         // Back button
         Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());
