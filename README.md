@@ -196,6 +196,7 @@ application {
         description-field = "description"
       }
       child {
+        title = "route.projects.title-card"
         repository = "projects"
         factory = "form"
         configuration {
