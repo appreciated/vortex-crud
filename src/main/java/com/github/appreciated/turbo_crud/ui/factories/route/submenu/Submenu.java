@@ -71,7 +71,9 @@ public class Submenu extends SplitLayout {
         setSizeFull();
         initializeRouteList(route.getChildrenMap());
 
-        showRouteDetail(route.getChild(), routeResolver);
+        if (routeResolver.hasPathForIndex(currentPathIndex + 1)){
+            showRouteDetail(route.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex+1)), routeResolver);
+        }
 
         setPrimaryStyle("flex", "1 0 250px");
         setSecondaryStyle("flex", "1 1 100%");

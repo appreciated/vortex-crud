@@ -111,7 +111,7 @@ public class TurboCrudPathToRouteResolver {
 
     public Integer getCurrentIndex() {
         List<Integer> numbers = pathRoutes.keySet().stream().toList().reversed();
-
+        Integer currentPointer = numbers.getFirst();
         for (int i = 0; i < numbers.size() - 1; i++) {
             Integer currentKey = numbers.get(i);
             Integer nextKey = numbers.get(i + 1);
@@ -134,10 +134,15 @@ public class TurboCrudPathToRouteResolver {
             if (currentIsContainer && !nextIsContainer) {
                 return currentKey;
             }
+
+            // Wenn auf einen Container eine nicht-Container-Route folgt, gib den Container zurück
+            if (nextIsContainer) {
+                currentPointer = nextKey;
+            }
         }
 
         // Falls nur eine Route vorhanden ist oder keine der Bedingungen zutrifft, gib die erste Route zurück
-        return numbers.getFirst();
+        return currentPointer;
     }
 
     public boolean isLastIndex(Integer currentPathIndex) {
@@ -148,5 +153,13 @@ public class TurboCrudPathToRouteResolver {
         String[] array = Arrays.copyOfRange(sections, 0, currentPathIndex + 1);
         return Arrays.stream(array)
                        .reduce((s, s2) -> s + "/" + s2).orElseThrow() + "/" + route;
+    }
+
+    public boolean hasPathForIndex(int i) {
+        return sections.length >= i - 1;
+    }
+
+    public String getPathForIndex(int i) {
+        return sections[i];
     }
 }
