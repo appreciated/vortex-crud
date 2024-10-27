@@ -62,7 +62,11 @@ public class KanbanView extends VerticalLayout {
                         route.getChild(),
                         repository,
                         routeFactory,
-                        () -> {},
+                        () -> {
+                            GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
+                            cardWrapper.removeAll();
+                            cardWrapper.add(  itemFactory.renderItem(kanbanConfig, recordById, null));
+                        },
                         formCreator);
                 dialog.open();
             });

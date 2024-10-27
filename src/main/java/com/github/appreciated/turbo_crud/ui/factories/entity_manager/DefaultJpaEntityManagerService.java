@@ -54,7 +54,7 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
 
             sql.deleteCharAt(sql.length() - 1); // Letztes Komma entfernen
             placeholders.deleteCharAt(placeholders.length() - 1); // Letztes Komma entfernen
-            sql.append(")").append(placeholders).append(") RETURNING id"); // "RETURNING id" für die generierte ID
+            sql.append(")").append(placeholders).append(")");
 
             Query query = entityManager.createNativeQuery(sql.toString());
             for (int i = 0; i < params.size(); i++) {
@@ -64,9 +64,11 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
                 }
                 query.setParameter(i + 1, value);
             }
+            query.executeUpdate();
 
-            // Die generierte ID nach dem Einfügen abrufen
-            return query.getSingleResult();
+            // Get the last inserted ID
+            Query idQuery = entityManager.createNativeQuery("SELECT SCOPE_IDENTITY()");
+            return idQuery.getSingleResult();
         });
     }
 
