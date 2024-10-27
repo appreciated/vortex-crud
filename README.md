@@ -97,28 +97,28 @@ classDiagram
     }
 
     class FormRoute{
-        
+
     }
     class GridRoute{
-        
+
     }
     class KanbanRoute{
-        
+
     }
     class ListRoute{
-        
+
     }
     class MasterDetailRoute{
-        
+
     }
     class SubmenuRoute{
-        
+
     }
     class MultiFormRoute {
-        
+
     }
     class FormRoute {
-        
+
     }
 
     class Field {
@@ -141,8 +141,8 @@ classDiagram
     SubmenuRoute --> Route: "contains"
     MasterDetailRoute --> Route: "contains"
     AppLayout --> MenuItem: "contains"
-    ListRoute --> Detail: "forwards to"
-    GridRoute --> Detail: "forwards to"
+    ListRoute --> FormRoute: "forwards to"
+    GridRoute --> FormRoute: "forwards to"
     FormRoute --> Form: "contains"
     MultiFormRoute --> FormRoute: "contains"
     Form --> Field: "contains"
@@ -152,7 +152,8 @@ classDiagram
     Field --> Column: "references"
     Collection --> Column: "references"
     Collection --> Dialog: "creates"
-    Dialog --> Detail: "creates"
+    KanbanRoute --> Dialog: "creates"
+    Dialog --> Form: "creates"
 ```
 
 ## Configuration via HOCON
