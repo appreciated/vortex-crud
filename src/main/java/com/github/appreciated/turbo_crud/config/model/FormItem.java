@@ -20,7 +20,7 @@ public class FormItem {
     private String repository;
     private String type;
     @Optional
-    private String foreignKeyField;
+    private String referenceField;
     @Optional
     private String emptyMessage;
     @Optional
@@ -84,12 +84,12 @@ public class FormItem {
         this.type = type;
     }
 
-    public String getForeignKeyField() {
-        return foreignKeyField;
+    public String getReferenceField() {
+        return referenceField;
     }
 
-    public void setForeignKeyField(String foreignKeyField) {
-        this.foreignKeyField = foreignKeyField;
+    public void setReferenceField(String referenceField) {
+        this.referenceField = referenceField;
     }
 
     public String getEmptyMessage() {

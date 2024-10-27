@@ -152,43 +152,42 @@ Below is an example of configuring a route and the associated table:
 application {
   #...
   tables = {
-    "projects" = {
-      columns = {
-        id = {factory = "id", primary = true},
-        name = {factory = "text", required = true, validation = {max-length = 255}},
-        description = {factory = "textarea", validation = {max-length = 500}},
-        start_date = {factory = "date"},
-        end_date = {factory = "date"},
-        created_at = {factory = "datetime"},
-        updated_at = {factory = "datetime"}
+    "projects" {
+      fields {
+        id {factory = "id", primary = true},
+        name {factory = "text", required = true, validation {max-length = 255}},
+        description {factory = "textarea", validation {max-length = 500}},
+        start_date {factory = "date"},
+        end_date {factory = "date"},
+        created_at {factory = "datetime"},
+        updated_at {factory = "datetime"}
       }
-    },
+    }
     # ...
   }
   # ...  
   routes = {
-    "projects-list" = {
+    "projects-list" {
       default-route = true
       factory = "grid"
-      table = "projects"
+      repository = "projects"
       icon = "FACTORY"
       title = "route.projects.title-card"
-      configuration = {
+      configuration {
         factory = "card"
-        title-column = "name"
-        description-column = "description"
+        title-field = "name"
+        description-field = "description"
       }
-      child = {
-        table = "projects"
-        title = "route.tasks.title"
+      child {
+        repository = "projects"
         factory = "form"
-        configuration = {
-          title-column = "name"
+        configuration {
+          title-field = "name"
           children = [
-            {type = "field", column = "name", label = "route.projects.labels.name"},
-            {type = "field", column = "description", label = "route.projects.labels.description"},
-            {type = "field", column = "start_date", label = "route.projects.labels.start_date"},
-            {type = "field", column = "end_date", label = "route.projects.labels.end_date"}
+            {type = "field", field = "name", label = "route.projects.labels.name"},
+            {type = "field", field = "description", label = "route.projects.labels.description"},
+            {type = "field", field = "start_date", label = "route.projects.labels.start_date"},
+            {type = "field", field = "end_date", label = "route.projects.labels.end_date"}
           ]
         }
       }
@@ -302,63 +301,59 @@ application {
       title = "route.tasks.title"
       factory = "submenu"
       children {
-        "tasks-done" {
-          icon = "CHECK_CIRCLE"
+        "open" {
+          icon = "TASKS"
           repository = "tasks"
-          title = "route.tasks.title"
-          factory = "master-detail"
+          title = "route.open-tasks.title"
+          factory = "kanban"
           configuration {
             factory = "card"
             title-field = "title"
             description-field = "description"
+            column-field= "status"
           }
           child {
             repository = "tasks"
-            factory = "multi-form"
+            factory = "form"
             configuration {
               title-field = "title"
               children = [
+                {type = "field", field = "title", label = "route.tasks.labels.title"},
+                {type = "field", field = "description", label = "route.tasks.labels.description"},
+                {type = "field", field = "status", label = "route.tasks.labels.status"},
+                {type = "field", field = "due_date", label = "route.tasks.labels.due_date"},
+                {type = "field", field = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
                 {
-                  title-field = "title"
+                  type = "collection"  # 1:N Relation
+                  factory = "list"
+                  repository = "task_comments"
+                  reference-field = "task_id"
+                  label = "route.tasks.labels.comments"
+                  empty-message = "route.tasks.labels.comments-empty-message"
                   children = [
-                    {type = "field", field = "title", label = "route.tasks.labels.title"},
-                    {type = "field", field = "description", label = "route.tasks.labels.description"},
-                    {type = "field", field = "status", label = "route.tasks.labels.status"},
-                    {type = "field", field = "due_date", label = "route.tasks.labels.due_date"},
-                    {type = "field", field = "assigned_to", label = "route.tasks.labels.assigned_to"}, # 1:1 Relation
-                    {
-                      type = "collection"  # 1:N Relation
-                      factory = "list"
-                      repository = "task_comments"
-                      reference = "task_id"
-                      label = "route.tasks.labels.comments"
-                      children = [
-                        "comment_text"
-                      ]
-                      dialog {
-                        factory = "form"
-                        empty-message = "route.tasks.labels.comments-empty-message"
-                        child {
-                          factory = "form"
-                          configuration {
-                            title-field = "name"
-                            children = [
-                              {type = "field", field = "comment_text", label = "route.tasks.labels.comment"}
-                            ]
-                          }
-                        }
+                    "comment_text"
+                  ]
+                  dialog {
+                    factory = "form"
+                    child {
+                      factory = "form"
+                      configuration {
+                        title-field = "name"
+                        children = [
+                          {type = "field", field = "comment_text", label = "route.tasks.labels.comment"}
+                        ]
                       }
                     }
-                  ]
+                  }
                 }
               ]
             }
           }
         }
-        "other-tasks" {
-          icon = "TASKS"
+        "done" {
+          icon = "CHECK_CIRCLE"
           repository = "tasks"
-          title = "route.tasks.title"
+          title = "route.done-tasks.title"
           factory = "master-detail"
           configuration {
             factory = "card"
@@ -380,14 +375,14 @@ application {
                   type = "collection"  # 1:N Relation
                   factory = "list"
                   repository = "task_comments"
-                  reference = "task_id"
+                  reference-field = "task_id"
                   label = "route.tasks.labels.comments"
+                  empty-message = "route.tasks.labels.comments-empty-message"
                   children = [
                     "comment_text"
                   ]
                   dialog {
                     factory = "form"
-                    empty-message = "route.tasks.labels.comments-empty-message"
                     child {
                       factory = "form"
                       configuration {

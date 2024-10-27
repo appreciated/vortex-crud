@@ -72,7 +72,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         list.removeAll();
         list.add(header);
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formItem.getRepository());
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getForeignKeyField(), foreignKey, 0, Integer.MAX_VALUE);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getReferenceField(), foreignKey, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formItem, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -110,7 +110,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         Dialog dialog = dialogFactory.getFactory(formItem.getDialog().getFactory()).createDialog(
                 entityId,
                 foreignKey,
-                formItem.getForeignKeyField(),
+                formItem.getReferenceField(),
                 formItem.getDialog().getChild(),
                 formItem.getRepository(),
                 routeFactoryRegistry,
