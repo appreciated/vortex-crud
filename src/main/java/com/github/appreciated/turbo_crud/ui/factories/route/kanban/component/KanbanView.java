@@ -21,7 +21,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Set;
 
