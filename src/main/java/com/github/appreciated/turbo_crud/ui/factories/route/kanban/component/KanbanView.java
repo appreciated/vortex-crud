@@ -51,11 +51,11 @@ public class KanbanView extends VerticalLayout {
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
         for (String string : strings) {
-            FlexLayout column = createColumn(getTranslation(translations.getString(string)));
+            VerticalLayout column = createColumn(getTranslation(translations.getString(string)));
             kanbanBoard.add(column);
             List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), string, 0, 1000);
             for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-                createCardComponent(record);
+                column.add(createCardComponent(record));
             }
         }
         kanbanBoard.setSizeFull();
@@ -64,15 +64,14 @@ public class KanbanView extends VerticalLayout {
     }
 
     // Methode zur Erstellung einer Spalte
-    private FlexLayout createColumn(String title) {
-        FlexLayout column = new FlexLayout();
+    private VerticalLayout createColumn(String title) {
+        VerticalLayout column = new VerticalLayout();
         column.setWidth("300px");
         column.setHeightFull();
-        column.getStyle().set("border", "1px solid lightgray");
-        column.getStyle().set("flex-direction", "column");
+        column.addClassNames("card", "no-hover");
 
         // Drop-Ziele für Drag-and-Drop ermöglichen
-        DropTarget<FlexLayout> dropTarget = DropTarget.create(column);
+        DropTarget<VerticalLayout> dropTarget = DropTarget.create(column);
         dropTarget.addDropListener(event -> {
             Component draggedComponent = event.getDragSourceComponent().orElse(null);
             if (draggedComponent != null) {
@@ -94,10 +93,6 @@ public class KanbanView extends VerticalLayout {
         ComponentRenderer<Component, GenericEntity> taskRenderer = new ComponentRenderer<>(task -> {
             // Erzeuge eine Komponente für die Karte über die TurboCrudItemFactory
             Component card = itemFactory.renderItem(kanbanConfig, genericEntity, null);
-            card.getElement().getStyle().set("padding", "10px");
-            card.getElement().getStyle().set("border", "1px solid black");
-            card.getElement().getStyle().set("background-color", "white");
-            card.getElement().getStyle().set("margin-bottom", "10px");
 
             // Ermögliche das Draggen der Karte
             DragSource<Component> dragSource = DragSource.create(card);

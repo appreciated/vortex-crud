@@ -26,10 +26,13 @@
     text-decoration-line: underline;
 }
 
-.card:hover {
+.card:not(.no-hover):hover {
     background: var(--lumo-contrast-20pct);
     transition: background 0.3s ease;
 }
+
+
+
 
 .card .actions {
     opacity: 0;

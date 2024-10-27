@@ -156,7 +156,7 @@ public class TurboCrudPathToRouteResolver {
     }
 
     public boolean hasPathForIndex(int i) {
-        return sections.length >= i - 1;
+        return sections.length >= i+1;
     }
 
     public String getPathForIndex(int i) {
