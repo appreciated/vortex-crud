@@ -18,8 +18,8 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import java.util.Map;
 
 /**
- * Factory für ein Master-Detail-Layout, das mehrere Routen als Children rendert.
- * Links wird eine vertikale Liste der Routen angezeigt, rechts die Detailansicht der ausgewählten Route.
+ * Factory for a submenu meaning it can render multiple routes as its children, one for each button.
+ * A vertical list of routes is displayed on the left and the detailed view of the selected route on the right.
  */
 public class Submenu extends SplitLayout {
 
@@ -91,18 +91,18 @@ public class Submenu extends SplitLayout {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(currentPathIndex, key);
                     pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
-                    showRouteDetail(route.getChild(), pathVariables);
                     ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
+                    showRouteDetail(route.getChildrenMap().get(key), pathVariables);
                 });
             });
             routeListLayout.add(routeButton);
         });
     }
 
-    private void showRouteDetail(Route route, TurboCrudPathToRouteResolver routeResolver) {
+    private void showRouteDetail(Route subRoute, TurboCrudPathToRouteResolver routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
             detailLayout.removeAll();
-            TurboCrudRouteFactory factory = routeFactory.getFactory(route.getFactory());
+            TurboCrudRouteFactory factory = routeFactory.getFactory(subRoute.getFactory());
             Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }
