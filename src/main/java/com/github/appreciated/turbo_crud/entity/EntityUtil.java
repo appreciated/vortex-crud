@@ -4,7 +4,7 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 
 public class EntityUtil {
     public static String getId(GenericEntity record) {
-        return "" + record.get("id"); //TODO Cleanup, Column name and type needs to be declared in config
+        return record.get("id") == null ? null : ("" + record.get("id")); //TODO Cleanup, Column name and type needs to be declared in config
     }
 
     public static boolean isNew(GenericEntity entity) {

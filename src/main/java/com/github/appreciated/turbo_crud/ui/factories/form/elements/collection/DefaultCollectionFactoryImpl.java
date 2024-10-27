@@ -62,7 +62,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         return list;
     }
 
-    private void loadCollection(String foreignKey,
+    private void loadCollection(String foreignKeyValue,
                                 FormItem formItem,
                                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                                 TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
@@ -72,10 +72,12 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         list.removeAll();
         list.add(header);
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formItem.getRepository());
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getReferenceField(), foreignKey, 0, Integer.MAX_VALUE);
+        List<GenericEntity> recordsFromTableWhereColumnEquals =
+                foreignKeyValue == null ? List.of() :
+                        entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKey, formItem, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formItem, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
 
             Config configuration = formItem.getDialog().getChild().getConfiguration();
             FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
@@ -87,7 +89,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     entityManagerService.deleteRecordById(EntityUtil.getId(record));
-                    loadCollection(foreignKey, formItem, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
+                    loadCollection(foreignKeyValue, formItem, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }

@@ -3,11 +3,14 @@ package com.github.appreciated.turbo_crud.ui.factories.route.kanban.component;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBar;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
@@ -39,7 +42,9 @@ public class KanbanView extends VerticalLayout {
                       KanbanConfig kanbanConfig,
                       ApplicationConfig configService,
                       TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                      FormCreator formCreator) {
+                      FormCreator formCreator,
+                      DetailRouteSetting detailRouteSetting,
+                      TurboCrudIconFactory iconFactory) {
         this.entityManagerService = entityManagerService;
         ConfigObject selects = configService.getSelects();
         RepositoryConfig config = configService.getRepositoriesConfig().get(repository);
@@ -91,9 +96,20 @@ public class KanbanView extends VerticalLayout {
 
         }
         kanbanBoard.setSizeFull();
+
+        HorizontalLayout header = new RouteHeaderBar(route,
+                detailRouteSetting,
+                iconFactory,
+                event -> onAdd(dialogFactoryRegistry, route, repository, formCreator, routeFactory)
+        );
+
+        if (!detailRouteSetting.isHeaderHidden()) {
+            add(header);
+        }
+
         add(kanbanBoard);
         setSizeFull();
-        setPadding(false);
+        setPadding(true);
     }
 
     private VerticalLayout createColumn(String title, String columnDatabaseValue) {
@@ -137,5 +153,22 @@ public class KanbanView extends VerticalLayout {
         }
 
         return wrapper;
+    }
+
+    private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String repository, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+        GenericEntity entity = new GenericEntity();
+        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).createDialog(
+                null,
+                null,
+                null,
+                route.getChild(),
+                repository,
+                routeFactory,
+                () -> {
+                    GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
+                    itemFactory.renderItem(kanbanConfig, recordById, null);
+                },
+                formCreator);
+        dialog.open();
     }
 }
