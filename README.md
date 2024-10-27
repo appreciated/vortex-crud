@@ -81,62 +81,78 @@ The diagram below presents a simplified version of the architecture, illustratin
 
 ```mermaid
 classDiagram
-   class Table {
-   }
+    class Table {
+    }
 
-   class Column {
-   }
+    class Column {
+    }
 
-   class Route {
-   }
+    class Route {
+    }
 
-   class AppLayout {
-   }
+    class AppLayout {
+    }
 
-   class MenuItem {
-   }
+    class MenuItem {
+    }
 
-   class MasterDetailRoute {
-   }
+    class FormRoute{
+        
+    }
+    class GridRoute{
+        
+    }
+    class KanbanRoute{
+        
+    }
+    class ListRoute{
+        
+    }
+    class MasterDetailRoute{
+        
+    }
+    class SubmenuRoute{
+        
+    }
+    class MultiFormRoute {
+        
+    }
+    class FormRoute {
+        
+    }
 
-   class ListRoute {
-   }
+    class Field {
+    }
 
-   class GridRoute {
-   }
+    class Collection {
+    }
 
-   class Detail {
-   }
+    class Dialog {
+    }
 
-   class Form {
-   }
-
-   class Field {
-   }
-
-   class Collection {
-   }
-
-   class Dialog {
-   }
-
-   Route <|-- MasterDetailRoute: "extends"
-   Route <|-- ListRoute: "extends"
-   Route <|-- GridRoute: "extends"
-   Route --> AppLayout: "contains"
-   AppLayout --> MenuItem: "contains"
-   MasterDetailRoute --> Detail: "is"
-   ListRoute --> Detail: "forwards to"
-   GridRoute --> Detail: "forwards to"
-   Detail --> Form: "contains"
-   Form --> Field: "contains"
-   Form --> Collection: "contains"
-   Route --> Table: "references"
-   Table --> Column: "contains"
-   Field --> Column: "references"
-   Collection --> Column: "references"
-   Collection --> Dialog: "creates"
-   Dialog --> Detail: "creates"
+    Route <|-- GridRoute: "extends"
+    Route <|-- KanbanRoute: "extends"
+    Route <|-- ListRoute: "extends"
+    Route <|-- MasterDetailRoute: "extends"
+    Route <|-- SubmenuRoute: "extends"
+    Route <|-- MultiFormRoute: "extends"
+    Route <|-- FormRoute: "extends"
+    Route --> AppLayout: "contains"
+    SubmenuRoute --> Route: "contains"
+    MasterDetailRoute --> Route: "contains"
+    AppLayout --> MenuItem: "contains"
+    ListRoute --> Detail: "forwards to"
+    GridRoute --> Detail: "forwards to"
+    FormRoute --> Form: "contains"
+    MultiFormRoute --> FormRoute: "contains"
+    Form --> Field: "contains"
+    Form --> Collection: "contains"
+    Route --> Table: "references"
+    Table --> Column: "contains"
+    Field --> Column: "references"
+    Collection --> Column: "references"
+    Collection --> Dialog: "creates"
+    Dialog --> Detail: "creates"
 ```
 
 ## Configuration via HOCON
