@@ -11,7 +11,6 @@ import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryR
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.dnd.DropTarget;
 import com.vaadin.flow.component.html.Div;
@@ -27,14 +26,26 @@ public class KanbanView extends VerticalLayout {
 
     private final TurboCrudItemFactory itemFactory;
     private final KanbanConfig kanbanConfig;
+    private final ComponentRenderer<Component, GenericEntity> itemRenderer;
+    private final TurboCrudEntityManagerService entityManagerService;
 
     public KanbanView(String repository, TurboCrudEntityManagerService entityManagerService, TurboCrudItemFactoryRegistry itemFactoryRegistry, KanbanConfig kanbanConfig, ApplicationConfig configService) {
+        this.entityManagerService = entityManagerService;
         ConfigObject selects = configService.getSelects();
         RepositoryConfig config = configService.getRepositoriesConfig().get(repository);
         FieldConfig fieldConfig = config.getFieldsConfig().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
+
+        itemRenderer = new ComponentRenderer<>(task -> {
+            // Create a component for the card via the TurboCrudItemFactory
+            Component card = itemFactory.renderItem(kanbanConfig, task, null);
+            // Allow dragging the card
+            DragSource<Component> dragSource = DragSource.create(card);
+            dragSource.setDragData(task);
+            return card;
+        });
 
         String selectName = fieldConfig.getValues();
         ConfigObject selectConfig = selects.toConfig().getObject(selectName);
@@ -48,7 +59,7 @@ public class KanbanView extends VerticalLayout {
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
         for (String string : strings) {
-            VerticalLayout column = createColumn(getTranslation(translations.getString(string)), string, entityManagerService);
+            VerticalLayout column = createColumn(getTranslation(translations.getString(string)), string);
             kanbanBoard.add(column);
 
         }
@@ -58,8 +69,7 @@ public class KanbanView extends VerticalLayout {
         setPadding(false);
     }
 
-    // Methode zur Erstellung einer Spalte
-    private VerticalLayout createColumn(String title, String string, TurboCrudEntityManagerService entityManagerService) {
+    private VerticalLayout createColumn(String title, String columnDatabaseValue) {
         VerticalLayout column = new VerticalLayout();
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
@@ -72,44 +82,33 @@ public class KanbanView extends VerticalLayout {
         column.setHeightFull();
         column.getStyle().set("overflow", "auto");
 
-        // Drop-Ziele für Drag-and-Drop ermöglichen
+        // Enable drag and drop and drop targets
         DropTarget<VerticalLayout> dropTarget = DropTarget.create(column);
         dropTarget.addDropListener(event -> {
             Component draggedComponent = event.getDragSourceComponent().orElse(null);
             if (draggedComponent != null) {
                 column.add(draggedComponent);
             }
+            event.getDragData().ifPresent(o -> {
+                if (o instanceof GenericEntity) {
+                    ((GenericEntity) o).put(kanbanConfig.getColumnField(), columnDatabaseValue);
+                    entityManagerService.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
+                }
+            });
         });
 
-        // Titel der Spalte hinzufügen
+        // Add column title
         Div titleLabel = new Div(new H4(title));
         titleLabel.getStyle().set("font-weight", "bold");
         titleLabel.getStyle().set("margin-bottom", "10px");
         wrapper.add(titleLabel);
         wrapper.add(column);
 
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), string, 0, 1000);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-            column.add(createCardComponent(record));
+            column.add(itemRenderer.createComponent(record));
         }
 
         return wrapper;
-    }
-
-    // Methode zur Erstellung einer Karte (Aufgabe) mit TurboCrudItemFactory
-    private Component createCardComponent(GenericEntity genericEntity) {
-        ComponentRenderer<Component, GenericEntity> taskRenderer = new ComponentRenderer<>(task -> {
-            // Erzeuge eine Komponente für die Karte über die TurboCrudItemFactory
-            Component card = itemFactory.renderItem(kanbanConfig, genericEntity, null);
-
-            // Ermögliche das Draggen der Karte
-            DragSource<Component> dragSource = DragSource.create(card);
-            dragSource.setDragData(task);
-
-            return card;
-        });
-
-        // Karte dynamisch mit TurboCrudItemFactory rendern und zurückgeben
-        return taskRenderer.createComponent(genericEntity);
     }
 }

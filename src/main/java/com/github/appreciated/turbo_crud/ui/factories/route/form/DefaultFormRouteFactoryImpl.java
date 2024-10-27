@@ -69,43 +69,44 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
     }
 
     public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, FormConfiguration formConfiguration) {
-        String table = route.getRepository();
-
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
-
-        H2WithHasValue titleComponent = new H2WithHasValue();
-
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
-
-        String lastSegment = routeResolver.getLastSegment();
-        GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);
-
-        Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
-
         String prefix = !isWrapped ? layout.getTranslation(route.getTitle()) + " / " : "";
 
-        binder.bind(
-                titleComponent,
-                entity1 -> prefix + entity1.getString(formConfiguration.getTitleField()),
-                (entity1, string) -> {
-                }
-        );
+        H2WithHasValue titleComponent = new H2WithHasValue();
+        Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
+        if (!creationMode) {
+            binder.bind(
+                    titleComponent,
+                    entity1 -> prefix + entity1.getString(formConfiguration.getTitleField()),
+                    (entity1, string) -> {
+                    }
+            );
+        } else {
+            titleComponent.setText(titleComponent.getTranslation("button.create.title"));
+        }
 
+        String table = route.getRepository();
         RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(table);
-
+        String lastSegment = routeResolver.getLastSegment();
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
+        GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, route, formConfiguration, entity,factoryRegistry, tables, binder, form, formCreator);
-
         binder.setBean(entity);
 
         // Generic Save button
         Button save = new Button(layout.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                entityManagerService.updateRecordById(EntityUtil.getId(entity), entity);
-                binder.setBean(entity);
+                if (!creationMode){
+                    entityManagerService.updateRecordById(EntityUtil.getId(entity), entity);
+                    binder.setBean(entity);
+                } else {
+                    Object o = entityManagerService.insertRecord(entity);
+                    binder.setBean(entityManagerService.getRecordById(o));
+                }
                 Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             } catch (ValidationException e) {
@@ -135,7 +136,10 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         }
 
         // Add the form and buttons to the layout
-        headerBar.add(titleComponent, save, delete);
+        headerBar.add(titleComponent, save);
+        if (!creationMode){
+            headerBar.add(delete);
+        }
         headerBar.setAlignItems(CENTER);
         if (!isHeaderHidden) {
             layout.add(headerBar);

@@ -13,5 +13,7 @@ public class RouteHeader extends HorizontalLayout {
         }
         add(h2);
         setAlignItems(Alignment.CENTER);
+        setMinHeight("53px");
+        getStyle().set("box-sizing", "content-box");
     }
 }

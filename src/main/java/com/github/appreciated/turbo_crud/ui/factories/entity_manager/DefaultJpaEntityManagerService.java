@@ -41,8 +41,8 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
      * @param values A map of column names and values to be inserted.
      */
 
-    public void insertRecord(GenericEntity values) {
-        transactionTemplate.executeWithoutResult(status -> {
+    public Object insertRecord(GenericEntity values) {
+        return transactionTemplate.execute(status -> {
             StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable()));
             StringBuilder placeholders = new StringBuilder(" VALUES (");
             List<Object> params = values.getProperties().values().stream().toList();
@@ -52,9 +52,9 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
                 placeholders.append("?,");
             });
 
-            sql.deleteCharAt(sql.length() - 1); // Remove last comma
-            placeholders.deleteCharAt(placeholders.length() - 1); // Remove last comma
-            sql.append(")").append(placeholders).append(")");
+            sql.deleteCharAt(sql.length() - 1); // Letztes Komma entfernen
+            placeholders.deleteCharAt(placeholders.length() - 1); // Letztes Komma entfernen
+            sql.append(")").append(placeholders).append(") RETURNING id"); // "RETURNING id" für die generierte ID
 
             Query query = entityManager.createNativeQuery(sql.toString());
             for (int i = 0; i < params.size(); i++) {
@@ -64,7 +64,9 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
                 }
                 query.setParameter(i + 1, value);
             }
-            query.executeUpdate();
+
+            // Die generierte ID nach dem Einfügen abrufen
+            return query.getSingleResult();
         });
     }
 

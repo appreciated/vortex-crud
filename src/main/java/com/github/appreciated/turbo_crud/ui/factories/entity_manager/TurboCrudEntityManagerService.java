@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TurboCrudEntityManagerService {
 
-    void insertRecord(GenericEntity values);
+    Object insertRecord(GenericEntity values);
 
     List<GenericEntity> getRecordsFromTable(int offset, int limit);
 
