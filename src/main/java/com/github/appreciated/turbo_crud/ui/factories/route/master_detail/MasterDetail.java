@@ -94,7 +94,7 @@ public class MasterDetail extends SplitLayout {
         textField.setValueChangeMode(ValueChangeMode.LAZY);
         textField.setPrefixComponent(VaadinIcon.SEARCH.create());
         textField.setWidthFull();
-        textField.setPlaceholder("Suchen...");
+        textField.setPlaceholder(textField.getTranslation("search.caption"));
         textField.addValueChangeListener(event -> applyFilter(event.getValue())); // Suchfunktion hinzufügen
 
         HorizontalLayout searchContainer = new HorizontalLayout(textField);
