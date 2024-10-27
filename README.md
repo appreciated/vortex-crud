@@ -24,7 +24,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Custom Repositories**: Enable integration of custom data repositories.
 - **Multiple Forms in Detail Views**: Support so a Detail can contain multiple forms (see [Architecture](#Architecture)).
 - **[WIP] Additional Routes**:
-  - **Kanban Route**: [Directus example](https://directus.pizza/admin/content/posts?bookmark=44)
+  - **Kanban Route**
 - **Route Filters**: Filter entity lists in "master-detail" routes.
 
 ## Roadmap (in no particular order)
