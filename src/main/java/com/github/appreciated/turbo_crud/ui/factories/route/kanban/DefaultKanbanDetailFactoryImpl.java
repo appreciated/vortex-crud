@@ -57,7 +57,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         Config factoryConfig = route.getConfiguration();
         KanbanConfig gridConfiguration = ConfigBeanFactory.create(factoryConfig, KanbanConfig.class);
 
-        KanbanView kanbanView = new KanbanView(turboCrudItemFactory, gridConfiguration);
+        KanbanView kanbanView = new KanbanView(route.getRepository(),entityManagerService, turboCrudItemFactory, gridConfiguration, configService.getConfiguration());
 
         // Back button
         Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());

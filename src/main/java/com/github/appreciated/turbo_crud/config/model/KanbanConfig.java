@@ -7,14 +7,11 @@ import java.util.List;
 public class KanbanConfig implements ItemFactoryConfig{
 
     private String factory;
-    @Optional
+    private String columnField;
     private String titleField;
-    @Optional
     private String descriptionField;
     @Optional
     private String imageField;
-    @Optional
-    private boolean inlineEdit;
     @Optional
     private List<FormItem> children;
 
@@ -56,5 +53,13 @@ public class KanbanConfig implements ItemFactoryConfig{
 
     public void setChildren(List<FormItem> children) {
         this.children = children;
+    }
+
+    public String getColumnField() {
+        return columnField;
+    }
+
+    public void setColumnField(String columnField) {
+        this.columnField = columnField;
     }
 }

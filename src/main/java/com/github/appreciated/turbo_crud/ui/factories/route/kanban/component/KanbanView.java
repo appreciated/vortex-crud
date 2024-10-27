@@ -1,9 +1,17 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban.component;
 
+import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
+import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.KanbanConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
+import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigObject;
+import com.typesafe.config.ConfigValue;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dnd.DragSource;
@@ -14,27 +22,42 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class KanbanView extends VerticalLayout {
 
     private final TurboCrudItemFactory itemFactory;
     private final KanbanConfig kanbanConfig;
 
-    public KanbanView(TurboCrudItemFactoryRegistry itemFactoryRegistry, KanbanConfig kanbanConfig) {
+    public KanbanView(String repository, TurboCrudEntityManagerService entityManagerService, TurboCrudItemFactoryRegistry itemFactoryRegistry, KanbanConfig kanbanConfig, ApplicationConfig configService) {
+        ConfigObject selects = configService.getSelects();
+        RepositoryConfig config = configService.getRepositoriesConfig().get(repository);
+        FieldConfig fieldConfig = config.getFieldsConfig().get(kanbanConfig.getColumnField());
+
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
 
-        // Erstelle die drei Spalten
-        FlexLayout todoColumn = createColumn("To Do");
-        FlexLayout inProgressColumn = createColumn("In Progress");
-        FlexLayout doneColumn = createColumn("Done");
+        String selectName = fieldConfig.getValues();
+        ConfigObject selectConfig = selects.toConfig().getObject(selectName);
 
-        // Beispielhafte Aufgaben hinzufügen
-        todoColumn.add(createCardComponent(new GenericEntity()));
-        todoColumn.add(createCardComponent(new GenericEntity()));
-        todoColumn.add(createCardComponent(new GenericEntity()));
+        if (selectConfig == null) {
+            throw new IllegalStateException("selectConfig must not be null");
+        }
 
-        // Layout für die Kanban-Tafel
-        HorizontalLayout kanbanBoard = new HorizontalLayout(todoColumn, inProgressColumn, doneColumn);
+        Set<String> strings = selectConfig.keySet();
+        Config translations = selectConfig.toConfig();
+
+        HorizontalLayout kanbanBoard = new HorizontalLayout();
+        for (String string : strings) {
+            FlexLayout column = createColumn(getTranslation(translations.getString(string)));
+            kanbanBoard.add(column);
+            List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), string, 0, 1000);
+            for (GenericEntity record : recordsFromTableWhereColumnEquals) {
+                createCardComponent(record);
+            }
+        }
         kanbanBoard.setSizeFull();
         add(kanbanBoard);
         setSizeFull();
