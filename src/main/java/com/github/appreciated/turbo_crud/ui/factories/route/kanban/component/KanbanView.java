@@ -55,6 +55,7 @@ public class KanbanView extends VerticalLayout {
         kanbanBoard.setSizeFull();
         add(kanbanBoard);
         setSizeFull();
+        setPadding(false);
     }
 
     // Methode zur Erstellung einer Spalte

@@ -31,6 +31,7 @@ public class Submenu extends SplitLayout {
     private final Integer currentPathIndex;
     private final TurboCrudIconFactory iconFactory;
     private final TurboCrudConfigService configService;
+    private Component active;
 
     public Submenu(Integer currentPathIndex,
                    TurboCrudPathToRouteResolver routeResolver,
@@ -69,10 +70,10 @@ public class Submenu extends SplitLayout {
         addToSecondary(detailLayout);
 
         setSizeFull();
-        initializeRouteList(route.getChildrenMap());
+        initializeRouteList(route.getChildrenMap(), currentPathIndex, routeResolver);
 
-        if (routeResolver.hasPathForIndex(currentPathIndex + 1)){
-            showRouteDetail(route.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex+1)), routeResolver);
+        if (hasActiveSubroute(currentPathIndex, routeResolver)) {
+            showRouteDetail(getActiveSubroute(currentPathIndex, routeResolver), routeResolver);
         }
 
         setPrimaryStyle("flex", "1 0 250px");
@@ -80,7 +81,15 @@ public class Submenu extends SplitLayout {
         addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
     }
 
-    private void initializeRouteList(Map<String, Route> childRoutes) {
+    private static boolean hasActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
+        return routeResolver.hasPathForIndex(currentPathIndex + 1);
+    }
+
+    private Route getActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
+        return route.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
+    }
+
+    private void initializeRouteList(Map<String, Route> childRoutes, Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
         childRoutes.forEach((key, value) -> {
             HorizontalLayout routeButton = new HorizontalLayout();
             routeButton.addClassNames("card", "master");
@@ -89,12 +98,22 @@ public class Submenu extends SplitLayout {
             routeButton.add(new H4(routeButton.getTranslation(value.getTitle())));
             routeButton.setWidthFull();
 
+            if (hasActiveSubroute(currentPathIndex, routeResolver) && value == getActiveSubroute(currentPathIndex, routeResolver)) {
+                routeButton.addClassName("active");
+                active = routeButton;
+            }
+
             routeButton.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
-                    String pathForEntity = pathVariables.generateSubRoute(currentPathIndex, key);
+                    String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
                     pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
                     ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
+                    if (active != null) {
+                        active.removeClassName("active");
+                    }
                     showRouteDetail(route.getChildrenMap().get(key), pathVariables);
+                    routeButton.addClassName("active");
+                    active = routeButton;
                 });
             });
             routeListLayout.add(routeButton);
@@ -103,6 +122,7 @@ public class Submenu extends SplitLayout {
 
     private void showRouteDetail(Route subRoute, TurboCrudPathToRouteResolver routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
+
             detailLayout.removeAll();
             TurboCrudRouteFactory factory = routeFactory.getFactory(subRoute.getFactory());
             Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
