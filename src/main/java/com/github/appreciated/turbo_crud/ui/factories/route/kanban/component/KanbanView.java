@@ -65,9 +65,9 @@ public class KanbanView extends VerticalLayout {
         wrapper.setWidth("300px");
         wrapper.getStyle().set("overflow", "hidden");
         wrapper.addClassNames("card", "no-hover");
+        wrapper.setSpacing(false);
         column.setPadding(false);
         column.setHeightFull();
-        column.setSpacing(false);
         column.getStyle().set("overflow", "auto");
 
         // Drop-Ziele für Drag-and-Drop ermöglichen
