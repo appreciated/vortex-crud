@@ -16,6 +16,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
 import com.vaadin.flow.component.virtuallist.VirtualList;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
@@ -78,7 +79,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                 layout.add(div);
             }
             wrapper.add(layout);
-            wrapper.getStyle().set("padding", "10px 10px 0px 10px");
+            wrapper.getStyle().set("padding", "10px 0px 0px 0px");
             return wrapper;
         }));
     }
@@ -88,30 +89,41 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void initLazyLoadingDataProvider() {
-        this.setDataProvider(DataProvider.fromCallbacks(
-                        // Fetching the data from the database for a given offset and limit
-                        query -> {
-                            int offset = query.getOffset() * currentNumberOfColumns;
-                            int limit = query.getLimit() * currentNumberOfColumns;
-                            List<GenericEntity> items = entityManagerService.getRecordsFromTable(offset, limit);
+        CallbackDataProvider<EntityItemList, String> dataProvider = DataProvider.fromFilteringCallbacks(
+                // Fetching the data from the database for a given offset and limit
+                query -> {
+                    int offset = query.getOffset() * currentNumberOfColumns;
+                    int limit = query.getLimit() * currentNumberOfColumns;
+                    List<GenericEntity> items;
 
-                            List<EntityItemList> wrappers = new ArrayList<>();
-                            for (int i = 0; i < items.size() / currentNumberOfColumns; i++) {
-                                List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
-                                wrappers.add(new EntityItemList(group));
-                            }
+                    String filterText = query.getFilter().orElse("");
+                    if (filterText.isEmpty()) {
+                        items = entityManagerService.getRecordsFromTable(offset, limit);
+                    } else {
+                        items = entityManagerService.getRecordsFromTableWhereColumnLike(gridConfiguration.getTitleField(), filterText, offset, limit);
+                    }
 
-                            return wrappers.stream();
-                        },
-                        // Providing the total number of records for correct pagination
-                        query -> {
-                            int count = entityManagerService.count();
-                            //System.out.println(count);
-                            //System.out.println(currentNumberOfColumns);
-                            return count / currentNumberOfColumns;
-                        }
-                )
+                    List<EntityItemList> wrappers = new ArrayList<>();
+                    for (int i = 0; i < Math.ceil((double) items.size() / (double) currentNumberOfColumns); i++) {
+                        List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
+                        wrappers.add(new EntityItemList(group));
+                    }
+
+                    return wrappers.stream();
+                },
+                // Providing the total number of records for correct pagination
+                query -> {
+                    int count;
+                    String filterText = query.getFilter().orElse("");
+                    if (filterText.isEmpty()) {
+                        count = entityManagerService.count();
+                    } else {
+                        count = entityManagerService.countWhereColumnLike(gridConfiguration.getTitleField(), filterText);
+                    }
+                    return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
+                }
         );
+        this.setDataProvider(dataProvider.withConfigurableFilter());
     }
 
     @Override

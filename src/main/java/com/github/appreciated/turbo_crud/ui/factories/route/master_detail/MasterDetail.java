@@ -3,10 +3,12 @@ package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.GridConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
+import com.github.appreciated.turbo_crud.ui.components.SearchField;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
@@ -25,13 +27,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
-import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.data.value.ValueChangeMode;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.BETWEEN;
@@ -43,7 +41,6 @@ public class MasterDetail extends SplitLayout {
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
-    private final Config factoryConfig;
     private final Integer currentPathIndex;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudConfigService configService;
@@ -67,8 +64,8 @@ public class MasterDetail extends SplitLayout {
 
         this.pathVariables = routeResolver;
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
-        this.factoryConfig = route.getConfiguration();
-        this.gridConfiguration = ConfigBeanFactory.create(this.factoryConfig, GridConfig.class);
+        Config factoryConfig = route.getConfiguration();
+        this.gridConfiguration = ConfigBeanFactory.create(factoryConfig, GridConfig.class);
         this.itemFactory = itemFactoryRegistry.getFactory(gridConfiguration.getFactory());
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
@@ -90,12 +87,7 @@ public class MasterDetail extends SplitLayout {
         headerContainer.setWidthFull();
         headerContainer.setJustifyContentMode(BETWEEN);
 
-        TextField textField = new TextField();
-        textField.setValueChangeMode(ValueChangeMode.LAZY);
-        textField.setPrefixComponent(VaadinIcon.SEARCH.create());
-        textField.setWidthFull();
-        textField.setPlaceholder(textField.getTranslation("search.caption"));
-        textField.addValueChangeListener(event -> applyFilter(event.getValue())); // Suchfunktion hinzufügen
+        SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
 
         HorizontalLayout searchContainer = new HorizontalLayout(textField);
         searchContainer.setPadding(false);
@@ -158,7 +150,7 @@ public class MasterDetail extends SplitLayout {
             Component component = itemFactory.renderItem(gridConfiguration, item, null);
             component.addClassName("master");
             Div div = new Div(component);
-            if (EntityUtil.getId(item).equals(pathVariables.getLastSegment())) {
+            if (EntityUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
                 setNewActive(component);
             }
@@ -168,25 +160,8 @@ public class MasterDetail extends SplitLayout {
             });
             return div;
         }));
-        CallbackDataProvider<GenericEntity, String> baseDataProvider = DataProvider.fromFilteringCallbacks(
-                query -> {
-                    String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
-                        return entityManagerService.getRecordsFromTable(query.getOffset(), query.getLimit()).stream();
-                    } else {
-                        return entityManagerService.getRecordsFromTableWhereColumnLike(gridConfiguration.getTitleField(), filterText, query.getOffset(), query.getLimit()).stream();
-                    }
-                },
-                query -> {
-                    String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
-                        return entityManagerService.count();
-                    } else {
-                        return entityManagerService.countWhereColumnLike(gridConfiguration.getTitleField(), filterText);
-                    }
-                }
-        );
-        dataProvider = baseDataProvider.withConfigurableFilter();
+
+        dataProvider = new GenericFilterableDataProvider(entityManagerService, gridConfiguration.getTitleField()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 
