@@ -3,7 +3,9 @@ package com.github.appreciated.turbo_crud.ui.factories.route.kanban.component;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBar;
+import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
+import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
+import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
@@ -97,14 +99,17 @@ public class KanbanView extends VerticalLayout {
         }
         kanbanBoard.setSizeFull();
 
-        HorizontalLayout header = new RouteHeaderBar(route,
-                detailRouteSetting,
-                iconFactory,
-                event -> onAdd(dialogFactoryRegistry, route, repository, formCreator, routeFactory)
-        );
+        RouteHeader routeHeader = new RouteHeader(route, iconFactory);
+        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
+                false,
+                null,
+                event -> onAdd(dialogFactoryRegistry, route, repository, formCreator, routeFactory),
+                null,
+                null,
+                routeHeader);
 
         if (!detailRouteSetting.isHeaderHidden()) {
-            add(header);
+            add(headerBar);
         }
 
         add(kanbanBoard);

@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>24.4.12</vaadin.version>
+        <vaadin.version>24.5.2</vaadin.version>
     </properties>
 
     <parent>
@@ -73,6 +73,13 @@
             <artifactId>config</artifactId>
             <version>1.4.3</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.vaadin.stefan</groupId>
+            <artifactId>fullcalendar2</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>

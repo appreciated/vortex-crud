@@ -8,6 +8,7 @@ import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
+import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
@@ -15,22 +16,18 @@ import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.ConfigBeanFactory;
+import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
-
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_ERROR;
-import static com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY;
-import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
 /**
  * Default implementation of the {@link TurboCrudRouteFactory} interface.
@@ -97,10 +94,10 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         binder.setBean(entity);
 
         // Generic Save button
-        Button save = new Button(layout.getTranslation("button.save.title"), event -> {
+        ComponentEventListener<ClickEvent<Button>> onSave = event -> {
             try {
                 binder.writeBean(entity);
-                if (!creationMode){
+                if (!creationMode) {
                     entityManagerService.updateRecordById(EntityUtil.getId(entity), entity);
                     binder.setBean(entity);
                 } else {
@@ -113,34 +110,16 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
                 Notification notification = Notification.show(layout.getTranslation("form.notification.failed-to-save", e.getMessage()));
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
-        });
-        save.addThemeVariants(LUMO_PRIMARY);
+        };
 
-        // Generic Delete button
-        Button delete = new Button(layout.getTranslation("button.delete.title"), event -> {
+        ComponentEventListener<ClickEvent<Button>> onDelete = event -> {
             entityManagerService.deleteRecordById(EntityUtil.getId(entity));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
-        });
-        delete.addThemeVariants(LUMO_ERROR);
+        };
 
-        // Generic Delete button
-        Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), event -> UI.getCurrent().getPage().getHistory().back());
-        back.getStyle().set("font-size", "1.6em")
-                .set("padding", "calc(var(--lumo-button-size) / 8)")
-                .set("border-radius", "100%")
-                .set("box-sizing", "content-box");
+        ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
 
-        HorizontalLayout headerBar = new HorizontalLayout();
-        if (!isWrapped) {
-            headerBar.add(back);
-        }
-
-        // Add the form and buttons to the layout
-        headerBar.add(titleComponent, save);
-        if (!creationMode){
-            headerBar.add(delete);
-        }
-        headerBar.setAlignItems(CENTER);
+        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(isWrapped, creationMode, onSave, null,  onDelete, onBack, titleComponent);
         if (!isHeaderHidden) {
             layout.add(headerBar);
         }
