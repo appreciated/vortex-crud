@@ -90,7 +90,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);
-        formCreator.bindAndAddToLayout(table, route, formConfiguration, entity,factoryRegistry, tables, binder, form, formCreator);
+        formCreator.bindAndAddToLayout(table, route, formConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
 
         // Generic Save button
@@ -119,7 +119,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
 
-        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(isWrapped, creationMode, onSave, null,  onDelete, onBack, titleComponent);
+        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(isWrapped, creationMode, onSave, null, onDelete, onBack, titleComponent);
         if (!isHeaderHidden) {
             layout.add(headerBar);
         }

@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
-import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -44,8 +43,15 @@ public class DefaultListRouteFactoryImpl implements TurboCrudRouteFactory {
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-
-        return new List(currentPathIndex, routeResolver, entityManagerFactoryRegistry, configService, columnCallbackRegistry, formCreator,dialogFactoryRegistry,routeFactoryRegistry,iconFactory);
+        return new List(currentPathIndex,
+                routeResolver,
+                entityManagerFactoryRegistry,
+                configService,
+                columnCallbackRegistry,
+                formCreator,
+                dialogFactoryRegistry,
+                routeFactoryRegistry,
+                iconFactory);
     }
 
     @Override

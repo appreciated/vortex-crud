@@ -11,7 +11,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
-import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -48,6 +47,7 @@ public class List extends VerticalLayout {
         setPadding(true);
         setSpacing(false);
     }
+
     private void applyFilter(String filterText) {
         DataProvider<GenericEntity, ?> dataProvider = entityGrid.getDataProvider();
         if (dataProvider != null) {

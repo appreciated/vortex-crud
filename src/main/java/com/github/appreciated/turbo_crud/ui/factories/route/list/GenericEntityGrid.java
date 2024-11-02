@@ -1,9 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
-import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -11,12 +9,12 @@ import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
 import com.typesafe.config.Config;
+import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
+import org.jsoup.nodes.FormElement;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,22 +37,24 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         String table = route.getRepository();
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
-        DataProvider<GenericEntity, Void> dataProvider =  new GenericFilterableDataProvider(entityManagerService, "").withConfigurableFilter();
 
         RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
-        Config itemFactoryConfig = route.getConfiguration();
+        GridOrListConfig gridOrListConfiguration = ConfigBeanFactory.create(route.getConfiguration(), GridOrListConfig.class);
+
+        assert gridOrListConfiguration.getFilterField() != null;
+        DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManagerService, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+
         Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
 
-        /*
         // Iterate over the fields defined in the configuration
-        for (FormElement field : itemFactoryConfig.getString()) {
-            String fieldName = field.getColumn();
+        for (FormItem field : gridOrListConfiguration.getChildren()) {
+            String fieldName = field.getField();
             FieldConfig fieldConfig = fieldsConfig.get(fieldName);
             if (fieldConfig == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
-            listColumnFactory.getCallback(pathElement).addColumn(this,field,table,fieldName,fieldConfig);
-        }*/
+            listColumnFactory.getCallback(route).addColumn(this, field, table, fieldName, fieldConfig);
+        }
 
         setDataProvider(dataProvider);
         setSizeFull();

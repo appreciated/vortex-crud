@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class KanbanConfig implements ItemFactoryConfig{
+public class KanbanConfig implements ItemFactoryConfig {
 
     private String factory;
     private String columnField;

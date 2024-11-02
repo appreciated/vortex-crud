@@ -23,12 +23,12 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudIconFactory iconFactory;
 
     public DefaultGridRouteFactoryImpl(
-                                       TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                       FormCreator formCreator,
-                                       TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                                       TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-                                       TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                                       TurboCrudIconFactory iconFactory) {
+            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+            FormCreator formCreator,
+            TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+            TurboCrudRouteFactoryRegistry routeFactoryRegistry,
+            TurboCrudItemFactoryRegistry itemFactoryRegistry,
+            TurboCrudIconFactory iconFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;

@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.GridConfig;
+import com.github.appreciated.turbo_crud.config.model.GridOrListConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -34,7 +34,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final TurboCrudItemFactory itemFactory;
     private final TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
-    private final GridConfig gridConfiguration;
+    private final GridOrListConfig gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -49,8 +49,8 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         this.entityManagerService = entityManagerRegistry.getFactory(table);
         Config factoryConfig = config.getConfiguration();
 
-        gridConfiguration = ConfigBeanFactory.create(factoryConfig, GridConfig.class);
-        this.itemFactory = itemFactoryRegistry.getFactory(gridConfiguration.getFactory());
+        gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfig.class);
+        this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -73,7 +73,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(gridConfiguration, entity, maxWidth));
+                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);
@@ -100,7 +100,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                     if (filterText.isEmpty()) {
                         items = entityManagerService.getRecordsFromTable(offset, limit);
                     } else {
-                        items = entityManagerService.getRecordsFromTableWhereColumnLike(gridConfiguration.getTitleField(), filterText, offset, limit);
+                        items = entityManagerService.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
                     List<EntityItemList> wrappers = new ArrayList<>();
@@ -118,7 +118,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                     if (filterText.isEmpty()) {
                         count = entityManagerService.count();
                     } else {
-                        count = entityManagerService.countWhereColumnLike(gridConfiguration.getTitleField(), filterText);
+                        count = entityManagerService.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }

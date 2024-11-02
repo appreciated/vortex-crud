@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class GridConfig implements ItemFactoryConfig{
+public class GridOrListConfig implements ItemFactoryConfig {
 
     private String factory;
     @Optional
@@ -13,6 +13,8 @@ public class GridConfig implements ItemFactoryConfig{
     private String descriptionField;
     @Optional
     private String imageField;
+    @Optional
+    private String filterField;
     @Optional
     private boolean inlineEdit;
     @Optional
@@ -56,5 +58,21 @@ public class GridConfig implements ItemFactoryConfig{
 
     public void setChildren(List<FormItem> children) {
         this.children = children;
+    }
+
+    public String getFilterField() {
+        return filterField;
+    }
+
+    public void setFilterField(String filterField) {
+        this.filterField = filterField;
+    }
+
+    public boolean isInlineEdit() {
+        return inlineEdit;
+    }
+
+    public void setInlineEdit(boolean inlineEdit) {
+        this.inlineEdit = inlineEdit;
     }
 }

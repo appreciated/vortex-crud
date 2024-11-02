@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.GridConfig;
+import com.github.appreciated.turbo_crud.config.model.GridOrListConfig;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
@@ -36,7 +36,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
 
 public class MasterDetail extends SplitLayout {
 
-    private final GridConfig gridConfiguration;
+    private final GridOrListConfig gridOrListConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
@@ -65,8 +65,8 @@ public class MasterDetail extends SplitLayout {
         this.pathVariables = routeResolver;
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         Config factoryConfig = route.getConfiguration();
-        this.gridConfiguration = ConfigBeanFactory.create(factoryConfig, GridConfig.class);
-        this.itemFactory = itemFactoryRegistry.getFactory(gridConfiguration.getFactory());
+        this.gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfig.class);
+        this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
 
@@ -147,7 +147,7 @@ public class MasterDetail extends SplitLayout {
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(gridConfiguration, item, null);
+            Component component = itemFactory.renderItem(gridOrListConfiguration, item, null);
             component.addClassName("master");
             Div div = new Div(component);
             if (EntityUtil.equals(item, pathVariables.getLastSegment())) {
@@ -161,7 +161,7 @@ public class MasterDetail extends SplitLayout {
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider(entityManagerService, gridConfiguration.getTitleField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider(entityManagerService, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 
