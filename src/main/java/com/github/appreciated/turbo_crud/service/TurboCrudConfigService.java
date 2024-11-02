@@ -20,7 +20,7 @@ public class TurboCrudConfigService {
 
     public TurboCrudConfigService() {
         ConfigParseOptions defaults = ConfigParseOptions.defaults();
-        Config config = ConfigFactory.parseResources(TurboCrudConfigService.class.getClassLoader(), "turbo-crud-config.conf", defaults);
+        Config config = ConfigFactory.parseResources(TurboCrudConfigService.class.getClassLoader(), "turbo-crud-config.conf", defaults).resolve();
         this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), ApplicationConfig.class);
         if (config.isEmpty()) {
             throw new IllegalStateException("No TurboCRUD config found");
