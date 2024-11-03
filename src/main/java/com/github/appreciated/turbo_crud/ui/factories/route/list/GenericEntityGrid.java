@@ -6,14 +6,12 @@ import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvi
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
-import com.typesafe.config.Config;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
 import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.DataProvider;
-import org.jsoup.nodes.FormElement;
 
 import java.util.Map;
 

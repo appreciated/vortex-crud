@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.entity_manager;
+package com.github.appreciated.turbo_crud.entity.manager;
 
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;

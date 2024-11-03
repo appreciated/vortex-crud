@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.config;
+package com.github.appreciated.turbo_crud.entity;
 
 import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
@@ -29,22 +29,10 @@ public class TurboCrudDatabaseSchemaValidator {
     private final EntityManager entityManager;
     private final HashMap<Object, Object> typeMappings;
 
-    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService) {
+    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudTypeMappingConfiguration typeMappingConfiguration) {
         this.entityManager = entityManager;
-
-        typeMappings = new HashMap<>();
-        typeMappings.put("number", List.of("INTEGER", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC"));
-        typeMappings.put("id", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
-        typeMappings.put("text", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
-        typeMappings.put("textarea", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
-        typeMappings.put("date", List.of("DATE"));
-        typeMappings.put("datetime", List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME"));
-        typeMappings.put("boolean", List.of("BOOLEAN", "BIT"));
-        typeMappings.put("select", List.of("VARCHAR", "CHARACTER VARYING"));
-        typeMappings.put("reference", typeMappings.get("id"));
-
+        typeMappings = typeMappingConfiguration.getTypeMappings();
         Map<String, RepositoryConfig> tablesConfig = configService.getConfiguration().getRepositoriesConfig();
-
         for (Map.Entry<String, RepositoryConfig> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFieldsConfig());
         }

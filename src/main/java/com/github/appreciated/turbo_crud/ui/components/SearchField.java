@@ -11,6 +11,7 @@ public class SearchField extends TextField {
         setValueChangeMode(ValueChangeMode.LAZY);
         setPrefixComponent(VaadinIcon.SEARCH.create());
         setWidthFull();
+        setMaxWidth("500px");
         setPlaceholder(getTranslation("search.caption"));
         addValueChangeListener(componentValueChangeEventValueChangeListener); // Suchfunktion hinzufügen
     }

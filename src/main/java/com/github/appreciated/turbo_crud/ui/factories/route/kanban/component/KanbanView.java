@@ -6,7 +6,7 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.entity_manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
@@ -69,7 +69,7 @@ public class KanbanView extends VerticalLayout {
                         repository,
                         routeFactory,
                         () -> {
-                            //TODO handle column switch
+                            //TODO handle if the column was edited, requiring the element to move
                             GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
                             cardWrapper.removeAll();
                             cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null));
