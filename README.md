@@ -3,14 +3,14 @@
 
 `turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD-style applications through configuration-driven definitions of routes, UI, entities, and data binding. By providing a robust abstraction layer, TurboCRUD uses Vaadin to dynamically generate routes and includes default implementations for UI representation. This approach enables developers to focus on configuration rather than writing code, enhancing both development speed and flexibility.
 
-## Tech Stack
+## Tech-Stack
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 - **HOCON**: A powerful and human-readable configuration format [(see here)](https://github.com/lightbend/config)
 
 ## Key Features
 - **Configuration-Driven UI and Route Generation**: Rapidly create complex, user-friendly CRUD applications through configuration alone, without writing Java code.
-- **Modular Architecture**: The architecture is modular and flexible at every level (see [Architecture](#Architecture)), allowing for custom implementations.
+- **Modular Architecture**: The architecture is modular and flexible at every level ([see under Architecture](#Architecture)), allowing for custom implementations.
 - **Entity Management**: `turbo-crud` handles data management by default; You need to define the data model.
 - **Custom Repositories**: Use custom data repositories for cases where the default Entity Manager is not ideal.
 - **Database Schema Validation**: The `turbo-crudDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
@@ -18,11 +18,11 @@
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
 - **Nested Hierarchies**
-- **Multiple Forms at Once**: Create views containing multiple forms simultaneously (see [Architecture](#Architecture)).
+- **Multiple Forms at Once**: Create views containing multiple forms simultaneously.
 - **[WIP] Additional Routes**:
     - **Kanban Route**
 - **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
-- **Media Support**: Add, remove, and view media as individual fields
+- **[WIP] Media Support**: Add, remove, and view media as individual fields
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
@@ -40,15 +40,16 @@
     - **Map Route**: Display entities on a map based on latitude and longitude columns.
     - **Generic Block Route**: Support for generic blocks with a flexible factory system.
 - **Custom Menu Routes**: Add custom routes to the menu.
-- **Alternative Collection Editing**: Offer different ways to edit collections (see [Architecture](#Architecture)).
+- **Alternative Collection Editing**: Offer different ways to edit collections.
 - **Configuration Pre-Checks**: Validate the application configuration fully at startup.
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **Code Generation**: Generate code from a turbo-crud HOCON configuration to support a top-down workflow, including model and repository generation.
+- **Code Generation**: Generate Vaadin code from using a given HOCON turbo-crud configuration to support top-down workflows, including models and repositories.
+- **API-Endpoint**: Allow defining API endpoints using the configuration file
 
 ## Data Handling and Management
-turbo-crud utilizes the H2 database during development. The database is accessed by the service `turbo-crudEntityManagerService`, while the `turbo-crudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
+turbo-crud utilizes the H2 database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
 
 ### Core Concept: User-Defined Database Model
 The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
