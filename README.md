@@ -6,7 +6,7 @@
 ## Tech Stack
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
-- **HOCON**: A compact, readable and powerful configuration format [(see here)](https://github.com/lightbend/config)
+- **HOCON**: A powerful and human-readable configuration format [(see here)](https://github.com/lightbend/config)
 
 ## Key Features
 - **Configuration-Driven UI and Route Generation**: Rapidly create complex, user-friendly CRUD applications through configuration alone, without writing Java code.
