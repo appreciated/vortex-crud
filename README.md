@@ -45,7 +45,7 @@
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **Code Generation**: Generate Vaadin code from using a given HOCON turbo-crud configuration to support top-down workflows, including models and repositories.
+- **Code Generation**: Check feasibility to generate Vaadin code by utilizing a configuration in combination with the runtime implementations to support top-down workflows, including models and repositories.
 - **API-Endpoint**: Allow defining API endpoints using the configuration file
 
 ## Data Handling and Management
