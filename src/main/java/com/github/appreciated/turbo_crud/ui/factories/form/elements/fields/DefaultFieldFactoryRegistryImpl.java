@@ -29,6 +29,7 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
         factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getRepositoriesConfig()));
         factories.put("number", new DefaultNumberFieldFactory());
         factories.put("reference", new DefaultReferenceFieldFactory(entityManagerFactoryRegistry));
+        factories.put("image", new DefaultImageFieldFactory());
     }
 
     public Map<String, TurboCrudFieldFactory> getFactories() {

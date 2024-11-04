@@ -41,11 +41,11 @@ public class FormCreator {
         // Iterate over the fields defined in the configuration
         for (FormItem field : formConfiguration.getChildren()) {
             String fieldName = field.getField();
-            FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null && field.getFactory() != null && !field.getType().equals("collection")) {
-                throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
-            }
-            if (fieldConfig != null && !field.getType().equals("collection")) {
+            if (!field.getType().equals("collection")) {
+                FieldConfig fieldConfig = fieldsConfig.get(fieldName);
+                if (fieldConfig == null) {
+                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
+                }
                 TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig.getFactory());
                 Component component = factory.createComponent(table, fieldName, fieldConfig);
                 if (component instanceof HasLabel) {
@@ -55,15 +55,19 @@ public class FormCreator {
                 form.add(component);
                 form.setColspan(component, (field.getSpan() == null ? 1 : field.getSpan()));
             } else {
-                Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
-                        EntityUtil.getId(entity),
-                        route,
-                        field,
-                        routeFactory,
-                        formCreator
-                );
-                form.add(collection);
-                form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
+                if (field.getType().equals("collection")) {
+                    Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
+                            EntityUtil.getId(entity),
+                            route,
+                            field,
+                            routeFactory,
+                            formCreator
+                    );
+                    form.add(collection);
+                    form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
+                } else {
+                    throw new IllegalStateException("Cannot initialize field with name '%s'".formatted(fieldName));
+                }
             }
         }
     }

@@ -2,17 +2,13 @@ package com.github.appreciated.turbo_crud.ui.factories.item;
 
 import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.ImageHasValue;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.server.StreamResource;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 @CssImport("card-styles.css")
 public class DefaultItem extends HorizontalLayout {
@@ -24,20 +20,11 @@ public class DefaultItem extends HorizontalLayout {
         addClassName("card");
 
         // Optional image
-        Image image = null;
+        ImageHasValue image = null;
         String imageField = config.getImageField();
         if (imageField != null) {
             String imagePath = entity.getString(imageField);
-            image = new Image(
-                    new StreamResource(imagePath.substring(imagePath.lastIndexOf("/") + 1), () -> {
-                        try {
-                            return new FileInputStream(imagePath);
-                        } catch (FileNotFoundException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }),
-                    imagePath
-            );
+            image = new ImageHasValue(imagePath, imagePath);
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
