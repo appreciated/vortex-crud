@@ -13,10 +13,10 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 ## Key Features
 - **Low Code for Vaadin Flow**: Build complicated CRUD applications super fast without needing to write Java-Code only by used configuration.
 - **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture)) to allow providing customer implementations.
+- **Entity Management**: No need to write Data models the data management can be handled by TurboCRUD.
 - **Custom Repositories**: Provide custom data repositories for use cases that do not work well with the default Entity manager.
 - **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` checks that the database schema matches the configuration at startup.
 - **UI Components and Factories**: Factory implementations like `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
-- **Low Code Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` handle generic entity management based on the database schema.
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
 - **Nested Hierarchies**
