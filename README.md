@@ -11,7 +11,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **HOCON**: Configuration format that is compact, readable, and supports imports
 
 ## Key Features
-- **Low Code Capabilites**: Allows building complicated CRUD applications without the need to write Java-Code only by used configuration.
+- **Low Code for Vaadin Flow**: Allows building complicated CRUD applications without the need to write Java-Code only by used configuration.
 - **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture)).
 - **Customization**: You can provide a custom implementation for every component.
 - **Custom Repositories**: Provide custom data repositories for more complicated requirements.
