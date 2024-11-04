@@ -1,7 +1,7 @@
 # turbo-crud
-<img width="100" alt="TurboCRUD Logo" src="./turbo-crud.png"/>
+<img width="100" alt="turbo-crud Logo" src="./turbo-crud.png"/>
 
-`turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD-style applications through configuration-driven definitions of routes, UI, entities, and data binding. By providing a robust abstraction layer, TurboCRUD uses Vaadin to dynamically generate routes and includes default implementations for UI representation. This approach enables developers to focus on configuration rather than writing code, enhancing both development speed and flexibility.
+`turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD-style applications through configuration-driven definitions of routes, UI, entities, and data binding. By providing several abstraction layers, `turbo-crud` uses Vaadin to dynamically generate routes and includes default implementations for UI representation. This approach enables developers to focus on configuration rather than writing code, enhancing both development speed and flexibility.
 
 ## Tech-Stack
 - **Spring Boot**: Backend API development and dependency injection
