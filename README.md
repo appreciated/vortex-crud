@@ -1,9 +1,7 @@
-# turbo-curd (Current Working Title)
+# turbo-crud
 <img width="100" alt="TurboCRUD Logo" src="./turbo-crud.png"/>
 
-TurboCRUD is a framework designed to accelerate the development of CRUD-style applications using Vaadin Flow. This is achieved by providing a high-level abstraction layer, enabling developers to work faster while retaining flexibility. With extensibility at its core, TurboCRUD allows for easy adaptation and expansion of features as project requirements evolve.
-
-Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetitive tasks and promoting the reusability of components. This empowers developers to focus more on application-specific logic and customization, maximizing productivity and efficiency.
+`turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD-style applications through configuration-driven definitions of routes, UI, entities, and data binding. By providing a robust abstraction layer, TurboCRUD uses Vaadin to dynamically generate routes and includes default implementations for UI representation. This approach enables developers to focus on configuration rather than writing code, enhancing both development speed and flexibility.
 
 ## Tech Stack
 - **Spring Boot**: Backend API development and dependency injection
@@ -11,11 +9,11 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **HOCON**: A compact, readable configuration format that supports imports
 
 ## Key Features
-- **Low Code for Vaadin Flow**: Build complex CRUD applications rapidly using configuration without the need to write Java code.
+- **Configuration-Driven UI and Route Generation**: Rapidly create complex, user-friendly CRUD applications through configuration alone, without writing Java code.
 - **Modular Architecture**: The architecture is modular and flexible at every level (see [Architecture](#Architecture)), allowing for custom implementations.
-- **Entity Management**: Data models can be managed without manual coding, handled directly by TurboCRUD.
+- **Entity Management**: `turbo-crud` handles data management by default; You need to define the data model.
 - **Custom Repositories**: Use custom data repositories for cases where the default Entity Manager is not ideal.
-- **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
+- **Database Schema Validation**: The `turbo-crudDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
 - **UI Components and Factories**: Factory implementations such as `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
@@ -23,13 +21,13 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Multiple Forms at Once**: Create views containing multiple forms simultaneously (see [Architecture](#Architecture)).
 - **[WIP] Additional Routes**:
     - **Kanban Route**
-- **Route Filters**: Filter entity lists in "grid," "list," and "master-detail" routes.
+- **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
+- **Media Support**: Add, remove, and view media as individual fields
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route."
 - **Field Validation**: Support for basic and advanced field validation hooks.
-- **Media Support**: Add, remove, and view media (as individual fields or collections).
 - **User and Role Management & Authentication**: (optionally using Authentik)
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Role-Based Access Control (RBAC)**
@@ -47,13 +45,13 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **Code Generation**: Generate code from a TurboCRUD HOCON configuration to support a top-down workflow, including model and repository generation.
+- **Code Generation**: Generate code from a turbo-crud HOCON configuration to support a top-down workflow, including model and repository generation.
 
 ## Data Handling and Management
-TurboCRUD utilizes the H2 database during development. The database is accessed by the service `TurboCRUDEntityManagerService`, while the `TurboCRUDDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
+turbo-crud utilizes the H2 database during development. The database is accessed by the service `turbo-crudEntityManagerService`, while the `turbo-crudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
 
 ### Core Concept: User-Defined Database Model
-The database model is defined by the user, with TurboCRUD validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
+The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
 
 ```sql
 -- Predefined system tables (examples)
@@ -154,7 +152,7 @@ classDiagram
 ```
 
 ## Configuration via HOCON
-TurboCRUD supports configuration through HOCON files, defining routes and tables.
+turbo-crud supports configuration through HOCON files, defining routes and tables.
 
 **Note**: Although Java classes can theoretically be used for configuration (as HOCON files are parsed into Java classes), this approach is not currently supported. HOCON is preferred for its readability and maintainability.
 
@@ -193,7 +191,7 @@ application {
         description-field: "description"
       }
       roles: ["manager", "admin"]
-      child: ${application.forms.project} #This is not feaure of TurboCrud but rather a HOCON feature called "substitution" 
+      child: ${application.forms.project} #This is not feaure of turbo-crud but rather a HOCON feature called "substitution" 
     }
     # ...
   }
@@ -309,7 +307,7 @@ application {
         description-field: "description"
       }
       roles: ["manager", "admin"]
-      child: ${application.forms.project} #This is not feaure of TurboCrud but rather a HOCON feature called "substitution" 
+      child: ${application.forms.project} #This is not feaure of turbo-crud but rather a HOCON feature called "substitution" 
     }
     "tasks" {
       icon: "TASKS"
