@@ -11,17 +11,16 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **HOCON**: Configuration format that is compact, readable, and supports imports
 
 ## Key Features
-- **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture))
-- **Flexible Configuration System**: Uses HOCON for dynamic configuration, making it easy to set up various parts of the application.
+- **Low Code Capabilites**: Allows building complicated CRUD applications without the need to write Java-Code only by used configuration.
+- **Modular Architecture**: The Architecture is modular and flexible on every level (see [Architecture](#Architecture)).
+- **Customization**: You can provide a custom implementation for every component.
+- **Custom Repositories**: Provide custom data repositories for more complicated requirements.
 - **Database Schema Validation**: The `TurboCRUDDatabaseSchemaValidator` checks that the database schema matches the configuration at startup.
-- **Dynamic Routing**: The `DynamicRoute` class enables routing based on configuration files, allowing flexible route management.
 - **UI Components and Factories**: Factory implementations like `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
 - **Low Code Entity Management**: The `GenericEntity` and `TurboCRUDEntityManagerService` handle generic entity management based on the database schema.
 - **i18n Support**
-- **Customizable Icons**
 - **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
 - **Nested Hierarchies**
-- **Custom Repositories**: Enable integration of custom data repositories.
 - **Multiple Forms at Once**: Create views that contain multiple forms at once (see [Architecture](#Architecture)).
 - **[WIP] Additional Routes**:
   - **Kanban Route**
