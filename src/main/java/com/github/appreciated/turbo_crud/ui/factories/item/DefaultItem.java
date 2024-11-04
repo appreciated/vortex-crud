@@ -9,6 +9,10 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.server.StreamResource;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 @CssImport("card-styles.css")
 public class DefaultItem extends HorizontalLayout {
@@ -21,8 +25,19 @@ public class DefaultItem extends HorizontalLayout {
 
         // Optional image
         Image image = null;
-        if (config.getImageField() != null) {
-            image = new Image(config.getImageField(), "Entity Image");
+        String imageField = config.getImageField();
+        if (imageField != null) {
+            String imagePath = entity.getString(imageField);
+            image = new Image(
+                    new StreamResource(imagePath.substring(imagePath.lastIndexOf("/") + 1), () -> {
+                        try {
+                            return new FileInputStream(imagePath);
+                        } catch (FileNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }),
+                    imagePath
+            );
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");
