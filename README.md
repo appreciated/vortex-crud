@@ -27,7 +27,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
-- **Form Navigation**: Enable navigation in forms to other / custom routes.
+- **Form Navigation**: Enable navigation in forms to other routes / sub-routes using a new input type called "route"
 - **Field Validation**: Add support for basic and advanced field validation hooks.
 - **Media Support**: Enable adding, removing, and viewing media (as field and as a collection)
 - **User and Role Management & Authentication**: (optionally using Authentik)
@@ -47,7 +47,7 @@ Rather than replacing Vaadin Flow, TurboCRUD enhances it by streamlining repetit
 - **Styling**: Improve styling options.
 - **Check Database Index**: Since the UI and the Database is defined in a machine parsable format it is possible to check if fitting indices are available
 - **Route Filters**: Add filtering for "kanban" routes.
-- **Code Generation** Allow generating Code from a given configuration to support a top-down workflow.
+- **Code Generation** Allow generating code from a given TurboCrud HOCON configuration to support a top-down workflow including model and repository generation.
 
 ## Data Handling and Management
 TurboCRUD uses during development H2 database. The database is accessed by the service `TurboCRUDEntityManagerService`. The `TurboCRUDDatabaseSchemaValidator` ensures the database schema matches the HOCON configuration on startup.
