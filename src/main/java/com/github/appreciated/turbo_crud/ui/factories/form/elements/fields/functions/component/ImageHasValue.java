@@ -23,6 +23,7 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
         image.setAlt(alt);
         setValue(src);
         add(image);
+        getStyle().set("overflow", "hidden");
     }
 
     @Override
