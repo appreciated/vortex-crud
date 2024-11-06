@@ -70,6 +70,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         layout.setPadding(false);
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
         String prefix = !isWrapped ? layout.getTranslation(route.getTitle()) + " / " : "";
 
         H2WithHasValue titleComponent = new H2WithHasValue();

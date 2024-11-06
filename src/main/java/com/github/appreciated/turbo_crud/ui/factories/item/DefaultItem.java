@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.item;
 
 import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.ImageHasValue;
+import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
@@ -20,11 +20,12 @@ public class DefaultItem extends HorizontalLayout {
         addClassName("card");
 
         // Optional image
-        ImageHasValue image = null;
+        ImageDisplayComponent image = null;
         String imageField = config.getImageField();
         if (imageField != null) {
             String imagePath = entity.getString(imageField);
-            image = new ImageHasValue(imagePath, imagePath);
+            image = new ImageDisplayComponent();
+            image.setImageSource(imagePath);
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
             image.getStyle().set("margin-right", "10px");

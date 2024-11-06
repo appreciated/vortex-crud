@@ -3,10 +3,9 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 import com.github.appreciated.turbo_crud.config.model.FieldConfig;
 import com.github.appreciated.turbo_crud.config.model.FormItem;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.ImageHasValue;
+import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
-import org.springframework.security.core.parameters.P;
 
 public class DefaultListColumnImplCallback implements TurboCrudListColumnCallback {
 
@@ -15,7 +14,8 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
         if (fieldConfig.getFactory().equals("image")) {
             grid.addComponentColumn(genericEntity -> {
                         String string = genericEntity.getString(fieldName);
-                        ImageHasValue image = new ImageHasValue(string, string);
+                        ImageDisplayComponent image = new ImageDisplayComponent();
+                        image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);
                         return image;
