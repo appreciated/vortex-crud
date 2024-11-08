@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.service;
 
-import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
+import com.github.appreciated.turbo_crud.config.model.Application;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -16,18 +16,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class TurboCrudConfigService {
 
-    private final ApplicationConfig configuration;
+    private final Application configuration;
 
     public TurboCrudConfigService() {
         ConfigParseOptions defaults = ConfigParseOptions.defaults();
         Config config = ConfigFactory.parseResources(TurboCrudConfigService.class.getClassLoader(), "turbo-crud-config.conf", defaults).resolve();
-        this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), ApplicationConfig.class);
+        this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), Application.class);
         if (config.isEmpty()) {
             throw new IllegalStateException("No TurboCRUD config found");
         }
     }
 
-    public ApplicationConfig getConfiguration() {
+    public Application getConfiguration() {
         return configuration;
     }
 

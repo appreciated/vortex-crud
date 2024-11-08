@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.Form;
+import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -60,12 +60,12 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
-        FormConfiguration formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), FormConfiguration.class);
+        Form form = ConfigBeanFactory.create(route.getConfiguration(), Form.class);
         assert detailRouteSetting != null;
-        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, formConfiguration);
+        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, FormConfiguration formConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, Form formConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -87,7 +87,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         }
 
         String table = route.getRepository();
-        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(table);
+        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : entityManagerService.getRecordById(lastSegment);

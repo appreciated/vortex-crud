@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /**
  * Default implementation of the {@link TurboCrudCollectionFactoryRegistry} interface.
- * This factory provides components based on the configuration specified in {@link FieldConfig},
+ * This factory provides components based on the configuration specified in {@link RepositoryField},
  * supporting various component types like text fields, text areas, date pickers, and dropdowns.
  */
 

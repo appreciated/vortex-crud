@@ -1,17 +1,16 @@
 package com.github.appreciated.turbo_crud.ui.components;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.server.StreamResource;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 public class ImageDisplayComponent extends Div {
 
     private final Image image;
+    private final TurboCrudFileProvider turboCrudFileProvider;
 
-    public ImageDisplayComponent() {
+    public ImageDisplayComponent(TurboCrudFileProvider turboCrudFileProvider) {
+        this.turboCrudFileProvider = turboCrudFileProvider;
         image = new Image();
         add(image);
         getStyle().set("overflow", "hidden");
@@ -19,13 +18,7 @@ public class ImageDisplayComponent extends Div {
 
     public void setImageSource(String src) {
         if (src != null) {
-            image.setSrc(new StreamResource(src.substring(src.lastIndexOf("/") + 1), () -> {
-                try {
-                    return new FileInputStream(src);
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
+            image.setSrc(turboCrudFileProvider.getResource(src));
             image.setVisible(true);
         } else {
             image.setVisible(false);

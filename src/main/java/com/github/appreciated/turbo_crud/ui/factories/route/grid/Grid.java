@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.components.SearchField;
@@ -28,7 +29,7 @@ public class Grid extends VerticalLayout {
                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                 TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                TurboCrudIconFactory iconFactory) {
+                TurboCrudIconFactory iconFactory, TurboCrudFileProviderRegistry fileProviderRegistry) {
         RouteHeader routeHeader = new RouteHeader(route, iconFactory);
         String repository = route.getRepository();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
@@ -40,7 +41,7 @@ public class Grid extends VerticalLayout {
                 routeHeader);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid(routeResolver, route, entityManagerFactoryRegistry, itemFactoryRegistry);
+        virtualGrid = new VirtualItemGrid(routeResolver, route, entityManagerFactoryRegistry, itemFactoryRegistry, fileProviderRegistry);
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);

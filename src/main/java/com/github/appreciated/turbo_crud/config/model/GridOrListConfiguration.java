@@ -4,16 +4,23 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class KanbanConfig implements ItemFactoryConfig {
+public class GridOrListConfiguration implements ItemFactory {
 
     private String factory;
-    private String columnField;
+    @Optional
     private String titleField;
+    @Optional
     private String descriptionField;
     @Optional
     private String imageField;
     @Optional
-    private List<FormItem> children;
+    private String imageFactory;
+    @Optional
+    private String filterField;
+    @Optional
+    private boolean inlineEdit;
+    @Optional
+    private List<FormElement> children;
 
     public String getFactory() {
         return factory;
@@ -43,23 +50,36 @@ public class KanbanConfig implements ItemFactoryConfig {
         return imageField;
     }
 
+    @Override
+    public String getImageFactory() {
+        return imageFactory;
+    }
+
     public void setImageField(String imageField) {
         this.imageField = imageField;
     }
 
-    public List<FormItem> getChildren() {
+    public List<FormElement> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormItem> children) {
+    public void setChildren(List<FormElement> children) {
         this.children = children;
     }
 
-    public String getColumnField() {
-        return columnField;
+    public String getFilterField() {
+        return filterField;
     }
 
-    public void setColumnField(String columnField) {
-        this.columnField = columnField;
+    public void setFilterField(String filterField) {
+        this.filterField = filterField;
+    }
+
+    public boolean isInlineEdit() {
+        return inlineEdit;
+    }
+
+    public void setInlineEdit(boolean inlineEdit) {
+        this.inlineEdit = inlineEdit;
     }
 }

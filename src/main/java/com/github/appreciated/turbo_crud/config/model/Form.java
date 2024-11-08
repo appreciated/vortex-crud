@@ -2,17 +2,17 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import java.util.List;
 
-public class FormConfiguration {
+public class Form {
 
     private String titleField;
 
-    private List<FormItem> children;
+    private List<FormElement> children;
 
-    public List<FormItem> getChildren() {
+    public List<FormElement> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormItem> children) {
+    public void setChildren(List<FormElement> children) {
         this.children = children;
     }
 

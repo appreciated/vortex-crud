@@ -47,6 +47,7 @@
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **Code Generation**: Check feasibility to generate Vaadin code by utilizing a configuration in combination with the runtime implementations to support top-down workflows, including models and repositories.
 - **API-Endpoints**: Allow defining API endpoints using the configuration file
+- **Allow adding routes without menu**
 
 ## Data Handling and Management
 turbo-crud utilizes the H2 database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
@@ -122,6 +123,8 @@ classDiagram
 ```
 
 ### Data Access
+
+The following shows a simplified representation on how data is being accessed. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
 ```mermaid
 classDiagram
     class Route

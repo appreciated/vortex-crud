@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component;
 
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
@@ -19,17 +19,17 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     private final TurboCrudEntityManagerService entityManagerService;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FieldConfig fieldConfig) {
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(fieldConfig.getRepository());
+    public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, RepositoryField repositoryField) {
+        this.entityManagerService = entityManagerFactoryRegistry.getFactory(repositoryField.getRepository());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> entityManagerService.getRecordsFromTableWhereColumnLike(fieldConfig.getFilterField(), filterValue, i, i1).stream(),
-                filterValue -> entityManagerService.countWhereColumnLike(fieldConfig.getFilterField(), filterValue)
+                (filterValue, i, i1) -> entityManagerService.getRecordsFromTableWhereColumnLike(repositoryField.getFilterField(), filterValue, i, i1).stream(),
+                filterValue -> entityManagerService.countWhereColumnLike(repositoryField.getFilterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> fieldConfig.getChildren().stream()
+        comboBox.setItemLabelGenerator(item -> repositoryField.getChildren().stream()
                 .map(item::getString)
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

@@ -36,22 +36,22 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
-        GridOrListConfig gridOrListConfiguration = ConfigBeanFactory.create(route.getConfiguration(), GridOrListConfig.class);
+        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
+        GridOrListConfiguration gridOrListConfiguration = ConfigBeanFactory.create(route.getConfiguration(), GridOrListConfiguration.class);
 
         assert gridOrListConfiguration.getFilterField() != null;
         DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManagerService, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
-        Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
+        Map<String, RepositoryField> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormItem field : gridOrListConfiguration.getChildren()) {
+        for (FormElement field : gridOrListConfiguration.getChildren()) {
             String fieldName = field.getField();
-            FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-            if (fieldConfig == null) {
+            RepositoryField repositoryField = fieldsConfig.get(fieldName);
+            if (repositoryField == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }
-            listColumnFactory.getCallback(route).addColumn(this, field, table, fieldName, fieldConfig);
+            listColumnFactory.getCallback(route).addColumn(this, field, table, fieldName, repositoryField);
         }
 
         setDataProvider(dataProvider);

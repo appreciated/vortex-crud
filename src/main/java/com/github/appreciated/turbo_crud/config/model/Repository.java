@@ -6,7 +6,7 @@ import java.util.Map;
 
 import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
 
-public class RepositoryConfig {
+public class Repository {
 
     private ConfigObject fields;
 
@@ -18,8 +18,8 @@ public class RepositoryConfig {
         this.fields = fields;
     }
 
-    public Map<String, FieldConfig> getFieldsConfig() {
-        return toStringMapWithValueType(fields, FieldConfig.class);
+    public Map<String, RepositoryField> getFieldsConfig() {
+        return toStringMapWithValueType(fields, RepositoryField.class);
     }
 }
 

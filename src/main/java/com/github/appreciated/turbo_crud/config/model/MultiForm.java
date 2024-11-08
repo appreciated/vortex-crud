@@ -2,17 +2,17 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import java.util.List;
 
-public class MultiFormConfig {
+public class MultiForm {
 
     private String titleField;
 
-    private List<FormConfiguration> children;
+    private List<Form> children;
 
-    public List<FormConfiguration> getChildren() {
+    public List<Form> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormConfiguration> children) {
+    public void setChildren(List<Form> children) {
         this.children = children;
     }
 

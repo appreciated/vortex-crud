@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-public class DialogConfig {
+public class Dialog {
 
     private String factory;
     private Route child;

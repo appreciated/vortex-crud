@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
@@ -15,21 +15,21 @@ import java.util.Set;
 public class DefaultSelectFactory implements TurboCrudFieldFactory {
 
     private final ConfigObject selectsConfig;
-    private final Map<String, RepositoryConfig> tablesConfig;
+    private final Map<String, Repository> tablesConfig;
 
-    public DefaultSelectFactory(ConfigObject selectsConfig, Map<String, RepositoryConfig> tablesConfig) {
+    public DefaultSelectFactory(ConfigObject selectsConfig, Map<String, Repository> tablesConfig) {
         this.selectsConfig = selectsConfig;
         this.tablesConfig = tablesConfig;
     }
 
     @Override
-    public Component createComponent(String table, String field, FieldConfig fieldConfig) {
+    public Component createComponent(String table, String field, RepositoryField repositoryField) {
         Select<String> select = new Select<>();
 
-        RepositoryConfig repositoryConfig = tablesConfig.get(table);
-        FieldConfig tableFieldConfig = repositoryConfig.getFieldsConfig().get(field);
+        Repository repository = tablesConfig.get(table);
+        RepositoryField tableRepositoryField = repository.getFieldsConfig().get(field);
 
-        String selectName = tableFieldConfig.getValues();
+        String selectName = tableRepositoryField.getValues();
         ConfigObject selectConfig = selectsConfig.toConfig().getObject(selectName);
 
         if (selectConfig == null) {

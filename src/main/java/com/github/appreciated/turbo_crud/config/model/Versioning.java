@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import java.util.List;
 
-public class VersioningConfig {
+public class Versioning {
 
     private boolean enabled;
     private List<String> repositories;

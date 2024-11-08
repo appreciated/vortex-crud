@@ -8,11 +8,9 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Defau
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.data.binder.Binder;
 import org.springframework.stereotype.Service;
 
@@ -31,25 +29,25 @@ public class FormCreator {
 
     public void bindAndAddToLayout(String table,
                                    Route route,
-                                   FormConfiguration formConfiguration,
+                                   Form formConfiguration,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
-                                   RepositoryConfig tables,
+                                   Repository tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
-        Map<String, FieldConfig> fieldsConfig = tables.getFieldsConfig();
+        Map<String, RepositoryField> fieldsConfig = tables.getFieldsConfig();
 
         // Iterate over the fields defined in the configuration
-        for (FormItem field : formConfiguration.getChildren()) {
+        for (FormElement field : formConfiguration.getChildren()) {
             String fieldName = field.getField();
             if (!field.getType().equals("collection")) {
-                FieldConfig fieldConfig = fieldsConfig.get(fieldName);
-                if (fieldConfig == null) {
+                RepositoryField repositoryField = fieldsConfig.get(fieldName);
+                if (repositoryField == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
                 }
-                TurboCrudFieldFactory factory = componentFactory.getFactory(fieldConfig.getFactory());
-                Component component = factory.createComponent(table, fieldName, fieldConfig);
+                TurboCrudFieldFactory factory = componentFactory.getFactory(repositoryField.getFactory());
+                Component component = factory.createComponent(table, fieldName, repositoryField);
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 if (component instanceof HasSize){
                     ((HasSize) component).setWidthFull();

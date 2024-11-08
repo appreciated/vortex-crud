@@ -1,9 +1,10 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.GridOrListConfig;
+import com.github.appreciated.turbo_crud.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
@@ -33,8 +34,9 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     private final TurboCrudItemFactory itemFactory;
     private final TurboCrudPathToRouteResolver pathVariables;
+    private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final TurboCrudEntityManagerService entityManagerService;
-    private final GridOrListConfig gridOrListConfiguration;
+    private final GridOrListConfiguration gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -42,14 +44,16 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     public VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
                            Route config,
                            TurboCrudEntityManagerFactoryRegistry entityManagerRegistry,
-                           TurboCrudItemFactoryRegistry itemFactoryRegistry) {
+                           TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                           TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.pathVariables = routeResolver;
+        this.fileProviderRegistry = fileProviderRegistry;
         String table = config.getRepository();
 
         this.entityManagerService = entityManagerRegistry.getFactory(table);
         Config factoryConfig = config.getConfiguration();
 
-        gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfig.class);
+        gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();
         this.addAttachListener(event -> {
@@ -73,7 +77,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth));
+                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);

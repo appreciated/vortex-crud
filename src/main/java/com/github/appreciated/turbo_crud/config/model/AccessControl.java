@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import java.util.List;
 
-public class AccessControlConfig {
+public class AccessControl {
 
     private List<String> roles;
 

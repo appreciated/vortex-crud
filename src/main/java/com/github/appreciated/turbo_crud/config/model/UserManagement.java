@@ -4,11 +4,11 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class UserManagementConfig {
+public class UserManagement {
 
     private boolean enabled;
     @Optional
-    private AccessControlConfig accessControl;
+    private AccessControl accessControl;
     private boolean signUp;
     private List<AdditionalField> additionalFields;
 
@@ -20,11 +20,11 @@ public class UserManagementConfig {
         this.enabled = enabled;
     }
 
-    public AccessControlConfig getAccessControl() {
+    public AccessControl getAccessControl() {
         return accessControl;
     }
 
-    public void setAccessControl(AccessControlConfig accessControl) {
+    public void setAccessControl(AccessControl accessControl) {
         this.accessControl = accessControl;
     }
 

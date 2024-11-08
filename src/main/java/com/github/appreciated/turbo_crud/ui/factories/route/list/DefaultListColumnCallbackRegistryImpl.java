@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,8 +16,8 @@ public class DefaultListColumnCallbackRegistryImpl implements TurboCrudListColum
 
     private final HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
 
-    public DefaultListColumnCallbackRegistryImpl() {
-        callbacks.put("default", new DefaultListColumnImplCallback());
+    public DefaultListColumnCallbackRegistryImpl(TurboCrudFileProviderRegistry fileProviderRegistry) {
+        callbacks.put("default", new DefaultListColumnImplCallback(fileProviderRegistry));
     }
 
     @Override

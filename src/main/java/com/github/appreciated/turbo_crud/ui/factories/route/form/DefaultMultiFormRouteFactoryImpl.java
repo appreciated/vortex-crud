@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.MultiFormConfig;
+import com.github.appreciated.turbo_crud.config.model.Form;
+import com.github.appreciated.turbo_crud.config.model.MultiForm;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
@@ -36,9 +36,9 @@ public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormConfig formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), MultiFormConfig.class);
+        MultiForm formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), MultiForm.class);
         Div div = new Div();
-        for (FormConfiguration child : formConfiguration.getChildren()) {
+        for (Form child : formConfiguration.getChildren()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
         }

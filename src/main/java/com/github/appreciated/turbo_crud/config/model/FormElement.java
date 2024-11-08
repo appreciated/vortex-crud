@@ -4,7 +4,7 @@ import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class FormItem {
+public class FormElement {
 
     @Optional
     private String field;
@@ -26,7 +26,7 @@ public class FormItem {
     @Optional
     private Integer span = null;
     @Optional
-    DialogConfig dialog;
+    Dialog configuration;
 
     public String getField() {
         return field;
@@ -100,19 +100,19 @@ public class FormItem {
         this.emptyMessage = emptyMessage;
     }
 
-    public DialogConfig getDialog() {
-        return dialog;
-    }
-
-    public void setDialog(DialogConfig dialog) {
-        this.dialog = dialog;
-    }
-
     public Integer getSpan() {
         return span;
     }
 
     public void setSpan(Integer span) {
         this.span = span;
+    }
+
+    public Dialog getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Dialog configuration) {
+        this.configuration = configuration;
     }
 }

@@ -7,16 +7,16 @@ import java.util.Map;
 
 import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
 
-public class ApplicationConfig {
+public class Application {
     private String name;
     @Optional
-    private UserManagementConfig userManagement;
+    private UserManagement userManagement;
     @Optional
     private ConfigObject selects;
     @Optional
-    private VersioningConfig versioning;
+    private Versioning versioning;
     @Optional
-    private AuditingConfig auditing;
+    private Auditing auditing;
     private ConfigObject repositories;
     private ConfigObject routes;
 
@@ -30,11 +30,11 @@ public class ApplicationConfig {
         this.name = name;
     }
 
-    public UserManagementConfig getUserManagement() {
+    public UserManagement getUserManagement() {
         return userManagement;
     }
 
-    public void setUserManagement(UserManagementConfig userManagement) {
+    public void setUserManagement(UserManagement userManagement) {
         this.userManagement = userManagement;
     }
 
@@ -46,19 +46,19 @@ public class ApplicationConfig {
         this.selects = selects;
     }
 
-    public VersioningConfig getVersioning() {
+    public Versioning getVersioning() {
         return versioning;
     }
 
-    public void setVersioning(VersioningConfig versioning) {
+    public void setVersioning(Versioning versioning) {
         this.versioning = versioning;
     }
 
-    public AuditingConfig getAuditing() {
+    public Auditing getAuditing() {
         return auditing;
     }
 
-    public void setAuditing(AuditingConfig auditing) {
+    public void setAuditing(Auditing auditing) {
         this.auditing = auditing;
     }
 
@@ -70,8 +70,8 @@ public class ApplicationConfig {
         this.repositories = repositories;
     }
 
-    public Map<String, RepositoryConfig> getRepositoriesConfig() {
-        return toStringMapWithValueType(repositories, RepositoryConfig.class);
+    public Map<String, Repository> getRepositoriesConfig() {
+        return toStringMapWithValueType(repositories, Repository.class);
     }
 
     public ConfigObject getRoutes() {

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
-import com.github.appreciated.turbo_crud.config.model.FieldConfig;
+import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
@@ -15,7 +15,7 @@ public class DefaultReferenceFieldFactory implements TurboCrudFieldFactory {
     }
 
     @Override
-    public Component createComponent(String table, String field, FieldConfig fieldConfig) {
-        return new EntityComboBoxWrapper(managerFactoryRegistry, fieldConfig);
+    public Component createComponent(String table, String field, RepositoryField repositoryField) {
+        return new EntityComboBoxWrapper(managerFactoryRegistry, repositoryField);
     }
 }

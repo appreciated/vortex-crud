@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
@@ -18,25 +19,28 @@ public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactor
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudIconFactory iconFactory;
     private final TurboCrudConfigService configService;
+    private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public DefaultMasterDetailRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                                TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                                TurboCrudRouteFactoryRegistry routeFactory,
                                                TurboCrudIconFactory iconFactory,
-                                               TurboCrudConfigService configService
+                                               TurboCrudConfigService configService,
+                                               TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.routeFactory = routeFactory;
         this.iconFactory = iconFactory;
         this.configService = configService;
+        this.fileProviderRegistry = fileProviderRegistry;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        return new MasterDetail(currentPathIndex, routeResolver, entityManagerFactoryRegistry, itemFactoryRegistry, routeFactory, configService, iconFactory);
+        return new MasterDetail(currentPathIndex, routeResolver, entityManagerFactoryRegistry, itemFactoryRegistry, routeFactory, configService, iconFactory, fileProviderRegistry);
     }
 
     @Override

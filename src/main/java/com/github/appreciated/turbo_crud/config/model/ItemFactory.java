@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-public interface ItemFactoryConfig {
+public interface ItemFactory {
 
     String getFactory();
 
@@ -9,4 +9,6 @@ public interface ItemFactoryConfig {
     String getDescriptionField();
 
     String getImageField();
+
+    String getImageFactory();
 }

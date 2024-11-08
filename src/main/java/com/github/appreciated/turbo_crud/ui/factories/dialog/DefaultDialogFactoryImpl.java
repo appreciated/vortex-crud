@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.Form;
+import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -63,12 +63,12 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        RepositoryConfig tables = configService.getConfiguration().getRepositoriesConfig().get(repository);
+        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(repository);
 
         Config configuration = formRoute.getConfiguration();
-        FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
+        Form form = ConfigBeanFactory.create(configuration, Form.class);
 
-        formCreator.bindAndAddToLayout(repository, formRoute, formConfiguration, recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(repository, formRoute, form, recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

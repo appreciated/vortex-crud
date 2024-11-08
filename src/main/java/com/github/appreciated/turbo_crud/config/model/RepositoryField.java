@@ -1,10 +1,11 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.typesafe.config.Config;
 import com.typesafe.config.Optional;
 
 import java.util.List;
 
-public class FieldConfig {
+public class RepositoryField {
 
     private String factory;
     @Optional
@@ -12,7 +13,7 @@ public class FieldConfig {
     @Optional
     private boolean required;
     @Optional
-    private ValidationConfig validation;
+    private Validation validation;
     @Optional
     private String defaultValue;
     @Optional
@@ -25,6 +26,8 @@ public class FieldConfig {
     private String filterField;
     @Optional
     private List<String> children;
+    @Optional
+    Config configuration;
 
     public boolean isPrimary() {
         return primary;
@@ -58,11 +61,11 @@ public class FieldConfig {
         this.values = values;
     }
 
-    public ValidationConfig getValidation() {
+    public Validation getValidation() {
         return validation;
     }
 
-    public void setValidation(ValidationConfig validation) {
+    public void setValidation(Validation validation) {
         this.validation = validation;
     }
 
@@ -104,5 +107,13 @@ public class FieldConfig {
 
     public void setFilterField(String filterField) {
         this.filterField = filterField;
+    }
+
+    public Config getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Config configuration) {
+        this.configuration = configuration;
     }
 }

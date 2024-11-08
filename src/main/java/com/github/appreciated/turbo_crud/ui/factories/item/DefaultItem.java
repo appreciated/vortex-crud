@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.config.model.ItemFactoryConfig;
+import com.github.appreciated.turbo_crud.config.model.ItemFactory;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Text;
@@ -13,7 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @CssImport("card-styles.css")
 public class DefaultItem extends HorizontalLayout {
 
-    public DefaultItem(ItemFactoryConfig config, GenericEntity entity, Integer maxWidth) {
+    public DefaultItem(ItemFactory config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider) {
         if (maxWidth != null) {
             setMaxWidth(maxWidth + "px");
         }
@@ -24,7 +25,7 @@ public class DefaultItem extends HorizontalLayout {
         String imageField = config.getImageField();
         if (imageField != null) {
             String imagePath = entity.getString(imageField);
-            image = new ImageDisplayComponent();
+            image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");

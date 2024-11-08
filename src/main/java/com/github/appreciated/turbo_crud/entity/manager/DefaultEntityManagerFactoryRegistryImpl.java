@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.entity.manager;
 
-import com.github.appreciated.turbo_crud.config.model.RepositoryConfig;
+import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class DefaultEntityManagerFactoryRegistryImpl implements TurboCrudEntityM
     private final HashMap<String, TurboCrudEntityManagerService> factories = new HashMap<>();
 
     public DefaultEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        for (Map.Entry<String, RepositoryConfig> entry : turboCrudConfigService.getConfiguration().getRepositoriesConfig().entrySet()) {
+        for (Map.Entry<String, Repository> entry : turboCrudConfigService.getConfiguration().getRepositoriesConfig().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new DefaultJpaEntityManagerService(table, entityManager, transactionTemplate));
         }

@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.HasAriaLabel;
 import com.vaadin.flow.component.HasLabel;
@@ -23,9 +24,9 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
 
     private String value;
 
-    public ImageHasValue() {
+    public ImageHasValue(TurboCrudFileProvider turboCrudFileProvider) {
         // Initialize the image component as a thumbnail
-        image = new ImageDisplayComponent();
+        image = new ImageDisplayComponent(turboCrudFileProvider);
         image.setWidth("30px");
         image.setHeight("30px");
 
@@ -58,8 +59,8 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
         getStyle().set("overflow", "hidden");
     }
 
-    public ImageHasValue(String path) {
-        this();
+    public ImageHasValue(String path, TurboCrudFileProvider turboCrudFileProvider) {
+        this(turboCrudFileProvider);
         setValue(path);
     }
 

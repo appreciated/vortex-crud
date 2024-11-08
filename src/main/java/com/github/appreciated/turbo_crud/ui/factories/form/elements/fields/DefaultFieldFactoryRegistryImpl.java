@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 
-import com.github.appreciated.turbo_crud.config.model.ApplicationConfig;
+import com.github.appreciated.turbo_crud.config.model.Application;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
@@ -21,15 +22,15 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
 
     private final Map<String, TurboCrudFieldFactory> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
-        ApplicationConfig configuration = configService.getConfiguration();
+    public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
+        Application configuration = configService.getConfiguration();
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());
         factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getRepositoriesConfig()));
         factories.put("number", new DefaultNumberFieldFactory());
         factories.put("reference", new DefaultReferenceFieldFactory(entityManagerFactoryRegistry));
-        factories.put("image", new DefaultImageFieldFactory());
+        factories.put("image", new DefaultImageFieldFactory(fileProviderRegistry));
     }
 
     public Map<String, TurboCrudFieldFactory> getFactories() {

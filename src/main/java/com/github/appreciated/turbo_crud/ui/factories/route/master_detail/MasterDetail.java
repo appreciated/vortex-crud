@@ -1,16 +1,17 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.GridOrListConfig;
+import com.github.appreciated.turbo_crud.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.SearchField;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -36,7 +37,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
 
 public class MasterDetail extends SplitLayout {
 
-    private final GridOrListConfig gridOrListConfiguration;
+    private final GridOrListConfiguration gridOrListConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudEntityManagerService entityManagerService;
     private final TurboCrudItemFactory itemFactory;
@@ -44,6 +45,7 @@ public class MasterDetail extends SplitLayout {
     private final Integer currentPathIndex;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudConfigService configService;
+    private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final Route route;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<GenericEntity, Void, String> dataProvider; // Hinzugefügter DataProvider
@@ -55,17 +57,20 @@ public class MasterDetail extends SplitLayout {
                         TurboCrudItemFactoryRegistry itemFactoryRegistry,
                         TurboCrudRouteFactoryRegistry routeFactory,
                         TurboCrudConfigService configService,
-                        TurboCrudIconFactory iconFactory) {
+                        TurboCrudIconFactory iconFactory,
+                        TurboCrudFileProviderRegistry fileProviderRegistry
+    ) {
         this.currentPathIndex = currentPathIndex;
         this.routeFactory = routeFactory;
         this.configService = configService;
+        this.fileProviderRegistry = fileProviderRegistry;
 
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
         Config factoryConfig = route.getConfiguration();
-        this.gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfig.class);
+        this.gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
@@ -147,7 +152,7 @@ public class MasterDetail extends SplitLayout {
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(gridOrListConfiguration, item, null);
+            Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry);
             component.addClassName("master");
             Div div = new Div(component);
             if (EntityUtil.equals(item, pathVariables.getLastSegment())) {

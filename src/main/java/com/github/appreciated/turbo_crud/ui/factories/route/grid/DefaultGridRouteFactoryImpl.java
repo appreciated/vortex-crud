@@ -2,8 +2,9 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -21,6 +22,7 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
     private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
     private final TurboCrudIconFactory iconFactory;
+    private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public DefaultGridRouteFactoryImpl(
             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
@@ -28,13 +30,16 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
             TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
             TurboCrudItemFactoryRegistry itemFactoryRegistry,
-            TurboCrudIconFactory iconFactory) {
+            TurboCrudIconFactory iconFactory,
+            TurboCrudFileProviderRegistry fileProviderRegistry
+    ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.iconFactory = iconFactory;
+        this.fileProviderRegistry = fileProviderRegistry;
     }
 
     @Override
@@ -51,7 +56,8 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
                 dialogFactoryRegistry,
                 routeFactoryRegistry,
                 itemFactoryRegistry,
-                iconFactory);
+                iconFactory,
+                fileProviderRegistry);
     }
 
     @Override

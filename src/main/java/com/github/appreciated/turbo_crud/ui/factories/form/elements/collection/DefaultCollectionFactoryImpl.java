@@ -1,7 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
-import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.FormItem;
+import com.github.appreciated.turbo_crud.config.model.Dialog;
+import com.github.appreciated.turbo_crud.config.model.Form;
+import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
@@ -16,7 +17,6 @@ import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -41,7 +41,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
     @Override
     public Component createCollection(String foreignKey,
                                       Route route,
-                                      FormItem factoryConfig,
+                                      FormElement factoryConfig,
                                       TurboCrudRouteFactoryRegistry routeFactory,
                                       FormCreator formCreator) {
         VerticalLayout list = new VerticalLayout();
@@ -63,7 +63,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
     }
 
     private void loadCollection(String foreignKeyValue,
-                                FormItem formItem,
+                                FormElement formElement,
                                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                                 TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                 FormCreator formCreator,
@@ -71,52 +71,53 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formItem.getRepository());
+        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formElement.getRepository());
         List<GenericEntity> recordsFromTableWhereColumnEquals =
                 foreignKeyValue == null ? List.of() :
-                        entityManagerService.getRecordsFromTableWhereColumnEquals(formItem.getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
+                        entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formItem, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
 
-            Config configuration = formItem.getDialog().getChild().getConfiguration();
-            FormConfiguration formConfiguration = ConfigBeanFactory.create(configuration, FormConfiguration.class);
-
-            for (FormItem child : formConfiguration.getChildren()) {
+            Config configuration = formElement.getConfiguration().getChild().getConfiguration();
+            Form form = ConfigBeanFactory.create(configuration, Form.class);
+            for (FormElement child : form.getChildren()) {
                 Object o = record.get(child.getField());
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     entityManagerService.deleteRecordById(EntityUtil.getId(record));
-                    loadCollection(foreignKeyValue, formItem, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
+                    loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
             list.add(item);
         }
         if (recordsFromTableWhereColumnEquals.isEmpty()) {
-            list.add(new Text(list.getTranslation(formItem.getEmptyMessage())));
+            list.add(new Text(list.getTranslation(formElement.getEmptyMessage())));
         }
     }
 
     private void openDialog(String entityId,
                             String foreignKey,
-                            FormItem formItem,
+                            FormElement formElement,
                             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
 
-        Dialog dialog = dialogFactory.getFactory(formItem.getDialog().getFactory()).createDialog(
+        Dialog dialogConfiguration = formElement.getConfiguration();
+
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(dialogConfiguration.getFactory()).createDialog(
                 entityId,
                 foreignKey,
-                formItem.getReferenceField(),
-                formItem.getDialog().getChild(),
-                formItem.getRepository(),
+                formElement.getReferenceField(),
+                dialogConfiguration.getChild(),
+                formElement.getRepository(),
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, formItem, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }
