@@ -32,7 +32,7 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);
-                        return new Text("");
+                        return image;
                     }).setHeader(grid.getTranslation(field.getLabel()))
                     .setResizable(true)
                     .setAutoWidth(true);

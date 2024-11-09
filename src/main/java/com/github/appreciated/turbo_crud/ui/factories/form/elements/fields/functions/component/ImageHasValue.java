@@ -11,7 +11,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.component.upload.receivers.FileBuffer;
 import com.vaadin.flow.shared.Registration;
 
 public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeEvent<String>, String>, HasLabel, HasAriaLabel {
@@ -20,7 +20,7 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
     private final TextField imageField;
     private final Button cancelButton;
     private final Upload upload;
-    private final MemoryBuffer buffer;
+    private final FileBuffer buffer;
 
     private String value;
 
@@ -47,10 +47,10 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
         imageField.setSuffixComponent(cancelButton);
 
         // Configure the upload component
-        buffer = new MemoryBuffer();
+        buffer = new FileBuffer(fileName -> turboCrudFileProvider.getPathForFile(fileName).toFile());
         upload = new Upload(buffer);
         upload.setMaxFileSize(10000000);
-        upload.addSucceededListener(event -> setImageFromStream(event.getFileName()));
+        upload.addSucceededListener(event -> setImageFromStream(turboCrudFileProvider.getPathForFile(event.getFileName()).toString()));
         upload.getStyle().set("padding", "unset");
 
         // Arrange components
@@ -67,7 +67,7 @@ public class ImageHasValue extends Div implements HasValue<HasValue.ValueChangeE
     private void setImageFromStream(String fileName) {
         image.setImageSource(fileName);
         imageField.setValue(fileName);
-        setValue(fileName); // Set the image source as the value
+        setValue(fileName);
     }
 
     private void clearImage() {

@@ -25,8 +25,8 @@
 - **[WIP] Media Support**: Add, remove, and view media as individual fields
 
 ## Roadmap (in no particular order)
-- **Extended Entity Relationship Support**: Add, remove, and view relationships (N:M).
-- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route."
+- **Extended Entity Relationship Support**: Add, remove, and view entities from N:M relationships.
+- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route".
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (optionally using Authentik)
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.

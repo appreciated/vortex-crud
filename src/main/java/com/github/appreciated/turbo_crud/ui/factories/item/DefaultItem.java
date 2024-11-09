@@ -24,6 +24,9 @@ public class DefaultItem extends HorizontalLayout {
         ImageDisplayComponent image = null;
         String imageField = config.getImageField();
         if (imageField != null) {
+            if (config.getImageFactory() == null){
+                throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
+            }
             String imagePath = entity.getString(imageField);
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);

@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.file_provider;
 
 import com.vaadin.flow.server.StreamResource;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Path;
 
 public class DefaultFileProviderImpl implements TurboCrudFileProvider {
 
@@ -12,13 +12,18 @@ public class DefaultFileProviderImpl implements TurboCrudFileProvider {
 
     @Override
     public StreamResource getResource(String src) {
-        return new StreamResource(src.substring(src.lastIndexOf("/") + 1), () -> {
+        File file = new File(src);
+        return new StreamResource(file.getName(), () -> {
             try {
-                return new FileInputStream(src);
+                return new FileInputStream(file);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
+    @Override
+    public Path getPathForFile(String fileName) {
+        return Path.of("images", fileName);
+    }
 }

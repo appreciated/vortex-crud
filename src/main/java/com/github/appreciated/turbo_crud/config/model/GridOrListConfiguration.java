@@ -55,6 +55,10 @@ public class GridOrListConfiguration implements ItemFactory {
         return imageFactory;
     }
 
+    public void setImageFactory(String imageFactory) {
+        this.imageFactory = imageFactory;
+    }
+
     public void setImageField(String imageField) {
         this.imageField = imageField;
     }

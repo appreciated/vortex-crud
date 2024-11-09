@@ -12,6 +12,8 @@ public class ImageDisplayComponent extends Div {
     public ImageDisplayComponent(TurboCrudFileProvider turboCrudFileProvider) {
         this.turboCrudFileProvider = turboCrudFileProvider;
         image = new Image();
+        image.setSizeFull();
+        image.getStyle().set("object-fit", "contain");
         add(image);
         getStyle().set("overflow", "hidden");
     }
