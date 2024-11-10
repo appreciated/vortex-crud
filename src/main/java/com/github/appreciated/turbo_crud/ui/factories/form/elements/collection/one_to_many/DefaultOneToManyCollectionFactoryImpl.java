@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many;
 
 import com.github.appreciated.turbo_crud.config.model.Dialog;
 import com.github.appreciated.turbo_crud.config.model.Form;
@@ -10,7 +10,7 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItemImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item.DefaultManyToManyCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -27,13 +27,13 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory {
+public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToManyCollectionFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                        TurboCrudDialogFactoryRegistry dialogFactory) {
+    public DefaultOneToManyCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                                 TurboCrudDialogFactoryRegistry dialogFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }
@@ -76,7 +76,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                 foreignKeyValue == null ? List.of() :
                         entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-            DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
+            DefaultManyToManyCollectionItemImpl item = new DefaultManyToManyCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
 
             Config configuration = formElement.getConfiguration().getChild().getConfiguration();

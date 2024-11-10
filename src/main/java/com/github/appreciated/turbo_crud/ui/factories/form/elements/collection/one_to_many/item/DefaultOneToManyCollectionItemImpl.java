@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -6,12 +6,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("card-styles.css")
-public class DefaultCollectionItemImpl extends HorizontalLayout {
+public class DefaultOneToManyCollectionItemImpl extends HorizontalLayout {
 
     private final VerticalLayout contentLayout;
     private final VerticalLayout actionsLayout;
 
-    public DefaultCollectionItemImpl() {
+    public DefaultOneToManyCollectionItemImpl() {
         setWidthFull();
         addClassNames("card", "collection");
 
