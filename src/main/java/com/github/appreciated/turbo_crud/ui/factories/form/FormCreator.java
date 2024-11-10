@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.form;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TurboCrudCollectionFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.TurboCrudOneToManyCollectionFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -20,9 +20,9 @@ import java.util.Map;
 public class FormCreator {
 
     private final DefaultFieldFactoryRegistryImpl componentFactory;
-    private final TurboCrudCollectionFactoryRegistry collectionFactoryRegistry;
+    private final TurboCrudOneToManyCollectionFactoryRegistry collectionFactoryRegistry;
 
-    public FormCreator(DefaultFieldFactoryRegistryImpl componentFactory, TurboCrudCollectionFactoryRegistry collectionFactoryRegistry) {
+    public FormCreator(DefaultFieldFactoryRegistryImpl componentFactory, TurboCrudOneToManyCollectionFactoryRegistry collectionFactoryRegistry) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
