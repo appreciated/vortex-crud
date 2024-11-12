@@ -39,7 +39,7 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
 
     @Override
     public TurboCrudFieldFactory getFactory(String type) {
-        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override

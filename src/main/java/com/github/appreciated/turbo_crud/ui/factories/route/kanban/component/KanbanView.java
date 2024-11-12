@@ -7,7 +7,7 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
@@ -34,12 +34,12 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudItemFactory itemFactory;
     private final Kanban kanbanConfig;
     private final ComponentRenderer<Component, GenericEntity> itemRenderer;
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManager entityManager;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(String repository,
                       Route route,
-                      TurboCrudEntityManagerService entityManagerService,
+                      TurboCrudEntityManager entityManager,
                       TurboCrudRouteFactoryRegistry routeFactory,
                       TurboCrudItemFactoryRegistry itemFactoryRegistry,
                       Kanban kanbanConfig,
@@ -49,7 +49,7 @@ public class KanbanView extends VerticalLayout {
                       FormCreator formCreator,
                       DetailRouteSetting detailRouteSetting,
                       TurboCrudIconFactory iconFactory) {
-        this.entityManagerService = entityManagerService;
+        this.entityManager = entityManager;
         ConfigObject selects = configService.getSelects();
         Repository config = configService.getRepositoriesConfig().get(repository);
         RepositoryField repositoryField = config.getFieldsConfig().get(kanbanConfig.getColumnField());
@@ -74,7 +74,7 @@ public class KanbanView extends VerticalLayout {
                         routeFactory,
                         () -> {
                             //TODO handle if the column was edited, requiring the element to move
-                            GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
+                            GenericEntity recordById = entityManager.getRecordById(EntityUtil.getId(entity));
                             cardWrapper.removeAll();
                             cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry));
                         },
@@ -143,7 +143,7 @@ public class KanbanView extends VerticalLayout {
             event.getDragData().ifPresent(o -> {
                 if (o instanceof GenericEntity) {
                     ((GenericEntity) o).put(kanbanConfig.getColumnField(), columnDatabaseValue);
-                    entityManagerService.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
+                    entityManager.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
                 }
             });
         });
@@ -155,7 +155,7 @@ public class KanbanView extends VerticalLayout {
         wrapper.add(titleLabel);
         wrapper.add(column);
 
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManagerService.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManager.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             column.add(itemRenderer.createComponent(record));
         }
@@ -173,7 +173,7 @@ public class KanbanView extends VerticalLayout {
                 repository,
                 routeFactory,
                 () -> {
-                    GenericEntity recordById = entityManagerService.getRecordById(EntityUtil.getId(entity));
+                    GenericEntity recordById = entityManager.getRecordById(EntityUtil.getId(entity));
                     itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry);
                 },
                 formCreator);

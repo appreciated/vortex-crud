@@ -4,13 +4,15 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 
 import java.util.List;
 
-public interface TurboCrudEntityManagerService {
+public interface TurboCrudEntityManager {
 
     Object insertRecord(GenericEntity values);
 
     List<GenericEntity> getRecordsFromTable(int offset, int limit);
 
     List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, String filterValue, int offset, int limit);
+
+    List<GenericEntity> getRecordsFromTableWhereColumnIn(String filterField, List<String> filterValue, int offset, int limit);
 
     List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, String filterValue, int offset, int limit);
 

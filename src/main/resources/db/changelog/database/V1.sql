@@ -23,6 +23,18 @@ CREATE TABLE tasks
     updated_at  TIMESTAMP
 );
 
+-- Table: task_has_task
+CREATE TABLE task_has_task
+(
+    id              SERIAL PRIMARY KEY,
+    task_id         INT NOT NULL,
+    FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE RESTRICT,
+    related_task_id INT NOT NULL,
+    FOREIGN KEY (related_task_id) REFERENCES tasks (id) ON DELETE RESTRICT,
+    created_at      TIMESTAMP DEFAULT NOW(),
+    UNIQUE (task_id, related_task_id)
+);
+
 -- Table: comments
 -- Table: task_comments
 CREATE TABLE task_comments

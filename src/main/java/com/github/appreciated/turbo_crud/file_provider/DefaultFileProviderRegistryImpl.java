@@ -28,7 +28,7 @@ public class DefaultFileProviderRegistryImpl implements TurboCrudFileProviderReg
 
     @Override
     public TurboCrudFileProvider getFactory(String type) {
-        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override

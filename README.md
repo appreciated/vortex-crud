@@ -16,7 +16,7 @@
 - **Database Schema Validation**: The `turbo-crudDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
 - **UI Components and Factories**: Factory implementations such as `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
 - **i18n Support**
-- **Entity Relationship Support**: Manage relationships between entities (1:1, 1:N).
+- **Entity Relationship Support**: Manage relationships between entities (One-To-One, One-To-Many).
 - **Nested Hierarchies**
 - **Multiple Forms at Once**: Create views containing multiple forms simultaneously.
 - **[WIP] Additional Routes**:
@@ -25,7 +25,7 @@
 - **[WIP] Media Support**: Add, remove, and view media as individual fields
 
 ## Roadmap (in no particular order)
-- **Extended Entity Relationship Support**: Add, remove, and view entities from N:M relationships.
+- **Extended Entity Relationship Support**: Add, remove, and view entities from Many-To-Many relationships.
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route".
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (optionally using Authentik)

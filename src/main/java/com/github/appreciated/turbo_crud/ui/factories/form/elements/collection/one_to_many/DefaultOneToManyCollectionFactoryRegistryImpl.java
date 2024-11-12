@@ -31,7 +31,7 @@ public class DefaultOneToManyCollectionFactoryRegistryImpl implements TurboCrudO
 
     @Override
     public TurboCrudOneToManyCollectionFactory getFactory(String factory) {
-        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory with key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
+        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
     }
 
     @Override

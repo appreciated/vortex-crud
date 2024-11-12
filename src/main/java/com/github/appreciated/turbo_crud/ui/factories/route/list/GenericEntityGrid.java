@@ -2,12 +2,12 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
+import com.github.appreciated.turbo_crud.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -33,14 +33,14 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         String table = route.getRepository();
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(table);
+        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
         Repository tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
         GridOrListConfiguration gridOrListConfiguration = ConfigBeanFactory.create(route.getConfiguration(), GridOrListConfiguration.class);
 
         assert gridOrListConfiguration.getFilterField() != null;
-        DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManagerService, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+        DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManager, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
         Map<String, RepositoryField> fieldsConfig = tables.getFieldsConfig();
 

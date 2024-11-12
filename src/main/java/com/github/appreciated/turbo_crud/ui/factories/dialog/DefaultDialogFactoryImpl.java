@@ -7,7 +7,7 @@ import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
@@ -27,7 +27,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
     private final TurboCrudConfigService configService;
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
-    private TurboCrudEntityManagerService entityManagerService;
+    private TurboCrudEntityManager entityManager;
 
     public DefaultDialogFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.configService = configService;
@@ -44,10 +44,10 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
                                OnStoreListener listener,
                                FormCreator formCreator) {
 
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(repository);
+        this.entityManager = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
 
-        GenericEntity recordById = entityManagerService.getRecordById(entityId);
+        GenericEntity recordById = entityManager.getRecordById(entityId);
         if (recordById == null) {
             recordById = new GenericEntity();
         }
@@ -86,9 +86,9 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
                     entity.put(foreignKeyField, foreignKeyValue);
                 }
                 if (EntityUtil.isNew(entity)) {
-                    entityManagerService.insertRecord(entity);
+                    entityManager.insertRecord(entity);
                 } else {
-                    entityManagerService.updateRecordById(EntityUtil.getId(entity), entity);
+                    entityManager.updateRecordById(EntityUtil.getId(entity), entity);
                 }
                 binder.setBean(entity);
                 dialog.close();

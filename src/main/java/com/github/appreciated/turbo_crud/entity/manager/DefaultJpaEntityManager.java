@@ -10,19 +10,20 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing dynamic entities using an EntityManager.
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerService {
+public class DefaultJpaEntityManager implements TurboCrudEntityManager {
 
     private final EntityManager entityManager;
     private final TransactionTemplate transactionTemplate;
     private final String table;
 
-    public DefaultJpaEntityManagerService(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public DefaultJpaEntityManager(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         this.entityManager = entityManager;
         this.transactionTemplate = transactionTemplate;
         if (table == null) {
@@ -99,6 +100,34 @@ public class DefaultJpaEntityManagerService implements TurboCrudEntityManagerSer
         // Create a native query using the entity manager
         Query nativeQuery = entityManager.createNativeQuery(query);
         nativeQuery.setParameter("filterValue", filterValue);
+
+        // Cast to NativeQuery to allow the use of setTupleTransformer
+        NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;
+        hibernateQuery.setTupleTransformer(new AliasToEntityMapTupleTransformer());
+
+        // Return the result list
+        return hibernateQuery.getResultList();
+    }
+
+    @Override
+    public List<GenericEntity> getRecordsFromTableWhereColumnIn(String filterField, List<String> filterValues, int offset, int limit) {
+        // Construct the SQL query to select records where the column is in the provided list of values
+        String placeholders = filterValues.stream()
+                .map(value -> ":filterValue" + filterValues.indexOf(value))
+                .collect(Collectors.joining(", "));
+        String query = "SELECT * FROM %s WHERE %s IN (%s)".formatted(getTable(), filterField, placeholders);
+
+        // Create a native query using the entity manager
+        Query nativeQuery = entityManager.createNativeQuery(query);
+
+        // Set parameters dynamically for each value in the filter list
+        for (int i = 0; i < filterValues.size(); i++) {
+            nativeQuery.setParameter("filterValue" + i, filterValues.get(i));
+        }
+
+        // Set pagination
+        nativeQuery.setFirstResult(offset);
+        nativeQuery.setMaxResults(limit);
 
         // Cast to NativeQuery to allow the use of setTupleTransformer
         NativeQuery<GenericEntity> hibernateQuery = (NativeQuery<GenericEntity>) nativeQuery;

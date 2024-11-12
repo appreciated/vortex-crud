@@ -1,16 +1,13 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many;
 
-import com.github.appreciated.turbo_crud.config.model.Dialog;
-import com.github.appreciated.turbo_crud.config.model.Form;
-import com.github.appreciated.turbo_crud.config.model.FormElement;
-import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item.DefaultManyToManyCollectionItemImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item.DefaultOneToManyCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -71,14 +68,13 @@ public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToMany
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        TurboCrudEntityManagerService entityManagerService = entityManagerFactoryRegistry.getFactory(formElement.getRepository());
-        List<GenericEntity> recordsFromTableWhereColumnEquals =
-                foreignKeyValue == null ? List.of() :
-                        entityManagerService.getRecordsFromTableWhereColumnEquals(formElement.getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
-        for (GenericEntity record : recordsFromTableWhereColumnEquals) {
-            DefaultManyToManyCollectionItemImpl item = new DefaultManyToManyCollectionItemImpl();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+        CollectionData data = formElement.getConfiguration().getData();
 
+        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(data.getRepository());
+        List<GenericEntity> records = getDataByConfig(foreignKeyValue, entityManager, data, entityManagerFactoryRegistry);
+        for (GenericEntity record : records) {
+            DefaultOneToManyCollectionItemImpl item = new DefaultOneToManyCollectionItemImpl();
+            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             Config configuration = formElement.getConfiguration().getChild().getConfiguration();
             Form form = ConfigBeanFactory.create(configuration, Form.class);
             for (FormElement child : form.getChildren()) {
@@ -87,15 +83,35 @@ public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToMany
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
-                    entityManagerService.deleteRecordById(EntityUtil.getId(record));
+                    entityManager.deleteRecordById(EntityUtil.getId(record));
                     loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
             list.add(item);
         }
-        if (recordsFromTableWhereColumnEquals.isEmpty()) {
-            list.add(new Text(list.getTranslation(formElement.getEmptyMessage())));
+        if (records.isEmpty()) {
+            list.add(new Text(list.getTranslation(formElement.getConfiguration().getEmptyMessage())));
+        }
+    }
+
+    private static List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudEntityManager targetEntityManager, CollectionData collectionData, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+        if (collectionData.getOneToMany() != null) {
+            return foreignKeyValue == null ? List.of() :
+                    targetEntityManager.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
+        } else if (collectionData.getManyToMany() != null) {
+            // If we need to resolve a many-to-many relation it is necessary to do two selects one over the associative
+            // repository and one over the target repository and one with the actual entries.
+            // This could be improved upon, if it was allowed to provide a custom repository / interface for the sake
+            // of resolving the following data.
+            ManyToManyConfiguration manyToMany = collectionData.getManyToMany();
+            TurboCrudEntityManager associativeEntityManager = entityManagerFactoryRegistry.getFactory(manyToMany.getAssociativeRepository());
+            List<GenericEntity> associativeRecords = associativeEntityManager.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
+            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.getString(manyToMany.getAssociativeTargetIdField())).toList();
+            return foreignKeyValue == null ? List.of() :
+                            targetEntityManager.getRecordsFromTableWhereColumnIn(manyToMany.getRepositoryField(), associativeRecordIds, 0, Integer.MAX_VALUE);
+        } else {
+            throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
         }
     }
 
@@ -107,15 +123,14 @@ public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToMany
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-
-        Dialog dialogConfiguration = formElement.getConfiguration();
-
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(dialogConfiguration.getFactory()).createDialog(
+        CollectionConfiguration collectionData = formElement.getConfiguration();
+        OneToManyConfiguration oneToMany = collectionData.getData().getOneToMany();
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getFactory()).createDialog(
                 entityId,
                 foreignKey,
-                formElement.getReferenceField(),
-                dialogConfiguration.getChild(),
-                formElement.getRepository(),
+                oneToMany.getReferenceField(),
+                collectionData.getChild(),
+                collectionData.getData().getRepository(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
                 formCreator);

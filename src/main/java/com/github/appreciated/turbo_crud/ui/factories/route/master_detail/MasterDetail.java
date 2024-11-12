@@ -3,10 +3,10 @@ package com.github.appreciated.turbo_crud.ui.factories.route.master_detail;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.dataprovider.GenericFilterableDataProvider;
+import com.github.appreciated.turbo_crud.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -39,7 +39,7 @@ public class MasterDetail extends SplitLayout {
 
     private final GridOrListConfiguration gridOrListConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManager entityManager;
     private final TurboCrudItemFactory itemFactory;
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
@@ -68,7 +68,7 @@ public class MasterDetail extends SplitLayout {
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.entityManagerService = entityManagerFactoryRegistry.getFactory(route.getRepository());
+        this.entityManager = entityManagerFactoryRegistry.getFactory(route.getRepository());
         Config factoryConfig = route.getConfiguration();
         this.gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
@@ -166,7 +166,7 @@ public class MasterDetail extends SplitLayout {
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider(entityManagerService, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider(entityManager, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

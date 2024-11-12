@@ -16,17 +16,11 @@ public class FormElement {
     private List<String> readOnlyForRoles;
     @Optional
     private String label;
-    @Optional
-    private String repository;
     private String type;
-    @Optional
-    private String referenceField;
-    @Optional
-    private String emptyMessage;
     @Optional
     private Integer span = null;
     @Optional
-    Dialog configuration;
+    CollectionConfiguration configuration;
 
     public String getField() {
         return field;
@@ -68,36 +62,12 @@ public class FormElement {
         this.factory = factory;
     }
 
-    public String getRepository() {
-        return repository;
-    }
-
-    public void setRepository(String repository) {
-        this.repository = repository;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getReferenceField() {
-        return referenceField;
-    }
-
-    public void setReferenceField(String referenceField) {
-        this.referenceField = referenceField;
-    }
-
-    public String getEmptyMessage() {
-        return emptyMessage;
-    }
-
-    public void setEmptyMessage(String emptyMessage) {
-        this.emptyMessage = emptyMessage;
     }
 
     public Integer getSpan() {
@@ -108,11 +78,11 @@ public class FormElement {
         this.span = span;
     }
 
-    public Dialog getConfiguration() {
+    public CollectionConfiguration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Dialog configuration) {
+    public void setConfiguration(CollectionConfiguration configuration) {
         this.configuration = configuration;
     }
 }

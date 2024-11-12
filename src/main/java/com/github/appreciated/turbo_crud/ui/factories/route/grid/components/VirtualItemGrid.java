@@ -7,7 +7,7 @@ import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerService;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.typesafe.config.Config;
@@ -35,7 +35,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final TurboCrudItemFactory itemFactory;
     private final TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudEntityManagerService entityManagerService;
+    private final TurboCrudEntityManager entityManager;
     private final GridOrListConfiguration gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
@@ -50,7 +50,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         this.fileProviderRegistry = fileProviderRegistry;
         String table = config.getRepository();
 
-        this.entityManagerService = entityManagerRegistry.getFactory(table);
+        this.entityManager = entityManagerRegistry.getFactory(table);
         Config factoryConfig = config.getConfiguration();
 
         gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
@@ -102,9 +102,9 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        items = entityManagerService.getRecordsFromTable(offset, limit);
+                        items = entityManager.getRecordsFromTable(offset, limit);
                     } else {
-                        items = entityManagerService.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
+                        items = entityManager.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
                     List<EntityItemList> wrappers = new ArrayList<>();
@@ -120,9 +120,9 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                     int count;
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        count = entityManagerService.count();
+                        count = entityManager.count();
                     } else {
-                        count = entityManagerService.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
+                        count = entityManager.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }
