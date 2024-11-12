@@ -3,9 +3,9 @@
 .card {
     border-radius: var(--lumo-border-radius-m);
     box-shadow: 0 2px 5px var(--lumo-box-shadow-xs);
-    padding: 10px;
     cursor: pointer;
     background: var(--lumo-contrast-10pct);
+    overflow: hidden;
 }
 
 .card.collection {
@@ -30,9 +30,6 @@
     background: var(--lumo-contrast-20pct);
     transition: background 0.3s ease;
 }
-
-
-
 
 .card .actions {
     opacity: 0;

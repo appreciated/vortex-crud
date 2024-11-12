@@ -12,13 +12,15 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("card-styles.css")
-public class DefaultItem extends HorizontalLayout {
+public class DefaultItem extends VerticalLayout {
 
     public DefaultItem(ItemFactory config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider) {
         if (maxWidth != null) {
             setMaxWidth(maxWidth + "px");
         }
         addClassName("card");
+        setPadding(false);
+        setSpacing(false);
 
         // Optional image
         ImageDisplayComponent image = null;
@@ -32,12 +34,12 @@ public class DefaultItem extends HorizontalLayout {
             image.setImageSource(imagePath);
             image.setMaxWidth("150px");
             image.setMaxHeight("150px");
-            image.getStyle().set("margin-right", "10px");
+            image.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
         }
 
         // Vertical layout for title and description
         VerticalLayout textContainer = new VerticalLayout();
-        textContainer.setPadding(false);
+        textContainer.setPadding(true);
         textContainer.setSpacing(false);
 
         H4 title = new H4(entity.getString(config.getTitleField()));
