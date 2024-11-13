@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
@@ -11,31 +11,32 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Default implementation of the {@link TurboCrudOneToManyCollectionFactoryRegistry} interface.
+ * Default implementation of the {@link TurboCrudCollectionFactoryRegistry} interface.
  * This factory provides components based on the configuration specified in {@link RepositoryField},
  * supporting various component types like text fields, text areas, date pickers, and dropdowns.
  */
 
 @Service
-public class DefaultOneToManyCollectionFactoryRegistryImpl implements TurboCrudOneToManyCollectionFactoryRegistry {
+public class DefaultCollectionFactoryRegistryImpl implements TurboCrudCollectionFactoryRegistry {
 
-    private final Map<String, TurboCrudOneToManyCollectionFactory> factories = new HashMap<>();
+    private final Map<String, TurboCrudCollectionFactory> factories = new HashMap<>();
 
-    public DefaultOneToManyCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
-        factories.put("list", new DefaultOneToManyCollectionFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
+    public DefaultCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
+        factories.put("list", new DefaultCollectionFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
     }
 
-    public Map<String, TurboCrudOneToManyCollectionFactory> getFactories() {
+    public Map<String, TurboCrudCollectionFactory> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudOneToManyCollectionFactory getFactory(String factory) {
+    public TurboCrudCollectionFactory getFactory(String factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudOneToManyCollectionFactory factory) {
+    public void addFactory(String key, TurboCrudCollectionFactory factory) {
         factories.put(key, factory);
     }
 }
+

@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
@@ -7,7 +7,7 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item.DefaultOneToManyCollectionItemImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultOneToManyCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
@@ -24,13 +24,13 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToManyCollectionFactory {
+public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public DefaultOneToManyCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                                 TurboCrudDialogFactoryRegistry dialogFactory) {
+    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                        TurboCrudDialogFactoryRegistry dialogFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }
@@ -124,16 +124,27 @@ public class DefaultOneToManyCollectionFactoryImpl implements TurboCrudOneToMany
                             VerticalLayout list,
                             HorizontalLayout header) {
         CollectionConfiguration collectionData = formElement.getConfiguration();
-        OneToManyConfiguration oneToMany = collectionData.getData().getOneToMany();
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getFactory()).createDialog(
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getConfiguration().getFactory()).createDialog(
                 entityId,
                 foreignKey,
-                oneToMany.getReferenceField(),
+                getReferenceField(collectionData.getData()),
                 collectionData.getChild(),
                 collectionData.getData().getRepository(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
+    }
+
+    private static String getReferenceField(CollectionData collectionData) {
+        if (collectionData.getOneToMany() != null) {
+            OneToManyConfiguration oneToMany = collectionData.getOneToMany();
+            return oneToMany.getReferenceField();
+        } else if (collectionData.getManyToMany() != null) {
+            ManyToManyConfiguration oneToMany = collectionData.getManyToMany();
+            return oneToMany.getRepositoryField();
+        } else {
+            throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
+        }
     }
 }

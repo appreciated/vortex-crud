@@ -6,6 +6,7 @@ public class CollectionConfiguration {
 
     private Route child;
     private String emptyMessage;
+    private String factory;
     private CollectionData data;
 
     public Route getChild() {
@@ -30,5 +31,13 @@ public class CollectionConfiguration {
 
     public void setData(CollectionData data) {
         this.data = data;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 }

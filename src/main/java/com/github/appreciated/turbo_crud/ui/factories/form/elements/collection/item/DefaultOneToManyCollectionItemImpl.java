@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.one_to_many.item;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
