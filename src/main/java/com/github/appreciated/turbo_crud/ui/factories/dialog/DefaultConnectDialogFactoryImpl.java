@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFa
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -20,11 +19,11 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class DefaultConnectFactoryImpl implements TurboCrudDialogFactory {
+public class DefaultConnectDialogFactoryImpl implements TurboCrudDialogFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
 
-    public DefaultConnectFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+    public DefaultConnectDialogFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
     }
 
