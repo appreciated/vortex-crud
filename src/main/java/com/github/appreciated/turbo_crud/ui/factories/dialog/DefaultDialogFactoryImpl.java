@@ -4,10 +4,10 @@ import com.github.appreciated.turbo_crud.config.model.Form;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.typesafe.config.Config;
@@ -35,7 +35,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
     }
 
     @Override
-    public Dialog createDialog(@Nullable String entityId,
+    public Dialog create(@Nullable String entityId,
                                @Nullable String foreignKeyValue,
                                @Nullable String foreignKeyField,
                                Route formRoute,
@@ -46,6 +46,7 @@ public class DefaultDialogFactoryImpl implements TurboCrudDialogFactory {
 
         this.entityManager = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
+        dialog.setMaxWidth("1200px");
 
         GenericEntity recordById = entityManager.getRecordById(entityId);
         if (recordById == null) {

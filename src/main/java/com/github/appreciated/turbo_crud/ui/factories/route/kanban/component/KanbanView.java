@@ -65,7 +65,7 @@ public class KanbanView extends VerticalLayout {
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
-                Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).createDialog(
+                Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                         EntityUtil.getId(entity),
                         null,
                         null,
@@ -165,7 +165,7 @@ public class KanbanView extends VerticalLayout {
 
     private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String repository, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         GenericEntity entity = new GenericEntity();
-        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).createDialog(
+        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,
                 null,

@@ -4,6 +4,7 @@ import com.typesafe.config.Optional;
 
 public class CollectionConfiguration {
 
+    @Optional
     private Route child;
     private String emptyMessage;
     private String factory;

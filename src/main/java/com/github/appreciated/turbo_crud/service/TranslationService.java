@@ -118,7 +118,7 @@ public class TranslationService implements I18NProvider {
             value = bundle.getString(key);
         } catch (final MissingResourceException e) {
             LoggerFactory.getLogger(TranslationService.class.getName())
-                    .warn("Missing resource", e);
+                    .warn("Missing i18n key '!{%s}!'".formatted(key), e);
             return "!{%s}!".formatted(key);
         }
 

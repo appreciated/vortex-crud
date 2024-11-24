@@ -124,7 +124,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                             VerticalLayout list,
                             HorizontalLayout header) {
         CollectionConfiguration collectionData = formElement.getConfiguration();
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getConfiguration().getFactory()).createDialog(
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getConfiguration().getFactory()).create(
                 entityId,
                 foreignKey,
                 getReferenceField(collectionData.getData()),

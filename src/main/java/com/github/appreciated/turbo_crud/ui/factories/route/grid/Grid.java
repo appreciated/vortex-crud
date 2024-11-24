@@ -58,7 +58,7 @@ public class Grid extends VerticalLayout {
     }
 
     private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String repository, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).createDialog(
+        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,
                 null,

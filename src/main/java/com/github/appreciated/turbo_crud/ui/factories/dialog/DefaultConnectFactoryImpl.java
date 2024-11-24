@@ -4,9 +4,9 @@ import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
+import com.typesafe.config.Config;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,16 +22,14 @@ import java.util.Set;
 
 public class DefaultConnectFactoryImpl implements TurboCrudDialogFactory {
 
-    private final TurboCrudConfigService configService;
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
 
-    public DefaultConnectFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
-        this.configService = configService;
+    public DefaultConnectFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
     }
 
     @Override
-    public Dialog createDialog(@Nullable String entityId,
+    public Dialog create(@Nullable String entityId,
                                @Nullable String foreignKeyValue,
                                @Nullable String foreignKeyField,
                                Route formRoute,
@@ -42,6 +40,7 @@ public class DefaultConnectFactoryImpl implements TurboCrudDialogFactory {
 
         TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
+        dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
 
         VerticalLayout layout = new VerticalLayout();
@@ -54,7 +53,7 @@ public class DefaultConnectFactoryImpl implements TurboCrudDialogFactory {
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(GenericEntity::toString); // Adjust if a specific field needs to be displayed
+        connectionList.setItemLabelGenerator(GenericEntity::toString); // Adjust if a specific entityfield needs to be displayed
 
         layout.add(connectionList);
 
