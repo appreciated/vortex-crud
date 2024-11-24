@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
+import com.github.appreciated.turbo_crud.config.model.CollectionData;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
@@ -18,6 +19,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DefaultConnectDialogFactoryImpl implements TurboCrudDialogFactory {
 
@@ -29,13 +31,14 @@ public class DefaultConnectDialogFactoryImpl implements TurboCrudDialogFactory {
 
     @Override
     public Dialog create(@Nullable String entityId,
-                               @Nullable String foreignKeyValue,
-                               @Nullable String foreignKeyField,
-                               Route formRoute,
-                               String repository,
-                               TurboCrudRouteFactoryRegistry routeFactory,
-                               OnStoreListener listener,
-                               FormCreator formCreator) {
+                         @Nullable String foreignKeyValue,
+                         @Nullable String foreignKeyField,
+                         Route formRoute,
+                         CollectionData collectionData,
+                         String repository,
+                         TurboCrudRouteFactoryRegistry routeFactory,
+                         OnStoreListener listener,
+                         FormCreator formCreator) {
 
         TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
@@ -52,7 +55,7 @@ public class DefaultConnectDialogFactoryImpl implements TurboCrudDialogFactory {
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(GenericEntity::toString); // Adjust if a specific entityfield needs to be displayed
+        connectionList.setItemLabelGenerator(genericEntity -> collectionData.getChildren().stream().map(genericEntity::getString).collect(Collectors.joining(",")));
 
         layout.add(connectionList);
 

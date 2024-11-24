@@ -1,5 +1,9 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.typesafe.config.Optional;
+
+import java.util.List;
+
 public class ManyToManyConfiguration {
 
     private String associativeRepository;

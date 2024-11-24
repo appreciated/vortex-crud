@@ -70,6 +70,7 @@ public class KanbanView extends VerticalLayout {
                         null,
                         null,
                         route.getChild(),
+                        null,
                         repository,
                         routeFactory,
                         () -> {
@@ -170,6 +171,7 @@ public class KanbanView extends VerticalLayout {
                 null,
                 null,
                 route.getChild(),
+                null,
                 repository,
                 routeFactory,
                 () -> {

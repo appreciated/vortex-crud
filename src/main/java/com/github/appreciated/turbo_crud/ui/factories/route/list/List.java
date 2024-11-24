@@ -63,6 +63,7 @@ public class List extends VerticalLayout {
                 null,
                 null,
                 route.getChild(),
+                null,
                 repository,
                 routeFactory,
                 () -> {

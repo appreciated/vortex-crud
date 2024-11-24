@@ -169,3 +169,10 @@ INSERT INTO task_comments (comment_text, user_id, created_at, task_id)
 VALUES ('We need to finalize the design by the end of the week.', 1, NOW(), 1),
        ('The database structure is ready for review.', 2, NOW(), 2),
        ('Waiting for more data to begin AI model training.', 3, NOW(), 3);
+
+-- Create relationships between "Design Homepage" and other tasks
+INSERT INTO task_has_task (task_id, related_task_id)
+VALUES
+    (1, 2), -- "Database Setup"
+    (1, 4), -- "User Authentication"
+    (1, 5); -- "Frontend Integration"

@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
+import com.github.appreciated.turbo_crud.config.model.CollectionData;
 import com.github.appreciated.turbo_crud.config.model.Form;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
@@ -36,13 +37,14 @@ public class DefaultFormDialogFactoryImpl implements TurboCrudDialogFactory {
 
     @Override
     public Dialog create(@Nullable String entityId,
-                               @Nullable String foreignKeyValue,
-                               @Nullable String foreignKeyField,
-                               Route formRoute,
-                               String repository,
-                               TurboCrudRouteFactoryRegistry routeFactory,
-                               OnStoreListener listener,
-                               FormCreator formCreator) {
+                         @Nullable String foreignKeyValue,
+                         @Nullable String foreignKeyField,
+                         Route formRoute,
+                         CollectionData collectionData,
+                         String repository,
+                         TurboCrudRouteFactoryRegistry routeFactory,
+                         OnStoreListener listener,
+                         FormCreator formCreator) {
 
         this.entityManager = entityManagerFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
