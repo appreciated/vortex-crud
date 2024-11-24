@@ -18,6 +18,10 @@
     padding: 10px;
 }
 
+.card.master.no-padding {
+    padding: 0;
+}
+
 .card.master.active {
     transition: border 0.3s ease;
     border: solid 3px var(--lumo-primary-color-50pct);

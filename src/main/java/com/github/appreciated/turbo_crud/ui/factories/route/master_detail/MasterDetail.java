@@ -153,7 +153,7 @@ public class MasterDetail extends SplitLayout {
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
             Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry);
-            component.addClassName("master");
+            component.addClassNames("master", "no-padding");
             Div div = new Div(component);
             if (EntityUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
