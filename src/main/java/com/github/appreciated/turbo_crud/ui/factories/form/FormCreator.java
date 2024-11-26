@@ -8,6 +8,7 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Defau
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -49,11 +50,17 @@ public class FormCreator {
                 TurboCrudFieldFactory factory = componentFactory.getFactory(repositoryField.getFactory());
                 Component component = factory.createComponent(table, fieldName, repositoryField);
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
-                if (component instanceof HasSize){
+                if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }
-                FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(field.getLabel()));
-                form.setColspan(formItem, (field.getSpan() == null ? 1 : field.getSpan()));
+                if (component instanceof HasLabel) {
+                    ((HasLabel) component).setLabel(component.getTranslation(field.getLabel()));
+                    form.add(component);
+                    form.setColspan(component, (field.getSpan() == null ? 1 : field.getSpan()));
+                } else {
+                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(field.getLabel()));
+                    form.setColspan(formItem, (field.getSpan() == null ? 1 : field.getSpan()));
+                }
             } else {
                 if (field.getType().equals("collection")) {
                     Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
@@ -63,8 +70,8 @@ public class FormCreator {
                             routeFactory,
                             formCreator
                     );
-                    FormLayout.FormItem formItem = form.addFormItem(collection, form.getTranslation(field.getLabel()));
-                    form.setColspan(formItem, (field.getSpan() == null ? 2 : field.getSpan()));
+                    form.add(collection);
+                    form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
                 } else {
                     throw new IllegalStateException("Cannot initialize field with name '%s'".formatted(fieldName));
                 }
