@@ -23,6 +23,7 @@
     - **Kanban Route**
 - **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
 - **[WIP] Media Support**: Add, remove, and view media as individual fields
+- **Allow adding routes not visible in the menu**
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view entities from Many-To-Many relationships.
@@ -47,7 +48,6 @@
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **Code Generation**: Check feasibility to generate Vaadin code by utilizing a configuration in combination with the runtime implementations to support top-down workflows, including models and repositories.
 - **API-Endpoints**: Allow defining API endpoints using the configuration file
-- **Allow adding routes without menu**
 
 ## Data Handling and Management
 turbo-crud utilizes the H2 database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
