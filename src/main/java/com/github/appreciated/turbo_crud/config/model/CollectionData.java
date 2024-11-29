@@ -1,11 +1,17 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class CollectionData {
+
     private String repository;
+
     private OneToMany oneToMany;
+
     private ManyToMany manyToMany;
+
     private List<String> children;
 
     public String getRepository() {
@@ -38,5 +44,47 @@ public class CollectionData {
 
     public void setChildren(List<String> children) {
         this.children = children;
+    }
+
+    public static class Builder {
+
+        private CollectionData product;
+
+        private Builder(CollectionData product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new CollectionData());
+        }
+
+        public Builder withRepository(String repository) {
+            product.repository = repository;
+            return this;
+        }
+
+        public Builder withOneToMany(OneToMany oneToMany) {
+            product.oneToMany = oneToMany;
+            return this;
+        }
+
+        public Builder withManyToMany(ManyToMany manyToMany) {
+            product.manyToMany = manyToMany;
+            return this;
+        }
+
+        public Builder withChildren(List<String> children) {
+            product.children = children;
+            return this;
+        }
+
+        public Builder addChildren(String item) {
+            product.children.add(item);
+            return this;
+        }
+
+        public CollectionData build() {
+            return product;
+        }
     }
 }

@@ -1,21 +1,33 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import com.typesafe.config.ConfigObject;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 import java.util.Map;
 
+@GenerateBuilder
 public class Route {
+
     private String repository;
+
     private String title;
+
     private String icon;
+
     private boolean defaultRoute;
+
     private String factory;
+
     private boolean hideInMenu;
+
     private RouteConfiguration configuration;
+
     private ConfigObject children;
+
     private Map<String, Route> childrenMap;
+
     private Route child;
+
     private List<String> roles;
 
     public String getRepository() {
@@ -105,7 +117,81 @@ public class Route {
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
+
+    public static class Builder {
+
+        private Route product;
+
+        Builder(Route product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Route());
+        }
+
+        public Builder withRepository(String repository) {
+            product.repository = repository;
+            return this;
+        }
+
+        public Builder withTitle(String title) {
+            product.title = title;
+            return this;
+        }
+
+        public Builder withIcon(String icon) {
+            product.icon = icon;
+            return this;
+        }
+
+        public Builder withDefaultRoute(boolean defaultRoute) {
+            product.defaultRoute = defaultRoute;
+            return this;
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withHideInMenu(boolean hideInMenu) {
+            product.hideInMenu = hideInMenu;
+            return this;
+        }
+
+        public Builder withConfiguration(RouteConfiguration configuration) {
+            product.configuration = configuration;
+            return this;
+        }
+
+        public Builder withChildren(ConfigObject children) {
+            product.children = children;
+            return this;
+        }
+
+        public Builder withChildrenMap(Map<String, Route> childrenMap) {
+            product.childrenMap = childrenMap;
+            return this;
+        }
+
+        public Builder withChild(Route child) {
+            product.child = child;
+            return this;
+        }
+
+        public Builder withRoles(List<String> roles) {
+            product.roles = roles;
+            return this;
+        }
+
+        public Builder addRole(String item) {
+            product.roles.add(item);
+            return this;
+        }
+
+        public Route build() {
+            return product;
+        }
+    }
 }
-
-
-

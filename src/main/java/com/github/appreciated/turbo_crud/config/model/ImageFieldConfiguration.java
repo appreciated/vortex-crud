@@ -1,6 +1,10 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
+@GenerateBuilder
 public class ImageFieldConfiguration {
+
     private String factory;
 
     public String getFactory() {
@@ -9,5 +13,27 @@ public class ImageFieldConfiguration {
 
     public void setFactory(String factory) {
         this.factory = factory;
+    }
+
+    public static class Builder {
+
+        private ImageFieldConfiguration product;
+
+        private Builder(ImageFieldConfiguration product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new ImageFieldConfiguration());
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public ImageFieldConfiguration build() {
+            return product;
+        }
     }
 }

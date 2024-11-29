@@ -1,15 +1,25 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class FormElement {
+
     private String field;
+
     private String factory;
+
     private boolean readOnly;
+
     private List<String> readOnlyForRoles;
+
     private String label;
+
     private String type;
+
     private Integer span = null;
+
     Collection configuration;
 
     public String getField() {
@@ -74,5 +84,67 @@ public class FormElement {
 
     public void setConfiguration(Collection configuration) {
         this.configuration = configuration;
+    }
+
+    public static class Builder {
+
+        private FormElement product;
+
+        private Builder(FormElement product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new FormElement());
+        }
+
+        public Builder withField(String field) {
+            product.field = field;
+            return this;
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withReadOnly(boolean readOnly) {
+            product.readOnly = readOnly;
+            return this;
+        }
+
+        public Builder withReadOnlyForRoles(List<String> readOnlyForRoles) {
+            product.readOnlyForRoles = readOnlyForRoles;
+            return this;
+        }
+
+        public Builder withLabel(String label) {
+            product.label = label;
+            return this;
+        }
+
+        public Builder withType(String type) {
+            product.type = type;
+            return this;
+        }
+
+        public Builder withSpan(Integer span) {
+            product.span = span;
+            return this;
+        }
+
+        public Builder withConfiguration(Collection configuration) {
+            product.configuration = configuration;
+            return this;
+        }
+
+        public Builder addReadOnlyForRole(String item) {
+            product.readOnlyForRoles.add(item);
+            return this;
+        }
+
+        public FormElement build() {
+            return product;
+        }
     }
 }

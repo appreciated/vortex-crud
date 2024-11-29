@@ -1,20 +1,27 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import com.typesafe.config.Optional;
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import org.jsoup.nodes.FormElement;
-
 import java.util.List;
 
+@GenerateBuilder
 public class Kanban extends RouteConfiguration implements ItemFactory {
 
     private String factory;
+
     private String columnField;
+
     private String titleField;
+
     private String descriptionField;
+
     @Optional
     private String imageField;
+
     @Optional
     private String imageFactory;
+
     @Optional
     private List<FormElement> children;
 
@@ -65,5 +72,62 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
 
     public void setColumnField(String columnField) {
         this.columnField = columnField;
+    }
+
+    public static class Builder {
+
+        private Kanban product;
+
+        private Builder(Kanban product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Kanban());
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withColumnField(String columnField) {
+            product.columnField = columnField;
+            return this;
+        }
+
+        public Builder withTitleField(String titleField) {
+            product.titleField = titleField;
+            return this;
+        }
+
+        public Builder withDescriptionField(String descriptionField) {
+            product.descriptionField = descriptionField;
+            return this;
+        }
+
+        public Builder withImageField(String imageField) {
+            product.imageField = imageField;
+            return this;
+        }
+
+        public Builder withImageFactory(String imageFactory) {
+            product.imageFactory = imageFactory;
+            return this;
+        }
+
+        public Builder withChildren(List<FormElement> children) {
+            product.children = children;
+            return this;
+        }
+
+        public Builder addChildren(FormElement item) {
+            product.children.add(item);
+            return this;
+        }
+
+        public Kanban build() {
+            return product;
+        }
     }
 }

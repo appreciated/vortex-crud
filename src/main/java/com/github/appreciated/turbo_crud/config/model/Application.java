@@ -1,16 +1,27 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
+@GenerateBuilder
 public class Application {
+
     private String name;
+
     private String i18nBundlePrefix;
+
     private UserManagement userManagement;
+
     private Selects selects;
+
     private Versioning versioning;
+
     private Auditing auditing;
+
     private Map<String, Repository> repositories;
+
     private Map<String, FormRoute> forms;
+
     private Map<String, Route> routes;
 
     public String getName() {
@@ -69,19 +80,63 @@ public class Application {
         this.repositories = repositories;
     }
 
-    public Map<String, FormRoute> getForms() {
-        return forms;
-    }
-
-    public void setForms(Map<String, FormRoute> forms) {
-        this.forms = forms;
-    }
-
     public Map<String, Route> getRoutes() {
         return routes;
     }
 
     public void setRoutes(Map<String, Route> routes) {
         this.routes = routes;
+    }
+
+    public static class Builder {
+
+        private Application product;
+
+        private Builder(Application product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Application());
+        }
+
+        public Builder withName(String name) {
+            product.name = name;
+            return this;
+        }
+
+        public Builder withI18nBundlePrefix(String i18nBundlePrefix) {
+            product.i18nBundlePrefix = i18nBundlePrefix;
+            return this;
+        }
+
+        public Builder withUserManagement(UserManagement userManagement) {
+            product.userManagement = userManagement;
+            return this;
+        }
+
+        public Builder withSelects(Selects selects) {
+            product.selects = selects;
+            return this;
+        }
+
+        public Builder withVersioning(Versioning versioning) {
+            product.versioning = versioning;
+            return this;
+        }
+
+        public Builder withAuditing(Auditing auditing) {
+            product.auditing = auditing;
+            return this;
+        }
+
+        public Builder withRepositories(Map<String, Repository> repositories) {
+            product.repositories = repositories;
+            return this;
+        }
+
+        public Application build() {
+            return product;
+        }
     }
 }

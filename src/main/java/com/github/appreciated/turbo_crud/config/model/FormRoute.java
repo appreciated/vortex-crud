@@ -1,8 +1,17 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.typesafe.config.ConfigObject;
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+import java.util.List;
+import java.util.Map;
+
+@GenerateBuilder
 public class FormRoute extends Route {
+
     private String repository;
+
     private String factory;
+
     private String title;
 
     public String getRepository() {
@@ -29,14 +38,36 @@ public class FormRoute extends Route {
         this.title = title;
     }
 
+    public static class Builder extends Route.Builder{
+
+        private FormRoute product;
+
+        private Builder(FormRoute product) {
+            super(product);
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new FormRoute());
+        }
+
+        public Builder withRepository(String repository) {
+            product.repository = repository;
+            return this;
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withTitle(String title) {
+            product.title = title;
+            return this;
+        }
+
+        public FormRoute build() {
+            return product;
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-

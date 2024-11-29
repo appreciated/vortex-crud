@@ -1,16 +1,25 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class GridOrListConfiguration extends RouteConfiguration implements ItemFactory {
 
     private String factory;
+
     private String titleField;
+
     private String descriptionField;
+
     private String imageField;
+
     private String imageFactory;
+
     private String filterField;
+
     private boolean inlineEdit;
+
     private List<FormElement> children;
 
     public String getFactory() {
@@ -76,5 +85,67 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     public void setChildren(List<FormElement> children) {
         this.children = children;
+    }
+
+    public static class Builder {
+
+        private GridOrListConfiguration product;
+
+        private Builder(GridOrListConfiguration product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new GridOrListConfiguration());
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withTitleField(String titleField) {
+            product.titleField = titleField;
+            return this;
+        }
+
+        public Builder withDescriptionField(String descriptionField) {
+            product.descriptionField = descriptionField;
+            return this;
+        }
+
+        public Builder withImageField(String imageField) {
+            product.imageField = imageField;
+            return this;
+        }
+
+        public Builder withImageFactory(String imageFactory) {
+            product.imageFactory = imageFactory;
+            return this;
+        }
+
+        public Builder withFilterField(String filterField) {
+            product.filterField = filterField;
+            return this;
+        }
+
+        public Builder withInlineEdit(boolean inlineEdit) {
+            product.inlineEdit = inlineEdit;
+            return this;
+        }
+
+        public Builder withChildren(List<FormElement> children) {
+            product.children = children;
+            return this;
+        }
+
+        public Builder addChildren(FormElement item) {
+            product.children.add(item);
+            return this;
+        }
+
+        public GridOrListConfiguration build() {
+            return product;
+        }
     }
 }

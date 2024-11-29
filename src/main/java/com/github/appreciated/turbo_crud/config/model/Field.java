@@ -1,22 +1,33 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import com.typesafe.config.Config;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class Field {
-    private String factory;
-    private boolean primary;
-    private boolean required;
-    private Validation validation;
-    private String defaultValue;
-    private String values;
-    private String repository;
-    private String field;
-    private String filterField;
-    private List<String> children;
-    Config configuration;
 
+    private String factory;
+
+    private boolean primary;
+
+    private boolean required;
+
+    private Validation validation;
+
+    private String defaultValue;
+
+    private String values;
+
+    private String repository;
+
+    private String field;
+
+    private String filterField;
+
+    private List<String> children;
+
+    Route configuration;
 
     public String getFactory() {
         return factory;
@@ -98,11 +109,88 @@ public class Field {
         this.children = children;
     }
 
-    public Config getConfiguration() {
+    public Route getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Config configuration) {
+    public void setConfiguration(Route configuration) {
         this.configuration = configuration;
+    }
+
+    public static class Builder {
+
+        private Field product;
+
+        private Builder(Field product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Field());
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withPrimary(boolean primary) {
+            product.primary = primary;
+            return this;
+        }
+
+        public Builder withRequired(boolean required) {
+            product.required = required;
+            return this;
+        }
+
+        public Builder withValidation(Validation validation) {
+            product.validation = validation;
+            return this;
+        }
+
+        public Builder withDefaultValue(String defaultValue) {
+            product.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder withValues(String values) {
+            product.values = values;
+            return this;
+        }
+
+        public Builder withRepository(String repository) {
+            product.repository = repository;
+            return this;
+        }
+
+        public Builder withField(String field) {
+            product.field = field;
+            return this;
+        }
+
+        public Builder withFilterField(String filterField) {
+            product.filterField = filterField;
+            return this;
+        }
+
+        public Builder withChildren(List<String> children) {
+            product.children = children;
+            return this;
+        }
+
+        public Builder withConfiguration(Route configuration) {
+            product.configuration = configuration;
+            return this;
+        }
+
+        public Builder addChildren(String item) {
+            product.children.add(item);
+            return this;
+        }
+
+        public Field build() {
+            return product;
+        }
     }
 }
