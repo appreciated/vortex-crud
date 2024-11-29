@@ -1,25 +1,16 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
 import java.util.List;
 
-public class GridOrListConfiguration implements ItemFactory {
+public class GridOrListConfiguration extends RouteConfiguration implements ItemFactory {
 
     private String factory;
-    @Optional
     private String titleField;
-    @Optional
     private String descriptionField;
-    @Optional
     private String imageField;
-    @Optional
     private String imageFactory;
-    @Optional
     private String filterField;
-    @Optional
     private boolean inlineEdit;
-    @Optional
     private List<FormElement> children;
 
     public String getFactory() {
@@ -63,14 +54,6 @@ public class GridOrListConfiguration implements ItemFactory {
         this.imageField = imageField;
     }
 
-    public List<FormElement> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<FormElement> children) {
-        this.children = children;
-    }
-
     public String getFilterField() {
         return filterField;
     }
@@ -85,5 +68,13 @@ public class GridOrListConfiguration implements ItemFactory {
 
     public void setInlineEdit(boolean inlineEdit) {
         this.inlineEdit = inlineEdit;
+    }
+
+    public List<FormElement> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<FormElement> children) {
+        this.children = children;
     }
 }

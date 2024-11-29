@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.entity;
 
 import com.github.appreciated.turbo_crud.config.model.Application;
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
@@ -14,7 +14,7 @@ import java.util.*;
  * Validates the database schema against the {@link Application}.
  * <p>
  * This class checks if tables and columns in the database match the expected
- * schema based on {@link Repository} and {@link RepositoryField} from
+ * schema based on {@link Repository} and {@link Field} from
  * {@link TurboCrudConfigService}. It uses JPA's {@link EntityManager} to run
  * native SQL queries and validate table existence, column names, and data types.
  * </p>
@@ -32,13 +32,13 @@ public class TurboCrudDatabaseSchemaValidator {
     public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudTypeMappingConfiguration typeMappingConfiguration) {
         this.entityManager = entityManager;
         typeMappings = typeMappingConfiguration.getTypeMappings();
-        Map<String, Repository> tablesConfig = configService.getConfiguration().getRepositoriesConfig();
+        Map<String, Repository> tablesConfig = configService.getConfiguration().getRepositories();
         for (Map.Entry<String, Repository> entry : tablesConfig.entrySet()) {
-            checkTable(entry.getKey(), entry.getValue().getFieldsConfig());
+            checkTable(entry.getKey(), entry.getValue().getFields());
         }
     }
 
-    public void checkTable(String tableName, Map<String, RepositoryField> expectedColumns) {
+    public void checkTable(String tableName, Map<String, Field> expectedColumns) {
         if (!tableExists(tableName)) {
             throw new PersistenceException("Table " + tableName + " does not exist in the database.");
         }
@@ -55,7 +55,7 @@ public class TurboCrudDatabaseSchemaValidator {
         return !result.isEmpty();
     }
 
-    private void checkColumns(String tableName, Map<String, RepositoryField> expectedColumns) {
+    private void checkColumns(String tableName, Map<String, Field> expectedColumns) {
         String query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = :tableName AND TABLE_SCHEMA = 'PUBLIC'";
         List<Object[]> columns = entityManager.createNativeQuery(query)
                 .setParameter("tableName", tableName.toUpperCase())
@@ -70,9 +70,9 @@ public class TurboCrudDatabaseSchemaValidator {
         }
 
         // Jetzt über die erwarteten Spalten iterieren
-        for (Map.Entry<String, RepositoryField> entry : expectedColumns.entrySet()) {
+        for (Map.Entry<String, Field> entry : expectedColumns.entrySet()) {
             String expectedColumnName = entry.getKey().toLowerCase();
-            RepositoryField expectedConfig = entry.getValue();
+            Field expectedConfig = entry.getValue();
 
             String actualColumnType = actualColumns.get(expectedColumnName);
             if (actualColumnType == null) {
@@ -96,7 +96,7 @@ public class TurboCrudDatabaseSchemaValidator {
         // TODO
     }
 
-    private void checkForeignKeys(String tableName, Map<String, RepositoryField> expectedColumns) {
+    private void checkForeignKeys(String tableName, Map<String, Field> expectedColumns) {
         // TODO
     }
 }

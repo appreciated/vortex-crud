@@ -1,13 +1,9 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
 import java.util.List;
 
 public class UserManagement {
-
     private boolean enabled;
-    @Optional
     private AccessControl accessControl;
     private boolean signUp;
     private List<AdditionalField> additionalFields;
@@ -44,4 +40,5 @@ public class UserManagement {
         this.additionalFields = additionalFields;
     }
 }
+
 

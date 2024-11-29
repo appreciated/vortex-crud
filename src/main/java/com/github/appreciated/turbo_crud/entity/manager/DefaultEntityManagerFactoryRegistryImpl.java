@@ -22,7 +22,7 @@ public class DefaultEntityManagerFactoryRegistryImpl implements TurboCrudEntityM
     private final HashMap<String, TurboCrudEntityManager> factories = new HashMap<>();
 
     public DefaultEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        for (Map.Entry<String, Repository> entry : turboCrudConfigService.getConfiguration().getRepositoriesConfig().entrySet()) {
+        for (Map.Entry<String, Repository> entry : turboCrudConfigService.getConfiguration().getRepositories().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new DefaultJpaEntityManager(table, entityManager, transactionTemplate));
         }

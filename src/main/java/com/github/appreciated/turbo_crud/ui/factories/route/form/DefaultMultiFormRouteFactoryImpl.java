@@ -1,19 +1,18 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.Form;
-import com.github.appreciated.turbo_crud.config.model.MultiForm;
-import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
+
+import java.util.List;
 
 public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
@@ -36,9 +35,9 @@ public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiForm formConfiguration = ConfigBeanFactory.create(route.getConfiguration(), MultiForm.class);
+        MultiFormConfiguration formConfiguration = (MultiFormConfiguration) route.getConfiguration();
         Div div = new Div();
-        for (Form child : formConfiguration.getChildren()) {
+        for (FormConfiguration child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
         }

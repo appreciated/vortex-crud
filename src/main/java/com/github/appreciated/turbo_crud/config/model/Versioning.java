@@ -3,7 +3,6 @@ package com.github.appreciated.turbo_crud.config.model;
 import java.util.List;
 
 public class Versioning {
-
     private boolean enabled;
     private List<String> repositories;
 
@@ -22,5 +21,4 @@ public class Versioning {
     public void setRepositories(List<String> repositories) {
         this.repositories = repositories;
     }
-
 }

@@ -1,36 +1,23 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
-import com.typesafe.config.Optional;
 
 import java.util.List;
 import java.util.Map;
 
 public class Route {
-    @Optional
     private String repository;
-    @Optional
     private String title;
-    @Optional
     private String icon;
-    @Optional
     private boolean defaultRoute;
     private String factory;
-    @Optional
     private boolean hideInMenu;
-    @Optional
-    private Config configuration;
-    @Optional
+    private RouteConfiguration configuration;
     private ConfigObject children;
-    @Optional
     private Map<String, Route> childrenMap;
-    @Optional
     private Route child;
-    @Optional
     private List<String> roles;
 
-    // Getter und Setter
     public String getRepository() {
         return repository;
     }
@@ -79,11 +66,11 @@ public class Route {
         this.hideInMenu = hideInMenu;
     }
 
-    public Config getConfiguration() {
+    public RouteConfiguration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Config configuration) {
+    public void setConfiguration(RouteConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -91,13 +78,24 @@ public class Route {
         return children;
     }
 
+    public void setChildren(ConfigObject children) {
+        this.children = children;
+    }
+
     public Map<String, Route> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildren(ConfigObject children) {
-        this.children = children;
-        this.childrenMap = ConfigModelUtil.toStringMapWithValueType(this.children, Route.class);
+    public void setChildrenMap(Map<String, Route> childrenMap) {
+        this.childrenMap = childrenMap;
+    }
+
+    public Route getChild() {
+        return child;
+    }
+
+    public void setChild(Route child) {
+        this.child = child;
     }
 
     public List<String> getRoles() {
@@ -107,13 +105,7 @@ public class Route {
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
-
-    public Route getChild() {
-        assert childrenMap.size() < 2;
-        return childrenMap.values().stream().findFirst().orElse(null);
-    }
-
-    public void setChild(Route child) {
-        this.childrenMap = Map.of("", child);
-    }
 }
+
+
+

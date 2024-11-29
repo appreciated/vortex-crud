@@ -1,25 +1,26 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.ConfigObject;
-
 import java.util.Map;
 
-import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
-
 public class Repository {
+    private String factory;
+    private Map<String, Field> fields;
 
-    private ConfigObject fields;
+    public String getFactory() {
+        return factory;
+    }
 
-    public ConfigObject getFields() {
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public Map<String, Field> getFields() {
         return fields;
     }
 
-    public void setFields(ConfigObject fields) {
+    public void setFields(Map<String, Field> fields) {
         this.fields = fields;
     }
-
-    public Map<String, RepositoryField> getFieldsConfig() {
-        return toStringMapWithValueType(fields, RepositoryField.class);
-    }
 }
+
 

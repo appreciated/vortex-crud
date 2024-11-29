@@ -1,8 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
-public class OneToManyConfiguration {
+public class OneToMany {
     private String referenceField;
 
     public String getReferenceField() {

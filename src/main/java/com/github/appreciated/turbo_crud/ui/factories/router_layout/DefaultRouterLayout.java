@@ -52,7 +52,7 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Set<Map.Entry<String, Route>> keys = configService.getConfiguration().getRoutesConfig().entrySet();
+        Set<Map.Entry<String, Route>> keys = configService.getConfiguration().getRoutes().entrySet();
         keys.forEach(configEntry -> {
             if (!configEntry.getValue().isHideInMenu()) {
                 String translation = getTranslation(configEntry.getValue().getTitle());

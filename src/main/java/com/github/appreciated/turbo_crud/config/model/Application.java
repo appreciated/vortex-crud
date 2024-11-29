@@ -1,26 +1,17 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.Optional;
-
 import java.util.Map;
-
-import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
 
 public class Application {
     private String name;
-    @Optional
-    private UserManagement userManagement;
-    @Optional
-    private ConfigObject selects;
-    @Optional
-    private Versioning versioning;
-    @Optional
-    private Auditing auditing;
-    private ConfigObject repositories;
-    private ConfigObject routes;
-
     private String i18nBundlePrefix;
+    private UserManagement userManagement;
+    private Selects selects;
+    private Versioning versioning;
+    private Auditing auditing;
+    private Map<String, Repository> repositories;
+    private Map<String, FormRoute> forms;
+    private Map<String, Route> routes;
 
     public String getName() {
         return name;
@@ -28,6 +19,14 @@ public class Application {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getI18nBundlePrefix() {
+        return i18nBundlePrefix;
+    }
+
+    public void setI18nBundlePrefix(String i18nBundlePrefix) {
+        this.i18nBundlePrefix = i18nBundlePrefix;
     }
 
     public UserManagement getUserManagement() {
@@ -38,11 +37,11 @@ public class Application {
         this.userManagement = userManagement;
     }
 
-    public ConfigObject getSelects() {
+    public Selects getSelects() {
         return selects;
     }
 
-    public void setSelects(ConfigObject selects) {
+    public void setSelects(Selects selects) {
         this.selects = selects;
     }
 
@@ -62,35 +61,27 @@ public class Application {
         this.auditing = auditing;
     }
 
-    public ConfigObject getRepositories() {
+    public Map<String, Repository> getRepositories() {
         return repositories;
     }
 
-    public void setRepositories(ConfigObject repositories) {
+    public void setRepositories(Map<String, Repository> repositories) {
         this.repositories = repositories;
     }
 
-    public Map<String, Repository> getRepositoriesConfig() {
-        return toStringMapWithValueType(repositories, Repository.class);
+    public Map<String, FormRoute> getForms() {
+        return forms;
     }
 
-    public ConfigObject getRoutes() {
+    public void setForms(Map<String, FormRoute> forms) {
+        this.forms = forms;
+    }
+
+    public Map<String, Route> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(ConfigObject routes) {
+    public void setRoutes(Map<String, Route> routes) {
         this.routes = routes;
-    }
-
-    public Map<String, Route> getRoutesConfig() {
-        return toStringMapWithValueType(routes, Route.class);
-    }
-
-    public String getI18nBundlePrefix() {
-        return i18nBundlePrefix;
-    }
-
-    public void setI18nBundlePrefix(String i18nBundlePrefix) {
-        this.i18nBundlePrefix = i18nBundlePrefix;
     }
 }

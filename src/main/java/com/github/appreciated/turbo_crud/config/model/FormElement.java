@@ -1,26 +1,16 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
 import java.util.List;
 
 public class FormElement {
-
-    @Optional
     private String field;
-    @Optional
     private String factory;
-    @Optional
     private boolean readOnly;
-    @Optional
     private List<String> readOnlyForRoles;
-    @Optional
     private String label;
     private String type;
-    @Optional
     private Integer span = null;
-    @Optional
-    CollectionConfiguration configuration;
+    Collection configuration;
 
     public String getField() {
         return field;
@@ -28,6 +18,14 @@ public class FormElement {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 
     public boolean isReadOnly() {
@@ -54,14 +52,6 @@ public class FormElement {
         this.label = label;
     }
 
-    public String getFactory() {
-        return factory;
-    }
-
-    public void setFactory(String factory) {
-        this.factory = factory;
-    }
-
     public String getType() {
         return type;
     }
@@ -78,11 +68,11 @@ public class FormElement {
         this.span = span;
     }
 
-    public CollectionConfiguration getConfiguration() {
+    public Collection getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(CollectionConfiguration configuration) {
+    public void setConfiguration(Collection configuration) {
         this.configuration = configuration;
     }
 }

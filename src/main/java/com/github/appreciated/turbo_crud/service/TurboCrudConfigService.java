@@ -19,12 +19,11 @@ public class TurboCrudConfigService {
     private final Application configuration;
 
     public TurboCrudConfigService() {
-        ConfigParseOptions defaults = ConfigParseOptions.defaults();
-        Config config = ConfigFactory.parseResources(TurboCrudConfigService.class.getClassLoader(), "turbo-crud-config.conf", defaults).resolve();
-        this.configuration = ConfigBeanFactory.create(config.getObject("application").toConfig(), Application.class);
-        if (config.isEmpty()) {
+
+
+       /* if (config.isEmpty()) {
             throw new IllegalStateException("No TurboCRUD config found");
-        }
+        }*/
     }
 
     public Application getConfiguration() {
@@ -32,7 +31,7 @@ public class TurboCrudConfigService {
     }
 
     public Route getConfigForRoute(String viewName) {
-        return configuration.getRoutesConfig().get(viewName.split("/")[0]);
+        return configuration.getRoutes().get(viewName.split("/")[0]);
     }
 
     public String getApplicationName() {

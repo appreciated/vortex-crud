@@ -1,20 +1,13 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import org.jsoup.nodes.FormElement;
+
 import java.util.List;
 
-public class MultiForm {
-
+public class FormConfiguration extends RouteConfiguration {
     private String titleField;
 
-    private List<Form> children;
-
-    public List<Form> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Form> children) {
-        this.children = children;
-    }
+    private List<FormElement> children;
 
     public String getTitleField() {
         return titleField;

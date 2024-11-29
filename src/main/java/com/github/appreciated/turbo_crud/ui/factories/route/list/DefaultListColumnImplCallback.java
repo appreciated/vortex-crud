@@ -1,13 +1,12 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.ImageFieldConfiguration;
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
 import com.typesafe.config.ConfigBeanFactory;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
@@ -20,7 +19,7 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
     }
 
     @Override
-    public void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, RepositoryField repositoryField) {
+    public void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, Field repositoryField) {
         if (repositoryField.getFactory().equals("image")) {
             if(repositoryField.getConfiguration() == null){
                 throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");

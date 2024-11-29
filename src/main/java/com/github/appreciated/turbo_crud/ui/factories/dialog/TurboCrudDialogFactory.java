@@ -4,7 +4,6 @@ import com.github.appreciated.turbo_crud.config.model.CollectionData;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
 import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;
 

@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 public class AdditionalField {
-
     private String name;
     private String type;
 

@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,5 +11,5 @@ import com.vaadin.flow.component.grid.Grid;
  */
 
 public interface TurboCrudListColumnCallback {
-    void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, RepositoryField repositoryField);
+    void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, Field repositoryField);
 }

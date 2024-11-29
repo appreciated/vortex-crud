@@ -17,8 +17,6 @@ import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -69,8 +67,7 @@ public class MasterDetail extends SplitLayout {
 
         this.pathVariables = routeResolver;
         this.entityManager = entityManagerFactoryRegistry.getFactory(route.getRepository());
-        Config factoryConfig = route.getConfiguration();
-        this.gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
+        this.gridOrListConfiguration = (GridOrListConfiguration) route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         assert route.getChildren() != null;
         assert route.getChildren().size() == 1;
@@ -144,7 +141,7 @@ public class MasterDetail extends SplitLayout {
     private void onItemClick(GenericEntity entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
-            pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
+            pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
         });

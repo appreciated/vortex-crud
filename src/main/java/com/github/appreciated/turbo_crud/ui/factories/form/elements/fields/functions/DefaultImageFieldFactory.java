@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.ImageFieldConfiguration;
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.ImageHasValue;
@@ -17,7 +17,7 @@ public class DefaultImageFieldFactory implements TurboCrudFieldFactory {
     }
 
     @Override
-    public Component createComponent(String table, String field, RepositoryField repositoryField) {
+    public Component createComponent(String table, String field, Field repositoryField) {
         ImageFieldConfiguration imageFieldConfiguration = ConfigBeanFactory.create(repositoryField.getConfiguration(), ImageFieldConfiguration.class);
         return new ImageHasValue(fileProviderRegistry.getFactory(imageFieldConfiguration.getFactory()));
     }

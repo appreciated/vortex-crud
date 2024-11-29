@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component;
 
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
@@ -19,7 +19,7 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     private final TurboCrudEntityManager entityManager;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, RepositoryField repositoryField) {
+    public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, Field repositoryField) {
         this.entityManager = entityManagerFactoryRegistry.getFactory(repositoryField.getRepository());
         this.comboBox = new ComboBox<>();
 

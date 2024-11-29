@@ -1,9 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.config.model.CollectionData;
-import com.github.appreciated.turbo_crud.config.model.Form;
-import com.github.appreciated.turbo_crud.config.model.Repository;
-import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
@@ -11,8 +8,6 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -40,7 +35,7 @@ public class DefaultFormDialogFactoryImpl implements TurboCrudDialogFactory {
                          @Nullable String foreignKeyValue,
                          @Nullable String foreignKeyField,
                          Route formRoute,
-                         CollectionData collectionData,
+                         CollectionData config,
                          String repository,
                          TurboCrudRouteFactoryRegistry routeFactory,
                          OnStoreListener listener,
@@ -66,12 +61,9 @@ public class DefaultFormDialogFactoryImpl implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(repository);
+        Repository tables = configService.getConfiguration().getRepositories().get(repository);
 
-        Config configuration = formRoute.getConfiguration();
-        Form form = ConfigBeanFactory.create(configuration, Form.class);
-
-        formCreator.bindAndAddToLayout(repository, formRoute, form, recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(repository, formRoute, (FormConfiguration) formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

@@ -8,7 +8,6 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.data.provider.DataProvider;
@@ -36,18 +35,18 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(route.getRepository());
-        GridOrListConfiguration gridOrListConfiguration = ConfigBeanFactory.create(route.getConfiguration(), GridOrListConfiguration.class);
+        Repository tables = configService.getConfiguration().getRepositories().get(route.getRepository());
+        RouteConfiguration gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManager, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
-        Map<String, RepositoryField> fieldsConfig = tables.getFieldsConfig();
+        Map<String, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
         for (FormElement field : gridOrListConfiguration.getChildren()) {
             String fieldName = field.getField();
-            RepositoryField repositoryField = fieldsConfig.get(fieldName);
+            Field repositoryField = fieldsConfig.get(fieldName);
             if (repositoryField == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }

@@ -1,21 +1,16 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-import org.jsoup.nodes.FormElement;
-
 import java.util.List;
 
-public class Kanban extends RouteConfiguration implements ItemFactory {
-
+public class RouteConfiguration {
     private String factory;
-    private String columnField;
     private String titleField;
     private String descriptionField;
-    @Optional
+    private String columnField;
     private String imageField;
-    @Optional
     private String imageFactory;
-    @Optional
+    private boolean inlineEdit;
+    private String filterField;
     private List<FormElement> children;
 
     public String getFactory() {
@@ -42,11 +37,22 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
         this.descriptionField = descriptionField;
     }
 
+    public String getColumnField() {
+        return columnField;
+    }
+
+    public void setColumnField(String columnField) {
+        this.columnField = columnField;
+    }
+
     public String getImageField() {
         return imageField;
     }
 
-    @Override
+    public void setImageField(String imageField) {
+        this.imageField = imageField;
+    }
+
     public String getImageFactory() {
         return imageFactory;
     }
@@ -55,15 +61,27 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
         this.imageFactory = imageFactory;
     }
 
-    public void setImageField(String imageField) {
-        this.imageField = imageField;
+    public boolean isInlineEdit() {
+        return inlineEdit;
     }
 
-    public String getColumnField() {
-        return columnField;
+    public void setInlineEdit(boolean inlineEdit) {
+        this.inlineEdit = inlineEdit;
     }
 
-    public void setColumnField(String columnField) {
-        this.columnField = columnField;
+    public String getFilterField() {
+        return filterField;
+    }
+
+    public void setFilterField(String filterField) {
+        this.filterField = filterField;
+    }
+
+    public List<FormElement> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<FormElement> children) {
+        this.children = children;
     }
 }

@@ -27,7 +27,7 @@ public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinService
     private static Optional<Map.Entry<String, Route>> defaultRoute;
 
     public TurboCrudDefaultRouteRedirectConfiguration(TurboCrudConfigService configService) {
-        this.routeConfigs = configService.getConfiguration().getRoutesConfig();
+        this.routeConfigs = configService.getConfiguration().getRoutes();
     }
 
     @Override

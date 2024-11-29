@@ -1,9 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
 public class Validation {
-    @Optional
     private int maxLength;
 
     public int getMaxLength() {

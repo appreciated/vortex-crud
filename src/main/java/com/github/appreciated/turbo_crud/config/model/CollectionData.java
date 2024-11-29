@@ -1,17 +1,11 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
 import java.util.List;
 
 public class CollectionData {
-    String repository;
-    @Optional
-    private OneToManyConfiguration oneToMany;
-    @Optional
-    private ManyToManyConfiguration manyToMany;
-
-    @Optional
+    private String repository;
+    private OneToMany oneToMany;
+    private ManyToMany manyToMany;
     private List<String> children;
 
     public String getRepository() {
@@ -22,19 +16,19 @@ public class CollectionData {
         this.repository = repository;
     }
 
-    public OneToManyConfiguration getOneToMany() {
+    public OneToMany getOneToMany() {
         return oneToMany;
     }
 
-    public void setOneToMany(OneToManyConfiguration oneToMany) {
+    public void setOneToMany(OneToMany oneToMany) {
         this.oneToMany = oneToMany;
     }
 
-    public ManyToManyConfiguration getManyToMany() {
+    public ManyToMany getManyToMany() {
         return manyToMany;
     }
 
-    public void setManyToMany(ManyToManyConfiguration manyToMany) {
+    public void setManyToMany(ManyToMany manyToMany) {
         this.manyToMany = manyToMany;
     }
 

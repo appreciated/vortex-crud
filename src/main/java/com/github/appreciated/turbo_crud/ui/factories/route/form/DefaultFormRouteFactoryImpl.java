@@ -1,7 +1,8 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.Form;
+import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
+import com.github.appreciated.turbo_crud.config.model.FormRoute;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
@@ -15,7 +16,6 @@ import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -60,12 +60,12 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
-        Form form = ConfigBeanFactory.create(route.getConfiguration(), Form.class);
+        FormConfiguration form = (FormConfiguration) route.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, Form formConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, FormConfiguration formRouteConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -78,7 +78,7 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         if (!creationMode) {
             binder.bind(
                     titleComponent,
-                    entity1 -> prefix + entity1.getString(formConfiguration.getTitleField()),
+                    entity1 -> prefix + entity1.getString(formRouteConfiguration.getTitleField()),
                     (entity1, string) -> {
                     }
             );
@@ -87,11 +87,11 @@ public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
         }
 
         String table = route.getRepository();
-        Repository tables = configService.getConfiguration().getRepositoriesConfig().get(table);
+        Repository tables = configService.getConfiguration().getRepositories().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : entityManager.getRecordById(lastSegment);
-        formCreator.bindAndAddToLayout(table, route, formConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
+        formCreator.bindAndAddToLayout(table, route, formRouteConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
 
         // Generic Save button

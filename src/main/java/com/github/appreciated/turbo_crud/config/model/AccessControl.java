@@ -3,7 +3,6 @@ package com.github.appreciated.turbo_crud.config.model;
 import java.util.List;
 
 public class AccessControl {
-
     private List<String> roles;
 
     public List<String> getRoles() {
@@ -13,5 +12,4 @@ public class AccessControl {
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
-
 }

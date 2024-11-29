@@ -7,5 +7,9 @@ import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactor
 import com.vaadin.flow.component.Component;
 
 public interface TurboCrudCollectionFactory {
-    Component createCollection(String id, Route route, FormElement factoryConfig, TurboCrudRouteFactoryRegistry routeFactory, FormCreator formCreator);
+    Component createCollection(String foreignKey,
+                               Route route,
+                               FormElement factoryConfig,
+                               TurboCrudRouteFactoryRegistry routeFactory,
+                               FormCreator formCreator);
 }
