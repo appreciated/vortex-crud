@@ -26,3 +26,8 @@ webpack.generated.js
 /src/main/bundles/dev.bundle
 /src/main/bundles/README.md
 /src/main/bundles/prod.bundle
+/package-lock.json
+/package.json
+/tsconfig.json
+/types.d.ts
+/.vaadin-node-tasks.lock
