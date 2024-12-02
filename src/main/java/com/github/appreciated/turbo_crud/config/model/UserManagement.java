@@ -1,15 +1,17 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class UserManagement {
 
     private boolean enabled;
-    @Optional
+
     private AccessControl accessControl;
+
     private boolean signUp;
+
     private List<AdditionalField> additionalFields;
 
     public boolean isEnabled() {
@@ -43,5 +45,46 @@ public class UserManagement {
     public void setAdditionalFields(List<AdditionalField> additionalFields) {
         this.additionalFields = additionalFields;
     }
-}
 
+    public static class Builder {
+
+        private UserManagement product;
+
+        private Builder(UserManagement product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new UserManagement());
+        }
+
+        public Builder withEnabled(boolean enabled) {
+            product.enabled = enabled;
+            return this;
+        }
+
+        public Builder withAccessControl(AccessControl accessControl) {
+            product.accessControl = accessControl;
+            return this;
+        }
+
+        public Builder withSignUp(boolean signUp) {
+            product.signUp = signUp;
+            return this;
+        }
+
+        public Builder withAdditionalFields(List<AdditionalField> additionalFields) {
+            product.additionalFields = additionalFields;
+            return this;
+        }
+
+        public Builder addAdditionalField(AdditionalField item) {
+            product.additionalFields.add(item);
+            return this;
+        }
+
+        public UserManagement build() {
+            return product;
+        }
+    }
+}

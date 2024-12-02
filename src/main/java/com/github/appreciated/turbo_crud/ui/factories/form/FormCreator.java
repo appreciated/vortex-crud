@@ -30,20 +30,20 @@ public class FormCreator {
 
     public void bindAndAddToLayout(String table,
                                    Route route,
-                                   Form formConfiguration,
+                                   FormConfiguration formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
                                    Repository tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
-        Map<String, RepositoryField> fieldsConfig = tables.getFieldsConfig();
+        Map<String, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement field : formConfiguration.getChildren()) {
+        for (FormElement field : formConfig.getChildren()) {
             String fieldName = field.getField();
             if (!field.getType().equals("collection")) {
-                RepositoryField repositoryField = fieldsConfig.get(fieldName);
+                Field repositoryField = fieldsConfig.get(fieldName);
                 if (repositoryField == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
                 }

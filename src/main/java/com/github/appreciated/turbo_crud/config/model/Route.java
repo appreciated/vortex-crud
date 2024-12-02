@@ -1,36 +1,32 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.Optional;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 import java.util.Map;
 
+@GenerateBuilder
 public class Route {
-    @Optional
+
     private String repository;
-    @Optional
+
     private String title;
-    @Optional
+
     private String icon;
-    @Optional
+
     private boolean defaultRoute;
+
     private String factory;
-    @Optional
+
     private boolean hideInMenu;
-    @Optional
-    private Config configuration;
-    @Optional
-    private ConfigObject children;
-    @Optional
+
+    private RouteConfiguration configuration;
+
     private Map<String, Route> childrenMap;
-    @Optional
+
     private Route child;
-    @Optional
+
     private List<String> roles;
 
-    // Getter und Setter
     public String getRepository() {
         return repository;
     }
@@ -79,25 +75,28 @@ public class Route {
         this.hideInMenu = hideInMenu;
     }
 
-    public Config getConfiguration() {
+    public RouteConfiguration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Config configuration) {
+    public void setConfiguration(RouteConfiguration configuration) {
         this.configuration = configuration;
-    }
-
-    public ConfigObject getChildren() {
-        return children;
     }
 
     public Map<String, Route> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildren(ConfigObject children) {
-        this.children = children;
-        this.childrenMap = ConfigModelUtil.toStringMapWithValueType(this.children, Route.class);
+    public void setChildrenMap(Map<String, Route> childrenMap) {
+        this.childrenMap = childrenMap;
+    }
+
+    public Route getChild() {
+        return child;
+    }
+
+    public void setChild(Route child) {
+        this.child = child;
     }
 
     public List<String> getRoles() {
@@ -108,12 +107,75 @@ public class Route {
         this.roles = roles;
     }
 
-    public Route getChild() {
-        assert childrenMap.size() < 2;
-        return childrenMap.values().stream().findFirst().orElse(null);
-    }
+    public static class Builder {
 
-    public void setChild(Route child) {
-        this.childrenMap = Map.of("", child);
+        private Route product;
+
+        Builder(Route product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Route());
+        }
+
+        public Builder withRepository(String repository) {
+            product.repository = repository;
+            return this;
+        }
+
+        public Builder withTitle(String title) {
+            product.title = title;
+            return this;
+        }
+
+        public Builder withIcon(String icon) {
+            product.icon = icon;
+            return this;
+        }
+
+        public Builder withDefaultRoute(boolean defaultRoute) {
+            product.defaultRoute = defaultRoute;
+            return this;
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withHideInMenu(boolean hideInMenu) {
+            product.hideInMenu = hideInMenu;
+            return this;
+        }
+
+        public Builder withConfiguration(RouteConfiguration configuration) {
+            product.configuration = configuration;
+            return this;
+        }
+
+        public Builder withChildrenMap(Map<String, Route> childrenMap) {
+            product.childrenMap = childrenMap;
+            return this;
+        }
+
+        public Builder withChild(Route child) {
+            product.child = child;
+            return this;
+        }
+
+        public Builder withRoles(List<String> roles) {
+            product.roles = roles;
+            return this;
+        }
+
+        public Builder addRole(String item) {
+            product.roles.add(item);
+            return this;
+        }
+
+        public Route build() {
+            return product;
+        }
     }
 }

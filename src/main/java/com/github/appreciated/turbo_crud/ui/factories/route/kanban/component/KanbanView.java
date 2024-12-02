@@ -14,8 +14,6 @@ import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigObject;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dnd.DragSource;
@@ -27,6 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class KanbanView extends VerticalLayout {
@@ -50,9 +49,9 @@ public class KanbanView extends VerticalLayout {
                       DetailRouteSetting detailRouteSetting,
                       TurboCrudIconFactory iconFactory) {
         this.entityManager = entityManager;
-        ConfigObject selects = configService.getSelects();
-        Repository config = configService.getRepositoriesConfig().get(repository);
-        RepositoryField repositoryField = config.getFieldsConfig().get(kanbanConfig.getColumnField());
+        Selects selects = configService.getSelects();
+        Repository config = configService.getRepositories().get(repository);
+        Field repositoryField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
@@ -86,18 +85,17 @@ public class KanbanView extends VerticalLayout {
         });
 
         String selectName = repositoryField.getValues();
-        ConfigObject selectConfig = selects.toConfig().getObject(selectName);
+        Map<String, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
         }
 
         Set<String> strings = selectConfig.keySet();
-        Config translations = selectConfig.toConfig();
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
         for (String string : strings) {
-            VerticalLayout column = createColumn(getTranslation(translations.getString(string)), string);
+            VerticalLayout column = createColumn(getTranslation(selectConfig.get(string)), string);
             kanbanBoard.add(column);
 
         }

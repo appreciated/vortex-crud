@@ -1,26 +1,35 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
+@GenerateBuilder
 public class FormElement {
 
-    @Optional
     private String field;
-    @Optional
+
     private String factory;
-    @Optional
+
     private boolean readOnly;
-    @Optional
+
     private List<String> readOnlyForRoles;
-    @Optional
+
     private String label;
+
     private String type;
-    @Optional
+
     private Integer span = null;
-    @Optional
-    CollectionConfiguration configuration;
+
+    Collection configuration;
+
+    public FormElement() {
+    }
+
+    public FormElement(String field, String type, String label) {
+        this.field = field;
+        this.type = type;
+        this.label = label;
+    }
 
     public String getField() {
         return field;
@@ -28,6 +37,14 @@ public class FormElement {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
     }
 
     public boolean isReadOnly() {
@@ -54,14 +71,6 @@ public class FormElement {
         this.label = label;
     }
 
-    public String getFactory() {
-        return factory;
-    }
-
-    public void setFactory(String factory) {
-        this.factory = factory;
-    }
-
     public String getType() {
         return type;
     }
@@ -78,11 +87,73 @@ public class FormElement {
         this.span = span;
     }
 
-    public CollectionConfiguration getConfiguration() {
+    public Collection getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(CollectionConfiguration configuration) {
+    public void setConfiguration(Collection configuration) {
         this.configuration = configuration;
+    }
+
+    public static class Builder {
+
+        private FormElement product;
+
+        private Builder(FormElement product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new FormElement());
+        }
+
+        public Builder withField(String field) {
+            product.field = field;
+            return this;
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withReadOnly(boolean readOnly) {
+            product.readOnly = readOnly;
+            return this;
+        }
+
+        public Builder withReadOnlyForRoles(List<String> readOnlyForRoles) {
+            product.readOnlyForRoles = readOnlyForRoles;
+            return this;
+        }
+
+        public Builder withLabel(String label) {
+            product.label = label;
+            return this;
+        }
+
+        public Builder withType(String type) {
+            product.type = type;
+            return this;
+        }
+
+        public Builder withSpan(Integer span) {
+            product.span = span;
+            return this;
+        }
+
+        public Builder withConfiguration(Collection configuration) {
+            product.configuration = configuration;
+            return this;
+        }
+
+        public Builder addReadOnlyForRole(String item) {
+            product.readOnlyForRoles.add(item);
+            return this;
+        }
+
+        public FormElement build() {
+            return product;
+        }
     }
 }

@@ -10,8 +10,6 @@ import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFa
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -51,9 +49,8 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
         String table = config.getRepository();
 
         this.entityManager = entityManagerRegistry.getFactory(table);
-        Config factoryConfig = config.getConfiguration();
+        gridOrListConfiguration = (GridOrListConfiguration) config.getConfiguration();
 
-        gridOrListConfiguration = ConfigBeanFactory.create(factoryConfig, GridOrListConfiguration.class);
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();
         this.addAttachListener(event -> {

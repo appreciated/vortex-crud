@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 /**
  * Default implementation of the {@link TurboCrudDialogFactoryRegistry} interface.
- * This factory provides components based on the configuration specified in {@link RepositoryField}.
+ * This factory provides components based on the configuration specified in {@link Field}.
  */
 
 @Service

@@ -9,8 +9,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItemImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -104,8 +102,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
         for (GenericEntity record : records) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
-            Config configuration = formElement.getConfiguration().getChild().getConfiguration();
-            Form form = ConfigBeanFactory.create(configuration, Form.class);
+            FormConfiguration form = (FormConfiguration) formElement.getConfiguration().getChild().getConfiguration();
             for (FormElement child : form.getChildren()) {
                 Object o = record.get(child.getField());
                 item.addContent(new Text(o.toString()));
@@ -130,7 +127,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
             // repository and one over the target repository and one with the actual entries.
             // This could be improved upon, if it was allowed to provide a custom repository / interface for the sake
             // of resolving the following data.
-            ManyToManyConfiguration manyToMany = collectionData.getManyToMany();
+            ManyToMany manyToMany = collectionData.getManyToMany();
             TurboCrudEntityManager associativeEntityManager = entityManagerFactoryRegistry.getFactory(manyToMany.getAssociativeRepository());
             List<GenericEntity> associativeRecords = associativeEntityManager.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
             List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(manyToMany.getAssociativeTargetIdField())).map(Object::toString).toList();
@@ -149,7 +146,7 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-        CollectionConfiguration collectionData = formElement.getConfiguration();
+        Collection collectionData = formElement.getConfiguration();
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(formElement.getConfiguration().getFactory()).create(
                 entityId,
                 foreignKey,
@@ -165,10 +162,10 @@ public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory 
 
     private static String getReferenceField(CollectionData collectionData) {
         if (collectionData.getOneToMany() != null) {
-            OneToManyConfiguration oneToMany = collectionData.getOneToMany();
+            OneToMany oneToMany = collectionData.getOneToMany();
             return oneToMany.getReferenceField();
         } else if (collectionData.getManyToMany() != null) {
-            ManyToManyConfiguration oneToMany = collectionData.getManyToMany();
+            ManyToMany oneToMany = collectionData.getManyToMany();
             return oneToMany.getRepositoryField();
         } else {
             throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");

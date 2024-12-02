@@ -14,7 +14,6 @@ import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.kanban.component.KanbanView;
-import com.typesafe.config.ConfigBeanFactory;
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
@@ -58,7 +57,7 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
                 entityManagerFactoryRegistry.getFactory(route.getRepository()),
                 routeFactory,
                 turboCrudItemFactory,
-                ConfigBeanFactory.create(route.getConfiguration(), Kanban.class),
+                (Kanban) route.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

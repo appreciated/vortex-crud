@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
+
 import com.github.appreciated.turbo_crud.config.model.Route;
 
 /**

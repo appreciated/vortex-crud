@@ -27,7 +27,7 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
         factories.put("text", new DefaultTextFieldFactory());
         factories.put("textarea", new DefaultTextAreaFactory());
         factories.put("date", new DefaultDatePickerFactory());
-        factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getRepositoriesConfig()));
+        factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getRepositories()));
         factories.put("number", new DefaultNumberFieldFactory());
         factories.put("reference", new DefaultReferenceFieldFactory(entityManagerFactoryRegistry));
         factories.put("image", new DefaultImageFieldFactory(fileProviderRegistry));

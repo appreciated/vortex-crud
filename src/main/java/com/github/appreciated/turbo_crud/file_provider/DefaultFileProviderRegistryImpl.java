@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.file_provider;
 
-import com.github.appreciated.turbo_crud.config.model.RepositoryField;
+import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
  * Default implementation of the {@link TurboCrudFileProviderRegistry} interface.
- * This factory provides components based on the configuration specified in {@link RepositoryField}.
+ * This factory provides components based on the configuration specified in {@link Field}.
  */
 
 @Service

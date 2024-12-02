@@ -4,7 +4,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListConfiguration extends RouteConfiguration implements ItemFactory {
+public class RouteConfiguration {
 
     private String factory;
 
@@ -12,13 +12,15 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     private String descriptionField;
 
+    private String columnField;
+
     private String imageField;
 
     private String imageFactory;
 
-    private String filterField;
-
     private boolean inlineEdit;
+
+    private String filterField;
 
     private List<FormElement> children;
 
@@ -46,11 +48,22 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
         this.descriptionField = descriptionField;
     }
 
+    public String getColumnField() {
+        return columnField;
+    }
+
+    public void setColumnField(String columnField) {
+        this.columnField = columnField;
+    }
+
     public String getImageField() {
         return imageField;
     }
 
-    @Override
+    public void setImageField(String imageField) {
+        this.imageField = imageField;
+    }
+
     public String getImageFactory() {
         return imageFactory;
     }
@@ -59,8 +72,12 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
         this.imageFactory = imageFactory;
     }
 
-    public void setImageField(String imageField) {
-        this.imageField = imageField;
+    public boolean isInlineEdit() {
+        return inlineEdit;
+    }
+
+    public void setInlineEdit(boolean inlineEdit) {
+        this.inlineEdit = inlineEdit;
     }
 
     public String getFilterField() {
@@ -69,14 +86,6 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     public void setFilterField(String filterField) {
         this.filterField = filterField;
-    }
-
-    public boolean isInlineEdit() {
-        return inlineEdit;
-    }
-
-    public void setInlineEdit(boolean inlineEdit) {
-        this.inlineEdit = inlineEdit;
     }
 
     public List<FormElement> getChildren() {
@@ -89,14 +98,14 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     public static class Builder {
 
-        private GridOrListConfiguration product;
+        private RouteConfiguration product;
 
-        private Builder(GridOrListConfiguration product) {
+        private Builder(RouteConfiguration product) {
             this.product = product;
         }
 
         public static Builder of() {
-            return new Builder(new GridOrListConfiguration());
+            return new Builder(new RouteConfiguration());
         }
 
         public Builder withFactory(String factory) {
@@ -114,6 +123,11 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
             return this;
         }
 
+        public Builder withColumnField(String columnField) {
+            product.columnField = columnField;
+            return this;
+        }
+
         public Builder withImageField(String imageField) {
             product.imageField = imageField;
             return this;
@@ -124,13 +138,13 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
             return this;
         }
 
-        public Builder withFilterField(String filterField) {
-            product.filterField = filterField;
+        public Builder withInlineEdit(boolean inlineEdit) {
+            product.inlineEdit = inlineEdit;
             return this;
         }
 
-        public Builder withInlineEdit(boolean inlineEdit) {
-            product.inlineEdit = inlineEdit;
+        public Builder withFilterField(String filterField) {
+            product.filterField = filterField;
             return this;
         }
 
@@ -144,7 +158,7 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
             return this;
         }
 
-        public GridOrListConfiguration build() {
+        public RouteConfiguration build() {
             return product;
         }
     }

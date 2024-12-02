@@ -106,7 +106,7 @@ public class Submenu extends SplitLayout {
             routeButton.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
-                    pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutesConfig());
+                    pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
                     ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
                     if (active != null) {
                         active.removeClassName("active");

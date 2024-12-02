@@ -1,25 +1,55 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.ConfigObject;
-
+import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
-import static com.github.appreciated.turbo_crud.config.model.ConfigModelUtil.toStringMapWithValueType;
-
+@GenerateBuilder
 public class Repository {
 
-    private ConfigObject fields;
+    private String factory;
 
-    public ConfigObject getFields() {
+    private Map<String, Field> fields;
+
+    public String getFactory() {
+        return factory;
+    }
+
+    public void setFactory(String factory) {
+        this.factory = factory;
+    }
+
+    public Map<String, Field> getFields() {
         return fields;
     }
 
-    public void setFields(ConfigObject fields) {
+    public void setFields(Map<String, Field> fields) {
         this.fields = fields;
     }
 
-    public Map<String, RepositoryField> getFieldsConfig() {
-        return toStringMapWithValueType(fields, RepositoryField.class);
+    public static class Builder {
+
+        private Repository product;
+
+        private Builder(Repository product) {
+            this.product = product;
+        }
+
+        public static Builder of() {
+            return new Builder(new Repository());
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
+        }
+
+        public Builder withFields(Map<String, Field> fields) {
+            product.fields = fields;
+            return this;
+        }
+
+        public Repository build() {
+            return product;
+        }
     }
 }
-
