@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +23,11 @@ public class Route {
 
     private RouteConfiguration configuration;
 
-    private Map<String, Route> childrenMap;
+    private Map<String, Route> childrenMap = new HashMap<>();
 
-    private Route child;
+    public Route(String factory) {
+        this.factory = factory;
+    }
 
     private List<String> roles;
 
@@ -92,11 +96,14 @@ public class Route {
     }
 
     public Route getChild() {
-        return child;
+        return childrenMap.entrySet().stream().findFirst().orElseThrow().getValue();
     }
 
     public void setChild(Route child) {
-        this.child = child;
+        if (!childrenMap.isEmpty()){
+            throw new IllegalArgumentException("Route already has a child. Only one child is allowed when using setChild()");
+        }
+        this.childrenMap.put(null,child);
     }
 
     public List<String> getRoles() {
@@ -115,8 +122,8 @@ public class Route {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Route());
+        public static Builder of(String factory) {
+            return new Builder(new Route(factory));
         }
 
         public Builder withRepository(String repository) {
@@ -160,7 +167,7 @@ public class Route {
         }
 
         public Builder withChild(Route child) {
-            product.child = child;
+            product.setChild(child);
             return this;
         }
 

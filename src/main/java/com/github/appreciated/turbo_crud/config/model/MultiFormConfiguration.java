@@ -10,6 +10,10 @@ public class MultiFormConfiguration extends RouteConfiguration {
 
     private List<FormConfiguration> forms;
 
+    public MultiFormConfiguration(String factory) {
+        super(factory);
+    }
+
     public List<FormConfiguration> getForms() {
         return forms;
     }
@@ -30,8 +34,8 @@ public class MultiFormConfiguration extends RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new MultiFormConfiguration());
+        public static Builder of(String factory) {
+            return new Builder(new MultiFormConfiguration(factory));
         }
 
         public Builder withTitleField(String titleField) {

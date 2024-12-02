@@ -7,6 +7,10 @@ public class ImageFieldConfiguration extends RouteConfiguration {
 
     private String factory;
 
+    public ImageFieldConfiguration(String factory) {
+        super(factory);
+    }
+
     public String getFactory() {
         return factory;
     }
@@ -23,8 +27,8 @@ public class ImageFieldConfiguration extends RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new ImageFieldConfiguration());
+        public static Builder of(String factory) {
+            return new Builder(new ImageFieldConfiguration(factory));
         }
 
         public Builder withFactory(String factory) {

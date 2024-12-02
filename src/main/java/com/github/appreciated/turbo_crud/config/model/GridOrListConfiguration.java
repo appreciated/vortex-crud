@@ -6,8 +6,6 @@ import java.util.List;
 @GenerateBuilder
 public class GridOrListConfiguration extends RouteConfiguration implements ItemFactory {
 
-    private String factory;
-
     private String titleField;
 
     private String descriptionField;
@@ -22,12 +20,8 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     private List<FormElement> children;
 
-    public String getFactory() {
-        return factory;
-    }
-
-    public void setFactory(String factory) {
-        this.factory = factory;
+    public GridOrListConfiguration(String factory) {
+        super(factory);
     }
 
     public String getTitleField() {
@@ -87,41 +81,17 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
         this.children = children;
     }
 
-    public static class Builder {
+    public static class Builder extends RouteConfiguration.Builder {
 
         private GridOrListConfiguration product;
 
         private Builder(GridOrListConfiguration product) {
+            super(product);
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new GridOrListConfiguration());
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
-            return this;
-        }
-
-        public Builder withTitleField(String titleField) {
-            product.titleField = titleField;
-            return this;
-        }
-
-        public Builder withDescriptionField(String descriptionField) {
-            product.descriptionField = descriptionField;
-            return this;
-        }
-
-        public Builder withImageField(String imageField) {
-            product.imageField = imageField;
-            return this;
-        }
-
-        public Builder withImageFactory(String imageFactory) {
-            product.imageFactory = imageFactory;
-            return this;
+        public static Builder of(String factory) {
+            return new Builder(new GridOrListConfiguration(factory));
         }
 
         public Builder withFilterField(String filterField) {

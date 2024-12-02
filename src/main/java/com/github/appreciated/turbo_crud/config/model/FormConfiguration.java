@@ -10,6 +10,10 @@ public class FormConfiguration extends RouteConfiguration {
 
     private List<FormElement> children;
 
+    public FormConfiguration(String factory) {
+        super(factory);
+    }
+
     public String getTitleField() {
         return titleField;
     }
@@ -26,8 +30,8 @@ public class FormConfiguration extends RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new FormConfiguration());
+        public static Builder of(String factory) {
+            return new Builder(new FormConfiguration(factory));
         }
 
         public Builder withTitleField(String titleField) {

@@ -10,6 +10,10 @@ public class Repository {
 
     private Map<String, Field> fields;
 
+    public Repository(String factory) {
+        this.factory = factory;
+    }
+
     public String getFactory() {
         return factory;
     }
@@ -34,13 +38,8 @@ public class Repository {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Repository());
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
-            return this;
+        public static Builder of(String factory) {
+            return new Builder(new Repository(factory));
         }
 
         public Builder withFields(Map<String, Field> fields) {

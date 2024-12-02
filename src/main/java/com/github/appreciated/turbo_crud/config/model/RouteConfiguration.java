@@ -24,6 +24,10 @@ public class RouteConfiguration {
 
     private List<FormElement> children;
 
+    public RouteConfiguration(String factory) {
+        this.factory = factory;
+    }
+
     public String getFactory() {
         return factory;
     }
@@ -100,17 +104,12 @@ public class RouteConfiguration {
 
         private RouteConfiguration product;
 
-        private Builder(RouteConfiguration product) {
+        Builder(RouteConfiguration product) {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new RouteConfiguration());
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
-            return this;
+        public static Builder of(String factory) {
+            return new Builder(new RouteConfiguration(factory));
         }
 
         public Builder withTitleField(String titleField) {

@@ -21,12 +21,12 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
 
     private List<FormElement> children;
 
-    public String getFactory() {
-        return factory;
+    public Kanban(String factory) {
+        super(factory);
     }
 
-    public void setFactory(String factory) {
-        this.factory = factory;
+    public String getFactory() {
+        return factory;
     }
 
     public String getTitleField() {
@@ -78,8 +78,8 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Kanban());
+        public static Builder of(String factory) {
+            return new Builder(new Kanban(factory));
         }
 
         public Builder withFactory(String factory) {

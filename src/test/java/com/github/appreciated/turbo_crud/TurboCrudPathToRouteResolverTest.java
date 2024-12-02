@@ -38,13 +38,11 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit wrapbaren Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route();
-        routeWithContainer.setFactory("container");
+        Route routeWithContainer = new Route("container");
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route childRoute = new Route();
-        childRoute.setFactory("container");
+        Route childRoute = new Route("container");
         childRoute.setTitle("childRouteWithContainer");
         routeWithContainer.setChild(childRoute);
 
@@ -63,13 +61,11 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit zwei aufeinanderfolgenden nicht-wrapbaren Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithoutContainer1 = new Route();
-        routeWithoutContainer1.setFactory("non-container");
+        Route routeWithoutContainer1 = new Route("non-container");
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
-        Route routeWithoutContainer2 = new Route();
-        routeWithoutContainer2.setFactory("non-container");
+        Route routeWithoutContainer2 = new Route("non-container");
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
@@ -88,18 +84,15 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit gemischten wrapbaren und nicht-wrapbaren Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route();
-        routeWithContainer.setFactory("container");
+        Route routeWithContainer = new Route("container");
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route firstChild = new Route();
-        firstChild.setFactory("container");
+        Route firstChild = new Route("container");
         firstChild.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(firstChild);
 
-        Route secondChild = new Route();
-        secondChild.setFactory("non-container");
+        Route secondChild = new Route("non-container");
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
@@ -117,8 +110,7 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit einer nicht-wrapbaren Route
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithoutContainer1 = new Route();
-        routeWithoutContainer1.setFactory("non-container");
+        Route routeWithoutContainer1 = new Route("non-container");
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
@@ -137,18 +129,15 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit gültigen Abschnitten
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route();
-        routeWithContainer.setFactory("container");
+        Route routeWithContainer = new Route("container");
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route routeWithoutContainer1 = new Route();
-        routeWithoutContainer1.setFactory("non-container");
+        Route routeWithoutContainer1 = new Route("non-container");
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(routeWithoutContainer1);
 
-        Route routeWithoutContainer2 = new Route();
-        routeWithoutContainer2.setFactory("non-container");
+        Route routeWithoutContainer2 = new Route("non-container");
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 

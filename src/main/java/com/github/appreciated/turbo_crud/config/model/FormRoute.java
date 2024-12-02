@@ -11,6 +11,10 @@ public class FormRoute extends Route {
 
     private String title;
 
+    public FormRoute(String factory) {
+        super(factory);
+    }
+
     public String getRepository() {
         return repository;
     }
@@ -44,17 +48,12 @@ public class FormRoute extends Route {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new FormRoute());
+        public static Builder of(String factory) {
+            return new Builder(new FormRoute(factory));
         }
 
         public Builder withRepository(String repository) {
             product.repository = repository;
-            return this;
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
             return this;
         }
 

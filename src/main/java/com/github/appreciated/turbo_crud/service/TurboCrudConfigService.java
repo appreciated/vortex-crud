@@ -17,10 +17,9 @@ public class TurboCrudConfigService {
     private final Application configuration;
 
     public TurboCrudConfigService() {
-        Map<String, Route> forms = Map.of("task", FormRoute.Builder.of()
+        Map<String, Route> forms = Map.of("task", FormRoute.Builder.of("form")
                 .withRepository("tasks")
-                .withFactory("form")
-                .withConfiguration(FormConfiguration.Builder.of()
+                .withConfiguration(FormConfiguration.Builder.of("default")
                         .withTitleField("title")
                         .withChildren(List.of(
                                 new FormElement("title", "field", "route.tasks.labels.title"),
@@ -30,11 +29,10 @@ public class TurboCrudConfigService {
                                 new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to")
                         ))
                         .build())
-                .build(), "project", FormRoute.Builder.of()
+                .build(), "project", FormRoute.Builder.of("form")
                 .withRepository("projects")
-                .withFactory("form")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(FormConfiguration.Builder.of()
+                .withConfiguration(FormConfiguration.Builder.of("default")
                         .withTitleField("name")
                         .withChildren(List.of(
                                 new FormElement("name", "field", "route.projects.labels.name"),
@@ -43,11 +41,10 @@ public class TurboCrudConfigService {
                                 new FormElement("end_date", "field", "route.projects.labels.end_date")
                         ))
                         .build())
-                .build(), "image", FormRoute.Builder.of()
+                .build(), "image", FormRoute.Builder.of("form")
                 .withRepository("images")
-                .withFactory("form")
                 .withTitle("route.images.title-cards")
-                .withConfiguration(FormConfiguration.Builder.of()
+                .withConfiguration(FormConfiguration.Builder.of("default")
                         .withTitleField("title")
                         .withChildren(List.of(
                                 new FormElement("title", "field", "route.images.labels.title"),
@@ -57,8 +54,7 @@ public class TurboCrudConfigService {
                 .build());
 
         Map<String, Repository> repositories = Map.of(
-                "projects", Repository.Builder.of()
-                        .withFactory("jpa")
+                "projects", Repository.Builder.of("jpa")
                         .withFields(Map.of(
                                 "id", new Field("id", true),
                                 "name", new Field("text", true, true, Validation.Builder.of()
@@ -73,8 +69,7 @@ public class TurboCrudConfigService {
                                 "updated_at", new Field("datetime"))
                         )
                         .build(),
-                "tasks", Repository.Builder.of()
-                        .withFactory("jpa")
+                "tasks", Repository.Builder.of("jpa")
                         .withFields(
                                 Map.of(
                                         "id", new Field("id", true),
@@ -92,12 +87,13 @@ public class TurboCrudConfigService {
                                         "created_at", new Field("datetime"),
                                         "updated_at", new Field("datetime")))
                         .build(),
-                "task_has_task", Repository.Builder.of()
-                        .withFactory("jpa")
-                        .withFields(Map.of("task_id", new Field("id"),
-                                "related_task_id", new Field("id")))
-                        .build(), "task_comments", Repository.Builder.of()
-                        .withFactory("jpa")
+                "task_has_task", Repository.Builder.of("jpa")
+                        .withFields(Map.of(
+                                "task_id", new Field("id"),
+                                "related_task_id", new Field("id")
+                        ))
+                        .build(),
+                "task_comments", Repository.Builder.of("jpa")
                         .withFields(Map.of("id", new Field("id", true),
                                 "comment_text", new Field("textarea", false, false, Validation.Builder.of()
                                         .withMaxLength(1000)
@@ -106,8 +102,8 @@ public class TurboCrudConfigService {
                                 "created_at", Field.Builder.of("datetime")
                                         .withDefaultValue("now()")
                                         .build()))
-                        .build(), "images", Repository.Builder.of()
-                        .withFactory("jpa")
+                        .build(),
+                "images", Repository.Builder.of("jpa")
                         .withFields(Map.of(
                                 "id", new Field("id", true),
                                 "title", Field.Builder.of("text")
@@ -115,38 +111,34 @@ public class TurboCrudConfigService {
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 "url", Field.Builder.of("text")
-                                        .withConfiguration(ImageFieldConfiguration.Builder.of()
-                                                .withFactory("default")
-                                                .build())
+                                        .withConfiguration(new ImageFieldConfiguration("default"))
                                         .build())
                         ).build());
-        Map<String, Route> routes = Map.of("projects-cards", Route.Builder.of()
-                .withDefaultRoute(true)
-                .withFactory("grid")
-                .withRepository("projects")
-                .withIcon("FACTORY")
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(GridOrListConfiguration.Builder.of()
-                        .withFactory("card")
-                        .withTitleField("name")
-                        .withDescriptionField("description")
-                        .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(FormRoute.Builder.of().withRepository("projects").withFactory("form").build())
-                .build(), "images-grid", Route.Builder.of()
-                .withFactory("grid")
-                .withRepository("images")
-                .withIcon("CAMERA")
-                .withTitle("route.images.title-cards")
-                .withConfiguration(GridOrListConfiguration.Builder.of()
-                        .withFactory("card")
-                        .withTitleField("title")
-                        .withImageField("url")
-                        .withImageFactory("default")
-                        .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(FormRoute.Builder.of().withRepository("images").withFactory("form").build())
-                .build());
+        Map<String, Route> routes = Map.of(
+                "projects-cards", Route.Builder.of("grid")
+                        .withDefaultRoute(true)
+                        .withRepository("projects")
+                        .withIcon("FACTORY")
+                        .withTitle("route.projects.title-cards")
+                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                                .withTitleField("name")
+                                .withDescriptionField("description")
+                                .build())
+                        .withRoles(List.of("manager", "admin"))
+                        .withChild(FormRoute.Builder.of("form").withRepository("projects").build())
+                        .build(),
+                "images-grid", Route.Builder.of("grid")
+                        .withRepository("images")
+                        .withIcon("CAMERA")
+                        .withTitle("route.images.title-cards")
+                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                                .withTitleField("title")
+                                .withImageField("url")
+                                .withImageFactory("default")
+                                .build())
+                        .withRoles(List.of("manager", "admin"))
+                        .withChild(FormRoute.Builder.of("form").withRepository("images").build())
+                        .build());
 
         configuration = Application.Builder.of()
                 .withName("application.name")
