@@ -22,6 +22,15 @@ public class FormElement {
 
     Collection configuration;
 
+    public FormElement() {
+    }
+
+    public FormElement(String field, String type, String label) {
+        this.field = field;
+        this.type = type;
+        this.label = label;
+    }
+
     public String getField() {
         return field;
     }

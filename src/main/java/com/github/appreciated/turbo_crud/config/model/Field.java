@@ -30,6 +30,37 @@ public class Field {
 
     RouteConfiguration configuration;
 
+    public Field(String factory) {
+        this.factory = factory;
+    }
+
+    public Field(String factory, boolean primary) {
+        this(factory);
+        this.primary = primary;
+    }
+
+    public Field(String factory, String values) {
+        this(factory);
+        this.values = values;
+    }
+
+    public Field(String factory, boolean primary, boolean required) {
+        this(factory, primary);
+        this.required = required;
+    }
+
+    public Field(String factory, boolean primary, boolean required, Validation validation) {
+        this(factory, primary, required);
+        this.validation = validation;
+    }
+
+    public Field(String factory, String field, String filterField, String repository, List<String> children) {
+        this.field=field;
+        this.filterField=filterField;
+        this.repository=repository;
+        this.children=children;
+    }
+
     public String getFactory() {
         return factory;
     }
@@ -126,13 +157,8 @@ public class Field {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Field());
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
-            return this;
+        public static Builder of(String factory) {
+            return new Builder(new Field(factory));
         }
 
         public Builder withPrimary(boolean primary) {
@@ -200,7 +226,18 @@ public class Field {
             return this;
         }
 
+        public Builder add(boolean primary) {
+             return withPrimary(primary);
+        }
+
+        public Builder add(boolean primary, boolean required) {
+            return withPrimary(primary).withRequired(required);
+        }
+
         public Field build() {
+            if (product.factory == null){
+                throw new IllegalArgumentException("The factory must not be null");
+            }
             return product;
         }
     }

@@ -72,14 +72,14 @@ public class TurboCrudDatabaseSchemaValidator {
         // Jetzt über die erwarteten Spalten iterieren
         for (Map.Entry<String, Field> entry : expectedColumns.entrySet()) {
             String expectedColumnName = entry.getKey().toLowerCase();
-            Field expectedConfig = entry.getValue();
+            Field fieldConfig = entry.getValue();
 
             String actualColumnType = actualColumns.get(expectedColumnName);
             if (actualColumnType == null) {
                 throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
             }
 
-            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(expectedConfig.getFactory().toUpperCase());
+            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(fieldConfig.getFactory().toUpperCase());
 
             if (!validColumnTypes.contains(actualColumnType)) {
                 throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
