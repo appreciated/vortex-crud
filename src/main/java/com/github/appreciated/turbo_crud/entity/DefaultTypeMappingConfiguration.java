@@ -10,8 +10,8 @@ public class DefaultTypeMappingConfiguration implements TurboCrudTypeMappingConf
     @Override
     public HashMap<Object, Object> getTypeMappings() {
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("number", List.of("INTEGER", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC"));
-        map.put("id", List.of("UUID", "INTEGER", "CHAR", "VARCHAR"));
+        map.put("number", List.of("INTEGER", "INT", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC"));
+        map.put("id", List.of("UUID", "INTEGER", "INT", "CHAR", "VARCHAR", "SERIAL"));
         map.put("text", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
         map.put("textarea", List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB"));
         map.put("date", List.of("DATE"));

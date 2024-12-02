@@ -6,6 +6,11 @@ import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
+import org.hibernate.exception.GenericJDBCException;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.type.StandardBasicTypes;
+import org.hibernate.usertype.UserType;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.*;
@@ -48,42 +53,48 @@ public class TurboCrudDatabaseSchemaValidator {
     }
 
     private boolean tableExists(String tableName) {
-        String query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = :tableName AND TABLE_SCHEMA = 'PUBLIC'";
+        String query = "SELECT name FROM sqlite_master WHERE type='table' AND name = :tableName";
         List<?> result = entityManager.createNativeQuery(query)
-                .setParameter("tableName", tableName.toUpperCase()) // H2 speichert Tabellen normalerweise in Großbuchstaben
+                .setParameter("tableName", tableName)
                 .getResultList();
         return !result.isEmpty();
     }
 
     private void checkColumns(String tableName, Map<String, Field> expectedColumns) {
-        String query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = :tableName AND TABLE_SCHEMA = 'PUBLIC'";
-        List<Object[]> columns = entityManager.createNativeQuery(query)
-                .setParameter("tableName", tableName.toUpperCase())
-                .getResultList();
+        String query = "PRAGMA table_info(" + tableName + ")";
+        try {
+            List<Object[]> columns = entityManager.createNativeQuery(query).unwrap(NativeQuery.class)
+                    .addScalar("dflt_value", StandardBasicTypes.STRING)
+                    .addScalar("name", StandardBasicTypes.STRING)
+                    .addScalar("type", StandardBasicTypes.STRING)
+                    .getResultList();
 
-        // Eine Map erstellen, die die tatsächlichen Spaltennamen und Typen aus der Datenbank enthält
-        Map<String, String> actualColumns = new HashMap<>();
-        for (Object[] column : columns) {
-            String columnName = ((String) column[0]).toLowerCase(); // Kleinbuchstaben zur besseren Vergleichbarkeit
-            String columnType = (String) column[1];
-            actualColumns.put(columnName, columnType);
-        }
-
-        // Jetzt über die erwarteten Spalten iterieren
-        for (Map.Entry<String, Field> entry : expectedColumns.entrySet()) {
-            String expectedColumnName = entry.getKey().toLowerCase();
-            Field fieldConfig = entry.getValue();
-
-            String actualColumnType = actualColumns.get(expectedColumnName);
-            if (actualColumnType == null) {
-                throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
+            // Create a map for actual columns with names and types
+            Map<String, String> actualColumns = new HashMap<>();
+            for (Object[] column : columns) {
+                String columnName = ((String) column[1]).toLowerCase(); // Assuming the second column is 'name'
+                String columnType = ((String) column[2]).toLowerCase(); // Assuming the third column is 'type'
+                actualColumns.put(columnName, columnType);
             }
 
-            Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(fieldConfig.getFactory().toUpperCase());
+            // Iterate over the expected columns
+            for (Map.Entry<String, Field> entry : expectedColumns.entrySet()) {
+                String expectedColumnName = entry.getKey().toLowerCase();
+                Field fieldConfig = entry.getValue();
 
-            if (!validColumnTypes.contains(actualColumnType)) {
-                throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
+                String actualColumnType = actualColumns.get(expectedColumnName);
+                if (actualColumnType == null) {
+                    throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
+                }
+
+                Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(fieldConfig.getFactory().toLowerCase());
+                String type = actualColumnType.contains("(") ? actualColumnType.substring(0, actualColumnType.indexOf("(")).toUpperCase() : actualColumnType.toUpperCase();
+                if (!validColumnTypes.contains(type)) {
+                    throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
+                }
             }
+        } catch (GenericJDBCException e) {
+            LoggerFactory.getLogger(TurboCrudDatabaseSchemaValidator.class).error("JDBC Error for table " + tableName , e);
         }
     }
 
