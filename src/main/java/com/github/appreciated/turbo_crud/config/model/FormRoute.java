@@ -1,9 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.ConfigObject;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
-import java.util.List;
-import java.util.Map;
 
 @GenerateBuilder
 public class FormRoute extends Route {
@@ -38,7 +35,7 @@ public class FormRoute extends Route {
         this.title = title;
     }
 
-    public static class Builder extends Route.Builder{
+    public static class Builder extends Route.Builder {
 
         private FormRoute product;
 

@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Config;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
@@ -27,7 +26,9 @@ public class Field {
 
     private List<String> children;
 
-    Route configuration;
+    private List<String> readOnlyForRoles;
+
+    RouteConfiguration configuration;
 
     public String getFactory() {
         return factory;
@@ -109,11 +110,11 @@ public class Field {
         this.children = children;
     }
 
-    public Route getConfiguration() {
+    public RouteConfiguration getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Route configuration) {
+    public void setConfiguration(RouteConfiguration configuration) {
         this.configuration = configuration;
     }
 
@@ -179,13 +180,23 @@ public class Field {
             return this;
         }
 
-        public Builder withConfiguration(Route configuration) {
+        public Builder withReadOnlyForRoles(List<String> readOnlyForRoles) {
+            product.readOnlyForRoles = readOnlyForRoles;
+            return this;
+        }
+
+        public Builder withConfiguration(RouteConfiguration configuration) {
             product.configuration = configuration;
             return this;
         }
 
         public Builder addChildren(String item) {
             product.children.add(item);
+            return this;
+        }
+
+        public Builder addReadOnlyForRole(String item) {
+            product.readOnlyForRoles.add(item);
             return this;
         }
 

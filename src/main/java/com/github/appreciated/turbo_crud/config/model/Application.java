@@ -138,5 +138,15 @@ public class Application {
         public Application build() {
             return product;
         }
+
+        public Builder withForms(Map<String, FormRoute> forms) {
+            product.forms = forms;
+            return this;
+        }
+
+        public Builder withRoutes(Map<String, Route> routes) {
+            product.routes = routes;
+            return this;
+        }
     }
 }

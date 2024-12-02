@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.Optional;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import org.jsoup.nodes.FormElement;
 import java.util.List;
@@ -16,13 +15,10 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
 
     private String descriptionField;
 
-    @Optional
     private String imageField;
 
-    @Optional
     private String imageFactory;
 
-    @Optional
     private List<FormElement> children;
 
     public String getFactory() {

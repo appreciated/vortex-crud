@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.config.model;
 
-import com.typesafe.config.ConfigObject;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +20,6 @@ public class Route {
     private boolean hideInMenu;
 
     private RouteConfiguration configuration;
-
-    private ConfigObject children;
 
     private Map<String, Route> childrenMap;
 
@@ -84,14 +81,6 @@ public class Route {
 
     public void setConfiguration(RouteConfiguration configuration) {
         this.configuration = configuration;
-    }
-
-    public ConfigObject getChildren() {
-        return children;
-    }
-
-    public void setChildren(ConfigObject children) {
-        this.children = children;
     }
 
     public Map<String, Route> getChildrenMap() {
@@ -162,11 +151,6 @@ public class Route {
 
         public Builder withConfiguration(RouteConfiguration configuration) {
             product.configuration = configuration;
-            return this;
-        }
-
-        public Builder withChildren(ConfigObject children) {
-            product.children = children;
             return this;
         }
 

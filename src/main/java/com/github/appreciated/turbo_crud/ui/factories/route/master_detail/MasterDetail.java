@@ -69,8 +69,7 @@ public class MasterDetail extends SplitLayout {
         this.entityManager = entityManagerFactoryRegistry.getFactory(route.getRepository());
         this.gridOrListConfiguration = (GridOrListConfiguration) route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
-        assert route.getChildren() != null;
-        assert route.getChildren().size() == 1;
+        assert route.getChild() != null;
 
         detailContainer = new VerticalLayout();
         detailContainer.setPadding(false);
