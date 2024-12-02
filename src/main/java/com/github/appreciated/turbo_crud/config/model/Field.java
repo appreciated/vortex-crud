@@ -31,6 +31,9 @@ public class Field {
     RouteConfiguration configuration;
 
     public Field(String factory) {
+        if (factory == null){
+            throw new IllegalArgumentException("The factory must not be null");
+        }
         this.factory = factory;
     }
 
@@ -55,6 +58,7 @@ public class Field {
     }
 
     public Field(String factory, String field, String filterField, String repository, List<String> children) {
+        this(factory);
         this.field=field;
         this.filterField=filterField;
         this.repository=repository;
@@ -235,9 +239,6 @@ public class Field {
         }
 
         public Field build() {
-            if (product.factory == null){
-                throw new IllegalArgumentException("The factory must not be null");
-            }
             return product;
         }
     }
