@@ -155,5 +155,9 @@ public class FormElement {
         public FormElement build() {
             return product;
         }
+
+        public static Builder of(String field, String type, String label) {
+            return new Builder(new FormElement(field, type, label));
+        }
     }
 }

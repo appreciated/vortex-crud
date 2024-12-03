@@ -31,7 +31,7 @@ public class Field {
     RouteConfiguration configuration;
 
     public Field(String factory) {
-        if (factory == null){
+        if (factory == null) {
             throw new IllegalArgumentException("The factory must not be null");
         }
         this.factory = factory;
@@ -59,10 +59,10 @@ public class Field {
 
     public Field(String factory, String field, String filterField, String repository, List<String> children) {
         this(factory);
-        this.field=field;
-        this.filterField=filterField;
-        this.repository=repository;
-        this.children=children;
+        this.field = field;
+        this.filterField = filterField;
+        this.repository = repository;
+        this.children = children;
     }
 
     public String getFactory() {
@@ -231,7 +231,7 @@ public class Field {
         }
 
         public Builder add(boolean primary) {
-             return withPrimary(primary);
+            return withPrimary(primary);
         }
 
         public Builder add(boolean primary, boolean required) {
@@ -240,6 +240,31 @@ public class Field {
 
         public Field build() {
             return product;
+        }
+
+        public static Builder of(String factory, boolean primary) {
+            return new Builder(new Field(factory, primary));
+        }
+
+        public static Builder of(String factory, String values) {
+            return new Builder(new Field(factory, values));
+        }
+
+        public static Builder of(String factory, boolean primary, boolean required) {
+            return new Builder(new Field(factory, primary, required));
+        }
+
+        public static Builder of(String factory, boolean primary, boolean required, Validation validation) {
+            return new Builder(new Field(factory, primary, required, validation));
+        }
+
+        public static Builder of(String factory, String field, String filterField, String repository, List<String> children) {
+            return new Builder(new Field(factory, field, filterField, repository, children));
+        }
+
+        public Builder withFactory(String factory) {
+            product.factory = factory;
+            return this;
         }
     }
 }

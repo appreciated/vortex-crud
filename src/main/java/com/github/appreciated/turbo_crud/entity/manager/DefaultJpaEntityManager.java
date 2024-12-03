@@ -223,7 +223,7 @@ public class DefaultJpaEntityManager implements TurboCrudEntityManager {
     }
 
     public int count() {
-        return Math.toIntExact((long) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable())).getSingleResult());
+        return (int) entityManager.createNativeQuery("SELECT COUNT(*) FROM %s".formatted(getTable())).getSingleResult();
     }
 
     @Override

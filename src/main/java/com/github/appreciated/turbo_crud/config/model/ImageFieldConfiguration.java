@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.config.model;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class ImageFieldConfiguration extends RouteConfiguration{
+public class ImageFieldConfiguration extends RouteConfiguration {
 
     private String factory;
 
