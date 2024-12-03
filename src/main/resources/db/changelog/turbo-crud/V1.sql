@@ -1,4 +1,6 @@
--- Table for users
+-- liquibase formatted sql
+
+-- changeset turbo-crud:1
 CREATE TABLE users
 (
     id            SERIAL PRIMARY KEY,
@@ -7,14 +9,14 @@ CREATE TABLE users
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Table for roles
+-- changeset turbo-crud:2
 CREATE TABLE roles
 (
     id   SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Join table to manage the many-to-many relationship between users and roles
+-- changeset turbo-crud:3
 CREATE TABLE user_roles
 (
     user_id INT,
@@ -24,7 +26,7 @@ CREATE TABLE user_roles
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
--- Table for audit logs
+-- changeset turbo-crud:4
 CREATE TABLE audit_log
 (
     id                SERIAL PRIMARY KEY,

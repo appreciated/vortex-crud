@@ -1,4 +1,6 @@
--- Table: projects
+-- liquibase formatted sql
+
+-- changeset test-project:1
 CREATE TABLE projects
 (
     id          SERIAL PRIMARY KEY,
@@ -10,7 +12,7 @@ CREATE TABLE projects
     updated_at  TIMESTAMP
 );
 
-/* Table: tasks */
+-- changeset test-project:2
 CREATE TABLE tasks
 (
     id          SERIAL PRIMARY KEY,
@@ -23,7 +25,7 @@ CREATE TABLE tasks
     updated_at  TIMESTAMP
 );
 
-/* Table: task_has_task */
+-- changeset test-project:3
 CREATE TABLE task_has_task
 (
     id              SERIAL PRIMARY KEY,
@@ -35,8 +37,7 @@ CREATE TABLE task_has_task
     FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE RESTRICT
 );
 
-/* Table: comments */
-/* Table: task_comments */
+-- changeset test-project:4
 CREATE TABLE task_comments
 (
     id           SERIAL PRIMARY KEY,
@@ -48,8 +49,7 @@ CREATE TABLE task_comments
     FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE RESTRICT
 );
 
-/* Table: comments */
-/* Table: task_comments */
+-- changeset test-project:5
 CREATE TABLE images
 (
     id  SERIAL PRIMARY KEY,
@@ -57,6 +57,8 @@ CREATE TABLE images
     url VARCHAR
 );
 
+
+-- changeset test-project:6
 INSERT INTO users (id, username)
 VALUES (1, 'max@mustermann.de'),
        (2, 'erika@musterfrau.de'),
@@ -64,13 +66,14 @@ VALUES (1, 'max@mustermann.de'),
        (4, 'jane@doe.com');
 
 
+-- changeset test-project:7
 INSERT INTO images (id, title, url)
 VALUES (1,'Red', './images/red.png'),
        (2,'Green', './images/green.png'),
        (3,'Blue', './images/blue.png');
 
 
-/* Insert example data into projects table */
+-- changeset test-project:8
 INSERT INTO projects (name, description, start_date, end_date, created_at, updated_at)
 VALUES ('Project Alpha', 'A high-priority project aimed at improving the internal system', '2023-01-01', '2023-12-31',
         CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -122,7 +125,8 @@ VALUES ('Project Alpha', 'A high-priority project aimed at improving the interna
        ('Project Epsilon 2.0', 'Refinement of data migration processes', '2025-04-01', '2025-11-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Project Zeta 2.0', 'Phase two of the CRM system implementation', '2025-05-01', '2025-12-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
-/* Insert example data into tasks table */
+
+-- changeset test-project:9
 INSERT INTO tasks (title, description, assigned_to, status, due_date, created_at, updated_at)
 VALUES ('Design Homepage', 'Create the design for the homepage of the web app', 1, 'work-in-progress', '2023-12-01',
         CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
@@ -164,13 +168,13 @@ VALUES ('Design Homepage', 'Create the design for the homepage of the web app', 
        ('Cloud Migration', 'Migrate services to the new cloud provider', 6, 'work-in-progress', '2024-02-10', CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP);
 
-/* Insert example data into comments table */
+-- changeset test-project:10
 INSERT INTO task_comments (comment_text, user_id, created_at, task_id)
 VALUES ('We need to finalize the design by the end of the week.', 1, CURRENT_TIMESTAMP, 1),
        ('The database structure is ready for review.', 2, CURRENT_TIMESTAMP, 2),
        ('Waiting for more data to begin AI model training.', 3, CURRENT_TIMESTAMP, 3);
 
-/* Create relationships between "Design Homepage" and other tasks */
+-- changeset test-project:11
 INSERT INTO task_has_task (task_id, related_task_id)
 VALUES
     (1, 2), -- "Database Setup"
