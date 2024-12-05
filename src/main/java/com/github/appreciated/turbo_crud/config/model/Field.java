@@ -210,8 +210,8 @@ public class Field {
             return this;
         }
 
-        public Builder withReadOnlyForRoles(List<String> readOnlyForRoles) {
-            product.readOnlyForRoles = readOnlyForRoles;
+        public Builder withReadOnlyForRoles(String ... readOnlyForRoles) {
+            product.readOnlyForRoles = List.of(readOnlyForRoles);
             return this;
         }
 

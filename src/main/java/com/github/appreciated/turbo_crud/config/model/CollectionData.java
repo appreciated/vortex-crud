@@ -14,6 +14,10 @@ public class CollectionData {
 
     private List<String> children;
 
+    public CollectionData(String repository) {
+        this.repository = repository;
+    }
+
     public String getRepository() {
         return repository;
     }
@@ -54,13 +58,8 @@ public class CollectionData {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new CollectionData());
-        }
-
-        public Builder withRepository(String repository) {
-            product.repository = repository;
-            return this;
+        public static Builder of(String repository) {
+            return new Builder(new CollectionData(repository));
         }
 
         public Builder withOneToMany(OneToMany oneToMany) {

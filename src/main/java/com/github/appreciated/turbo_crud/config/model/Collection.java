@@ -5,6 +5,12 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 @GenerateBuilder
 public class Collection {
 
+    private CollectionConfig config;
+
+    public Collection(String factory) {
+        this.factory = factory;
+    }
+
     private String label;
 
     private String factory;
@@ -51,6 +57,10 @@ public class Collection {
         return child;
     }
 
+    public CollectionConfig getConfig() {
+        return config;
+    }
+
     public void setChild(Route child) {
         this.child = child;
     }
@@ -63,17 +73,12 @@ public class Collection {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Collection());
+        public static Builder of(String factory) {
+            return new Builder(new Collection(factory));
         }
 
         public Builder withLabel(String label) {
             product.label = label;
-            return this;
-        }
-
-        public Builder withFactory(String factory) {
-            product.factory = factory;
             return this;
         }
 
@@ -94,6 +99,16 @@ public class Collection {
 
         public Collection build() {
             return product;
+        }
+
+        public Builder withFactory(String connect) {
+            product.factory = connect;
+            return this;
+        }
+
+        public Builder withConfiguration(CollectionConfig title) {
+            product.config = title;
+            return this;
         }
     }
 }

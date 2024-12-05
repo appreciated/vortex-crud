@@ -15,6 +15,10 @@ public class OneToMany {
         this.referenceField = referenceField;
     }
 
+    public OneToMany(String referenceField) {
+        this.referenceField = referenceField;
+    }
+
     public static class Builder {
 
         private OneToMany product;
@@ -23,8 +27,8 @@ public class OneToMany {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new OneToMany());
+        public static Builder of(String referenceField) {
+            return new Builder(new OneToMany(referenceField));
         }
 
         public Builder withReferenceField(String referenceField) {
