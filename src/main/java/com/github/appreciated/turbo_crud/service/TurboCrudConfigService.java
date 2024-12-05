@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,7 @@ public class TurboCrudConfigService {
     private final Application configuration;
 
     public TurboCrudConfigService() {
-        Map<String, Route> forms = Map.of(
-                "task", FormRoute.Builder.of("form")
+        FormRoute taskForm = FormRoute.Builder.of("form")
                         .withRepository("tasks")
                         .withConfiguration(FormConfiguration.Builder.of("default")
                                 .withTitleField("title")
@@ -53,32 +51,31 @@ public class TurboCrudConfigService {
                                                 .build()
                                 ))
                                 .build())
-                        .build(),
-                "project", FormRoute.Builder.of("form")
-                        .withRepository("projects")
-                        .withTitle("route.projects.title-cards")
-                        .withConfiguration(FormConfiguration.Builder.of("default")
-                                .withTitleField("name")
-                                .withChildren(List.of(
-                                        new FormElement("name", "field", "route.projects.labels.name"),
-                                        new FormElement("description", "field", "route.projects.labels.description"),
-                                        new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                                        new FormElement("end_date", "field", "route.projects.labels.end_date")
-                                ))
-                                .build())
-                        .build(),
-                "image", FormRoute.Builder.of("form")
-                        .withRepository("images")
-                        .withTitle("route.projects.title-cards")
-                        .withConfiguration(FormConfiguration.Builder.of("default")
-                                .withTitleField("title")
-                                .withChildren(List.of(
-                                        new FormElement("title", "field", "route.images.labels.title"),
-                                        new FormElement("url", "field", "route.images.labels.image")
-                                ))
-                                .build())
-                        .build()
-        );
+                        .build();
+        FormRoute projectForm = FormRoute.Builder.of("form")
+                .withRepository("projects")
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(FormConfiguration.Builder.of("default")
+                        .withTitleField("name")
+                        .withChildren(List.of(
+                                new FormElement("name", "field", "route.projects.labels.name"),
+                                new FormElement("description", "field", "route.projects.labels.description"),
+                                new FormElement("start_date", "field", "route.projects.labels.start_date"),
+                                new FormElement("end_date", "field", "route.projects.labels.end_date")
+                        ))
+                        .build())
+                .build();
+        FormRoute imageForm = FormRoute.Builder.of("form")
+                .withRepository("images")
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(FormConfiguration.Builder.of("default")
+                        .withTitleField("title")
+                        .withChildren(List.of(
+                                new FormElement("title", "field", "route.images.labels.title"),
+                                new FormElement("url", "field", "route.images.labels.image")
+                        ))
+                        .build())
+                .build();
 
         Map<String, Repository> repositories = Map.of(
                 "projects", Repository.Builder.of("jpa")
@@ -143,7 +140,7 @@ public class TurboCrudConfigService {
                                 .withDescriptionField("description")
                                 .build())
                         .withRoles(List.of("manager", "admin"))
-                        .withChild(FormRoute.Builder.of("form").withRepository("projects").build())
+                        .withChild(projectForm)
                         .build(),
                 "projects-list", Route.Builder.of("list")
                         .withRepository("projects")
@@ -160,7 +157,7 @@ public class TurboCrudConfigService {
                                 ))
                                 .build())
                         .withRoles(List.of("manager", "admin"))
-                        .withChild(FormRoute.Builder.of("form").withRepository("projects").build())
+                        .withChild(projectForm)
                         .build(),
                 "tasks", Route.Builder.of("submenu")
                         .withIcon("TASKS")
@@ -176,7 +173,7 @@ public class TurboCrudConfigService {
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")
                                                 .build())
-                                        .withChild(FormRoute.Builder.of("form").withRepository("tasks").build())
+                                        .withChild(taskForm)
                                         .build(),
                                 "done", Route.Builder.of("master-detail")
                                         .withIcon("CHECK_CIRCLE")
@@ -186,7 +183,7 @@ public class TurboCrudConfigService {
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .build())
-                                        .withChild(FormRoute.Builder.of("form").withRepository("tasks").build())
+                                        .withChild(taskForm)
                                         .build()
                         ))
                         .build(),
@@ -200,7 +197,7 @@ public class TurboCrudConfigService {
                                 .withImageFactory("default")
                                 .build())
                         .withRoles(List.of("manager", "admin"))
-                        .withChild(FormRoute.Builder.of("form").withRepository("images").build())
+                        .withChild(imageForm)
                         .build(),
                 "images-list", Route.Builder.of("list")
                         .withRepository("images")
@@ -215,7 +212,7 @@ public class TurboCrudConfigService {
                                 ))
                                 .build())
                         .withRoles(List.of("manager", "admin"))
-                        .withChild(FormRoute.Builder.of("form").withRepository("images").build())
+                        .withChild(imageForm)
                         .build()
         );
 

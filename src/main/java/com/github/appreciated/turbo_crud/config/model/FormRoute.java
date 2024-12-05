@@ -52,6 +52,11 @@ public class FormRoute extends Route {
             return new Builder(new FormRoute(factory));
         }
 
+        public Builder withConfiguration(RouteConfiguration configuration) {
+            product.setConfiguration(configuration);
+            return this;
+        }
+
         public Builder withRepository(String repository) {
             product.repository = repository;
             return this;
