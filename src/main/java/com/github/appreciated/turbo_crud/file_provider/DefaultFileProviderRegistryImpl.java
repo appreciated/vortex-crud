@@ -16,23 +16,23 @@ import java.util.Optional;
 @Service
 public class DefaultFileProviderRegistryImpl implements TurboCrudFileProviderRegistry {
 
-    private final Map<String, TurboCrudFileProvider> factories = new HashMap<>();
+    private final Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> factories = new HashMap<>();
 
     public DefaultFileProviderRegistryImpl() {
-        factories.put("default", new DefaultFileProviderImpl());
+        factories.put(DefaultFileProviderImpl.class, new DefaultFileProviderImpl());
     }
 
-    public Map<String, TurboCrudFileProvider> getFactories() {
+    public Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudFileProvider getFactory(String type) {
+    public TurboCrudFileProvider getFactory(Class<? extends TurboCrudFileProvider> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudFileProvider factory) {
+    public void addFactory(Class<? extends TurboCrudFileProvider> key, TurboCrudFileProvider factory) {
         factories.put(key, factory);
     }
 }

@@ -6,11 +6,11 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.ImageHasValue;
 import com.vaadin.flow.component.Component;
 
-public class DefaultImageFieldFactory implements TurboCrudFieldFactory {
+public class TCImageFieldFactory implements TurboCrudFieldFactory {
 
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public DefaultImageFieldFactory(TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public TCImageFieldFactory(TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.fileProviderRegistry = fileProviderRegistry;
     }
 

@@ -8,7 +8,7 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 
 public interface TurboCrudFieldFactoryRegistry {
 
-    TurboCrudFieldFactory getFactory(String type);
+    TurboCrudFieldFactory getFactory(Class<? extends TurboCrudFieldFactory> type);
 
-    void addFactory(String key, TurboCrudFieldFactory factory);
+    void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory factory);
 }

@@ -8,8 +8,8 @@ package com.github.appreciated.turbo_crud.file_provider;
 
 public interface TurboCrudFileProviderRegistry {
 
-    TurboCrudFileProvider getFactory(String type);
+    TurboCrudFileProvider getFactory(Class<? extends TurboCrudFileProvider> type);
 
-    void addFactory(String key, TurboCrudFileProvider factory);
+    void addFactory(Class<? extends TurboCrudFileProvider> key, TurboCrudFileProvider factory);
 
 }

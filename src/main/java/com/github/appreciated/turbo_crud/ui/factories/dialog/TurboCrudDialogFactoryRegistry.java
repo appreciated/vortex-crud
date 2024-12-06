@@ -8,8 +8,8 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 public interface TurboCrudDialogFactoryRegistry {
 
-    TurboCrudDialogFactory getFactory(String type);
+    TurboCrudDialogFactory getFactory(Class<? extends TurboCrudDialogFactory> type);
 
-    void addFactory(String key, TurboCrudDialogFactory factory);
+    void addFactory(Class<? extends TurboCrudDialogFactory> key, TurboCrudDialogFactory factory);
 
 }

@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
@@ -7,11 +8,11 @@ public class FormRoute extends Route {
 
     private String repository;
 
-    private String factory;
+    private Class<? extends TurboCrudRouteFactory> factory;
 
     private String title;
 
-    public FormRoute(String factory) {
+    public FormRoute(Class<? extends TurboCrudRouteFactory> factory) {
         super(factory);
     }
 
@@ -23,11 +24,11 @@ public class FormRoute extends Route {
         this.repository = repository;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudRouteFactory> getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class<? extends TurboCrudRouteFactory> factory) {
         this.factory = factory;
     }
 
@@ -48,7 +49,7 @@ public class FormRoute extends Route {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudRouteFactory> factory) {
             return new Builder(new FormRoute(factory));
         }
 

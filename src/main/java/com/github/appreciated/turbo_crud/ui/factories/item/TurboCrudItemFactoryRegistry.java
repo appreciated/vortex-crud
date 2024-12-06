@@ -6,7 +6,7 @@ package com.github.appreciated.turbo_crud.ui.factories.item;
  */
 
 public interface TurboCrudItemFactoryRegistry {
-    TurboCrudItemFactory getFactory(String factory);
+    TurboCrudItemFactory getFactory(Class<? extends TurboCrudItemFactory> factory);
 
-    void addFactory(String key, TurboCrudItemFactory factory);
+    void addFactory(Class<? extends TurboCrudItemFactory> key, TurboCrudItemFactory factory);
 }

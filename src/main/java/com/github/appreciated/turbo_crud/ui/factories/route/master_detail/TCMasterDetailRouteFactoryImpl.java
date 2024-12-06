@@ -12,7 +12,7 @@ import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactor
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactory {
+public class TCMasterDetailRouteFactoryImpl implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
@@ -21,12 +21,12 @@ public class DefaultMasterDetailRouteFactoryImpl implements TurboCrudRouteFactor
     private final TurboCrudConfigService configService;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public DefaultMasterDetailRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                               TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                                               TurboCrudRouteFactoryRegistry routeFactory,
-                                               TurboCrudIconFactory iconFactory,
-                                               TurboCrudConfigService configService,
-                                               TurboCrudFileProviderRegistry fileProviderRegistry
+    public TCMasterDetailRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                          TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                                          TurboCrudRouteFactoryRegistry routeFactory,
+                                          TurboCrudIconFactory iconFactory,
+                                          TurboCrudConfigService configService,
+                                          TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;

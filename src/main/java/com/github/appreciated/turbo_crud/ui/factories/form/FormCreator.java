@@ -40,40 +40,40 @@ public class FormCreator {
         Map<String, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement field : formConfig.getChildren()) {
-            String fieldName = field.getField();
-            if (!field.getType().equals("collection")) {
-                Field repositoryField = fieldsConfig.get(fieldName);
-                if (repositoryField == null) {
+        for (FormElement element : formConfig.getChildren()) {
+            String fieldName = element.getField();
+            if (!element.getType().equals("collection")) {
+                Field field = fieldsConfig.get(fieldName);
+                if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
                 }
-                TurboCrudFieldFactory factory = componentFactory.getFactory(repositoryField.getFactory());
-                Component component = factory.createComponent(table, fieldName, repositoryField);
+                TurboCrudFieldFactory factory = componentFactory.getFactory(field.getFactory());
+                Component component = factory.createComponent(table, fieldName, field);
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }
                 if (component instanceof HasLabel) {
-                    ((HasLabel) component).setLabel(component.getTranslation(field.getLabel()));
+                    ((HasLabel) component).setLabel(component.getTranslation(element.getLabel()));
                     form.add(component);
-                    form.setColspan(component, (field.getSpan() == null ? 1 : field.getSpan()));
+                    form.setColspan(component, (element.getSpan() == null ? 1 : element.getSpan()));
                 } else {
-                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(field.getLabel()));
-                    form.setColspan(formItem, (field.getSpan() == null ? 1 : field.getSpan()));
+                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(element.getLabel()));
+                    form.setColspan(formItem, (element.getSpan() == null ? 1 : element.getSpan()));
                 }
             } else {
-                if (field.getType().equals("collection")) {
-                    Component collection = collectionFactoryRegistry.getFactory(field.getFactory()).createCollection(
+                if (element.getType().equals("collection")) {
+                    Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
                             EntityUtil.getId(entity),
                             route,
-                            field,
+                            element,
                             routeFactory,
                             formCreator
                     );
                     form.add(collection);
-                    form.setColspan(collection, (field.getSpan() == null ? 2 : field.getSpan()));
+                    form.setColspan(collection, (element.getSpan() == null ? 2 : element.getSpan()));
                 } else {
-                    throw new IllegalStateException("Cannot initialize field with name '%s'".formatted(fieldName));
+                    throw new IllegalStateException("Cannot initialize element with name '%s'".formatted(fieldName));
                 }
             }
         }

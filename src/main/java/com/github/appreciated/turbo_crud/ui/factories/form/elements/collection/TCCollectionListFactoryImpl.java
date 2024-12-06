@@ -22,13 +22,13 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class DefaultCollectionFactoryImpl implements TurboCrudCollectionFactory {
+public class TCCollectionListFactoryImpl implements TurboCrudCollectionFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public DefaultCollectionFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                        TurboCrudDialogFactoryRegistry dialogFactory) {
+    public TCCollectionListFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                       TurboCrudDialogFactoryRegistry dialogFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }

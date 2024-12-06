@@ -17,25 +17,25 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultCollectionFactoryRegistryImpl implements TurboCrudCollectionFactoryRegistry {
+public class TCCollectionFactoryRegistryImpl implements TurboCrudCollectionFactoryRegistry {
 
-    private final Map<String, TurboCrudCollectionFactory> factories = new HashMap<>();
+    private final Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> factories = new HashMap<>();
 
-    public DefaultCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
-        factories.put("list", new DefaultCollectionFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
+    public TCCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
+        factories.put(TCCollectionListFactoryImpl.class, new TCCollectionListFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
     }
 
-    public Map<String, TurboCrudCollectionFactory> getFactories() {
+    public Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudCollectionFactory getFactory(String factory) {
+    public TurboCrudCollectionFactory getFactory(Class<? extends TurboCrudCollectionFactory> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudCollectionFactory factory) {
+    public void addFactory(Class<? extends TurboCrudCollectionFactory> key, TurboCrudCollectionFactory factory) {
         factories.put(key, factory);
     }
 }

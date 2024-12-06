@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TurboCrudCollectionFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
@@ -8,7 +9,7 @@ public class FormElement {
 
     private String field;
 
-    private String factory;
+    private Class<? extends TurboCrudCollectionFactory> factory;
 
     private boolean readOnly;
 
@@ -39,11 +40,11 @@ public class FormElement {
         this.field = field;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudCollectionFactory> getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class<? extends TurboCrudCollectionFactory> factory) {
         this.factory = factory;
     }
 
@@ -112,7 +113,7 @@ public class FormElement {
             return this;
         }
 
-        public Builder withFactory(String factory) {
+        public Builder withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
             product.factory = factory;
             return this;
         }

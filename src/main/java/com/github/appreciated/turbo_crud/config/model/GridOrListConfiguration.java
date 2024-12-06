@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     private List<FormElement> children;
 
-    public GridOrListConfiguration(String factory) {
+    public GridOrListConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
@@ -90,7 +91,7 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
             return new Builder(new GridOrListConfiguration(factory));
         }
 

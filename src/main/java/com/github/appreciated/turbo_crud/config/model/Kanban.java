@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import org.jsoup.nodes.FormElement;
 import java.util.List;
@@ -7,7 +8,7 @@ import java.util.List;
 @GenerateBuilder
 public class Kanban extends RouteConfiguration implements ItemFactory {
 
-    private String factory;
+    private Class<? extends TurboCrudItemFactory> factory;
 
     private String columnField;
 
@@ -21,11 +22,11 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
 
     private List<FormElement> children;
 
-    public Kanban(String factory) {
+    public Kanban(Class<? extends TurboCrudItemFactory>  factory) {
         super(factory);
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudItemFactory> getFactory() {
         return factory;
     }
 

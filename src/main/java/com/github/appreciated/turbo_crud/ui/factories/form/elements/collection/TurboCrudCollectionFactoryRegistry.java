@@ -8,8 +8,8 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 public interface TurboCrudCollectionFactoryRegistry {
 
-    TurboCrudCollectionFactory getFactory(String factory);
+    TurboCrudCollectionFactory getFactory(Class<? extends TurboCrudCollectionFactory> factory);
 
-    void addFactory(String key, TurboCrudCollectionFactory factory);
+    void addFactory(Class<? extends TurboCrudCollectionFactory> key, TurboCrudCollectionFactory factory);
 
 }

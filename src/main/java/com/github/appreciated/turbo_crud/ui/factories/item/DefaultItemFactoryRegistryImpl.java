@@ -12,18 +12,18 @@ import java.util.HashMap;
 @Service
 public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegistry {
 
-    private final HashMap<String, TurboCrudItemFactory> factories = new HashMap<>();
+    private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistryImpl() {
-        factories.put("card", new DefaultItemCardFactoryImpl());
+        factories.put(TCItemCardFactoryImpl.class, new TCItemCardFactoryImpl());
     }
 
-    public TurboCrudItemFactory getFactory(String factory) {
+    public TurboCrudItemFactory getFactory(Class<? extends TurboCrudItemFactory> factory) {
         return factories.get(factory);
     }
 
     @Override
-    public void addFactory(String key, TurboCrudItemFactory factory) {
+    public void addFactory(Class<? extends TurboCrudItemFactory> key, TurboCrudItemFactory factory) {
         factories.put(key, factory);
     }
 }

@@ -17,7 +17,7 @@ import com.github.appreciated.turbo_crud.ui.factories.route.kanban.component.Kan
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
+public class TCKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
@@ -27,14 +27,14 @@ public class DefaultKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudIconFactory iconFactory;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public DefaultKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                          TurboCrudConfigService configService,
-                                          TurboCrudItemFactoryRegistry turboCrudItemFactory,
-                                          TurboCrudRouteFactoryRegistry routeFactory,
-                                          FormCreator formCreator,
-                                          TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                                          TurboCrudIconFactory iconFactory,
-                                            TurboCrudFileProviderRegistry fileProviderRegistry
+    public TCKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                     TurboCrudConfigService configService,
+                                     TurboCrudItemFactoryRegistry turboCrudItemFactory,
+                                     TurboCrudRouteFactoryRegistry routeFactory,
+                                     FormCreator formCreator,
+                                     TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                                     TurboCrudIconFactory iconFactory,
+                                     TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;

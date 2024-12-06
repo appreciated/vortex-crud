@@ -12,21 +12,19 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
 
-import java.util.List;
+public class TCMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
-public class DefaultMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
-
-    private final DefaultFormRouteFactoryImpl formRouteFactory;
+    private final TCFormRouteFactoryImpl formRouteFactory;
 
     private String titleColumn;
 
-    public DefaultMultiFormRouteFactoryImpl(
+    public TCMultiFormRouteFactoryImpl(
             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
             TurboCrudConfigService configService,
             FormCreator formCreator,
             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
-        this.formRouteFactory = new DefaultFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
+        this.formRouteFactory = new TCFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactor
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
+public class TCGridRouteFactoryImpl implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final FormCreator formCreator;
@@ -24,7 +24,7 @@ public class DefaultGridRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudIconFactory iconFactory;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public DefaultGridRouteFactoryImpl(
+    public TCGridRouteFactoryImpl(
             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
             FormCreator formCreator,
             TurboCrudDialogFactoryRegistry dialogFactoryRegistry,

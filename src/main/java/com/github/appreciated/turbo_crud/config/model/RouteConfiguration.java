@@ -1,12 +1,13 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
 public class RouteConfiguration {
 
-    private String factory;
+    private Class<? extends TurboCrudItemFactory> factory;
 
     private String titleField;
 
@@ -24,15 +25,15 @@ public class RouteConfiguration {
 
     private List<FormElement> children;
 
-    public RouteConfiguration(String factory) {
+    public RouteConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         this.factory = factory;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudItemFactory>  getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class<? extends TurboCrudItemFactory> factory) {
         this.factory = factory;
     }
 
@@ -108,7 +109,7 @@ public class RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
             return new Builder(new RouteConfiguration(factory));
         }
 

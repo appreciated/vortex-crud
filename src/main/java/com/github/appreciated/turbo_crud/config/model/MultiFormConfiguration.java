@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class MultiFormConfiguration extends RouteConfiguration {
 
     private List<FormConfiguration> forms;
 
-    public MultiFormConfiguration(String factory) {
+    public MultiFormConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
@@ -34,7 +35,7 @@ public class MultiFormConfiguration extends RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudItemFactory>  factory) {
             return new Builder(new MultiFormConfiguration(factory));
         }
 

@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
@@ -7,13 +8,13 @@ public class Collection {
 
     private CollectionConfig config;
 
-    public Collection(String factory) {
+    public Collection(Class<? extends TurboCrudDialogFactory> factory) {
         this.factory = factory;
     }
 
     private String label;
 
-    private String factory;
+    private Class factory;
 
     private CollectionData data;
 
@@ -29,11 +30,11 @@ public class Collection {
         this.label = label;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudDialogFactory> getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class factory) {
         this.factory = factory;
     }
 
@@ -73,7 +74,7 @@ public class Collection {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class factory) {
             return new Builder(new Collection(factory));
         }
 
@@ -101,7 +102,7 @@ public class Collection {
             return product;
         }
 
-        public Builder withFactory(String connect) {
+        public Builder withFactory(Class<? extends TurboCrudDialogFactory> connect) {
             product.factory = connect;
             return this;
         }

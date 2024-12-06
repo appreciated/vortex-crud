@@ -6,11 +6,11 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
 
-public class DefaultReferenceFieldFactory implements TurboCrudFieldFactory {
+public class TCReferenceFieldFactory implements TurboCrudFieldFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry;
 
-    public DefaultReferenceFieldFactory(TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry) {
+    public TCReferenceFieldFactory(TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry) {
         this.managerFactoryRegistry = managerFactoryRegistry;
     }
 

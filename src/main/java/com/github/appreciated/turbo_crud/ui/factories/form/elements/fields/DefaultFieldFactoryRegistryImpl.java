@@ -20,30 +20,30 @@ import java.util.Optional;
 @Service
 public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryRegistry {
 
-    private final Map<String, TurboCrudFieldFactory> factories = new HashMap<>();
+    private final Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> factories = new HashMap<>();
 
     public DefaultFieldFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
         Application configuration = configService.getConfiguration();
-        factories.put("text", new DefaultTextFieldFactory());
-        factories.put("textarea", new DefaultTextAreaFactory());
-        factories.put("date", new DefaultDatePickerFactory());
-        factories.put("select", new DefaultSelectFactory(configuration.getSelects(), configuration.getRepositories()));
-        factories.put("number", new DefaultNumberFieldFactory());
-        factories.put("reference", new DefaultReferenceFieldFactory(entityManagerFactoryRegistry));
-        factories.put("image", new DefaultImageFieldFactory(fileProviderRegistry));
+        factories.put(TCTextFieldFactory.class, new TCTextFieldFactory());
+        factories.put(TCTextAreaFieldFactory.class, new TCTextAreaFieldFactory());
+        factories.put(TCDateFieldFactory.class, new TCDateFieldFactory());
+        factories.put(TCSelectFieldFactory.class, new TCSelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
+        factories.put(TCNumberFieldFactory.class, new TCNumberFieldFactory());
+        factories.put(TCReferenceFieldFactory.class, new TCReferenceFieldFactory(entityManagerFactoryRegistry));
+        factories.put(TCImageFieldFactory.class, new TCImageFieldFactory(fileProviderRegistry));
     }
 
-    public Map<String, TurboCrudFieldFactory> getFactories() {
+    public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudFieldFactory getFactory(String type) {
+    public TurboCrudFieldFactory getFactory(Class<? extends TurboCrudFieldFactory> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudFieldFactory factory) {
+    public void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory factory) {
         factories.put(key, factory);
     }
 }

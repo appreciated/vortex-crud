@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class Route {
 
     private boolean defaultRoute;
 
-    private String factory;
+    private Class<? extends TurboCrudRouteFactory> factory;
 
     private boolean hideInMenu;
 
@@ -25,7 +26,7 @@ public class Route {
 
     private Map<String, Route> childrenMap = new HashMap<>();
 
-    public Route(String factory) {
+    public Route(Class<? extends TurboCrudRouteFactory> factory) {
         this.factory = factory;
     }
 
@@ -63,11 +64,11 @@ public class Route {
         this.defaultRoute = defaultRoute;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudRouteFactory> getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class<? extends TurboCrudRouteFactory> factory) {
         this.factory = factory;
     }
 
@@ -122,7 +123,7 @@ public class Route {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudRouteFactory> factory) {
             return new Builder(new Route(factory));
         }
 
@@ -146,7 +147,7 @@ public class Route {
             return this;
         }
 
-        public Builder withFactory(String factory) {
+        public Builder withFactory(Class<? extends TurboCrudRouteFactory> factory) {
             product.factory = factory;
             return this;
         }

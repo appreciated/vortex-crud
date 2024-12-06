@@ -2,7 +2,6 @@ package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
-import com.github.appreciated.turbo_crud.config.model.FormRoute;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
@@ -35,17 +34,17 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class DefaultFormRouteFactoryImpl implements TurboCrudRouteFactory {
+public class TCFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public DefaultFormRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                       TurboCrudConfigService configService,
-                                       FormCreator formCreator,
-                                       TurboCrudRouteFactoryRegistry factoryRegistry
+    public TCFormRouteFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                  TurboCrudConfigService configService,
+                                  FormCreator formCreator,
+                                  TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;

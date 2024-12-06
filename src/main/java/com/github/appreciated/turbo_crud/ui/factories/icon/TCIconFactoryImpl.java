@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultTurboCrudIconFactoryImpl implements TurboCrudIconFactory {
+public class TCIconFactoryImpl implements TurboCrudIconFactory {
 
     @Override
     public Component renderIcon(String iconEnum) {

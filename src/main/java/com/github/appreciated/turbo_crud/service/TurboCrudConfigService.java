@@ -1,6 +1,18 @@
 package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.config.model.*;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.TCConnectDialogFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TCCollectionListFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.TCDateTimePickerFactory;
+import com.github.appreciated.turbo_crud.ui.factories.item.DefaultItemFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.item.TCItemCardFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.form.TCFormRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.grid.TCGridRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.kanban.TCKanbanDetailFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.list.TCListRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.master_detail.TCMasterDetailRouteFactoryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.submenu.TCSubmenuRouteFactoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +29,9 @@ public class TurboCrudConfigService {
     private final Application configuration;
 
     public TurboCrudConfigService() {
-        FormRoute taskForm = FormRoute.Builder.of("form")
+        FormRoute taskForm = FormRoute.Builder.of(TCFormRouteFactoryImpl.class)
                         .withRepository("tasks")
-                        .withConfiguration(FormConfiguration.Builder.of("default")
+                        .withConfiguration(FormConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withTitleField("title")
                                 .withChildren(List.of(
                                         new FormElement("title", "field", "route.tasks.labels.title"),
@@ -28,7 +40,7 @@ public class TurboCrudConfigService {
                                         new FormElement("due_date", "field", "route.tasks.labels.due_date"),
                                         new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
                                         FormElement.Builder.of("comments", "collection", "route.tasks.labels.comments")
-                                                .withConfiguration(Collection.Builder.of("list")
+                                                .withConfiguration(Collection.Builder.of(TCCollectionListFactoryImpl.class)
                                                         .withData(
                                                                 CollectionData.Builder.of("task_comments")
                                                                         .withOneToMany(new OneToMany("task_id"))
@@ -38,24 +50,24 @@ public class TurboCrudConfigService {
                                                 )
                                                 .build(),
                                         FormElement.Builder.of("related-tasks", "collection", "route.tasks.labels.related-tasks")
-                                                .withConfiguration(Collection.Builder.of("list")
+                                                .withConfiguration(Collection.Builder.of(TCCollectionListFactoryImpl.class)
                                                         .withData(CollectionData.Builder.of("tasks")
                                                                 .withManyToMany(new ManyToMany("task_has_task", "task_id", "related_task_id", "id"))
                                                                 .withChildren(List.of("title", "field", "route.tasks.labels.title"))
                                                                 .build())
                                                         .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
                                                         .withConfiguration(new CollectionConfig("title"))
-                                                        .withFactory("connect")
+                                                        .withFactory(TCConnectDialogFactoryImpl.class)
                                                         .build()
                                                 )
                                                 .build()
                                 ))
                                 .build())
                         .build();
-        FormRoute projectForm = FormRoute.Builder.of("form")
+        FormRoute projectForm = FormRoute.Builder.of(TCFormRouteFactoryImpl.class)
                 .withRepository("projects")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(FormConfiguration.Builder.of("default")
+                .withConfiguration(FormConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                         .withTitleField("name")
                         .withChildren(List.of(
                                 new FormElement("name", "field", "route.projects.labels.name"),
@@ -65,10 +77,10 @@ public class TurboCrudConfigService {
                         ))
                         .build())
                 .build();
-        FormRoute imageForm = FormRoute.Builder.of("form")
+        FormRoute imageForm = FormRoute.Builder.of(TCFormRouteFactoryImpl.class)
                 .withRepository("images")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(FormConfiguration.Builder.of("default")
+                .withConfiguration(FormConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                         .withTitleField("title")
                         .withChildren(List.of(
                                 new FormElement("title", "field", "route.images.labels.title"),
@@ -80,49 +92,49 @@ public class TurboCrudConfigService {
         Map<String, Repository> repositories = Map.of(
                 "projects", Repository.Builder.of("jpa")
                         .withFields(Map.of(
-                                "id", new Field("id", true),
-                                "name", new Field("text", true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field("textarea", false, false, Validation.Builder.of().withMaxLength(500).build()),
-                                "start_date", new Field("date"),
-                                "end_date", new Field("date"),
-                                "created_at", new Field("datetime"),
-                                "updated_at", new Field("datetime")
+                                "id", new Field(null, true),
+                                "name", new Field(TCTextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                "description", new Field(TCTextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                                "start_date", new Field(TCDateFieldFactory.class),
+                                "end_date", new Field(TCDateFieldFactory.class),
+                                "created_at", new Field(TCDateTimePickerFactory.class),
+                                "updated_at", new Field(TCDateTimePickerFactory.class)
                         ))
                         .build(),
                 "tasks", Repository.Builder.of("jpa")
                         .withFields(Map.of(
-                                "id", new Field("id", true),
-                                "title", new Field("text", true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field("textarea", false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "assigned_to", new Field("reference", "users", "id", "username", List.of("username")), // 1:1 Relation
-                                "status", new Field("select", "task-status"),
-                                "due_date", Field.Builder.of("date").withReadOnlyForRoles("developer").build(),
-                                "created_at", new Field("datetime"),
-                                "updated_at", new Field("datetime")
+                                "id", new Field(null, true),
+                                "title", new Field(TCTextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                "description", new Field(TCTextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                "assigned_to", new Field(TCReferenceFieldFactory.class, "users", "id", "username", List.of("username")), // 1:1 Relation
+                                "status", new Field(TCSelectFieldFactory.class, "task-status"),
+                                "due_date", Field.Builder.of(TCDateFieldFactory.class).withReadOnlyForRoles("developer").build(),
+                                "created_at", new Field(TCDateTimePickerFactory.class),
+                                "updated_at", new Field(TCDateTimePickerFactory.class)
                         ))
                         .build(),
                 "task_has_task", Repository.Builder.of("jpa")
                         .withFields(Map.of(
-                                "task_id", new Field("id"),
-                                "related_task_id", new Field("id")
+                                "task_id", new Field(null),
+                                "related_task_id", new Field(null)
                         ))
                         .build(),
                 "task_comments", Repository.Builder.of("jpa")
                         .withFields(Map.of(
-                                "id", new Field("id", true),
-                                "comment_text", new Field("textarea", false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "user_id", new Field("number"),
-                                "created_at", Field.Builder.of("datetime").withDefaultValue("now()").build()
+                                "id", new Field(null, true),
+                                "comment_text", new Field(TCTextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                "user_id", new Field(TCNumberFieldFactory.class),
+                                "created_at", Field.Builder.of(TCDateTimePickerFactory.class).withDefaultValue("now()").build()
                         ))
                         .build(),
                 "images", Repository.Builder.of("jpa")
                         .withFields(Map.of(
-                                "id", new Field("id", true),
-                                "title", Field.Builder.of("text")
+                                "id", new Field(null, true),
+                                "title", Field.Builder.of(TCTextFieldFactory.class)
                                         .withRequired(true)
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
-                                "url", Field.Builder.of("text")
+                                "url", Field.Builder.of(TCImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldConfiguration("default"))
                                         .build()
                         ))
@@ -130,23 +142,23 @@ public class TurboCrudConfigService {
         );
 
         Map<String, Route> routes = Map.of(
-                "projects-cards", Route.Builder.of("grid")
+                "projects-cards", Route.Builder.of(TCGridRouteFactoryImpl.class)
                         .withDefaultRoute(true)
                         .withRepository("projects")
                         .withIcon("FACTORY")
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withTitleField("name")
                                 .withDescriptionField("description")
                                 .build())
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list", Route.Builder.of("list")
+                "projects-list", Route.Builder.of(TCListRouteFactoryImpl.class)
                         .withRepository("projects")
                         .withIcon("FACTORY")
                         .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of("default")
+                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withInlineEdit(true)
                                 .withFilterField("name")
                                 .withChildren(List.of(
@@ -159,27 +171,27 @@ public class TurboCrudConfigService {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks", Route.Builder.of("submenu")
+                "tasks", Route.Builder.of(TCSubmenuRouteFactoryImpl.class)
                         .withIcon("TASKS")
                         .withRepository("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of(
-                                "open", Route.Builder.of("kanban")
+                                "open", Route.Builder.of(TCKanbanDetailFactoryImpl.class)
                                         .withIcon("TASKS")
                                         .withRepository("tasks")
                                         .withTitle("route.open-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")
                                                 .build())
                                         .withChild(taskForm)
                                         .build(),
-                                "done", Route.Builder.of("master-detail")
+                                "done", Route.Builder.of(TCMasterDetailRouteFactoryImpl.class)
                                         .withIcon("CHECK_CIRCLE")
                                         .withRepository("tasks")
                                         .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .build())
@@ -187,11 +199,11 @@ public class TurboCrudConfigService {
                                         .build()
                         ))
                         .build(),
-                "images-grid", Route.Builder.of("grid")
+                "images-grid", Route.Builder.of(TCGridRouteFactoryImpl.class)
                         .withRepository("images")
                         .withIcon("CAMERA")
                         .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of("card")
+                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withTitleField("title")
                                 .withImageField("url")
                                 .withImageFactory("default")
@@ -199,11 +211,11 @@ public class TurboCrudConfigService {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list", Route.Builder.of("list")
+                "images-list", Route.Builder.of(TCListRouteFactoryImpl.class)
                         .withRepository("images")
                         .withIcon("CAMERA")
                         .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of("default")
+                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withInlineEdit(true)
                                 .withFilterField("title")
                                 .withChildren(List.of(

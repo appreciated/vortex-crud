@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class DefaultSelectFactory implements TurboCrudFieldFactory {
+public class TCSelectFieldFactory implements TurboCrudFieldFactory {
 
     private final Selects selects;
     private final Map<String, Repository> tablesConfig;
 
-    public DefaultSelectFactory(Selects selects, Map<String, Repository> tablesConfig) {
+    public TCSelectFieldFactory(Selects selects, Map<String, Repository> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }

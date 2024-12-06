@@ -5,7 +5,7 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.NumberField;
 
-public class DefaultNumberFieldFactory implements TurboCrudFieldFactory {
+public class TCNumberFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {
