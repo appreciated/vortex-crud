@@ -77,9 +77,8 @@ public class CollectionData {
             return this;
         }
 
-        public Builder withChildren(String ... children) {
-            product.children = List.of(children);
-            return this;
+        public Builder withChildren(String... children) {
+            return withChildren(List.of(children));
         }
 
         public Builder addChildren(String item) {

@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.manager.JpaRepository;
-import com.github.appreciated.turbo_crud.file_provider.FileProviderRegistry;
 import com.github.appreciated.turbo_crud.file_provider.FileProvider;
+import com.github.appreciated.turbo_crud.file_provider.FileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
@@ -42,36 +42,36 @@ public class TurboCrudConfigService {
                                 new FormElement("status", "field", "route.tasks.labels.status"),
                                 new FormElement("due_date", "field", "route.tasks.labels.due_date"),
                                 new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
-                                FormElement.Builder.of("comments", "collection", "route.tasks.labels.comments")
-                                        .withConfiguration(Collection.Builder.of(ListCollectionFactory.class)
+                                FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
+                                        .withFactory(ListCollectionFactory.class)
+                                        .withConfiguration(Collection.Builder.of(FormRouteFactory.class)
                                                 .withData(CollectionData.Builder.of("task_comments")
                                                         .withOneToMany(new OneToMany("task_id"))
-                                                        .withChildren(
-                                                                "comment_text",
-                                                                "field",
-                                                                "route.tasks.labels.comment"
-                                                        )
+                                                        .withChildren("comment_text")
+                                                        .build())
+                                                .withEmptyMessage("route.tasks.labels.comments-empty-message")
+                                                .withChild(Route.Builder.of(FormRouteFactory.class)
+                                                        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                                                                .withTitleField("name")
+                                                                .withChildren(
+                                                                        new FormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                                )
+                                                                .build())
                                                         .build())
                                                 .build())
                                         .build(),
-                                FormElement.Builder.of("related-tasks",
-                                                "collection",
-                                                "route.tasks.labels.related-tasks")
-                                        .withConfiguration(Collection.Builder.of(ListCollectionFactory.class)
+                                FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
+                                        .withFactory(ListCollectionFactory.class)
+                                        .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("tasks")
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",
                                                                 "related_task_id",
                                                                 "id"))
-                                                        .withChildren(
-                                                                "title",
-                                                                "field",
-                                                                "route.tasks.labels.title"
-                                                        )
+                                                        .withChildren("title")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
                                                 .withConfiguration(new CollectionConfig("title"))
-                                                .withFactory(ConnectDialogFactory.class)
                                                 .build())
                                         .build()
                         )
@@ -119,7 +119,7 @@ public class TurboCrudConfigService {
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
                                 "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "assigned_to", new Field(ReferenceFieldFactory.class, "users", "id", "username", List.of("username")) /* 1:1 Relation */,
+                                "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
                                 "status", new Field(SelectFieldFactory.class, "task-status"),
                                 "due_date", Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
                                 "created_at", new Field(DateTimePickerFactory.class),

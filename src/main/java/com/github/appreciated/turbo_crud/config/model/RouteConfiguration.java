@@ -155,8 +155,7 @@ public class RouteConfiguration {
         }
 
         public Builder withChildren(FormElement ... children) {
-            product.children = List.of(children);
-            return this;
+            return withChildren(List.of(children));
         }
 
         public Builder addChildren(FormElement item) {
