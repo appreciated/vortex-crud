@@ -1,12 +1,13 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.List;
 
 @GenerateBuilder
 public class CollectionData {
 
-    private String repository;
+    private String dataStore;
 
     private OneToMany oneToMany;
 
@@ -14,16 +15,16 @@ public class CollectionData {
 
     private List<String> children;
 
-    public CollectionData(String repository) {
-        this.repository = repository;
+    public CollectionData(String dataStore) {
+        this.dataStore = dataStore;
     }
 
-    public String getRepository() {
-        return repository;
+    public String getDataStore() {
+        return dataStore;
     }
 
-    public void setRepository(String repository) {
-        this.repository = repository;
+    public void setDataStore(String dataStore) {
+        this.dataStore = dataStore;
     }
 
     public OneToMany getOneToMany() {

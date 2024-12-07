@@ -2,27 +2,27 @@ package com.github.appreciated.turbo_crud.config.model;
 
 public class ManyToMany {
 
-    private String associativeRepository;
+    private String associativeDataStore;
 
     private String associativeSourceIdField;
 
     private String associativeTargetIdField;
 
-    private String repositoryField;
+    private String dataStoreField;
 
-    public ManyToMany(String associativeRepository, String associativeSourceIdField, String associativeTargetIdField, String repositoryField) {
-        this.associativeRepository = associativeRepository;
+    public ManyToMany(String associativeDataStore, String associativeSourceIdField, String associativeTargetIdField, String dataStoreField) {
+        this.associativeDataStore = associativeDataStore;
         this.associativeSourceIdField = associativeSourceIdField;
         this.associativeTargetIdField = associativeTargetIdField;
-        this.repositoryField = repositoryField;
+        this.dataStoreField = dataStoreField;
     }
 
-    public String getAssociativeRepository() {
-        return associativeRepository;
+    public String getAssociativeDataStore() {
+        return associativeDataStore;
     }
 
-    public void setAssociativeRepository(String associativeRepository) {
-        this.associativeRepository = associativeRepository;
+    public void setAssociativeDataStore(String associativeDataStore) {
+        this.associativeDataStore = associativeDataStore;
     }
 
     public String getAssociativeSourceIdField() {
@@ -41,12 +41,12 @@ public class ManyToMany {
         this.associativeTargetIdField = associativeTargetIdField;
     }
 
-    public String getRepositoryField() {
-        return repositoryField;
+    public String getDataStoreField() {
+        return dataStoreField;
     }
 
-    public void setRepositoryField(String repositoryField) {
-        this.repositoryField = repositoryField;
+    public void setDataStoreField(String dataStoreField) {
+        this.dataStoreField = dataStoreField;
     }
 
 }

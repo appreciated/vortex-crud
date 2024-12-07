@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.entity;
 
 import com.github.appreciated.turbo_crud.config.model.Application;
+import com.github.appreciated.turbo_crud.config.model.DataStore;
 import com.github.appreciated.turbo_crud.config.model.Field;
-import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactoryRegistry;
 import jakarta.persistence.EntityManager;
@@ -19,7 +19,7 @@ import java.util.*;
  * Validates the database schema against the {@link Application}.
  * <p>
  * This class checks if tables and columns in the database match the expected
- * schema based on {@link Repository} and {@link Field} from
+ * schema based on {@link DataStore} and {@link Field} from
  * {@link TurboCrudConfigService}. It uses JPA's {@link EntityManager} to run
  * native SQL queries and validate table existence, column names, and data types.
  * </p>
@@ -29,16 +29,16 @@ import java.util.*;
  */
 
 @Configuration
-public class TurboCrudDatabaseSchemaValidator {
+public class TurboCrudJpaDatabaseSchemaValidator {
 
     private final EntityManager entityManager;
     private final TurboCrudFieldFactoryRegistry fieldRegistry;
 
-    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
+    public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
         this.entityManager = entityManager;
         this.fieldRegistry = fieldRegistry;
-        Map<String, Repository> tablesConfig = configService.getConfiguration().getRepositories();
-        for (Map.Entry<String, Repository> entry : tablesConfig.entrySet()) {
+        Map<String, DataStore> tablesConfig = configService.getConfiguration().getRepositories();
+        for (Map.Entry<String, DataStore> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFields());
         }
     }
@@ -94,7 +94,7 @@ public class TurboCrudDatabaseSchemaValidator {
                 }
             }
         } catch (GenericJDBCException e) {
-            LoggerFactory.getLogger(TurboCrudDatabaseSchemaValidator.class).error("JDBC Error for table " + tableName , e);
+            LoggerFactory.getLogger(TurboCrudJpaDatabaseSchemaValidator.class).error("JDBC Error for table " + tableName , e);
         }
     }
 

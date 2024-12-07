@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.entity.manager.JpaRepository;
+import com.github.appreciated.turbo_crud.entity.data_store.JpaDataStore;
 import com.github.appreciated.turbo_crud.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.file_provider.FileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.ConnectDialogFactory;
@@ -102,8 +102,8 @@ public class TurboCrudConfigService {
                         .build())
                 .build();
 
-        Map<String, Repository> repositories = Map.of("projects",
-                Repository.Builder.of(JpaRepository.class)
+        Map<String, DataStore> repositories = Map.of(
+                "projects", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -113,8 +113,7 @@ public class TurboCrudConfigService {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks",
-                Repository.Builder.of(JpaRepository.class)
+                "tasks", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -125,22 +124,19 @@ public class TurboCrudConfigService {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task",
-                Repository.Builder.of(JpaRepository.class)
+                "task_has_task", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "task_id", new Field(IdFieldFactory.class),
                                 "related_task_id", new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments",
-                Repository.Builder.of(JpaRepository.class)
+                "task_comments", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 "user_id", new Field(NumberFieldFactory.class),
                                 "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images",
-                Repository.Builder.of(JpaRepository.class)
+                "images", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", Field.Builder.of(TextFieldFactory.class)
@@ -152,8 +148,8 @@ public class TurboCrudConfigService {
                                         .build()))
                         .build());
 
-        Map<String, Route> routes = Map.of("projects-cards",
-                Route.Builder.of(GridRouteFactory.class)
+        Map<String, Route> routes = Map.of(
+                "projects-cards", Route.Builder.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withRepository("projects")
                         .withIconFactory(FACTORY::create)
@@ -165,8 +161,7 @@ public class TurboCrudConfigService {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list",
-                Route.Builder.of(ListRouteFactory.class)
+                "projects-list", Route.Builder.of(ListRouteFactory.class)
                         .withRepository("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
@@ -183,8 +178,7 @@ public class TurboCrudConfigService {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks",
-                Route.Builder.of(SubmenuRouteFactory.class)
+                "tasks", Route.Builder.of(SubmenuRouteFactory.class)
                         .withIconFactory(TASKS::create)
                         .withRepository("tasks")
                         .withTitle("route.tasks.title")
@@ -212,8 +206,7 @@ public class TurboCrudConfigService {
                                         .withChild(taskForm)
                                         .build()))
                         .build(),
-                "images-grid",
-                Route.Builder.of(GridRouteFactory.class)
+                "images-grid", Route.Builder.of(GridRouteFactory.class)
                         .withRepository("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
@@ -225,8 +218,7 @@ public class TurboCrudConfigService {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list",
-                Route.Builder.of(ListRouteFactory.class)
+                "images-list", Route.Builder.of(ListRouteFactory.class)
                         .withRepository("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
@@ -255,6 +247,8 @@ public class TurboCrudConfigService {
                                 .build()))
                         .build())
                 .withRoutes(routes)
+                .withVersioning(Versioning.Builder.of().withRepositories("projects", "tasks", "task_comments").build())
+                .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status",
                                 Map.of(

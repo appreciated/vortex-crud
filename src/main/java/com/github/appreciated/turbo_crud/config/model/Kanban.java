@@ -3,6 +3,7 @@ package com.github.appreciated.turbo_crud.config.model;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.List;
 
 @GenerateBuilder

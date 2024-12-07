@@ -4,9 +4,9 @@ import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -36,7 +36,7 @@ public class MasterDetail extends SplitLayout {
 
     private final GridOrListConfiguration gridOrListConfiguration;
     private TurboCrudPathToRouteResolver pathVariables;
-    private final TurboCrudEntityManager entityManager;
+    private final TurboCrudDataStore dataStore;
     private final TurboCrudItemFactory itemFactory;
     private final VirtualList<GenericEntity> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
@@ -50,7 +50,7 @@ public class MasterDetail extends SplitLayout {
 
     public MasterDetail(Integer currentPathIndex,
                         TurboCrudPathToRouteResolver routeResolver,
-                        TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                        TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                         TurboCrudItemFactoryRegistry itemFactoryRegistry,
                         TurboCrudRouteFactoryRegistry routeFactory,
                         TurboCrudConfigService configService,
@@ -64,7 +64,7 @@ public class MasterDetail extends SplitLayout {
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.entityManager = entityManagerFactoryRegistry.getFactory(route.getRepository());
+        this.dataStore = dataStoreFactoryRegistry.getFactory(route.getDataStore());
         this.gridOrListConfiguration = (GridOrListConfiguration) route.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         assert route.getChild() != null;
@@ -149,7 +149,7 @@ public class MasterDetail extends SplitLayout {
             Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry);
             component.addClassNames("master", "no-padding");
             Div div = new Div(component);
-            if (EntityUtil.equals(item, pathVariables.getLastSegment())) {
+            if (DataStoreUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
                 setNewActive(component);
             }
@@ -160,7 +160,7 @@ public class MasterDetail extends SplitLayout {
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider(entityManager, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.form;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -12,19 +12,19 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
 
-public class TCMultiFormRouteFactory implements TurboCrudRouteFactory {
+public class MultiFormRouteFactory implements TurboCrudRouteFactory {
 
     private final FormRouteFactory formRouteFactory;
 
     private String titleColumn;
 
-    public TCMultiFormRouteFactory(
-            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public MultiFormRouteFactory(
+            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
             TurboCrudConfigService configService,
             FormCreator formCreator,
             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
-        this.formRouteFactory = new FormRouteFactory(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
+        this.formRouteFactory = new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry);
     }
 
     @Override

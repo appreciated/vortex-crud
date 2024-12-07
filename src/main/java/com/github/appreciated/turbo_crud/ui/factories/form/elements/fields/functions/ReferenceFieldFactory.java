@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.turbo_crud.config.model.Field;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class ReferenceFieldFactory implements TurboCrudFieldFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry managerFactoryRegistry;
 
-    public ReferenceFieldFactory(TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry) {
+    public ReferenceFieldFactory(TurboCrudDataStoreFactoryRegistry managerFactoryRegistry) {
         this.managerFactoryRegistry = managerFactoryRegistry;
     }
 

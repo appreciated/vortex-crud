@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
@@ -19,15 +19,15 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class TCFormDialogFactory implements TurboCrudDialogFactory {
+public class FormDialogFactory implements TurboCrudDialogFactory {
 
     private final TurboCrudConfigService configService;
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
-    private TurboCrudEntityManager entityManager;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
+    private TurboCrudDataStore dataStore;
 
-    public TCFormDialogFactory(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
         this.configService = configService;
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
@@ -41,16 +41,16 @@ public class TCFormDialogFactory implements TurboCrudDialogFactory {
                          OnStoreListener listener,
                          FormCreator formCreator) {
 
-        this.entityManager = entityManagerFactoryRegistry.getFactory(repository);
+        this.dataStore = dataStoreFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
-        GenericEntity recordById = entityManager.getRecordById(entityId);
+        GenericEntity recordById = dataStore.getRecordById(entityId);
         if (recordById == null) {
             recordById = new GenericEntity();
         }
 
-        if (EntityUtil.isNew(recordById)) {
+        if (DataStoreUtil.isNew(recordById)) {
             dialog.setHeaderTitle(dialog.getTranslation("button.create.title"));
         } else {
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
@@ -61,7 +61,7 @@ public class TCFormDialogFactory implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        Repository tables = configService.getConfiguration().getRepositories().get(repository);
+        DataStore tables = configService.getConfiguration().getRepositories().get(repository);
 
         formCreator.bindAndAddToLayout(repository, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
@@ -80,10 +80,10 @@ public class TCFormDialogFactory implements TurboCrudDialogFactory {
                 if (foreignKeyField != null && foreignKeyValue != null) {
                     entity.put(foreignKeyField, foreignKeyValue);
                 }
-                if (EntityUtil.isNew(entity)) {
-                    entityManager.insertRecord(entity);
+                if (DataStoreUtil.isNew(entity)) {
+                    dataStore.insertRecord(entity);
                 } else {
-                    entityManager.updateRecordById(EntityUtil.getId(entity), entity);
+                    dataStore.updateRecordById(DataStoreUtil.getId(entity), entity);
                 }
                 binder.setBean(entity);
                 dialog.close();

@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.func
 
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -16,17 +16,17 @@ import com.vaadin.flow.shared.Registration;
 public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<ValueChangeEvent<Integer>, Integer>, HasLabel {
 
     private final ComboBox<GenericEntity> comboBox;
-    private final TurboCrudEntityManager entityManager;
+    private final TurboCrudDataStore dataStore;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, Field repositoryField) {
-        this.entityManager = entityManagerFactoryRegistry.getFactory(repositoryField.getRepository());
+    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, Field repositoryField) {
+        this.dataStore = dataStoreFactoryRegistry.getFactory(repositoryField.getDataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> entityManager.getRecordsFromTableWhereColumnLike(repositoryField.getFilterField(), filterValue, i, i1).stream(),
-                filterValue -> entityManager.countWhereColumnLike(repositoryField.getFilterField(), filterValue)
+                (filterValue, i, i1) -> dataStore.getRecordsFromTableWhereColumnLike(repositoryField.getFilterField(), filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(repositoryField.getFilterField(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> repositoryField.getChildren().stream()
@@ -61,7 +61,7 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     @Override
     public void setValue(Integer id) {
         if (id != null) {
-            GenericEntity entity = entityManager.getRecordById(id);
+            GenericEntity entity = dataStore.getRecordById(id);
             comboBox.setValue(entity);
             currentValue = id;
         } else {

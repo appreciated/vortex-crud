@@ -1,16 +1,16 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.Repository;
+import com.github.appreciated.turbo_crud.config.model.DataStore;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.config.model.RouteConfiguration;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -36,17 +36,17 @@ import jakarta.annotation.Nullable;
 
 public class FormRouteFactory implements TurboCrudRouteFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public FormRouteFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public FormRouteFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                             TurboCrudConfigService configService,
                             FormCreator formCreator,
                             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
@@ -85,11 +85,11 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        String table = route.getRepository();
-        Repository tables = configService.getConfiguration().getRepositories().get(table);
+        String table = route.getDataStore();
+        DataStore tables = configService.getConfiguration().getRepositories().get(table);
         String lastSegment = routeResolver.getLastSegment();
-        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(table);
-        GenericEntity entity = creationMode ? new GenericEntity() : entityManager.getRecordById(lastSegment);
+        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
+        GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, route, formRouteConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
 
@@ -98,11 +98,11 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
             try {
                 binder.writeBean(entity);
                 if (!creationMode) {
-                    entityManager.updateRecordById(EntityUtil.getId(entity), entity);
+                    dataStore.updateRecordById(DataStoreUtil.getId(entity), entity);
                     binder.setBean(entity);
                 } else {
-                    Object o = entityManager.insertRecord(entity);
-                    binder.setBean(entityManager.getRecordById(o));
+                    Object o = dataStore.insertRecord(entity);
+                    binder.setBean(dataStore.getRecordById(o));
                 }
                 Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -113,7 +113,7 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
         };
 
         ComponentEventListener<ClickEvent<Button>> onDelete = event -> {
-            entityManager.deleteRecordById(EntityUtil.getId(entity));
+            dataStore.deleteRecordById(DataStoreUtil.getId(entity));
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
         };
 

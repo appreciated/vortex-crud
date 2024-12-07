@@ -12,7 +12,7 @@ import java.util.Map;
 @GenerateBuilder
 public class Route {
 
-    private String repository;
+    private String dataStore;
 
     private String title;
 
@@ -34,12 +34,12 @@ public class Route {
 
     private List<String> roles;
 
-    public String getRepository() {
-        return repository;
+    public String getDataStore() {
+        return dataStore;
     }
 
-    public void setRepository(String repository) {
-        this.repository = repository;
+    public void setDataStore(String dataStore) {
+        this.dataStore = dataStore;
     }
 
     public String getTitle() {
@@ -129,8 +129,8 @@ public class Route {
             return new Builder(new Route(factory));
         }
 
-        public Builder withRepository(String repository) {
-            product.repository = repository;
+        public Builder withRepository(String dataStore) {
+            product.dataStore = dataStore;
             return this;
         }
 

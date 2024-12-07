@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.service;
 
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.entity.manager.JpaRepository;
+import com.github.appreciated.turbo_crud.entity.data_store.JpaDataStore;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,12 +28,12 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @Autowired
     private TransactionTemplate transactionTemplate;
 
-    private JpaRepository service;
+    private JpaDataStore service;
 
     @BeforeEach
     void setUp() {
         createTestTable();
-        service = new JpaRepository("test_table", entityManager, transactionTemplate);
+        service = new JpaDataStore("test_table", entityManager, transactionTemplate);
     }
 
     @AfterEach

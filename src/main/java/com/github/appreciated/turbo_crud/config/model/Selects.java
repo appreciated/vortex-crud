@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.Map;
 
 @GenerateBuilder

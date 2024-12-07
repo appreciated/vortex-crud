@@ -1,10 +1,10 @@
-package com.github.appreciated.turbo_crud.entity.manager;
+package com.github.appreciated.turbo_crud.entity.data_store;
 
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 
 import java.util.List;
 
-public interface TurboCrudEntityManager {
+public interface TurboCrudDataStore {
 
     Object insertRecord(GenericEntity values);
 

@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.config;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -101,7 +101,7 @@ public class TurboCrudPathToRouteResolver {
     }
 
     public String getPathForEntity(Integer currentPathIndex, GenericEntity entity) {
-        return generateSubRoute(currentPathIndex, EntityUtil.getId(entity));
+        return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
     }
 
     public Route getRouteForIndex(Integer currentPathIndex) {

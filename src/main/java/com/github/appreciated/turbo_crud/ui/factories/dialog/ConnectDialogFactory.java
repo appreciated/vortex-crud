@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.config.model.CollectionData;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 
 public class ConnectDialogFactory implements TurboCrudDialogFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
 
-    public ConnectDialogFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+    public ConnectDialogFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ConnectDialogFactory implements TurboCrudDialogFactory {
                          OnStoreListener listener,
                          FormCreator formCreator) {
 
-        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(repository);
+        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(repository);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -50,7 +50,7 @@ public class ConnectDialogFactory implements TurboCrudDialogFactory {
         layout.setSpacing(false);
 
         // Fetch available connections
-        List<GenericEntity> availableConnections = entityManager.getRecordsFromTable(0, Integer.MAX_VALUE);
+        List<GenericEntity> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();

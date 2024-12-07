@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -13,21 +13,21 @@ import jakarta.annotation.Nullable;
 
 public class ListRouteFactory implements TurboCrudRouteFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final TurboCrudListColumnCallbackRegistry columnCallbackRegistry;
     private final FormCreator formCreator;
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
 
-    public ListRouteFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public ListRouteFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                             TurboCrudConfigService configService,
                             TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                             FormCreator formCreator,
                             TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry
     ) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.columnCallbackRegistry = columnCallbackRegistry;
         this.formCreator = formCreator;
@@ -41,7 +41,7 @@ public class ListRouteFactory implements TurboCrudRouteFactory {
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         return new List(currentPathIndex,
                 routeResolver,
-                entityManagerFactoryRegistry,
+                dataStoreFactoryRegistry,
                 configService,
                 columnCallbackRegistry,
                 formCreator,

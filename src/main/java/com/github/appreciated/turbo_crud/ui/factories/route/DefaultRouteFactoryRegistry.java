@@ -4,11 +4,11 @@ import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.turbo_crud.ui.factories.route.form.TCMultiFormRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.form.MultiFormRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.kanban.KanbanDetailFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.list.ListRouteFactory;
@@ -33,17 +33,17 @@ public class DefaultRouteFactoryRegistry implements TurboCrudRouteFactoryRegistr
     public DefaultRouteFactoryRegistry(TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                        TurboCrudConfigService configService,
                                        TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
-                                       TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                       TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                                        TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                                        TurboCrudFileProviderRegistry fileProviderRegistry,
                                        FormCreator formCreatorService
     ) {
-        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory(entityManagerFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry));
-        factories.put(ListRouteFactory.class, new ListRouteFactory(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this));
-        factories.put(GridRouteFactory.class, new GridRouteFactory(entityManagerFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry));
-        factories.put(FormRouteFactory.class, new FormRouteFactory(entityManagerFactoryRegistry, configService, formCreatorService, this));
-        factories.put(TCMultiFormRouteFactory.class, new TCMultiFormRouteFactory(entityManagerFactoryRegistry, configService, formCreatorService, this));
-        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory(entityManagerFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry));
+        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry));
+        factories.put(ListRouteFactory.class, new ListRouteFactory(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this));
+        factories.put(GridRouteFactory.class, new GridRouteFactory(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry));
+        factories.put(FormRouteFactory.class, new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this));
+        factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this));
+        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry));
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory(this, configService));
     }
 

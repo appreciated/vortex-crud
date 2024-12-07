@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
@@ -15,7 +15,7 @@ import jakarta.annotation.Nullable;
 
 public class GridRouteFactory implements TurboCrudRouteFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
     private final FormCreator formCreator;
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
@@ -23,14 +23,14 @@ public class GridRouteFactory implements TurboCrudRouteFactory {
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public GridRouteFactory(
-            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
             FormCreator formCreator,
             TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
             TurboCrudItemFactoryRegistry itemFactoryRegistry,
             TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
@@ -47,7 +47,7 @@ public class GridRouteFactory implements TurboCrudRouteFactory {
 
         return new Grid(routeResolver,
                 route,
-                entityManagerFactoryRegistry,
+                dataStoreFactoryRegistry,
                 formCreator,
                 dialogFactoryRegistry,
                 routeFactoryRegistry,

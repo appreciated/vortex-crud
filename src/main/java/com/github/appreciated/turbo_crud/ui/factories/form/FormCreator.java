@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.TurboCrudCollectionFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -33,7 +33,7 @@ public class FormCreator {
                                    RouteConfiguration formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
-                                   Repository tables,
+                                   DataStore tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
@@ -64,7 +64,7 @@ public class FormCreator {
             } else {
                 if (element.getType().equals("collection")) {
                     Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
-                            EntityUtil.getId(entity),
+                            DataStoreUtil.getId(entity),
                             route,
                             element,
                             routeFactory,

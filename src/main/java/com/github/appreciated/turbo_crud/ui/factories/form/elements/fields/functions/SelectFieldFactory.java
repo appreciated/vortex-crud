@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
+import com.github.appreciated.turbo_crud.config.model.DataStore;
 import com.github.appreciated.turbo_crud.config.model.Field;
-import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Selects;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
@@ -12,9 +12,9 @@ import java.util.*;
 public class SelectFieldFactory implements TurboCrudFieldFactory {
 
     private final Selects selects;
-    private final Map<String, Repository> tablesConfig;
+    private final Map<String, DataStore> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<String, Repository> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<String, DataStore> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }
@@ -23,8 +23,8 @@ public class SelectFieldFactory implements TurboCrudFieldFactory {
     public Component createComponent(String table, String field, Field repositoryField) {
         Select<String> select = new Select<>();
 
-        Repository repository = tablesConfig.get(table);
-        Field tableField = repository.getFields().get(field);
+        DataStore dataStore = tablesConfig.get(table);
+        Field tableField = dataStore.getFields().get(field);
 
         String selectName = tableField.getValues();
         Map<String, String> selectConfig = selects.getConfigs().get(selectName);

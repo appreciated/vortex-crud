@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.List;
 
 @GenerateBuilder
@@ -48,7 +49,11 @@ public class Versioning {
             return this;
         }
 
-        public Builder addRepositorie(String item) {
+        public Builder withRepositories(String... repositories) {
+            return withRepositories(List.of(repositories));
+        }
+
+        public Builder addRepositories(String item) {
             product.repositories.add(item);
             return this;
         }

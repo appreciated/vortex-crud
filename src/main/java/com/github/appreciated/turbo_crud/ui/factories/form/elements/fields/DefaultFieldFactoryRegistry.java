@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields;
 import com.github.appreciated.turbo_crud.config.model.Application;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistr
 
     private final Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistry(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public DefaultFieldFactoryRegistry(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
         Application configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory());
@@ -30,7 +30,7 @@ public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistr
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory());
         factories.put(SelectFieldFactory.class, new SelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
         factories.put(NumberFieldFactory.class, new NumberFieldFactory());
-        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory(entityManagerFactoryRegistry));
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory(dataStoreFactoryRegistry));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory(fileProviderRegistry));
         factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory());
         factories.put(IdFieldFactory.class, new IdFieldFactory());

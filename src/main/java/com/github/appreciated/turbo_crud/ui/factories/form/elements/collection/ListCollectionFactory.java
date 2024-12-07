@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
@@ -24,12 +24,12 @@ import static com.vaadin.flow.component.button.ButtonVariant.*;
 
 public class ListCollectionFactory implements TurboCrudCollectionFactory {
 
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public ListCollectionFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public ListCollectionFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                                  TurboCrudDialogFactoryRegistry dialogFactory) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }
 
@@ -51,16 +51,16 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, entityManagerFactoryRegistry, routeFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, dataStoreFactoryRegistry, routeFactory, formCreator, list, header));
         header.add(button);
-        loadCollection(foreignKey, factoryConfig, routeFactory, entityManagerFactoryRegistry, formCreator, list, header);
+        loadCollection(foreignKey, factoryConfig, routeFactory, dataStoreFactoryRegistry, formCreator, list, header);
         return list;
     }
 
     private void loadCollection(String foreignKeyValue,
                                 FormElement formElement,
                                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-                                TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                                 FormCreator formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
@@ -68,12 +68,12 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         list.add(header);
         CollectionData data = formElement.getConfiguration().getData();
 
-        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(data.getRepository());
-        List<GenericEntity> records = getDataByConfig(foreignKeyValue, entityManager, data, entityManagerFactoryRegistry);
+        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
+        List<GenericEntity> records = getDataByConfig(foreignKeyValue, dataStore, data, dataStoreFactoryRegistry);
         if (formElement.getConfiguration().getData().getOneToMany() != null) {
-            addOneToManyItems(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header, records, entityManager);
+            addOneToManyItems(foreignKeyValue, formElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header, records, dataStore);
         } else if (formElement.getConfiguration().getData().getManyToMany() != null) {
-            addManyToManyItems(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header, records, entityManager);
+            addManyToManyItems(foreignKeyValue, formElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header, records, dataStore);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
         }
@@ -82,26 +82,26 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private void addManyToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudEntityManager entityManager) {
+    private void addManyToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, formElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             List<String> children = formElement.getConfiguration().getData().getChildren();
             children.forEach(s -> item.addContent(new Text(record.getString(s))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
-                entityManager.deleteRecordById(EntityUtil.getId(record));
-                loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
+                dataStore.deleteRecordById(DataStoreUtil.getId(record));
+                loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header);
             });
             list.add(item);
         }
     }
 
-    private void addOneToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudEntityManager entityManager) {
+    private void addOneToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, formElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             RouteConfiguration form = formElement.getConfiguration().getChild().getConfiguration();
             for (FormElement child : form.getChildren()) {
                 Object o = record.get(child.getField());
@@ -109,8 +109,8 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
-                    entityManager.deleteRecordById(EntityUtil.getId(record));
-                    loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header);
+                    dataStore.deleteRecordById(DataStoreUtil.getId(record));
+                    loadCollection(foreignKeyValue, formElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
@@ -118,21 +118,21 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private static List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudEntityManager targetEntityManager, CollectionData collectionData, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+    private static List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore dataStore, CollectionData collectionData, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
         if (collectionData.getOneToMany() != null) {
             return foreignKeyValue == null ? List.of() :
-                    targetEntityManager.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
+                    dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         } else if (collectionData.getManyToMany() != null) {
             // If we need to resolve a many-to-many relation it is necessary to do two selects one over the associative
             // repository and one over the target repository and one with the actual entries.
             // This could be improved upon, if it was allowed to provide a custom repository / interface for the sake
             // of resolving the following data.
             ManyToMany manyToMany = collectionData.getManyToMany();
-            TurboCrudEntityManager associativeEntityManager = entityManagerFactoryRegistry.getFactory(manyToMany.getAssociativeRepository());
-            List<GenericEntity> associativeRecords = associativeEntityManager.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
+            TurboCrudDataStore associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
+            List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
             List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(manyToMany.getAssociativeTargetIdField())).map(Object::toString).toList();
             return foreignKeyValue == null ? List.of() :
-                    targetEntityManager.getRecordsFromTableWhereColumnIn(manyToMany.getRepositoryField(), associativeRecordIds, 0, Integer.MAX_VALUE);
+                    dataStore.getRecordsFromTableWhereColumnIn(manyToMany.getDataStoreField(), associativeRecordIds, 0, Integer.MAX_VALUE);
         } else {
             throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
         }
@@ -141,7 +141,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
     private void openDialog(String entityId,
                             String foreignKey,
                             FormElement formElement,
-                            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                             FormCreator formCreator,
                             VerticalLayout list,
@@ -153,9 +153,9 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
                 getReferenceField(collectionData.getData()),
                 collectionData.getChild(),
                 collectionData.getData(),
-                collectionData.getData().getRepository(),
+                collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, entityManagerFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, formElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }
@@ -166,7 +166,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
             return oneToMany.getReferenceField();
         } else if (collectionData.getManyToMany() != null) {
             ManyToMany oneToMany = collectionData.getManyToMany();
-            return oneToMany.getRepositoryField();
+            return oneToMany.getDataStoreField();
         } else {
             throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
         }

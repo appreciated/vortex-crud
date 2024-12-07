@@ -6,7 +6,7 @@ import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
@@ -17,7 +17,7 @@ import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
 public class KanbanDetailFactory implements TurboCrudRouteFactory {
-    private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
     private final TurboCrudRouteFactoryRegistry routeFactory;
@@ -25,7 +25,7 @@ public class KanbanDetailFactory implements TurboCrudRouteFactory {
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanDetailFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+    public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                                TurboCrudConfigService configService,
                                TurboCrudItemFactoryRegistry turboCrudItemFactory,
                                TurboCrudRouteFactoryRegistry routeFactory,
@@ -33,7 +33,7 @@ public class KanbanDetailFactory implements TurboCrudRouteFactory {
                                TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
-        this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.turboCrudItemFactory = turboCrudItemFactory;
         this.routeFactory = routeFactory;
@@ -48,9 +48,9 @@ public class KanbanDetailFactory implements TurboCrudRouteFactory {
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView(route.getRepository(),
+        return new KanbanView(route.getDataStore(),
                 route,
-                entityManagerFactoryRegistry.getFactory(route.getRepository()),
+                dataStoreFactoryRegistry.getFactory(route.getDataStore()),
                 routeFactory,
                 turboCrudItemFactory,
                 (Kanban) route.getConfiguration(),

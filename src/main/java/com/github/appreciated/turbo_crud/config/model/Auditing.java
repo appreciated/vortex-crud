@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.List;
 
 @GenerateBuilder
@@ -46,6 +47,10 @@ public class Auditing {
         public Builder withActions(List<String> actions) {
             product.actions = actions;
             return this;
+        }
+
+        public Builder withActions(String... actions) {
+            return withActions(List.of(actions));
         }
 
         public Builder addAction(String item) {

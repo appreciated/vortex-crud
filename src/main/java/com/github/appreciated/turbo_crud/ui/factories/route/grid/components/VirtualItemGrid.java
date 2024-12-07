@@ -3,11 +3,11 @@ package com.github.appreciated.turbo_crud.ui.factories.route.grid.components;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
@@ -33,7 +33,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private final TurboCrudItemFactory itemFactory;
     private final TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudEntityManager entityManager;
+    private final TurboCrudDataStore dataStore;
     private final GridOrListConfiguration gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
@@ -41,14 +41,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
     public VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
                            Route config,
-                           TurboCrudEntityManagerFactoryRegistry entityManagerRegistry,
+                           TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry,
                            TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
-        String table = config.getRepository();
+        String table = config.getDataStore();
 
-        this.entityManager = entityManagerRegistry.getFactory(table);
+        this.dataStore = dataStoreFactoryRegistry.getFactory(table);
         gridOrListConfiguration = (GridOrListConfiguration) config.getConfiguration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
@@ -86,7 +86,7 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     }
 
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + EntityUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + DataStoreUtil.getId(entity)));
     }
 
     private void initLazyLoadingDataProvider() {
@@ -99,9 +99,9 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        items = entityManager.getRecordsFromTable(offset, limit);
+                        items = dataStore.getRecordsFromTable(offset, limit);
                     } else {
-                        items = entityManager.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
+                        items = dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
                     List<EntityItemList> wrappers = new ArrayList<>();
@@ -117,9 +117,9 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
                     int count;
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        count = entityManager.count();
+                        count = dataStore.count();
                     } else {
-                        count = entityManager.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
+                        count = dataStore.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }

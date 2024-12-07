@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.config.model;
 
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.List;
 
 @GenerateBuilder
@@ -19,7 +20,7 @@ public class Field {
 
     private String values;
 
-    private String repository;
+    private String dataStore;
 
     private String field;
 
@@ -58,11 +59,11 @@ public class Field {
         this.validation = validation;
     }
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String repository, List<String> children) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
         this(factory);
         this.field = field;
         this.filterField = filterField;
-        this.repository = repository;
+        this.dataStore = dataStore;
         this.children = children;
     }
 
@@ -114,12 +115,12 @@ public class Field {
         this.values = values;
     }
 
-    public String getRepository() {
-        return repository;
+    public String getDataStore() {
+        return dataStore;
     }
 
-    public void setRepository(String repository) {
-        this.repository = repository;
+    public void setDataStore(String dataStore) {
+        this.dataStore = dataStore;
     }
 
     public String getField() {
@@ -191,8 +192,8 @@ public class Field {
             return this;
         }
 
-        public Builder withRepository(String repository) {
-            product.repository = repository;
+        public Builder withRepository(String dataStore) {
+            product.dataStore = dataStore;
             return this;
         }
 

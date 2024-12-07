@@ -3,14 +3,13 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.data.provider.DataProvider;
 
 import java.util.Map;
 
@@ -26,20 +25,20 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
 
     public GenericEntityGrid(TurboCrudPathToRouteResolver routeResolver,
                              Route route,
-                             TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                             TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
                              TurboCrudConfigService configService,
                              TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        String table = route.getRepository();
-        TurboCrudEntityManager entityManager = entityManagerFactoryRegistry.getFactory(table);
+        String table = route.getDataStore();
+        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        Repository tables = configService.getConfiguration().getRepositories().get(route.getRepository());
+        DataStore tables = configService.getConfiguration().getRepositories().get(route.getDataStore());
         RouteConfiguration gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
-        DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(entityManager, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
         Map<String, Field> fieldsConfig = tables.getFields();
 
@@ -64,6 +63,6 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
      * @param entity the clicked GenericEntity
      */
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + EntityUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + DataStoreUtil.getId(entity)));
     }
 }

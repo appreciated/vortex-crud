@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+
 import java.util.Map;
 
 @GenerateBuilder
@@ -18,7 +19,7 @@ public class Application {
 
     private Auditing auditing;
 
-    private Map<String, Repository> repositories;
+    private Map<String, DataStore> repositories;
 
     private Map<String, Route> routes;
 
@@ -70,11 +71,11 @@ public class Application {
         this.auditing = auditing;
     }
 
-    public Map<String, Repository> getRepositories() {
+    public Map<String, DataStore> getRepositories() {
         return repositories;
     }
 
-    public void setRepositories(Map<String, Repository> repositories) {
+    public void setRepositories(Map<String, DataStore> repositories) {
         this.repositories = repositories;
     }
 
@@ -128,7 +129,7 @@ public class Application {
             return this;
         }
 
-        public Builder withRepositories(Map<String, Repository> repositories) {
+        public Builder withRepositories(Map<String, DataStore> repositories) {
             product.repositories = repositories;
             return this;
         }

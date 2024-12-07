@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.entity.manager;
+package com.github.appreciated.turbo_crud.entity.data_store;
 
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.AliasToEntityMapTupleTransformer;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class JpaRepository implements TurboCrudEntityManager {
+public class JpaDataStore implements TurboCrudDataStore {
 
     private final EntityManager entityManager;
     private final TransactionTemplate transactionTemplate;
     private final String table;
 
-    public JpaRepository(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public JpaDataStore(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         this.entityManager = entityManager;
         this.transactionTemplate = transactionTemplate;
         if (table == null) {

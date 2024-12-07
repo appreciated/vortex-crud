@@ -1,14 +1,14 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.kanban.component;
 
 import com.github.appreciated.turbo_crud.config.model.*;
-import com.github.appreciated.turbo_crud.entity.EntityUtil;
+import com.github.appreciated.turbo_crud.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
+import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -33,12 +33,12 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudItemFactory itemFactory;
     private final Kanban kanbanConfig;
     private final ComponentRenderer<Component, GenericEntity> itemRenderer;
-    private final TurboCrudEntityManager entityManager;
+    private final TurboCrudDataStore dataStore;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(String repository,
                       Route route,
-                      TurboCrudEntityManager entityManager,
+                      TurboCrudDataStore dataStore,
                       TurboCrudRouteFactoryRegistry routeFactory,
                       TurboCrudItemFactoryRegistry itemFactoryRegistry,
                       Kanban kanbanConfig,
@@ -47,9 +47,9 @@ public class KanbanView extends VerticalLayout {
                       TurboCrudFileProviderRegistry fileProviderRegistry,
                       FormCreator formCreator,
                       DetailRouteSetting detailRouteSetting) {
-        this.entityManager = entityManager;
+        this.dataStore = dataStore;
         Selects selects = configService.getSelects();
-        Repository config = configService.getRepositories().get(repository);
+        DataStore config = configService.getRepositories().get(repository);
         Field repositoryField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
@@ -64,7 +64,7 @@ public class KanbanView extends VerticalLayout {
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
                 Dialog dialog = dialogFactoryRegistry.getFactory((Class<? extends TurboCrudDialogFactory>) route.getChild().getFactory()).create(
-                        EntityUtil.getId(entity),
+                        DataStoreUtil.getId(entity),
                         null,
                         null,
                         route.getChild(),
@@ -73,7 +73,7 @@ public class KanbanView extends VerticalLayout {
                         routeFactory,
                         () -> {
                             //TODO handle if the column was edited, requiring the element to move
-                            GenericEntity recordById = entityManager.getRecordById(EntityUtil.getId(entity));
+                            GenericEntity recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
                             cardWrapper.removeAll();
                             cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry));
                         },
@@ -141,7 +141,7 @@ public class KanbanView extends VerticalLayout {
             event.getDragData().ifPresent(o -> {
                 if (o instanceof GenericEntity) {
                     ((GenericEntity) o).put(kanbanConfig.getColumnField(), columnDatabaseValue);
-                    entityManager.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
+                    dataStore.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
                 }
             });
         });
@@ -153,7 +153,7 @@ public class KanbanView extends VerticalLayout {
         wrapper.add(titleLabel);
         wrapper.add(column);
 
-        List<GenericEntity> recordsFromTableWhereColumnEquals = entityManager.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
+        List<GenericEntity> recordsFromTableWhereColumnEquals = dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
         for (GenericEntity record : recordsFromTableWhereColumnEquals) {
             column.add(itemRenderer.createComponent(record));
         }
@@ -172,7 +172,7 @@ public class KanbanView extends VerticalLayout {
                 repository,
                 routeFactory,
                 () -> {
-                    GenericEntity recordById = entityManager.getRecordById(EntityUtil.getId(entity));
+                    GenericEntity recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
                     itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry);
                 },
                 formCreator);
