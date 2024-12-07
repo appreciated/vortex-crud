@@ -111,6 +111,11 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
             return this;
         }
 
+        public Builder withChildren(FormElement ... children) {
+            product.children = List.of(children);
+            return this;
+        }
+
         public Builder addChildren(FormElement item) {
             product.children.add(item);
             return this;
