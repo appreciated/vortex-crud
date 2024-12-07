@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.dialog;
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -16,13 +16,13 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultDialogFactoryRegistryImpl implements TurboCrudDialogFactoryRegistry {
+public class DefaultDialogFactoryRegistry implements TurboCrudDialogFactoryRegistry {
 
     private final Map<Class<? extends TurboCrudDialogFactory>, TurboCrudDialogFactory> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
-        factories.put(TCFormDialogFactoryImpl.class, new TCFormDialogFactoryImpl(configService, entityManagerFactoryRegistry));
-        factories.put(TCConnectDialogFactoryImpl.class, new TCConnectDialogFactoryImpl(entityManagerFactoryRegistry));
+    public DefaultDialogFactoryRegistry(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+        factories.put(TCFormDialogFactory.class, new TCFormDialogFactory(configService, entityManagerFactoryRegistry));
+        factories.put(TCConnectDialogFactory.class, new TCConnectDialogFactory(entityManagerFactoryRegistry));
     }
 
     public Map<Class<? extends TurboCrudDialogFactory>, TurboCrudDialogFactory> getFactories() {
@@ -31,7 +31,7 @@ public class DefaultDialogFactoryRegistryImpl implements TurboCrudDialogFactoryR
 
     @Override
     public TurboCrudDialogFactory getFactory(Class<? extends TurboCrudDialogFactory> type) {
-        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override

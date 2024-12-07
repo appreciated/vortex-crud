@@ -12,11 +12,11 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultListColumnCallbackRegistryImpl implements TurboCrudListColumnCallbackRegistry {
+public class DefaultListColumnCallbackRegistry implements TurboCrudListColumnCallbackRegistry {
 
     private final HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
 
-    public DefaultListColumnCallbackRegistryImpl(TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public DefaultListColumnCallbackRegistry(TurboCrudFileProviderRegistry fileProviderRegistry) {
         callbacks.put("default", new DefaultListColumnImplCallback(fileProviderRegistry));
     }
 

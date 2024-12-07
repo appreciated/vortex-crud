@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.routes;
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.route.DefaultRouteFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.route.DefaultRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -13,7 +13,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 
 /**
  * A dynamic route component that renders different views based on the route path.
- * It uses the {@link TurboCrudConfigService} to retrieve configuration details and the {@link DefaultRouteFactoryRegistryImpl}
+ * It uses the {@link TurboCrudConfigService} to retrieve configuration details and the {@link DefaultRouteFactoryRegistry}
  * to generate the appropriate view container for the specified route.
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */

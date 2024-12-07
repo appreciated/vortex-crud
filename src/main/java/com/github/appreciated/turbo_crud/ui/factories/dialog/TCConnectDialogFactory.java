@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TCConnectDialogFactoryImpl implements TurboCrudDialogFactory {
+public class TCConnectDialogFactory implements TurboCrudDialogFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
 
-    public TCConnectDialogFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+    public TCConnectDialogFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
     }
 

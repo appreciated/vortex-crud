@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.file_provider;
 
 import com.github.appreciated.turbo_crud.config.model.Field;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -14,12 +14,12 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultFileProviderRegistryImpl implements TurboCrudFileProviderRegistry {
+public class TCFileProviderRegistry implements TurboCrudFileProviderRegistry {
 
     private final Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> factories = new HashMap<>();
 
-    public DefaultFileProviderRegistryImpl() {
-        factories.put(TSFileProviderImpl.class, new TSFileProviderImpl());
+    public TCFileProviderRegistry() {
+        factories.put(TCFileProvider.class, new TCFileProvider());
     }
 
     public Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> getFactories() {
@@ -28,7 +28,7 @@ public class DefaultFileProviderRegistryImpl implements TurboCrudFileProviderReg
 
     @Override
     public TurboCrudFileProvider getFactory(Class<? extends TurboCrudFileProvider> type) {
-        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), type)));
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override

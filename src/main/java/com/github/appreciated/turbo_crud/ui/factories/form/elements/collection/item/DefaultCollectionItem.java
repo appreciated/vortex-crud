@@ -6,12 +6,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("card-styles.css")
-public class DefaultCollectionItemImpl extends HorizontalLayout {
+public class DefaultCollectionItem extends HorizontalLayout {
 
     private final VerticalLayout contentLayout;
     private final VerticalLayout actionsLayout;
 
-    public DefaultCollectionItemImpl() {
+    public DefaultCollectionItem() {
         setWidthFull();
         addClassNames("card", "collection");
 

@@ -3,7 +3,7 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.collection;
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -17,12 +17,12 @@ import java.util.Optional;
  */
 
 @Service
-public class TCCollectionFactoryRegistryImpl implements TurboCrudCollectionFactoryRegistry {
+public class TCCollectionFactoryRegistry implements TurboCrudCollectionFactoryRegistry {
 
     private final Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> factories = new HashMap<>();
 
-    public TCCollectionFactoryRegistryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
-        factories.put(TCCollectionListFactoryImpl.class, new TCCollectionListFactoryImpl(entityManagerFactoryRegistry, dialogFactoryRegistry));
+    public TCCollectionFactoryRegistry(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
+        factories.put(TCListCollectionFactory.class, new TCListCollectionFactory(entityManagerFactoryRegistry, dialogFactoryRegistry));
     }
 
     public Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> getFactories() {
@@ -31,7 +31,7 @@ public class TCCollectionFactoryRegistryImpl implements TurboCrudCollectionFacto
 
     @Override
     public TurboCrudCollectionFactory getFactory(Class<? extends TurboCrudCollectionFactory> factory) {
-        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
+        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 
     @Override

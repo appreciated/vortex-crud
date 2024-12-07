@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.entity.manager;
 
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -17,11 +17,11 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultEntityManagerFactoryRegistryImpl implements TurboCrudEntityManagerFactoryRegistry {
+public class DefaultEntityManagerFactoryRegistry implements TurboCrudEntityManagerFactoryRegistry {
 
     private final HashMap<String, TurboCrudEntityManager> factories = new HashMap<>();
 
-    public DefaultEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public DefaultEntityManagerFactoryRegistry(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         for (Map.Entry<String, Repository> entry : turboCrudConfigService.getConfiguration().getRepositories().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new TCJpaEntityManager(table, entityManager, transactionTemplate));
@@ -33,7 +33,7 @@ public class DefaultEntityManagerFactoryRegistryImpl implements TurboCrudEntityM
     }
 
     public TurboCrudEntityManager getFactory(String table) {
-        return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), table)));
+        return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override

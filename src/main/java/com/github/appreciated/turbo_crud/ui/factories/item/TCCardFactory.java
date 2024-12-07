@@ -10,7 +10,7 @@ import com.vaadin.flow.component.Component;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class TCItemCardFactoryImpl implements TurboCrudItemFactory {
+public class TCCardFactory implements TurboCrudItemFactory {
 
     @Override
     public Component renderItem(ItemFactory itemFactory, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry fileProvider) {

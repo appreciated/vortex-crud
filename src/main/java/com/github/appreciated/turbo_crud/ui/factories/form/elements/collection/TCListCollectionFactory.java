@@ -7,7 +7,7 @@ import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFa
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItemImpl;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.item.DefaultCollectionItem;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -22,13 +22,13 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class TCCollectionListFactoryImpl implements TurboCrudCollectionFactory {
+public class TCListCollectionFactory implements TurboCrudCollectionFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry dialogFactory;
 
-    public TCCollectionListFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                       TurboCrudDialogFactoryRegistry dialogFactory) {
+    public TCListCollectionFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                                   TurboCrudDialogFactoryRegistry dialogFactory) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.dialogFactory = dialogFactory;
     }
@@ -84,7 +84,7 @@ public class TCCollectionListFactoryImpl implements TurboCrudCollectionFactory {
 
     private void addManyToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudEntityManager entityManager) {
         for (GenericEntity record : records) {
-            DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
+            DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             List<String> children = formElement.getConfiguration().getData().getChildren();
             children.forEach(s -> item.addContent(new Text(record.getString(s))));
@@ -100,7 +100,7 @@ public class TCCollectionListFactoryImpl implements TurboCrudCollectionFactory {
 
     private void addOneToManyItems(String foreignKeyValue, FormElement formElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudEntityManager entityManager) {
         for (GenericEntity record : records) {
-            DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
+            DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             RouteConfiguration form = formElement.getConfiguration().getChild().getConfiguration();
             for (FormElement child : form.getChildren()) {

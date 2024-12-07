@@ -19,13 +19,13 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class TCFormDialogFactoryImpl implements TurboCrudDialogFactory {
+public class TCFormDialogFactory implements TurboCrudDialogFactory {
 
     private final TurboCrudConfigService configService;
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private TurboCrudEntityManager entityManager;
 
-    public TCFormDialogFactoryImpl(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
+    public TCFormDialogFactory(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         this.configService = configService;
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
     }

@@ -8,12 +8,12 @@ import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactor
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class TCSubmenuRouteFactoryImpl implements TurboCrudRouteFactory {
+public class TCSubmenuRouteFactory implements TurboCrudRouteFactory {
 
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final TurboCrudConfigService configService;
 
-    public TCSubmenuRouteFactoryImpl(TurboCrudRouteFactoryRegistry routeFactory, TurboCrudConfigService configService) {
+    public TCSubmenuRouteFactory(TurboCrudRouteFactoryRegistry routeFactory, TurboCrudConfigService configService) {
         this.routeFactory = routeFactory;
         this.configService = configService;
     }

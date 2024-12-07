@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class TCLoginFactoryImpl implements TurboCrudLoginFactory {
+public class TCLoginFactory implements TurboCrudLoginFactory {
 
     @Override
     public Component getLoginView(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
