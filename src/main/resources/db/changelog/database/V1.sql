@@ -3,7 +3,7 @@
 -- changeset test-project:1
 CREATE TABLE projects
 (
-    id  SERIAL PRIMARY KEY,
+    id  INTEGER PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(500),
     start_date  DATE,
@@ -15,7 +15,7 @@ CREATE TABLE projects
 -- changeset test-project:2
 CREATE TABLE tasks
 (
-    id  SERIAL PRIMARY KEY,
+    id  INTEGER PRIMARY KEY,
     title       VARCHAR(255) NOT NULL,
     description VARCHAR(1000),
     assigned_to INT,
@@ -28,7 +28,7 @@ CREATE TABLE tasks
 -- changeset test-project:3
 CREATE TABLE task_has_task
 (
-    id      SERIAL PRIMARY KEY,
+    id      INTEGER PRIMARY KEY,
     task_id INT NOT NULL,
     related_task_id INT NOT NULL,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CREATE TABLE task_has_task
 -- changeset test-project:4
 CREATE TABLE task_comments
 (
-    id   SERIAL PRIMARY KEY,
+    id   INTEGER PRIMARY KEY,
     comment_text VARCHAR(1000),
     user_id      INT,
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -52,7 +52,7 @@ CREATE TABLE task_comments
 -- changeset test-project:5
 CREATE TABLE images
 (
-    id  SERIAL PRIMARY KEY,
+    id  INTEGER PRIMARY KEY,
     title VARCHAR,
     url VARCHAR
 );

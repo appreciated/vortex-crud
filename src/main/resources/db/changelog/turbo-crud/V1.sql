@@ -3,7 +3,7 @@
 -- changeset turbo-crud:1
 CREATE TABLE users
 (
-    id            SERIAL PRIMARY KEY,
+    id            INTEGER PRIMARY KEY,
     username      VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255),
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -12,7 +12,7 @@ CREATE TABLE users
 -- changeset turbo-crud:2
 CREATE TABLE roles
 (
-    id   SERIAL PRIMARY KEY,
+    id   INTEGER PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE user_roles
 -- changeset turbo-crud:4
 CREATE TABLE audit_log
 (
-    id                SERIAL PRIMARY KEY,
+    id                INTEGER PRIMARY KEY,
     user_id           INT         NOT NULL REFERENCES users (id) ON DELETE CASCADE, -- The user who performed the action
     action            VARCHAR(50) NOT NULL,                                         -- Type of action, e.g., "create", "update", "delete", "login", "logout"
     target_collection VARCHAR(255),                                                 -- The collection the action was applied to
