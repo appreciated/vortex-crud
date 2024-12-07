@@ -24,12 +24,12 @@ public class DefaultEntityManagerFactoryRegistryImpl implements TurboCrudEntityM
     public DefaultEntityManagerFactoryRegistryImpl(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         for (Map.Entry<String, Repository> entry : turboCrudConfigService.getConfiguration().getRepositories().entrySet()) {
             String table = entry.getKey();
-            factories.put(table, new DefaultJpaEntityManager(table, entityManager, transactionTemplate));
+            factories.put(table, new TCJpaEntityManager(table, entityManager, transactionTemplate));
         }
-        factories.put("users", new DefaultJpaEntityManager("users", entityManager, transactionTemplate));
-        factories.put("roles", new DefaultJpaEntityManager("roles", entityManager, transactionTemplate));
-        factories.put("user_roles", new DefaultJpaEntityManager("user_roles", entityManager, transactionTemplate));
-        factories.put("audit_log", new DefaultJpaEntityManager("audit_log", entityManager, transactionTemplate));
+        factories.put("users", new TCJpaEntityManager("users", entityManager, transactionTemplate));
+        factories.put("roles", new TCJpaEntityManager("roles", entityManager, transactionTemplate));
+        factories.put("user_roles", new TCJpaEntityManager("user_roles", entityManager, transactionTemplate));
+        factories.put("audit_log", new TCJpaEntityManager("audit_log", entityManager, transactionTemplate));
     }
 
     public TurboCrudEntityManager getFactory(String table) {

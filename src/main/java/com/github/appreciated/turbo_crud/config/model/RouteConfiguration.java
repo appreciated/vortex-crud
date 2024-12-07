@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
@@ -17,7 +18,7 @@ public class RouteConfiguration {
 
     private String imageField;
 
-    private String imageFactory;
+    private Class<? extends TurboCrudFileProvider> imageFactory;
 
     private boolean inlineEdit;
 
@@ -69,11 +70,11 @@ public class RouteConfiguration {
         this.imageField = imageField;
     }
 
-    public String getImageFactory() {
+    public Class<? extends TurboCrudFileProvider> getImageFactory() {
         return imageFactory;
     }
 
-    public void setImageFactory(String imageFactory) {
+    public void setImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
         this.imageFactory = imageFactory;
     }
 
@@ -133,7 +134,7 @@ public class RouteConfiguration {
             return this;
         }
 
-        public Builder withImageFactory(String imageFactory) {
+        public Builder withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }

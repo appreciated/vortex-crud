@@ -9,17 +9,17 @@ public class MultiFormConfiguration extends RouteConfiguration {
 
     private String titleField;
 
-    private List<FormConfiguration> forms;
+    private List<RouteConfiguration> forms;
 
     public MultiFormConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
-    public List<FormConfiguration> getForms() {
+    public List<RouteConfiguration> getForms() {
         return forms;
     }
 
-    public void setForms(List<FormConfiguration> children) {
+    public void setForms(List<RouteConfiguration> children) {
         this.forms = children;
     }
 
@@ -44,12 +44,12 @@ public class MultiFormConfiguration extends RouteConfiguration {
             return this;
         }
 
-        public Builder withForms(List<FormConfiguration> forms) {
+        public Builder withForms(List<RouteConfiguration> forms) {
             product.forms = forms;
             return this;
         }
 
-        public Builder addForm(FormConfiguration item) {
+        public Builder addForm(RouteConfiguration item) {
             product.forms.add(item);
             return this;
         }

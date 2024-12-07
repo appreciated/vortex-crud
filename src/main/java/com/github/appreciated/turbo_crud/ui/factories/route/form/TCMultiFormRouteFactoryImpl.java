@@ -35,7 +35,7 @@ public class TCMultiFormRouteFactoryImpl implements TurboCrudRouteFactory {
 
         MultiFormConfiguration formConfiguration = (MultiFormConfiguration) route.getConfiguration();
         Div div = new Div();
-        for (FormConfiguration child : formConfiguration.getForms()) {
+        for (RouteConfiguration child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
         }

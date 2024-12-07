@@ -27,10 +27,13 @@ public class DefaultFieldFactoryRegistryImpl implements TurboCrudFieldFactoryReg
         factories.put(TCTextFieldFactory.class, new TCTextFieldFactory());
         factories.put(TCTextAreaFieldFactory.class, new TCTextAreaFieldFactory());
         factories.put(TCDateFieldFactory.class, new TCDateFieldFactory());
+        factories.put(TCDateTimePickerFactory.class, new TCDateTimePickerFactory());
         factories.put(TCSelectFieldFactory.class, new TCSelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
         factories.put(TCNumberFieldFactory.class, new TCNumberFieldFactory());
         factories.put(TCReferenceFieldFactory.class, new TCReferenceFieldFactory(entityManagerFactoryRegistry));
         factories.put(TCImageFieldFactory.class, new TCImageFieldFactory(fileProviderRegistry));
+        factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory());
+        factories.put(TCIdFieldFactory.class, new TCIdFieldFactory());
     }
 
     public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> getFactories() {

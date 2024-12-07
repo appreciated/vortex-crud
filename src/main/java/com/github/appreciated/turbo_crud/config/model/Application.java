@@ -20,8 +20,6 @@ public class Application {
 
     private Map<String, Repository> repositories;
 
-    private Map<String, FormRoute> forms;
-
     private Map<String, Route> routes;
 
     public String getName() {
@@ -137,11 +135,6 @@ public class Application {
 
         public Application build() {
             return product;
-        }
-
-        public Builder withForms(Map<String, FormRoute> forms) {
-            product.forms = forms;
-            return this;
         }
 
         public Builder withRoutes(Map<String, Route> routes) {

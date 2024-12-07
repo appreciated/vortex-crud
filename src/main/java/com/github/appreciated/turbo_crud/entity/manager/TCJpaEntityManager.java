@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class DefaultJpaEntityManager implements TurboCrudEntityManager {
+public class TCJpaEntityManager implements TurboCrudEntityManager {
 
     private final EntityManager entityManager;
     private final TransactionTemplate transactionTemplate;
     private final String table;
 
-    public DefaultJpaEntityManager(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public TCJpaEntityManager(String table, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         this.entityManager = entityManager;
         this.transactionTemplate = transactionTemplate;
         if (table == null) {

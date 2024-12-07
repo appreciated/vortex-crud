@@ -1,4 +1,4 @@
-package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component;
+package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
@@ -8,6 +8,7 @@ import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 public class TCDateTimePickerFactory implements TurboCrudFieldFactory {
@@ -48,5 +49,10 @@ public class TCDateTimePickerFactory implements TurboCrudFieldFactory {
         datePickerI18n.setCancel(datePicker.getTranslation("button.cancel.title"));
         datePicker.setDatePickerI18n(datePickerI18n);
         return datePicker;
+    }
+
+    @Override
+    public Collection<String> getValidDatabaseTypesForExpectedType() {
+        return List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME");
     }
 }

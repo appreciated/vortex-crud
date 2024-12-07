@@ -1,24 +1,25 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
 public class Repository {
 
-    private String factory;
+    private Class<? extends TurboCrudEntityManager> factory;
 
     private Map<String, Field> fields;
 
-    public Repository(String factory) {
+    public Repository(Class<? extends TurboCrudEntityManager> factory) {
         this.factory = factory;
     }
 
-    public String getFactory() {
+    public Class<? extends TurboCrudEntityManager> getFactory() {
         return factory;
     }
 
-    public void setFactory(String factory) {
+    public void setFactory(Class<? extends TurboCrudEntityManager> factory) {
         this.factory = factory;
     }
 
@@ -38,7 +39,7 @@ public class Repository {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudEntityManager> factory) {
             return new Builder(new Repository(factory));
         }
 

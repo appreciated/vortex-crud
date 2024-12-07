@@ -7,6 +7,7 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 public class TCDateFieldFactory implements TurboCrudFieldFactory {
@@ -47,5 +48,10 @@ public class TCDateFieldFactory implements TurboCrudFieldFactory {
         genericI18n.setCancel(datePicker.getTranslation("button.cancel.title"));
         datePicker.setI18n(genericI18n);
         return datePicker;
+    }
+
+    @Override
+    public Collection<String> getValidDatabaseTypesForExpectedType() {
+        return List.of("TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "DATETIME", "DATE");
     }
 }

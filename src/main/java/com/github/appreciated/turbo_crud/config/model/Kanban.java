@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import org.jsoup.nodes.FormElement;
@@ -18,7 +19,7 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
 
     private String imageField;
 
-    private String imageFactory;
+    private Class<? extends TurboCrudFileProvider> imageFactory;
 
     private List<FormElement> children;
 
@@ -51,11 +52,11 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
     }
 
     @Override
-    public String getImageFactory() {
+    public Class<? extends TurboCrudFileProvider> getImageFactory() {
         return imageFactory;
     }
 
-    public void setImageFactory(String imageFactory) {
+    public void setImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
         this.imageFactory = imageFactory;
     }
 
@@ -79,11 +80,11 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
             this.product = product;
         }
 
-        public static Builder of(String factory) {
+        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
             return new Builder(new Kanban(factory));
         }
 
-        public Builder withFactory(String factory) {
+        public Builder withFactory(Class<? extends TurboCrudItemFactory> factory) {
             product.factory = factory;
             return this;
         }
@@ -108,7 +109,7 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
             return this;
         }
 
-        public Builder withImageFactory(String imageFactory) {
+        public Builder withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }

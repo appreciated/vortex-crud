@@ -102,7 +102,7 @@ public class TCCollectionListFactoryImpl implements TurboCrudCollectionFactory {
         for (GenericEntity record : records) {
             DefaultCollectionItemImpl item = new DefaultCollectionItemImpl();
             item.getContent().addClickListener(event -> openDialog(EntityUtil.getId(record), foreignKeyValue, formElement, entityManagerFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
-            FormConfiguration form = (FormConfiguration) formElement.getConfiguration().getChild().getConfiguration();
+            RouteConfiguration form = formElement.getConfiguration().getChild().getConfiguration();
             for (FormElement child : form.getChildren()) {
                 Object o = record.get(child.getField());
                 item.addContent(new Text(o.toString()));

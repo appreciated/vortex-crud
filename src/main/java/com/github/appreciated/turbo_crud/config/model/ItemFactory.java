@@ -1,8 +1,11 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
+import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
+
 public interface ItemFactory {
 
-    String getFactory();
+    Class<? extends TurboCrudItemFactory> getFactory();
 
     String getTitleField();
 
@@ -10,5 +13,5 @@ public interface ItemFactory {
 
     String getImageField();
 
-    String getImageFactory();
+    Class<? extends TurboCrudFileProvider> getImageFactory();
 }

@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.config.model.FormConfiguration;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.config.model.Route;
+import com.github.appreciated.turbo_crud.config.model.RouteConfiguration;
 import com.github.appreciated.turbo_crud.entity.EntityUtil;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
@@ -59,12 +59,12 @@ public class TCFormRouteFactoryImpl implements TurboCrudRouteFactory {
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
-        FormConfiguration form = (FormConfiguration) route.getConfiguration();
+        RouteConfiguration form = route.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, FormConfiguration formRouteConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, RouteConfiguration formRouteConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();

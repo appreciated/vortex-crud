@@ -4,12 +4,12 @@ import com.github.appreciated.turbo_crud.config.model.Application;
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.Repository;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactoryRegistry;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.usertype.UserType;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
@@ -32,11 +32,11 @@ import java.util.*;
 public class TurboCrudDatabaseSchemaValidator {
 
     private final EntityManager entityManager;
-    private final HashMap<Object, Object> typeMappings;
+    private final TurboCrudFieldFactoryRegistry fieldRegistry;
 
-    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudTypeMappingConfiguration typeMappingConfiguration) {
+    public TurboCrudDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
         this.entityManager = entityManager;
-        typeMappings = typeMappingConfiguration.getTypeMappings();
+        this.fieldRegistry = fieldRegistry;
         Map<String, Repository> tablesConfig = configService.getConfiguration().getRepositories();
         for (Map.Entry<String, Repository> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFields());
@@ -87,7 +87,7 @@ public class TurboCrudDatabaseSchemaValidator {
                     throw new PersistenceException("The expected column '" + expectedColumnName + "' was not found in table '" + tableName + "'.");
                 }
 
-                Collection<String> validColumnTypes = getValidDatabaseTypesForExpectedType(fieldConfig.getFactory().toLowerCase());
+                Collection<String> validColumnTypes = fieldRegistry.getFactory(fieldConfig.getFactory()).getValidDatabaseTypesForExpectedType();
                 String type = actualColumnType.contains("(") ? actualColumnType.substring(0, actualColumnType.indexOf("(")).toUpperCase() : actualColumnType.toUpperCase();
                 if (!validColumnTypes.contains(type)) {
                     throw new PersistenceException("The type of the column '" + expectedColumnName + "' in table '" + tableName + "' does not match. Expected one of: " + validColumnTypes + ", Found: " + actualColumnType);
@@ -96,11 +96,6 @@ public class TurboCrudDatabaseSchemaValidator {
         } catch (GenericJDBCException e) {
             LoggerFactory.getLogger(TurboCrudDatabaseSchemaValidator.class).error("JDBC Error for table " + tableName , e);
         }
-    }
-
-    private Collection<String> getValidDatabaseTypesForExpectedType(String expectedType) {
-
-        return (Collection<String>) typeMappings.getOrDefault(expectedType.toLowerCase(), Collections.emptyList());
     }
 
     private void checkPrimaryKey(String tableName) {

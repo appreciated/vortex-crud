@@ -47,9 +47,9 @@ public class TurboCrudPathToRouteResolver {
         // Check if the current route exists
         Route currentRoute = currentRoutes.get(section);
 
-        if (currentRoute == null && currentRoutes.containsKey("")) {
+        if (currentRoute == null && currentRoutes.containsKey(null) ) {
             pathRoutes.put(sectionIndex, currentRoute);
-            currentRoute = currentRoutes.get("");
+            currentRoute = currentRoutes.get(null);
         } else if (routeFactoryRegistry.isContainerRoute(currentRoute)) {
             pathRoutes.put(sectionIndex, currentRoute);
         }
@@ -120,6 +120,13 @@ public class TurboCrudPathToRouteResolver {
 
             TurboCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRoute.getFactory());
             TurboCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRoute.getFactory());
+
+            if (currentFactory == null){
+                throw new IllegalStateException("The route does not have a factory set");
+            }
+            if (nextFactory == null){
+                throw new IllegalStateException("The route does not have a factory set");
+            }
 
             boolean currentIsContainer = currentFactory.isContainerRoute();
             boolean nextIsContainer = nextFactory.isContainerRoute();

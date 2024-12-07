@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.config.model.FormElement;
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.ui.components.ImageDisplayComponent;
@@ -24,7 +25,7 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
             }
             grid.addComponentColumn(genericEntity -> {
                         String string = genericEntity.getString(fieldName);
-                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(repositoryField.getConfiguration().getFactory()));
+                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory((Class<? extends TurboCrudFileProvider>) repositoryField.getConfiguration().getFactory()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);

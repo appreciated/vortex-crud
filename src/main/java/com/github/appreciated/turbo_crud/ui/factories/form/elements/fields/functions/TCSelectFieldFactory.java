@@ -7,9 +7,7 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.select.Select;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TCSelectFieldFactory implements TurboCrudFieldFactory {
 
@@ -40,5 +38,10 @@ public class TCSelectFieldFactory implements TurboCrudFieldFactory {
         select.setItemLabelGenerator(item -> select.getTranslation(selectConfig.get(item)));
 
         return select;
+    }
+
+    @Override
+    public Collection<String> getValidDatabaseTypesForExpectedType() {
+       return List.of("VARCHAR", "CHARACTER VARYING");
     }
 }

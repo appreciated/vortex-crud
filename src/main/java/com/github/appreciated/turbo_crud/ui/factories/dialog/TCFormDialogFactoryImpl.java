@@ -63,7 +63,7 @@ public class TCFormDialogFactoryImpl implements TurboCrudDialogFactory {
 
         Repository tables = configService.getConfiguration().getRepositories().get(repository);
 
-        formCreator.bindAndAddToLayout(repository, formRoute, (FormConfiguration) formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(repository, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

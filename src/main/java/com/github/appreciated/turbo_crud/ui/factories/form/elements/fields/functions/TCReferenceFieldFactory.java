@@ -6,6 +6,9 @@ import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.Turbo
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
 
+import java.util.Collection;
+import java.util.List;
+
 public class TCReferenceFieldFactory implements TurboCrudFieldFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry;
@@ -17,5 +20,10 @@ public class TCReferenceFieldFactory implements TurboCrudFieldFactory {
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {
         return new EntityComboBoxWrapper(managerFactoryRegistry, repositoryField);
+    }
+
+    @Override
+    public Collection<String> getValidDatabaseTypesForExpectedType() {
+       return List.of("UUID", "INTEGER", "INT", "CHAR", "VARCHAR", "SERIAL");
     }
 }

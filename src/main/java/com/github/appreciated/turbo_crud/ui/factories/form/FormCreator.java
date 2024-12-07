@@ -30,7 +30,7 @@ public class FormCreator {
 
     public void bindAndAddToLayout(String table,
                                    Route route,
-                                   FormConfiguration formConfig,
+                                   RouteConfiguration formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
                                    Repository tables,

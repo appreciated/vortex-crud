@@ -1,5 +1,6 @@
 package com.github.appreciated.turbo_crud.config.model;
 
+import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
@@ -13,7 +14,7 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
 
     private String imageField;
 
-    private String imageFactory;
+    private Class<? extends TurboCrudFileProvider> imageFactory;
 
     private String filterField;
 
@@ -46,11 +47,11 @@ public class GridOrListConfiguration extends RouteConfiguration implements ItemF
     }
 
     @Override
-    public String getImageFactory() {
+    public Class<? extends TurboCrudFileProvider> getImageFactory() {
         return imageFactory;
     }
 
-    public void setImageFactory(String imageFactory) {
+    public void setImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
         this.imageFactory = imageFactory;
     }
 

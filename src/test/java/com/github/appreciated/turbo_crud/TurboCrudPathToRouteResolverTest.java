@@ -2,7 +2,9 @@ package com.github.appreciated.turbo_crud;
 
 import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
-import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.service.TestContainerRouteFactory;
+import com.github.appreciated.turbo_crud.service.TestNonContainerRouteFactory;
+import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,25 +25,25 @@ class TurboCrudPathToRouteResolverTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        TurboCrudRouteFactory containerFactory = mock(TurboCrudRouteFactory.class);
-        when(containerFactory.isContainerRoute()).thenReturn(true);  // Wrapbare Routen
-        when(registry.getFactory("container")).thenReturn(containerFactory);
+        TestContainerRouteFactory containerFactory = mock(TestContainerRouteFactory.class);
+        when(containerFactory.isContainerRoute()).thenReturn(true);  // Wrappable Routen
+        when(registry.getFactory(TestContainerRouteFactory.class)).thenReturn(containerFactory);
 
-        TurboCrudRouteFactory nonContainerFactory = mock(TurboCrudRouteFactory.class);
-        when(nonContainerFactory.isContainerRoute()).thenReturn(false);  // Nicht-wrapbare Routen
-        when(registry.getFactory("non-container")).thenReturn(nonContainerFactory);
+        TestNonContainerRouteFactory nonContainerFactory = mock(TestNonContainerRouteFactory.class);
+        when(nonContainerFactory.isContainerRoute()).thenReturn(false);  // Non-wrappable Routen
+        when(registry.getFactory(TestNonContainerRouteFactory.class)).thenReturn(nonContainerFactory);
     }
 
     @Test
-    void testWrapableRouteReturnsFirstContainer() {
-        // Testpfad mit wrapbaren Routen
+    void testWrappableRouteReturnsFirstContainer() {
+        // Testpfad mit wrappable Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route("container");
+        Route routeWithContainer = new Route(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route childRoute = new Route("container");
+        Route childRoute = new Route(TestContainerRouteFactory.class);
         childRoute.setTitle("childRouteWithContainer");
         routeWithContainer.setChild(childRoute);
 
@@ -57,14 +59,14 @@ class TurboCrudPathToRouteResolverTest {
 
     @Test
     void testNonWrapableRouteReturnsLast() {
-        // Testpfad mit zwei aufeinanderfolgenden nicht-wrapbaren Routen
+        // Testpfad mit zwei aufeinanderfolgenden non-wrappable Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithoutContainer1 = new Route("non-container");
+        Route routeWithoutContainer1 = new Route(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
-        Route routeWithoutContainer2 = new Route("non-container");
+        Route routeWithoutContainer2 = new Route(TestNonContainerRouteFactory.class);
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
@@ -74,24 +76,24 @@ class TurboCrudPathToRouteResolverTest {
         // Abrufen der aktuellen Route
         Route currentRoute = turboCrudPath.getCurrentRoute();
 
-        // Prüfung, ob die letzte nicht-wrapbare Route zurückgegeben wird
+        // Prüfung, ob die letzte non-wrappable Route zurückgegeben wird
         assertEquals("routeWithoutContainer2", currentRoute.getTitle(), "Die letzte nicht-wrapbare Route sollte zurückgegeben werden.");
     }
 
     @Test
     void testMixedRoutes() {
-        // Testpfad mit gemischten wrapbaren und nicht-wrapbaren Routen
+        // Testpfad mit gemischten wrappable und non-wrappable Routen
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route("container");
+        Route routeWithContainer = new Route(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route firstChild = new Route("container");
+        Route firstChild = new Route(TestContainerRouteFactory.class);
         firstChild.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(firstChild);
 
-        Route secondChild = new Route("non-container");
+        Route secondChild = new Route(TestNonContainerRouteFactory.class);
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
@@ -100,16 +102,16 @@ class TurboCrudPathToRouteResolverTest {
         // Abrufen der aktuellen Route
         Route currentRoute = turboCrudPath.getCurrentRoute();
 
-        // Prüfung, ob die erste wrapbare Route zurückgegeben wird
-        assertEquals("routeWithContainer", currentRoute.getTitle(), "Die erste wrapbare Route sollte zurückgegeben werden.");
+        // Prüfung, ob die erste wrappable Route zurückgegeben wird
+        assertEquals("routeWithContainer", currentRoute.getTitle(), "Die erste wrappable Route sollte zurückgegeben werden.");
     }
 
     @Test
-    void testNonWrapableRouteReturnsItself() {
-        // Testpfad mit einer nicht-wrapbaren Route
+    void testNonWrappableRouteReturnsItself() {
+        // Testpfad mit einer non-wrappable Route
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithoutContainer1 = new Route("non-container");
+        Route routeWithoutContainer1 = new Route(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
@@ -120,7 +122,7 @@ class TurboCrudPathToRouteResolverTest {
         Route currentRoute = turboCrudPath.getCurrentRoute();
 
         // Prüfung, ob die Route selbst zurückgegeben wird
-        assertEquals("routeWithoutContainer1", currentRoute.getTitle(), "Die nicht-wrapbare Route sollte zurückgegeben werden.");
+        assertEquals("routeWithoutContainer1", currentRoute.getTitle(), "Die nicht-wrappable Route sollte zurückgegeben werden.");
     }
 
     @Test
@@ -128,15 +130,15 @@ class TurboCrudPathToRouteResolverTest {
         // Testpfad mit gültigen Abschnitten
         Map<String, Route> routesConfig = new HashMap<>();
 
-        Route routeWithContainer = new Route("container");
+        Route routeWithContainer = new Route(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route routeWithoutContainer1 = new Route("non-container");
+        Route routeWithoutContainer1 = new Route(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(routeWithoutContainer1);
 
-        Route routeWithoutContainer2 = new Route("non-container");
+        Route routeWithoutContainer2 = new Route(TestNonContainerRouteFactory.class);
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 

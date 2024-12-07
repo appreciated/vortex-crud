@@ -19,7 +19,7 @@ public class DefaultFileProviderRegistryImpl implements TurboCrudFileProviderReg
     private final Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> factories = new HashMap<>();
 
     public DefaultFileProviderRegistryImpl() {
-        factories.put(DefaultFileProviderImpl.class, new DefaultFileProviderImpl());
+        factories.put(TSFileProviderImpl.class, new TSFileProviderImpl());
     }
 
     public Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> getFactories() {

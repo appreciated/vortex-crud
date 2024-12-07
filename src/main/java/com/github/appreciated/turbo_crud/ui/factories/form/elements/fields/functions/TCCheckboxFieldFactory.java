@@ -3,20 +3,20 @@ package com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.func
 import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.textfield.TextArea;
+import com.vaadin.flow.component.checkbox.Checkbox;
 
 import java.util.Collection;
 import java.util.List;
 
-public class TCTextAreaFieldFactory implements TurboCrudFieldFactory {
+public class TCCheckboxFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {
-        return new TextArea();
+        return new Checkbox();
     }
 
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
-        return List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "CLOB");
+        return List.of("BOOLEAN", "BIT");
     }
 }

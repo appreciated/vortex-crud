@@ -147,11 +147,6 @@ public class Route {
             return this;
         }
 
-        public Builder withFactory(Class<? extends TurboCrudRouteFactory> factory) {
-            product.factory = factory;
-            return this;
-        }
-
         public Builder withHideInMenu(boolean hideInMenu) {
             product.hideInMenu = hideInMenu;
             return this;
