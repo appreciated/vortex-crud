@@ -37,7 +37,7 @@ public class TurboCrudJpaDatabaseSchemaValidator {
     public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
         this.entityManager = entityManager;
         this.fieldRegistry = fieldRegistry;
-        Map<String, DataStore> tablesConfig = configService.getConfiguration().getRepositories();
+        Map<String, DataStore> tablesConfig = configService.getConfiguration().getDataStores();
         for (Map.Entry<String, DataStore> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFields());
         }

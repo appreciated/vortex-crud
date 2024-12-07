@@ -59,8 +59,8 @@ public class CollectionData {
             this.product = product;
         }
 
-        public static Builder of(String repository) {
-            return new Builder(new CollectionData(repository));
+        public static Builder of(String dataStore) {
+            return new Builder(new CollectionData(dataStore));
         }
 
         public Builder withOneToMany(OneToMany oneToMany) {

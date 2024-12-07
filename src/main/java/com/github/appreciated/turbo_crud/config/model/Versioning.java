@@ -9,7 +9,7 @@ public class Versioning {
 
     private boolean enabled;
 
-    private List<String> repositories;
+    private List<String> dataStores;
 
     public boolean isEnabled() {
         return enabled;
@@ -19,12 +19,12 @@ public class Versioning {
         this.enabled = enabled;
     }
 
-    public List<String> getRepositories() {
-        return repositories;
+    public List<String> getDataStores() {
+        return dataStores;
     }
 
-    public void setRepositories(List<String> repositories) {
-        this.repositories = repositories;
+    public void setDataStores(List<String> dataStores) {
+        this.dataStores = dataStores;
     }
 
     public static class Builder {
@@ -44,17 +44,17 @@ public class Versioning {
             return this;
         }
 
-        public Builder withRepositories(List<String> repositories) {
-            product.repositories = repositories;
+        public Builder withDataStores(List<String> dataStores) {
+            product.dataStores = dataStores;
             return this;
         }
 
-        public Builder withRepositories(String... repositories) {
-            return withRepositories(List.of(repositories));
+        public Builder withDataStores(String... dataStores) {
+            return withDataStores(List.of(dataStores));
         }
 
-        public Builder addRepositories(String item) {
-            product.repositories.add(item);
+        public Builder addDataStores(String item) {
+            product.dataStores.add(item);
             return this;
         }
 

@@ -192,7 +192,7 @@ public class Field {
             return this;
         }
 
-        public Builder withRepository(String dataStore) {
+        public Builder withDataStore(String dataStore) {
             product.dataStore = dataStore;
             return this;
         }
@@ -260,8 +260,8 @@ public class Field {
             return new Builder(new Field(factory, primary, required, validation));
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String repository, List<String> children) {
-            return new Builder(new Field(factory, field, filterField, repository, children));
+        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
+            return new Builder(new Field(factory, field, filterField, dataStore, children));
         }
     }
 }

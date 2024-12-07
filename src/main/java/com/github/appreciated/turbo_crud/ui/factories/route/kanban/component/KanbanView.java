@@ -36,7 +36,7 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudDataStore dataStore;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanView(String repository,
+    public KanbanView(String dataStoreIdentifier,
                       Route route,
                       TurboCrudDataStore dataStore,
                       TurboCrudRouteFactoryRegistry routeFactory,
@@ -49,8 +49,8 @@ public class KanbanView extends VerticalLayout {
                       DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
         Selects selects = configService.getSelects();
-        DataStore config = configService.getRepositories().get(repository);
-        Field repositoryField = config.getFields().get(kanbanConfig.getColumnField());
+        DataStore config = configService.getDataStores().get(dataStoreIdentifier);
+        Field dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
@@ -69,7 +69,7 @@ public class KanbanView extends VerticalLayout {
                         null,
                         route.getChild(),
                         null,
-                        repository,
+                        dataStoreIdentifier,
                         routeFactory,
                         () -> {
                             //TODO handle if the column was edited, requiring the element to move
@@ -83,7 +83,7 @@ public class KanbanView extends VerticalLayout {
             return cardWrapper;
         });
 
-        String selectName = repositoryField.getValues();
+        String selectName = dataStoreField.getValues();
         Map<String, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
@@ -104,7 +104,7 @@ public class KanbanView extends VerticalLayout {
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, route, repository, formCreator, routeFactory),
+                event -> onAdd(dialogFactoryRegistry, route, dataStoreIdentifier, formCreator, routeFactory),
                 null,
                 null,
                 routeHeader);
@@ -161,7 +161,7 @@ public class KanbanView extends VerticalLayout {
         return wrapper;
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String repository, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         GenericEntity entity = new GenericEntity();
         Dialog dialog = dialogFactoryRegistry.getFactory((Class<? extends TurboCrudDialogFactory>) route.getChild().getFactory()).create(
                 null,
@@ -169,10 +169,10 @@ public class KanbanView extends VerticalLayout {
                 null,
                 route.getChild(),
                 null,
-                repository,
+                dataStore,
                 routeFactory,
                 () -> {
-                    GenericEntity recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
+                    GenericEntity recordById = this.dataStore.getRecordById(DataStoreUtil.getId(entity));
                     itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry);
                 },
                 formCreator);

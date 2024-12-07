@@ -129,7 +129,7 @@ public class Route {
             return new Builder(new Route(factory));
         }
 
-        public Builder withRepository(String dataStore) {
+        public Builder withDataStore(String dataStore) {
             product.dataStore = dataStore;
             return this;
         }

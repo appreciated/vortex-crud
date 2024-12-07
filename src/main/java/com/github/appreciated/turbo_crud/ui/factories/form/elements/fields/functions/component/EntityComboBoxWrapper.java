@@ -19,17 +19,17 @@ public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<
     private final TurboCrudDataStore dataStore;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, Field repositoryField) {
-        this.dataStore = dataStoreFactoryRegistry.getFactory(repositoryField.getDataStore());
+    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, Field dataStoreField) {
+        this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> dataStore.getRecordsFromTableWhereColumnLike(repositoryField.getFilterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(repositoryField.getFilterField(), filterValue)
+                (filterValue, i, i1) -> dataStore.getRecordsFromTableWhereColumnLike(dataStoreField.getFilterField(), filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(dataStoreField.getFilterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> repositoryField.getChildren().stream()
+        comboBox.setItemLabelGenerator(item -> dataStoreField.getChildren().stream()
                 .map(item::getString)
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

@@ -33,7 +33,7 @@ public class TurboCrudConfigService {
 
     public TurboCrudConfigService() {
         Route taskForm = Route.Builder.of(FormRouteFactory.class)
-                .withRepository("tasks")
+                .withDataStore("tasks")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
@@ -78,7 +78,7 @@ public class TurboCrudConfigService {
                         .build())
                 .build();
         Route projectForm = Route.Builder.of(FormRouteFactory.class)
-                .withRepository("projects")
+                .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("name")
@@ -91,7 +91,7 @@ public class TurboCrudConfigService {
                         .build())
                 .build();
         Route imageForm = Route.Builder.of(FormRouteFactory.class)
-                .withRepository("images")
+                .withDataStore("images")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("title")
@@ -102,7 +102,7 @@ public class TurboCrudConfigService {
                         .build())
                 .build();
 
-        Map<String, DataStore> repositories = Map.of(
+        Map<String, DataStore> dataStores = Map.of(
                 "projects", DataStore.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
@@ -151,7 +151,7 @@ public class TurboCrudConfigService {
         Map<String, Route> routes = Map.of(
                 "projects-cards", Route.Builder.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
-                        .withRepository("projects")
+                        .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -162,7 +162,7 @@ public class TurboCrudConfigService {
                         .withChild(projectForm)
                         .build(),
                 "projects-list", Route.Builder.of(ListRouteFactory.class)
-                        .withRepository("projects")
+                        .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -180,12 +180,12 @@ public class TurboCrudConfigService {
                         .build(),
                 "tasks", Route.Builder.of(SubmenuRouteFactory.class)
                         .withIconFactory(TASKS::create)
-                        .withRepository("tasks")
+                        .withDataStore("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
                                 Route.Builder.of(KanbanDetailFactory.class)
                                         .withIconFactory(TASKS::create)
-                                        .withRepository("tasks")
+                                        .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
                                         .withConfiguration(Kanban.Builder.of(CardFactory.class)
                                                 .withTitleField("title")
@@ -197,7 +197,7 @@ public class TurboCrudConfigService {
                                 "done",
                                 Route.Builder.of(MasterDetailRouteFactory.class)
                                         .withIconFactory(CHECK_CIRCLE::create)
-                                        .withRepository("tasks")
+                                        .withDataStore("tasks")
                                         .withTitle("route.done-tasks.title")
                                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
                                                 .withTitleField("title")
@@ -207,7 +207,7 @@ public class TurboCrudConfigService {
                                         .build()))
                         .build(),
                 "images-grid", Route.Builder.of(GridRouteFactory.class)
-                        .withRepository("images")
+                        .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -219,7 +219,7 @@ public class TurboCrudConfigService {
                         .withChild(imageForm)
                         .build(),
                 "images-list", Route.Builder.of(ListRouteFactory.class)
-                        .withRepository("images")
+                        .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -247,7 +247,7 @@ public class TurboCrudConfigService {
                                 .build()))
                         .build())
                 .withRoutes(routes)
-                .withVersioning(Versioning.Builder.of().withRepositories("projects", "tasks", "task_comments").build())
+                .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
                 .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status",
@@ -258,7 +258,7 @@ public class TurboCrudConfigService {
                                         "closed", "selects.task-status.closed"
                                 )
                         )).build())
-                .withRepositories(repositories)
+                .withDataStores(dataStores)
                 .build();
     }
 

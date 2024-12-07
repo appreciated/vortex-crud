@@ -11,7 +11,7 @@ import java.util.List;
 public class NumberFieldFactory implements TurboCrudFieldFactory {
 
     @Override
-    public Component createComponent(String table, String field, Field repositoryField) {
+    public Component createComponent(String table, String field, Field dataStoreField) {
         return new NumberField();
     }
 

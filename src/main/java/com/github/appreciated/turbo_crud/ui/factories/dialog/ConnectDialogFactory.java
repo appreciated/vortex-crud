@@ -35,12 +35,12 @@ public class ConnectDialogFactory implements TurboCrudDialogFactory {
                          @Nullable String foreignKeyField,
                          Route formRoute,
                          CollectionData collectionData,
-                         String repository,
+                         String dataStoreIdentifier,
                          TurboCrudRouteFactoryRegistry routeFactory,
                          OnStoreListener listener,
                          FormCreator formCreator) {
 
-        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(repository);
+        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));

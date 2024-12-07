@@ -28,7 +28,7 @@ public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistr
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory());
         factories.put(DateFieldFactory.class, new DateFieldFactory());
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory());
-        factories.put(SelectFieldFactory.class, new SelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
+        factories.put(SelectFieldFactory.class, new SelectFieldFactory(configuration.getSelects(), configuration.getDataStores()));
         factories.put(NumberFieldFactory.class, new NumberFieldFactory());
         factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory(dataStoreFactoryRegistry));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory(fileProviderRegistry));

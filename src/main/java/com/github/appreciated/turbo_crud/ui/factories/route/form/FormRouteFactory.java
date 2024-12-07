@@ -86,7 +86,7 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
         }
 
         String table = route.getDataStore();
-        DataStore tables = configService.getConfiguration().getRepositories().get(table);
+        DataStore tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);

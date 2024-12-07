@@ -13,7 +13,7 @@ public interface TurboCrudDialogFactory {
                   @Nullable String foreignKeyField,
                   Route formRoute,
                   CollectionData config,
-                  String repository,
+                  String dataStore,
                   TurboCrudRouteFactoryRegistry routeFactory,
                   OnStoreListener listener,
                   FormCreator formCreator);

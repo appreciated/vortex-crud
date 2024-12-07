@@ -18,8 +18,8 @@ public class ReferenceFieldFactory implements TurboCrudFieldFactory {
     }
 
     @Override
-    public Component createComponent(String table, String field, Field repositoryField) {
-        return new EntityComboBoxWrapper(managerFactoryRegistry, repositoryField);
+    public Component createComponent(String table, String field, Field dataStoreField) {
+        return new EntityComboBoxWrapper(managerFactoryRegistry, dataStoreField);
     }
 
     @Override

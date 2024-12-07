@@ -11,5 +11,5 @@ import com.vaadin.flow.component.grid.Grid;
  */
 
 public interface TurboCrudListColumnCallback {
-    void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, Field repositoryField);
+    void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, Field dataStoreField);
 }

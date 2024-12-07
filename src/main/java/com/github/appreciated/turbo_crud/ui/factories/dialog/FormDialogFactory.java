@@ -36,16 +36,16 @@ public class FormDialogFactory implements TurboCrudDialogFactory {
                          @Nullable String foreignKeyField,
                          Route formRoute,
                          CollectionData config,
-                         String repository,
+                         String dataStore,
                          TurboCrudRouteFactoryRegistry routeFactory,
                          OnStoreListener listener,
                          FormCreator formCreator) {
 
-        this.dataStore = dataStoreFactoryRegistry.getFactory(repository);
+        this.dataStore = dataStoreFactoryRegistry.getFactory(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
-        GenericEntity recordById = dataStore.getRecordById(entityId);
+        GenericEntity recordById = this.dataStore.getRecordById(entityId);
         if (recordById == null) {
             recordById = new GenericEntity();
         }
@@ -61,9 +61,9 @@ public class FormDialogFactory implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStore tables = configService.getConfiguration().getRepositories().get(repository);
+        DataStore tables = configService.getConfiguration().getDataStores().get(dataStore);
 
-        formCreator.bindAndAddToLayout(repository, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

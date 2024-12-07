@@ -124,8 +124,8 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
                     dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         } else if (collectionData.getManyToMany() != null) {
             // If we need to resolve a many-to-many relation it is necessary to do two selects one over the associative
-            // repository and one over the target repository and one with the actual entries.
-            // This could be improved upon, if it was allowed to provide a custom repository / interface for the sake
+            // datastore and one over the target datastore and one with the actual entries.
+            // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
             // of resolving the following data.
             ManyToMany manyToMany = collectionData.getManyToMany();
             TurboCrudDataStore associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
