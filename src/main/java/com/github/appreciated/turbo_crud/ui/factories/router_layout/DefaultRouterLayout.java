@@ -2,7 +2,6 @@ package com.github.appreciated.turbo_crud.ui.factories.router_layout;
 
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -24,11 +23,9 @@ import java.util.Set;
 public class DefaultRouterLayout extends AppLayout {
 
     private final TurboCrudConfigService configService;
-    private final TurboCrudIconFactory iconFactory;
 
-    public DefaultRouterLayout(TurboCrudConfigService configService, TurboCrudIconFactory iconFactory) {
+    public DefaultRouterLayout(TurboCrudConfigService configService) {
         this.configService = configService;
-        this.iconFactory = iconFactory;
     }
 
     @Override
@@ -54,12 +51,13 @@ public class DefaultRouterLayout extends AppLayout {
         SideNav nav = new SideNav();
         Set<Map.Entry<String, Route>> keys = configService.getConfiguration().getRoutes().entrySet();
         keys.forEach(configEntry -> {
-            if (!configEntry.getValue().isHideInMenu()) {
-                String translation = getTranslation(configEntry.getValue().getTitle());
+            Route value = configEntry.getValue();
+            if (!value.isHideInMenu()) {
+                String translation = getTranslation(value.getTitle());
                 String path = "/view/" + configEntry.getKey();
                 Component icon = null;
-                if (configEntry.getValue().getIcon() != null) {
-                    icon = iconFactory.renderIcon(configEntry.getValue().getIcon());
+                if (value.getIconFactory() != null) {
+                    icon = value.getIconFactory().get();
                 }
                 nav.addItem(new SideNavItem(translation, path, icon));
             }

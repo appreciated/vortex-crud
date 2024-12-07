@@ -11,7 +11,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -28,11 +27,10 @@ public class List extends VerticalLayout {
                 TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                 FormCreator formCreator,
                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-                TurboCrudIconFactory iconFactory) {
+                TurboCrudRouteFactoryRegistry routeFactoryRegistry) {
 
         Route route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteHeader routeHeader = new RouteHeader(route, iconFactory);
+        RouteHeader routeHeader = new RouteHeader(route);
         String repository = route.getRepository();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,

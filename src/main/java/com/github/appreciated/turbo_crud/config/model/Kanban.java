@@ -3,73 +3,13 @@ package com.github.appreciated.turbo_crud.config.model;
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
-import org.jsoup.nodes.FormElement;
 import java.util.List;
 
 @GenerateBuilder
 public class Kanban extends RouteConfiguration implements ItemFactory {
 
-    private Class<? extends TurboCrudItemFactory> factory;
-
-    private String columnField;
-
-    private String titleField;
-
-    private String descriptionField;
-
-    private String imageField;
-
-    private Class<? extends TurboCrudFileProvider> imageFactory;
-
-    private List<FormElement> children;
-
     public Kanban(Class<? extends TurboCrudItemFactory>  factory) {
         super(factory);
-    }
-
-    public Class<? extends TurboCrudItemFactory> getFactory() {
-        return factory;
-    }
-
-    public String getTitleField() {
-        return titleField;
-    }
-
-    public void setTitleField(String titleField) {
-        this.titleField = titleField;
-    }
-
-    public String getDescriptionField() {
-        return descriptionField;
-    }
-
-    public void setDescriptionField(String descriptionField) {
-        this.descriptionField = descriptionField;
-    }
-
-    public String getImageField() {
-        return imageField;
-    }
-
-    @Override
-    public Class<? extends TurboCrudFileProvider> getImageFactory() {
-        return imageFactory;
-    }
-
-    public void setImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
-        this.imageFactory = imageFactory;
-    }
-
-    public void setImageField(String imageField) {
-        this.imageField = imageField;
-    }
-
-    public String getColumnField() {
-        return columnField;
-    }
-
-    public void setColumnField(String columnField) {
-        this.columnField = columnField;
     }
 
     public static class Builder {
@@ -84,43 +24,38 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
             return new Builder(new Kanban(factory));
         }
 
-        public Builder withFactory(Class<? extends TurboCrudItemFactory> factory) {
-            product.factory = factory;
-            return this;
-        }
-
         public Builder withColumnField(String columnField) {
-            product.columnField = columnField;
+            product.setColumnField(columnField);
             return this;
         }
 
         public Builder withTitleField(String titleField) {
-            product.titleField = titleField;
+            product.setTitleField(titleField);
             return this;
         }
 
         public Builder withDescriptionField(String descriptionField) {
-            product.descriptionField = descriptionField;
+            product.setDescriptionField(descriptionField);
             return this;
         }
 
         public Builder withImageField(String imageField) {
-            product.imageField = imageField;
+            product.setImageField(imageField);
             return this;
         }
 
         public Builder withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
-            product.imageFactory = imageFactory;
+            product.setImageFactory(imageFactory);
             return this;
         }
 
         public Builder withChildren(List<FormElement> children) {
-            product.children = children;
+            product.setChildren(children);
             return this;
         }
 
         public Builder addChildren(FormElement item) {
-            product.children.add(item);
+            product.getChildren().add(item);
             return this;
         }
 

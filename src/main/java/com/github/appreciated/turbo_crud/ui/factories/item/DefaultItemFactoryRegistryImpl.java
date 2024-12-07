@@ -1,8 +1,10 @@
 package com.github.appreciated.turbo_crud.ui.factories.item;
 
+import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * Factory implementation for creating entity item renderers.
@@ -19,7 +21,7 @@ public class DefaultItemFactoryRegistryImpl implements TurboCrudItemFactoryRegis
     }
 
     public TurboCrudItemFactory getFactory(Class<? extends TurboCrudItemFactory> factory) {
-        return factories.get(factory);
+        return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistryImpl.class.getName(), factory)));
     }
 
     @Override

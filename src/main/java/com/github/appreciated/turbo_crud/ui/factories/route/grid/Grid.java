@@ -10,7 +10,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.grid.components.EntityItemList;
@@ -30,8 +29,8 @@ public class Grid extends VerticalLayout {
                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                 TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                TurboCrudIconFactory iconFactory, TurboCrudFileProviderRegistry fileProviderRegistry) {
-        RouteHeader routeHeader = new RouteHeader(route, iconFactory);
+                TurboCrudFileProviderRegistry fileProviderRegistry) {
+        RouteHeader routeHeader = new RouteHeader(route);
         String repository = route.getRepository();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,

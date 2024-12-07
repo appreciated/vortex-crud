@@ -8,7 +8,6 @@ import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -24,7 +23,6 @@ public class TCKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final FormCreator formCreator;
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
-    private final TurboCrudIconFactory iconFactory;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public TCKanbanDetailFactoryImpl(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
@@ -33,7 +31,6 @@ public class TCKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
                                      TurboCrudRouteFactoryRegistry routeFactory,
                                      FormCreator formCreator,
                                      TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                                     TurboCrudIconFactory iconFactory,
                                      TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
@@ -42,7 +39,6 @@ public class TCKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
         this.routeFactory = routeFactory;
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
-        this.iconFactory = iconFactory;
         this.fileProviderRegistry = fileProviderRegistry;
     }
 
@@ -62,8 +58,7 @@ public class TCKanbanDetailFactoryImpl implements TurboCrudRouteFactory {
                 dialogFactoryRegistry,
                 fileProviderRegistry,
                 formCreator,
-                detailRouteSetting,
-                iconFactory);
+                detailRouteSetting);
     }
 
     @Override

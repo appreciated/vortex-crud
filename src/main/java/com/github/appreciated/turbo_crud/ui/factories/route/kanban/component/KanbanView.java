@@ -10,7 +10,6 @@ import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFact
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManager;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
@@ -47,8 +46,7 @@ public class KanbanView extends VerticalLayout {
                       TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                       TurboCrudFileProviderRegistry fileProviderRegistry,
                       FormCreator formCreator,
-                      DetailRouteSetting detailRouteSetting,
-                      TurboCrudIconFactory iconFactory) {
+                      DetailRouteSetting detailRouteSetting) {
         this.entityManager = entityManager;
         Selects selects = configService.getSelects();
         Repository config = configService.getRepositories().get(repository);
@@ -102,7 +100,7 @@ public class KanbanView extends VerticalLayout {
         }
         kanbanBoard.setSizeFull();
 
-        RouteHeader routeHeader = new RouteHeader(route, iconFactory);
+        RouteHeader routeHeader = new RouteHeader(route);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,

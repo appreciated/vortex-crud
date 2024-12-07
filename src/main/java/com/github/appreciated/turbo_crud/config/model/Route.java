@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.config.model;
 
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.function.SerializableSupplier;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.HashMap;
@@ -14,8 +16,6 @@ public class Route {
 
     private String title;
 
-    private String icon;
-
     private boolean defaultRoute;
 
     private Class<? extends TurboCrudRouteFactory> factory;
@@ -25,6 +25,8 @@ public class Route {
     private RouteConfiguration configuration;
 
     private Map<String, Route> childrenMap = new HashMap<>();
+
+    private SerializableSupplier<Component> iconFactory;
 
     public Route(Class<? extends TurboCrudRouteFactory> factory) {
         this.factory = factory;
@@ -48,12 +50,12 @@ public class Route {
         this.title = title;
     }
 
-    public String getIcon() {
-        return icon;
+    public SerializableSupplier<Component> getIconFactory() {
+        return iconFactory;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
+    public void setIconFactory(SerializableSupplier<Component> iconFactory) {
+        this.iconFactory = iconFactory;
     }
 
     public boolean isDefaultRoute() {
@@ -137,8 +139,8 @@ public class Route {
             return this;
         }
 
-        public Builder withIcon(String icon) {
-            product.icon = icon;
+        public Builder withIconFactory(SerializableSupplier<Component> iconFactory) {
+            product.iconFactory = iconFactory;
             return this;
         }
 

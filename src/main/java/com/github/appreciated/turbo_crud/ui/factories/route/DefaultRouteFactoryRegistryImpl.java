@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.form.TCFormRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.form.TCMultiFormRouteFactoryImpl;
@@ -34,19 +33,18 @@ public class DefaultRouteFactoryRegistryImpl implements TurboCrudRouteFactoryReg
     public DefaultRouteFactoryRegistryImpl(TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                            TurboCrudConfigService configService,
                                            TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
-                                           TurboCrudIconFactory iconFactory,
                                            TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
                                            TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                                            TurboCrudFileProviderRegistry fileProviderRegistry,
                                            FormCreator formCreatorService
     ) {
-        factories.put(TCMasterDetailRouteFactoryImpl.class, new TCMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, this, iconFactory, configService, fileProviderRegistry));
-        factories.put(TCListRouteFactoryImpl.class, new TCListRouteFactoryImpl(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, iconFactory, formCreatorService, dialogFactoryRegistry, this));
-        factories.put(TCGridRouteFactoryImpl.class, new TCGridRouteFactoryImpl(entityManagerFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, iconFactory, fileProviderRegistry));
+        factories.put(TCMasterDetailRouteFactoryImpl.class, new TCMasterDetailRouteFactoryImpl(entityManagerFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry));
+        factories.put(TCListRouteFactoryImpl.class, new TCListRouteFactoryImpl(entityManagerFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this));
+        factories.put(TCGridRouteFactoryImpl.class, new TCGridRouteFactoryImpl(entityManagerFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry));
         factories.put(TCFormRouteFactoryImpl.class, new TCFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
         factories.put(TCMultiFormRouteFactoryImpl.class, new TCMultiFormRouteFactoryImpl(entityManagerFactoryRegistry, configService, formCreatorService, this));
-        factories.put(TCKanbanDetailFactoryImpl.class, new TCKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, iconFactory, fileProviderRegistry));
-        factories.put(TCSubmenuRouteFactoryImpl.class, new TCSubmenuRouteFactoryImpl(this, configService, iconFactory));
+        factories.put(TCKanbanDetailFactoryImpl.class, new TCKanbanDetailFactoryImpl(entityManagerFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry));
+        factories.put(TCSubmenuRouteFactoryImpl.class, new TCSubmenuRouteFactoryImpl(this, configService));
     }
 
     public TurboCrudRouteFactory getFactory(Class<?extends TurboCrudRouteFactory> factory) {

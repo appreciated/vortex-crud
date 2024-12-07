@@ -14,10 +14,13 @@ import com.github.appreciated.turbo_crud.ui.factories.route.kanban.TCKanbanDetai
 import com.github.appreciated.turbo_crud.ui.factories.route.list.TCListRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.master_detail.TCMasterDetailRouteFactoryImpl;
 import com.github.appreciated.turbo_crud.ui.factories.route.submenu.TCSubmenuRouteFactoryImpl;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 /**
  * Service for loading and providing access to the Turbo CRUD configuration.
@@ -117,8 +120,7 @@ public class TurboCrudConfigService {
                                 "id", new Field(TCIdFieldFactory.class, true),
                                 "title", new Field(TCTextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
                                 "description", new Field(TCTextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "assigned_to", new Field(TCReferenceFieldFactory.class, "users", "id", "username", List.of("username")),
-                                // 1:1 Relation
+                                "assigned_to", new Field(TCReferenceFieldFactory.class, "users", "id", "username", List.of("username")) /* 1:1 Relation */,
                                 "status", new Field(TCSelectFieldFactory.class, "task-status"),
                                 "due_date", Field.Builder.of(TCDateFieldFactory.class).withReadOnlyForRoles("developer").build(),
                                 "created_at", new Field(TCDateTimePickerFactory.class),
@@ -136,7 +138,7 @@ public class TurboCrudConfigService {
                                 "id", new Field(TCIdFieldFactory.class, true),
                                 "comment_text", new Field(TCTextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 "user_id", new Field(TCNumberFieldFactory.class),
-                                "created_at", Field.Builder.of(TCDateTimePickerFactory.class).withDefaultValue("now()").build()))
+                                "created_at", Field.Builder.of(TCDateTimePickerFactory.class).build()))
                         .build(),
                 "images",
                 Repository.Builder.of(TCJpaEntityManager.class)
@@ -155,7 +157,7 @@ public class TurboCrudConfigService {
                 Route.Builder.of(TCGridRouteFactoryImpl.class)
                         .withDefaultRoute(true)
                         .withRepository("projects")
-                        .withIcon("FACTORY")
+                        .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withTitleField("name")
@@ -167,7 +169,7 @@ public class TurboCrudConfigService {
                 "projects-list",
                 Route.Builder.of(TCListRouteFactoryImpl.class)
                         .withRepository("projects")
-                        .withIcon("FACTORY")
+                        .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withInlineEdit(true)
@@ -184,15 +186,15 @@ public class TurboCrudConfigService {
                         .build(),
                 "tasks",
                 Route.Builder.of(TCSubmenuRouteFactoryImpl.class)
-                        .withIcon("TASKS")
+                        .withIconFactory(TASKS::create)
                         .withRepository("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
                                 Route.Builder.of(TCKanbanDetailFactoryImpl.class)
-                                        .withIcon("TASKS")
+                                        .withIconFactory(TASKS::create)
                                         .withRepository("tasks")
                                         .withTitle("route.open-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
+                                        .withConfiguration(Kanban.Builder.of(TCItemCardFactoryImpl.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")
@@ -201,7 +203,7 @@ public class TurboCrudConfigService {
                                         .build(),
                                 "done",
                                 Route.Builder.of(TCMasterDetailRouteFactoryImpl.class)
-                                        .withIcon("CHECK_CIRCLE")
+                                        .withIconFactory(CHECK_CIRCLE::create)
                                         .withRepository("tasks")
                                         .withTitle("route.done-tasks.title")
                                         .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
@@ -214,7 +216,7 @@ public class TurboCrudConfigService {
                 "images-grid",
                 Route.Builder.of(TCGridRouteFactoryImpl.class)
                         .withRepository("images")
-                        .withIcon("CAMERA")
+                        .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withTitleField("title")
@@ -227,7 +229,7 @@ public class TurboCrudConfigService {
                 "images-list",
                 Route.Builder.of(TCListRouteFactoryImpl.class)
                         .withRepository("images")
-                        .withIcon("CAMERA")
+                        .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(TCItemCardFactoryImpl.class)
                                 .withInlineEdit(true)
@@ -254,6 +256,15 @@ public class TurboCrudConfigService {
                                 .build()))
                         .build())
                 .withRoutes(routes)
+                .withSelects(Selects.Builder.of().withConfigs(
+                        Map.of("task-status",
+                                Map.of(
+                                        "open", "selects.task-status.open",
+                                        "todo", "selects.task-status.todo",
+                                        "work-in-progress", "selects.task-status.progress",
+                                        "closed", "selects.task-status.closed"
+                                )
+                        )).build())
                 .withRepositories(repositories)
                 .build();
     }

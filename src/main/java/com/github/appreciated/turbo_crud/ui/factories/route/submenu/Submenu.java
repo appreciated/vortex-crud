@@ -4,7 +4,6 @@ import com.github.appreciated.turbo_crud.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.config.model.Route;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -29,18 +28,15 @@ public class Submenu extends SplitLayout {
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final Integer currentPathIndex;
-    private final TurboCrudIconFactory iconFactory;
     private final TurboCrudConfigService configService;
     private Component active;
 
     public Submenu(Integer currentPathIndex,
                    TurboCrudPathToRouteResolver routeResolver,
                    TurboCrudRouteFactoryRegistry routeFactory,
-                   TurboCrudIconFactory iconFactory,
                    TurboCrudConfigService configService
     ) {
         this.currentPathIndex = currentPathIndex;
-        this.iconFactory = iconFactory;
         this.configService = configService;
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
@@ -51,7 +47,7 @@ public class Submenu extends SplitLayout {
         masterLayout.setPadding(true);
         masterLayout.setSizeFull();
 
-        HorizontalLayout header = new RouteHeader(route, iconFactory);
+        HorizontalLayout header = new RouteHeader(route);
         masterLayout.add(header);
 
         routeListLayout.setPadding(false);
@@ -93,7 +89,7 @@ public class Submenu extends SplitLayout {
         childRoutes.forEach((key, value) -> {
             HorizontalLayout routeButton = new HorizontalLayout();
             routeButton.addClassNames("card", "master");
-            Component icon = iconFactory.renderIcon(value.getIcon());
+            Component icon = value.getIconFactory().get();
             routeButton.add(icon);
             routeButton.add(new H4(routeButton.getTranslation(value.getTitle())));
             routeButton.setWidthFull();

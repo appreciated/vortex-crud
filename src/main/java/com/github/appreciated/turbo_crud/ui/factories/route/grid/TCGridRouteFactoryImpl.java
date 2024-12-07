@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.entity.manager.TurboCrudEntityManagerFa
 import com.github.appreciated.turbo_crud.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.FormCreator;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.ui.factories.route.TurboCrudRouteFactory;
@@ -21,7 +20,6 @@ public class TCGridRouteFactoryImpl implements TurboCrudRouteFactory {
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
     private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
-    private final TurboCrudIconFactory iconFactory;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public TCGridRouteFactoryImpl(
@@ -30,7 +28,6 @@ public class TCGridRouteFactoryImpl implements TurboCrudRouteFactory {
             TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
             TurboCrudItemFactoryRegistry itemFactoryRegistry,
-            TurboCrudIconFactory iconFactory,
             TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
@@ -38,7 +35,6 @@ public class TCGridRouteFactoryImpl implements TurboCrudRouteFactory {
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
-        this.iconFactory = iconFactory;
         this.fileProviderRegistry = fileProviderRegistry;
     }
 
@@ -56,7 +52,6 @@ public class TCGridRouteFactoryImpl implements TurboCrudRouteFactory {
                 dialogFactoryRegistry,
                 routeFactoryRegistry,
                 itemFactoryRegistry,
-                iconFactory,
                 fileProviderRegistry);
     }
 

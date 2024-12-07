@@ -7,8 +7,6 @@ import java.util.List;
 @GenerateBuilder
 public class MultiFormConfiguration extends RouteConfiguration {
 
-    private String titleField;
-
     private List<RouteConfiguration> forms;
 
     public MultiFormConfiguration(Class<? extends TurboCrudItemFactory> factory) {
@@ -23,9 +21,6 @@ public class MultiFormConfiguration extends RouteConfiguration {
         this.forms = children;
     }
 
-    public String getTitleField() {
-        return titleField;
-    }
 
     public static class Builder {
 
@@ -40,7 +35,7 @@ public class MultiFormConfiguration extends RouteConfiguration {
         }
 
         public Builder withTitleField(String titleField) {
-            product.titleField = titleField;
+            product.setTitleField(titleField);
             return this;
         }
 

@@ -12,7 +12,6 @@ import com.github.appreciated.turbo_crud.model.GenericEntity;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.ui.components.SearchField;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.route.DetailRouteSetting;
@@ -55,7 +54,6 @@ public class MasterDetail extends SplitLayout {
                         TurboCrudItemFactoryRegistry itemFactoryRegistry,
                         TurboCrudRouteFactoryRegistry routeFactory,
                         TurboCrudConfigService configService,
-                        TurboCrudIconFactory iconFactory,
                         TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.currentPathIndex = currentPathIndex;
@@ -76,7 +74,7 @@ public class MasterDetail extends SplitLayout {
         detailContainer.setHeightFull();
         detailContainer.setWidth("unset");
 
-        HorizontalLayout header = new RouteHeader(route, iconFactory);
+        HorizontalLayout header = new RouteHeader(route);
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addClickListener(event -> onAdd());

@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.ui.factories.router_layout;
 
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.ui.factories.icon.TurboCrudIconFactory;
 import com.vaadin.flow.component.applayout.AppLayout;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +13,13 @@ import org.springframework.stereotype.Service;
 public class DefaultRouterLayoutFactoryImpl implements TurboCrudRouterLayoutFactory {
 
     private final TurboCrudConfigService configService;
-    private final TurboCrudIconFactory iconFactory;
 
-    public DefaultRouterLayoutFactoryImpl(TurboCrudConfigService configService, TurboCrudIconFactory iconFactory) {
+    public DefaultRouterLayoutFactoryImpl(TurboCrudConfigService configService) {
         this.configService = configService;
-        this.iconFactory = iconFactory;
     }
 
     @Override
     public AppLayout createAppLayout() {
-        return new DefaultRouterLayout(configService, iconFactory);
+        return new DefaultRouterLayout(configService);
     }
 }
