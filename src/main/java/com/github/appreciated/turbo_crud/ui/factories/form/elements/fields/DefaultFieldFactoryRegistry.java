@@ -24,16 +24,16 @@ public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistr
 
     public DefaultFieldFactoryRegistry(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
         Application configuration = configService.getConfiguration();
-        factories.put(TCTextFieldFactory.class, new TCTextFieldFactory());
-        factories.put(TCTextAreaFieldFactory.class, new TCTextAreaFieldFactory());
-        factories.put(TCDateFieldFactory.class, new TCDateFieldFactory());
-        factories.put(TCDateTimePickerFactory.class, new TCDateTimePickerFactory());
-        factories.put(TCSelectFieldFactory.class, new TCSelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
-        factories.put(TCNumberFieldFactory.class, new TCNumberFieldFactory());
-        factories.put(TCReferenceFieldFactory.class, new TCReferenceFieldFactory(entityManagerFactoryRegistry));
-        factories.put(TCImageFieldFactory.class, new TCImageFieldFactory(fileProviderRegistry));
+        factories.put(TextFieldFactory.class, new TextFieldFactory());
+        factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory());
+        factories.put(DateFieldFactory.class, new DateFieldFactory());
+        factories.put(DateTimePickerFactory.class, new DateTimePickerFactory());
+        factories.put(SelectFieldFactory.class, new SelectFieldFactory(configuration.getSelects(), configuration.getRepositories()));
+        factories.put(NumberFieldFactory.class, new NumberFieldFactory());
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory(entityManagerFactoryRegistry));
+        factories.put(ImageFieldFactory.class, new ImageFieldFactory(fileProviderRegistry));
         factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory());
-        factories.put(TCIdFieldFactory.class, new TCIdFieldFactory());
+        factories.put(IdFieldFactory.class, new IdFieldFactory());
     }
 
     public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> getFactories() {

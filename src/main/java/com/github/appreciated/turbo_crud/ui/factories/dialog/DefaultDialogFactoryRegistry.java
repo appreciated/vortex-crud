@@ -22,7 +22,7 @@ public class DefaultDialogFactoryRegistry implements TurboCrudDialogFactoryRegis
 
     public DefaultDialogFactoryRegistry(TurboCrudConfigService configService, TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry) {
         factories.put(TCFormDialogFactory.class, new TCFormDialogFactory(configService, entityManagerFactoryRegistry));
-        factories.put(TCConnectDialogFactory.class, new TCConnectDialogFactory(entityManagerFactoryRegistry));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory(entityManagerFactoryRegistry));
     }
 
     public Map<Class<? extends TurboCrudDialogFactory>, TurboCrudDialogFactory> getFactories() {

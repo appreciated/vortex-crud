@@ -22,7 +22,7 @@ public class TCCollectionFactoryRegistry implements TurboCrudCollectionFactoryRe
     private final Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> factories = new HashMap<>();
 
     public TCCollectionFactoryRegistry(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry, TurboCrudDialogFactoryRegistry dialogFactoryRegistry) {
-        factories.put(TCListCollectionFactory.class, new TCListCollectionFactory(entityManagerFactoryRegistry, dialogFactoryRegistry));
+        factories.put(ListCollectionFactory.class, new ListCollectionFactory(entityManagerFactoryRegistry, dialogFactoryRegistry));
     }
 
     public Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> getFactories() {

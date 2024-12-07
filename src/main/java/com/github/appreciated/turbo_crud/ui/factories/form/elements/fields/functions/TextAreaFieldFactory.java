@@ -8,7 +8,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import java.util.Collection;
 import java.util.List;
 
-public class TCTextAreaFieldFactory implements TurboCrudFieldFactory {
+public class TextAreaFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {

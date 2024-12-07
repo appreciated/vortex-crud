@@ -9,11 +9,11 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class TCReferenceFieldFactory implements TurboCrudFieldFactory {
+public class ReferenceFieldFactory implements TurboCrudFieldFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry;
 
-    public TCReferenceFieldFactory(TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry) {
+    public ReferenceFieldFactory(TurboCrudEntityManagerFactoryRegistry managerFactoryRegistry) {
         this.managerFactoryRegistry = managerFactoryRegistry;
     }
 

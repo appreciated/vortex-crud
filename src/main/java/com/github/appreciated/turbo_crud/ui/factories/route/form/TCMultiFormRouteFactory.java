@@ -14,7 +14,7 @@ import jakarta.annotation.Nullable;
 
 public class TCMultiFormRouteFactory implements TurboCrudRouteFactory {
 
-    private final TCFormRouteFactory formRouteFactory;
+    private final FormRouteFactory formRouteFactory;
 
     private String titleColumn;
 
@@ -24,7 +24,7 @@ public class TCMultiFormRouteFactory implements TurboCrudRouteFactory {
             FormCreator formCreator,
             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
-        this.formRouteFactory = new TCFormRouteFactory(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
+        this.formRouteFactory = new FormRouteFactory(entityManagerFactoryRegistry, configService, formCreator, factoryRegistry);
     }
 
     @Override

@@ -5,9 +5,9 @@ import com.vaadin.flow.server.StreamResource;
 import java.io.*;
 import java.nio.file.Path;
 
-public class TCFileProvider implements TurboCrudFileProvider {
+public class FileProvider implements TurboCrudFileProvider {
 
-    public TCFileProvider() {
+    public FileProvider() {
     }
 
     @Override

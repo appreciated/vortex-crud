@@ -14,12 +14,12 @@ import java.util.Optional;
  */
 
 @Service
-public class TCFileProviderRegistry implements TurboCrudFileProviderRegistry {
+public class FileProviderRegistry implements TurboCrudFileProviderRegistry {
 
     private final Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> factories = new HashMap<>();
 
-    public TCFileProviderRegistry() {
-        factories.put(TCFileProvider.class, new TCFileProvider());
+    public FileProviderRegistry() {
+        factories.put(FileProvider.class, new FileProvider());
     }
 
     public Map<Class<? extends TurboCrudFileProvider>, TurboCrudFileProvider> getFactories() {

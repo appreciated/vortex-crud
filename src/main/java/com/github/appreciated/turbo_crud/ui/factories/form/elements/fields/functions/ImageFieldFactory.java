@@ -10,11 +10,11 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class TCImageFieldFactory implements TurboCrudFieldFactory {
+public class ImageFieldFactory implements TurboCrudFieldFactory {
 
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public TCImageFieldFactory(TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public ImageFieldFactory(TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.fileProviderRegistry = fileProviderRegistry;
     }
 

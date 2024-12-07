@@ -16,7 +16,7 @@ import com.github.appreciated.turbo_crud.ui.factories.route.kanban.component.Kan
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class TCKanbanDetailFactory implements TurboCrudRouteFactory {
+public class KanbanDetailFactory implements TurboCrudRouteFactory {
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
@@ -25,13 +25,13 @@ public class TCKanbanDetailFactory implements TurboCrudRouteFactory {
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public TCKanbanDetailFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                                 TurboCrudConfigService configService,
-                                 TurboCrudItemFactoryRegistry turboCrudItemFactory,
-                                 TurboCrudRouteFactoryRegistry routeFactory,
-                                 FormCreator formCreator,
-                                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                                 TurboCrudFileProviderRegistry fileProviderRegistry
+    public KanbanDetailFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                               TurboCrudConfigService configService,
+                               TurboCrudItemFactoryRegistry turboCrudItemFactory,
+                               TurboCrudRouteFactoryRegistry routeFactory,
+                               FormCreator formCreator,
+                               TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                               TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;

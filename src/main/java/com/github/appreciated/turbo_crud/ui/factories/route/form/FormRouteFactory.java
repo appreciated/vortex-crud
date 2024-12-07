@@ -34,17 +34,17 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class TCFormRouteFactory implements TurboCrudRouteFactory {
+public class FormRouteFactory implements TurboCrudRouteFactory {
 
     private final TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry;
     private final TurboCrudConfigService configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public TCFormRouteFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
-                              TurboCrudConfigService configService,
-                              FormCreator formCreator,
-                              TurboCrudRouteFactoryRegistry factoryRegistry
+    public FormRouteFactory(TurboCrudEntityManagerFactoryRegistry entityManagerFactoryRegistry,
+                            TurboCrudConfigService configService,
+                            FormCreator formCreator,
+                            TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
         this.entityManagerFactoryRegistry = entityManagerFactoryRegistry;
         this.configService = configService;

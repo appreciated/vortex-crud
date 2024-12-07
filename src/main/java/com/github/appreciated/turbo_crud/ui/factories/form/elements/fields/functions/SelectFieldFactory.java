@@ -9,12 +9,12 @@ import com.vaadin.flow.component.select.Select;
 
 import java.util.*;
 
-public class TCSelectFieldFactory implements TurboCrudFieldFactory {
+public class SelectFieldFactory implements TurboCrudFieldFactory {
 
     private final Selects selects;
     private final Map<String, Repository> tablesConfig;
 
-    public TCSelectFieldFactory(Selects selects, Map<String, Repository> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<String, Repository> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }

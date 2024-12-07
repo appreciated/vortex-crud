@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-public class TCDateTimePickerFactory implements TurboCrudFieldFactory {
+public class DateTimePickerFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {

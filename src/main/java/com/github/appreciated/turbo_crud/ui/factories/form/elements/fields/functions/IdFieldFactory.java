@@ -7,7 +7,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import java.util.Collection;
 import java.util.List;
 
-public class TCIdFieldFactory extends TCTextFieldFactory{
+public class IdFieldFactory extends TextFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field repositoryField) {

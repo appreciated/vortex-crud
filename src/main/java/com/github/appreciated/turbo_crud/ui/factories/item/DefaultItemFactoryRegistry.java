@@ -17,7 +17,7 @@ public class DefaultItemFactoryRegistry implements TurboCrudItemFactoryRegistry 
     private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistry() {
-        factories.put(TCCardFactory.class, new TCCardFactory());
+        factories.put(CardFactory.class, new CardFactory());
     }
 
     public TurboCrudItemFactory getFactory(Class<? extends TurboCrudItemFactory> factory) {
