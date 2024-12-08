@@ -161,7 +161,6 @@ turbo-crud supports configuration using java to define routes and data stores.
 Below is an example of configuring a route and the associated data store:
 
 ```java
-    // ...
 Map<String, DataStore> dataStores = Map.of(
         "projects", DataStore.Builder.of(JpaDataStore.class)
                 .withFields(Map.of(
@@ -175,7 +174,6 @@ Map<String, DataStore> dataStores = Map.of(
                 .build()
         // ...
 );
-// ...
 Route projectForm = Route.Builder.of(FormRouteFactory.class)
         .withDataStore("projects")
         .withTitle("route.projects.title-cards")
@@ -205,7 +203,6 @@ Map<String, Route> routes = Map.of(
                 .build()
         // ...
 );
-// ...
 Application configuration = Application.Builder.of()
         .withName("application.name")
         .withI18nBundlePrefix("some_i18n")
