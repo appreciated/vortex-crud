@@ -3,8 +3,8 @@ package com.github.appreciated.turbo_crud.service;
 import com.github.appreciated.turbo_crud.config.model.*;
 import com.github.appreciated.turbo_crud.entity.data_store.JpaDataStore;
 import com.github.appreciated.turbo_crud.file_provider.FileProvider;
-import com.github.appreciated.turbo_crud.file_provider.FileProviderRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.turbo_crud.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.ui.factories.item.CardFactory;
@@ -44,7 +44,7 @@ public class TurboCrudConfigService {
                                 new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
                                 FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of(FormRouteFactory.class)
+                                        .withConfiguration(Collection.Builder.of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("task_comments")
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")

@@ -4,6 +4,7 @@ import com.github.appreciated.turbo_crud.config.model.Field;
 import com.github.appreciated.turbo_crud.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
+import com.github.appreciated.turbo_crud.ui.factories.route.form.FormRouteFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,24 +19,25 @@ import java.util.Optional;
 @Service
 public class DefaultDialogFactoryRegistry implements TurboCrudDialogFactoryRegistry {
 
-    private final Map<Class<? extends TurboCrudDialogFactory>, TurboCrudDialogFactory> factories = new HashMap<>();
+    private final Map<Class<?>, TurboCrudDialogFactory> factories = new HashMap<>();
 
     public DefaultDialogFactoryRegistry(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
         factories.put(FormDialogFactory.class, new FormDialogFactory(configService, dataStoreFactoryRegistry));
+        factories.put(FormRouteFactory.class, new FormDialogFactory(configService, dataStoreFactoryRegistry));
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory(dataStoreFactoryRegistry));
     }
 
-    public Map<Class<? extends TurboCrudDialogFactory>, TurboCrudDialogFactory> getFactories() {
+    public Map<Class<?>, TurboCrudDialogFactory> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudDialogFactory getFactory(Class<? extends TurboCrudDialogFactory> type) {
+    public TurboCrudDialogFactory getFactory(Class<?> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<? extends TurboCrudDialogFactory> key, TurboCrudDialogFactory factory) {
+    public void addFactory(Class<?> key, TurboCrudDialogFactory factory) {
         factories.put(key, factory);
     }
 }

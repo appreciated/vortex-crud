@@ -63,7 +63,7 @@ public class KanbanView extends VerticalLayout {
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
-                Dialog dialog = dialogFactoryRegistry.getFactory((Class<? extends TurboCrudDialogFactory>) route.getChild().getFactory()).create(
+                Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                         DataStoreUtil.getId(entity),
                         null,
                         null,
