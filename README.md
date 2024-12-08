@@ -162,67 +162,67 @@ Below is an example of configuring a route and the associated data store:
 
 ```java
     // ...
-    Map<String, DataStore> dataStores = Map.of(
-            "projects", DataStore.Builder.of(JpaDataStore.class)
-                    .withFields(Map.of(
-                            "id", new Field(IdFieldFactory.class, true),
-                            "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                            "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                            "start_date", new Field(DateFieldFactory.class),
-                            "end_date", new Field(DateFieldFactory.class),
-                            "created_at", new Field(DateTimePickerFactory.class),
-                            "updated_at", new Field(DateTimePickerFactory.class)))
-                    .build()
-            // ...
-    );
-    // ...
-    Route projectForm = Route.Builder.of(FormRouteFactory.class)
-            .withDataStore("projects")
-            .withTitle("route.projects.title-cards")
-            .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
-                    .withTitleField("name")
-                    .withChildren(
-                            new FormElement("name", "field", "route.projects.labels.name"),
-                            new FormElement("description", "field", "route.projects.labels.description"),
-                            new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                            new FormElement("end_date", "field", "route.projects.labels.end_date")
-                    )
-                    .build())
-            .build();
-    // ...
-    Map<String, Route> routes = Map.of(
-            "projects-cards", Route.Builder.of(GridRouteFactory.class)
-                    .withDefaultRoute(true)
-                    .withDataStore("projects")
-                    .withIconFactory(FACTORY::create)
-                    .withTitle("route.projects.title-cards")
-                    .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
-                            .withTitleField("name")
-                            .withDescriptionField("description")
-                            .build())
-                    .withRoles(List.of("manager", "admin"))
-                    .withChild(projectForm)
-                    .build()
-            // ...
-    );
-    // ...
-    Application configuration = Application.Builder.of()
-            .withName("application.name")
-            .withI18nBundlePrefix("some_i18n")
-            .withUserManagement(UserManagement.Builder.of()
-                    .withEnabled(true)
-                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
-                .withSignUp(true)
-                        .withAdditionalFields(List.of(AdditionalField.Builder.of()
-                                .withName("start_date")
-                                .withType("date")
-                                .build()))
+Map<String, DataStore> dataStores = Map.of(
+        "projects", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "id", new Field(IdFieldFactory.class, true),
+                        "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                        "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                        "start_date", new Field(DateFieldFactory.class),
+                        "end_date", new Field(DateFieldFactory.class),
+                        "created_at", new Field(DateTimePickerFactory.class),
+                        "updated_at", new Field(DateTimePickerFactory.class)))
                 .build()
-            )
-            .withRoutes(routes)
-                .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
-            .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
-            .withSelects(Selects.Builder.of().withConfigs(
+        // ...
+);
+// ...
+Route projectForm = Route.Builder.of(FormRouteFactory.class)
+        .withDataStore("projects")
+        .withTitle("route.projects.title-cards")
+        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withTitleField("name")
+                .withChildren(
+                        new FormElement("name", "field", "route.projects.labels.name"),
+                        new FormElement("description", "field", "route.projects.labels.description"),
+                        new FormElement("start_date", "field", "route.projects.labels.start_date"),
+                        new FormElement("end_date", "field", "route.projects.labels.end_date")
+                )
+                .build())
+        .build();
+// ...
+Map<String, Route> routes = Map.of(
+        "projects-cards", Route.Builder.of(GridRouteFactory.class)
+                .withDefaultRoute(true)
+                .withDataStore("projects")
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withTitleField("name")
+                        .withDescriptionField("description")
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build()
+        // ...
+);
+// ...
+Application configuration = Application.Builder.of()
+        .withName("application.name")
+        .withI18nBundlePrefix("some_i18n")
+        .withUserManagement(UserManagement.Builder.of()
+                .withEnabled(true)
+                .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
+                .withSignUp(true)
+                .withAdditionalFields(List.of(AdditionalField.Builder.of()
+                        .withName("start_date")
+                        .withType("date")
+                        .build()))
+                .build()
+        )
+        .withRoutes(routes)
+        .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+        .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+        .withSelects(Selects.Builder.of().withConfigs(
                 Map.of(
                         "task-status", Map.of(
                                 "open", "selects.task-status.open",
@@ -230,10 +230,9 @@ Below is an example of configuring a route and the associated data store:
                                 "work-in-progress", "selects.task-status.progress",
                                 "closed", "selects.task-status.closed"
                         )
-                )).build()
-            )
-            .withDataStores(dataStores)
-            .build();
+                )).build())
+        .withDataStores(dataStores)
+        .build();
 ```
 
 ## Application Configuration
@@ -241,50 +240,50 @@ Here’s a more complete sample configuration for setting up a project managemen
 
 ```java
 Route taskForm = Route.Builder.of(FormRouteFactory.class)
-.withDataStore("tasks")
-.withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
-        .withTitleField("title")
-        .withChildren(
-                new FormElement("title", "field", "route.tasks.labels.title"),
-                new FormElement("description", "field", "route.tasks.labels.description"),
-                new FormElement("status", "field", "route.tasks.labels.status"),
-                new FormElement("due_date", "field", "route.tasks.labels.due_date"),
-                new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
-                FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
-                        .withFactory(ListCollectionFactory.class)
-                        .withConfiguration(Collection.Builder.of(FormRouteFactory.class)
-                                .withData(CollectionData.Builder.of("task_comments")
-                                        .withOneToMany(new OneToMany("task_id"))
-                                        .withChildren("comment_text")
-                                        .build())
-                                .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                .withChild(Route.Builder.of(FormRouteFactory.class)
-                                        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
-                                                .withTitleField("name")
-                                                .withChildren(
-                                                        new FormElement("comment_text", "field", "route.tasks.labels.comment")
-                                                )
+        .withDataStore("tasks")
+        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withTitleField("title")
+                .withChildren(
+                        new FormElement("title", "field", "route.tasks.labels.title"),
+                        new FormElement("description", "field", "route.tasks.labels.description"),
+                        new FormElement("status", "field", "route.tasks.labels.status"),
+                        new FormElement("due_date", "field", "route.tasks.labels.due_date"),
+                        new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
+                        FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
+                                .withFactory(ListCollectionFactory.class)
+                                .withConfiguration(Collection.Builder.of(FormRouteFactory.class)
+                                        .withData(CollectionData.Builder.of("task_comments")
+                                                .withOneToMany(new OneToMany("task_id"))
+                                                .withChildren("comment_text")
+                                                .build())
+                                        .withEmptyMessage("route.tasks.labels.comments-empty-message")
+                                        .withChild(Route.Builder.of(FormRouteFactory.class)
+                                                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                                                        .withTitleField("name")
+                                                        .withChildren(
+                                                                new FormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                        )
+                                                        .build())
                                                 .build())
                                         .build())
-                                .build())
-                        .build(),
-                FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
-                        .withFactory(ListCollectionFactory.class)
-                        .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
-                                .withData(CollectionData.Builder.of("tasks")
-                                        .withManyToMany(new ManyToMany("task_has_task",
-                                                "task_id",
-                                                "related_task_id",
-                                                "id"))
-                                        .withChildren("title")
+                                .build(),
+                        FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
+                                .withFactory(ListCollectionFactory.class)
+                                .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
+                                        .withData(CollectionData.Builder.of("tasks")
+                                                .withManyToMany(new ManyToMany("task_has_task",
+                                                        "task_id",
+                                                        "related_task_id",
+                                                        "id"))
+                                                .withChildren("title")
+                                                .build())
+                                        .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
+                                        .withConfiguration(new CollectionConfig("title"))
                                         .build())
-                                .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                .withConfiguration(new CollectionConfig("title"))
-                                .build())
-                        .build()
-        )
-        .build())
-.build();
+                                .build()
+                )
+                .build())
+        .build();
 Route projectForm = Route.Builder.of(FormRouteFactory.class)
         .withDataStore("projects")
         .withTitle("route.projects.title-cards")
@@ -326,7 +325,7 @@ Map<String, DataStore> dataStores = Map.of(
                         "id", new Field(IdFieldFactory.class, true),
                         "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
                         "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                        "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
+                        "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */ ,
                         "status", new Field(SelectFieldFactory.class, "task-status"),
                         "due_date", Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
                         "created_at", new Field(DateTimePickerFactory.class),
@@ -443,30 +442,29 @@ Map<String, Route> routes = Map.of(
                 .build());
 
 Application configuration = Application.Builder.of()
-            .withName("application.name")
-            .withI18nBundlePrefix("some_i18n")
-            .withUserManagement(UserManagement.Builder.of()
-                    .withEnabled(true)
-                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
-    .withSignUp(true)
-                    .withAdditionalFields(List.of(AdditionalField.Builder.of()
-                            .withName("start_date")
-                            .withType("date")
-                            .build()))
-    .build())
-    .withRoutes(routes)
-            .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
-    .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
-    .withSelects(Selects.Builder.of().withConfigs(
-        Map.of("task-status", Map.of(
-                    "open", "selects.task-status.open",
-                    "todo", "selects.task-status.todo",
-                    "work-in-progress", "selects.task-status.progress",
-                    "closed", "selects.task-status.closed"
-            )
-        )).build())
-    .withDataStores(dataStores)
-            .build();
+        .withName("application.name")
+        .withI18nBundlePrefix("some_i18n")
+        .withUserManagement(UserManagement.Builder.of()
+                .withEnabled(true)
+                .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
+                .withSignUp(true)
+                .withAdditionalFields(List.of(AdditionalField.Builder.of()
+                        .withName("start_date")
+                        .withType("date")
+                        .build()))
+                .build())
+        .withRoutes(routes)
+        .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+        .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+        .withSelects(Selects.Builder.of().withConfigs(
+                Map.of("task-status", Map.of(
+                        "open", "selects.task-status.open",
+                        "todo", "selects.task-status.todo",
+                        "work-in-progress", "selects.task-status.progress",
+                        "closed", "selects.task-status.closed"
+                ))).build())
+        .withDataStores(dataStores)
+        .build();
 ```
 
 ## Getting Started with Development
