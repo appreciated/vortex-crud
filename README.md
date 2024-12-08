@@ -348,7 +348,7 @@ Map<String, DataStore> dataStores = Map.of(
                                 .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                 .build(),
                         "url", Field.Builder.of(ImageFieldFactory.class)
-                                .withConfiguration(new ImageFieldConfiguration(FileProviderRegistry.class))
+                                .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
                                 .build()))
                 .build());
 

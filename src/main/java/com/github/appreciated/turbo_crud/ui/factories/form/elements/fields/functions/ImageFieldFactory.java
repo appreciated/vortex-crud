@@ -20,7 +20,7 @@ public class ImageFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Component createComponent(String table, String field, Field dataStoreField) {
-        return new ImageHasValue(fileProviderRegistry.getFactory((Class<? extends TurboCrudFileProvider>) dataStoreField.getConfiguration().getFactory()));
+        return new ImageHasValue(fileProviderRegistry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
     }
 
     @Override

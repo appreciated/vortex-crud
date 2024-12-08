@@ -144,7 +144,7 @@ public class TurboCrudConfigService {
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 "url", Field.Builder.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldConfiguration(FileProviderRegistry.class))
+                                        .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
                                         .build()))
                         .build());
 
@@ -252,7 +252,7 @@ public class TurboCrudConfigService {
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status",
                                 Map.of(
-                                        "open", "selects.task-status.open",
+                                         "open", "selects.task-status.open",
                                         "todo", "selects.task-status.todo",
                                         "work-in-progress", "selects.task-status.progress",
                                         "closed", "selects.task-status.closed"
