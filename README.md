@@ -6,13 +6,12 @@
 ## Tech-Stack
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
-- **HOCON**: A powerful and human-readable configuration format [(see here)](https://github.com/lightbend/config)
 
 ## Key Features
 - **Configuration-Driven UI and Route Generation**: Rapidly create complex, user-friendly CRUD applications through configuration alone, without writing Java code.
 - **Modular Architecture**: The architecture is modular and flexible at every level ([see under Architecture](#Architecture)), allowing for custom implementations.
 - **Entity Management**: `turbo-crud` handles data management by default; You need to define the data model.
-- **Custom Repositories**: Use custom data repositories for cases where the default Entity Manager is not ideal.
+- **Custom DataStores**: Use custom data sources for cases where the default data manager is not ideal.
 - **Database Schema Validation**: The `turbo-crudDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
 - **UI Components and Factories**: Factory implementations such as `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
 - **i18n Support**
@@ -50,7 +49,7 @@
 - **API-Endpoints**: Allow defining API endpoints using the configuration file
 
 ## Data Handling and Management
-turbo-crud utilizes the H2 database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the HOCON configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
+turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
 
 ### Core Concept: User-Defined Database Model
 The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
@@ -80,7 +79,7 @@ The following diagram provides a simplified view of the architecture, illustrati
 ```mermaid
 classDiagram
     class Dialog
-    class Table
+    class DataStore
     class Column
     class Route 
     class KanbanRoute
@@ -113,8 +112,8 @@ classDiagram
     MultiFormRoute --> FormRoute: contains
     Form --> Field: contains
     Form --> Collection: contains
-    Route --> Table: references
-    Table --> Column: contains
+    Route --> DataStore: references
+    DataStore --> Column: contains
     Field --> Column: references
     Collection --> Column: references
     Collection --> Dialog: creates
@@ -155,278 +154,319 @@ classDiagram
     MultiFormRoute --> FormRoute: contains
 ```
 
-## Configuration via HOCON
-turbo-crud supports configuration through HOCON files, defining routes and tables.
-
-**Note**: Although Java classes can theoretically be used for configuration (as HOCON files are parsed into Java classes), this approach is not currently supported. HOCON is preferred for its readability and maintainability.
+## Configuration via Java
+turbo-crud supports configuration using java to define routes and data stores.
 
 ### Example Configuration
+Below is an example of configuring a route and the associated data store:
 
-Below is an example of configuring a route and the associated table:
-
-```hocon
-application {
-  #...
-  tables = {
-    "projects" {
-      fields {
-        id {factory: "id", primary: true},
-        name {factory: "text", required: true, validation {max-length: 255}},
-        description {factory: "textarea", validation {max-length: 500}},
-        start_date {factory: "date"},
-        end_date {factory: "date"},
-        created_at {factory: "datetime"},
-        updated_at {factory: "datetime"}
-      }
-    }
-    # ...
-  }
-  # ...  
-  routes = {
-    "projects-cards" {
-      default-route: true
-      factory: "grid"
-      repository: "projects"
-      icon: "FACTORY"
-      title: "route.projects.title-cards"
-      configuration {
-        factory: "card"
-        title-field: "name"
-        description-field: "description"
-      }
-      roles: ["manager", "admin"]
-      child: ${application.forms.project} #This is not feaure of turbo-crud but rather a HOCON feature called "substitution" 
-    }
-    # ...
-  }
-
-  forms { # Form configuration values to be used for HOCON substitution
-    project: {
-      repository: "projects"
-      factory: "form"
-      title: "route.projects.title-cards"
-      configuration {
-        title-field: "name"
-        children: [
-          {type: "field", field: "name", label: "route.projects.labels.name"},
-          {type: "field", field: "description", label: "route.projects.labels.description"},
-          {type: "field", field: "start_date", label: "route.projects.labels.start_date"},
-          {type: "field", field: "end_date", label: "route.projects.labels.end_date"}
-        ]
-      }
-    }
-    # ...
-  }
-}
+```java
+    // ...
+    Map<String, DataStore> dataStores = Map.of(
+            "projects", DataStore.Builder.of(JpaDataStore.class)
+                    .withFields(Map.of(
+                            "id", new Field(IdFieldFactory.class, true),
+                            "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                            "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                            "start_date", new Field(DateFieldFactory.class),
+                            "end_date", new Field(DateFieldFactory.class),
+                            "created_at", new Field(DateTimePickerFactory.class),
+                            "updated_at", new Field(DateTimePickerFactory.class)))
+                    .build()
+            // ...
+    );
+    // ...
+    Route projectForm = Route.Builder.of(FormRouteFactory.class)
+            .withDataStore("projects")
+            .withTitle("route.projects.title-cards")
+            .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                    .withTitleField("name")
+                    .withChildren(
+                            new FormElement("name", "field", "route.projects.labels.name"),
+                            new FormElement("description", "field", "route.projects.labels.description"),
+                            new FormElement("start_date", "field", "route.projects.labels.start_date"),
+                            new FormElement("end_date", "field", "route.projects.labels.end_date")
+                    )
+                    .build())
+            .build();
+    // ...
+    Map<String, Route> routes = Map.of(
+            "projects-cards", Route.Builder.of(GridRouteFactory.class)
+                    .withDefaultRoute(true)
+                    .withDataStore("projects")
+                    .withIconFactory(FACTORY::create)
+                    .withTitle("route.projects.title-cards")
+                    .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                            .withTitleField("name")
+                            .withDescriptionField("description")
+                            .build())
+                    .withRoles(List.of("manager", "admin"))
+                    .withChild(projectForm)
+                    .build()
+            // ...
+    );
+    // ...
+    Application configuration = Application.Builder.of()
+            .withName("application.name")
+            .withI18nBundlePrefix("some_i18n")
+            .withUserManagement(UserManagement.Builder.of()
+                    .withEnabled(true)
+                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
+                .withSignUp(true)
+                        .withAdditionalFields(List.of(AdditionalField.Builder.of()
+                                .withName("start_date")
+                                .withType("date")
+                                .build()))
+                .build()
+            )
+            .withRoutes(routes)
+                .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+            .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+            .withSelects(Selects.Builder.of().withConfigs(
+                Map.of(
+                        "task-status", Map.of(
+                                "open", "selects.task-status.open",
+                                "todo", "selects.task-status.todo",
+                                "work-in-progress", "selects.task-status.progress",
+                                "closed", "selects.task-status.closed"
+                        )
+                )).build()
+            )
+            .withDataStores(dataStores)
+            .build();
 ```
 
-## Application Configuration (HOCON Format)
+## Application Configuration
 Here’s a more complete sample configuration for setting up a project management application:
 
-```hocon
-application {
-  name: "application.name"
+```java
+Route taskForm = Route.Builder.of(FormRouteFactory.class)
+.withDataStore("tasks")
+.withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+        .withTitleField("title")
+        .withChildren(
+                new FormElement("title", "field", "route.tasks.labels.title"),
+                new FormElement("description", "field", "route.tasks.labels.description"),
+                new FormElement("status", "field", "route.tasks.labels.status"),
+                new FormElement("due_date", "field", "route.tasks.labels.due_date"),
+                new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
+                FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
+                        .withFactory(ListCollectionFactory.class)
+                        .withConfiguration(Collection.Builder.of(FormRouteFactory.class)
+                                .withData(CollectionData.Builder.of("task_comments")
+                                        .withOneToMany(new OneToMany("task_id"))
+                                        .withChildren("comment_text")
+                                        .build())
+                                .withEmptyMessage("route.tasks.labels.comments-empty-message")
+                                .withChild(Route.Builder.of(FormRouteFactory.class)
+                                        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                                                .withTitleField("name")
+                                                .withChildren(
+                                                        new FormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                )
+                                                .build())
+                                        .build())
+                                .build())
+                        .build(),
+                FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
+                        .withFactory(ListCollectionFactory.class)
+                        .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
+                                .withData(CollectionData.Builder.of("tasks")
+                                        .withManyToMany(new ManyToMany("task_has_task",
+                                                "task_id",
+                                                "related_task_id",
+                                                "id"))
+                                        .withChildren("title")
+                                        .build())
+                                .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
+                                .withConfiguration(new CollectionConfig("title"))
+                                .build())
+                        .build()
+        )
+        .build())
+.build();
+Route projectForm = Route.Builder.of(FormRouteFactory.class)
+        .withDataStore("projects")
+        .withTitle("route.projects.title-cards")
+        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withTitleField("name")
+                .withChildren(
+                        new FormElement("name", "field", "route.projects.labels.name"),
+                        new FormElement("description", "field", "route.projects.labels.description"),
+                        new FormElement("start_date", "field", "route.projects.labels.start_date"),
+                        new FormElement("end_date", "field", "route.projects.labels.end_date")
+                )
+                .build())
+        .build();
+Route imageForm = Route.Builder.of(FormRouteFactory.class)
+        .withDataStore("images")
+        .withTitle("route.projects.title-cards")
+        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withTitleField("title")
+                .withChildren(
+                        new FormElement("title", "field", "route.images.labels.title"),
+                        new FormElement("url", "field", "route.images.labels.image")
+                )
+                .build())
+        .build();
 
-  i18n-bundle-prefix: "some_i18n"
+Map<String, DataStore> dataStores = Map.of(
+        "projects", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "id", new Field(IdFieldFactory.class, true),
+                        "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                        "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                        "start_date", new Field(DateFieldFactory.class),
+                        "end_date", new Field(DateFieldFactory.class),
+                        "created_at", new Field(DateTimePickerFactory.class),
+                        "updated_at", new Field(DateTimePickerFactory.class)))
+                .build(),
+        "tasks", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "id", new Field(IdFieldFactory.class, true),
+                        "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                        "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                        "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
+                        "status", new Field(SelectFieldFactory.class, "task-status"),
+                        "due_date", Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
+                        "created_at", new Field(DateTimePickerFactory.class),
+                        "updated_at", new Field(DateTimePickerFactory.class)))
+                .build(),
+        "task_has_task", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "task_id", new Field(IdFieldFactory.class),
+                        "related_task_id", new Field(IdFieldFactory.class)))
+                .build(),
+        "task_comments", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "id", new Field(IdFieldFactory.class, true),
+                        "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                        "user_id", new Field(NumberFieldFactory.class),
+                        "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
+                .build(),
+        "images", DataStore.Builder.of(JpaDataStore.class)
+                .withFields(Map.of(
+                        "id", new Field(IdFieldFactory.class, true),
+                        "title", Field.Builder.of(TextFieldFactory.class)
+                                .withRequired(true)
+                                .withValidation(Validation.Builder.of().withMaxLength(255).build())
+                                .build(),
+                        "url", Field.Builder.of(ImageFieldFactory.class)
+                                .withConfiguration(new ImageFieldConfiguration(FileProviderRegistry.class))
+                                .build()))
+                .build());
 
-  user-management {
-    enabled: true
-    access-control {
-      roles: ["manager", "admin"]
-    }
-    sign-up: true
-    additional-fields: [{name: "start_date", type: "date"}]
-  }
+Map<String, Route> routes = Map.of(
+        "projects-cards", Route.Builder.of(GridRouteFactory.class)
+                .withDefaultRoute(true)
+                .withDataStore("projects")
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withTitleField("name")
+                        .withDescriptionField("description")
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build(),
+        "projects-list", Route.Builder.of(ListRouteFactory.class)
+                .withDataStore("projects")
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-list")
+                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField("name")
+                        .withChildren(
+                                new FormElement("name", "field", "route.projects.labels.name"),
+                                new FormElement("description", "field", "route.projects.labels.description"),
+                                new FormElement("start_date", "field", "route.projects.labels.start_date"),
+                                new FormElement("end_date", "field", "route.projects.labels.end_date")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build(),
+        "tasks", Route.Builder.of(SubmenuRouteFactory.class)
+                .withIconFactory(TASKS::create)
+                .withDataStore("tasks")
+                .withTitle("route.tasks.title")
+                .withChildrenMap(Map.of("open",
+                        Route.Builder.of(KanbanDetailFactory.class)
+                                .withIconFactory(TASKS::create)
+                                .withDataStore("tasks")
+                                .withTitle("route.open-tasks.title")
+                                .withConfiguration(Kanban.Builder.of(CardFactory.class)
+                                        .withTitleField("title")
+                                        .withDescriptionField("description")
+                                        .withColumnField("status")
+                                        .build())
+                                .withChild(taskForm)
+                                .build(),
+                        "done",
+                        Route.Builder.of(MasterDetailRouteFactory.class)
+                                .withIconFactory(CHECK_CIRCLE::create)
+                                .withDataStore("tasks")
+                                .withTitle("route.done-tasks.title")
+                                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                                        .withTitleField("title")
+                                        .withDescriptionField("description")
+                                        .build())
+                                .withChild(taskForm)
+                                .build()))
+                .build(),
+        "images-grid", Route.Builder.of(GridRouteFactory.class)
+                .withDataStore("images")
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-cards")
+                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withTitleField("title")
+                        .withImageField("url")
+                        .withImageFactory(FileProvider.class)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build(),
+        "images-list", Route.Builder.of(ListRouteFactory.class)
+                .withDataStore("images")
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-list")
+                .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField("title")
+                        .withChildren(
+                                new FormElement("url", "field", "route.projects.labels.description"),
+                                new FormElement("title", "field", "route.projects.labels.name")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build());
 
-  selects {
-    task-status {
-      open: "selects.task-status.open"
-      todo: "selects.task-status.todo"
-      work-in-progress: "selects.task-status.progress"
-      closed: "selects.task-status.closed"
-    }
-  }
-
-  versioning {
-    enabled: true
-    repositories: ["projects", "tasks", "task_comments"]
-  }
-
-  auditing {
-    enabled: true
-    actions: ["create", "update", "delete", "login", "logout"]
-  }
-
-  repositories {
-    "projects" {
-      fields {
-        id {factory: "id", primary: true},
-        name {factory: "text", required: true, validation {max-length: 255}},
-        description {factory: "textarea", validation {max-length: 500}},
-        start_date {factory: "date"},
-        end_date {factory: "date"},
-        created_at {factory: "datetime"},
-        updated_at {factory: "datetime"}
-      }
-    },
-    "tasks" {
-      fields {
-        id {factory: "id", primary: true},
-        title {factory: "text", required: true, validation {max-length: 255}},
-        description {factory: "textarea", validation {max-length: 1000}},
-        assigned_to {factory: "reference", repository: "users", field: "id", filter-field: "username", children: ["username"]},  # 1:1 Relation
-        status {factory: "select", values: "task-status"},
-        due_date {factory: "date", read-only-for-roles: ["developer"]},
-        created_at {factory: "datetime"},
-        updated_at {factory: "datetime"}
-      }
-    },
-    "task_comments" {
-      fields {
-        id {factory: "id", primary: true},
-        comment_text {factory: "textarea", validation {max-length: 1000}},
-        user_id {factory: "number"},
-        created_at {factory: "datetime", default: "now()"}
-      }
-    }
-    "images" {
-      fields {
-        id {factory: "id", primary: true},
-        title {factory: "text", required: true, validation {max-length: 255}},
-        url {factory: "image", required: true},
-      }
-    }
-  }
-
-  routes {
-    "projects-cards" {
-      default-route: true
-      factory: "grid"
-      repository: "projects"
-      icon: "FACTORY"
-      title: "route.projects.title-cards"
-      configuration {
-        factory: "card"
-        title-field: "name"
-        description-field: "description"
-      }
-      roles: ["manager", "admin"]
-      child: ${application.forms.project} #This is not feaure of turbo-crud but rather a HOCON feature called "substitution" 
-    }
-    "tasks" {
-      icon: "TASKS"
-      repository: "tasks"
-      title: "route.tasks.title"
-      factory: "submenu"
-      children {
-        "open" {
-          icon: "TASKS"
-          repository: "tasks"
-          title: "route.open-tasks.title"
-          factory: "kanban"
-          configuration {
-            factory: "card"
-            title-field: "title"
-            description-field: "description"
-            column-field: "status"
-          }
-          child: ${application.forms.task} # HOCON substitution
-        }
-        "done" {
-          icon: "CHECK_CIRCLE"
-          repository: "tasks"
-          title: "route.done-tasks.title"
-          factory: "master-detail"
-          configuration {
-            factory: "card"
-            title-field: "title"
-            description-field: "description"
-          }
-          child: ${application.forms.task} # HOCON substitution
-        }
-      }
-    }
-    "images" {
-      factory: "grid"
-      repository: "images"
-      icon: "CAMERA"
-      title: "route.images.title"
-      configuration {
-        factory: "card"
-        title-field: "title"
-        image-field: "url"
-      }
-      roles: ["manager", "admin"] 
-      child: ${application.forms.image} # HOCON substitution
-    }
-  }
-
-  forms { # Form configuration values to be used for HOCON substitution
-    task: {
-      repository: "tasks"
-      factory: "form"
-      configuration {
-        title-field: "title"
-        children: [
-          {type: "field", field: "title", label: "route.tasks.labels.title"},
-          {type: "field", field: "description", label: "route.tasks.labels.description"},
-          {type: "field", field: "status", label: "route.tasks.labels.status"},
-          {type: "field", field: "due_date", label: "route.tasks.labels.due_date"},
-          {type: "field", field: "assigned_to", label: "route.tasks.labels.assigned_to"}, # 1:1 Relation
-          {
-            type: "collection"  # 1:N Relation
-            factory: "list"
-            repository: "task_comments"
-            reference-field: "task_id"
-            label: "route.tasks.labels.comments"
-            empty-message: "route.tasks.labels.comments-empty-message"
-            children: [
-              "comment_text"
-            ]
-            dialog {
-              factory: "form"
-              child {
-                factory: "form"
-                configuration {
-                  title-field: "name"
-                  children: [
-                    {type: "field", field: "comment_text", label: "route.tasks.labels.comment"}
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      }
-    }
-    project: {
-      repository: "projects"
-      factory: "form"
-      title: "route.projects.title-cards"
-      configuration {
-        title-field: "name"
-        children: [
-          {type: "field", field: "name", label: "route.projects.labels.name"},
-          {type: "field", field: "description", label: "route.projects.labels.description"},
-          {type: "field", field: "start_date", label: "route.projects.labels.start_date"},
-          {type: "field", field: "end_date", label: "route.projects.labels.end_date"}
-        ]
-      }
-    }
-    image: {
-      repository: "projects"
-      factory: "form"
-      title: "route.projects.title-cards"
-      configuration {
-        title-field: "name"
-        children: [
-          {type: "field", field: "title", label: "route.images.labels.title"},
-          {type: "field", field: "url", label: "route.images.labels.image"},
-        ]
-      }
-    }
-  }
-}
+Application configuration = Application.Builder.of()
+            .withName("application.name")
+            .withI18nBundlePrefix("some_i18n")
+            .withUserManagement(UserManagement.Builder.of()
+                    .withEnabled(true)
+                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
+    .withSignUp(true)
+                    .withAdditionalFields(List.of(AdditionalField.Builder.of()
+                            .withName("start_date")
+                            .withType("date")
+                            .build()))
+    .build())
+    .withRoutes(routes)
+            .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+    .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+    .withSelects(Selects.Builder.of().withConfigs(
+        Map.of("task-status", Map.of(
+                    "open", "selects.task-status.open",
+                    "todo", "selects.task-status.todo",
+                    "work-in-progress", "selects.task-status.progress",
+                    "closed", "selects.task-status.closed"
+            )
+        )).build())
+    .withDataStores(dataStores)
+            .build();
 ```
 
 ## Getting Started with Development
@@ -434,7 +474,7 @@ application {
 1. **Clone the repository**
 2. **Run the application**:
    - Use the provided SQL schema to set up the database.
-   - Configure application properties for H2 or other databases.
+   - Configure application properties for SQLite or other databases.
    - Start the Spring Boot server:
      ```bash
      ./mvnw spring-boot:run
