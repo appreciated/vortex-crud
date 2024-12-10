@@ -57,7 +57,7 @@ public class List extends VerticalLayout {
     }
 
     private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory((Class<? extends TurboCrudDialogFactory>) route.getChild().getFactory()).create(
+        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,
                 null,
