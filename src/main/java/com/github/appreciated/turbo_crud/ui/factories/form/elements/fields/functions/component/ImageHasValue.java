@@ -61,9 +61,7 @@ public class ImageHasValue extends CustomField<String> {
 
         imageWrapper.getStyle().set("cursor", "pointer");
         imageWrapper.addClickListener(e -> {
-            if (!deleteButton.getStyle().get("visibility").equals("visible")) {
-                deleteButton.getStyle().set("visibility", "visible");
-            }
+            deleteButton.getStyle().set("visibility", deleteButton.getStyle().get("visibility").equals("visible") ? "hidden" : "visible");
         });
     }
 
