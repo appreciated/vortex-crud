@@ -9,6 +9,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.FileBuffer;
+
+import static com.vaadin.flow.component.button.ButtonVariant.*;
+
 public class ImageHasValue extends CustomField<String> {
 
     private final ImageDisplayComponent image;
@@ -25,10 +28,12 @@ public class ImageHasValue extends CustomField<String> {
         image.getStyle().set("border-radius", "3px");
 
         deleteButton = new Button(VaadinIcon.TRASH.create(), event -> clearImage());
-        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+        deleteButton.addThemeVariants(LUMO_ERROR, LUMO_PRIMARY, LUMO_LARGE);
         deleteButton.getStyle().set("position", "absolute")
                 .set("top", "50%")
                 .set("left", "50%")
+                .set("border-radius", "100%")
+                .set("padding", "unset !important")
                 .set("transform", "translate(-50%, -50%)")
                 .set("visibility", "hidden");
 
