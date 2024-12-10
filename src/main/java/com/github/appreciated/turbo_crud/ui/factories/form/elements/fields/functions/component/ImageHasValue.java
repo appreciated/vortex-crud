@@ -41,6 +41,7 @@ public class ImageHasValue extends CustomField<String> {
         buffer = new FileBuffer(fileName -> turboCrudFileProvider.getPathForFile(fileName).toFile());
         upload = new Upload(buffer);
         upload.setSizeFull();
+        upload.setMaxFiles(1);
         upload.setMaxFileSize(10000000);
         upload.addSucceededListener(event -> setImageFromStream(turboCrudFileProvider.getPathForFile(event.getFileName()).toString()));
 
