@@ -25,7 +25,7 @@ public class ImageHasValue extends CustomField<String> {
         image.getStyle().set("border-radius", "3px");
 
         deleteButton = new Button(VaadinIcon.TRASH.create(), event -> clearImage());
-        deleteButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
         deleteButton.getStyle().set("position", "absolute")
                 .set("top", "50%")
                 .set("left", "50%")
