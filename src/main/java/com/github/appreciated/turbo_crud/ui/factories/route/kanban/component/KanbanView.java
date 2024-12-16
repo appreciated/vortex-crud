@@ -93,10 +93,14 @@ public class KanbanView extends VerticalLayout {
         Set<String> strings = selectConfig.keySet();
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
+
+        kanbanBoard.getStyle()
+                .set("flex", "1 1 auto")
+                .set("overflow", "auto");
+
         for (String string : strings) {
             VerticalLayout column = createColumn(getTranslation(selectConfig.get(string)), string);
             kanbanBoard.add(column);
-
         }
         kanbanBoard.setSizeFull();
 

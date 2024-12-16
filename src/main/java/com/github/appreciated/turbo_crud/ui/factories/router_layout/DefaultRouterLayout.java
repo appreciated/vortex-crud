@@ -41,7 +41,7 @@ public class DefaultRouterLayout extends AppLayout {
         SideNav nav = getSideNav();
 
         Scroller scroller = new Scroller(nav);
-        scroller.setClassName(LumoUtility.Padding.SMALL);
+        scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
 
         addToDrawer(scroller);
         addToNavbar(toggle, title);
