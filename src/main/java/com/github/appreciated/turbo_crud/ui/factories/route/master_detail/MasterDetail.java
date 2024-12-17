@@ -140,7 +140,7 @@ public class MasterDetail extends SplitLayout {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
             pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
             setDetail(pathVariables, false);
-            ui.getPage().getHistory().pushState(null, "/view/" + pathForEntity);
+            ui.getPage().getHistory().pushState(null, pathForEntity);
         });
     }
 
