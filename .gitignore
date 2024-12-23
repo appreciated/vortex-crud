@@ -46,3 +46,17 @@ webpack.generated.js
 /jooq/target/
 /examples/example-base/target/
 /examples/jpa-sqlite-example/target/
+
+/examples/jpa-sqlite-example/src/main/bundles
+/examples/jpa-sqlite-example/package.json
+/examples/jpa-sqlite-example/package-lock.json
+/examples/jpa-sqlite-example/tsconfig.json
+/examples/jpa-sqlite-example/types.d.ts
+/examples/jpa-sqlite-example/vite.config.ts
+
+/examples/jooq-sqlite-example/src/main/bundles
+/examples/jooq-sqlite-example/package.json
+/examples/jooq-sqlite-example/package-lock.json
+/examples/jooq-sqlite-example/tsconfig.json
+/examples/jooq-sqlite-example/types.d.ts
+/examples/jooq-sqlite-example/vite.config.ts
