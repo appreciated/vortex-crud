@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.appreciated</groupId>
-    <artifactId>turbo-crud</artifactId>
+    <groupId>com.github.appreciated.turbo-crud</groupId>
+    <artifactId>examples</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>turbo-crud</name>
+    <name>turbo-crud examples</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
 
     <modules>
-        <module>core</module>
-        <module>jpa</module>
-        <module>jooq</module>
-        <module>examples</module>
+        <module>example-base</module>
+        <module>jpa-sqlite-example</module>
+        <module>jooq-sqlite-example</module>
     </modules>
 </project>

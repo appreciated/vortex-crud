@@ -10,7 +10,7 @@
 
 # The following files are generated/updated by vaadin-maven-plugin
 node_modules/
-src/main/frontend/generated/
+core/src/main/frontend/generated/
 pnpmfile.js
 vite.generated.ts
 
@@ -32,3 +32,8 @@ webpack.generated.js
 
 # SQLite database
 /mydatabase.db
+/core/target/
+/jpa-example/mydatabase.db
+/examples/example-base/src/main/frontend/generated/
+/examples/jooq-sqlite-example/src/main/frontend/generated/
+/examples/jpa-sqlite-example/src/main/frontend/generated/

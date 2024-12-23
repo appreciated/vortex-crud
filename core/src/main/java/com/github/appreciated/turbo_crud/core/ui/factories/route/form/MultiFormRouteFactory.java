@@ -1,0 +1,49 @@
+package com.github.appreciated.turbo_crud.core.ui.factories.route.form;
+
+import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.core.config.model.*;
+import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
+import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
+import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactoryRegistry;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.html.Div;
+import jakarta.annotation.Nullable;
+
+public class MultiFormRouteFactory implements TurboCrudRouteFactory {
+
+    private final FormRouteFactory formRouteFactory;
+
+    private String titleColumn;
+
+    public MultiFormRouteFactory(
+            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+            TurboCrudConfigService configService,
+            FormCreator formCreator,
+            TurboCrudRouteFactoryRegistry factoryRegistry
+    ) {
+        this.formRouteFactory = new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry);
+    }
+
+    @Override
+    public Component renderRoute(Integer currentPathIndex,
+                                 TurboCrudPathToRouteResolver routeResolver,
+                                 @Nullable DetailRouteSetting detailRouteSetting) {
+        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+
+        MultiFormConfiguration formConfiguration = (MultiFormConfiguration) route.getConfiguration();
+        Div div = new Div();
+        for (RouteConfiguration child : formConfiguration.getForms()) {
+            assert detailRouteSetting != null;
+            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
+        }
+        return div;
+    }
+
+    @Override
+    public boolean isContainerRoute() {
+        return false;
+    }
+}

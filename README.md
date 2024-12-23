@@ -1,5 +1,5 @@
 # turbo-crud
-<img width="100" alt="turbo-crud Logo" src="./turbo-crud.png"/>
+<img width="100" alt="turbo-crud Logo" src="turbo-crud.png"/>
 
 `turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD-style applications through configuration-driven definitions of routes, UI, entities, and data binding. By providing several abstraction layers, `turbo-crud` uses Vaadin to dynamically generate routes and includes default implementations for UI representation. This approach enables developers to focus on configuration rather than writing code, enhancing both development speed and flexibility.
 
@@ -203,7 +203,7 @@ Map<String, Route> routes = Map.of(
                 .build()
         // ...
 );
-Application configuration = Application.Builder.of()
+example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application configuration = example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application.Builder.of()
         .withName("application.name")
         .withI18nBundlePrefix("some_i18n")
         .withUserManagement(UserManagement.Builder.of()
@@ -232,7 +232,7 @@ Application configuration = Application.Builder.of()
         .build();
 ```
 
-## Application Configuration
+## example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application Configuration
 Here’s a more complete sample configuration for setting up a project management application:
 
 ```java
@@ -438,7 +438,7 @@ Map<String, Route> routes = Map.of(
                 .withChild(imageForm)
                 .build());
 
-Application configuration = Application.Builder.of()
+example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application configuration = example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application.Builder.of()
         .withName("application.name")
         .withI18nBundlePrefix("some_i18n")
         .withUserManagement(UserManagement.Builder.of()
