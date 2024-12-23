@@ -37,3 +37,12 @@ webpack.generated.js
 /examples/example-base/src/main/frontend/generated/
 /examples/jooq-sqlite-example/src/main/frontend/generated/
 /examples/jpa-sqlite-example/src/main/frontend/generated/
+/examples/example-base/src/main/frontend/index.html
+/examples/jooq-sqlite-example/src/main/frontend/index.html
+/examples/jpa-sqlite-example/src/main/frontend/index.html
+/examples/jooq-sqlite-example/target/
+
+/jpa/target/
+/jooq/target/
+/examples/example-base/target/
+/examples/jpa-sqlite-example/target/
