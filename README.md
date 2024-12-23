@@ -232,7 +232,7 @@ example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.tur
         .build();
 ```
 
-## example.com.github.appreciated.turbo_crud.example.jpa.com.github.appreciated.turbo_crud.example.jooq.Application Configuration
+## Configuration
 Here’s a more complete sample configuration for setting up a project management application:
 
 ```java
