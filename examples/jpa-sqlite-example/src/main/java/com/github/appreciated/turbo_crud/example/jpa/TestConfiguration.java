@@ -17,6 +17,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteF
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.Map;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
+//TODO This shouldn't be necessary, replace using AutoConfiguration
+@ComponentScan("com.github.appreciated.turbo_crud")
 @Service
 public class TestConfiguration implements TurboCrudConfigurationProvider {
     @Override
