@@ -18,7 +18,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
-@com.vaadin.flow.router.Route(value = "view/:path*", layout = ProxyRouterLayout.class)
 public class DynamicRoute extends Div implements BeforeEnterObserver {
 
     private final TurboCrudConfigService configService;
@@ -33,8 +32,11 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         String path = event.getRouteParameters().get("path").orElse("");
+        if (!path.isEmpty()){
+            path = "/" + path;
+        }
         removeAll();
-        TurboCrudPathToRouteResolver pathRoutes = new TurboCrudPathToRouteResolver(routeFactoryRegistry, path, configService.getConfiguration().getRoutes());
+        TurboCrudPathToRouteResolver pathRoutes = new TurboCrudPathToRouteResolver(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRoutes());
         Route currentRoute = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())

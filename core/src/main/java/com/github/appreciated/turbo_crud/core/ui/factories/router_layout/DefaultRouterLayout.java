@@ -53,7 +53,7 @@ public class DefaultRouterLayout extends AppLayout {
             Route value = configEntry.getValue();
             if (!value.isHideInMenu()) {
                 String translation = getTranslation(value.getTitle());
-                String path = "/view/" + configEntry.getKey();
+                String path = configEntry.getKey();
                 Component icon = null;
                 if (value.getIconFactory() != null) {
                     icon = value.getIconFactory().get();

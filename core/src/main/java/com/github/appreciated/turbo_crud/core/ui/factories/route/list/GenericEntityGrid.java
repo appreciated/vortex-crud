@@ -63,6 +63,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
      * @param entity the clicked GenericEntity
      */
     private void onItemClick(GenericEntity entity) {
-        getUI().ifPresent(ui -> ui.navigate("/view/" + pathVariables.getPath() + "/" + DataStoreUtil.getId(entity)));
+        String v = pathVariables.getPath() + "/" + DataStoreUtil.getId(entity);
+        getUI().ifPresent(ui -> ui.navigate(v));
     }
 }

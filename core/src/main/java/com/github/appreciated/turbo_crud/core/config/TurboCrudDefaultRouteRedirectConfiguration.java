@@ -50,7 +50,7 @@ public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinService
 
         @Override
         public void beforeEnter(BeforeEnterEvent event) {
-            event.forwardTo("/view/" + defaultRoute.get().getKey());
+            event.forwardTo(defaultRoute.get().getKey());
         }
     }
 }
