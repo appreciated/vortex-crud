@@ -16,6 +16,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteF
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 
+import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Map;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class TestConfiguration implements TurboCrudConfigurationProvider {
+public class JooqTestConfiguration implements TurboCrudConfigurationProvider {
     @Override
     public com.github.appreciated.turbo_crud.core.config.model.Application get() {
         Route taskForm = Route.Builder.of(FormRouteFactory.class)
@@ -98,7 +99,7 @@ public class TestConfiguration implements TurboCrudConfigurationProvider {
                 .build();
 
         Map<String, DataStore> dataStores = Map.of(
-                "projects", DataStore.Builder.of(JpaDataStore.class)
+                "projects", DataStore.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -108,7 +109,7 @@ public class TestConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks", DataStore.Builder.of(JpaDataStore.class)
+                "tasks", DataStore.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -119,19 +120,19 @@ public class TestConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task", DataStore.Builder.of(JpaDataStore.class)
+                "task_has_task", DataStore.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 "task_id", new Field(IdFieldFactory.class),
                                 "related_task_id", new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments", DataStore.Builder.of(JpaDataStore.class)
+                "task_comments", DataStore.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 "user_id", new Field(NumberFieldFactory.class),
                                 "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images", DataStore.Builder.of(JpaDataStore.class)
+                "images", DataStore.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", Field.Builder.of(TextFieldFactory.class)
