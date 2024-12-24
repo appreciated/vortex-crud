@@ -60,3 +60,4 @@ webpack.generated.js
 /examples/jooq-sqlite-example/tsconfig.json
 /examples/jooq-sqlite-example/types.d.ts
 /examples/jooq-sqlite-example/vite.config.ts
+/jooq/mydatabase.db
