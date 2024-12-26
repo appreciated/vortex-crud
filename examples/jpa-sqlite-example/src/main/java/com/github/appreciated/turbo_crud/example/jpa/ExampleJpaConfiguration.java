@@ -1,7 +1,9 @@
-package com.github.appreciated.turbo_crud.example.jooq;
+package com.github.appreciated.turbo_crud.example.jpa;
 
-import com.github.appreciated.turbo_crud.core.config.model.*;
+
 import com.github.appreciated.turbo_crud.core.config.model.Application;
+import com.github.appreciated.turbo_crud.core.config.model.*;
+import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -15,8 +17,8 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-
-import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
+import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,10 @@ import java.util.Map;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
+//TODO This shouldn't be necessary, replace using AutoConfiguration
+@ComponentScan("com.github.appreciated.turbo_crud")
 @Service
-public class JooqTestConfiguration implements TurboCrudConfigurationProvider {
+public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
     @Override
     public com.github.appreciated.turbo_crud.core.config.model.Application get() {
         Route taskForm = Route.Builder.of(FormRouteFactory.class)
@@ -99,7 +103,7 @@ public class JooqTestConfiguration implements TurboCrudConfigurationProvider {
                 .build();
 
         Map<String, DataStoreConfig> dataStores = Map.of(
-                "projects", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "projects", DataStoreConfig.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -109,7 +113,7 @@ public class JooqTestConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "tasks", DataStoreConfig.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -120,19 +124,19 @@ public class JooqTestConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "task_has_task", DataStoreConfig.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "task_id", new Field(IdFieldFactory.class),
                                 "related_task_id", new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "task_comments", DataStoreConfig.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 "user_id", new Field(NumberFieldFactory.class),
                                 "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "images", DataStoreConfig.Builder.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", Field.Builder.of(TextFieldFactory.class)
