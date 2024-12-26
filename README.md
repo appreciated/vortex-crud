@@ -1,5 +1,5 @@
-# turbo-crud
-<img width="100" alt="turbo-crud Logo" src="turbo-crud.png"/>
+# turbo-crud 
+<img width="120px" alt="turbo-crud Logo" src="turbo-crud.png"/>
 
 `turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD applications. It uses a declarative configuration approach to define routes, UI components, entities, relationships and data bindings, reducing the need for manual coding. By providing multiple abstraction layers, turbo-crud leverages Vaadin Flow to dynamically generate routes and offers default implementations for UI representation, allowing developers to quickly build and manage CRUD interfaces with minimal effort.
 
@@ -11,27 +11,26 @@
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 
 ## Key Features
-- **Configuration-Driven UI and Route Generation**: Rapidly create complex, user-friendly CRUD applications through configuration alone, without writing Java code.
-- **Modular Architecture**: The architecture is modular and flexible at every level ([see under Architecture](#Architecture)), allowing for custom implementations.
-- **Entity Management**: `turbo-crud` handles data management by default; You need to define the data model.
-- **Custom DataStores**: Use custom data sources for cases where the default data manager is not ideal.
-- **Database Schema Validation**: The `turbo-crudDatabaseSchemaValidator` verifies that the database schema matches the configuration at startup.
-- **UI Components and Factories**: Factory implementations such as `DefaultEntityDetailFactoryImpl` and `DefaultEntityItemCardFactoryImpl` dynamically configure UI components.
+- **Declarative definition of UI and Route Generation**: create rapidly complex, user-friendly CRUD applications by describing the application.
+- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)), to supply custom implementations.
+- **DataStores**: Let `turbo-crud` handle simple entity management; For more complicated use-cases provide a custom implementation.
+- **Database Schema Validation**: Get noticed if the data model does no longer match the data model 
+- **UI Components**: 
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (One-To-One, One-To-Many).
 - **Nested Hierarchies**
 - **Multiple Forms at Once**: Create views containing multiple forms simultaneously.
-- **[WIP] Additional Routes**:
+- **Additional Routes**:
     - **Kanban Route**
 - **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
-- **[WIP] Media Support**: Add, remove, and view media as individual fields
+- **[WIP] Media Support**: Manage and view media easily
 - **Allow adding routes not visible in the menu**
 
 ## Roadmap (in no particular order)
 - **Extended Entity Relationship Support**: Add, remove, and view entities from Many-To-Many relationships.
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route".
 - **Field Validation**: Support for basic and advanced field validation hooks.
-- **User and Role Management & Authentication**: (optionally using Authentik)
+- **User and Role Management & Authentication**: (optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Role-Based Access Control (RBAC)**
 - **Entity Versioning**
@@ -48,7 +47,6 @@
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **Code Generation**: Check feasibility to generate Vaadin code by utilizing a configuration in combination with the runtime implementations to support top-down workflows, including models and repositories.
 - **API-Endpoints**: Allow defining API endpoints using the configuration file
 
 ## Data Handling and Management

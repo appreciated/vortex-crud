@@ -19,7 +19,7 @@ public class Application {
 
     private Auditing auditing;
 
-    private Map<String, DataStore> dataStores;
+    private Map<String, DataStoreConfig> dataStores;
 
     private Map<String, Route> routes;
 
@@ -71,11 +71,11 @@ public class Application {
         this.auditing = auditing;
     }
 
-    public Map<String, DataStore> getDataStores() {
+    public Map<String, DataStoreConfig> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<String, DataStore> dataStores) {
+    public void setDataStores(Map<String, DataStoreConfig> dataStores) {
         this.dataStores = dataStores;
     }
 
@@ -129,7 +129,7 @@ public class Application {
             return this;
         }
 
-        public Builder withDataStores(Map<String, DataStore> dataStores) {
+        public Builder withDataStores(Map<String, DataStoreConfig> dataStores) {
             product.dataStores = dataStores;
             return this;
         }

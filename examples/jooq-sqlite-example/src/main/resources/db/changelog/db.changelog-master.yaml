@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - includeAll:
+      path: src/main/resources/db/changelog/turbo-crud/
+  - includeAll:
+      path: src/main/resources/db/changelog/database/

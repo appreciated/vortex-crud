@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.jpa.service;
 
 import com.github.appreciated.turbo_crud.core.config.model.Application;
-import com.github.appreciated.turbo_crud.core.config.model.DataStore;
+import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.config.model.Field;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.TurboCrudFieldFactoryRegistry;
@@ -19,7 +19,7 @@ import java.util.*;
  * Validates the database schema against the {@link Application}.
  * <p>
  * This class checks if tables and columns in the database match the expected
- * schema based on {@link DataStore} and {@link Field} from
+ * schema based on {@link DataStoreConfig} and {@link Field} from
  * {@link TurboCrudConfigService}. It uses JPA's {@link EntityManager} to run
  * native SQL queries and validate table existence, column names, and data types.
  * </p>
@@ -37,8 +37,8 @@ public class TurboCrudJpaDatabaseSchemaValidator {
     public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
         this.entityManager = entityManager;
         this.fieldRegistry = fieldRegistry;
-        Map<String, DataStore> tablesConfig = configService.getConfiguration().getDataStores();
-        for (Map.Entry<String, DataStore> entry : tablesConfig.entrySet()) {
+        Map<String, DataStoreConfig> tablesConfig = configService.getConfiguration().getDataStores();
+        for (Map.Entry<String, DataStoreConfig> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFields());
         }
     }

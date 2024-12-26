@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.DataStore;
+import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
@@ -86,7 +86,7 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
         }
 
         String table = route.getDataStore();
-        DataStore tables = configService.getConfiguration().getDataStores().get(table);
+        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);

@@ -49,7 +49,7 @@ public class KanbanView extends VerticalLayout {
                       DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
         Selects selects = configService.getSelects();
-        DataStore config = configService.getDataStores().get(dataStoreIdentifier);
+        DataStoreConfig config = configService.getDataStores().get(dataStoreIdentifier);
         Field dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;

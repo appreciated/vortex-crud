@@ -6,13 +6,13 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class DataStore {
+public class DataStoreConfig {
 
     private Class<? extends TurboCrudDataStore> factory;
 
     private Map<String, Field> fields;
 
-    public DataStore(Class<? extends TurboCrudDataStore> factory) {
+    public DataStoreConfig(Class<? extends TurboCrudDataStore> factory) {
         this.factory = factory;
     }
 
@@ -34,14 +34,14 @@ public class DataStore {
 
     public static class Builder {
 
-        private DataStore product;
+        private DataStoreConfig product;
 
-        private Builder(DataStore product) {
+        private Builder(DataStoreConfig product) {
             this.product = product;
         }
 
         public static Builder of(Class<? extends TurboCrudDataStore> factory) {
-            return new Builder(new DataStore(factory));
+            return new Builder(new DataStoreConfig(factory));
         }
 
         public Builder withFields(Map<String, Field> fields) {
@@ -49,7 +49,7 @@ public class DataStore {
             return this;
         }
 
-        public DataStore build() {
+        public DataStoreConfig build() {
             return product;
         }
     }

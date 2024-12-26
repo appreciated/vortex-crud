@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.jpa.service;
 
-import com.github.appreciated.turbo_crud.core.config.model.DataStore;
+import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
@@ -24,7 +24,7 @@ public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFac
     private final HashMap<String, TurboCrudDataStore> factories = new HashMap<>();
 
     public DefaultJpaDataStoreFactoryRegistry(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        for (Map.Entry<String, DataStore> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+        for (Map.Entry<String, DataStoreConfig> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new JpaDataStore(table, entityManager, transactionTemplate));
         }

@@ -61,7 +61,7 @@ public class FormDialogFactory implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStore tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 

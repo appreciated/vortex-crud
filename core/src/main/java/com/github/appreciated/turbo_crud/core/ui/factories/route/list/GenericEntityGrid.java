@@ -34,7 +34,7 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStore tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
+        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
         RouteConfiguration gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;

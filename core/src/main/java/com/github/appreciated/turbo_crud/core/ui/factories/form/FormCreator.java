@@ -33,7 +33,7 @@ public class FormCreator {
                                    RouteConfiguration formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
-                                   DataStore tables,
+                                   DataStoreConfig tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
