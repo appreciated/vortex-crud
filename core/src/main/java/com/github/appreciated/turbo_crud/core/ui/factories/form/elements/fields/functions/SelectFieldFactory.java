@@ -12,9 +12,9 @@ import java.util.*;
 public class SelectFieldFactory implements TurboCrudFieldFactory {
 
     private final Selects selects;
-    private final Map<String, DataStoreConfig> tablesConfig;
+    private final Map<String, DataStoreConfig<?>> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<String, DataStoreConfig> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<String, DataStoreConfig<?>> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }
@@ -23,7 +23,7 @@ public class SelectFieldFactory implements TurboCrudFieldFactory {
     public Component createComponent(String table, String field, Field dataStoreField) {
         Select<String> select = new Select<>();
 
-        DataStoreConfig dataStoreConfig = tablesConfig.get(table);
+        DataStoreConfig<?> dataStoreConfig = tablesConfig.get(table);
         Field tableField = dataStoreConfig.getFields().get(field);
 
         String selectName = tableField.getValues();

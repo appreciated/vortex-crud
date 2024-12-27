@@ -16,12 +16,22 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteF
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 
+import com.github.appreciated.turbo_crud.jooq.models.Tables;
+import com.github.appreciated.turbo_crud.jooq.models.tables.*;
 import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
+import com.github.appreciated.turbo_crud.jooq.service.JooqDataStoreConfig;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Images.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Projects.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskComments.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskHasTask.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
@@ -97,49 +107,48 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         )
                         .build())
                 .build();
-
-        Map<String, DataStoreConfig> dataStores = Map.of(
-                "projects", DataStoreConfig.Builder.of(JooqDataStore.class)
+        Map<String, DataStoreConfig<?>> dataStores = Map.of(
+                "projects", JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                                "start_date", new Field(DateFieldFactory.class),
-                                "end_date", new Field(DateFieldFactory.class),
-                                "created_at", new Field(DateTimePickerFactory.class),
-                                "updated_at", new Field(DateTimePickerFactory.class)))
+                                PROJECTS.ID, new Field(IdFieldFactory.class, true),
+                                PROJECTS.NAME, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                PROJECTS.DESCRIPTION, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                                PROJECTS.START_DATE, new Field(DateFieldFactory.class),
+                                PROJECTS.END_DATE, new Field(DateFieldFactory.class),
+                                PROJECTS.CREATED_AT, new Field(DateTimePickerFactory.class),
+                                PROJECTS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "tasks", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
-                                "status", new Field(SelectFieldFactory.class, "task-status"),
-                                "due_date", Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
-                                "created_at", new Field(DateTimePickerFactory.class),
-                                "updated_at", new Field(DateTimePickerFactory.class)))
+                                TASKS.ID, new Field(IdFieldFactory.class, true),
+                                TASKS.TITLE, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                TASKS.DESCRIPTION, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                TASKS.ASSIGNED_TO, new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
+                                TASKS.STATUS, new Field(SelectFieldFactory.class, "task-status"),
+                                TASKS.DUE_DATE, Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
+                                TASKS.CREATED_AT, new Field(DateTimePickerFactory.class),
+                                TASKS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "task_has_task", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                "task_id", new Field(IdFieldFactory.class),
-                                "related_task_id", new Field(IdFieldFactory.class)))
+                                TASK_HAS_TASK.TASK_ID, new Field(IdFieldFactory.class),
+                                TASK_HAS_TASK.RELATED_TASK_ID, new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "task_comments", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "user_id", new Field(NumberFieldFactory.class),
-                                "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
+                                TASK_COMMENTS.ID, new Field(IdFieldFactory.class, true),
+                                TASK_COMMENTS.COMMENT_TEXT, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                TASK_COMMENTS.USER_ID, new Field(NumberFieldFactory.class),
+                                TASK_COMMENTS.CREATED_AT, Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images", DataStoreConfig.Builder.of(JooqDataStore.class)
+                "images", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "title", Field.Builder.of(TextFieldFactory.class)
+                                IMAGES.ID, new Field(IdFieldFactory.class, true),
+                                IMAGES.TITLE, Field.Builder.of(TextFieldFactory.class)
                                         .withRequired(true)
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
-                                "url", Field.Builder.of(ImageFieldFactory.class)
+                                IMAGES.URL, Field.Builder.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
                                         .build()))
                         .build());
@@ -175,12 +184,12 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withChild(projectForm)
                         .build(),
                 "tasks", Route.Builder.of(SubmenuRouteFactory.class)
-                        .withIconFactory(TASKS::create)
+                        .withIconFactory(VaadinIcon.TASKS::create)
                         .withDataStore("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
                                 Route.Builder.of(KanbanDetailFactory.class)
-                                        .withIconFactory(TASKS::create)
+                                        .withIconFactory(VaadinIcon.TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
                                         .withConfiguration(Kanban.Builder.of(CardFactory.class)

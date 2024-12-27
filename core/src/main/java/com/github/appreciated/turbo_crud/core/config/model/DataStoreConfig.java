@@ -6,11 +6,11 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class DataStoreConfig {
+public class DataStoreConfig<T> {
 
     private Class<? extends TurboCrudDataStore> factory;
 
-    private Map<String, Field> fields;
+    private Map<T, Field> fields;
 
     public DataStoreConfig(Class<? extends TurboCrudDataStore> factory) {
         this.factory = factory;
@@ -24,32 +24,32 @@ public class DataStoreConfig {
         this.factory = factory;
     }
 
-    public Map<String, Field> getFields() {
+    public Map<T, Field> getFields() {
         return fields;
     }
 
-    public void setFields(Map<String, Field> fields) {
+    public void setFields(Map<T, Field> fields) {
         this.fields = fields;
     }
 
-    public static class Builder {
+    public static class Builder<T> {
 
         private DataStoreConfig product;
 
-        private Builder(DataStoreConfig product) {
+        public Builder(DataStoreConfig<T> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudDataStore> factory) {
-            return new Builder(new DataStoreConfig(factory));
+        public  static <T> Builder<T> of(Class<? extends TurboCrudDataStore> factory) {
+            return new Builder<>(new DataStoreConfig<>(factory));
         }
 
-        public Builder withFields(Map<String, Field> fields) {
+        public Builder<T> withFields(Map<T, Field> fields) {
             product.fields = fields;
             return this;
         }
 
-        public DataStoreConfig build() {
+        public DataStoreConfig<T> build() {
             return product;
         }
     }
