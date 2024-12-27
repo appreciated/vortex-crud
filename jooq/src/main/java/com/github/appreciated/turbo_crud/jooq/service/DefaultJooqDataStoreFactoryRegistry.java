@@ -1,11 +1,12 @@
-package com.github.appreciated.turbo_crud.jpa.service;
+package com.github.appreciated.turbo_crud.jooq.service;
 
 import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import jakarta.persistence.EntityManager;
+import org.jooq.DSLContext;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -19,27 +20,23 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFactoryRegistry<String> {
+public class DefaultJooqDataStoreFactoryRegistry implements TurboCrudDataStoreFactoryRegistry<Table<?>> {
 
-    private final HashMap<String, TurboCrudDataStore> factories = new HashMap<>();
+    private final HashMap<Table<?>, TurboCrudDataStore> factories = new HashMap<>();
 
-    public DefaultJpaDataStoreFactoryRegistry(TurboCrudConfigService turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService turboCrudConfigService, DSLContext dslContext) {
         for (Map.Entry<?, DataStoreConfig<?>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
-            String table = (String) entry.getKey();
-            factories.put(table, new JpaDataStore(table, entityManager, transactionTemplate));
+            Table<?> table = (Table<?>) entry.getKey();
+            factories.put(table, new JooqDataStore(table, dslContext));
         }
-        factories.put("users", new JpaDataStore("users", entityManager, transactionTemplate));
-        factories.put("roles", new JpaDataStore("roles", entityManager, transactionTemplate));
-        factories.put("user_roles", new JpaDataStore("user_roles", entityManager, transactionTemplate));
-        factories.put("audit_log", new JpaDataStore("audit_log", entityManager, transactionTemplate));
     }
 
-    public TurboCrudDataStore getFactory(String table) {
+    public TurboCrudDataStore getFactory(Table<?> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudDataStore factory) {
+    public void addFactory(Table<?> key, TurboCrudDataStore factory) {
         factories.put(key, factory);
     }
 }

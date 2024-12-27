@@ -6,6 +6,7 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * The entry point of the Spring Boot application.
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @Theme(variant = Lumo.DARK)
 @Push
+@ComponentScan({"com.github.appreciated.turbo_crud"})
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {

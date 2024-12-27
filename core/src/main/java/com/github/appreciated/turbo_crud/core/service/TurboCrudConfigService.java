@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.core.service;
 
 import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ public class TurboCrudConfigService {
 
     private final Application<?> configuration;
 
-    public TurboCrudConfigService(TurboCrudConfigurationProvider configurationProvider) {
+    public TurboCrudConfigService(@Autowired TurboCrudConfigurationProvider configurationProvider) {
         configuration = configurationProvider.get();
     }
 

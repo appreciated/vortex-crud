@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.example.jpa;
 
 
-import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.config.model.*;
+import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
@@ -20,7 +20,6 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.Submenu
 import com.github.appreciated.turbo_crud.jpa.service.JpaApplication;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStoreConfig;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,11 +28,11 @@ import java.util.Map;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 //TODO This shouldn't be necessary, replace using AutoConfiguration
-@ComponentScan("com.github.appreciated.turbo_crud")
 @Service
 public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
+
     @Override
-    public com.github.appreciated.turbo_crud.core.config.model.Application get() {
+    public Application<String> get() {
         Route taskForm = Route.Builder.of(FormRouteFactory.class)
                 .withDataStore("tasks")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
