@@ -1,7 +1,6 @@
 package com.github.appreciated.turbo_crud.example.jooq;
 
 import com.github.appreciated.turbo_crud.core.config.model.*;
-import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -15,29 +14,27 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-
-import com.github.appreciated.turbo_crud.jooq.models.Tables;
-import com.github.appreciated.turbo_crud.jooq.models.tables.*;
+import com.github.appreciated.turbo_crud.jooq.service.JooqApplication;
 import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.turbo_crud.jooq.service.JooqDataStoreConfig;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import org.jooq.Table;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.turbo_crud.jooq.models.tables.Images.*;
-import static com.github.appreciated.turbo_crud.jooq.models.tables.Projects.*;
-import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskComments.*;
-import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskHasTask.*;
-import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.*;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Images.IMAGES;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.Projects.PROJECTS;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
+import static com.github.appreciated.turbo_crud.jooq.models.tables.TaskHasTask.TASK_HAS_TASK;
 import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
 public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider {
     @Override
-    public com.github.appreciated.turbo_crud.core.config.model.Application get() {
+    public com.github.appreciated.turbo_crud.core.config.model.Application<?> get() {
         Route taskForm = Route.Builder.of(FormRouteFactory.class)
                 .withDataStore("tasks")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
@@ -107,8 +104,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         )
                         .build())
                 .build();
-        Map<String, DataStoreConfig<?>> dataStores = Map.of(
-                "projects", JooqDataStoreConfig.of(JooqDataStore.class)
+        Map<Table<?>, DataStoreConfig<?>> dataStores = Map.of(
+                PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new Field(IdFieldFactory.class, true),
                                 PROJECTS.NAME, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -118,7 +115,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                 PROJECTS.CREATED_AT, new Field(DateTimePickerFactory.class),
                                 PROJECTS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASKS, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASKS.ID, new Field(IdFieldFactory.class, true),
                                 TASKS.TITLE, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -129,19 +126,19 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                 TASKS.CREATED_AT, new Field(DateTimePickerFactory.class),
                                 TASKS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASK_HAS_TASK, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_HAS_TASK.TASK_ID, new Field(IdFieldFactory.class),
                                 TASK_HAS_TASK.RELATED_TASK_ID, new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASK_COMMENTS, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new Field(IdFieldFactory.class, true),
                                 TASK_COMMENTS.COMMENT_TEXT, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new Field(NumberFieldFactory.class),
                                 TASK_COMMENTS.CREATED_AT, Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images", JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                IMAGES, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 IMAGES.ID, new Field(IdFieldFactory.class, true),
                                 IMAGES.TITLE, Field.Builder.of(TextFieldFactory.class)
@@ -239,7 +236,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withChild(imageForm)
                         .build());
 
-        return Application.Builder.of()
+        return JooqApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withUserManagement(UserManagement.Builder.of()

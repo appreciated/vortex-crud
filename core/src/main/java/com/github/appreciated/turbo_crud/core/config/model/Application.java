@@ -5,7 +5,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class Application {
+public class Application<T> {
 
     private String name;
 
@@ -19,7 +19,7 @@ public class Application {
 
     private Auditing auditing;
 
-    private Map<String, DataStoreConfig<?>> dataStores;
+    private Map<T, DataStoreConfig<?>> dataStores;
 
     private Map<String, Route> routes;
 
@@ -71,11 +71,11 @@ public class Application {
         this.auditing = auditing;
     }
 
-    public Map<String, DataStoreConfig<?>> getDataStores() {
+    public Map<T, DataStoreConfig<?>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<String, DataStoreConfig<?>> dataStores) {
+    public void setDataStores(Map<T, DataStoreConfig<?>> dataStores) {
         this.dataStores = dataStores;
     }
 
@@ -87,58 +87,54 @@ public class Application {
         this.routes = routes;
     }
 
-    public static class Builder {
+    public static class Builder<T> {
 
-        private Application product;
+        private Application<T> product;
 
-        private Builder(Application product) {
+        public Builder(Application<T> product) {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Application());
-        }
-
-        public Builder withName(String name) {
+        public Builder<T> withName(String name) {
             product.name = name;
             return this;
         }
 
-        public Builder withI18nBundlePrefix(String i18nBundlePrefix) {
+        public Builder<T> withI18nBundlePrefix(String i18nBundlePrefix) {
             product.i18nBundlePrefix = i18nBundlePrefix;
             return this;
         }
 
-        public Builder withUserManagement(UserManagement userManagement) {
+        public Builder<T> withUserManagement(UserManagement userManagement) {
             product.userManagement = userManagement;
             return this;
         }
 
-        public Builder withSelects(Selects selects) {
+        public Builder<T> withSelects(Selects selects) {
             product.selects = selects;
             return this;
         }
 
-        public Builder withVersioning(Versioning versioning) {
+        public Builder<T> withVersioning(Versioning versioning) {
             product.versioning = versioning;
             return this;
         }
 
-        public Builder withAuditing(Auditing auditing) {
+        public Builder<T> withAuditing(Auditing auditing) {
             product.auditing = auditing;
             return this;
         }
 
-        public Builder withDataStores(Map<String, DataStoreConfig<?>> dataStores) {
+        public Builder<T> withDataStores(Map<T, DataStoreConfig<?>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
-        public Application build() {
+        public Application<T> build() {
             return product;
         }
 
-        public Builder withRoutes(Map<String, Route> routes) {
+        public Builder<T> withRoutes(Map<String, Route> routes) {
             product.routes = routes;
             return this;
         }

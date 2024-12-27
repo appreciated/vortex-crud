@@ -4,6 +4,8 @@ import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Service for loading and providing access to the Turbo CRUD configuration.
  * Reads configuration from a resource file and offers methods to retrieve route and application settings.
@@ -12,13 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class TurboCrudConfigService {
 
-    private final Application configuration;
+    private final Application<?> configuration;
 
     public TurboCrudConfigService(TurboCrudConfigurationProvider configurationProvider) {
         configuration = configurationProvider.get();
     }
 
-    public Application getConfiguration() {
+    public Application<?>  getConfiguration() {
         return configuration;
     }
 

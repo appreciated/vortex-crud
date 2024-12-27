@@ -42,7 +42,7 @@ public class KanbanView extends VerticalLayout {
                       TurboCrudRouteFactoryRegistry routeFactory,
                       TurboCrudItemFactoryRegistry itemFactoryRegistry,
                       Kanban kanbanConfig,
-                      Application configService,
+                      Application<?> configService,
                       TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                       TurboCrudFileProviderRegistry fileProviderRegistry,
                       FormCreator formCreator,

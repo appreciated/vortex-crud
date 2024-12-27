@@ -17,6 +17,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.turbo_crud.jpa.service.JpaApplication;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStoreConfig;
 import org.springframework.context.annotation.ComponentScan;
@@ -235,7 +236,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withChild(imageForm)
                         .build());
 
-        return Application.Builder.of()
+        return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withUserManagement(UserManagement.Builder.of()
