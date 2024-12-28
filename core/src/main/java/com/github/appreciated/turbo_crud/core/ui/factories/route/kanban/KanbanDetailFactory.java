@@ -16,17 +16,17 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.componen
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class KanbanDetailFactory implements TurboCrudRouteFactory {
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
-    private final TurboCrudConfigService configService;
+public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId> {
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final FormCreator formCreator;
     private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-                               TurboCrudConfigService configService,
+    public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                               TurboCrudConfigService<DataStoreId, FieldId> configService,
                                TurboCrudItemFactoryRegistry turboCrudItemFactory,
                                TurboCrudRouteFactoryRegistry routeFactory,
                                FormCreator formCreator,
@@ -44,9 +44,9 @@ public class KanbanDetailFactory implements TurboCrudRouteFactory {
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        Route<DataStoreId> route = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new KanbanView(route.getDataStore(),
                 route,

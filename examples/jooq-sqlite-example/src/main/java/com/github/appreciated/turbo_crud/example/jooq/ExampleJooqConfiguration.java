@@ -6,7 +6,6 @@ import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
@@ -18,7 +17,6 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.M
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.tabs.Tab;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.springframework.stereotype.Service;
@@ -34,9 +32,9 @@ import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>, TableField<?,?>> {
+public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>, TableField<?, ?>> {
     @Override
-    public Application<Table<?>, TableField<?,?>> get() {
+    public Application<Table<?>, TableField<?, ?>> get() {
         Route<Table<?>> taskForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
                 .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
@@ -82,6 +80,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         )
                         .build())
                 .build();
+
         Route<Table<?>> projectForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(PROJECTS)
                 .withTitle("route.projects.title-cards")
@@ -95,6 +94,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         )
                         .build())
                 .build();
+
         Route<Table<?>> imageForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(IMAGES)
                 .withTitle("route.projects.title-cards")
@@ -106,7 +106,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         )
                         .build())
                 .build();
-        Map<Table<?>, DataStoreConfig<TableField<?,?>>> dataStores = Map.of(
+        Map<Table<?>, DataStoreConfig<TableField<?, ?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new Field(IdFieldFactory.class, true),
@@ -191,7 +191,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withIconFactory(VaadinIcon.TASKS::create)
                                         .withDataStore(TASKS)
                                         .withTitle("route.open-tasks.title")
-                                        .withConfiguration(Kanban.Builder.of(CardFactory.class)
+                                        .withConfiguration(Kanban.Builder.<Table<?>>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")

@@ -185,7 +185,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .withIconFactory(TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
-                                        .withConfiguration(Kanban.Builder.of(CardFactory.class)
+                                        .withConfiguration(Kanban.Builder.<String>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")

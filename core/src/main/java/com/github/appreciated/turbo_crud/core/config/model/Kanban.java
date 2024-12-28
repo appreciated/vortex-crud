@@ -7,60 +7,60 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Kanban extends RouteConfiguration implements ItemFactory {
+public class Kanban<DataStoreId> extends RouteConfiguration<DataStoreId> implements ItemFactory {
 
     public Kanban(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
-    public static class Builder {
+    public static class Builder<DataStoreId> {
 
-        private Kanban product;
+        private Kanban<DataStoreId> product;
 
-        private Builder(Kanban product) {
+        private Builder(Kanban<DataStoreId> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder(new Kanban(factory));
+        public static <DataStoreId> Builder<DataStoreId> of(Class<? extends TurboCrudItemFactory> factory) {
+            return new Builder<>(new Kanban<>(factory));
         }
 
-        public Builder withColumnField(String columnField) {
+        public Builder<DataStoreId> withColumnField(String columnField) {
             product.setColumnField(columnField);
             return this;
         }
 
-        public Builder withTitleField(String titleField) {
+        public Builder<DataStoreId> withTitleField(String titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder withDescriptionField(String descriptionField) {
+        public Builder<DataStoreId> withDescriptionField(String descriptionField) {
             product.setDescriptionField(descriptionField);
             return this;
         }
 
-        public Builder withImageField(String imageField) {
+        public Builder<DataStoreId> withImageField(String imageField) {
             product.setImageField(imageField);
             return this;
         }
 
-        public Builder withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
+        public Builder<DataStoreId> withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
             product.setImageFactory(imageFactory);
             return this;
         }
 
-        public Builder withChildren(List<InternalFormElement> children) {
+        public Builder<DataStoreId> withChildren(List<InternalFormElement<DataStoreId>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder addChildren(InternalFormElement item) {
+        public Builder<DataStoreId> addChildren(InternalFormElement<DataStoreId> item) {
             product.getChildren().add(item);
             return this;
         }
 
-        public Kanban build() {
+        public Kanban<DataStoreId> build() {
             return product;
         }
     }
