@@ -11,16 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TurboCrudPathToRouteResolver {
+public class TurboCrudPathToRouteResolver<T> {
 
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
     private final String path;
     private String[] sections;
-    private final Map<Integer, Route> pathRoutes;
-    private final Map<String, Route> routesConfig;
+    private final Map<Integer, Route<T>> pathRoutes;
+    private final Map<String, Route<T>> routesConfig;
 
     // Konstruktor
-    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route> routesConfig) {
+    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route<T>> routesConfig) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.pathRoutes = new HashMap<>();
@@ -37,7 +37,7 @@ public class TurboCrudPathToRouteResolver {
         traverseRoutes(0, routesConfig);
     }
 
-    private void traverseRoutes(int sectionIndex, Map<String, Route> currentRoutes) {
+    private void traverseRoutes(int sectionIndex, Map<String, Route<T>> currentRoutes) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
@@ -45,7 +45,7 @@ public class TurboCrudPathToRouteResolver {
         String section = sections[sectionIndex];
 
         // Check if the current route exists
-        Route currentRoute = currentRoutes.get(section);
+        Route<T> currentRoute = currentRoutes.get(section);
 
         if (currentRoute == null && currentRoutes.containsKey(null) ) {
             pathRoutes.put(sectionIndex, currentRoute);
@@ -69,14 +69,14 @@ public class TurboCrudPathToRouteResolver {
         }
     }
 
-    public Map<Integer, Route> getPathRoutes() {
+    public Map<Integer, Route<T>> getPathRoutes() {
         return pathRoutes;
     }
 
     /**
      * This returns the to be rendered route.
      */
-    public Route getCurrentRoute() {
+    public Route<T> getCurrentRoute() {
         return pathRoutes.get(getCurrentIndex());
     }
 
@@ -104,7 +104,7 @@ public class TurboCrudPathToRouteResolver {
         return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
     }
 
-    public Route getRouteForIndex(Integer currentPathIndex) {
+    public Route<T> getRouteForIndex(Integer currentPathIndex) {
         return pathRoutes.get(currentPathIndex);
     }
 
@@ -115,8 +115,8 @@ public class TurboCrudPathToRouteResolver {
             Integer currentKey = numbers.get(i);
             Integer nextKey = numbers.get(i + 1);
 
-            Route currentRoute = pathRoutes.get(currentKey);
-            Route nextRoute = pathRoutes.get(nextKey);
+            Route<T> currentRoute = pathRoutes.get(currentKey);
+            Route<T> nextRoute = pathRoutes.get(nextKey);
 
             TurboCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRoute.getFactory());
             TurboCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRoute.getFactory());
@@ -131,7 +131,7 @@ public class TurboCrudPathToRouteResolver {
             boolean currentIsContainer = currentFactory.isContainerRoute();
             boolean nextIsContainer = nextFactory.isContainerRoute();
 
-            // Wenn beide Container-Routen sind, gib die erste Route zurück
+            // Wenn beide Container-Routen sind, gib die erste Route<T> zurück
             if (currentIsContainer && nextIsContainer) {
                 return nextKey;
             }
@@ -147,7 +147,7 @@ public class TurboCrudPathToRouteResolver {
             }
         }
 
-        // Falls nur eine Route vorhanden ist oder keine der Bedingungen zutrifft, gib die erste Route zurück
+        // Falls nur eine Route<T> vorhanden ist oder keine der Bedingungen zutrifft, gib die erste Route<T> zurück
         return currentPointer;
     }
 

@@ -39,14 +39,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
-                           Route config,
-                           TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+    public <T> VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
+                           Route<T> config,
+                           TurboCrudDataStoreFactoryRegistry<T> dataStoreFactoryRegistry,
                            TurboCrudItemFactoryRegistry itemFactoryRegistry,
                            TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
-        String table = config.getDataStore();
+        T table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(table);
         gridOrListConfiguration = (GridOrListConfiguration) config.getConfiguration();

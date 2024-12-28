@@ -20,6 +20,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.Submenu
 import com.github.appreciated.turbo_crud.jpa.service.JpaApplication;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
 import com.github.appreciated.turbo_crud.jpa.service.JpaDataStoreConfig;
+import com.github.appreciated.turbo_crud.jpa.service.JpaRoute;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,13 +28,12 @@ import java.util.Map;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
-//TODO This shouldn't be necessary, replace using AutoConfiguration
 @Service
 public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
 
     @Override
     public Application<String> get() {
-        Route taskForm = Route.Builder.of(FormRouteFactory.class)
+        Route<String> taskForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("tasks")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("title")
@@ -51,7 +51,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                                .withChild(Route.Builder.of(FormRouteFactory.class)
+                                                .withChild(JpaRoute.of(FormRouteFactory.class)
                                                         .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
@@ -78,7 +78,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         )
                         .build())
                 .build();
-        Route projectForm = Route.Builder.of(FormRouteFactory.class)
+        Route<String> projectForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
@@ -91,7 +91,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         )
                         .build())
                 .build();
-        Route imageForm = Route.Builder.of(FormRouteFactory.class)
+        Route<String> imageForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("images")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
@@ -149,8 +149,8 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .build()))
                         .build());
 
-        Map<String, Route> routes = Map.of(
-                "projects-cards", Route.Builder.of(GridRouteFactory.class)
+        Map<String, Route<String>> routes = Map.of(
+                "projects-cards", JpaRoute.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
@@ -162,7 +162,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list", Route.Builder.of(ListRouteFactory.class)
+                "projects-list", JpaRoute.of(ListRouteFactory.class)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
@@ -179,12 +179,12 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks", Route.Builder.of(SubmenuRouteFactory.class)
+                "tasks", JpaRoute.of(SubmenuRouteFactory.class)
                         .withIconFactory(TASKS::create)
                         .withDataStore("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
-                                Route.Builder.of(KanbanDetailFactory.class)
+                                JpaRoute.of(KanbanDetailFactory.class)
                                         .withIconFactory(TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
@@ -196,7 +196,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .withChild(taskForm)
                                         .build(),
                                 "done",
-                                Route.Builder.of(MasterDetailRouteFactory.class)
+                                JpaRoute.of(MasterDetailRouteFactory.class)
                                         .withIconFactory(CHECK_CIRCLE::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.done-tasks.title")
@@ -207,7 +207,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .withChild(taskForm)
                                         .build()))
                         .build(),
-                "images-grid", Route.Builder.of(GridRouteFactory.class)
+                "images-grid", JpaRoute.of(GridRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
@@ -219,7 +219,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list", Route.Builder.of(ListRouteFactory.class)
+                "images-list", JpaRoute.of(ListRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")

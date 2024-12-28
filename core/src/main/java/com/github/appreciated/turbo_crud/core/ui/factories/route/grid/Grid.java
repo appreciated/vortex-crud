@@ -22,16 +22,16 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class Grid extends VerticalLayout {
     private final VirtualItemGrid virtualGrid;
 
-    public Grid(TurboCrudPathToRouteResolver routeResolver,
-                Route route,
-                TurboCrudDataStoreFactoryRegistry turboCrudDataStoreFactoryRegistry,
+    public <T> Grid(TurboCrudPathToRouteResolver routeResolver,
+                Route<T> route,
+                TurboCrudDataStoreFactoryRegistry<T> turboCrudDataStoreFactoryRegistry,
                 FormCreator formCreator,
                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                 TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                 TurboCrudItemFactoryRegistry itemFactoryRegistry,
                 TurboCrudFileProviderRegistry fileProviderRegistry) {
         RouteHeader routeHeader = new RouteHeader(route);
-        String dataStore = route.getDataStore();
+        T dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -57,8 +57,8 @@ public class Grid extends VerticalLayout {
         }
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory((Class<? extends TurboCrudDialogFactory>) route.getChild().getFactory()).create(
+    private <T> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<T> route, T dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,
                 null,

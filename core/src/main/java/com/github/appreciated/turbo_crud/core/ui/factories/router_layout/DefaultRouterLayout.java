@@ -48,12 +48,10 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Set<Map.Entry<String, Route>> keys = configService.getConfiguration().getRoutes().entrySet();
-        keys.forEach(configEntry -> {
-            Route value = configEntry.getValue();
+        Map<String, ? extends Route<?>> routes = configService.getConfiguration().getRoutes();
+        routes.forEach((path, value) -> {
             if (!value.isHideInMenu()) {
                 String translation = getTranslation(value.getTitle());
-                String path = configEntry.getKey();
                 Component icon = null;
                 if (value.getIconFactory() != null) {
                     icon = value.getIconFactory().get();

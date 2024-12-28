@@ -22,26 +22,26 @@ import jakarta.annotation.Nullable;
 public class FormDialogFactory implements TurboCrudDialogFactory {
 
     private final TurboCrudConfigService configService;
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry;
     private TurboCrudDataStore dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
-    public Dialog create(@Nullable String entityId,
+    public <T> Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
                          @Nullable String foreignKeyField,
-                         Route formRoute,
+                         Route<T> formRoute,
                          CollectionData config,
-                         String dataStore,
+                         T dataStore,
                          TurboCrudRouteFactoryRegistry routeFactory,
                          OnStoreListener listener,
                          FormCreator formCreator) {
 
-        this.dataStore = dataStoreFactoryRegistry.getFactory(dataStore);
+        this.dataStore = ((TurboCrudDataStoreFactoryRegistry<T>)dataStoreFactoryRegistry).getFactory(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -61,7 +61,7 @@ public class FormDialogFactory implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<?> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 

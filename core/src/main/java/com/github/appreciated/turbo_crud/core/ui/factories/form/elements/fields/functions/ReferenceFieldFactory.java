@@ -11,14 +11,14 @@ import java.util.List;
 
 public class ReferenceFieldFactory implements TurboCrudFieldFactory {
 
-    private final TurboCrudDataStoreFactoryRegistry managerFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<?> managerFactoryRegistry;
 
-    public ReferenceFieldFactory(TurboCrudDataStoreFactoryRegistry managerFactoryRegistry) {
+    public ReferenceFieldFactory(TurboCrudDataStoreFactoryRegistry<?> managerFactoryRegistry) {
         this.managerFactoryRegistry = managerFactoryRegistry;
     }
 
     @Override
-    public Component createComponent(String table, String field, Field dataStoreField) {
+    public Component createComponent(Object table, String field, Field dataStoreField) {
         return new EntityComboBoxWrapper(managerFactoryRegistry, dataStoreField);
     }
 

@@ -18,7 +18,7 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
     }
 
     @Override
-    public void addColumn(Grid<GenericEntity> grid, FormElement field, String table, String fieldName, Field dataStoreField) {
+    public void addColumn(Grid<GenericEntity> grid, FormElement field, Object table, String fieldName, Field dataStoreField) {
         if (dataStoreField.getFactory() == ImageFieldFactory.class) {
             if(dataStoreField.getConfiguration() == null){
                 throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");

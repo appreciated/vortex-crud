@@ -85,8 +85,8 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        String table = route.getDataStore();
-        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(table);
+        Object table = route.getDataStore();
+        DataStoreConfig<?> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);

@@ -19,18 +19,18 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class List extends VerticalLayout {
     private final GenericEntityGrid entityGrid;
 
-    public List(Integer currentPathIndex,
+    public <T> List(Integer currentPathIndex,
                 TurboCrudPathToRouteResolver routeResolver,
-                TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+                TurboCrudDataStoreFactoryRegistry<T> dataStoreFactoryRegistry,
                 TurboCrudConfigService configService,
                 TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                 FormCreator formCreator,
                 TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                 TurboCrudRouteFactoryRegistry routeFactoryRegistry) {
 
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        Route<T> route = (Route<T>) routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(route);
-        String dataStore = route.getDataStore();
+        T dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -55,7 +55,7 @@ public class List extends VerticalLayout {
         }
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route route, String dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private <T> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<T> route, T dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

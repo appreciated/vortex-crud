@@ -5,7 +5,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class RouteHeader extends HorizontalLayout {
-    public RouteHeader(Route config) {
+    public RouteHeader(Route<?> config) {
         H2 h2 = new H2(getTranslation(config.getTitle()));
         if (config.getIconFactory() != null) {
             add(config.getIconFactory().get());

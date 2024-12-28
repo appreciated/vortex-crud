@@ -24,7 +24,7 @@ public class Submenu extends SplitLayout {
 
     private final VerticalLayout routeListLayout = new VerticalLayout();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final Route route;
+    private final Route<?> route;
     private TurboCrudPathToRouteResolver pathVariables;
     private final TurboCrudRouteFactoryRegistry routeFactory;
     private final Integer currentPathIndex;
@@ -81,11 +81,11 @@ public class Submenu extends SplitLayout {
         return routeResolver.hasPathForIndex(currentPathIndex + 1);
     }
 
-    private Route getActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
+    private Route<?> getActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
         return route.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
-    private void initializeRouteList(Map<String, Route> childRoutes, Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
+    private void initializeRouteList(Map<String, ? extends Route<?>> childRoutes, Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver) {
         childRoutes.forEach((key, value) -> {
             HorizontalLayout routeButton = new HorizontalLayout();
             routeButton.addClassNames("card", "master");
@@ -116,7 +116,7 @@ public class Submenu extends SplitLayout {
         });
     }
 
-    private void showRouteDetail(Route subRoute, TurboCrudPathToRouteResolver routeResolver) {
+    private void showRouteDetail(Route<?> subRoute, TurboCrudPathToRouteResolver routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();

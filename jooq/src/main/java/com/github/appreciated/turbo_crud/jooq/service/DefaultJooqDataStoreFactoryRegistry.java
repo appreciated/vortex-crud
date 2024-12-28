@@ -8,7 +8,6 @@ import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.
 import org.jooq.DSLContext;
 import org.jooq.Table;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.HashMap;
 import java.util.Map;

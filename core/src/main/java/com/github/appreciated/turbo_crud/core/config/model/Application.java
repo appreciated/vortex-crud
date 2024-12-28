@@ -21,7 +21,7 @@ public class Application<T> {
 
     private Map<T, DataStoreConfig<?>> dataStores;
 
-    private Map<String, Route> routes;
+    private Map<String, Route<T>> routes;
 
     public String getName() {
         return name;
@@ -79,11 +79,11 @@ public class Application<T> {
         this.dataStores = dataStores;
     }
 
-    public Map<String, Route> getRoutes() {
+    public Map<String, Route<T>> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(Map<String, Route> routes) {
+    public void setRoutes(Map<String, Route<T>> routes) {
         this.routes = routes;
     }
 
@@ -134,7 +134,7 @@ public class Application<T> {
             return product;
         }
 
-        public Builder<T> withRoutes(Map<String, Route> routes) {
+        public Builder<T> withRoutes(Map<String, Route<T>> routes) {
             product.routes = routes;
             return this;
         }

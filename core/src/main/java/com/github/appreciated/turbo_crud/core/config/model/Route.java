@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateBuilder
-public class Route {
+public class Route<T> {
 
-    private String dataStore;
+    private T dataStore;
 
     private String title;
 
@@ -24,7 +24,7 @@ public class Route {
 
     private RouteConfiguration configuration;
 
-    private Map<String, Route> childrenMap = new HashMap<>();
+    private Map<String, Route<T>> childrenMap = new HashMap<>();
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -34,11 +34,11 @@ public class Route {
 
     private List<String> roles;
 
-    public String getDataStore() {
+    public T getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(String dataStore) {
+    public void setDataStore(T dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -90,19 +90,19 @@ public class Route {
         this.configuration = configuration;
     }
 
-    public Map<String, Route> getChildrenMap() {
+    public Map<String, Route<T>> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildrenMap(Map<String, Route> childrenMap) {
+    public void setChildrenMap(Map<String, Route<T>> childrenMap) {
         this.childrenMap = childrenMap;
     }
 
-    public Route getChild() {
+    public Route<T> getChild() {
         return childrenMap.entrySet().stream().findFirst().orElseThrow().getValue();
     }
 
-    public void setChild(Route child) {
+    public void setChild(Route<T> child) {
         if (!childrenMap.isEmpty()){
             throw new IllegalArgumentException("Route already has a child. Only one child is allowed when using setChild()");
         }
@@ -117,69 +117,69 @@ public class Route {
         this.roles = roles;
     }
 
-    public static class Builder {
+    public static class Builder<T> {
 
-        private Route product;
+        private Route<T> product;
 
-        Builder(Route product) {
+        public Builder(Route<T> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudRouteFactory> factory) {
-            return new Builder(new Route(factory));
+        public Builder<T> of(Class<? extends TurboCrudRouteFactory> factory) {
+            return new Builder<>(new Route<T>(factory));
         }
 
-        public Builder withDataStore(String dataStore) {
+        public Builder<T> withDataStore(T dataStore) {
             product.dataStore = dataStore;
             return this;
         }
 
-        public Builder withTitle(String title) {
+        public Builder<T> withTitle(String title) {
             product.title = title;
             return this;
         }
 
-        public Builder withIconFactory(SerializableSupplier<Component> iconFactory) {
+        public Builder<T> withIconFactory(SerializableSupplier<Component> iconFactory) {
             product.iconFactory = iconFactory;
             return this;
         }
 
-        public Builder withDefaultRoute(boolean defaultRoute) {
+        public Builder<T> withDefaultRoute(boolean defaultRoute) {
             product.defaultRoute = defaultRoute;
             return this;
         }
 
-        public Builder withHideInMenu(boolean hideInMenu) {
+        public Builder<T> withHideInMenu(boolean hideInMenu) {
             product.hideInMenu = hideInMenu;
             return this;
         }
 
-        public Builder withConfiguration(RouteConfiguration configuration) {
+        public Builder<T> withConfiguration(RouteConfiguration configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder withChildrenMap(Map<String, Route> childrenMap) {
+        public Builder<T> withChildrenMap(Map<String, Route<T>> childrenMap) {
             product.childrenMap = childrenMap;
             return this;
         }
 
-        public Builder withChild(Route child) {
+        public Builder<T> withChild(Route<T> child) {
             product.setChild(child);
             return this;
         }
 
-        public Builder withRoles(List<String> roles) {
+        public Builder<T> withRoles(List<String> roles) {
             product.roles = roles;
             return this;
         }
 
-        public Builder addRole(String item) {
+        public Builder<T> addRole(String item) {
             product.roles.add(item);
             return this;
         }
 
-        public Route build() {
+        public Route<T> build() {
             return product;
         }
     }

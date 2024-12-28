@@ -10,7 +10,7 @@ import java.util.List;
 public class IdFieldFactory extends TextFieldFactory {
 
     @Override
-    public Component createComponent(String table, String field, Field dataStoreField) {
+    public Component createComponent(Object table, String field, Field dataStoreField) {
         TextField textField = new TextField();
         textField.setReadOnly(true);
         return textField;

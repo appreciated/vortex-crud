@@ -6,7 +6,7 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 
 public interface TurboCrudFieldFactory {
-    Component createComponent(String table, String field, Field dataStoreField);
+    Component createComponent(Object table, String field, Field dataStoreField);
 
     Collection<String> getValidDatabaseTypesForExpectedType();
 }

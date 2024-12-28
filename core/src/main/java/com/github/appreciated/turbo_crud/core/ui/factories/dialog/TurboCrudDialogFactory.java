@@ -8,12 +8,12 @@ import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;
 
 public interface TurboCrudDialogFactory {
-    Dialog create(@Nullable String entityId,
+    <T> Dialog create(@Nullable String entityId,
                   @Nullable String foreignKeyValue,
                   @Nullable String foreignKeyField,
-                  Route formRoute,
+                  Route<T> formRoute,
                   CollectionData config,
-                  String dataStore,
+                  T dataStore,
                   TurboCrudRouteFactoryRegistry routeFactory,
                   OnStoreListener listener,
                   FormCreator formCreator);

@@ -37,7 +37,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
         }
         removeAll();
         TurboCrudPathToRouteResolver pathRoutes = new TurboCrudPathToRouteResolver(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRoutes());
-        Route currentRoute = pathRoutes.getCurrentRoute();
+        Route<?> currentRoute = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));

@@ -14,9 +14,11 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.turbo_crud.jooq.models.tables.Images;
 import com.github.appreciated.turbo_crud.jooq.service.JooqApplication;
 import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.turbo_crud.jooq.service.JooqDataStoreConfig;
+import com.github.appreciated.turbo_crud.jooq.service.JooqRoute;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.Table;
 import org.springframework.stereotype.Service;
@@ -35,8 +37,8 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*;
 public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider {
     @Override
     public com.github.appreciated.turbo_crud.core.config.model.Application<?> get() {
-        Route taskForm = Route.Builder.of(FormRouteFactory.class)
-                .withDataStore("tasks")
+        Route<Table<?>> taskForm = JooqRoute.of(FormRouteFactory.class)
+                .withDataStore(TASKS)
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
@@ -53,7 +55,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                                .withChild(Route.Builder.of(FormRouteFactory.class)
+                                                .withChild(JooqRoute.of(FormRouteFactory.class)
                                                         .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
@@ -80,8 +82,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         )
                         .build())
                 .build();
-        Route projectForm = Route.Builder.of(FormRouteFactory.class)
-                .withDataStore("projects")
+        Route<Table<?>> projectForm = JooqRoute.of(FormRouteFactory.class)
+                .withDataStore(PROJECTS)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("name")
@@ -93,8 +95,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         )
                         .build())
                 .build();
-        Route imageForm = Route.Builder.of(FormRouteFactory.class)
-                .withDataStore("images")
+        Route<Table<?>> imageForm = JooqRoute.of(FormRouteFactory.class)
+                .withDataStore(IMAGES)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
                         .withTitleField("title")
@@ -150,10 +152,10 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                         .build()))
                         .build());
 
-        Map<String, Route> routes = Map.of(
-                "projects-cards", Route.Builder.of(GridRouteFactory.class)
+        Map<String, Route<Table<?>>> routes = Map.of(
+                "projects-cards", JooqRoute.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
-                        .withDataStore("projects")
+                        .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -163,8 +165,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list", Route.Builder.of(ListRouteFactory.class)
-                        .withDataStore("projects")
+                "projects-list", JooqRoute.of(ListRouteFactory.class)
+                        .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -180,14 +182,14 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks", Route.Builder.of(SubmenuRouteFactory.class)
+                "tasks", JooqRoute.of(SubmenuRouteFactory.class)
                         .withIconFactory(VaadinIcon.TASKS::create)
-                        .withDataStore("tasks")
+                        .withDataStore(TASKS)
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
-                                Route.Builder.of(KanbanDetailFactory.class)
+                                JooqRoute.of(KanbanDetailFactory.class)
                                         .withIconFactory(VaadinIcon.TASKS::create)
-                                        .withDataStore("tasks")
+                                        .withDataStore(TASKS)
                                         .withTitle("route.open-tasks.title")
                                         .withConfiguration(Kanban.Builder.of(CardFactory.class)
                                                 .withTitleField("title")
@@ -197,9 +199,9 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                         .withChild(taskForm)
                                         .build(),
                                 "done",
-                                Route.Builder.of(MasterDetailRouteFactory.class)
+                                JooqRoute.of(MasterDetailRouteFactory.class)
                                         .withIconFactory(CHECK_CIRCLE::create)
-                                        .withDataStore("tasks")
+                                        .withDataStore(TASKS)
                                         .withTitle("route.done-tasks.title")
                                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
                                                 .withTitleField("title")
@@ -208,8 +210,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                         .withChild(taskForm)
                                         .build()))
                         .build(),
-                "images-grid", Route.Builder.of(GridRouteFactory.class)
-                        .withDataStore("images")
+                "images-grid", JooqRoute.of(GridRouteFactory.class)
+                        .withDataStore(IMAGES)
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
@@ -220,8 +222,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list", Route.Builder.of(ListRouteFactory.class)
-                        .withDataStore("images")
+                "images-list", JooqRoute.of(ListRouteFactory.class)
+                        .withDataStore(IMAGES)
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
                         .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)

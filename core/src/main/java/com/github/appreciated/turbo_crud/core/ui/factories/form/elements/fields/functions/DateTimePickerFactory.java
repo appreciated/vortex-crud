@@ -14,7 +14,7 @@ import java.util.List;
 public class DateTimePickerFactory implements TurboCrudFieldFactory {
 
     @Override
-    public Component createComponent(String table, String field, Field dataStoreField) {
+    public Component createComponent(Object table, String field, Field dataStoreField) {
         DateTimePicker datePicker = new DateTimePicker();
         DatePicker.DatePickerI18n datePickerI18n = new DatePicker.DatePickerI18n();
 

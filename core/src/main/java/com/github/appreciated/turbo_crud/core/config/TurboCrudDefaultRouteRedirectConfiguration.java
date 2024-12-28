@@ -23,8 +23,8 @@ import java.util.Optional;
 @Component
 public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinServiceInitListener {
 
-    private final Map<String, Route> routeConfigs;
-    private static Optional<Map.Entry<String, Route>> defaultRoute;
+    private final Map<String, ? extends Route<?>> routeConfigs;
+    private static Optional<? extends Map.Entry<String, ? extends Route<?>>> defaultRoute;
 
     public TurboCrudDefaultRouteRedirectConfiguration(TurboCrudConfigService configService) {
         this.routeConfigs = configService.getConfiguration().getRoutes();
@@ -32,7 +32,7 @@ public class TurboCrudDefaultRouteRedirectConfiguration implements VaadinService
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<Map.Entry<String, Route>> defaultRoutes = routeConfigs
+        List<? extends Map.Entry<String, ? extends Route<?>>> defaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();

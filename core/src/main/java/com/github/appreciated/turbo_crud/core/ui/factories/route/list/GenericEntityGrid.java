@@ -23,14 +23,14 @@ public class GenericEntityGrid extends Grid<GenericEntity> {
 
     private final TurboCrudPathToRouteResolver pathVariables;
 
-    public GenericEntityGrid(TurboCrudPathToRouteResolver routeResolver,
-                             Route route,
-                             TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+    public <T> GenericEntityGrid(TurboCrudPathToRouteResolver routeResolver,
+                             Route<T> route,
+                             TurboCrudDataStoreFactoryRegistry<T> dataStoreFactoryRegistry,
                              TurboCrudConfigService configService,
                              TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        String table = route.getDataStore();
+        T table = route.getDataStore();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 

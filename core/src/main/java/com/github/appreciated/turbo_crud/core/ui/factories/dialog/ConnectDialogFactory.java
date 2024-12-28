@@ -30,12 +30,12 @@ public class ConnectDialogFactory implements TurboCrudDialogFactory {
     }
 
     @Override
-    public Dialog create(@Nullable String entityId,
+    public <T> Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
                          @Nullable String foreignKeyField,
-                         Route formRoute,
+                         Route<T> formRoute,
                          CollectionData collectionData,
-                         String dataStoreIdentifier,
+                         T dataStoreIdentifier,
                          TurboCrudRouteFactoryRegistry routeFactory,
                          OnStoreListener listener,
                          FormCreator formCreator) {
