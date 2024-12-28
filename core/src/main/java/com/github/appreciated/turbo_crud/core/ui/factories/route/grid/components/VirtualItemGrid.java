@@ -28,18 +28,18 @@ import java.util.List;
  * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
  */
 
-public class VirtualItemGrid extends VirtualList<EntityItemList> {
+public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityItemList> {
 
     private final TurboCrudItemFactory itemFactory;
-    private final TurboCrudPathToRouteResolver pathVariables;
+    private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final TurboCrudDataStore dataStore;
-    private final GridOrListConfiguration gridOrListConfiguration;
+    private final GridOrListConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public <DataStoreId, FieldId> VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+    public VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                Route<DataStoreId, FieldId> config,
                                TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
                                TurboCrudItemFactoryRegistry itemFactoryRegistry,
