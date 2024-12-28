@@ -34,15 +34,15 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class FormRouteFactory<DataStoreId> implements TurboCrudRouteFactory<DataStoreId> {
+public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId> {
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
-    private final TurboCrudConfigService<DataStoreId> configService;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
     public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
-                            TurboCrudConfigService<DataStoreId> configService,
+                            TurboCrudConfigService<DataStoreId, FieldId> configService,
                             FormCreator formCreator,
                             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
@@ -86,7 +86,7 @@ public class FormRouteFactory<DataStoreId> implements TurboCrudRouteFactory<Data
         }
 
         DataStoreId table = route.getDataStore();
-        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(table);
+        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);

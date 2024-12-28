@@ -7,6 +7,7 @@ import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import org.jooq.DSLContext;
 import org.jooq.Table;
+import org.jooq.TableField;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -23,8 +24,8 @@ public class DefaultJooqDataStoreFactoryRegistry implements TurboCrudDataStoreFa
 
     private final HashMap<Table<?>, TurboCrudDataStore> factories = new HashMap<>();
 
-    public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService<Table<?>> turboCrudConfigService, DSLContext dslContext) {
-        for (Map.Entry<Table<?>, DataStoreConfig<Table<?>>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+    public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService<Table<?>, TableField<?,?>> turboCrudConfigService, DSLContext dslContext) {
+        for (Map.Entry<Table<?>, DataStoreConfig<TableField<?,?>>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
             Table<?> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }

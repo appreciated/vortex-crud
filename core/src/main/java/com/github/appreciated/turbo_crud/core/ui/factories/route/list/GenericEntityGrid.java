@@ -19,14 +19,14 @@ import java.util.Map;
  * {@link Route}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
-public class GenericEntityGrid<DataStoreId> extends Grid<GenericEntity> {
+public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity> {
 
     private final TurboCrudPathToRouteResolver<DataStoreId> pathVariables;
 
     public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
                                  Route<DataStoreId> route,
                                  TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
-                                 TurboCrudConfigService<DataStoreId> configService,
+                                 TurboCrudConfigService<DataStoreId, FieldId> configService,
                                  TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -34,7 +34,7 @@ public class GenericEntityGrid<DataStoreId> extends Grid<GenericEntity> {
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
+        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
         RouteConfiguration<DataStoreId> gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;

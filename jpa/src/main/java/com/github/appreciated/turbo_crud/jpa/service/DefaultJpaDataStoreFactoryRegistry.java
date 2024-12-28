@@ -23,7 +23,7 @@ public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFac
 
     private final HashMap<String, TurboCrudDataStore> factories = new HashMap<>();
 
-    public DefaultJpaDataStoreFactoryRegistry(TurboCrudConfigService<String> turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+    public DefaultJpaDataStoreFactoryRegistry(TurboCrudConfigService<String, String> turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
         for (Map.Entry<String, DataStoreConfig<String>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new JpaDataStore(table, entityManager, transactionTemplate));

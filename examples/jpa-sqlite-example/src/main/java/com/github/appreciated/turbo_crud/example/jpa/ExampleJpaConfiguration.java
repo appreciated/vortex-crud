@@ -1,9 +1,8 @@
 package com.github.appreciated.turbo_crud.example.jpa;
 
 
-import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.config.model.Application;
-import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -12,7 +11,6 @@ import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialo
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
@@ -28,11 +26,11 @@ import java.util.Map;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
+public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<String,String> {
 
     @Override
-    public Application<String> get() {
-        Route taskForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
+    public Application<String, String> get() {
+        Route<String> taskForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("tasks")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
@@ -44,7 +42,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                 new JpaFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<String>of((Class<? extends TurboCrudDialogFactory<String>>) FormDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("task_comments")
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
@@ -62,7 +60,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .build(),
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<String>of((Class<? extends TurboCrudDialogFactory<String>>) ConnectDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("tasks")
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",
@@ -77,7 +75,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         )
                         .build())
                 .build();
-        Route<String> projectForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
+        Route<String> projectForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
@@ -90,7 +88,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         )
                         .build())
                 .build();
-        Route<String> imageForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
+        Route<String> imageForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("images")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
@@ -149,19 +147,19 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .build());
 
         Map<String, Route<String>> routes = Map.of(
-                "projects-cards", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) GridRouteFactory.class)
+                "projects-cards", JpaRoute.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
                                 .withTitleField("name")
                                 .withDescriptionField("description")
                                 .build())
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) ListRouteFactory.class)
+                "projects-list", JpaRoute.of(ListRouteFactory.class)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
@@ -178,12 +176,12 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) SubmenuRouteFactory.class)
+                "tasks", JpaRoute.of(SubmenuRouteFactory.class)
                         .withIconFactory(TASKS::create)
                         .withDataStore("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
-                                JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) KanbanDetailFactory.class)
+                                JpaRoute.of(KanbanDetailFactory.class)
                                         .withIconFactory(TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
@@ -195,22 +193,22 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .withChild(taskForm)
                                         .build(),
                                 "done",
-                                JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) MasterDetailRouteFactory.class)
+                                JpaRoute.of(MasterDetailRouteFactory.class)
                                         .withIconFactory(CHECK_CIRCLE::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .build())
                                         .withChild(taskForm)
                                         .build()))
                         .build(),
-                "images-grid", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) GridRouteFactory.class)
+                "images-grid", JpaRoute.of(GridRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
                                 .withTitleField("title")
                                 .withImageField("url")
                                 .withImageFactory(FileProvider.class)
@@ -218,7 +216,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) ListRouteFactory.class)
+                "images-list", JpaRoute.of(ListRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")

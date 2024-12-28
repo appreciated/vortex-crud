@@ -18,6 +18,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.M
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.tabs.Tab;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>> {
+public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>, TableField<?,?>> {
     @Override
     public Application<Table<?>, TableField<?,?>> get() {
         Route<Table<?>> taskForm = JooqRoute.of(FormRouteFactory.class)
@@ -48,7 +49,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 new JooqFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of((Class<? extends TurboCrudDialogFactory<Table<?>>>) FormDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<Table<?>>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>>of(TASK_COMMENTS)
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
@@ -66,7 +67,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .build(),
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of((Class<? extends TurboCrudDialogFactory<Table<?>>>) ConnectDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<Table<?>>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>>of(TASKS)
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",

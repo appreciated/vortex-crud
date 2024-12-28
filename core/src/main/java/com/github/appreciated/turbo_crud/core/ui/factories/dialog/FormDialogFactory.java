@@ -21,13 +21,13 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory <DataStoreId> implements TurboCrudDialogFactory<DataStoreId> {
+public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId> {
 
-    private final TurboCrudConfigService <DataStoreId> configService;
+    private final TurboCrudConfigService <DataStoreId, FieldId> configService;
     private final TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry;
     private TurboCrudDataStore dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService<DataStoreId> configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
@@ -63,7 +63,7 @@ public class FormDialogFactory <DataStoreId> implements TurboCrudDialogFactory<D
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 

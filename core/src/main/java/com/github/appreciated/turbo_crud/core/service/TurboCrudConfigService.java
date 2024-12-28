@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class TurboCrudConfigService<DataStoreId> {
+public class TurboCrudConfigService<DataStoreId, FieldId> {
 
-    private final Application<DataStoreId> configuration;
+    private final Application<DataStoreId, FieldId> configuration;
 
-    public TurboCrudConfigService(@Autowired TurboCrudConfigurationProvider<DataStoreId> configurationProvider) {
+    public TurboCrudConfigService(@Autowired TurboCrudConfigurationProvider<DataStoreId, FieldId> configurationProvider) {
         configuration = configurationProvider.get();
     }
 
-    public Application<DataStoreId> getConfiguration() {
+    public Application<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 

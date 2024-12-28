@@ -74,7 +74,7 @@ public class Collection<DataStoreId> {
             this.product = product;
         }
 
-        public static <DataStoreId> Builder <DataStoreId> of(Class<? extends TurboCrudDialogFactory<DataStoreId>> factory) {
+        public static <DataStoreId> Builder <DataStoreId> of(Class<? extends TurboCrudDialogFactory> factory) {
             return new Builder<>(new Collection<>(factory));
         }
 

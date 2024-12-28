@@ -35,13 +35,13 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudDataStore dataStore;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public <DataStoreId> KanbanView(DataStoreId dataStoreIdentifier,
+    public <DataStoreId, FieldId> KanbanView(DataStoreId dataStoreIdentifier,
                           Route<DataStoreId> route,
                           TurboCrudDataStore dataStore,
                           TurboCrudRouteFactoryRegistry routeFactory,
                           TurboCrudItemFactoryRegistry itemFactoryRegistry,
                           Kanban kanbanConfig,
-                          Application<?> configService,
+                          Application<DataStoreId, FieldId> configService,
                           TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                           TurboCrudFileProviderRegistry fileProviderRegistry,
                           FormCreator formCreator,
