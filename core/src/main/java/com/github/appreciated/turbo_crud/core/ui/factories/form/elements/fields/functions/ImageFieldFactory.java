@@ -9,7 +9,7 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class ImageFieldFactory implements TurboCrudFieldFactory {
+public class ImageFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
@@ -18,7 +18,7 @@ public class ImageFieldFactory implements TurboCrudFieldFactory {
     }
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         return new ImageHasValue(fileProviderRegistry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
     }
 

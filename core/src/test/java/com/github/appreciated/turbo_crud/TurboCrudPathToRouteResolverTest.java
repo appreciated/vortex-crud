@@ -37,21 +37,21 @@ class TurboCrudPathToRouteResolverTest {
     @Test
     void testWrappableRouteReturnsFirstContainer() {
         // Testpfad mit wrappable Routen
-        Map<String, Route<String>> routesConfig = new HashMap<>();
+        Map<String, Route<String, String>> routesConfig = new HashMap<>();
 
-        Route<String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
+        Route<String, String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route<String> childRoute = new Route<>(TestContainerRouteFactory.class);
+        Route<String, String> childRoute = new Route<>(TestContainerRouteFactory.class);
         childRoute.setTitle("childRouteWithContainer");
         routeWithContainer.setChild(childRoute);
 
         String path = "routeWithContainer/routeWithContainer";
-        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String, String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        Route<String> currentRoute = turboCrudPath.getCurrentRoute();
+        Route<String, String> currentRoute = turboCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrapbare Route zurückgegeben wird
         assertEquals("routeWithContainer", currentRoute.getTitle(), "Die erste wrapbare Route sollte zurückgegeben werden.");
@@ -60,21 +60,21 @@ class TurboCrudPathToRouteResolverTest {
     @Test
     void testNonWrapableRouteReturnsLast() {
         // Testpfad mit zwei aufeinanderfolgenden non-wrappable Routen
-        Map<String, Route<String>> routesConfig = new HashMap<>();
+        Map<String, Route<String, String>> routesConfig = new HashMap<>();
 
-        Route<String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
-        Route<String> routeWithoutContainer2 = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> routeWithoutContainer2 = new Route<>(TestNonContainerRouteFactory.class);
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String, String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        Route<String> currentRoute = turboCrudPath.getCurrentRoute();
+        Route<String, String> currentRoute = turboCrudPath.getCurrentRoute();
 
         // Prüfung, ob die letzte non-wrappable Route zurückgegeben wird
         assertEquals("routeWithoutContainer2", currentRoute.getTitle(), "Die letzte nicht-wrapbare Route sollte zurückgegeben werden.");
@@ -83,24 +83,24 @@ class TurboCrudPathToRouteResolverTest {
     @Test
     void testMixedRoutes() {
         // Testpfad mit gemischten wrappable und non-wrappable Routen
-        Map<String, Route<String>> routesConfig = new HashMap<>();
+        Map<String, Route<String, String>> routesConfig = new HashMap<>();
 
-        Route<String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
+        Route<String, String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route<String> firstChild = new Route<>(TestContainerRouteFactory.class);
+        Route<String, String> firstChild = new Route<>(TestContainerRouteFactory.class);
         firstChild.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(firstChild);
 
-        Route<String> secondChild = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> secondChild = new Route<>(TestNonContainerRouteFactory.class);
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String, String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        Route<String> currentRoute = turboCrudPath.getCurrentRoute();
+        Route<String, String> currentRoute = turboCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrappable Route zurückgegeben wird
         assertEquals("routeWithContainer", currentRoute.getTitle(), "Die erste wrappable Route sollte zurückgegeben werden.");
@@ -109,17 +109,17 @@ class TurboCrudPathToRouteResolverTest {
     @Test
     void testNonWrappableRouteReturnsItself() {
         // Testpfad mit einer non-wrappable Route
-        Map<String, Route<String>> routesConfig = new HashMap<>();
+        Map<String, Route<String, String>> routesConfig = new HashMap<>();
 
-        Route<String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
         String path = "routeWithoutContainer1";
-        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String, String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        Route<String> currentRoute = turboCrudPath.getCurrentRoute();
+        Route<String, String> currentRoute = turboCrudPath.getCurrentRoute();
 
         // Prüfung, ob die Route selbst zurückgegeben wird
         assertEquals("routeWithoutContainer1", currentRoute.getTitle(), "Die nicht-wrappable Route sollte zurückgegeben werden.");
@@ -128,25 +128,25 @@ class TurboCrudPathToRouteResolverTest {
     @Test
     void testValidPathWithMarkers() {
         // Testpfad mit gültigen Abschnitten
-        Map<String, Route<String>> routesConfig = new HashMap<>();
+        Map<String, Route<String, String>> routesConfig = new HashMap<>();
 
-        Route<String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
+        Route<String, String> routeWithContainer = new Route<>(TestContainerRouteFactory.class);
         routeWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeWithContainer);
 
-        Route<String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> routeWithoutContainer1 = new Route<>(TestNonContainerRouteFactory.class);
         routeWithoutContainer1.setTitle("routeWithoutContainer1");
         routeWithContainer.setChild(routeWithoutContainer1);
 
-        Route<String> routeWithoutContainer2 = new Route<>(TestNonContainerRouteFactory.class);
+        Route<String, String> routeWithoutContainer2 = new Route<>(TestNonContainerRouteFactory.class);
         routeWithoutContainer2.setTitle("routeWithoutContainer2");
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String, String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der gesetzten Marker
-        Map<Integer, Route<String>> routes = turboCrudPath.getPathRoutes();
+        Map<Integer, Route<String, String>> routes = turboCrudPath.getPathRoutes();
 
         // Prüfung der Marker
         assertEquals(3, routes.size(), "Es sollten 3 Marker gesetzt sein.");

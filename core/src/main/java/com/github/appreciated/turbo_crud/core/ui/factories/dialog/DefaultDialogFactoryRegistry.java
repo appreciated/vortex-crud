@@ -17,27 +17,27 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultDialogFactoryRegistry implements TurboCrudDialogFactoryRegistry {
+public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> {
 
-    private final Map<Class<?>, TurboCrudDialogFactory> factories = new HashMap<>();
+    private final Map<Class<?>, TurboCrudDialogFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistry(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
-        factories.put(FormDialogFactory.class, new FormDialogFactory(configService, dataStoreFactoryRegistry));
-        factories.put(FormRouteFactory.class, new FormDialogFactory(configService, dataStoreFactoryRegistry));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory(dataStoreFactoryRegistry));
+    public DefaultDialogFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry) {
+        factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
+        factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry));
     }
 
-    public Map<Class<?>, TurboCrudDialogFactory> getFactories() {
+    public Map<Class<?>, TurboCrudDialogFactory<DataStoreId, FieldId>> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudDialogFactory getFactory(Class<?> type) {
+    public TurboCrudDialogFactory<DataStoreId, FieldId> getFactory(Class<?> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<?> key, TurboCrudDialogFactory factory) {
+    public void addFactory(Class<?> key, TurboCrudDialogFactory<DataStoreId, FieldId> factory) {
         factories.put(key, factory);
     }
 }

@@ -4,23 +4,23 @@ import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialo
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class Collection<DataStoreId> {
+public class Collection<DataStoreId, FieldId> {
 
     private CollectionConfig config;
 
-    public Collection(Class<? extends TurboCrudDialogFactory> factory) {
+    public Collection(Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
     private String label;
 
-    private Class<? extends TurboCrudDialogFactory> factory;
+    private Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> factory;
 
     private CollectionData<DataStoreId> data;
 
     private String emptyMessage;
 
-    private Route<DataStoreId> child;
+    private Route<DataStoreId, FieldId> child;
 
     public String getLabel() {
         return label;
@@ -30,11 +30,11 @@ public class Collection<DataStoreId> {
         this.label = label;
     }
 
-    public Class<? extends TurboCrudDialogFactory> getFactory() {
+    public Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends TurboCrudDialogFactory> factory) {
+    public void setFactory(Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
@@ -54,7 +54,7 @@ public class Collection<DataStoreId> {
         this.emptyMessage = emptyMessage;
     }
 
-    public Route<DataStoreId> getChild() {
+    public Route<DataStoreId, FieldId> getChild() {
         return child;
     }
 
@@ -62,52 +62,52 @@ public class Collection<DataStoreId> {
         return config;
     }
 
-    public void setChild(Route<DataStoreId> child) {
+    public void setChild(Route<DataStoreId, FieldId> child) {
         this.child = child;
     }
 
-    public static class Builder<DataStoreId> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private Collection<DataStoreId> product;
+        private Collection<DataStoreId, FieldId> product;
 
-        private Builder(Collection<DataStoreId> product) {
+        private Builder(Collection<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static <DataStoreId> Builder <DataStoreId> of(Class<? extends TurboCrudDialogFactory> factory) {
-            return new Builder<>(new Collection<>(factory));
+        public static <DataStoreId, FieldId> Builder <DataStoreId, FieldId> of(Class<? extends TurboCrudDialogFactory> factory) {
+            return new Builder<>(new Collection<>((Class<? extends TurboCrudDialogFactory<DataStoreId,FieldId>>)factory));
         }
 
-        public Builder<DataStoreId> withLabel(String label) {
+        public Builder<DataStoreId,FieldId> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder<DataStoreId> withData(CollectionData<DataStoreId> data) {
+        public Builder<DataStoreId,FieldId> withData(CollectionData<DataStoreId> data) {
             product.data = data;
             return this;
         }
 
-        public Builder<DataStoreId> withEmptyMessage(String emptyMessage) {
+        public Builder<DataStoreId,FieldId> withEmptyMessage(String emptyMessage) {
             product.emptyMessage = emptyMessage;
             return this;
         }
 
-        public Builder<DataStoreId> withChild(Route<DataStoreId> child) {
+        public Builder<DataStoreId,FieldId> withChild(Route<DataStoreId, FieldId> child) {
             product.child = child;
             return this;
         }
 
-        public Collection<DataStoreId> build() {
+        public Collection<DataStoreId, FieldId> build() {
             return product;
         }
 
-        public Builder<DataStoreId> withFactory(Class<? extends TurboCrudDialogFactory<DataStoreId>> connect) {
+        public Builder<DataStoreId,FieldId> withFactory(Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> connect) {
             product.factory = connect;
             return this;
         }
 
-        public Builder<DataStoreId> withConfiguration(CollectionConfig title) {
+        public Builder<DataStoreId,FieldId> withConfiguration(CollectionConfig title) {
             product.config = title;
             return this;
         }

@@ -9,11 +9,11 @@ import jakarta.annotation.Nullable;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface TurboCrudRouteFactory<DataStoreId> {
+public interface TurboCrudRouteFactory<DataStoreId, FieldId> {
 
     Component renderRoute(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
+            TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     );
 

@@ -7,11 +7,11 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;
 
-public interface TurboCrudDialogFactory<DataStoreId> {
+public interface TurboCrudDialogFactory<DataStoreId, FieldId> {
     Dialog create(@Nullable String entityId,
                       @Nullable String foreignKeyValue,
                       @Nullable String foreignKeyField,
-                      Route<DataStoreId> formRoute,
+                      Route<DataStoreId, FieldId> formRoute,
                       CollectionData<DataStoreId> config,
                       DataStoreId dataStore,
                       TurboCrudRouteFactoryRegistry routeFactory,

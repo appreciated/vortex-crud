@@ -8,10 +8,10 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import java.util.Collection;
 import java.util.List;
 
-public class TCCheckboxFieldFactory implements TurboCrudFieldFactory {
+public class TCCheckboxFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         return new Checkbox();
     }
 

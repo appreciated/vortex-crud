@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConnectDialogFactory<DataStoreId> implements TurboCrudDialogFactory<DataStoreId> {
+public class ConnectDialogFactory<DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId, FieldId> {
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
 
@@ -33,7 +33,7 @@ public class ConnectDialogFactory<DataStoreId> implements TurboCrudDialogFactory
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
                              @Nullable String foreignKeyField,
-                             Route<DataStoreId> formRoute,
+                             Route<DataStoreId, FieldId> formRoute,
                              CollectionData<DataStoreId> collectionData,
                              DataStoreId dataStoreIdentifier,
                              TurboCrudRouteFactoryRegistry routeFactory,

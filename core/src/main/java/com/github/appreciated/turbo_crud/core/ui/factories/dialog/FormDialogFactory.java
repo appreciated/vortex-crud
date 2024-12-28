@@ -21,7 +21,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId> {
+public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId, FieldId> {
 
     private final TurboCrudConfigService <DataStoreId, FieldId> configService;
     private final TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry;
@@ -36,7 +36,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
                              @Nullable String foreignKeyField,
-                             Route<DataStoreId> formRoute,
+                             Route<DataStoreId, FieldId> formRoute,
                              CollectionData<DataStoreId> config,
                              DataStoreId dataStore,
                              TurboCrudRouteFactoryRegistry routeFactory,

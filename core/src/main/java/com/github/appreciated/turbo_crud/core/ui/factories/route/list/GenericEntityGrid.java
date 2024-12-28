@@ -21,10 +21,10 @@ import java.util.Map;
 
 public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity> {
 
-    private final TurboCrudPathToRouteResolver<DataStoreId> pathVariables;
+    private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
 
-    public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
-                                 Route<DataStoreId> route,
+    public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                                 Route<DataStoreId, FieldId> route,
                                  TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
                                  TurboCrudConfigService<DataStoreId, FieldId> configService,
                                  TurboCrudListColumnCallbackRegistry listColumnFactory) {
@@ -35,7 +35,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
         // Set up the data provider with lazy loading and filtering
 
         DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
-        RouteConfiguration<DataStoreId> gridOrListConfiguration = route.getConfiguration();
+        RouteConfiguration<DataStoreId, FieldId> gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
@@ -43,8 +43,9 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
         Map<?, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<DataStoreId> field : gridOrListConfiguration.getChildren()) {
-            String fieldName = field.getField();
+        for (InternalFormElement<DataStoreId, FieldId> field : gridOrListConfiguration.getChildren()) {
+            //TODO
+            String fieldName = (String) field.getField();
             Field dataStoreField = fieldsConfig.get(fieldName);
             if (dataStoreField == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");

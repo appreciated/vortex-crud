@@ -34,7 +34,7 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId> {
+public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
@@ -55,16 +55,16 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
     @Override
     public Component renderRoute(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
+            TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        Route<DataStoreId> route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteConfiguration<DataStoreId> form = route.getConfiguration();
+        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteConfiguration<DataStoreId, FieldId> form = route.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver<DataStoreId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route<DataStoreId> route, RouteConfiguration<DataStoreId> formRouteConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route<DataStoreId, FieldId> route, RouteConfiguration<DataStoreId, FieldId> formRouteConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();

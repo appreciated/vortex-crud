@@ -98,13 +98,13 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId> void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId> internalFormElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private <DataStoreId, FieldId> void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
-            RouteConfiguration<DataStoreId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
-            for (InternalFormElement<DataStoreId> child : form.getChildren()) {
-                Object o = record.get(child.getField());
+            RouteConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
+            for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
+                Object o = record.get(String.valueOf(child.getField()));
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
@@ -138,15 +138,15 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId> void openDialog(String entityId,
+    private <DataStoreId, FieldId> void openDialog(String entityId,
                             String foreignKey,
-                            InternalFormElement<DataStoreId> internalFormElement,
+                            InternalFormElement<DataStoreId, FieldId> internalFormElement,
                             TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
                             TurboCrudRouteFactoryRegistry routeFactoryRegistry,
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-        Collection<DataStoreId> collectionData = internalFormElement.getConfiguration();
+        Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(
                 entityId,
                 foreignKey,
@@ -160,7 +160,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         dialog.open();
     }
 
-    private static String getReferenceField(CollectionData collectionData) {
+    private static <DataStoreId> String getReferenceField(CollectionData<DataStoreId> collectionData) {
         if (collectionData.getOneToMany() != null) {
             OneToMany oneToMany = collectionData.getOneToMany();
             return oneToMany.getReferenceField();

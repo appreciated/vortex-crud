@@ -28,9 +28,9 @@ public class FormCreator {
         this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
 
-    public <DataStoreId, FieldId> void bindAndAddToLayout(Object table,
-                                   Route<?> route,
-                                   RouteConfiguration<DataStoreId> formConfig,
+    public <DataStoreId, FieldId> void bindAndAddToLayout(DataStoreId table,
+                                   Route<DataStoreId,FieldId> route,
+                                   RouteConfiguration<DataStoreId,FieldId> formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
                                    DataStoreConfig<FieldId> tables,
@@ -40,16 +40,17 @@ public class FormCreator {
         Map<FieldId, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<DataStoreId> element : formConfig.getChildren()) {
-            String fieldName = element.getField();
+        for (InternalFormElement<DataStoreId, FieldId> element : formConfig.getChildren()) {
+            FieldId fieldName = element.getField();
             if (!element.getType().equals("collection")) {
                 Field field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
                 }
-                TurboCrudFieldFactory factory = componentFactory.getFactory(field.getFactory());
+                TurboCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);
-                binder.bind((HasValue) component, entity1 -> entity1.get(fieldName), (entity1, o) -> entity1.put(fieldName, o));
+                //TODO Add Factory to generate field from FieldId
+                binder.bind((HasValue) component, entity1 -> entity1.get((String) fieldName), (entity1, o) -> entity1.put((String) fieldName, o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }

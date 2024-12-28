@@ -7,10 +7,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import java.util.Collection;
 import java.util.List;
 
-public class IdFieldFactory extends TextFieldFactory {
+public class IdFieldFactory<DataStoreId, FieldId> extends TextFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         TextField textField = new TextField();
         textField.setReadOnly(true);
         return textField;

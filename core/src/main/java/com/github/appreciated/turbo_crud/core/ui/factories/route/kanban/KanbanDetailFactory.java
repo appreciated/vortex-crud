@@ -16,7 +16,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.componen
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId> {
+public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
@@ -44,9 +44,9 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        Route<DataStoreId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new KanbanView(route.getDataStore(),
                 route,

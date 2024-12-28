@@ -8,10 +8,10 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface TurboCrudRouteFactoryRegistry {
-    TurboCrudRouteFactory getFactory(Class<? extends TurboCrudRouteFactory> factory);
+public interface TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> {
+    TurboCrudRouteFactory<DataStoreId, FieldId> getFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory);
 
-    void addFactory(Class<? extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory);
+    void addFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> key, TurboCrudRouteFactory<DataStoreId, FieldId> factory);
 
-    boolean isContainerRoute(Route currentRoute);
+    boolean isContainerRoute(Route<DataStoreId, FieldId> currentRoute);
 }

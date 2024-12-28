@@ -26,15 +26,15 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultRouteFactoryRegistry implements TurboCrudRouteFactoryRegistry {
+public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> {
 
-    HashMap<Class<? extends TurboCrudRouteFactory>, TurboCrudRouteFactory> factories = new HashMap<>();
+    HashMap<Class<? extends TurboCrudRouteFactory>, TurboCrudRouteFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistry(TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                                       TurboCrudConfigService configService,
+                                       TurboCrudConfigService<DataStoreId, FieldId> configService,
                                        TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
-                                       TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-                                       TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                                       TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                                       TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                        TurboCrudFileProviderRegistry fileProviderRegistry,
                                        FormCreator formCreatorService
     ) {
@@ -47,17 +47,17 @@ public class DefaultRouteFactoryRegistry implements TurboCrudRouteFactoryRegistr
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory(this, configService));
     }
 
-    public TurboCrudRouteFactory getFactory(Class<? extends TurboCrudRouteFactory> factory) {
+    public TurboCrudRouteFactory<DataStoreId, FieldId> getFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory) {
         return factories.get(factory);
     }
 
     @Override
-    public void addFactory(Class<? extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory) {
+    public void addFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> key, TurboCrudRouteFactory<DataStoreId, FieldId> factory) {
         factories.put(key, factory);
     }
 
     @Override
-    public boolean isContainerRoute(Route currentRoute) {
+    public boolean isContainerRoute(Route<DataStoreId, FieldId> currentRoute) {
         return factories.get(currentRoute.getFactory()).isContainerRoute();
     }
 }

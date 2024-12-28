@@ -36,11 +36,11 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public <DataStoreId, FieldId> KanbanView(DataStoreId dataStoreIdentifier,
-                          Route<DataStoreId> route,
+                          Route<DataStoreId, FieldId> route,
                           TurboCrudDataStore dataStore,
                           TurboCrudRouteFactoryRegistry routeFactory,
                           TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                          Kanban kanbanConfig,
+                          Kanban<DataStoreId, FieldId> kanbanConfig,
                           Application<DataStoreId, FieldId> configService,
                           TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
                           TurboCrudFileProviderRegistry fileProviderRegistry,
@@ -164,7 +164,7 @@ public class KanbanView extends VerticalLayout {
         return wrapper;
     }
 
-    private <DataStoreId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private <DataStoreId, FieldId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         GenericEntity entity = new GenericEntity();
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,

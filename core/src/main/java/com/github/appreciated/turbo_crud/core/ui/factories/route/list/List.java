@@ -16,20 +16,20 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class List extends VerticalLayout {
-    private final GenericEntityGrid entityGrid;
+public class List<DataStoreId, FieldId> extends VerticalLayout {
+    private final GenericEntityGrid<DataStoreId, FieldId> entityGrid;
 
-    public <DataStoreId> List(Integer currentPathIndex,
-                    TurboCrudPathToRouteResolver routeResolver,
+    public List(Integer currentPathIndex,
+                    TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                     TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
-                    TurboCrudConfigService configService,
+                    TurboCrudConfigService<DataStoreId, FieldId> configService,
                     TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                     FormCreator formCreator,
-                    TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                    TurboCrudRouteFactoryRegistry routeFactoryRegistry) {
+                    TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                    TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
 
-        Route<DataStoreId> route = (Route<DataStoreId>) routeResolver.getRouteForIndex(currentPathIndex);
-        RouteHeader routeHeader = new RouteHeader(route);
+        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
         DataStoreId dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
@@ -39,7 +39,7 @@ public class List extends VerticalLayout {
                 null,
                 routeHeader);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid(routeResolver, route, dataStoreFactoryRegistry, configService, columnCallbackRegistry);
+        entityGrid = new GenericEntityGrid<>(routeResolver, route, dataStoreFactoryRegistry, configService, columnCallbackRegistry);
         add(headerBar, textField, entityGrid);
         setSizeFull();
         setPadding(true);
@@ -55,7 +55,7 @@ public class List extends VerticalLayout {
         }
     }
 
-    private <DataStoreId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

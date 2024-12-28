@@ -6,60 +6,60 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListConfiguration<DataStoreId> extends RouteConfiguration<DataStoreId> implements ItemFactory {
+public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfiguration<DataStoreId,FieldId> implements ItemFactory {
 
-    private List<InternalFormElement<DataStoreId>> children;
+    private List<InternalFormElement<DataStoreId,FieldId>> children;
 
     public GridOrListConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
-    public List<InternalFormElement<DataStoreId>> getChildren() {
+    public List<InternalFormElement<DataStoreId,FieldId>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<InternalFormElement<DataStoreId>> children) {
+    public void setChildren(List<InternalFormElement<DataStoreId,FieldId>> children) {
         this.children = children;
     }
 
-    public static class Builder<DataStoreId> extends RouteConfiguration.Builder<DataStoreId> {
+    public static class Builder<DataStoreId,FieldId> extends RouteConfiguration.Builder<DataStoreId,FieldId> {
 
-        private GridOrListConfiguration<DataStoreId> product;
+        private GridOrListConfiguration<DataStoreId,FieldId> product;
 
-        private Builder(GridOrListConfiguration<DataStoreId> product) {
+        private Builder(GridOrListConfiguration<DataStoreId,FieldId> product) {
             super(product);
             this.product = product;
         }
 
-        public static <DataStoreId> Builder<DataStoreId> of(Class<? extends TurboCrudItemFactory> factory) {
+        public static <DataStoreId,FieldId> Builder<DataStoreId,FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
             return new Builder<>(new GridOrListConfiguration<>(factory));
         }
 
-        public Builder<DataStoreId> withFilterField(String filterField) {
+        public Builder<DataStoreId,FieldId> withFilterField(String filterField) {
             product.setFilterField(filterField);
             return this;
         }
 
-        public Builder<DataStoreId> withInlineEdit(boolean inlineEdit) {
+        public Builder<DataStoreId,FieldId> withInlineEdit(boolean inlineEdit) {
             product.setInlineEdit(inlineEdit);
             return this;
         }
 
-        public Builder<DataStoreId> withChildren(List<InternalFormElement<DataStoreId>> children) {
+        public Builder<DataStoreId,FieldId> withChildren(List<InternalFormElement<DataStoreId,FieldId>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public <T extends InternalFormElement<DataStoreId>> Builder<DataStoreId> withChildren(T... children) {
+        public <T extends InternalFormElement<DataStoreId,FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId> addChildren(InternalFormElement<DataStoreId> item) {
+        public Builder<DataStoreId,FieldId> addChildren(InternalFormElement<DataStoreId,FieldId> item) {
             product.children.add(item);
             return this;
         }
 
-        public GridOrListConfiguration<DataStoreId> build() {
+        public GridOrListConfiguration<DataStoreId,FieldId> build() {
             return product;
         }
     }

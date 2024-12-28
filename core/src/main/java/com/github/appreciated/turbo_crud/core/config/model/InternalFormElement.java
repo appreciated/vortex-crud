@@ -6,9 +6,9 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class InternalFormElement<DataStoreId> {
+public class InternalFormElement<DataStoreId, FieldId> {
 
-    private String field;
+    private FieldId field;
 
     private Class<? extends TurboCrudCollectionFactory> factory;
 
@@ -22,22 +22,22 @@ public class InternalFormElement<DataStoreId> {
 
     private Integer span = null;
 
-    Collection<DataStoreId> configuration;
+    Collection<DataStoreId, FieldId> configuration;
 
     public InternalFormElement() {
     }
 
-    public InternalFormElement(String field, String type, String label) {
+    public InternalFormElement(FieldId field, String type, String label) {
         this.field = field;
         this.type = type;
         this.label = label;
     }
 
-    public String getField() {
+    public FieldId getField() {
         return field;
     }
 
-    public void setField(String field) {
+    public void setField(FieldId field) {
         this.field = field;
     }
 
@@ -89,72 +89,72 @@ public class InternalFormElement<DataStoreId> {
         this.span = span;
     }
 
-    public Collection<DataStoreId> getConfiguration() {
+    public Collection<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Collection<DataStoreId> configuration) {
+    public void setConfiguration(Collection<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
-    public static class Builder<DataStoreId> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private InternalFormElement<DataStoreId> product;
+        private InternalFormElement<DataStoreId, FieldId> product;
 
-        public Builder(InternalFormElement<DataStoreId> product) {
+        public Builder(InternalFormElement<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static <DataStoreId> Builder<DataStoreId> of() {
+        public static <DataStoreId, FieldId> Builder<DataStoreId,FieldId> of() {
             return new Builder<>(new InternalFormElement<>());
         }
 
-        public Builder<DataStoreId>withField(String field) {
+        public Builder<DataStoreId,FieldId> withField(FieldId field) {
             product.field = field;
             return this;
         }
 
-        public Builder<DataStoreId> withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
+        public Builder<DataStoreId,FieldId> withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
             product.factory = factory;
             return this;
         }
 
-        public Builder<DataStoreId> withReadOnly(boolean readOnly) {
+        public Builder<DataStoreId,FieldId> withReadOnly(boolean readOnly) {
             product.readOnly = readOnly;
             return this;
         }
 
-        public Builder<DataStoreId> withReadOnlyForRoles(List<String> readOnlyForRoles) {
+        public Builder<DataStoreId,FieldId> withReadOnlyForRoles(List<String> readOnlyForRoles) {
             product.readOnlyForRoles = readOnlyForRoles;
             return this;
         }
 
-        public Builder<DataStoreId> withLabel(String label) {
+        public Builder<DataStoreId,FieldId> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder<DataStoreId> withType(String type) {
+        public Builder<DataStoreId,FieldId> withType(String type) {
             product.type = type;
             return this;
         }
 
-        public Builder<DataStoreId> withSpan(Integer span) {
+        public Builder<DataStoreId,FieldId> withSpan(Integer span) {
             product.span = span;
             return this;
         }
 
-        public Builder<DataStoreId> withConfiguration(Collection configuration) {
+        public Builder<DataStoreId,FieldId> withConfiguration(Collection<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<DataStoreId> addReadOnlyForRole(String item) {
+        public Builder<DataStoreId,FieldId> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
         }
 
-        public InternalFormElement<DataStoreId> build() {
+        public InternalFormElement<DataStoreId, FieldId> build() {
             return product;
         }
 

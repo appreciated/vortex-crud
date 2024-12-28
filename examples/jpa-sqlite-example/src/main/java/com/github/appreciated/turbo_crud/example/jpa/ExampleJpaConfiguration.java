@@ -30,7 +30,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 
     @Override
     public Application<String, String> get() {
-        Route<String> taskForm = JpaRoute.of(FormRouteFactory.class)
+        Route<String, String> taskForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("tasks")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
@@ -42,7 +42,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 new JpaFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<String>of(FormDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String, String>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("task_comments")
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
@@ -60,7 +60,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .build(),
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<String>of(ConnectDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String, String>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("tasks")
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",
@@ -75,7 +75,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         )
                         .build())
                 .build();
-        Route<String> projectForm = JpaRoute.of(FormRouteFactory.class)
+        Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
@@ -88,7 +88,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         )
                         .build())
                 .build();
-        Route<String> imageForm = JpaRoute.of(FormRouteFactory.class)
+        Route<String, String> imageForm = JpaRoute.of(FormRouteFactory.class)
                 .withDataStore("images")
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
@@ -146,13 +146,13 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .build()))
                         .build());
 
-        Map<String, Route<String>> routes = Map.of(
+        Map<String, Route<String, String>> routes = Map.of(
                 "projects-cards", JpaRoute.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
                                 .withTitleField("name")
                                 .withDescriptionField("description")
                                 .build())
@@ -163,7 +163,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("name")
                                 .withChildren(
@@ -185,7 +185,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .withIconFactory(TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
-                                        .withConfiguration(Kanban.Builder.<String>of(CardFactory.class)
+                                        .withConfiguration(Kanban.Builder.<String, String>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .withColumnField("status")
@@ -197,7 +197,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .withIconFactory(CHECK_CIRCLE::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
+                                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .build())
@@ -208,7 +208,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
                                 .withTitleField("title")
                                 .withImageField("url")
                                 .withImageFactory(FileProvider.class)
@@ -220,7 +220,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("title")
                                 .withChildren(

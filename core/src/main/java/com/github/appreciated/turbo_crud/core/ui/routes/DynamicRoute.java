@@ -18,12 +18,12 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
-public class DynamicRoute extends Div implements BeforeEnterObserver {
+public class DynamicRoute<DataStoreId, FieldId> extends Div implements BeforeEnterObserver {
 
-    private final TurboCrudConfigService configService;
-    private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
 
-    public DynamicRoute(TurboCrudConfigService configService, TurboCrudRouteFactoryRegistry routeFactoryRegistry) {
+    public DynamicRoute(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
         setSizeFull();
@@ -36,8 +36,8 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
             path = "/" + path;
         }
         removeAll();
-        TurboCrudPathToRouteResolver pathRoutes = new TurboCrudPathToRouteResolver(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRoutes());
-        Route<?> currentRoute = pathRoutes.getCurrentRoute();
+        TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathRoutes = new TurboCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRoutes());
+        Route<DataStoreId, FieldId> currentRoute = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));

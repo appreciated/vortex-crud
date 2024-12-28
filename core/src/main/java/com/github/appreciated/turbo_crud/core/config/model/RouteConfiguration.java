@@ -7,7 +7,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class RouteConfiguration<DataStoreId> {
+public class RouteConfiguration<DataStoreId, FieldId> {
 
     private Class<? extends TurboCrudItemFactory> factory;
 
@@ -25,7 +25,7 @@ public class RouteConfiguration<DataStoreId> {
 
     private String filterField;
 
-    private List<InternalFormElement<DataStoreId>> children;
+    private List<InternalFormElement<DataStoreId, FieldId>> children;
 
     public RouteConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         this.factory = factory;
@@ -95,72 +95,72 @@ public class RouteConfiguration<DataStoreId> {
         this.filterField = filterField;
     }
 
-    public List<InternalFormElement<DataStoreId>> getChildren() {
+    public List<InternalFormElement<DataStoreId, FieldId>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<InternalFormElement<DataStoreId>> children) {
+    public void setChildren(List<InternalFormElement<DataStoreId, FieldId>> children) {
         this.children = children;
     }
 
-    public static class Builder<DataStoreId> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private RouteConfiguration<DataStoreId> product;
+        private RouteConfiguration<DataStoreId, FieldId> product;
 
-        public Builder(RouteConfiguration<DataStoreId> product) {
+        public Builder(RouteConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId> withTitleField(String titleField) {
+        public Builder<DataStoreId,FieldId> withTitleField(String titleField) {
             product.titleField = titleField;
             return this;
         }
 
-        public Builder<DataStoreId> withDescriptionField(String descriptionField) {
+        public Builder<DataStoreId,FieldId> withDescriptionField(String descriptionField) {
             product.descriptionField = descriptionField;
             return this;
         }
 
-        public Builder<DataStoreId> withColumnField(String columnField) {
+        public Builder<DataStoreId,FieldId> withColumnField(String columnField) {
             product.columnField = columnField;
             return this;
         }
 
-        public Builder<DataStoreId> withImageField(String imageField) {
+        public Builder<DataStoreId,FieldId> withImageField(String imageField) {
             product.imageField = imageField;
             return this;
         }
 
-        public Builder<DataStoreId> withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
+        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }
 
-        public Builder<DataStoreId> withInlineEdit(boolean inlineEdit) {
+        public Builder<DataStoreId,FieldId> withInlineEdit(boolean inlineEdit) {
             product.inlineEdit = inlineEdit;
             return this;
         }
 
-        public Builder<DataStoreId> withFilterField(String filterField) {
+        public Builder<DataStoreId,FieldId> withFilterField(String filterField) {
             product.filterField = filterField;
             return this;
         }
 
-        public Builder<DataStoreId> withChildren(List<InternalFormElement<DataStoreId>> children) {
+        public Builder<DataStoreId,FieldId> withChildren(List<InternalFormElement<DataStoreId, FieldId>> children) {
             product.children = children;
             return this;
         }
 
-        public <T extends InternalFormElement<DataStoreId>> Builder<DataStoreId> withChildren(T... children) {
+        public <T extends InternalFormElement<DataStoreId, FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId> addChildren(InternalFormElement<DataStoreId> item) {
+        public Builder<DataStoreId,FieldId> addChildren(InternalFormElement<DataStoreId, FieldId> item) {
             product.children.add(item);
             return this;
         }
 
-        public RouteConfiguration<DataStoreId> build() {
+        public RouteConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

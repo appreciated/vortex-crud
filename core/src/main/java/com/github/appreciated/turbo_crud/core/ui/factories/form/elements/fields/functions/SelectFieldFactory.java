@@ -9,7 +9,7 @@ import com.vaadin.flow.component.select.Select;
 
 import java.util.*;
 
-public class SelectFieldFactory implements TurboCrudFieldFactory {
+public class SelectFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     private final Selects selects;
     private final Map<String, DataStoreConfig<?>> tablesConfig;
@@ -20,7 +20,7 @@ public class SelectFieldFactory implements TurboCrudFieldFactory {
     }
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         Select<String> select = new Select<>();
 
         DataStoreConfig<?> dataStoreConfig = tablesConfig.get(table);

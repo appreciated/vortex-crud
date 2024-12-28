@@ -11,16 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TurboCrudPathToRouteResolver<DataStoreId> {
+public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
 
     private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
     private final String path;
     private String[] sections;
-    private final Map<Integer, Route<DataStoreId>> pathRoutes;
-    private final Map<String, Route<DataStoreId>> routesConfig;
+    private final Map<Integer, Route<DataStoreId,FieldId>> pathRoutes;
+    private final Map<String, Route<DataStoreId,FieldId>> routesConfig;
 
     // Konstruktor
-    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route<DataStoreId>> routesConfig) {
+    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route<DataStoreId,FieldId>> routesConfig) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.pathRoutes = new HashMap<>();
@@ -37,7 +37,7 @@ public class TurboCrudPathToRouteResolver<DataStoreId> {
         traverseRoutes(0, routesConfig);
     }
 
-    private void traverseRoutes(int sectionIndex, Map<String, Route<DataStoreId>> currentRoutes) {
+    private void traverseRoutes(int sectionIndex, Map<String, Route<DataStoreId,FieldId>> currentRoutes) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
@@ -45,7 +45,7 @@ public class TurboCrudPathToRouteResolver<DataStoreId> {
         String section = sections[sectionIndex];
 
         // Check if the current route exists
-        Route<DataStoreId> currentRoute = currentRoutes.get(section);
+        Route<DataStoreId,FieldId> currentRoute = currentRoutes.get(section);
 
         if (currentRoute == null && currentRoutes.containsKey(null)) {
             pathRoutes.put(sectionIndex, currentRoute);
@@ -69,14 +69,14 @@ public class TurboCrudPathToRouteResolver<DataStoreId> {
         }
     }
 
-    public Map<Integer, Route<DataStoreId>> getPathRoutes() {
+    public Map<Integer, Route<DataStoreId,FieldId>> getPathRoutes() {
         return pathRoutes;
     }
 
     /**
      * This returns the to be rendered route.
      */
-    public Route<DataStoreId> getCurrentRoute() {
+    public Route<DataStoreId,FieldId> getCurrentRoute() {
         return pathRoutes.get(getCurrentIndex());
     }
 
@@ -104,7 +104,7 @@ public class TurboCrudPathToRouteResolver<DataStoreId> {
         return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
     }
 
-    public Route<DataStoreId> getRouteForIndex(Integer currentPathIndex) {
+    public Route<DataStoreId,FieldId> getRouteForIndex(Integer currentPathIndex) {
         return pathRoutes.get(currentPathIndex);
     }
 
@@ -115,8 +115,8 @@ public class TurboCrudPathToRouteResolver<DataStoreId> {
             Integer currentKey = numbers.get(i);
             Integer nextKey = numbers.get(i + 1);
 
-            Route<DataStoreId> currentRoute = pathRoutes.get(currentKey);
-            Route<DataStoreId> nextRoute = pathRoutes.get(nextKey);
+            Route<DataStoreId,FieldId> currentRoute = pathRoutes.get(currentKey);
+            Route<DataStoreId,FieldId> nextRoute = pathRoutes.get(nextKey);
 
             TurboCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRoute.getFactory());
             TurboCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRoute.getFactory());

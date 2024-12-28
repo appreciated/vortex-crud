@@ -8,10 +8,10 @@ import com.vaadin.flow.component.textfield.NumberField;
 import java.util.Collection;
 import java.util.List;
 
-public class NumberFieldFactory implements TurboCrudFieldFactory {
+public class NumberFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         return new NumberField();
     }
 

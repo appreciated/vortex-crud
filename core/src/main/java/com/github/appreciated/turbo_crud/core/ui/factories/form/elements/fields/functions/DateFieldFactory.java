@@ -10,10 +10,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-public class DateFieldFactory implements TurboCrudFieldFactory {
+public class DateFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(Object table, String field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
         DatePicker datePicker = new DatePicker();
         DatePicker.DatePickerI18n genericI18n = new DatePicker.DatePickerI18n();
 

@@ -6,10 +6,10 @@ package com.github.appreciated.turbo_crud.core.ui.factories.dialog;
  * the specified FieldConfig.
  */
 
-public interface TurboCrudDialogFactoryRegistry {
+public interface TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> {
 
-    TurboCrudDialogFactory getFactory(Class<?> type);
+    TurboCrudDialogFactory<DataStoreId, FieldId> getFactory(Class<?> type);
 
-    void addFactory(Class<?> key, TurboCrudDialogFactory factory);
+    void addFactory(Class<?> key, TurboCrudDialogFactory<DataStoreId, FieldId> factory);
 
 }

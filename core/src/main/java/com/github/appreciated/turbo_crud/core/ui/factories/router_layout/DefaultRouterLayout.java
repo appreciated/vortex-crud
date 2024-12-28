@@ -18,11 +18,11 @@ import java.util.Map;
  * It configures the navigation drawer and the application title based on the {@link TurboCrudConfigService} configuration.
  */
 
-public class DefaultRouterLayout extends AppLayout {
+public class DefaultRouterLayout<DataStoreId, FieldId> extends AppLayout {
 
-    private final TurboCrudConfigService configService;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
 
-    public DefaultRouterLayout(TurboCrudConfigService configService) {
+    public DefaultRouterLayout(TurboCrudConfigService<DataStoreId, FieldId> configService) {
         this.configService = configService;
     }
 
@@ -47,7 +47,7 @@ public class DefaultRouterLayout extends AppLayout {
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Map<String, ? extends Route<?>> routes = configService.getConfiguration().getRoutes();
+        Map<String, ? extends Route<DataStoreId, FieldId>> routes = configService.getConfiguration().getRoutes();
         routes.forEach((path, value) -> {
             if (!value.isHideInMenu()) {
                 String translation = getTranslation(value.getTitle());
