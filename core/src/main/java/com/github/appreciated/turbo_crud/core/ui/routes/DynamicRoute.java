@@ -32,7 +32,7 @@ public class DynamicRoute extends Div implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         String path = event.getRouteParameters().get("path").orElse("");
-        if (!path.isEmpty()){
+        if (!path.isEmpty()) {
             path = "/" + path;
         }
         removeAll();

@@ -9,9 +9,9 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
  */
 
 public interface TurboCrudRouteFactoryRegistry {
-    TurboCrudRouteFactory getFactory(Class<?extends TurboCrudRouteFactory> factory);
+    TurboCrudRouteFactory getFactory(Class<? extends TurboCrudRouteFactory> factory);
 
-    void addFactory(Class<?extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory);
+    void addFactory(Class<? extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory);
 
     boolean isContainerRoute(Route currentRoute);
 }

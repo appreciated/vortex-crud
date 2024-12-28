@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields;
 
 import com.github.appreciated.turbo_crud.core.config.model.Application;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import org.springframework.stereotype.Service;
 

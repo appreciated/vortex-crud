@@ -28,19 +28,19 @@ public class FormCreator {
         this.collectionFactoryRegistry = collectionFactoryRegistry;
     }
 
-    public void bindAndAddToLayout(Object table,
+    public <DataStoreId> void bindAndAddToLayout(Object table,
                                    Route<?> route,
-                                   RouteConfiguration formConfig,
+                                   RouteConfiguration<DataStoreId> formConfig,
                                    GenericEntity entity,
                                    TurboCrudRouteFactoryRegistry routeFactory,
-                                   DataStoreConfig<?> tables,
+                                   DataStoreConfig<DataStoreId> tables,
                                    Binder<GenericEntity> binder,
                                    FormLayout form,
                                    FormCreator formCreator) {
-        Map<?, Field> fieldsConfig = tables.getFields();
+        Map<DataStoreId, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement element : formConfig.getChildren()) {
+        for (InternalFormElement<DataStoreId> element : formConfig.getChildren()) {
             String fieldName = element.getField();
             if (!element.getType().equals("collection")) {
                 Field field = fieldsConfig.get(fieldName);

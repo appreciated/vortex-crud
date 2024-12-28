@@ -4,10 +4,10 @@ import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolve
 import com.github.appreciated.turbo_crud.core.config.model.GridOrListConfiguration;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
@@ -39,14 +39,14 @@ public class VirtualItemGrid extends VirtualList<EntityItemList> {
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public <T> VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
-                           Route<T> config,
-                           TurboCrudDataStoreFactoryRegistry<T> dataStoreFactoryRegistry,
-                           TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                           TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public <DataStoreId> VirtualItemGrid(TurboCrudPathToRouteResolver routeResolver,
+                               Route<DataStoreId> config,
+                               TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                               TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                               TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
-        T table = config.getDataStore();
+        DataStoreId table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(table);
         gridOrListConfiguration = (GridOrListConfiguration) config.getConfiguration();

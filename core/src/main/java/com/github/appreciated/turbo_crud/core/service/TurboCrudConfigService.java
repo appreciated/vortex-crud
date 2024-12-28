@@ -1,11 +1,8 @@
 package com.github.appreciated.turbo_crud.core.service;
 
 import com.github.appreciated.turbo_crud.core.config.model.Application;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * Service for loading and providing access to the Turbo CRUD configuration.
@@ -13,20 +10,16 @@ import java.util.Map;
  */
 
 @Service
-public class TurboCrudConfigService {
+public class TurboCrudConfigService<DataStoreId> {
 
-    private final Application<?> configuration;
+    private final Application<DataStoreId> configuration;
 
-    public TurboCrudConfigService(@Autowired TurboCrudConfigurationProvider configurationProvider) {
+    public TurboCrudConfigService(@Autowired TurboCrudConfigurationProvider<DataStoreId> configurationProvider) {
         configuration = configurationProvider.get();
     }
 
-    public Application<?>  getConfiguration() {
+    public Application<DataStoreId> getConfiguration() {
         return configuration;
-    }
-
-    public Route getConfigForRoute(String viewName) {
-        return configuration.getRoutes().get(viewName.split("/")[0]);
     }
 
     public String getApplicationName() {

@@ -9,7 +9,7 @@ import java.util.List;
 @GenerateBuilder
 public class Kanban extends RouteConfiguration implements ItemFactory {
 
-    public Kanban(Class<? extends TurboCrudItemFactory>  factory) {
+    public Kanban(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
@@ -50,12 +50,12 @@ public class Kanban extends RouteConfiguration implements ItemFactory {
             return this;
         }
 
-        public Builder withChildren(List<FormElement> children) {
+        public Builder withChildren(List<InternalFormElement> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder addChildren(FormElement item) {
+        public Builder addChildren(InternalFormElement item) {
             product.getChildren().add(item);
             return this;
         }

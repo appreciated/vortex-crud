@@ -23,9 +23,9 @@ public class DefaultJooqDataStoreFactoryRegistry implements TurboCrudDataStoreFa
 
     private final HashMap<Table<?>, TurboCrudDataStore> factories = new HashMap<>();
 
-    public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService turboCrudConfigService, DSLContext dslContext) {
-        for (Map.Entry<?, DataStoreConfig<?>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
-            Table<?> table = (Table<?>) entry.getKey();
+    public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService<Table<?>> turboCrudConfigService, DSLContext dslContext) {
+        for (Map.Entry<Table<?>, DataStoreConfig<Table<?>>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+            Table<?> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }
     }

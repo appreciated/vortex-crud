@@ -1,10 +1,10 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route;
 
 import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.form.FormRouteFactory;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 @Service
 public class DefaultRouteFactoryRegistry implements TurboCrudRouteFactoryRegistry {
 
-    HashMap<Class<?extends TurboCrudRouteFactory>, TurboCrudRouteFactory> factories = new HashMap<>();
+    HashMap<Class<? extends TurboCrudRouteFactory>, TurboCrudRouteFactory> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistry(TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                        TurboCrudConfigService configService,
@@ -47,12 +47,12 @@ public class DefaultRouteFactoryRegistry implements TurboCrudRouteFactoryRegistr
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory(this, configService));
     }
 
-    public TurboCrudRouteFactory getFactory(Class<?extends TurboCrudRouteFactory> factory) {
+    public TurboCrudRouteFactory getFactory(Class<? extends TurboCrudRouteFactory> factory) {
         return factories.get(factory);
     }
 
     @Override
-    public void addFactory(Class<?extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory) {
+    public void addFactory(Class<? extends TurboCrudRouteFactory> key, TurboCrudRouteFactory factory) {
         factories.put(key, factory);
     }
 

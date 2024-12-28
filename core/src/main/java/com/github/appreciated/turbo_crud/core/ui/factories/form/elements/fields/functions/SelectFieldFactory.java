@@ -42,6 +42,6 @@ public class SelectFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
-       return List.of("VARCHAR", "CHARACTER VARYING");
+        return List.of("VARCHAR", "CHARACTER VARYING");
     }
 }

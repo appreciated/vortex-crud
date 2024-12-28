@@ -1,10 +1,12 @@
 package com.github.appreciated.turbo_crud.example.jooq;
 
+import com.github.appreciated.turbo_crud.core.config.model.Application;
 import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
@@ -14,13 +16,10 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.turbo_crud.jooq.models.tables.Images;
-import com.github.appreciated.turbo_crud.jooq.service.JooqApplication;
-import com.github.appreciated.turbo_crud.jooq.service.JooqDataStore;
-import com.github.appreciated.turbo_crud.jooq.service.JooqDataStoreConfig;
-import com.github.appreciated.turbo_crud.jooq.service.JooqRoute;
+import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.Table;
+import org.jooq.TableField;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,41 +33,41 @@ import static com.github.appreciated.turbo_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider {
+public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>> {
     @Override
-    public com.github.appreciated.turbo_crud.core.config.model.Application<?> get() {
+    public Application<Table<?>, TableField<?,?>> get() {
         Route<Table<?>> taskForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new FormElement("title", "field", "route.tasks.labels.title"),
-                                new FormElement("description", "field", "route.tasks.labels.description"),
-                                new FormElement("status", "field", "route.tasks.labels.status"),
-                                new FormElement("due_date", "field", "route.tasks.labels.due_date"),
-                                new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
-                                FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
+                                new JooqFormElement("title", "field", "route.tasks.labels.title"),
+                                new JooqFormElement("description", "field", "route.tasks.labels.description"),
+                                new JooqFormElement("status", "field", "route.tasks.labels.status"),
+                                new JooqFormElement("due_date", "field", "route.tasks.labels.due_date"),
+                                new JooqFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
+                                JooqFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.of("task_comments")
+                                        .withConfiguration(Collection.Builder.of((Class<? extends TurboCrudDialogFactory<Table<?>>>) FormDialogFactory.class)
+                                                .withData(CollectionData.Builder.<Table<?>>of(TASK_COMMENTS)
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
                                                 .withChild(JooqRoute.of(FormRouteFactory.class)
-                                                        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                                                        .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
-                                                                        new FormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                                        new JooqFormElement("comment_text", "field", "route.tasks.labels.comment")
                                                                 )
                                                                 .build())
                                                         .build())
                                                 .build())
                                         .build(),
-                                FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
+                                JooqFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.of("tasks")
+                                        .withConfiguration(Collection.Builder.of((Class<? extends TurboCrudDialogFactory<Table<?>>>) ConnectDialogFactory.class)
+                                                .withData(CollectionData.Builder.<Table<?>>of(TASKS)
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",
                                                                 "related_task_id",
@@ -85,28 +84,28 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
         Route<Table<?>> projectForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(PROJECTS)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new FormElement("name", "field", "route.projects.labels.name"),
-                                new FormElement("description", "field", "route.projects.labels.description"),
-                                new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                                new FormElement("end_date", "field", "route.projects.labels.end_date")
+                                new JooqFormElement("name", "field", "route.projects.labels.name"),
+                                new JooqFormElement("description", "field", "route.projects.labels.description"),
+                                new JooqFormElement("start_date", "field", "route.projects.labels.start_date"),
+                                new JooqFormElement("end_date", "field", "route.projects.labels.end_date")
                         )
                         .build())
                 .build();
         Route<Table<?>> imageForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(IMAGES)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new FormElement("title", "field", "route.images.labels.title"),
-                                new FormElement("url", "field", "route.images.labels.image")
+                                new JooqFormElement("title", "field", "route.images.labels.title"),
+                                new JooqFormElement("url", "field", "route.images.labels.image")
                         )
                         .build())
                 .build();
-        Map<Table<?>, DataStoreConfig<?>> dataStores = Map.of(
+        Map<Table<?>, DataStoreConfig<TableField<?,?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new Field(IdFieldFactory.class, true),
@@ -117,7 +116,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                 PROJECTS.CREATED_AT, new Field(DateTimePickerFactory.class),
                                 PROJECTS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                TASKS, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASKS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASKS.ID, new Field(IdFieldFactory.class, true),
                                 TASKS.TITLE, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -128,19 +127,19 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                 TASKS.CREATED_AT, new Field(DateTimePickerFactory.class),
                                 TASKS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
                         .build(),
-                TASK_HAS_TASK, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASK_HAS_TASK, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_HAS_TASK.TASK_ID, new Field(IdFieldFactory.class),
                                 TASK_HAS_TASK.RELATED_TASK_ID, new Field(IdFieldFactory.class)))
                         .build(),
-                TASK_COMMENTS, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                TASK_COMMENTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new Field(IdFieldFactory.class, true),
                                 TASK_COMMENTS.COMMENT_TEXT, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new Field(NumberFieldFactory.class),
                                 TASK_COMMENTS.CREATED_AT, Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                IMAGES, JooqDataStoreConfig.Builder.of(JooqDataStore.class)
+                IMAGES, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 IMAGES.ID, new Field(IdFieldFactory.class, true),
                                 IMAGES.TITLE, Field.Builder.of(TextFieldFactory.class)
@@ -158,7 +157,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>>of(CardFactory.class)
                                 .withTitleField("name")
                                 .withDescriptionField("description")
                                 .build())
@@ -169,14 +168,14 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("name")
                                 .withChildren(
-                                        new FormElement("name", "field", "route.projects.labels.name"),
-                                        new FormElement("description", "field", "route.projects.labels.description"),
-                                        new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                                        new FormElement("end_date", "field", "route.projects.labels.end_date")
+                                        new JooqFormElement("name", "field", "route.projects.labels.name"),
+                                        new JooqFormElement("description", "field", "route.projects.labels.description"),
+                                        new JooqFormElement("start_date", "field", "route.projects.labels.start_date"),
+                                        new JooqFormElement("end_date", "field", "route.projects.labels.end_date")
                                 )
                                 .build())
                         .withRoles(List.of("manager", "admin"))
@@ -203,7 +202,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                                         .withIconFactory(CHECK_CIRCLE::create)
                                         .withDataStore(TASKS)
                                         .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>>of(CardFactory.class)
                                                 .withTitleField("title")
                                                 .withDescriptionField("description")
                                                 .build())
@@ -214,7 +213,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withDataStore(IMAGES)
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>>of(CardFactory.class)
                                 .withTitleField("title")
                                 .withImageField("url")
                                 .withImageFactory(FileProvider.class)
@@ -226,12 +225,12 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider 
                         .withDataStore(IMAGES)
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("title")
                                 .withChildren(
-                                        new FormElement("url", "field", "route.projects.labels.description"),
-                                        new FormElement("title", "field", "route.projects.labels.name")
+                                        new JooqFormElement("url", "field", "route.projects.labels.description"),
+                                        new JooqFormElement("title", "field", "route.projects.labels.name")
                                 )
                                 .build())
                         .withRoles(List.of("manager", "admin"))

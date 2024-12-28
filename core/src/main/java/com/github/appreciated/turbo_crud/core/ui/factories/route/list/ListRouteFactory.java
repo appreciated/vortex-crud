@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;

@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.data_provider;
 
-import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 
 public class GenericFilterableDataProvider extends CallbackDataProvider<GenericEntity, String> {

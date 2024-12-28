@@ -5,12 +5,12 @@ import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
@@ -34,15 +34,15 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class FormRouteFactory implements TurboCrudRouteFactory {
+public class FormRouteFactory<DataStoreId> implements TurboCrudRouteFactory<DataStoreId> {
 
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
-    private final TurboCrudConfigService configService;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
+    private final TurboCrudConfigService<DataStoreId> configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry factoryRegistry;
 
-    public FormRouteFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-                            TurboCrudConfigService configService,
+    public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                            TurboCrudConfigService<DataStoreId> configService,
                             FormCreator formCreator,
                             TurboCrudRouteFactoryRegistry factoryRegistry
     ) {
@@ -55,16 +55,16 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
     @Override
     public Component renderRoute(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver routeResolver,
+            TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteConfiguration form = route.getConfiguration();
+        Route<DataStoreId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteConfiguration<DataStoreId> form = route.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route route, RouteConfiguration formRouteConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver<DataStoreId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route<DataStoreId> route, RouteConfiguration<DataStoreId> formRouteConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -85,8 +85,8 @@ public class FormRouteFactory implements TurboCrudRouteFactory {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        Object table = route.getDataStore();
-        DataStoreConfig<?> tables = configService.getConfiguration().getDataStores().get(table);
+        DataStoreId table = route.getDataStore();
+        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);

@@ -5,9 +5,9 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class CollectionData {
+public class CollectionData<DataStoreId> {
 
-    private String dataStore;
+    private DataStoreId dataStore;
 
     private OneToMany oneToMany;
 
@@ -15,15 +15,15 @@ public class CollectionData {
 
     private List<String> children;
 
-    public CollectionData(String dataStore) {
+    public CollectionData(DataStoreId dataStore) {
         this.dataStore = dataStore;
     }
 
-    public String getDataStore() {
+    public DataStoreId getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(String dataStore) {
+    public void setDataStore(DataStoreId dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -51,43 +51,43 @@ public class CollectionData {
         this.children = children;
     }
 
-    public static class Builder {
+    public static class Builder<DataStoreId> {
 
-        private CollectionData product;
+        private CollectionData<DataStoreId> product;
 
-        private Builder(CollectionData product) {
+        private Builder(CollectionData<DataStoreId> product) {
             this.product = product;
         }
 
-        public static Builder of(String dataStore) {
-            return new Builder(new CollectionData(dataStore));
+        public static <DataStoreId> Builder<DataStoreId> of(DataStoreId dataStore) {
+            return new Builder<>(new CollectionData<>(dataStore));
         }
 
-        public Builder withOneToMany(OneToMany oneToMany) {
+        public Builder<DataStoreId> withOneToMany(OneToMany oneToMany) {
             product.oneToMany = oneToMany;
             return this;
         }
 
-        public Builder withManyToMany(ManyToMany manyToMany) {
+        public Builder<DataStoreId> withManyToMany(ManyToMany manyToMany) {
             product.manyToMany = manyToMany;
             return this;
         }
 
-        public Builder withChildren(List<String> children) {
+        public Builder<DataStoreId> withChildren(List<String> children) {
             product.children = children;
             return this;
         }
 
-        public Builder withChildren(String... children) {
+        public Builder<DataStoreId> withChildren(String... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder addChildren(String item) {
+        public Builder<DataStoreId> addChildren(String item) {
             product.children.add(item);
             return this;
         }
 
-        public CollectionData build() {
+        public CollectionData<DataStoreId> build() {
             return product;
         }
     }

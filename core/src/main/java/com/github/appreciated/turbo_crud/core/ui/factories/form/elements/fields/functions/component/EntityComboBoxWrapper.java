@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.component;
 
 import com.github.appreciated.turbo_crud.core.config.model.Field;
-import com.github.appreciated.turbo_crud.core.model.GenericEntity;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;

@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.turbo_crud.core.config.model.*;
+import com.github.appreciated.turbo_crud.core.config.model.CollectionData;
+import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
@@ -19,29 +21,29 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory implements TurboCrudDialogFactory {
+public class FormDialogFactory <DataStoreId> implements TurboCrudDialogFactory<DataStoreId> {
 
-    private final TurboCrudConfigService configService;
+    private final TurboCrudConfigService <DataStoreId> configService;
     private final TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry;
     private TurboCrudDataStore dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService<DataStoreId> configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
-    public <T> Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
-                         @Nullable String foreignKeyField,
-                         Route<T> formRoute,
-                         CollectionData config,
-                         T dataStore,
-                         TurboCrudRouteFactoryRegistry routeFactory,
-                         OnStoreListener listener,
-                         FormCreator formCreator) {
+    public Dialog create(@Nullable String entityId,
+                             @Nullable String foreignKeyValue,
+                             @Nullable String foreignKeyField,
+                             Route<DataStoreId> formRoute,
+                             CollectionData<DataStoreId> config,
+                             DataStoreId dataStore,
+                             TurboCrudRouteFactoryRegistry routeFactory,
+                             OnStoreListener listener,
+                             FormCreator formCreator) {
 
-        this.dataStore = ((TurboCrudDataStoreFactoryRegistry<T>)dataStoreFactoryRegistry).getFactory(dataStore);
+        this.dataStore = ((TurboCrudDataStoreFactoryRegistry<DataStoreId>) dataStoreFactoryRegistry).getFactory(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -61,7 +63,7 @@ public class FormDialogFactory implements TurboCrudDialogFactory {
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<?> tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 

@@ -4,11 +4,11 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
 
 public class JpaRoute extends Route<String> {
-        public JpaRoute(Class<? extends TurboCrudRouteFactory> factory) {
+        public JpaRoute(Class<? extends TurboCrudRouteFactory<String>> factory) {
             super(factory);
         }
 
         public static Route.Builder<String> of(Class<? extends TurboCrudRouteFactory> factory) {
-            return new Route.Builder<>(new Route<>(factory));
+            return new Route.Builder<>(new Route<>((Class<? extends TurboCrudRouteFactory<String>>)factory));
         }
     }

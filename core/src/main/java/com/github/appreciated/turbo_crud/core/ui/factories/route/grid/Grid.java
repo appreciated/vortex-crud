@@ -2,13 +2,12 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.turbo_crud.core.ui.components.SearchField;
-import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactoryRegistry;
@@ -22,16 +21,16 @@ import com.vaadin.flow.data.provider.DataProvider;
 public class Grid extends VerticalLayout {
     private final VirtualItemGrid virtualGrid;
 
-    public <T> Grid(TurboCrudPathToRouteResolver routeResolver,
-                Route<T> route,
-                TurboCrudDataStoreFactoryRegistry<T> turboCrudDataStoreFactoryRegistry,
-                FormCreator formCreator,
-                TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-                TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                TurboCrudFileProviderRegistry fileProviderRegistry) {
+    public <DataStoreId> Grid(TurboCrudPathToRouteResolver routeResolver,
+                    Route<DataStoreId> route,
+                    TurboCrudDataStoreFactoryRegistry<DataStoreId> turboCrudDataStoreFactoryRegistry,
+                    FormCreator formCreator,
+                    TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                    TurboCrudRouteFactoryRegistry routeFactoryRegistry,
+                    TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                    TurboCrudFileProviderRegistry fileProviderRegistry) {
         RouteHeader routeHeader = new RouteHeader(route);
-        T dataStore = route.getDataStore();
+        DataStoreId dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -57,7 +56,7 @@ public class Grid extends VerticalLayout {
         }
     }
 
-    private <T> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<T> route, T dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private <DataStoreId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

@@ -21,24 +21,24 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConnectDialogFactory implements TurboCrudDialogFactory {
+public class ConnectDialogFactory<DataStoreId> implements TurboCrudDialogFactory<DataStoreId> {
 
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
 
-    public ConnectDialogFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
+    public ConnectDialogFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
-    public <T> Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
-                         @Nullable String foreignKeyField,
-                         Route<T> formRoute,
-                         CollectionData collectionData,
-                         T dataStoreIdentifier,
-                         TurboCrudRouteFactoryRegistry routeFactory,
-                         OnStoreListener listener,
-                         FormCreator formCreator) {
+    public Dialog create(@Nullable String entityId,
+                             @Nullable String foreignKeyValue,
+                             @Nullable String foreignKeyField,
+                             Route<DataStoreId> formRoute,
+                             CollectionData<DataStoreId> collectionData,
+                             DataStoreId dataStoreIdentifier,
+                             TurboCrudRouteFactoryRegistry routeFactory,
+                             OnStoreListener listener,
+                             FormCreator formCreator) {
 
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
         Dialog dialog = new Dialog();

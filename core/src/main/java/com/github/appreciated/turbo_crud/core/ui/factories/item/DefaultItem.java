@@ -25,7 +25,7 @@ public class DefaultItem extends VerticalLayout {
         ImageDisplayComponent image = null;
         String imageField = config.getImageField();
         if (imageField != null) {
-            if (config.getImageFactory() == null){
+            if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
             String imagePath = entity.getString(imageField);

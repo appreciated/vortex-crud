@@ -4,10 +4,10 @@ import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolve
 import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 
@@ -19,31 +19,31 @@ import java.util.Map;
  * {@link Route}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
-public class GenericEntityGrid extends Grid<GenericEntity> {
+public class GenericEntityGrid<DataStoreId> extends Grid<GenericEntity> {
 
-    private final TurboCrudPathToRouteResolver pathVariables;
+    private final TurboCrudPathToRouteResolver<DataStoreId> pathVariables;
 
-    public <T> GenericEntityGrid(TurboCrudPathToRouteResolver routeResolver,
-                             Route<T> route,
-                             TurboCrudDataStoreFactoryRegistry<T> dataStoreFactoryRegistry,
-                             TurboCrudConfigService configService,
-                             TurboCrudListColumnCallbackRegistry listColumnFactory) {
+    public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId> routeResolver,
+                                 Route<DataStoreId> route,
+                                 TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                                 TurboCrudConfigService<DataStoreId> configService,
+                                 TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        T table = route.getDataStore();
+        DataStoreId table = route.getDataStore();
         TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
-        RouteConfiguration gridOrListConfiguration = route.getConfiguration();
+        DataStoreConfig<DataStoreId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
+        RouteConfiguration<DataStoreId> gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
-        Map<String, Field> fieldsConfig = tables.getFields();
+        Map<?, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (FormElement field : gridOrListConfiguration.getChildren()) {
+        for (InternalFormElement<DataStoreId> field : gridOrListConfiguration.getChildren()) {
             String fieldName = field.getField();
             Field dataStoreField = fieldsConfig.get(fieldName);
             if (dataStoreField == null) {

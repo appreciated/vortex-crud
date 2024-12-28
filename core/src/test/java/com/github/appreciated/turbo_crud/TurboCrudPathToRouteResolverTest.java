@@ -48,7 +48,7 @@ class TurboCrudPathToRouteResolverTest {
         routeWithContainer.setChild(childRoute);
 
         String path = "routeWithContainer/routeWithContainer";
-        TurboCrudPathToRouteResolver turboCrudPath = new TurboCrudPathToRouteResolver(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
         Route<String> currentRoute = turboCrudPath.getCurrentRoute();
@@ -71,7 +71,7 @@ class TurboCrudPathToRouteResolverTest {
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver turboCrudPath = new TurboCrudPathToRouteResolver(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
         Route<String> currentRoute = turboCrudPath.getCurrentRoute();
@@ -97,7 +97,7 @@ class TurboCrudPathToRouteResolverTest {
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver turboCrudPath = new TurboCrudPathToRouteResolver(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
         Route<String> currentRoute = turboCrudPath.getCurrentRoute();
@@ -116,7 +116,7 @@ class TurboCrudPathToRouteResolverTest {
         routesConfig.put("routeWithoutContainer1", routeWithoutContainer1);
 
         String path = "routeWithoutContainer1";
-        TurboCrudPathToRouteResolver turboCrudPath = new TurboCrudPathToRouteResolver(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
         Route<String> currentRoute = turboCrudPath.getCurrentRoute();
@@ -143,10 +143,10 @@ class TurboCrudPathToRouteResolverTest {
         routeWithoutContainer1.setChild(routeWithoutContainer2);
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        TurboCrudPathToRouteResolver turboCrudPath = new TurboCrudPathToRouteResolver(registry, path, routesConfig);
+        TurboCrudPathToRouteResolver<String> turboCrudPath = new TurboCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der gesetzten Marker
-        Map<Integer, Route<?>> routes = turboCrudPath.getPathRoutes();
+        Map<Integer, Route<String>> routes = turboCrudPath.getPathRoutes();
 
         // Prüfung der Marker
         assertEquals(3, routes.size(), "Es sollten 3 Marker gesetzt sein.");

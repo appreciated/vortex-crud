@@ -24,7 +24,7 @@ public class ImageFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
-       return List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "BLOB");
+        return List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "BLOB");
     }
 
 }

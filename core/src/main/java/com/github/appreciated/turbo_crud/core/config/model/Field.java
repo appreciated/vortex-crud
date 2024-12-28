@@ -8,7 +8,7 @@ import java.util.List;
 @GenerateBuilder
 public class Field {
 
-    private  Class<? extends TurboCrudFieldFactory> factory;
+    private Class<? extends TurboCrudFieldFactory> factory;
 
     private boolean primary;
 
@@ -32,29 +32,29 @@ public class Field {
 
     RouteConfiguration configuration;
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory) {
         if (factory == null) {
             throw new IllegalArgumentException("The factory must not be null");
         }
         this.factory = factory;
     }
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
         this(factory);
         this.primary = primary;
     }
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory, String values) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory, String values) {
         this(factory);
         this.values = values;
     }
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
         this(factory, primary);
         this.required = required;
     }
 
-    public Field( Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
+    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
         this(factory, primary, required);
         this.validation = validation;
     }
@@ -67,11 +67,11 @@ public class Field {
         this.children = children;
     }
 
-    public  Class<? extends TurboCrudFieldFactory> getFactory() {
+    public Class<? extends TurboCrudFieldFactory> getFactory() {
         return factory;
     }
 
-    public void setFactory( Class<? extends TurboCrudFieldFactory> factory) {
+    public void setFactory(Class<? extends TurboCrudFieldFactory> factory) {
         this.factory = factory;
     }
 
@@ -163,7 +163,7 @@ public class Field {
             this.product = product;
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory) {
             return new Builder(new Field(factory));
         }
 
@@ -212,7 +212,7 @@ public class Field {
             return this;
         }
 
-        public Builder withReadOnlyForRoles(String ... readOnlyForRoles) {
+        public Builder withReadOnlyForRoles(String... readOnlyForRoles) {
             product.readOnlyForRoles = List.of(readOnlyForRoles);
             return this;
         }
@@ -244,23 +244,23 @@ public class Field {
             return product;
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
             return new Builder(new Field(factory, primary));
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, String values) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, String values) {
             return new Builder(new Field(factory, values));
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
             return new Builder(new Field(factory, primary, required));
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
             return new Builder(new Field(factory, primary, required, validation));
         }
 
-        public static Builder of( Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
+        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
             return new Builder(new Field(factory, field, filterField, dataStore, children));
         }
     }

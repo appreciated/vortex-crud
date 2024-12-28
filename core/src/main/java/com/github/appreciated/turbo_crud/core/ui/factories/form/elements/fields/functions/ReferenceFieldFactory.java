@@ -24,6 +24,6 @@ public class ReferenceFieldFactory implements TurboCrudFieldFactory {
 
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
-       return List.of("UUID", "INTEGER", "INT", "CHAR", "VARCHAR", "SERIAL");
+        return List.of("UUID", "INTEGER", "INT", "CHAR", "VARCHAR", "SERIAL");
     }
 }

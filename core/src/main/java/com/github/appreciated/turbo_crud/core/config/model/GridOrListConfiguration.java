@@ -6,60 +6,60 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListConfiguration extends RouteConfiguration implements ItemFactory {
+public class GridOrListConfiguration<DataStoreId> extends RouteConfiguration<DataStoreId> implements ItemFactory {
 
-    private List<FormElement> children;
+    private List<InternalFormElement<DataStoreId>> children;
 
     public GridOrListConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
     }
 
-    public List<FormElement> getChildren() {
+    public List<InternalFormElement<DataStoreId>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormElement> children) {
+    public void setChildren(List<InternalFormElement<DataStoreId>> children) {
         this.children = children;
     }
 
-    public static class Builder extends RouteConfiguration.Builder {
+    public static class Builder<DataStoreId> extends RouteConfiguration.Builder<DataStoreId> {
 
-        private GridOrListConfiguration product;
+        private GridOrListConfiguration<DataStoreId> product;
 
-        private Builder(GridOrListConfiguration product) {
+        private Builder(GridOrListConfiguration<DataStoreId> product) {
             super(product);
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder(new GridOrListConfiguration(factory));
+        public static <DataStoreId> Builder<DataStoreId> of(Class<? extends TurboCrudItemFactory> factory) {
+            return new Builder<>(new GridOrListConfiguration<>(factory));
         }
 
-        public Builder withFilterField(String filterField) {
+        public Builder<DataStoreId> withFilterField(String filterField) {
             product.setFilterField(filterField);
             return this;
         }
 
-        public Builder withInlineEdit(boolean inlineEdit) {
+        public Builder<DataStoreId> withInlineEdit(boolean inlineEdit) {
             product.setInlineEdit(inlineEdit);
             return this;
         }
 
-        public Builder withChildren(List<FormElement> children) {
+        public Builder<DataStoreId> withChildren(List<InternalFormElement<DataStoreId>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder withChildren(FormElement ... children) {
+        public <T extends InternalFormElement<DataStoreId>> Builder<DataStoreId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder addChildren(FormElement item) {
+        public Builder<DataStoreId> addChildren(InternalFormElement<DataStoreId> item) {
             product.children.add(item);
             return this;
         }
 
-        public GridOrListConfiguration build() {
+        public GridOrListConfiguration<DataStoreId> build() {
             return product;
         }
     }

@@ -5,11 +5,11 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import org.jooq.Table;
 
 public class JooqRoute extends Route<Table<?>> {
-    public JooqRoute(Class<? extends TurboCrudRouteFactory> factory) {
+    public JooqRoute(Class<? extends TurboCrudRouteFactory<Table<?>>> factory) {
         super(factory);
     }
 
     public static Route.Builder<Table<?>> of(Class<? extends TurboCrudRouteFactory> factory) {
-        return new Route.Builder<Table<?>>(new Route<>(factory));
+        return new Route.Builder<>(new Route<>((Class<? extends TurboCrudRouteFactory<Table<?>>>)factory));
     }
 }

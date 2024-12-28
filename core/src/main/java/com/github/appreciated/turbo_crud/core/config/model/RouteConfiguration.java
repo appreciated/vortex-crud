@@ -7,7 +7,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class RouteConfiguration {
+public class RouteConfiguration<DataStoreId> {
 
     private Class<? extends TurboCrudItemFactory> factory;
 
@@ -25,13 +25,13 @@ public class RouteConfiguration {
 
     private String filterField;
 
-    private List<FormElement> children;
+    private List<InternalFormElement<DataStoreId>> children;
 
     public RouteConfiguration(Class<? extends TurboCrudItemFactory> factory) {
         this.factory = factory;
     }
 
-    public Class<? extends TurboCrudItemFactory>  getFactory() {
+    public Class<? extends TurboCrudItemFactory> getFactory() {
         return factory;
     }
 
@@ -95,76 +95,72 @@ public class RouteConfiguration {
         this.filterField = filterField;
     }
 
-    public List<FormElement> getChildren() {
+    public List<InternalFormElement<DataStoreId>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FormElement> children) {
+    public void setChildren(List<InternalFormElement<DataStoreId>> children) {
         this.children = children;
     }
 
-    public static class Builder {
+    public static class Builder<DataStoreId> {
 
-        private RouteConfiguration product;
+        private RouteConfiguration<DataStoreId> product;
 
-        Builder(RouteConfiguration product) {
+        public Builder(RouteConfiguration<DataStoreId> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder(new RouteConfiguration(factory));
-        }
-
-        public Builder withTitleField(String titleField) {
+        public Builder<DataStoreId> withTitleField(String titleField) {
             product.titleField = titleField;
             return this;
         }
 
-        public Builder withDescriptionField(String descriptionField) {
+        public Builder<DataStoreId> withDescriptionField(String descriptionField) {
             product.descriptionField = descriptionField;
             return this;
         }
 
-        public Builder withColumnField(String columnField) {
+        public Builder<DataStoreId> withColumnField(String columnField) {
             product.columnField = columnField;
             return this;
         }
 
-        public Builder withImageField(String imageField) {
+        public Builder<DataStoreId> withImageField(String imageField) {
             product.imageField = imageField;
             return this;
         }
 
-        public Builder withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
+        public Builder<DataStoreId> withImageFactory(Class<? extends TurboCrudFileProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }
 
-        public Builder withInlineEdit(boolean inlineEdit) {
+        public Builder<DataStoreId> withInlineEdit(boolean inlineEdit) {
             product.inlineEdit = inlineEdit;
             return this;
         }
 
-        public Builder withFilterField(String filterField) {
+        public Builder<DataStoreId> withFilterField(String filterField) {
             product.filterField = filterField;
             return this;
         }
 
-        public Builder withChildren(List<FormElement> children) {
+        public Builder<DataStoreId> withChildren(List<InternalFormElement<DataStoreId>> children) {
             product.children = children;
             return this;
         }
 
-        public Builder withChildren(FormElement ... children) {
+        public <T extends InternalFormElement<DataStoreId>> Builder<DataStoreId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder addChildren(FormElement item) {
+        public Builder<DataStoreId> addChildren(InternalFormElement<DataStoreId> item) {
             product.children.add(item);
             return this;
         }
 
-        public RouteConfiguration build() {
+        public RouteConfiguration<DataStoreId> build() {
             return product;
         }
     }

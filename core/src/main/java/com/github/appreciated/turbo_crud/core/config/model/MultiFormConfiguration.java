@@ -31,7 +31,7 @@ public class MultiFormConfiguration extends RouteConfiguration {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudItemFactory>  factory) {
+        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
             return new Builder(new MultiFormConfiguration(factory));
         }
 

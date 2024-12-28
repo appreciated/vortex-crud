@@ -2,13 +2,12 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.compone
 
 import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
-import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
-import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactoryRegistry;
@@ -36,17 +35,17 @@ public class KanbanView extends VerticalLayout {
     private final TurboCrudDataStore dataStore;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public <T> KanbanView(T dataStoreIdentifier,
-                      Route<T> route,
-                      TurboCrudDataStore dataStore,
-                      TurboCrudRouteFactoryRegistry routeFactory,
-                      TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                      Kanban kanbanConfig,
-                      Application<?> configService,
-                      TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                      TurboCrudFileProviderRegistry fileProviderRegistry,
-                      FormCreator formCreator,
-                      DetailRouteSetting detailRouteSetting) {
+    public <DataStoreId> KanbanView(DataStoreId dataStoreIdentifier,
+                          Route<DataStoreId> route,
+                          TurboCrudDataStore dataStore,
+                          TurboCrudRouteFactoryRegistry routeFactory,
+                          TurboCrudItemFactoryRegistry itemFactoryRegistry,
+                          Kanban kanbanConfig,
+                          Application<?> configService,
+                          TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                          TurboCrudFileProviderRegistry fileProviderRegistry,
+                          FormCreator formCreator,
+                          DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
         Selects selects = configService.getSelects();
         DataStoreConfig<?> config = configService.getDataStores().get(dataStoreIdentifier);
@@ -165,7 +164,7 @@ public class KanbanView extends VerticalLayout {
         return wrapper;
     }
 
-    private <T> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<T> route, T dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private <DataStoreId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
         GenericEntity entity = new GenericEntity();
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,

@@ -12,7 +12,6 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Default implementation of an application layout using Vaadin's AppLayout.

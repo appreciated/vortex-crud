@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.entity.data_store;
 
-public interface TurboCrudDataStoreFactoryRegistry<T> {
-    TurboCrudDataStore getFactory(T table);
+public interface TurboCrudDataStoreFactoryRegistry<DataStoreId> {
+    TurboCrudDataStore getFactory(DataStoreId table);
 
-    void addFactory(T table, TurboCrudDataStore factory);
+    void addFactory(DataStoreId table, TurboCrudDataStore factory);
 }

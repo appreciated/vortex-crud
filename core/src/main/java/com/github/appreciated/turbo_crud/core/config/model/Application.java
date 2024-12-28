@@ -5,7 +5,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class Application<T> {
+public class Application<DataStoreId, FieldId> {
 
     private String name;
 
@@ -19,9 +19,9 @@ public class Application<T> {
 
     private Auditing auditing;
 
-    private Map<T, DataStoreConfig<?>> dataStores;
+    private Map<DataStoreId, DataStoreConfig<FieldId>> dataStores;
 
-    private Map<String, Route<T>> routes;
+    private Map<String, Route<DataStoreId>> routes;
 
     public String getName() {
         return name;
@@ -71,70 +71,70 @@ public class Application<T> {
         this.auditing = auditing;
     }
 
-    public Map<T, DataStoreConfig<?>> getDataStores() {
+    public Map<DataStoreId, DataStoreConfig<FieldId>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<T, DataStoreConfig<?>> dataStores) {
+    public void setDataStores(Map<DataStoreId, DataStoreConfig<FieldId>> dataStores) {
         this.dataStores = dataStores;
     }
 
-    public Map<String, Route<T>> getRoutes() {
+    public Map<String, Route<DataStoreId>> getRoutes() {
         return routes;
     }
 
-    public void setRoutes(Map<String, Route<T>> routes) {
+    public void setRoutes(Map<String, Route<DataStoreId>> routes) {
         this.routes = routes;
     }
 
-    public static class Builder<T> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private Application<T> product;
+        private Application<DataStoreId,FieldId> product;
 
-        public Builder(Application<T> product) {
+        public Builder(Application<DataStoreId,FieldId> product) {
             this.product = product;
         }
 
-        public Builder<T> withName(String name) {
+        public Builder<DataStoreId, FieldId> withName(String name) {
             product.name = name;
             return this;
         }
 
-        public Builder<T> withI18nBundlePrefix(String i18nBundlePrefix) {
+        public Builder<DataStoreId, FieldId> withI18nBundlePrefix(String i18nBundlePrefix) {
             product.i18nBundlePrefix = i18nBundlePrefix;
             return this;
         }
 
-        public Builder<T> withUserManagement(UserManagement userManagement) {
+        public Builder<DataStoreId, FieldId> withUserManagement(UserManagement userManagement) {
             product.userManagement = userManagement;
             return this;
         }
 
-        public Builder<T> withSelects(Selects selects) {
+        public Builder<DataStoreId, FieldId> withSelects(Selects selects) {
             product.selects = selects;
             return this;
         }
 
-        public Builder<T> withVersioning(Versioning versioning) {
+        public Builder<DataStoreId, FieldId> withVersioning(Versioning versioning) {
             product.versioning = versioning;
             return this;
         }
 
-        public Builder<T> withAuditing(Auditing auditing) {
+        public Builder<DataStoreId, FieldId> withAuditing(Auditing auditing) {
             product.auditing = auditing;
             return this;
         }
 
-        public Builder<T> withDataStores(Map<T, DataStoreConfig<?>> dataStores) {
+        public Builder<DataStoreId, FieldId> withDataStores(Map<DataStoreId, DataStoreConfig<FieldId>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
-        public Application<T> build() {
+        public Application<DataStoreId, FieldId> build() {
             return product;
         }
 
-        public Builder<T> withRoutes(Map<String, Route<T>> routes) {
+        public Builder<DataStoreId, FieldId> withRoutes(Map<String, Route<DataStoreId>> routes) {
             product.routes = routes;
             return this;
         }

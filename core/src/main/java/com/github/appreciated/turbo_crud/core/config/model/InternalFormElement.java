@@ -6,7 +6,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class FormElement {
+public class InternalFormElement<DataStoreId> {
 
     private String field;
 
@@ -22,12 +22,12 @@ public class FormElement {
 
     private Integer span = null;
 
-    Collection configuration;
+    Collection<DataStoreId> configuration;
 
-    public FormElement() {
+    public InternalFormElement() {
     }
 
-    public FormElement( String field, String type, String label) {
+    public InternalFormElement(String field, String type, String label) {
         this.field = field;
         this.type = type;
         this.label = label;
@@ -89,77 +89,74 @@ public class FormElement {
         this.span = span;
     }
 
-    public Collection getConfiguration() {
+    public Collection<DataStoreId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Collection configuration) {
+    public void setConfiguration(Collection<DataStoreId> configuration) {
         this.configuration = configuration;
     }
 
-    public static class Builder {
+    public static class Builder<DataStoreId> {
 
-        private FormElement product;
+        private InternalFormElement<DataStoreId> product;
 
-        private Builder(FormElement product) {
+        public Builder(InternalFormElement<DataStoreId> product) {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new FormElement());
+        public static <DataStoreId> Builder<DataStoreId> of() {
+            return new Builder<>(new InternalFormElement<>());
         }
 
-        public Builder withField(String field) {
+        public Builder<DataStoreId>withField(String field) {
             product.field = field;
             return this;
         }
 
-        public Builder withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
+        public Builder<DataStoreId> withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
             product.factory = factory;
             return this;
         }
 
-        public Builder withReadOnly(boolean readOnly) {
+        public Builder<DataStoreId> withReadOnly(boolean readOnly) {
             product.readOnly = readOnly;
             return this;
         }
 
-        public Builder withReadOnlyForRoles(List<String> readOnlyForRoles) {
+        public Builder<DataStoreId> withReadOnlyForRoles(List<String> readOnlyForRoles) {
             product.readOnlyForRoles = readOnlyForRoles;
             return this;
         }
 
-        public Builder withLabel(String label) {
+        public Builder<DataStoreId> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder withType(String type) {
+        public Builder<DataStoreId> withType(String type) {
             product.type = type;
             return this;
         }
 
-        public Builder withSpan(Integer span) {
+        public Builder<DataStoreId> withSpan(Integer span) {
             product.span = span;
             return this;
         }
 
-        public Builder withConfiguration(Collection configuration) {
+        public Builder<DataStoreId> withConfiguration(Collection configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder addReadOnlyForRole(String item) {
+        public Builder<DataStoreId> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
         }
 
-        public FormElement build() {
+        public InternalFormElement<DataStoreId> build() {
             return product;
         }
 
-        public static Builder of(String field, String type, String label) {
-            return new Builder(new FormElement(field, type, label));
-        }
     }
 }

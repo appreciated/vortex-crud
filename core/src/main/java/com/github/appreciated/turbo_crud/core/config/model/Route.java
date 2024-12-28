@@ -10,35 +10,35 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateBuilder
-public class Route<T> {
+public class Route<DataStoreId> {
 
-    private T dataStore;
+    private DataStoreId dataStore;
 
     private String title;
 
     private boolean defaultRoute;
 
-    private Class<? extends TurboCrudRouteFactory> factory;
+    private Class<? extends TurboCrudRouteFactory<DataStoreId>> factory;
 
     private boolean hideInMenu;
 
-    private RouteConfiguration configuration;
+    private RouteConfiguration<DataStoreId> configuration;
 
-    private Map<String, Route<T>> childrenMap = new HashMap<>();
+    private Map<String, Route<DataStoreId>> childrenMap = new HashMap<>();
 
     private SerializableSupplier<Component> iconFactory;
 
-    public Route(Class<? extends TurboCrudRouteFactory> factory) {
+    public Route(Class<? extends TurboCrudRouteFactory<DataStoreId>> factory) {
         this.factory = factory;
     }
 
     private List<String> roles;
 
-    public T getDataStore() {
+    public DataStoreId getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(T dataStore) {
+    public void setDataStore(DataStoreId dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -66,11 +66,11 @@ public class Route<T> {
         this.defaultRoute = defaultRoute;
     }
 
-    public Class<? extends TurboCrudRouteFactory> getFactory() {
+    public Class<? extends TurboCrudRouteFactory<DataStoreId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends TurboCrudRouteFactory> factory) {
+    public void setFactory(Class<? extends TurboCrudRouteFactory<DataStoreId>> factory) {
         this.factory = factory;
     }
 
@@ -82,31 +82,31 @@ public class Route<T> {
         this.hideInMenu = hideInMenu;
     }
 
-    public RouteConfiguration getConfiguration() {
+    public RouteConfiguration<DataStoreId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteConfiguration configuration) {
+    public void setConfiguration(RouteConfiguration<DataStoreId> configuration) {
         this.configuration = configuration;
     }
 
-    public Map<String, Route<T>> getChildrenMap() {
+    public Map<String, Route<DataStoreId>> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildrenMap(Map<String, Route<T>> childrenMap) {
+    public void setChildrenMap(Map<String, Route<DataStoreId>> childrenMap) {
         this.childrenMap = childrenMap;
     }
 
-    public Route<T> getChild() {
+    public Route<DataStoreId> getChild() {
         return childrenMap.entrySet().stream().findFirst().orElseThrow().getValue();
     }
 
-    public void setChild(Route<T> child) {
-        if (!childrenMap.isEmpty()){
+    public void setChild(Route<DataStoreId> child) {
+        if (!childrenMap.isEmpty()) {
             throw new IllegalArgumentException("Route already has a child. Only one child is allowed when using setChild()");
         }
-        this.childrenMap.put(null,child);
+        this.childrenMap.put(null, child);
     }
 
     public List<String> getRoles() {
@@ -117,69 +117,69 @@ public class Route<T> {
         this.roles = roles;
     }
 
-    public static class Builder<T> {
+    public static class Builder<DataStoreId> {
 
-        private Route<T> product;
+        private Route<DataStoreId> product;
 
-        public Builder(Route<T> product) {
+        public Builder(Route<DataStoreId> product) {
             this.product = product;
         }
 
-        public Builder<T> of(Class<? extends TurboCrudRouteFactory> factory) {
-            return new Builder<>(new Route<T>(factory));
+        public Builder<DataStoreId> of(Class<? extends TurboCrudRouteFactory<DataStoreId>> factory) {
+            return new Builder<>(new Route<>(factory));
         }
 
-        public Builder<T> withDataStore(T dataStore) {
+        public Builder<DataStoreId> withDataStore(DataStoreId dataStore) {
             product.dataStore = dataStore;
             return this;
         }
 
-        public Builder<T> withTitle(String title) {
+        public Builder<DataStoreId> withTitle(String title) {
             product.title = title;
             return this;
         }
 
-        public Builder<T> withIconFactory(SerializableSupplier<Component> iconFactory) {
+        public Builder<DataStoreId> withIconFactory(SerializableSupplier<Component> iconFactory) {
             product.iconFactory = iconFactory;
             return this;
         }
 
-        public Builder<T> withDefaultRoute(boolean defaultRoute) {
+        public Builder<DataStoreId> withDefaultRoute(boolean defaultRoute) {
             product.defaultRoute = defaultRoute;
             return this;
         }
 
-        public Builder<T> withHideInMenu(boolean hideInMenu) {
+        public Builder<DataStoreId> withHideInMenu(boolean hideInMenu) {
             product.hideInMenu = hideInMenu;
             return this;
         }
 
-        public Builder<T> withConfiguration(RouteConfiguration configuration) {
+        public Builder<DataStoreId> withConfiguration(RouteConfiguration<DataStoreId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<T> withChildrenMap(Map<String, Route<T>> childrenMap) {
+        public Builder<DataStoreId> withChildrenMap(Map<String, Route<DataStoreId>> childrenMap) {
             product.childrenMap = childrenMap;
             return this;
         }
 
-        public Builder<T> withChild(Route<T> child) {
+        public Builder<DataStoreId> withChild(Route<DataStoreId> child) {
             product.setChild(child);
             return this;
         }
 
-        public Builder<T> withRoles(List<String> roles) {
+        public Builder<DataStoreId> withRoles(List<String> roles) {
             product.roles = roles;
             return this;
         }
 
-        public Builder<T> addRole(String item) {
+        public Builder<DataStoreId> addRole(String item) {
             product.roles.add(item);
             return this;
         }
 
-        public Route<T> build() {
+        public Route<DataStoreId> build() {
             return product;
         }
     }

@@ -6,9 +6,9 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class TestNonContainerRouteFactory implements TurboCrudRouteFactory {
+public class TestNonContainerRouteFactory implements TurboCrudRouteFactory<String> {
     @Override
-    public Component renderRoute(Integer currentPathIndex, TurboCrudPathToRouteResolver routeResolver, @Nullable DetailRouteSetting detailRouteSetting) {
+    public Component renderRoute(Integer currentPathIndex, TurboCrudPathToRouteResolver<String> routeResolver, @Nullable DetailRouteSetting detailRouteSetting) {
         return null;
     }
 

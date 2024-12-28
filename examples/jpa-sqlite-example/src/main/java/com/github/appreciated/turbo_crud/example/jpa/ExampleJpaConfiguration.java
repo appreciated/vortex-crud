@@ -8,19 +8,18 @@ import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.turbo_crud.jpa.service.JpaApplication;
-import com.github.appreciated.turbo_crud.jpa.service.JpaDataStore;
-import com.github.appreciated.turbo_crud.jpa.service.JpaDataStoreConfig;
-import com.github.appreciated.turbo_crud.jpa.service.JpaRoute;
+import com.github.appreciated.turbo_crud.jpa.service.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,37 +32,37 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
 
     @Override
     public Application<String> get() {
-        Route<String> taskForm = JpaRoute.of(FormRouteFactory.class)
+        Route taskForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
                 .withDataStore("tasks")
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new FormElement("title", "field", "route.tasks.labels.title"),
-                                new FormElement("description", "field", "route.tasks.labels.description"),
-                                new FormElement("status", "field", "route.tasks.labels.status"),
-                                new FormElement("due_date", "field", "route.tasks.labels.due_date"),
-                                new FormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
-                                FormElement.Builder.of(null, "collection", "route.tasks.labels.comments")
+                                new JpaFormElement("title", "field", "route.tasks.labels.title"),
+                                new JpaFormElement("description", "field", "route.tasks.labels.description"),
+                                new JpaFormElement("status", "field", "route.tasks.labels.status"),
+                                new JpaFormElement("due_date", "field", "route.tasks.labels.due_date"),
+                                new JpaFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
+                                JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of(FormDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String>of((Class<? extends TurboCrudDialogFactory<String>>) FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("task_comments")
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
                                                 .withChild(JpaRoute.of(FormRouteFactory.class)
-                                                        .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                                                        .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
-                                                                        new FormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                                        new JpaFormElement("comment_text", "field", "route.tasks.labels.comment")
                                                                 )
                                                                 .build())
                                                         .build())
                                                 .build())
                                         .build(),
-                                FormElement.Builder.of(null, "collection", "route.tasks.labels.related-tasks")
+                                JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.of(ConnectDialogFactory.class)
+                                        .withConfiguration(Collection.Builder.<String>of((Class<? extends TurboCrudDialogFactory<String>>) ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.of("tasks")
                                                         .withManyToMany(new ManyToMany("task_has_task",
                                                                 "task_id",
@@ -78,33 +77,33 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         )
                         .build())
                 .build();
-        Route<String> projectForm = JpaRoute.of(FormRouteFactory.class)
+        Route<String> projectForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
                 .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new FormElement("name", "field", "route.projects.labels.name"),
-                                new FormElement("description", "field", "route.projects.labels.description"),
-                                new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                                new FormElement("end_date", "field", "route.projects.labels.end_date")
+                                new JpaFormElement("name", "field", "route.projects.labels.name"),
+                                new JpaFormElement("description", "field", "route.projects.labels.description"),
+                                new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
+                                new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
                         )
                         .build())
                 .build();
-        Route<String> imageForm = JpaRoute.of(FormRouteFactory.class)
+        Route<String> imageForm = JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) FormRouteFactory.class)
                 .withDataStore("images")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(RouteConfiguration.Builder.of(CardFactory.class)
+                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new FormElement("title", "field", "route.images.labels.title"),
-                                new FormElement("url", "field", "route.images.labels.image")
+                                new JpaFormElement("title", "field", "route.images.labels.title"),
+                                new JpaFormElement("url", "field", "route.images.labels.image")
                         )
                         .build())
                 .build();
 
-        Map<String, DataStoreConfig<?>> dataStores = Map.of(
-                "projects", JpaDataStoreConfig.Builder.of(JpaDataStore.class)
+        Map<String, DataStoreConfig<String>> dataStores = Map.of(
+                "projects", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -114,7 +113,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "tasks", JpaDataStoreConfig.Builder.of(JpaDataStore.class)
+                "tasks", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -125,19 +124,19 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                 "created_at", new Field(DateTimePickerFactory.class),
                                 "updated_at", new Field(DateTimePickerFactory.class)))
                         .build(),
-                "task_has_task", JpaDataStoreConfig.Builder.of(JpaDataStore.class)
+                "task_has_task", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "task_id", new Field(IdFieldFactory.class),
                                 "related_task_id", new Field(IdFieldFactory.class)))
                         .build(),
-                "task_comments", JpaDataStoreConfig.Builder.of(JpaDataStore.class)
+                "task_comments", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 "user_id", new Field(NumberFieldFactory.class),
                                 "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
                         .build(),
-                "images", JpaDataStoreConfig.Builder.of(JpaDataStore.class)
+                "images", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new Field(IdFieldFactory.class, true),
                                 "title", Field.Builder.of(TextFieldFactory.class)
@@ -150,7 +149,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .build());
 
         Map<String, Route<String>> routes = Map.of(
-                "projects-cards", JpaRoute.of(GridRouteFactory.class)
+                "projects-cards", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
@@ -162,29 +161,29 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "projects-list", JpaRoute.of(ListRouteFactory.class)
+                "projects-list", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) ListRouteFactory.class)
                         .withDataStore("projects")
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("name")
                                 .withChildren(
-                                        new FormElement("name", "field", "route.projects.labels.name"),
-                                        new FormElement("description", "field", "route.projects.labels.description"),
-                                        new FormElement("start_date", "field", "route.projects.labels.start_date"),
-                                        new FormElement("end_date", "field", "route.projects.labels.end_date")
+                                        new JpaFormElement("name", "field", "route.projects.labels.name"),
+                                        new JpaFormElement("description", "field", "route.projects.labels.description"),
+                                        new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
+                                        new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
                                 )
                                 .build())
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
                         .build(),
-                "tasks", JpaRoute.of(SubmenuRouteFactory.class)
+                "tasks", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) SubmenuRouteFactory.class)
                         .withIconFactory(TASKS::create)
                         .withDataStore("tasks")
                         .withTitle("route.tasks.title")
                         .withChildrenMap(Map.of("open",
-                                JpaRoute.of(KanbanDetailFactory.class)
+                                JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) KanbanDetailFactory.class)
                                         .withIconFactory(TASKS::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.open-tasks.title")
@@ -196,7 +195,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .withChild(taskForm)
                                         .build(),
                                 "done",
-                                JpaRoute.of(MasterDetailRouteFactory.class)
+                                JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) MasterDetailRouteFactory.class)
                                         .withIconFactory(CHECK_CIRCLE::create)
                                         .withDataStore("tasks")
                                         .withTitle("route.done-tasks.title")
@@ -207,7 +206,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                                         .withChild(taskForm)
                                         .build()))
                         .build(),
-                "images-grid", JpaRoute.of(GridRouteFactory.class)
+                "images-grid", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) GridRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
@@ -219,16 +218,16 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider {
                         .withRoles(List.of("manager", "admin"))
                         .withChild(imageForm)
                         .build(),
-                "images-list", JpaRoute.of(ListRouteFactory.class)
+                "images-list", JpaRoute.of((Class<? extends TurboCrudRouteFactory<String>>) ListRouteFactory.class)
                         .withDataStore("images")
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.of(CardFactory.class)
+                        .withConfiguration(GridOrListConfiguration.Builder.<String>of(CardFactory.class)
                                 .withInlineEdit(true)
                                 .withFilterField("title")
                                 .withChildren(
-                                        new FormElement("url", "field", "route.projects.labels.description"),
-                                        new FormElement("title", "field", "route.projects.labels.name")
+                                        new JpaFormElement("url", "field", "route.projects.labels.description"),
+                                        new JpaFormElement("title", "field", "route.projects.labels.name")
                                 )
                                 .build())
                         .withRoles(List.of("manager", "admin"))

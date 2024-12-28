@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.core.config.model.Field;
-import com.github.appreciated.turbo_crud.core.config.model.FormElement;
+import com.github.appreciated.turbo_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.components.ImageDisplayComponent;
@@ -18,9 +18,9 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
     }
 
     @Override
-    public void addColumn(Grid<GenericEntity> grid, FormElement field, Object table, String fieldName, Field dataStoreField) {
+    public void addColumn(Grid<GenericEntity> grid, InternalFormElement field, Object table, String fieldName, Field dataStoreField) {
         if (dataStoreField.getFactory() == ImageFieldFactory.class) {
-            if(dataStoreField.getConfiguration() == null){
+            if (dataStoreField.getConfiguration() == null) {
                 throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");
             }
             grid.addComponentColumn(genericEntity -> {
