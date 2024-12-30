@@ -17,20 +17,20 @@ import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
 public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
-    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId,FieldId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
-    private final TurboCrudRouteFactoryRegistry routeFactory;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final FormCreator formCreator;
-    private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
+    private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+    public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudConfigService<DataStoreId, FieldId> configService,
                                TurboCrudItemFactoryRegistry turboCrudItemFactory,
-                               TurboCrudRouteFactoryRegistry routeFactory,
+                               TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                FormCreator formCreator,
-                               TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                               TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;

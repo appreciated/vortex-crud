@@ -160,8 +160,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withTitleField("name")
-                                .withDescriptionField("description")
+                                .withTitleField(PROJECTS.NAME)
+                                .withDescriptionField(PROJECTS.DESCRIPTION)
                                 .build())
                         .withRoles(List.of("manager", "admin"))
                         .withChild(projectForm)
@@ -172,7 +172,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .withTitle("route.projects.title-list")
                         .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
                                 .withInlineEdit(true)
-                                .withFilterField("name")
+                                .withFilterField(PROJECTS.NAME)
                                 .withChildren(
                                         new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
                                         new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),

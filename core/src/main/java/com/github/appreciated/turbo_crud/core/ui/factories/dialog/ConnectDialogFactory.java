@@ -23,24 +23,24 @@ import java.util.stream.Collectors;
 
 public class ConnectDialogFactory<DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
 
-    public ConnectDialogFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry) {
+    public ConnectDialogFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
 
     @Override
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
-                             @Nullable String foreignKeyField,
+                             @Nullable FieldId foreignKeyField,
                              Route<DataStoreId, FieldId> formRoute,
-                             CollectionData<DataStoreId> collectionData,
+                             CollectionData<DataStoreId, FieldId> collectionData,
                              DataStoreId dataStoreIdentifier,
-                             TurboCrudRouteFactoryRegistry routeFactory,
+                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                              OnStoreListener listener,
                              FormCreator formCreator) {
 
-        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
+        TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));

@@ -10,11 +10,11 @@ import jakarta.annotation.Nullable;
 public interface TurboCrudDialogFactory<DataStoreId, FieldId> {
     Dialog create(@Nullable String entityId,
                       @Nullable String foreignKeyValue,
-                      @Nullable String foreignKeyField,
+                      @Nullable FieldId foreignKeyField,
                       Route<DataStoreId, FieldId> formRoute,
-                      CollectionData<DataStoreId> config,
+                      CollectionData<DataStoreId, FieldId> config,
                       DataStoreId dataStore,
-                      TurboCrudRouteFactoryRegistry routeFactory,
+                      TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                       OnStoreListener listener,
                       FormCreator formCreator);
 }

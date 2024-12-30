@@ -33,7 +33,7 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements TurboC
     public DefaultRouteFactoryRegistry(TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                        TurboCrudConfigService<DataStoreId, FieldId> configService,
                                        TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
-                                       TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                                       TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                        TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                        TurboCrudFileProviderRegistry fileProviderRegistry,
                                        FormCreator formCreatorService

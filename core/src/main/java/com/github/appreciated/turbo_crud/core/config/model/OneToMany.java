@@ -3,35 +3,35 @@ package com.github.appreciated.turbo_crud.core.config.model;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class OneToMany {
+public class OneToMany<FieldId> {
 
-    private String referenceField;
+    private FieldId referenceField;
 
-    public String getReferenceField() {
+    public FieldId getReferenceField() {
         return referenceField;
     }
 
-    public void setReferenceField(String referenceField) {
+    public void setReferenceField(FieldId referenceField) {
         this.referenceField = referenceField;
     }
 
-    public OneToMany(String referenceField) {
+    public OneToMany(FieldId referenceField) {
         this.referenceField = referenceField;
     }
 
-    public static class Builder {
+    public static class Builder<FieldId> {
 
-        private OneToMany product;
+        private OneToMany<FieldId> product;
 
-        private Builder(OneToMany product) {
+        private Builder(OneToMany<FieldId> product) {
             this.product = product;
         }
 
-        public static Builder of(String referenceField) {
-            return new Builder(new OneToMany(referenceField));
+        public static <FieldId> Builder<FieldId> of(FieldId referenceField) {
+            return new Builder<>(new OneToMany<>(referenceField));
         }
 
-        public Builder withReferenceField(String referenceField) {
+        public Builder withReferenceField(FieldId referenceField) {
             product.referenceField = referenceField;
             return this;
         }

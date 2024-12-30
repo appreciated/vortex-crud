@@ -16,7 +16,7 @@ public class Collection<DataStoreId, FieldId> {
 
     private Class<? extends TurboCrudDialogFactory<DataStoreId, FieldId>> factory;
 
-    private CollectionData<DataStoreId> data;
+    private CollectionData<DataStoreId, FieldId> data;
 
     private String emptyMessage;
 
@@ -38,11 +38,11 @@ public class Collection<DataStoreId, FieldId> {
         this.factory = factory;
     }
 
-    public CollectionData<DataStoreId> getData() {
+    public CollectionData<DataStoreId, FieldId> getData() {
         return data;
     }
 
-    public void setData(CollectionData<DataStoreId> data) {
+    public void setData(CollectionData<DataStoreId, FieldId> data) {
         this.data = data;
     }
 
@@ -83,7 +83,7 @@ public class Collection<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withData(CollectionData<DataStoreId> data) {
+        public Builder<DataStoreId,FieldId> withData(CollectionData<DataStoreId, FieldId> data) {
             product.data = data;
             return this;
         }

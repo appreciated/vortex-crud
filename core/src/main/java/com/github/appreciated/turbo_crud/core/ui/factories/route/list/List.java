@@ -21,7 +21,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
 
     public List(Integer currentPathIndex,
                     TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                    TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                    TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                     TurboCrudConfigService<DataStoreId, FieldId> configService,
                     TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
                     FormCreator formCreator,

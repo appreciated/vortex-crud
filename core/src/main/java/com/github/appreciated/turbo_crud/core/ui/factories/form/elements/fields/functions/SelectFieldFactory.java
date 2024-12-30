@@ -12,19 +12,19 @@ import java.util.*;
 public class SelectFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     private final Selects selects;
-    private final Map<String, DataStoreConfig<?>> tablesConfig;
+    private final Map<String, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<String, DataStoreConfig<?>> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<String, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         Select<String> select = new Select<>();
 
-        DataStoreConfig<?> dataStoreConfig = tablesConfig.get(table);
-        Field tableField = dataStoreConfig.getFields().get(field);
+        DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);
+        Field<DataStoreId, FieldId> tableField = dataStoreConfig.getFields().get(field);
 
         String selectName = tableField.getValues();
         Map<String, String> selectConfig = selects.getConfigs().get(selectName);

@@ -57,18 +57,18 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         return list;
     }
 
-    private void loadCollection(String foreignKeyValue,
-                                InternalFormElement internalFormElement,
-                                TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-                                TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+    private <DataStoreId, FieldId> void loadCollection(String foreignKeyValue,
+                                InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                                TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                 FormCreator formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        CollectionData data = internalFormElement.getConfiguration().getData();
+        CollectionData<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
-        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
+        TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
         List<GenericEntity> records = getDataByConfig(foreignKeyValue, dataStore, data, dataStoreFactoryRegistry);
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header, records, dataStore);
@@ -82,7 +82,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private void addManyToManyItems(String foreignKeyValue, InternalFormElement internalFormElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private <DataStoreId, FieldId> void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -98,7 +98,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId, FieldId> void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private <DataStoreId, FieldId> void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -118,7 +118,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private static List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore dataStore, CollectionData collectionData, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry) {
+    private static <DataStoreId, FieldId> List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
         if (collectionData.getOneToMany() != null) {
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
@@ -127,8 +127,8 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
             // datastore and one over the target datastore and one with the actual entries.
             // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
             // of resolving the following data.
-            ManyToMany manyToMany = collectionData.getManyToMany();
-            TurboCrudDataStore associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
+            ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
+            TurboCrudDataStore<FieldId> associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
             List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
             List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(manyToMany.getAssociativeTargetIdField())).map(Object::toString).toList();
             return foreignKeyValue == null ? List.of() :
@@ -141,8 +141,8 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
     private <DataStoreId, FieldId> void openDialog(String entityId,
                             String foreignKey,
                             InternalFormElement<DataStoreId, FieldId> internalFormElement,
-                            TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
-                            TurboCrudRouteFactoryRegistry routeFactoryRegistry,
+                            TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                             FormCreator formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
@@ -160,12 +160,12 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         dialog.open();
     }
 
-    private static <DataStoreId> String getReferenceField(CollectionData<DataStoreId> collectionData) {
+    private static <DataStoreId, FieldId> FieldId getReferenceField(CollectionData<DataStoreId, FieldId> collectionData) {
         if (collectionData.getOneToMany() != null) {
-            OneToMany oneToMany = collectionData.getOneToMany();
+            OneToMany<FieldId> oneToMany = collectionData.getOneToMany();
             return oneToMany.getReferenceField();
         } else if (collectionData.getManyToMany() != null) {
-            ManyToMany oneToMany = collectionData.getManyToMany();
+            ManyToMany<DataStoreId, FieldId> oneToMany = collectionData.getManyToMany();
             return oneToMany.getDataStoreField();
         } else {
             throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");

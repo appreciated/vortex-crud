@@ -25,28 +25,28 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
 
     public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  Route<DataStoreId, FieldId> route,
-                                 TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                                 TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  TurboCrudConfigService<DataStoreId, FieldId> configService,
                                  TurboCrudListColumnCallbackRegistry listColumnFactory) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         DataStoreId table = route.getDataStore();
-        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
+        TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
         RouteConfiguration<DataStoreId, FieldId> gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
-        Map<?, Field> fieldsConfig = tables.getFields();
+        Map<?, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<DataStoreId, FieldId> field : gridOrListConfiguration.getChildren()) {
             //TODO
             String fieldName = (String) field.getField();
-            Field dataStoreField = fieldsConfig.get(fieldName);
+            Field<DataStoreId, FieldId> dataStoreField = fieldsConfig.get(fieldName);
             if (dataStoreField == null) {
                 throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
             }

@@ -3,15 +3,15 @@ package com.github.appreciated.turbo_crud.core.config.model;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactory;
 
-public interface ItemFactory {
+public interface ItemFactory<FieldId> {
 
     Class<? extends TurboCrudItemFactory> getFactory();
 
-    String getTitleField();
+    FieldId getTitleField();
 
-    String getDescriptionField();
+    FieldId getDescriptionField();
 
-    String getImageField();
+    FieldId getImageField();
 
     Class<? extends TurboCrudFileProvider> getImageFactory();
 }

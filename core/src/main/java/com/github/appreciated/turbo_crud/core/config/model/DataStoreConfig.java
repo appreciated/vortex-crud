@@ -6,46 +6,46 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class DataStoreConfig<FieldId> {
+public class DataStoreConfig<DataStoreId, FieldId> {
 
-    private Class<? extends TurboCrudDataStore> factory;
+    private Class<? extends TurboCrudDataStore<FieldId>> factory;
 
-    private Map<FieldId, Field> fields;
+    private Map<FieldId, Field<DataStoreId, FieldId>> fields;
 
-    public DataStoreConfig(Class<? extends TurboCrudDataStore> factory) {
+    public DataStoreConfig(Class<? extends TurboCrudDataStore<FieldId>> factory) {
         this.factory = factory;
     }
 
-    public Class<? extends TurboCrudDataStore> getFactory() {
+    public Class<? extends TurboCrudDataStore<FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends TurboCrudDataStore> factory) {
+    public void setFactory(Class<? extends TurboCrudDataStore<FieldId>> factory) {
         this.factory = factory;
     }
 
-    public Map<FieldId, Field> getFields() {
+    public Map<FieldId, Field<DataStoreId, FieldId>> getFields() {
         return fields;
     }
 
-    public void setFields(Map<FieldId, Field> fields) {
+    public void setFields(Map<FieldId, Field<DataStoreId, FieldId>> fields) {
         this.fields = fields;
     }
 
-    public static class Builder<FieldId> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private DataStoreConfig<FieldId> product;
+        private DataStoreConfig<DataStoreId, FieldId> product;
 
-        public Builder(DataStoreConfig<FieldId> product) {
+        public Builder(DataStoreConfig<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public Builder<FieldId> withFields(Map<FieldId, Field> fields) {
+        public Builder<DataStoreId, FieldId> withFields(Map<FieldId, Field<DataStoreId, FieldId>> fields) {
             product.fields = fields;
             return this;
         }
 
-        public DataStoreConfig<FieldId> build() {
+        public DataStoreConfig<DataStoreId, FieldId> build() {
             return product;
         }
     }

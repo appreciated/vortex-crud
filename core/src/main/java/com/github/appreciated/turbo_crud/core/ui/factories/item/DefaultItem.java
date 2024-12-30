@@ -11,9 +11,9 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("card-styles.css")
-public class DefaultItem extends VerticalLayout {
+public class DefaultItem<FieldId> extends VerticalLayout {
 
-    public DefaultItem(ItemFactory config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider) {
+    public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider) {
         if (maxWidth != null) {
             setMaxWidth(maxWidth + "px");
         }
@@ -23,7 +23,7 @@ public class DefaultItem extends VerticalLayout {
 
         // Optional image
         ImageDisplayComponent image = null;
-        String imageField = config.getImageField();
+        FieldId imageField = config.getImageField();
         if (imageField != null) {
             if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");

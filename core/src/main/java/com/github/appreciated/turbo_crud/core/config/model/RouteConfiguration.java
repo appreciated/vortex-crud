@@ -11,19 +11,19 @@ public class RouteConfiguration<DataStoreId, FieldId> {
 
     private Class<? extends TurboCrudItemFactory> factory;
 
-    private String titleField;
+    private FieldId titleField;
 
-    private String descriptionField;
+    private FieldId descriptionField;
 
-    private String columnField;
+    private FieldId columnField;
 
-    private String imageField;
+    private FieldId imageField;
 
     private Class<? extends TurboCrudFileProvider> imageFactory;
 
     private boolean inlineEdit;
 
-    private String filterField;
+    private FieldId filterField;
 
     private List<InternalFormElement<DataStoreId, FieldId>> children;
 
@@ -39,35 +39,35 @@ public class RouteConfiguration<DataStoreId, FieldId> {
         this.factory = factory;
     }
 
-    public String getTitleField() {
+    public FieldId getTitleField() {
         return titleField;
     }
 
-    public void setTitleField(String titleField) {
+    public void setTitleField(FieldId titleField) {
         this.titleField = titleField;
     }
 
-    public String getDescriptionField() {
+    public FieldId getDescriptionField() {
         return descriptionField;
     }
 
-    public void setDescriptionField(String descriptionField) {
+    public void setDescriptionField(FieldId descriptionField) {
         this.descriptionField = descriptionField;
     }
 
-    public String getColumnField() {
+    public FieldId getColumnField() {
         return columnField;
     }
 
-    public void setColumnField(String columnField) {
+    public void setColumnField(FieldId columnField) {
         this.columnField = columnField;
     }
 
-    public String getImageField() {
+    public FieldId getImageField() {
         return imageField;
     }
 
-    public void setImageField(String imageField) {
+    public void setImageField(FieldId imageField) {
         this.imageField = imageField;
     }
 
@@ -87,11 +87,11 @@ public class RouteConfiguration<DataStoreId, FieldId> {
         this.inlineEdit = inlineEdit;
     }
 
-    public String getFilterField() {
+    public FieldId getFilterField() {
         return filterField;
     }
 
-    public void setFilterField(String filterField) {
+    public void setFilterField(FieldId filterField) {
         this.filterField = filterField;
     }
 
@@ -111,22 +111,22 @@ public class RouteConfiguration<DataStoreId, FieldId> {
             this.product = product;
         }
 
-        public Builder<DataStoreId,FieldId> withTitleField(String titleField) {
+        public Builder<DataStoreId,FieldId> withTitleField(FieldId titleField) {
             product.titleField = titleField;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withDescriptionField(String descriptionField) {
+        public Builder<DataStoreId,FieldId> withDescriptionField(FieldId descriptionField) {
             product.descriptionField = descriptionField;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withColumnField(String columnField) {
+        public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {
             product.columnField = columnField;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageField(String imageField) {
+        public Builder<DataStoreId,FieldId> withImageField(FieldId imageField) {
             product.imageField = imageField;
             return this;
         }
@@ -141,7 +141,7 @@ public class RouteConfiguration<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withFilterField(String filterField) {
+        public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {
             product.filterField = filterField;
             return this;
         }

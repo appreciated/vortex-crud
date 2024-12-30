@@ -19,7 +19,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     private final TurboCrudDataStore<FieldId> dataStore;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
+    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 

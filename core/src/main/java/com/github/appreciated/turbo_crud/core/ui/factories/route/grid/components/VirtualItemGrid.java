@@ -33,7 +33,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private final TurboCrudItemFactory itemFactory;
     private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStore dataStore;
+    private final TurboCrudDataStore<FieldId> dataStore;
     private final GridOrListConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
@@ -41,7 +41,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
 
     public VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                Route<DataStoreId, FieldId> config,
-                               TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+                               TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudItemFactoryRegistry itemFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry) {
         this.pathVariables = routeResolver;

@@ -35,7 +35,7 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
             return new Builder<>(new GridOrListConfiguration<>(factory));
         }
 
-        public Builder<DataStoreId,FieldId> withFilterField(String filterField) {
+        public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {
             product.setFilterField(filterField);
             return this;
         }

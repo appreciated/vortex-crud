@@ -18,15 +18,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class Grid extends VerticalLayout {
-    private final VirtualItemGrid virtualGrid;
+public class Grid<DataStoreId, FieldId> extends VerticalLayout {
+    private final VirtualItemGrid<DataStoreId, FieldId> virtualGrid;
 
-    public <DataStoreId, FieldId> Grid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+    public Grid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                     Route<DataStoreId, FieldId> route,
-                    TurboCrudDataStoreFactoryRegistry<DataStoreId> turboCrudDataStoreFactoryRegistry,
+                    TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> turboCrudDataStoreFactoryRegistry,
                     FormCreator formCreator,
-                    TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                    TurboCrudRouteFactoryRegistry routeFactoryRegistry,
+                    TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                    TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                     TurboCrudItemFactoryRegistry itemFactoryRegistry,
                     TurboCrudFileProviderRegistry fileProviderRegistry) {
         RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
@@ -40,7 +40,7 @@ public class Grid extends VerticalLayout {
                 routeHeader);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid(routeResolver, route, turboCrudDataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry);
+        virtualGrid = new VirtualItemGrid<>(routeResolver, route, turboCrudDataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry);
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);
@@ -56,7 +56,7 @@ public class Grid extends VerticalLayout {
         }
     }
 
-    private <DataStoreId, FieldId> void onAdd(TurboCrudDialogFactoryRegistry dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

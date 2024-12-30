@@ -25,22 +25,22 @@ public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId
             return new Builder<>(new Kanban<>(factory));
         }
 
-        public Builder<DataStoreId,FieldId> withColumnField(String columnField) {
+        public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {
             product.setColumnField(columnField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withTitleField(String titleField) {
+        public Builder<DataStoreId,FieldId> withTitleField(FieldId titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withDescriptionField(String descriptionField) {
+        public Builder<DataStoreId,FieldId> withDescriptionField(FieldId descriptionField) {
             product.setDescriptionField(descriptionField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageField(String imageField) {
+        public Builder<DataStoreId,FieldId> withImageField(FieldId imageField) {
             product.setImageField(imageField);
             return this;
         }

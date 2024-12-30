@@ -33,11 +33,11 @@ public class FormCreator {
                                                           RouteConfiguration<DataStoreId, FieldId> formConfig,
                                                           GenericEntity entity,
                                                           TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                                          DataStoreConfig<FieldId> tables,
+                                                          DataStoreConfig<DataStoreId, FieldId> tables,
                                                           Binder<GenericEntity> binder,
                                                           FormLayout form,
                                                           FormCreator formCreator) {
-        Map<FieldId, Field> fieldsConfig = tables.getFields();
+        Map<FieldId, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<DataStoreId, FieldId> element : formConfig.getChildren()) {

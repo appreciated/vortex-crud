@@ -1,51 +1,51 @@
 package com.github.appreciated.turbo_crud.core.config.model;
 
-public class ManyToMany {
+public class ManyToMany<DataStoreId, FieldId> {
 
-    private String associativeDataStore;
+    private DataStoreId associativeDataStore;
 
-    private String associativeSourceIdField;
+    private FieldId associativeSourceIdField;
 
-    private String associativeTargetIdField;
+    private FieldId associativeTargetIdField;
 
-    private String dataStoreField;
+    private FieldId dataStoreField;
 
-    public ManyToMany(String associativeDataStore, String associativeSourceIdField, String associativeTargetIdField, String dataStoreField) {
+    public ManyToMany(DataStoreId associativeDataStore, FieldId associativeSourceIdField, FieldId associativeTargetIdField, FieldId dataStoreField) {
         this.associativeDataStore = associativeDataStore;
         this.associativeSourceIdField = associativeSourceIdField;
         this.associativeTargetIdField = associativeTargetIdField;
         this.dataStoreField = dataStoreField;
     }
 
-    public String getAssociativeDataStore() {
+    public DataStoreId getAssociativeDataStore() {
         return associativeDataStore;
     }
 
-    public void setAssociativeDataStore(String associativeDataStore) {
+    public void setAssociativeDataStore(DataStoreId associativeDataStore) {
         this.associativeDataStore = associativeDataStore;
     }
 
-    public String getAssociativeSourceIdField() {
+    public FieldId getAssociativeSourceIdField() {
         return associativeSourceIdField;
     }
 
-    public void setAssociativeSourceIdField(String associativeSourceIdField) {
+    public void setAssociativeSourceIdField(FieldId associativeSourceIdField) {
         this.associativeSourceIdField = associativeSourceIdField;
     }
 
-    public String getAssociativeTargetIdField() {
+    public FieldId getAssociativeTargetIdField() {
         return associativeTargetIdField;
     }
 
-    public void setAssociativeTargetIdField(String associativeTargetIdField) {
+    public void setAssociativeTargetIdField(FieldId associativeTargetIdField) {
         this.associativeTargetIdField = associativeTargetIdField;
     }
 
-    public String getDataStoreField() {
+    public FieldId getDataStoreField() {
         return dataStoreField;
     }
 
-    public void setDataStoreField(String dataStoreField) {
+    public void setDataStoreField(FieldId dataStoreField) {
         this.dataStoreField = dataStoreField;
     }
 

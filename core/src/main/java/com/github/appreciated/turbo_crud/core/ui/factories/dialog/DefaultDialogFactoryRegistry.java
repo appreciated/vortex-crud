@@ -21,7 +21,7 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Turbo
 
     private final Map<Class<?>, TurboCrudDialogFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry) {
+    public DefaultDialogFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry));

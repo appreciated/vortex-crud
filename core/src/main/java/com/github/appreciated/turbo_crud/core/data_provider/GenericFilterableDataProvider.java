@@ -4,8 +4,8 @@ import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataSto
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 
-public class GenericFilterableDataProvider extends CallbackDataProvider<GenericEntity, String> {
-    public GenericFilterableDataProvider(TurboCrudDataStore dataStore, String filterField) {
+public class GenericFilterableDataProvider<FieldId> extends CallbackDataProvider<GenericEntity, String> {
+    public GenericFilterableDataProvider(TurboCrudDataStore<FieldId> dataStore, FieldId filterField) {
         super(query -> {
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {

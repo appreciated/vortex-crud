@@ -24,10 +24,10 @@ import jakarta.annotation.Nullable;
 public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialogFactory<DataStoreId, FieldId> {
 
     private final TurboCrudConfigService <DataStoreId, FieldId> configService;
-    private final TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry;
-    private TurboCrudDataStore dataStore;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private TurboCrudDataStore<FieldId> dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<?> dataStoreFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
     }
@@ -35,15 +35,15 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
     @Override
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
-                             @Nullable String foreignKeyField,
+                             @Nullable FieldId foreignKeyField,
                              Route<DataStoreId, FieldId> formRoute,
-                             CollectionData<DataStoreId> config,
+                             CollectionData<DataStoreId, FieldId> config,
                              DataStoreId dataStore,
-                             TurboCrudRouteFactoryRegistry routeFactory,
+                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                              OnStoreListener listener,
                              FormCreator formCreator) {
 
-        this.dataStore = ((TurboCrudDataStoreFactoryRegistry<DataStoreId>) dataStoreFactoryRegistry).getFactory(dataStore);
+        this.dataStore = dataStoreFactoryRegistry.getFactory(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -63,7 +63,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
@@ -74,7 +74,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, String foreignKeyField, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {

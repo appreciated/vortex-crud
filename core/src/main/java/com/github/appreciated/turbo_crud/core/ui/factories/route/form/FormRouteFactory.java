@@ -36,15 +36,15 @@ import jakarta.annotation.Nullable;
 
 public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final FormCreator formCreator;
-    private final TurboCrudRouteFactoryRegistry factoryRegistry;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
 
-    public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry,
+    public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
                             FormCreator formCreator,
-                            TurboCrudRouteFactoryRegistry factoryRegistry
+                            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -86,9 +86,9 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
         }
 
         DataStoreId table = route.getDataStore();
-        DataStoreConfig<FieldId> tables = configService.getConfiguration().getDataStores().get(table);
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
-        TurboCrudDataStore dataStore = dataStoreFactoryRegistry.getFactory(table);
+        TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, route, formRouteConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
