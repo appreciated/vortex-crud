@@ -6,9 +6,9 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Field {
+public class Field<DataStoreId, FieldId> {
 
-    private Class<? extends TurboCrudFieldFactory> factory;
+    private Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory;
 
     private boolean primary;
 
@@ -20,46 +20,46 @@ public class Field {
 
     private String values;
 
-    private String dataStore;
+    private DataStoreId dataStore;
 
-    private String field;
+    private FieldId field;
 
-    private String filterField;
+    private FieldId filterField;
 
     private List<String> children;
 
     private List<String> readOnlyForRoles;
 
-    RouteConfiguration configuration;
+    RouteConfiguration<DataStoreId, FieldId> configuration;
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory) {
         if (factory == null) {
             throw new IllegalArgumentException("The factory must not be null");
         }
         this.factory = factory;
     }
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary) {
         this(factory);
         this.primary = primary;
     }
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory, String values) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, String values) {
         this(factory);
         this.values = values;
     }
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required) {
         this(factory, primary);
         this.required = required;
     }
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required, Validation validation) {
         this(factory, primary, required);
         this.validation = validation;
     }
 
-    public Field(Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
+    public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<String> children) {
         this(factory);
         this.field = field;
         this.filterField = filterField;
@@ -67,11 +67,11 @@ public class Field {
         this.children = children;
     }
 
-    public Class<? extends TurboCrudFieldFactory> getFactory() {
+    public Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends TurboCrudFieldFactory> factory) {
+    public void setFactory(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
@@ -115,27 +115,27 @@ public class Field {
         this.values = values;
     }
 
-    public String getDataStore() {
+    public DataStoreId getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(String dataStore) {
+    public void setDataStore(DataStoreId dataStore) {
         this.dataStore = dataStore;
     }
 
-    public String getField() {
+    public FieldId getField() {
         return field;
     }
 
-    public void setField(String field) {
+    public void setField(FieldId field) {
         this.field = field;
     }
 
-    public String getFilterField() {
+    public FieldId getFilterField() {
         return filterField;
     }
 
-    public void setFilterField(String filterField) {
+    public void setFilterField(FieldId filterField) {
         this.filterField = filterField;
     }
 
@@ -147,121 +147,121 @@ public class Field {
         this.children = children;
     }
 
-    public RouteConfiguration getConfiguration() {
+    public RouteConfiguration<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteConfiguration configuration) {
+    public void setConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
-    public static class Builder {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private Field product;
+        private Field<DataStoreId, FieldId> product;
 
-        private Builder(Field product) {
+        public Builder(Field<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory) {
-            return new Builder(new Field(factory));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory) {
+            return new Builder<>(new Field<>(factory));
         }
 
-        public Builder withPrimary(boolean primary) {
+        public Builder<DataStoreId, FieldId> withPrimary(boolean primary) {
             product.primary = primary;
             return this;
         }
 
-        public Builder withRequired(boolean required) {
+        public Builder<DataStoreId, FieldId> withRequired(boolean required) {
             product.required = required;
             return this;
         }
 
-        public Builder withValidation(Validation validation) {
+        public Builder<DataStoreId, FieldId> withValidation(Validation validation) {
             product.validation = validation;
             return this;
         }
 
-        public Builder withDefaultValue(String defaultValue) {
+        public Builder<DataStoreId, FieldId> withDefaultValue(String defaultValue) {
             product.defaultValue = defaultValue;
             return this;
         }
 
-        public Builder withValues(String values) {
+        public Builder<DataStoreId, FieldId> withValues(String values) {
             product.values = values;
             return this;
         }
 
-        public Builder withDataStore(String dataStore) {
+        public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {
             product.dataStore = dataStore;
             return this;
         }
 
-        public Builder withField(String field) {
+        public Builder<DataStoreId, FieldId> withField(FieldId field) {
             product.field = field;
             return this;
         }
 
-        public Builder withFilterField(String filterField) {
+        public Builder<DataStoreId, FieldId> withFilterField(FieldId filterField) {
             product.filterField = filterField;
             return this;
         }
 
-        public Builder withChildren(List<String> children) {
+        public Builder<DataStoreId, FieldId> withChildren(List<String> children) {
             product.children = children;
             return this;
         }
 
-        public Builder withReadOnlyForRoles(String... readOnlyForRoles) {
+        public Builder<DataStoreId, FieldId> withReadOnlyForRoles(String... readOnlyForRoles) {
             product.readOnlyForRoles = List.of(readOnlyForRoles);
             return this;
         }
 
-        public Builder withConfiguration(RouteConfiguration configuration) {
+        public Builder<DataStoreId, FieldId> withConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder addChildren(String item) {
+        public Builder<DataStoreId, FieldId> addChildren(String item) {
             product.children.add(item);
             return this;
         }
 
-        public Builder addReadOnlyForRole(String item) {
+        public Builder<DataStoreId, FieldId> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
         }
 
-        public Builder add(boolean primary) {
+        public Builder<DataStoreId, FieldId> add(boolean primary) {
             return withPrimary(primary);
         }
 
-        public Builder add(boolean primary, boolean required) {
+        public Builder<DataStoreId, FieldId> add(boolean primary, boolean required) {
             return withPrimary(primary).withRequired(required);
         }
 
-        public Field build() {
+        public Field<DataStoreId, FieldId> build() {
             return product;
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary) {
-            return new Builder(new Field(factory, primary));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary) {
+            return new Builder<>(new Field<>(factory, primary));
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, String values) {
-            return new Builder(new Field(factory, values));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, String values) {
+            return new Builder<>(new Field<>(factory, values));
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required) {
-            return new Builder(new Field(factory, primary, required));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required) {
+            return new Builder<>(new Field<>(factory, primary, required));
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, boolean primary, boolean required, Validation validation) {
-            return new Builder(new Field(factory, primary, required, validation));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required, Validation validation) {
+            return new Builder<>(new Field<>(factory, primary, required, validation));
         }
 
-        public static Builder of(Class<? extends TurboCrudFieldFactory> factory, String field, String filterField, String dataStore, List<String> children) {
-            return new Builder(new Field(factory, field, filterField, dataStore, children));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<String> children) {
+            return new Builder<>(new Field<>(factory, field, filterField, dataStore, children));
         }
     }
 }

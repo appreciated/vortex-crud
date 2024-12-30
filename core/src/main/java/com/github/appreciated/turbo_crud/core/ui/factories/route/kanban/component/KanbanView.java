@@ -38,11 +38,11 @@ public class KanbanView extends VerticalLayout {
     public <DataStoreId, FieldId> KanbanView(DataStoreId dataStoreIdentifier,
                           Route<DataStoreId, FieldId> route,
                           TurboCrudDataStore dataStore,
-                          TurboCrudRouteFactoryRegistry routeFactory,
+                          TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                           TurboCrudItemFactoryRegistry itemFactoryRegistry,
                           Kanban<DataStoreId, FieldId> kanbanConfig,
                           Application<DataStoreId, FieldId> configService,
-                          TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
+                          TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                           TurboCrudFileProviderRegistry fileProviderRegistry,
                           FormCreator formCreator,
                           DetailRouteSetting detailRouteSetting) {

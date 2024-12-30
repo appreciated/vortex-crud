@@ -13,13 +13,13 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-public class EntityComboBoxWrapper extends HorizontalLayout implements HasValue<ValueChangeEvent<Integer>, Integer>, HasLabel {
+public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Integer>, Integer>, HasLabel {
 
     private final ComboBox<GenericEntity> comboBox;
-    private final TurboCrudDataStore dataStore;
+    private final TurboCrudDataStore<FieldId> dataStore;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, Field dataStoreField) {
+    public EntityComboBoxWrapper(TurboCrudDataStoreFactoryRegistry<DataStoreId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 

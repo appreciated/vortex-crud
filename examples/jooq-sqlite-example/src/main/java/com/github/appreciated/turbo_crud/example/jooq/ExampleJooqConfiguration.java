@@ -15,6 +15,7 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.turbo_crud.jooq.models.tables.Users;
 import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.Table;
@@ -109,45 +110,45 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
         Map<Table<?>, DataStoreConfig<TableField<?, ?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                PROJECTS.ID, new Field(IdFieldFactory.class, true),
-                                PROJECTS.NAME, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                PROJECTS.DESCRIPTION, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                                PROJECTS.START_DATE, new Field(DateFieldFactory.class),
-                                PROJECTS.END_DATE, new Field(DateFieldFactory.class),
-                                PROJECTS.CREATED_AT, new Field(DateTimePickerFactory.class),
-                                PROJECTS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
+                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
+                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                                PROJECTS.START_DATE, new JooqField(DateFieldFactory.class),
+                                PROJECTS.END_DATE, new JooqField(DateFieldFactory.class),
+                                PROJECTS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
+                                PROJECTS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
                         .build(),
                 TASKS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                TASKS.ID, new Field(IdFieldFactory.class, true),
-                                TASKS.TITLE, new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                TASKS.DESCRIPTION, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
-                                TASKS.STATUS, new Field(SelectFieldFactory.class, "task-status"),
-                                TASKS.DUE_DATE, Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
-                                TASKS.CREATED_AT, new Field(DateTimePickerFactory.class),
-                                TASKS.UPDATED_AT, new Field(DateTimePickerFactory.class)))
+                                TASKS.ID, new JooqField(IdFieldFactory.class, true),
+                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of("username")) /* 1:1 Relation */,
+                                TASKS.STATUS, new JooqField(SelectFieldFactory.class, "task-status"),
+                                TASKS.DUE_DATE, JooqField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
+                                TASKS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
+                                TASKS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
                         .build(),
                 TASK_HAS_TASK, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                TASK_HAS_TASK.TASK_ID, new Field(IdFieldFactory.class),
-                                TASK_HAS_TASK.RELATED_TASK_ID, new Field(IdFieldFactory.class)))
+                                TASK_HAS_TASK.TASK_ID, new JooqField(IdFieldFactory.class),
+                                TASK_HAS_TASK.RELATED_TASK_ID, new JooqField(IdFieldFactory.class)))
                         .build(),
                 TASK_COMMENTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                TASK_COMMENTS.ID, new Field(IdFieldFactory.class, true),
-                                TASK_COMMENTS.COMMENT_TEXT, new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                TASK_COMMENTS.USER_ID, new Field(NumberFieldFactory.class),
-                                TASK_COMMENTS.CREATED_AT, Field.Builder.of(DateTimePickerFactory.class).build()))
+                                TASK_COMMENTS.ID, new JooqField(IdFieldFactory.class, true),
+                                TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                TASK_COMMENTS.USER_ID, new JooqField(NumberFieldFactory.class),
+                                TASK_COMMENTS.CREATED_AT, JooqField.of(DateTimePickerFactory.class).build()))
                         .build(),
                 IMAGES, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
-                                IMAGES.ID, new Field(IdFieldFactory.class, true),
-                                IMAGES.TITLE, Field.Builder.of(TextFieldFactory.class)
+                                IMAGES.ID, new JooqField(IdFieldFactory.class, true),
+                                IMAGES.TITLE, JooqField.of(TextFieldFactory.class)
                                         .withRequired(true)
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
-                                IMAGES.URL, Field.Builder.of(ImageFieldFactory.class)
+                                IMAGES.URL, JooqField.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
                                         .build()))
                         .build());

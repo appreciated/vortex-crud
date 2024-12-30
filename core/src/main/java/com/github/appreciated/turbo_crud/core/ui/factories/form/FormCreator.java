@@ -29,14 +29,14 @@ public class FormCreator {
     }
 
     public <DataStoreId, FieldId> void bindAndAddToLayout(DataStoreId table,
-                                   Route<DataStoreId,FieldId> route,
-                                   RouteConfiguration<DataStoreId,FieldId> formConfig,
-                                   GenericEntity entity,
-                                   TurboCrudRouteFactoryRegistry routeFactory,
-                                   DataStoreConfig<FieldId> tables,
-                                   Binder<GenericEntity> binder,
-                                   FormLayout form,
-                                   FormCreator formCreator) {
+                                                          Route<DataStoreId, FieldId> route,
+                                                          RouteConfiguration<DataStoreId, FieldId> formConfig,
+                                                          GenericEntity entity,
+                                                          TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                                                          DataStoreConfig<FieldId> tables,
+                                                          Binder<GenericEntity> binder,
+                                                          FormLayout form,
+                                                          FormCreator formCreator) {
         Map<FieldId, Field> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration

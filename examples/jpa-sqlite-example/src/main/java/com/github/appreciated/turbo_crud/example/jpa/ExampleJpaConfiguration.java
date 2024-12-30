@@ -103,45 +103,45 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
         Map<String, DataStoreConfig<String>> dataStores = Map.of(
                 "projects", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "name", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                                "start_date", new Field(DateFieldFactory.class),
-                                "end_date", new Field(DateFieldFactory.class),
-                                "created_at", new Field(DateTimePickerFactory.class),
-                                "updated_at", new Field(DateTimePickerFactory.class)))
+                                "id", new JpaField(IdFieldFactory.class, true),
+                                "name", new JpaField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                "description", new JpaField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
+                                "start_date", new JpaField(DateFieldFactory.class),
+                                "end_date", new JpaField(DateFieldFactory.class),
+                                "created_at", new JpaField(DateTimePickerFactory.class),
+                                "updated_at", new JpaField(DateTimePickerFactory.class)))
                         .build(),
                 "tasks", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "title", new Field(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                                "description", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "assigned_to", new Field(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
-                                "status", new Field(SelectFieldFactory.class, "task-status"),
-                                "due_date", Field.Builder.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
-                                "created_at", new Field(DateTimePickerFactory.class),
-                                "updated_at", new Field(DateTimePickerFactory.class)))
+                                "id", new JpaField(IdFieldFactory.class, true),
+                                "title", new JpaField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
+                                "description", new JpaField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                "assigned_to", new JpaField(ReferenceFieldFactory.class, "id", "username", "users", List.of("username")) /* 1:1 Relation */,
+                                "status", new JpaField(SelectFieldFactory.class, "task-status"),
+                                "due_date", JpaField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
+                                "created_at", new JpaField(DateTimePickerFactory.class),
+                                "updated_at", new JpaField(DateTimePickerFactory.class)))
                         .build(),
                 "task_has_task", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
-                                "task_id", new Field(IdFieldFactory.class),
-                                "related_task_id", new Field(IdFieldFactory.class)))
+                                "task_id", new JpaField(IdFieldFactory.class),
+                                "related_task_id", new JpaField(IdFieldFactory.class)))
                         .build(),
                 "task_comments", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "comment_text", new Field(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                "user_id", new Field(NumberFieldFactory.class),
-                                "created_at", Field.Builder.of(DateTimePickerFactory.class).build()))
+                                "id", new JpaField(IdFieldFactory.class, true),
+                                "comment_text", new JpaField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
+                                "user_id", new JpaField(NumberFieldFactory.class),
+                                "created_at", JpaField.of(DateTimePickerFactory.class).build()))
                         .build(),
                 "images", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
-                                "id", new Field(IdFieldFactory.class, true),
-                                "title", Field.Builder.of(TextFieldFactory.class)
+                                "id", new JpaField(IdFieldFactory.class, true),
+                                "title", JpaField.of(TextFieldFactory.class)
                                         .withRequired(true)
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
-                                "url", Field.Builder.of(ImageFieldFactory.class)
+                                "url", JpaField.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
                                         .build()))
                         .build());

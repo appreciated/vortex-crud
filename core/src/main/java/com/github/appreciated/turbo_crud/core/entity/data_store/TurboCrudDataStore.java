@@ -4,17 +4,17 @@ import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 
 import java.util.List;
 
-public interface TurboCrudDataStore {
+public interface TurboCrudDataStore<FieldId> {
 
     Object insertRecord(GenericEntity values);
 
     List<GenericEntity> getRecordsFromTable(int offset, int limit);
 
-    List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, String filterValue, int offset, int limit);
+    List<GenericEntity> getRecordsFromTableWhereColumnEquals(FieldId filterField, String filterValue, int offset, int limit);
 
-    List<GenericEntity> getRecordsFromTableWhereColumnIn(String filterField, List<String> filterValue, int offset, int limit);
+    List<GenericEntity> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit);
 
-    List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, String filterValue, int offset, int limit);
+    List<GenericEntity> getRecordsFromTableWhereColumnLike(FieldId filterField, String filterValue, int offset, int limit);
 
     GenericEntity getRecordById(Object id);
 
@@ -26,5 +26,5 @@ public interface TurboCrudDataStore {
 
     int count();
 
-    int countWhereColumnLike(String filterField, String filterValue);
+    int countWhereColumnLike(FieldId filterField, String filterValue);
 }

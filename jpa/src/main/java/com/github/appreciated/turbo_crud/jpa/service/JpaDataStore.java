@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class JpaDataStore implements TurboCrudDataStore {
+public class JpaDataStore implements TurboCrudDataStore<String> {
 
     private final EntityManager entityManager;
     private final TransactionTemplate transactionTemplate;
