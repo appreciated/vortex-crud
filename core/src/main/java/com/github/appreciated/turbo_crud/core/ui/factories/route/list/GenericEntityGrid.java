@@ -6,6 +6,7 @@ import com.github.appreciated.turbo_crud.core.data_provider.GenericFilterableDat
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.vaadin.flow.component.grid.Grid;
@@ -27,7 +28,9 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
                                  Route<DataStoreId, FieldId> route,
                                  TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  TurboCrudConfigService<DataStoreId, FieldId> configService,
-                                 TurboCrudListColumnCallbackRegistry listColumnFactory) {
+                                 TurboCrudListColumnCallbackRegistry listColumnFactory,
+                                 TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+    ) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         DataStoreId table = route.getDataStore();
@@ -38,19 +41,18 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
         RouteConfiguration<DataStoreId, FieldId> gridOrListConfiguration = route.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
-        com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
         Map<?, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<DataStoreId, FieldId> field : gridOrListConfiguration.getChildren()) {
-            //TODO
-            String fieldName = (String) field.getField();
+            FieldId fieldName = field.getField();
             Field<DataStoreId, FieldId> dataStoreField = fieldsConfig.get(fieldName);
             if (dataStoreField == null) {
-                throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
+                throw new IllegalStateException("Field '" + resolver.getKeyForFieldId(fieldName) + "' not found in the config unter table '" + table + "'");
             }
-            listColumnFactory.getCallback(route).addColumn(this, field, table, fieldName, dataStoreField);
+            listColumnFactory.getCallback(route).addColumn(this, field, table, resolver.getKeyForFieldId(fieldName), dataStoreField);
         }
 
         setDataProvider(dataProvider);

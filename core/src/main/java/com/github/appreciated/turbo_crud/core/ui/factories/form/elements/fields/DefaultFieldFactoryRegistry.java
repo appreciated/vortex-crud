@@ -18,9 +18,9 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistry {
+public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements TurboCrudFieldFactoryRegistry {
 
-    private final Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> factories = new HashMap<>();
+    private final Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
     public DefaultFieldFactoryRegistry(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
         Application configuration = configService.getConfiguration();
@@ -36,12 +36,12 @@ public class DefaultFieldFactoryRegistry implements TurboCrudFieldFactoryRegistr
         factories.put(IdFieldFactory.class, new IdFieldFactory());
     }
 
-    public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory> getFactories() {
+    public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory<DataStoreId, FieldId>> getFactories() {
         return factories;
     }
 
     @Override
-    public TurboCrudFieldFactory getFactory(Class<? extends TurboCrudFieldFactory> type) {
+    public TurboCrudFieldFactory<DataStoreId, FieldId> getFactory(Class<? extends TurboCrudFieldFactory> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 

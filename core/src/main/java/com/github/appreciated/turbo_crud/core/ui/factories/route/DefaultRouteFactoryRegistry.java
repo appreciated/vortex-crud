@@ -38,10 +38,10 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements TurboC
                                        TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                        TurboCrudFileProviderRegistry fileProviderRegistry,
                                        TurboCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                       FormCreator formCreatorService
+                                       FormCreator<DataStoreId, FieldId> formCreatorService
     ) {
         factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver));
-        factories.put(ListRouteFactory.class, new ListRouteFactory(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this));
+        factories.put(ListRouteFactory.class, new ListRouteFactory(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver));
         factories.put(GridRouteFactory.class, new GridRouteFactory(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver));
         factories.put(FormRouteFactory.class, new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));
         factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));

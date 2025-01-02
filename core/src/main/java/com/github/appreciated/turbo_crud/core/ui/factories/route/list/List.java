@@ -3,6 +3,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeader;
@@ -24,9 +25,11 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                     TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                     TurboCrudConfigService<DataStoreId, FieldId> configService,
                     TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
-                    FormCreator formCreator,
+                    FormCreator<DataStoreId, FieldId> formCreator,
                     TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-                    TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
+                    TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                    TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+    ) {
 
         Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
@@ -39,7 +42,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                 null,
                 routeHeader);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, route, dataStoreFactoryRegistry, configService, columnCallbackRegistry);
+        entityGrid = new GenericEntityGrid<>(routeResolver, route, dataStoreFactoryRegistry, configService, columnCallbackRegistry, resolver);
         add(headerBar, textField, entityGrid);
         setSizeFull();
         setPadding(true);

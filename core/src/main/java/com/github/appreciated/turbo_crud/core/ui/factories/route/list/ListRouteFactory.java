@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
@@ -11,21 +12,23 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class ListRouteFactory implements TurboCrudRouteFactory {
+public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
-    private final TurboCrudConfigService configService;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudListColumnCallbackRegistry columnCallbackRegistry;
-    private final FormCreator formCreator;
-    private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
-    private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
+    private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
-    public ListRouteFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-                            TurboCrudConfigService configService,
+    public ListRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                            TurboCrudConfigService<DataStoreId, FieldId> configService,
                             TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
-                            FormCreator formCreator,
-                            TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-                            TurboCrudRouteFactoryRegistry routeFactoryRegistry
+                            FormCreator<DataStoreId, FieldId> formCreator,
+                            TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -33,20 +36,21 @@ public class ListRouteFactory implements TurboCrudRouteFactory {
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
+        this.resolver = resolver;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        return new List(currentPathIndex,
+        return new List<>(currentPathIndex,
                 routeResolver,
                 dataStoreFactoryRegistry,
                 configService,
                 columnCallbackRegistry,
                 formCreator,
                 dialogFactoryRegistry,
-                routeFactoryRegistry);
+                routeFactoryRegistry, resolver);
     }
 
     @Override
