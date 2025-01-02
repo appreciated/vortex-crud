@@ -135,4 +135,5 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
                 .where(filterField.like("%" + filterValue + "%"))
                 .fetchOne(0, int.class);
     }
+
 }

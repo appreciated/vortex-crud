@@ -15,6 +15,8 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.turbo_crud.jooq.models.tables.TaskHasTask;
+import com.github.appreciated.turbo_crud.jooq.models.tables.Tasks;
 import com.github.appreciated.turbo_crud.jooq.models.tables.Users;
 import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -39,7 +41,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
         Route<Table<?>, TableField<?, ?>> taskForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
                 .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
+                        .withTitleField(TASKS.TITLE)
                         .withChildren(
                                 new JooqFormElement(TASKS.TITLE, "field", "route.tasks.labels.title"),
                                 new JooqFormElement(TASKS.DESCRIPTION, "field", "route.tasks.labels.description"),
@@ -49,14 +51,13 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>>of(TASK_COMMENTS)
+                                                .withData(CollectionData.Builder.<Table<?>,TableField<?, ?>>of(TASK_COMMENTS)
                                                         .withOneToMany(new OneToMany("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
                                                 .withChild(JooqRoute.of(FormRouteFactory.class)
                                                         .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                                                                .withTitleField("name")
                                                                 .withChildren(
                                                                         new JooqFormElement(TASK_COMMENTS.COMMENT_TEXT, "field", "route.tasks.labels.comment")
                                                                 )
@@ -67,11 +68,11 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>>of(TASKS)
-                                                        .withManyToMany(new ManyToMany("task_has_task",
-                                                                "task_id",
-                                                                "related_task_id",
-                                                                "id"))
+                                                .withData(CollectionData.Builder.<Table<?>,TableField<?, ?>>of(TASKS)
+                                                        .withManyToMany(new ManyToMany<>(TASK_HAS_TASK,
+                                                                TASK_HAS_TASK.ID,
+                                                                TASK_HAS_TASK.RELATED_TASK_ID,
+                                                                TASKS.ID))
                                                         .withChildren("title")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
@@ -86,7 +87,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                 .withDataStore(PROJECTS)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                        .withTitleField("name")
+                        .withTitleField(PROJECTS.NAME)
                         .withChildren(
                                 new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
                                 new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
@@ -100,14 +101,14 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                 .withDataStore(IMAGES)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
+                        .withTitleField(IMAGES.TITLE)
                         .withChildren(
                                 new JooqFormElement(IMAGES.TITLE, "field", "route.images.labels.title"),
                                 new JooqFormElement(IMAGES.URL, "field", "route.images.labels.image")
                         )
                         .build())
                 .build();
-        Map<Table<?>, DataStoreConfig<TableField<?, ?>>> dataStores = Map.of(
+        Map<Table<?>, DataStoreConfig<Table<?>, TableField<?, ?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
@@ -193,9 +194,9 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withDataStore(TASKS)
                                         .withTitle("route.open-tasks.title")
                                         .withConfiguration(Kanban.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                                .withTitleField("title")
-                                                .withDescriptionField("description")
-                                                .withColumnField("status")
+                                                .withTitleField(TASKS.TITLE)
+                                                .withDescriptionField(TASKS.DESCRIPTION)
+                                                .withColumnField(TASKS.STATUS)
                                                 .build())
                                         .withChild(taskForm)
                                         .build(),
@@ -205,8 +206,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withDataStore(TASKS)
                                         .withTitle("route.done-tasks.title")
                                         .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                                .withTitleField("title")
-                                                .withDescriptionField("description")
+                                                .withTitleField(TASKS.TITLE)
+                                                .withDescriptionField(TASKS.DESCRIPTION)
                                                 .build())
                                         .withChild(taskForm)
                                         .build()))
@@ -216,8 +217,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .withIconFactory(CAMERA::create)
                         .withTitle("route.images-cards")
                         .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withTitleField("title")
-                                .withImageField("url")
+                                .withTitleField(IMAGES.TITLE)
+                                .withImageField(IMAGES.URL)
                                 .withImageFactory(FileProvider.class)
                                 .build())
                         .withRoles(List.of("manager", "admin"))
@@ -229,7 +230,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .withTitle("route.images-list")
                         .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
                                 .withInlineEdit(true)
-                                .withFilterField("title")
+                                .withFilterField(IMAGES.TITLE)
                                 .withChildren(
                                         new JooqFormElement(IMAGES.URL, "field", "route.projects.labels.description"),
                                         new JooqFormElement(IMAGES.TITLE, "field", "route.projects.labels.name")

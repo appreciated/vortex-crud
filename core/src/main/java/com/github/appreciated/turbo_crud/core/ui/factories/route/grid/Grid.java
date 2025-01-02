@@ -3,6 +3,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.grid;
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -27,8 +28,10 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                     FormCreator formCreator,
                     TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                     TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
-                    TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                    TurboCrudFileProviderRegistry fileProviderRegistry) {
+                    TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+                    TurboCrudFileProviderRegistry fileProviderRegistry,
+                    TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+    ) {
         RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
         DataStoreId dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
@@ -40,7 +43,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                 routeHeader);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid<>(routeResolver, route, turboCrudDataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry);
+        virtualGrid = new VirtualItemGrid<>(routeResolver, route, turboCrudDataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry, resolver);
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);

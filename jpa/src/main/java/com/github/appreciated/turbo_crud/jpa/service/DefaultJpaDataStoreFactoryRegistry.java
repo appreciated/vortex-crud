@@ -19,12 +19,12 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFactoryRegistry<String> {
+public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFactoryRegistry<String, String> {
 
     private final HashMap<String, TurboCrudDataStore> factories = new HashMap<>();
 
     public DefaultJpaDataStoreFactoryRegistry(TurboCrudConfigService<String, String> turboCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        for (Map.Entry<String, DataStoreConfig<String>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+        for (Map.Entry<String, DataStoreConfig<String, String>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new JpaDataStore(table, entityManager, transactionTemplate));
         }
@@ -34,12 +34,12 @@ public class DefaultJpaDataStoreFactoryRegistry implements TurboCrudDataStoreFac
         factories.put("audit_log", new JpaDataStore("audit_log", entityManager, transactionTemplate));
     }
 
-    public TurboCrudDataStore getFactory(String table) {
+    public TurboCrudDataStore<String> getFactory(String table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override
-    public void addFactory(String key, TurboCrudDataStore factory) {
+    public void addFactory(String key, TurboCrudDataStore<String> factory) {
         factories.put(key, factory);
     }
 }

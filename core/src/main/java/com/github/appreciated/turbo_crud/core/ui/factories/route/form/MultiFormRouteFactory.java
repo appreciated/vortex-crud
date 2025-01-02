@@ -5,6 +5,7 @@ import com.github.appreciated.turbo_crud.core.config.model.MultiFormConfiguratio
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
@@ -14,30 +15,31 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
 
-public class MultiFormRouteFactory implements TurboCrudRouteFactory {
+public class MultiFormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final FormRouteFactory formRouteFactory;
+    private final FormRouteFactory<DataStoreId, FieldId> formRouteFactory;
 
     private String titleColumn;
 
     public MultiFormRouteFactory(
-            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-            TurboCrudConfigService configService,
+            TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+            TurboCrudConfigService<DataStoreId, FieldId> configService,
             FormCreator formCreator,
-            TurboCrudRouteFactoryRegistry factoryRegistry
+            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
+            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-        this.formRouteFactory = new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry);
+        this.formRouteFactory = new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry,resolver);
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormConfiguration formConfiguration = (MultiFormConfiguration) route.getConfiguration();
+        MultiFormConfiguration<DataStoreId, FieldId> formConfiguration = (MultiFormConfiguration<DataStoreId, FieldId>) route.getConfiguration();
         Div div = new Div();
-        for (RouteConfiguration child : formConfiguration.getForms()) {
+        for (RouteConfiguration<DataStoreId, FieldId> child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
         }

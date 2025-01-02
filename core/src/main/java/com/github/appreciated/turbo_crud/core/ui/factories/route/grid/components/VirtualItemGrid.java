@@ -6,6 +6,7 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactory;
@@ -30,9 +31,10 @@ import java.util.List;
 
 public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityItemList> {
 
-    private final TurboCrudItemFactory itemFactory;
+    private final TurboCrudItemFactory<FieldId> itemFactory;
     private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
     private final TurboCrudDataStore<FieldId> dataStore;
     private final GridOrListConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
@@ -42,10 +44,13 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     public VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                Route<DataStoreId, FieldId> config,
                                TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                               TurboCrudItemFactoryRegistry itemFactoryRegistry,
-                               TurboCrudFileProviderRegistry fileProviderRegistry) {
+                               TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+                               TurboCrudFileProviderRegistry fileProviderRegistry,
+                               TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+    ) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
+        this.resolver = resolver;
         DataStoreId table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(table);
@@ -74,7 +79,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry));
+                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, resolver));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);

@@ -3,6 +3,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.grid;
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
@@ -13,22 +14,24 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class GridRouteFactory implements TurboCrudRouteFactory {
+public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final FormCreator formCreator;
-    private final TurboCrudDialogFactoryRegistry dialogFactoryRegistry;
-    private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
-    private final TurboCrudItemFactoryRegistry itemFactoryRegistry;
+    private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
+    private final TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
     public GridRouteFactory(
-            TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
+            TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
             FormCreator formCreator,
-            TurboCrudDialogFactoryRegistry dialogFactoryRegistry,
-            TurboCrudRouteFactoryRegistry routeFactoryRegistry,
-            TurboCrudItemFactoryRegistry itemFactoryRegistry,
-            TurboCrudFileProviderRegistry fileProviderRegistry
+            TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+            TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+            TurboCrudFileProviderRegistry fileProviderRegistry,
+            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
@@ -36,23 +39,25 @@ public class GridRouteFactory implements TurboCrudRouteFactory {
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
+        this.resolver = resolver;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
 
-        Route route = routeResolver.getRouteForIndex(currentPathIndex);
+        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new Grid(routeResolver,
+        return new Grid<>(routeResolver,
                 route,
                 dataStoreFactoryRegistry,
                 formCreator,
                 dialogFactoryRegistry,
                 routeFactoryRegistry,
                 itemFactoryRegistry,
-                fileProviderRegistry);
+                fileProviderRegistry,
+                resolver);
     }
 
     @Override

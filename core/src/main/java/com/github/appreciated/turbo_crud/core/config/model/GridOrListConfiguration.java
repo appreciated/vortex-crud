@@ -6,7 +6,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfiguration<DataStoreId,FieldId> implements ItemFactory {
+public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfiguration<DataStoreId,FieldId> implements ItemFactory<FieldId> {
 
     private List<InternalFormElement<DataStoreId,FieldId>> children;
 

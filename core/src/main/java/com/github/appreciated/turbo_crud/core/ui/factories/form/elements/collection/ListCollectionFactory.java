@@ -4,6 +4,7 @@ import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
@@ -22,22 +23,26 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class ListCollectionFactory implements TurboCrudCollectionFactory {
+public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCollectionFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry;
-    private final TurboCrudDialogFactoryRegistry dialogFactory;
+    private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
-    public ListCollectionFactory(TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry,
-                                 TurboCrudDialogFactoryRegistry dialogFactory) {
+    public ListCollectionFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                                 TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory,
+                                 TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+    ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
+        this.resolver = resolver;
     }
 
     @Override
     public Component createCollection(String foreignKey,
-                                      Route route,
-                                      InternalFormElement factoryConfig,
-                                      TurboCrudRouteFactoryRegistry routeFactory,
+                                      Route<DataStoreId, FieldId> route,
+                                      InternalFormElement<DataStoreId, FieldId> factoryConfig,
+                                      TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                       FormCreator formCreator) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
@@ -57,7 +62,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         return list;
     }
 
-    private <DataStoreId, FieldId> void loadCollection(String foreignKeyValue,
+    private void loadCollection(String foreignKeyValue,
                                 InternalFormElement<DataStoreId, FieldId> internalFormElement,
                                 TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                                 TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -82,7 +87,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId, FieldId> void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -98,7 +103,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId, FieldId> void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -118,7 +123,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private static <DataStoreId, FieldId> List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
+    private List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
         if (collectionData.getOneToMany() != null) {
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
@@ -130,7 +135,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
             ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
             TurboCrudDataStore<FieldId> associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
             List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
-            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(manyToMany.getAssociativeTargetIdField())).map(Object::toString).toList();
+            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(resolver.getKeyForFieldId(manyToMany.getAssociativeTargetIdField()))).map(Object::toString).toList();
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnIn(manyToMany.getDataStoreField(), associativeRecordIds, 0, Integer.MAX_VALUE);
         } else {
@@ -138,7 +143,7 @@ public class ListCollectionFactory implements TurboCrudCollectionFactory {
         }
     }
 
-    private <DataStoreId, FieldId> void openDialog(String entityId,
+    private void openDialog(String entityId,
                             String foreignKey,
                             InternalFormElement<DataStoreId, FieldId> internalFormElement,
                             TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,

@@ -7,6 +7,7 @@ import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.components.H2WithHasValue;
@@ -40,16 +41,19 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final FormCreator formCreator;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
     public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
                             FormCreator formCreator,
-                            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry
+                            TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
+                            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
+        this.resolver = resolver;
     }
 
     @Override
@@ -77,7 +81,7 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
         if (!creationMode) {
             binder.bind(
                     titleComponent,
-                    entity1 -> prefix + entity1.getString(formRouteConfiguration.getTitleField()),
+                    entity1 -> prefix + entity1.getString(resolver.getKeyForFieldId(formRouteConfiguration.getTitleField())),
                     (entity1, string) -> {
                     }
             );

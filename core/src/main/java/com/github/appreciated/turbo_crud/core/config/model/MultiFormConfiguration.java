@@ -6,51 +6,51 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class MultiFormConfiguration extends RouteConfiguration {
+public class MultiFormConfiguration<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId, FieldId> {
 
-    private List<RouteConfiguration> forms;
+    private List<RouteConfiguration<DataStoreId, FieldId>> forms;
 
-    public MultiFormConfiguration(Class<? extends TurboCrudItemFactory> factory) {
+    public MultiFormConfiguration(Class<? extends TurboCrudItemFactory<?>> factory) {
         super(factory);
     }
 
-    public List<RouteConfiguration> getForms() {
+    public List<RouteConfiguration<DataStoreId, FieldId>> getForms() {
         return forms;
     }
 
-    public void setForms(List<RouteConfiguration> children) {
+    public void setForms(List<RouteConfiguration<DataStoreId, FieldId>> children) {
         this.forms = children;
     }
 
 
-    public static class Builder {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private MultiFormConfiguration product;
+        private MultiFormConfiguration<DataStoreId, FieldId> product;
 
-        private Builder(MultiFormConfiguration product) {
+        private Builder(MultiFormConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static Builder of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder(new MultiFormConfiguration(factory));
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
+            return new Builder<>(new MultiFormConfiguration<>((Class<? extends TurboCrudItemFactory<?>>) factory));
         }
 
-        public Builder withTitleField(String titleField) {
+        public Builder<DataStoreId, FieldId> withTitleField(FieldId titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder withForms(List<RouteConfiguration> forms) {
+        public Builder<DataStoreId, FieldId> withForms(List<RouteConfiguration<DataStoreId, FieldId>> forms) {
             product.forms = forms;
             return this;
         }
 
-        public Builder addForm(RouteConfiguration item) {
+        public Builder<DataStoreId, FieldId> addForm(RouteConfiguration<DataStoreId, FieldId> item) {
             product.forms.add(item);
             return this;
         }
 
-        public MultiFormConfiguration build() {
+        public MultiFormConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

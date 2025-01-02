@@ -13,14 +13,14 @@ import java.util.Map;
 
 public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
 
-    private final TurboCrudRouteFactoryRegistry routeFactoryRegistry;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactoryRegistry;
     private final String path;
     private String[] sections;
     private final Map<Integer, Route<DataStoreId,FieldId>> pathRoutes;
     private final Map<String, Route<DataStoreId,FieldId>> routesConfig;
 
     // Konstruktor
-    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry routeFactoryRegistry, String path, Map<String, Route<DataStoreId,FieldId>> routesConfig) {
+    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactoryRegistry, String path, Map<String, Route<DataStoreId,FieldId>> routesConfig) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.pathRoutes = new HashMap<>();

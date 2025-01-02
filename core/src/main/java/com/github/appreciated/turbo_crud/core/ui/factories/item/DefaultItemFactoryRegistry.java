@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultItemFactoryRegistry implements TurboCrudItemFactoryRegistry {
+public class DefaultItemFactoryRegistry<FieldId> implements TurboCrudItemFactoryRegistry<FieldId> {
 
     private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory> factories = new HashMap<>();
 
@@ -20,12 +20,12 @@ public class DefaultItemFactoryRegistry implements TurboCrudItemFactoryRegistry 
         factories.put(CardFactory.class, new CardFactory());
     }
 
-    public TurboCrudItemFactory getFactory(Class<? extends TurboCrudItemFactory> factory) {
+    public TurboCrudItemFactory<FieldId> getFactory(Class<? extends TurboCrudItemFactory> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(Class<? extends TurboCrudItemFactory> key, TurboCrudItemFactory factory) {
+    public void addFactory(Class<? extends TurboCrudItemFactory<FieldId>> key, TurboCrudItemFactory<FieldId> factory) {
         factories.put(key, factory);
     }
 }

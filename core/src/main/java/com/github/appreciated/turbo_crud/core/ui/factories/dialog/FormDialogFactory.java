@@ -6,6 +6,7 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.FormCreator;
@@ -25,11 +26,13 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
 
     private final TurboCrudConfigService <DataStoreId, FieldId> configService;
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
     private TurboCrudDataStore<FieldId> dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
+    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
+        this.resolver = resolver;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
             try {
                 binder.writeBean(entity);
                 if (foreignKeyField != null && foreignKeyValue != null) {
-                    entity.put(foreignKeyField, foreignKeyValue);
+                    entity.put(resolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
                 }
                 if (DataStoreUtil.isNew(entity)) {
                     dataStore.insertRecord(entity);

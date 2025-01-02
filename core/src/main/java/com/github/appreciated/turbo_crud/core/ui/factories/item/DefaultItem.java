@@ -1,6 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.item;
 
 import com.github.appreciated.turbo_crud.core.config.model.ItemFactory;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.components.ImageDisplayComponent;
@@ -13,7 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 @CssImport("card-styles.css")
 public class DefaultItem<FieldId> extends VerticalLayout {
 
-    public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider) {
+    public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry provider, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
         if (maxWidth != null) {
             setMaxWidth(maxWidth + "px");
         }
@@ -28,7 +29,7 @@ public class DefaultItem<FieldId> extends VerticalLayout {
             if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
-            String imagePath = entity.getString(imageField);
+            String imagePath = entity.getString(resolver.getKeyForFieldId(imageField));
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
             image.setMaxWidth("150px");
@@ -41,12 +42,12 @@ public class DefaultItem<FieldId> extends VerticalLayout {
         textContainer.setPadding(true);
         textContainer.setSpacing(false);
 
-        H4 title = new H4(entity.getString(config.getTitleField()));
+        H4 title = new H4(entity.getString(resolver.getKeyForFieldId(config.getTitleField())));
         Div titleDiv = new Div(title);
         textContainer.add(titleDiv);
 
         if (config.getDescriptionField() != null) {
-            Text description = new Text(entity.getString(config.getDescriptionField()));
+            Text description = new Text(entity.getString(resolver.getKeyForFieldId(config.getDescriptionField())));
             Div descriptionDiv = new Div(description);
             textContainer.add(descriptionDiv);
         }

@@ -1,6 +1,8 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.item;
 
+import com.github.appreciated.turbo_crud.core.config.model.Field;
 import com.github.appreciated.turbo_crud.core.config.model.ItemFactory;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.vaadin.flow.component.Component;
@@ -10,10 +12,10 @@ import com.vaadin.flow.component.Component;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class CardFactory implements TurboCrudItemFactory {
+public class CardFactory<FieldId> implements TurboCrudItemFactory<FieldId> {
 
     @Override
-    public Component renderItem(ItemFactory itemFactory, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry fileProvider) {
-        return new DefaultItem(itemFactory, entity, maxWidth, fileProvider);
+    public Component renderItem(ItemFactory<FieldId> itemFactory, GenericEntity entity, Integer maxWidth, TurboCrudFileProviderRegistry fileProvider, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
+        return new DefaultItem<>(itemFactory, entity, maxWidth, fileProvider, resolver);
     }
 }

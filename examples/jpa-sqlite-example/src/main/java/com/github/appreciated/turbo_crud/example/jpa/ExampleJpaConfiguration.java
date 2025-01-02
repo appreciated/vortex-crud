@@ -100,7 +100,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         .build())
                 .build();
 
-        Map<String, DataStoreConfig<String>> dataStores = Map.of(
+        Map<String, DataStoreConfig<String, String>> dataStores = Map.of(
                 "projects", JpaDataStoreConfig.of(JpaDataStore.class)
                         .withFields(Map.of(
                                 "id", new JpaField(IdFieldFactory.class, true),

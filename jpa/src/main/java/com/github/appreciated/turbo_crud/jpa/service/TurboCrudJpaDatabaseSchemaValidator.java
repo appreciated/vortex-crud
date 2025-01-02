@@ -37,13 +37,13 @@ public class TurboCrudJpaDatabaseSchemaValidator {
     public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
         this.entityManager = entityManager;
         this.fieldRegistry = fieldRegistry;
-        Map<String, DataStoreConfig<?>> tablesConfig = (Map<String, DataStoreConfig<?>>) configService.getConfiguration().getDataStores();
-        for (Map.Entry<String, DataStoreConfig<?>> entry : tablesConfig.entrySet()) {
-            checkTable(entry.getKey(), (Map<String, Field>) entry.getValue().getFields());
+        Map<String, DataStoreConfig<String,String>> tablesConfig = (Map<String, DataStoreConfig<String,String>>) configService.getConfiguration().getDataStores();
+        for (Map.Entry<String, DataStoreConfig<String,String>> entry : tablesConfig.entrySet()) {
+            checkTable(entry.getKey(), entry.getValue().getFields());
         }
     }
 
-    public void checkTable(String tableName, Map<String, Field> expectedColumns) {
+    public void checkTable(String tableName, Map<String, Field<String,String>> expectedColumns) {
         if (!tableExists(tableName)) {
             throw new PersistenceException("Table " + tableName + " does not exist in the database.");
         }
@@ -60,7 +60,7 @@ public class TurboCrudJpaDatabaseSchemaValidator {
         return !result.isEmpty();
     }
 
-    private void checkColumns(String tableName, Map<String, Field> expectedColumns) {
+    private void checkColumns(String tableName, Map<String, Field<String,String>> expectedColumns) {
         String query = "PRAGMA table_info(" + tableName + ")";
         try {
             List<Object[]> columns = entityManager.createNativeQuery(query).unwrap(NativeQuery.class)
@@ -78,7 +78,7 @@ public class TurboCrudJpaDatabaseSchemaValidator {
             }
 
             // Iterate over the expected columns
-            for (Map.Entry<String, Field> entry : expectedColumns.entrySet()) {
+            for (Map.Entry<String, Field<String,String>> entry : expectedColumns.entrySet()) {
                 String expectedColumnName = entry.getKey().toLowerCase();
                 Field fieldConfig = entry.getValue();
 
@@ -102,7 +102,7 @@ public class TurboCrudJpaDatabaseSchemaValidator {
         // TODO
     }
 
-    private void checkForeignKeys(String tableName, Map<String, Field> expectedColumns) {
+    private void checkForeignKeys(String tableName, Map<String, Field<String,String>> expectedColumns) {
         // TODO
     }
 }

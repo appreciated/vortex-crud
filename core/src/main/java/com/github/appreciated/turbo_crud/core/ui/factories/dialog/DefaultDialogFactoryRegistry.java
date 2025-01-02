@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.core.config.model.Field;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.form.FormRouteFactory;
@@ -21,9 +22,9 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Turbo
 
     private final Map<Class<?>, TurboCrudDialogFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
-        factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
-        factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry));
+    public DefaultDialogFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
+        factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver));
+        factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver));
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry));
     }
 

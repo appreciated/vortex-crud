@@ -4,6 +4,7 @@ import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolve
 import com.github.appreciated.turbo_crud.core.config.model.Kanban;
 import com.github.appreciated.turbo_crud.core.config.model.Route;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
+import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactoryRegistry;
@@ -19,19 +20,21 @@ import jakarta.annotation.Nullable;
 public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId,FieldId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
-    private final TurboCrudItemFactoryRegistry turboCrudItemFactory;
+    private final TurboCrudItemFactoryRegistry<FieldId>  turboCrudItemFactory;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final FormCreator formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
     public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudConfigService<DataStoreId, FieldId> configService,
-                               TurboCrudItemFactoryRegistry turboCrudItemFactory,
+                               TurboCrudItemFactoryRegistry<FieldId> turboCrudItemFactory,
                                TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                FormCreator formCreator,
                                TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-                               TurboCrudFileProviderRegistry fileProviderRegistry
+                               TurboCrudFileProviderRegistry fileProviderRegistry,
+                               TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -40,6 +43,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
+        this.resolver = resolver;
     }
 
     @Override
@@ -48,7 +52,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView(route.getDataStore(),
+        return new KanbanView<>(route.getDataStore(),
                 route,
                 dataStoreFactoryRegistry.getFactory(route.getDataStore()),
                 routeFactory,
@@ -57,8 +61,10 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,
+                resolver,
                 formCreator,
-                detailRouteSetting);
+                detailRouteSetting
+               );
     }
 
     @Override
