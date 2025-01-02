@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultRouterLayoutFactory implements TurboCrudRouterLayoutFactory {
+public class DefaultRouterLayoutFactory<DataStoreId, FieldId> implements TurboCrudRouterLayoutFactory {
 
-    private final TurboCrudConfigService configService;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
 
-    public DefaultRouterLayoutFactory(TurboCrudConfigService configService) {
+    public DefaultRouterLayoutFactory(TurboCrudConfigService<DataStoreId, FieldId> configService) {
         this.configService = configService;
     }
 
     @Override
     public AppLayout createAppLayout() {
-        return new DefaultRouterLayout(configService);
+        return new DefaultRouterLayout<>(configService);
     }
 }

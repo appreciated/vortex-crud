@@ -25,7 +25,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
     public Grid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                     Route<DataStoreId, FieldId> route,
                     TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> turboCrudDataStoreFactoryRegistry,
-                    FormCreator formCreator,
+                    FormCreator<DataStoreId, FieldId> formCreator,
                     TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                     TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                     TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
@@ -59,7 +59,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
         }
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

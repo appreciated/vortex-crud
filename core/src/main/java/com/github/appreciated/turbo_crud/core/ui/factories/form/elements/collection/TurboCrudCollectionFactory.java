@@ -11,5 +11,5 @@ public interface TurboCrudCollectionFactory<DataStoreId, FieldId> {
                                Route<DataStoreId, FieldId> route,
                                InternalFormElement<DataStoreId, FieldId> factoryConfig,
                                TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                               FormCreator formCreator);
+                               FormCreator<DataStoreId, FieldId> formCreator);
 }

@@ -52,7 +52,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>,TableField<?, ?>>of(TASK_COMMENTS)
-                                                        .withOneToMany(new OneToMany("task_id"))
+                                                        .withOneToMany(new OneToMany<>(TASK_COMMENTS.TASK_ID))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")

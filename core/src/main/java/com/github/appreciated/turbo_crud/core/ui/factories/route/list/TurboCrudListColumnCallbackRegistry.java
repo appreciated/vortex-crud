@@ -8,8 +8,8 @@ import com.github.appreciated.turbo_crud.core.config.model.Route;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface TurboCrudListColumnCallbackRegistry {
-    TurboCrudListColumnCallback getCallback(Route config);
+public interface TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> {
+    TurboCrudListColumnCallback<DataStoreId, FieldId> getCallback(Route<DataStoreId, FieldId> config);
 
-    void addCallback(String key, TurboCrudListColumnCallback factory);
+    void addCallback(String key, TurboCrudListColumnCallback<DataStoreId, FieldId> factory);
 }

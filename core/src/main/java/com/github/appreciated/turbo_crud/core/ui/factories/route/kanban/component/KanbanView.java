@@ -47,7 +47,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                           TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                           TurboCrudFileProviderRegistry fileProviderRegistry,
                           TurboCrudDataStoreFieldNameResolver<FieldId> resolver,
-                          FormCreator formCreator,
+                          FormCreator<DataStoreId, FieldId> formCreator,
                           DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
         this.resolver = resolver;
@@ -56,7 +56,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         Field<DataStoreId, FieldId> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
-        this.itemFactory = itemFactoryRegistry.getFactory((Class<? extends TurboCrudItemFactory<FieldId>>) kanbanConfig.getFactory());
+        this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
         this.fileProviderRegistry = fileProviderRegistry;
 
         itemRenderer = new ComponentRenderer<>(entity -> {
@@ -168,7 +168,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         return wrapper;
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         GenericEntity entity = new GenericEntity();
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,

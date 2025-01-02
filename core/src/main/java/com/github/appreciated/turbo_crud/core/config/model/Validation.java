@@ -17,7 +17,7 @@ public class Validation {
 
     public static class Builder {
 
-        private Validation product;
+        private final Validation product;
 
         private Builder(Validation product) {
             this.product = product;

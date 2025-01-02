@@ -43,7 +43,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
                                       Route<DataStoreId, FieldId> route,
                                       InternalFormElement<DataStoreId, FieldId> factoryConfig,
                                       TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                      FormCreator formCreator) {
+                                      FormCreator<DataStoreId, FieldId> formCreator) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.setSpacing(false);
@@ -66,7 +66,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
                                 InternalFormElement<DataStoreId, FieldId> internalFormElement,
                                 TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                                 TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                FormCreator formCreator,
+                                FormCreator<DataStoreId, FieldId> formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
         list.removeAll();
@@ -87,7 +87,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         }
     }
 
-    private void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator<DataStoreId, FieldId> formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore<FieldId> dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
@@ -103,13 +103,13 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         }
     }
 
-    private void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore dataStore) {
+    private void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator<DataStoreId, FieldId> formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore<FieldId> dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
             RouteConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
-                Object o = record.get(String.valueOf(child.getField()));
+                Object o = record.get(resolver.getKeyForFieldId(child.getField()));
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
@@ -148,7 +148,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
                             InternalFormElement<DataStoreId, FieldId> internalFormElement,
                             TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
-                            FormCreator formCreator,
+                            FormCreator<DataStoreId, FieldId> formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
         Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();

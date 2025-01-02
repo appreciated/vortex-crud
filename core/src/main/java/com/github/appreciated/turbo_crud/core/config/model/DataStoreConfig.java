@@ -34,7 +34,7 @@ public class DataStoreConfig<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private DataStoreConfig<DataStoreId, FieldId> product;
+        private final DataStoreConfig<DataStoreId, FieldId> product;
 
         public Builder(DataStoreConfig<DataStoreId, FieldId> product) {
             this.product = product;

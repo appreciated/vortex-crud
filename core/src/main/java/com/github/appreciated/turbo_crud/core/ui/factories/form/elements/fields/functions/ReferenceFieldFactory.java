@@ -19,7 +19,7 @@ public class ReferenceFieldFactory<DataStoreId, FieldId> implements TurboCrudFie
 
     @Override
     public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
-        return new EntityComboBoxWrapper(managerFactoryRegistry, dataStoreField);
+        return new EntityComboBoxWrapper<>(managerFactoryRegistry, dataStoreField);
     }
 
     @Override

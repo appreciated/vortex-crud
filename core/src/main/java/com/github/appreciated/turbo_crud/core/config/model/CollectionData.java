@@ -53,7 +53,7 @@ public class CollectionData<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private CollectionData<DataStoreId, FieldId> product;
+        private final CollectionData<DataStoreId, FieldId> product;
 
         private Builder(CollectionData<DataStoreId, FieldId> product) {
             this.product = product;

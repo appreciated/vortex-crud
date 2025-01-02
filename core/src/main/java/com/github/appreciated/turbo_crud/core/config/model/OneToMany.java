@@ -21,7 +21,7 @@ public class OneToMany<FieldId> {
 
     public static class Builder<FieldId> {
 
-        private OneToMany<FieldId> product;
+        private final OneToMany<FieldId> product;
 
         private Builder(OneToMany<FieldId> product) {
             this.product = product;

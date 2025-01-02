@@ -1,6 +1,5 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.item;
 
-import com.github.appreciated.turbo_crud.core.config.model.Field;
 import com.github.appreciated.turbo_crud.core.config.model.ItemFactory;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;

@@ -49,7 +49,7 @@ public class UserManagement {
 
     public static class Builder {
 
-        private UserManagement product;
+        private final UserManagement product;
 
         private Builder(UserManagement product) {
             this.product = product;

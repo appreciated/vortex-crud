@@ -119,7 +119,7 @@ public class Route<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private Route<DataStoreId, FieldId> product;
+        private final Route<DataStoreId, FieldId> product;
 
         public Builder(Route<DataStoreId, FieldId> product) {
             this.product = product;

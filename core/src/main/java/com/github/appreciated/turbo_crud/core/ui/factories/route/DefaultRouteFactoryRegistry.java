@@ -29,24 +29,24 @@ import java.util.HashMap;
 @Service
 public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> {
 
-    HashMap<Class<? extends TurboCrudRouteFactory>, TurboCrudRouteFactory<DataStoreId, FieldId>> factories = new HashMap<>();
+    final HashMap<Class<? extends TurboCrudRouteFactory>, TurboCrudRouteFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistry(TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                                        TurboCrudConfigService<DataStoreId, FieldId> configService,
-                                       TurboCrudListColumnCallbackRegistry listColumnCallbackRegistry,
+                                       TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> listColumnCallbackRegistry,
                                        TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                        TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                        TurboCrudFileProviderRegistry fileProviderRegistry,
                                        TurboCrudDataStoreFieldNameResolver<FieldId> resolver,
                                        FormCreator<DataStoreId, FieldId> formCreatorService
     ) {
-        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver));
-        factories.put(ListRouteFactory.class, new ListRouteFactory(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver));
-        factories.put(GridRouteFactory.class, new GridRouteFactory(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver));
-        factories.put(FormRouteFactory.class, new FormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));
-        factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));
-        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver));
-        factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory(this, configService));
+        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver));
+        factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver));
+        factories.put(GridRouteFactory.class, new GridRouteFactory<>(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver));
+        factories.put(FormRouteFactory.class, new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));
+        factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver));
+        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver));
+        factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService));
     }
 
     public TurboCrudRouteFactory<DataStoreId, FieldId> getFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory) {

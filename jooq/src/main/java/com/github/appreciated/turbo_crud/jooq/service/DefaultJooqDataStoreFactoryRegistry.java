@@ -5,7 +5,6 @@ import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataSto
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import com.vaadin.flow.component.tabs.Tab;
 import org.jooq.DSLContext;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -23,7 +22,7 @@ import java.util.Optional;
 @Service
 public class DefaultJooqDataStoreFactoryRegistry implements TurboCrudDataStoreFactoryRegistry<Table<?>, TableField<?,?>> {
 
-    private final HashMap<Table<?>, TurboCrudDataStore> factories = new HashMap<>();
+    private final HashMap<Table<?>, TurboCrudDataStore<TableField<?,?>>> factories = new HashMap<>();
 
     public DefaultJooqDataStoreFactoryRegistry(TurboCrudConfigService<Table<?>, TableField<?,?>> turboCrudConfigService, DSLContext dslContext) {
         for (Map.Entry<Table<?>, DataStoreConfig<Table<?>, TableField<?,?>>> entry : turboCrudConfigService.getConfiguration().getDataStores().entrySet()) {

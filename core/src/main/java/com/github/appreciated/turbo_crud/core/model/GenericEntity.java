@@ -36,12 +36,4 @@ public class GenericEntity {
         this.properties.put(name, value);
     }
 
-    public String getSecondProperty() {
-        return null;
-    }
-
-    public String getFirstProperty() {
-        return null;
-    }
-
 }

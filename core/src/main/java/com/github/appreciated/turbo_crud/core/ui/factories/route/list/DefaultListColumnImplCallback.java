@@ -5,11 +5,12 @@ import com.github.appreciated.turbo_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.components.ImageDisplayComponent;
+import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.TurboCrudFieldFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
-public class DefaultListColumnImplCallback implements TurboCrudListColumnCallback {
+public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements TurboCrudListColumnCallback<DataStoreId, FieldId> {
 
     private final TurboCrudFileProviderRegistry registry;
 
@@ -18,8 +19,8 @@ public class DefaultListColumnImplCallback implements TurboCrudListColumnCallbac
     }
 
     @Override
-    public void addColumn(Grid<GenericEntity> grid, InternalFormElement field, Object table, String fieldName, Field dataStoreField) {
-        if (dataStoreField.getFactory() == ImageFieldFactory.class) {
+    public void addColumn(Grid<GenericEntity> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField) {
+        if (((Class<? extends TurboCrudFieldFactory>)dataStoreField.getFactory()) == ImageFieldFactory.class) {
             if (dataStoreField.getConfiguration() == null) {
                 throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");
             }

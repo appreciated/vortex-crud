@@ -22,7 +22,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudItemFactoryRegistry<FieldId>  turboCrudItemFactory;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
-    private final FormCreator formCreator;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
@@ -31,7 +31,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                                TurboCrudConfigService<DataStoreId, FieldId> configService,
                                TurboCrudItemFactoryRegistry<FieldId> turboCrudItemFactory,
                                TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                               FormCreator formCreator,
+                               FormCreator<DataStoreId, FieldId> formCreator,
                                TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry,
                                TurboCrudDataStoreFieldNameResolver<FieldId> resolver
@@ -57,7 +57,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                 dataStoreFactoryRegistry.getFactory(route.getDataStore()),
                 routeFactory,
                 turboCrudItemFactory,
-                (Kanban) route.getConfiguration(),
+                (Kanban<DataStoreId, FieldId>) route.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

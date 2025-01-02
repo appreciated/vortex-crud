@@ -18,22 +18,22 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements TurboCrudFieldFactoryRegistry {
+public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements TurboCrudFieldFactoryRegistry<DataStoreId, FieldId> {
 
     private final Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistry(TurboCrudConfigService configService, TurboCrudDataStoreFactoryRegistry dataStoreFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
-        Application configuration = configService.getConfiguration();
-        factories.put(TextFieldFactory.class, new TextFieldFactory());
-        factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory());
-        factories.put(DateFieldFactory.class, new DateFieldFactory());
-        factories.put(DateTimePickerFactory.class, new DateTimePickerFactory());
-        factories.put(SelectFieldFactory.class, new SelectFieldFactory(configuration.getSelects(), configuration.getDataStores()));
-        factories.put(NumberFieldFactory.class, new NumberFieldFactory());
-        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory(dataStoreFactoryRegistry));
-        factories.put(ImageFieldFactory.class, new ImageFieldFactory(fileProviderRegistry));
-        factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory());
-        factories.put(IdFieldFactory.class, new IdFieldFactory());
+    public DefaultFieldFactoryRegistry(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudFileProviderRegistry fileProviderRegistry) {
+        Application<DataStoreId, FieldId> configuration = configService.getConfiguration();
+        factories.put(TextFieldFactory.class, new TextFieldFactory<>());
+        factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
+        factories.put(DateFieldFactory.class, new DateFieldFactory<>());
+        factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
+        factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.getSelects(), configuration.getDataStores()));
+        factories.put(NumberFieldFactory.class, new NumberFieldFactory<>());
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(dataStoreFactoryRegistry));
+        factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
+        factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory<>());
+        factories.put(IdFieldFactory.class, new IdFieldFactory<>());
     }
 
     public Map<Class<? extends TurboCrudFieldFactory>, TurboCrudFieldFactory<DataStoreId, FieldId>> getFactories() {
@@ -46,7 +46,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements TurboC
     }
 
     @Override
-    public void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory factory) {
+    public void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory<DataStoreId, FieldId> factory) {
         factories.put(key, factory);
     }
 }

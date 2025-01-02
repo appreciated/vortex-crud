@@ -25,7 +25,7 @@ public class MultiFormConfiguration<DataStoreId, FieldId> extends RouteConfigura
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private MultiFormConfiguration<DataStoreId, FieldId> product;
+        private final MultiFormConfiguration<DataStoreId, FieldId> product;
 
         private Builder(MultiFormConfiguration<DataStoreId, FieldId> product) {
             this.product = product;

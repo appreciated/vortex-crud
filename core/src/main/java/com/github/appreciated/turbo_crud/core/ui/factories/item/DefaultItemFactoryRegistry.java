@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 public class DefaultItemFactoryRegistry<FieldId> implements TurboCrudItemFactoryRegistry<FieldId> {
 
-    private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory> factories = new HashMap<>();
+    private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory<FieldId>> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistry() {
-        factories.put(CardFactory.class, new CardFactory());
+        factories.put(CardFactory.class, new CardFactory<>());
     }
 
     public TurboCrudItemFactory<FieldId> getFactory(Class<? extends TurboCrudItemFactory> factory) {

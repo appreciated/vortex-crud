@@ -4,7 +4,7 @@ import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProvide
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class ImageFieldConfiguration extends RouteConfiguration {
+public class ImageFieldConfiguration<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId, FieldId> {
 
     public ImageFieldConfiguration(Class<? extends TurboCrudFileProvider> fileFactory) {
         super(null);

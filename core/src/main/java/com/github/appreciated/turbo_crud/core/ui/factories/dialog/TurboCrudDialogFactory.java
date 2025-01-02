@@ -16,5 +16,5 @@ public interface TurboCrudDialogFactory<DataStoreId, FieldId> {
                       DataStoreId dataStore,
                       TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                       OnStoreListener listener,
-                      FormCreator formCreator);
+                      FormCreator<DataStoreId, FieldId> formCreator);
 }

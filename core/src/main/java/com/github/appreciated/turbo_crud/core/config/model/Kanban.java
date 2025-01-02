@@ -7,7 +7,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId, FieldId> implements ItemFactory {
+public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId, FieldId> implements ItemFactory<FieldId> {
 
     public Kanban(Class<? extends TurboCrudItemFactory> factory) {
         super(factory);
@@ -15,7 +15,7 @@ public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private Kanban<DataStoreId, FieldId> product;
+        private final Kanban<DataStoreId, FieldId> product;
 
         private Builder(Kanban<DataStoreId, FieldId> product) {
             this.product = product;

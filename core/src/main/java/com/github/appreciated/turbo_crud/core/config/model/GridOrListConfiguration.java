@@ -24,7 +24,7 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
 
     public static class Builder<DataStoreId,FieldId> extends RouteConfiguration.Builder<DataStoreId,FieldId> {
 
-        private GridOrListConfiguration<DataStoreId,FieldId> product;
+        private final GridOrListConfiguration<DataStoreId,FieldId> product;
 
         private Builder(GridOrListConfiguration<DataStoreId,FieldId> product) {
             super(product);

@@ -29,7 +29,7 @@ public class Versioning {
 
     public static class Builder {
 
-        private Versioning product;
+        private final Versioning product;
 
         private Builder(Versioning product) {
             this.product = product;

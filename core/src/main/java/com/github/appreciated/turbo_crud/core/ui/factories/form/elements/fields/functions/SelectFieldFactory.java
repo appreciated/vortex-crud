@@ -12,9 +12,9 @@ import java.util.*;
 public class SelectFieldFactory<DataStoreId, FieldId> implements TurboCrudFieldFactory<DataStoreId, FieldId> {
 
     private final Selects selects;
-    private final Map<String, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
+    private final Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<String, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }

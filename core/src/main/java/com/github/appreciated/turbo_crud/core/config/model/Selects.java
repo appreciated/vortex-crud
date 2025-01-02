@@ -19,7 +19,7 @@ public class Selects {
 
     public static class Builder {
 
-        private Selects product;
+        private final Selects product;
 
         private Builder(Selects product) {
             this.product = product;

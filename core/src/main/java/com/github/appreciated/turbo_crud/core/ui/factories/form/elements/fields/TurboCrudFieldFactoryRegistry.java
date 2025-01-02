@@ -6,9 +6,9 @@ package com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields
  * the specified FieldConfig.
  */
 
-public interface TurboCrudFieldFactoryRegistry {
+public interface TurboCrudFieldFactoryRegistry<DataStoreId, FieldId> {
 
-    TurboCrudFieldFactory getFactory(Class<? extends TurboCrudFieldFactory> type);
+    TurboCrudFieldFactory<DataStoreId, FieldId> getFactory(Class<? extends TurboCrudFieldFactory> type);
 
-    void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory factory);
+    void addFactory(Class<? extends TurboCrudFieldFactory> key, TurboCrudFieldFactory<DataStoreId, FieldId> factory);
 }

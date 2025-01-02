@@ -17,7 +17,7 @@ import jakarta.annotation.Nullable;
 public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
-    private final FormCreator formCreator;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
     private final TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
@@ -26,7 +26,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
 
     public GridRouteFactory(
             TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-            FormCreator formCreator,
+            FormCreator<DataStoreId, FieldId> formCreator,
             TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
             TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,

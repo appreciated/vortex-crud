@@ -29,7 +29,7 @@ public class Auditing {
 
     public static class Builder {
 
-        private Auditing product;
+        private final Auditing product;
 
         private Builder(Auditing product) {
             this.product = product;

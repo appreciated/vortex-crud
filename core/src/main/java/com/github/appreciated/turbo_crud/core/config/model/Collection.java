@@ -68,7 +68,7 @@ public class Collection<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private Collection<DataStoreId, FieldId> product;
+        private final Collection<DataStoreId, FieldId> product;
 
         private Builder(Collection<DataStoreId, FieldId> product) {
             this.product = product;

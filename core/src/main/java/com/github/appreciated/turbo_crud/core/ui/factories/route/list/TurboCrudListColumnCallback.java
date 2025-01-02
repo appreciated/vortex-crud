@@ -10,6 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface TurboCrudListColumnCallback {
-    void addColumn(Grid<GenericEntity> grid, InternalFormElement field, Object table, String fieldName, Field dataStoreField);
+public interface TurboCrudListColumnCallback<DataStoreId, FieldId> {
+    void addColumn(Grid<GenericEntity> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField);
 }

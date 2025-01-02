@@ -8,21 +8,21 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteF
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class SubmenuRouteFactory implements TurboCrudRouteFactory {
+public class SubmenuRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final TurboCrudRouteFactoryRegistry routeFactory;
-    private final TurboCrudConfigService configService;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
+    private final TurboCrudConfigService<DataStoreId, FieldId> configService;
 
-    public SubmenuRouteFactory(TurboCrudRouteFactoryRegistry routeFactory, TurboCrudConfigService configService) {
+    public SubmenuRouteFactory(TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory, TurboCrudConfigService<DataStoreId, FieldId> configService) {
         this.routeFactory = routeFactory;
         this.configService = configService;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 TurboCrudPathToRouteResolver routeResolver,
+                                 TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        return new Submenu(currentPathIndex, routeResolver, routeFactory, configService);
+        return new Submenu<>(currentPathIndex, routeResolver, routeFactory, configService);
     }
 
     @Override

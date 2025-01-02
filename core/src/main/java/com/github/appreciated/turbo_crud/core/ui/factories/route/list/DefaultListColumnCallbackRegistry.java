@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultListColumnCallbackRegistry implements TurboCrudListColumnCallbackRegistry {
+public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId> implements TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> {
 
     private final HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
 
@@ -21,7 +21,7 @@ public class DefaultListColumnCallbackRegistry implements TurboCrudListColumnCal
     }
 
     @Override
-    public TurboCrudListColumnCallback getCallback(Route config) {
+    public TurboCrudListColumnCallback getCallback(Route<DataStoreId, FieldId> config) {
         return callbacks.get("default");
     }
 

@@ -28,7 +28,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
                                  Route<DataStoreId, FieldId> route,
                                  TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  TurboCrudConfigService<DataStoreId, FieldId> configService,
-                                 TurboCrudListColumnCallbackRegistry listColumnFactory,
+                                 TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> listColumnFactory,
                                  TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.pathVariables = routeResolver;

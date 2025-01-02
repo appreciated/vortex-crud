@@ -39,13 +39,13 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
-    private final FormCreator formCreator;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
     private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
 
     public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
-                            FormCreator formCreator,
+                            FormCreator<DataStoreId, FieldId> formCreator,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
                             TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {

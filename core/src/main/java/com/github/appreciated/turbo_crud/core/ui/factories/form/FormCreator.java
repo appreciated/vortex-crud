@@ -53,7 +53,6 @@ public class FormCreator<DataStoreId, FieldId> {
                 }
                 TurboCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);
-                //TODO Add Factory to generate field from FieldId
                 binder.bind((HasValue) component, entity1 -> entity1.get(resolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(resolver.getKeyForFieldId(fieldName), o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
@@ -68,7 +67,7 @@ public class FormCreator<DataStoreId, FieldId> {
                 }
             } else {
                 if (element.getType().equals("collection")) {
-                    Component collection = collectionFactoryRegistry.getFactory((Class<? extends TurboCrudCollectionFactory<DataStoreId, FieldId>>) element.getFactory()).createCollection(
+                    Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
                             DataStoreUtil.getId(entity),
                             route,
                             element,

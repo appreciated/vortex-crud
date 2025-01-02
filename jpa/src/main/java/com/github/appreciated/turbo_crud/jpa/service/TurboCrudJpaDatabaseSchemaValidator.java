@@ -32,12 +32,12 @@ import java.util.*;
 public class TurboCrudJpaDatabaseSchemaValidator {
 
     private final EntityManager entityManager;
-    private final TurboCrudFieldFactoryRegistry fieldRegistry;
+    private final TurboCrudFieldFactoryRegistry<String, String> fieldRegistry;
 
-    public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService configService, TurboCrudFieldFactoryRegistry fieldRegistry) {
+    public TurboCrudJpaDatabaseSchemaValidator(EntityManager entityManager, TurboCrudConfigService<String, String> configService, TurboCrudFieldFactoryRegistry<String, String> fieldRegistry) {
         this.entityManager = entityManager;
         this.fieldRegistry = fieldRegistry;
-        Map<String, DataStoreConfig<String,String>> tablesConfig = (Map<String, DataStoreConfig<String,String>>) configService.getConfiguration().getDataStores();
+        Map<String, DataStoreConfig<String,String>> tablesConfig = configService.getConfiguration().getDataStores();
         for (Map.Entry<String, DataStoreConfig<String,String>> entry : tablesConfig.entrySet()) {
             checkTable(entry.getKey(), entry.getValue().getFields());
         }

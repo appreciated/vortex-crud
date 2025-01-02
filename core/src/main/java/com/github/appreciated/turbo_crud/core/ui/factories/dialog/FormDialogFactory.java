@@ -44,7 +44,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
                              DataStoreId dataStore,
                              TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                              OnStoreListener listener,
-                             FormCreator formCreator) {
+                             FormCreator<DataStoreId, FieldId> formCreator) {
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStore);
         Dialog dialog = new Dialog();

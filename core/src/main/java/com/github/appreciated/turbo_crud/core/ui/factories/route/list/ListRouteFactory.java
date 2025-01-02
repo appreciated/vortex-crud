@@ -16,7 +16,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
-    private final TurboCrudListColumnCallbackRegistry columnCallbackRegistry;
+    private final TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> columnCallbackRegistry;
     private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
@@ -24,7 +24,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
 
     public ListRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
-                            TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
+                            TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> columnCallbackRegistry,
                             FormCreator<DataStoreId, FieldId> formCreator,
                             TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,

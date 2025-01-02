@@ -38,7 +38,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements TurboCrudDial
                              DataStoreId dataStoreIdentifier,
                              TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                              OnStoreListener listener,
-                             FormCreator formCreator) {
+                             FormCreator<DataStoreId, FieldId> formCreator) {
 
         TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
         Dialog dialog = new Dialog();

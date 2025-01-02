@@ -89,7 +89,7 @@ public class Application<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private Application<DataStoreId,FieldId> product;
+        private final Application<DataStoreId,FieldId> product;
 
         public Builder(Application<DataStoreId,FieldId> product) {
             this.product = product;

@@ -27,7 +27,7 @@ public class AdditionalField {
 
     public static class Builder {
 
-        private AdditionalField product;
+        private final AdditionalField product;
 
         private Builder(AdditionalField product) {
             this.product = product;

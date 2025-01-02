@@ -24,13 +24,12 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                     TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                     TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                     TurboCrudConfigService<DataStoreId, FieldId> configService,
-                    TurboCrudListColumnCallbackRegistry columnCallbackRegistry,
+                    TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> columnCallbackRegistry,
                     FormCreator<DataStoreId, FieldId> formCreator,
                     TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                     TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                     TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-
         Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
         DataStoreId dataStore = route.getDataStore();
@@ -58,7 +57,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
         }
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
                 null,
                 null,

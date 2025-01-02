@@ -157,7 +157,7 @@ public class Field<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private Field<DataStoreId, FieldId> product;
+        private final Field<DataStoreId, FieldId> product;
 
         public Builder(Field<DataStoreId, FieldId> product) {
             this.product = product;

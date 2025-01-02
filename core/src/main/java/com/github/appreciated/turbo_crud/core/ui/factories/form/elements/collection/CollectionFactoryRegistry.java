@@ -20,13 +20,13 @@ import java.util.Optional;
 @Service
 public class CollectionFactoryRegistry<DataStoreId, FieldId> implements TurboCrudCollectionFactoryRegistry<DataStoreId, FieldId> {
 
-    private final Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> factories = new HashMap<>();
+    private final Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
     public CollectionFactoryRegistry(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
-        factories.put(ListCollectionFactory.class, new ListCollectionFactory<DataStoreId, FieldId>(dataStoreFactoryRegistry, dialogFactoryRegistry, resolver));
+        factories.put(ListCollectionFactory.class, new ListCollectionFactory<>(dataStoreFactoryRegistry, dialogFactoryRegistry, resolver));
     }
 
-    public Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory> getFactories() {
+    public Map<Class<? extends TurboCrudCollectionFactory>, TurboCrudCollectionFactory<DataStoreId, FieldId>> getFactories() {
         return factories;
     }
 

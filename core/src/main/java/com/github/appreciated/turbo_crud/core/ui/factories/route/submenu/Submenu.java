@@ -26,14 +26,14 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
     private final VerticalLayout detailLayout = new VerticalLayout();
     private final Route<DataStoreId, FieldId> route;
     private TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
-    private final TurboCrudRouteFactoryRegistry routeFactory;
+    private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final Integer currentPathIndex;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private Component active;
 
     public Submenu(Integer currentPathIndex,
                    TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                   TurboCrudRouteFactoryRegistry routeFactory,
+                   TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                    TurboCrudConfigService<DataStoreId, FieldId> configService
     ) {
         this.currentPathIndex = currentPathIndex;
@@ -102,7 +102,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
             routeButton.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
-                    pathVariables = new TurboCrudPathToRouteResolver(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
+                    pathVariables = new TurboCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
                     ui.getPage().getHistory().pushState(null, pathForEntity);
                     if (active != null) {
                         active.removeClassName("active");
@@ -116,7 +116,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         });
     }
 
-    private void showRouteDetail(Route<DataStoreId, FieldId> subRoute, TurboCrudPathToRouteResolver routeResolver) {
+    private void showRouteDetail(Route<DataStoreId, FieldId> subRoute, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();

@@ -10,7 +10,7 @@ public class InternalFormElement<DataStoreId, FieldId> {
 
     private FieldId field;
 
-    private Class<? extends TurboCrudCollectionFactory> factory;
+    private Class<? extends TurboCrudCollectionFactory<DataStoreId, FieldId>> factory;
 
     private boolean readOnly;
 
@@ -41,12 +41,12 @@ public class InternalFormElement<DataStoreId, FieldId> {
         this.field = field;
     }
 
-    public Class<? extends TurboCrudCollectionFactory> getFactory() {
+    public Class<? extends TurboCrudCollectionFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
     public void setFactory(Class<? extends TurboCrudCollectionFactory> factory) {
-        this.factory = factory;
+        this.factory = (Class<? extends TurboCrudCollectionFactory<DataStoreId, FieldId>>) factory;
     }
 
     public boolean isReadOnly() {
@@ -99,7 +99,7 @@ public class InternalFormElement<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private InternalFormElement<DataStoreId, FieldId> product;
+        private final InternalFormElement<DataStoreId, FieldId> product;
 
         public Builder(InternalFormElement<DataStoreId, FieldId> product) {
             this.product = product;
@@ -115,7 +115,7 @@ public class InternalFormElement<DataStoreId, FieldId> {
         }
 
         public Builder<DataStoreId,FieldId> withFactory(Class<? extends TurboCrudCollectionFactory> factory) {
-            product.factory = factory;
+            product.factory = (Class<? extends TurboCrudCollectionFactory<DataStoreId, FieldId>>) factory;
             return this;
         }
 

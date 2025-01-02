@@ -19,7 +19,7 @@ public class AccessControl {
 
     public static class Builder {
 
-        private AccessControl product;
+        private final AccessControl product;
 
         private Builder(AccessControl product) {
             this.product = product;
