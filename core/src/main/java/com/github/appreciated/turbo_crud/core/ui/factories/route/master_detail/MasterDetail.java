@@ -44,7 +44,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactory;
     private final TurboCrudConfigService<DataStoreId, FieldId>  configService;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final Route<DataStoreId, FieldId>  route;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<GenericEntity, Void, String> dataProvider; // Hinzugefügter DataProvider
@@ -57,13 +57,13 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
                         TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactory,
                         TurboCrudConfigService<DataStoreId, FieldId>  configService,
                         TurboCrudFileProviderRegistry fileProviderRegistry,
-                        TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                        TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.currentPathIndex = currentPathIndex;
         this.routeFactory = routeFactory;
         this.configService = configService;
         this.fileProviderRegistry = fileProviderRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
 
         route = routeResolver.getRouteForIndex(currentPathIndex);
 
@@ -78,7 +78,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
         detailContainer.setHeightFull();
         detailContainer.setWidth("unset");
 
-        HorizontalLayout header = new RouteHeader<>(route);
+        HorizontalLayout header = new RouteHeader(route);
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addClickListener(event -> onAdd());
@@ -150,7 +150,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry, resolver);
+            Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry, fieldNameResolver);
             component.addClassNames("master", "no-padding");
             Div div = new Div(component);
             if (DataStoreUtil.equals(item, pathVariables.getLastSegment())) {

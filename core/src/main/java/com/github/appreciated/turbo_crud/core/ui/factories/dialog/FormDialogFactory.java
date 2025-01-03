@@ -26,13 +26,13 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
 
     private final TurboCrudConfigService <DataStoreId, FieldId> configService;
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private TurboCrudDataStore<FieldId> dataStore;
 
-    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
+    public FormDialogFactory(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
             try {
                 binder.writeBean(entity);
                 if (foreignKeyField != null && foreignKeyValue != null) {
-                    entity.put(resolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                    entity.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
                 }
                 if (DataStoreUtil.isNew(entity)) {
                     dataStore.insertRecord(entity);

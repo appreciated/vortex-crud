@@ -20,7 +20,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
     private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public ListRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
@@ -28,7 +28,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
                             FormCreator<DataStoreId, FieldId> formCreator,
                             TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
-                            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                            TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -36,7 +36,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ListRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
                 columnCallbackRegistry,
                 formCreator,
                 dialogFactoryRegistry,
-                routeFactoryRegistry, resolver);
+                routeFactoryRegistry, fieldNameResolver);
     }
 
     @Override

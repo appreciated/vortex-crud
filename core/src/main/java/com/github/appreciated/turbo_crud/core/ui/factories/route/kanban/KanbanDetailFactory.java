@@ -25,7 +25,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
     private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public KanbanDetailFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudConfigService<DataStoreId, FieldId> configService,
@@ -34,7 +34,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                                FormCreator<DataStoreId, FieldId> formCreator,
                                TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry,
-                               TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                               TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -43,7 +43,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,
-                resolver,
+                fieldNameResolver,
                 formCreator,
                 detailRouteSetting
                );

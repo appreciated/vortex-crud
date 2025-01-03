@@ -34,7 +34,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private final TurboCrudItemFactory<FieldId> itemFactory;
     private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final TurboCrudDataStore<FieldId> dataStore;
     private final GridOrListConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
@@ -46,11 +46,11 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
                                TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry,
-                               TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                               TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
         DataStoreId table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(table);
@@ -79,7 +79,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
             layout.setSpacing(true);
             layout.setWidthFull();
             for (GenericEntity entity : item.getList()) {
-                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, resolver));
+                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, fieldNameResolver));
                 div.getStyle().set("display", "flex");
                 div.addClickListener(event -> onItemClick(entity));
                 layout.add(div);

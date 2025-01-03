@@ -4,7 +4,6 @@ import com.github.appreciated.turbo_crud.core.config.model.*;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
-import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.TurboCrudCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.TurboCrudCollectionFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.TurboCrudFieldFactory;
@@ -24,12 +23,12 @@ public class FormCreator<DataStoreId, FieldId> {
 
     private final DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory;
     private final TurboCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
-    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory, TurboCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> resolver) {
+    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory, TurboCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry, TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     public void bindAndAddToLayout(DataStoreId table,
@@ -53,7 +52,7 @@ public class FormCreator<DataStoreId, FieldId> {
                 }
                 TurboCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);
-                binder.bind((HasValue) component, entity1 -> entity1.get(resolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(resolver.getKeyForFieldId(fieldName), o));
+                binder.bind((HasValue) component, entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }

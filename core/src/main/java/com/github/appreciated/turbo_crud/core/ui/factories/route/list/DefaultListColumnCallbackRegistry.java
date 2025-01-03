@@ -14,19 +14,19 @@ import java.util.HashMap;
 @Service
 public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId> implements TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> {
 
-    private final HashMap<String, TurboCrudListColumnCallback> callbacks = new HashMap<>();
+    private final HashMap<String, TurboCrudListColumnCallback<DataStoreId, FieldId>> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistry(TurboCrudFileProviderRegistry fileProviderRegistry) {
-        callbacks.put("default", new DefaultListColumnImplCallback(fileProviderRegistry));
+        callbacks.put("default", new DefaultListColumnImplCallback<>(fileProviderRegistry));
     }
 
     @Override
-    public TurboCrudListColumnCallback getCallback(Route<DataStoreId, FieldId> config) {
+    public TurboCrudListColumnCallback<DataStoreId, FieldId> getCallback(Route<DataStoreId, FieldId> config) {
         return callbacks.get("default");
     }
 
     @Override
-    public void addCallback(String key, TurboCrudListColumnCallback factory) {
+    public void addCallback(String key, TurboCrudListColumnCallback<DataStoreId, FieldId> factory) {
         callbacks.put(key, factory);
     }
 }

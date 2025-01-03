@@ -24,7 +24,7 @@ public class MultiFormRouteFactory<DataStoreId, FieldId> implements TurboCrudRou
     public MultiFormRouteFactory(
             TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
             TurboCrudConfigService<DataStoreId, FieldId> configService,
-            FormCreator formCreator,
+            FormCreator<DataStoreId, FieldId> formCreator,
             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
             TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {

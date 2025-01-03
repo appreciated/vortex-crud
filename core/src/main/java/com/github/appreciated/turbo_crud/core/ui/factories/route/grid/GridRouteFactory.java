@@ -22,7 +22,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
     private final TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public GridRouteFactory(
             TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -31,7 +31,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
             TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
             TurboCrudFileProviderRegistry fileProviderRegistry,
-            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+            TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
@@ -39,7 +39,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
                 routeFactoryRegistry,
                 itemFactoryRegistry,
                 fileProviderRegistry,
-                resolver);
+                fieldNameResolver);
     }
 
     @Override

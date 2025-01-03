@@ -34,7 +34,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     private final Kanban<DataStoreId, FieldId> kanbanConfig;
     private final ComponentRenderer<Component, GenericEntity> itemRenderer;
     private final TurboCrudDataStore<FieldId> dataStore;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(DataStoreId dataStoreIdentifier,
@@ -46,11 +46,11 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                           Application<DataStoreId, FieldId> configService,
                           TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                           TurboCrudFileProviderRegistry fileProviderRegistry,
-                          TurboCrudDataStoreFieldNameResolver<FieldId> resolver,
+                          TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                           FormCreator<DataStoreId, FieldId> formCreator,
                           DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
         Selects selects = configService.getSelects();
         DataStoreConfig<DataStoreId, FieldId> config = configService.getDataStores().get(dataStoreIdentifier);
         Field<DataStoreId, FieldId> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
@@ -61,7 +61,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
 
         itemRenderer = new ComponentRenderer<>(entity -> {
             // Create a component for the card via the TurboCrudItemFactory
-            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig, entity, null, fileProviderRegistry, resolver));
+            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig, entity, null, fileProviderRegistry, fieldNameResolver));
             // Allow dragging the card
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
@@ -78,7 +78,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                             //TODO handle if the column was edited, requiring the element to move
                             GenericEntity recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
                             cardWrapper.removeAll();
-                            cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, resolver));
+                            cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver));
                         },
                         formCreator);
                 dialog.open();
@@ -107,7 +107,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         }
         kanbanBoard.setSizeFull();
 
-        RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
+        RouteHeader routeHeader = new RouteHeader(route);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -147,7 +147,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
             }
             event.getDragData().ifPresent(o -> {
                 if (o instanceof GenericEntity) {
-                    ((GenericEntity) o).put(resolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
+                    ((GenericEntity) o).put(fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
                     dataStore.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
                 }
             });
@@ -180,7 +180,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                 routeFactory,
                 () -> {
                     GenericEntity recordById = this.dataStore.getRecordById(DataStoreUtil.getId(entity));
-                    itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, resolver);
+                    itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver);
                 },
                 formCreator);
         dialog.open();

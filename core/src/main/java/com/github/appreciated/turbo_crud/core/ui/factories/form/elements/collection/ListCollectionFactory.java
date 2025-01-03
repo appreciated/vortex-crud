@@ -27,15 +27,15 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
 
     private final TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public ListCollectionFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory,
-                                 TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                                 TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -56,16 +56,15 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, dataStoreFactoryRegistry, routeFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
         header.add(button);
-        loadCollection(foreignKey, factoryConfig, routeFactory, dataStoreFactoryRegistry, formCreator, list, header);
+        loadCollection(foreignKey, factoryConfig, routeFactory, formCreator, list, header);
         return list;
     }
 
     private void loadCollection(String foreignKeyValue,
                                 InternalFormElement<DataStoreId, FieldId> internalFormElement,
                                 TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
-                                TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                 FormCreator<DataStoreId, FieldId> formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
@@ -74,11 +73,11 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         CollectionData<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
         TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
-        List<GenericEntity> records = getDataByConfig(foreignKeyValue, dataStore, data, dataStoreFactoryRegistry);
+        List<GenericEntity> records = getDataByConfig(foreignKeyValue, dataStore, data);
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {
-            addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header, records, dataStore);
+            addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
         } else if (internalFormElement.getConfiguration().getData().getManyToMany() != null) {
-            addManyToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header, records, dataStore);
+            addManyToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
         }
@@ -87,35 +86,49 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         }
     }
 
-    private void addManyToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId>  internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator<DataStoreId, FieldId> formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore<FieldId> dataStore) {
+    private void addManyToManyItems(String foreignKeyValue,
+                                    InternalFormElement<DataStoreId, FieldId>  internalFormElement,
+                                    TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                    FormCreator<DataStoreId, FieldId> formCreator,
+                                    VerticalLayout list,
+                                    HorizontalLayout header,
+                                    List<GenericEntity> records,
+                                    TurboCrudDataStore<FieldId> dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<String> children = internalFormElement.getConfiguration().getData().getChildren();
             children.forEach(s -> item.addContent(new Text(record.getString(s))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
                 dataStore.deleteRecordById(DataStoreUtil.getId(record));
-                loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header);
+                loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
             });
             list.add(item);
         }
     }
 
-    private void addOneToManyItems(String foreignKeyValue, InternalFormElement<DataStoreId, FieldId> internalFormElement, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, FormCreator<DataStoreId, FieldId> formCreator, VerticalLayout list, HorizontalLayout header, List<GenericEntity> records, TurboCrudDataStore<FieldId> dataStore) {
+    private void addOneToManyItems(String foreignKeyValue,
+                                   InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                                   TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                   FormCreator<DataStoreId, FieldId> formCreator,
+                                   VerticalLayout list,
+                                   HorizontalLayout header,
+                                   List<GenericEntity> records,
+                                   TurboCrudDataStore<FieldId> dataStore) {
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, dataStoreFactoryRegistry, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
-                Object o = record.get(resolver.getKeyForFieldId(child.getField()));
+                Object o = record.get(fieldNameResolver.getKeyForFieldId(child.getField()));
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     dataStore.deleteRecordById(DataStoreUtil.getId(record));
-                    loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header);
+                    loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);
             }
@@ -123,7 +136,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         }
     }
 
-    private List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData, TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
+    private List<GenericEntity> getDataByConfig(String foreignKeyValue, TurboCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData) {
         if (collectionData.getOneToMany() != null) {
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
@@ -135,7 +148,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
             ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
             TurboCrudDataStore<FieldId> associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
             List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
-            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(resolver.getKeyForFieldId(manyToMany.getAssociativeTargetIdField()))).map(Object::toString).toList();
+            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(fieldNameResolver.getKeyForFieldId(manyToMany.getAssociativeTargetIdField()))).map(Object::toString).toList();
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnIn(manyToMany.getDataStoreField(), associativeRecordIds, 0, Integer.MAX_VALUE);
         } else {
@@ -146,7 +159,6 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
     private void openDialog(String entityId,
                             String foreignKey,
                             InternalFormElement<DataStoreId, FieldId> internalFormElement,
-                            TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                             FormCreator<DataStoreId, FieldId> formCreator,
                             VerticalLayout list,
@@ -160,7 +172,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, dataStoreFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }

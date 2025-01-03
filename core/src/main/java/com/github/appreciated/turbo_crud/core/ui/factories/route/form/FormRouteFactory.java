@@ -41,19 +41,19 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final FormCreator<DataStoreId, FieldId> formCreator;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public FormRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             TurboCrudConfigService<DataStoreId, FieldId> configService,
                             FormCreator<DataStoreId, FieldId> formCreator,
                             TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
-                            TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                            TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
         if (!creationMode) {
             binder.bind(
                     titleComponent,
-                    entity1 -> prefix + entity1.getString(resolver.getKeyForFieldId(formRouteConfiguration.getTitleField())),
+                    entity1 -> prefix + entity1.getString(fieldNameResolver.getKeyForFieldId(formRouteConfiguration.getTitleField())),
                     (entity1, string) -> {
                     }
             );

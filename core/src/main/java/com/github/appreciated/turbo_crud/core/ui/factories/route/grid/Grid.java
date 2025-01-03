@@ -32,7 +32,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                     TurboCrudFileProviderRegistry fileProviderRegistry,
                     TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-        RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
+        RouteHeader routeHeader = new RouteHeader(route);
         DataStoreId dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,

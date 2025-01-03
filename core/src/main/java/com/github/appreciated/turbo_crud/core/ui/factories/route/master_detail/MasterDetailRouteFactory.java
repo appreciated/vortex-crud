@@ -19,28 +19,28 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId> implements TurboCrud
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
-    private final TurboCrudDataStoreFieldNameResolver<FieldId> resolver;
+    private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
     public MasterDetailRouteFactory(TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                     TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                                     TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                     TurboCrudConfigService<DataStoreId, FieldId> configService,
                                     TurboCrudFileProviderRegistry fileProviderRegistry,
-                                    TurboCrudDataStoreFieldNameResolver<FieldId> resolver
+                                    TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.routeFactory = routeFactory;
         this.configService = configService;
         this.fileProviderRegistry = fileProviderRegistry;
-        this.resolver = resolver;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        return new MasterDetail<>(currentPathIndex, routeResolver, dataStoreFactoryRegistry, itemFactoryRegistry, routeFactory, configService, fileProviderRegistry, resolver);
+        return new MasterDetail<>(currentPathIndex, routeResolver, dataStoreFactoryRegistry, itemFactoryRegistry, routeFactory, configService, fileProviderRegistry, fieldNameResolver);
     }
 
     @Override

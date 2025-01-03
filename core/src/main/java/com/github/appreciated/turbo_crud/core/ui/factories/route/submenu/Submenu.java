@@ -47,7 +47,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         masterLayout.setPadding(true);
         masterLayout.setSizeFull();
 
-        HorizontalLayout header = new RouteHeader<>(route);
+        HorizontalLayout header = new RouteHeader(route);
         masterLayout.add(header);
 
         routeListLayout.setPadding(false);

@@ -31,7 +31,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                     TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteHeader<DataStoreId, FieldId> routeHeader = new RouteHeader<>(route);
+        RouteHeader routeHeader = new RouteHeader(route);
         DataStoreId dataStore = route.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,

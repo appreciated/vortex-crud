@@ -17,10 +17,12 @@ public class DefaultItemFactoryRegistry<FieldId> implements TurboCrudItemFactory
     private final HashMap<Class<? extends TurboCrudItemFactory>, TurboCrudItemFactory<FieldId>> factories = new HashMap<>();
 
     public DefaultItemFactoryRegistry() {
-        factories.put(CardFactory.class, new CardFactory<>());
+        Class<CardFactory> cardFactoryClass = CardFactory.class;
+        factories.put(cardFactoryClass, new CardFactory<>());
     }
 
-    public TurboCrudItemFactory<FieldId> getFactory(Class<? extends TurboCrudItemFactory> factory) {
+    @Override
+    public TurboCrudItemFactory<FieldId> getFactory(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 

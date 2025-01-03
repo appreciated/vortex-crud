@@ -9,7 +9,7 @@ import java.util.List;
 @GenerateBuilder
 public class RouteConfiguration<DataStoreId, FieldId> {
 
-    private Class<? extends TurboCrudItemFactory> factory;
+    private Class<? extends TurboCrudItemFactory<FieldId>> factory;
 
     private FieldId titleField;
 
@@ -27,15 +27,15 @@ public class RouteConfiguration<DataStoreId, FieldId> {
 
     private List<InternalFormElement<DataStoreId, FieldId>> children;
 
-    public RouteConfiguration(Class<? extends TurboCrudItemFactory> factory) {
+    public RouteConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         this.factory = factory;
     }
 
-    public Class<? extends TurboCrudItemFactory> getFactory() {
+    public Class<? extends TurboCrudItemFactory<FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends TurboCrudItemFactory> factory) {
+    public void setFactory(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         this.factory = factory;
     }
 

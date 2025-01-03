@@ -8,9 +8,9 @@ import com.vaadin.flow.component.Component;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface TurboCrudLoginFactory {
+public interface TurboCrudLoginFactory<DataStoreId, FieldId> {
     Component getLoginView(
             Integer currentPathIndex,
-            TurboCrudPathToRouteResolver routeResolver
+            TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver
     );
 }

@@ -20,6 +20,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Turb
 
     @Override
     public void addColumn(Grid<GenericEntity> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField) {
+        // TODO Check if cast can be removed, removal causes compile issues
         if (((Class<? extends TurboCrudFieldFactory>)dataStoreField.getFactory()) == ImageFieldFactory.class) {
             if (dataStoreField.getConfiguration() == null) {
                 throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");
