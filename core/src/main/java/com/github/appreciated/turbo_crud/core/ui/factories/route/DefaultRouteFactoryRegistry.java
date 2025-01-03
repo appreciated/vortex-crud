@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route;
 
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
@@ -59,8 +59,8 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements TurboC
     }
 
     @Override
-    public boolean isContainerRoute(Route<DataStoreId, FieldId> currentRoute) {
-        return factories.get(currentRoute.getFactory()).isContainerRoute();
+    public boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId> currentRouteRenderer) {
+        return factories.get(currentRouteRenderer.getFactory()).isContainerRoute();
     }
 }
 

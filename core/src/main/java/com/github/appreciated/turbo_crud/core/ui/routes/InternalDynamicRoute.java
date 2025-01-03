@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.routes;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DefaultRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
@@ -18,12 +18,12 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
-public class DynamicRoute<DataStoreId, FieldId> extends Div implements BeforeEnterObserver {
+public class InternalDynamicRoute<DataStoreId, FieldId> extends Div implements BeforeEnterObserver {
 
     private final TurboCrudConfigService<DataStoreId, FieldId> configService;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
 
-    public DynamicRoute(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
+    public InternalDynamicRoute(TurboCrudConfigService<DataStoreId, FieldId> configService, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
         setSizeFull();
@@ -36,10 +36,10 @@ public class DynamicRoute<DataStoreId, FieldId> extends Div implements BeforeEnt
             path = "/" + path;
         }
         removeAll();
-        TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathRoutes = new TurboCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRoutes());
-        Route<DataStoreId, FieldId> currentRoute = pathRoutes.getCurrentRoute();
+        TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathRoutes = new TurboCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRouteRenderers());
+        RouteRenderer<DataStoreId, FieldId> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
-        Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
+        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }

@@ -1,9 +1,9 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.MultiFormConfiguration;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
-import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.MultiFormRendererConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
@@ -35,13 +35,13 @@ public class MultiFormRouteFactory<DataStoreId, FieldId> implements TurboCrudRou
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormConfiguration<DataStoreId, FieldId> formConfiguration = (MultiFormConfiguration<DataStoreId, FieldId>) route.getConfiguration();
+        MultiFormRendererConfiguration<DataStoreId, FieldId> formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId>) routeRenderer.getConfiguration();
         Div div = new Div();
-        for (RouteConfiguration<DataStoreId, FieldId> child : formConfiguration.getForms()) {
+        for (RouteRendererConfiguration<DataStoreId, FieldId> child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
-            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), route, child));
+            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), routeRenderer, child));
         }
         return div;
     }

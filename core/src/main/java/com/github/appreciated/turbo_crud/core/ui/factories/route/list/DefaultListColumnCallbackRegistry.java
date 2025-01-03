@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId> implements 
     }
 
     @Override
-    public TurboCrudListColumnCallback<DataStoreId, FieldId> getCallback(Route<DataStoreId, FieldId> config) {
+    public TurboCrudListColumnCallback<DataStoreId, FieldId> getCallback(RouteRenderer<DataStoreId, FieldId> config) {
         return callbacks.get("default");
     }
 

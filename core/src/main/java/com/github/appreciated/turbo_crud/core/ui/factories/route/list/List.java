@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
@@ -30,18 +30,18 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                     TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                     TurboCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteHeader routeHeader = new RouteHeader(route);
-        DataStoreId dataStore = route.getDataStore();
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteHeader routeHeader = new RouteHeader(routeRenderer);
+        DataStoreId dataStore = routeRenderer.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, route, dataStore, formCreator, routeFactoryRegistry),
+                event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStore, formCreator, routeFactoryRegistry),
                 null,
                 null,
                 routeHeader);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, route, dataStoreFactoryRegistry, configService, columnCallbackRegistry, resolver);
+        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, resolver);
         add(headerBar, textField, entityGrid);
         setSizeFull();
         setPadding(true);
@@ -57,12 +57,12 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
         }
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,
                 null,
-                route.getChild(),
+                routeRenderer.getChild(),
                 null,
                 dataStore,
                 routeFactory,

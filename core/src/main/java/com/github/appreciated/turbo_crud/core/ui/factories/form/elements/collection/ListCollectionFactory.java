@@ -40,7 +40,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
 
     @Override
     public Component createCollection(String foreignKey,
-                                      Route<DataStoreId, FieldId> route,
+                                      RouteRenderer<DataStoreId, FieldId> routeRenderer,
                                       InternalFormElement<DataStoreId, FieldId> factoryConfig,
                                       TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                       FormCreator<DataStoreId, FieldId> formCreator) {
@@ -120,7 +120,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements TurboCrudCol
         for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            RouteConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
+            RouteRendererConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
                 Object o = record.get(fieldNameResolver.getKeyForFieldId(child.getField()));
                 item.addContent(new Text(o.toString()));

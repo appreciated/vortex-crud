@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
@@ -47,10 +47,10 @@ public class GridRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
                                  TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
 
-        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new Grid<>(routeResolver,
-                route,
+                routeRenderer,
                 dataStoreFactoryRegistry,
                 formCreator,
                 dialogFactoryRegistry,

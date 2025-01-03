@@ -1,14 +1,15 @@
 package com.github.appreciated.turbo_crud.example.jooq;
 
-import com.github.appreciated.turbo_crud.core.config.model.GridOrListConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.GridOrListRendererConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.routes.TurboCrudRoute;
 import com.github.appreciated.turbo_crud.jooq.service.JooqFormElement;
-import com.github.appreciated.turbo_crud.jooq.service.JooqRoute;
-import com.github.appreciated.turbo_crud.jooq.service.JooqRouteConfiguration;
+import com.github.appreciated.turbo_crud.jooq.service.JooqRouteRenderer;
+import com.github.appreciated.turbo_crud.jooq.service.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -26,20 +27,20 @@ public class ExampleJooqTurboCrudRoute extends TurboCrudRoute<Table<?>, TableFie
     }
 
     @Override
-    protected com.github.appreciated.turbo_crud.core.config.model.Route<Table<?>, TableField<?, ?>> getConfiguration() {
-        return JooqRoute.of(GridRouteFactory.class)
+    protected RouteRenderer<Table<?>, TableField<?, ?>> getConfiguration() {
+        return JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDataStore(PROJECTS)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withDescriptionField(PROJECTS.DESCRIPTION)
                         .build())
                 .withRoles(List.of("manager", "admin"))
-                .withChild(JooqRoute.of(FormRouteFactory.class)
+                .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
                         .withDataStore(PROJECTS)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                        .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                 .withTitleField(PROJECTS.NAME)
                                 .withChildren(
                                         new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),

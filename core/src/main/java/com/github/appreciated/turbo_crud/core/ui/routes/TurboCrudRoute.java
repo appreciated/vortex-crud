@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.routes;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -33,7 +33,7 @@ public abstract class TurboCrudRoute<DataStoreId, FieldId> extends Div implement
      *
      * @return a map of route configurations.
      */
-    protected abstract Route<DataStoreId, FieldId> getConfiguration();
+    protected abstract RouteRenderer<DataStoreId, FieldId> getConfiguration();
 
     protected String getUrl() {
         return RouteConfiguration.forSessionScope().getUrl(getClass());
@@ -57,10 +57,10 @@ public abstract class TurboCrudRoute<DataStoreId, FieldId> extends Div implement
                 Map.of(routePattern,getConfiguration())
         );
 
-        Route<DataStoreId, FieldId> currentRoute = pathRoutes.getCurrentRoute();
+        RouteRenderer<DataStoreId, FieldId> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
 
-        Component component = routeFactoryRegistry.getFactory(currentRoute.getFactory())
+        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }

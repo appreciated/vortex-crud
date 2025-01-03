@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.kanban;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.Kanban;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFieldNameResolver;
 import com.github.appreciated.turbo_crud.core.file_provider.TurboCrudFileProviderRegistry;
@@ -50,14 +50,14 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements TurboCrudRoute
     public Component renderRoute(Integer currentPathIndex,
                                  TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView<>(route.getDataStore(),
-                route,
-                dataStoreFactoryRegistry.getFactory(route.getDataStore()),
+        return new KanbanView<>(routeRenderer.getDataStore(),
+                routeRenderer,
+                dataStoreFactoryRegistry.getFactory(routeRenderer.getDataStore()),
                 routeFactory,
                 turboCrudItemFactory,
-                (Kanban<DataStoreId, FieldId>) route.getConfiguration(),
+                (Kanban<DataStoreId, FieldId>) routeRenderer.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

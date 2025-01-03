@@ -30,7 +30,7 @@ public class Field<DataStoreId, FieldId> {
 
     private List<String> readOnlyForRoles;
 
-    RouteConfiguration<DataStoreId, FieldId> configuration;
+    RouteRendererConfiguration<DataStoreId, FieldId> configuration;
 
     public Field(Class<? extends TurboCrudFieldFactory<DataStoreId, FieldId>> factory) {
         if (factory == null) {
@@ -147,11 +147,11 @@ public class Field<DataStoreId, FieldId> {
         this.children = children;
     }
 
-    public RouteConfiguration<DataStoreId, FieldId> getConfiguration() {
+    public RouteRendererConfiguration<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
+    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
@@ -217,7 +217,7 @@ public class Field<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
+        public Builder<DataStoreId, FieldId> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }

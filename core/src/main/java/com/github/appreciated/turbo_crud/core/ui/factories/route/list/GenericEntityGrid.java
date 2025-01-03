@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * A custom {@link Grid} component for displaying {@link GenericEntity} objects with lazy loading. This grid is
  * configured with a data provider that retrieves and counts records dynamically based on the specified table in the
- * {@link Route}. It also supports click events for rows to navigate to a detailed view of each entity.
+ * {@link RouteRenderer}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
 public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity> {
@@ -25,7 +25,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
     private final TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
 
     public GenericEntityGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                                 Route<DataStoreId, FieldId> route,
+                                 RouteRenderer<DataStoreId, FieldId> routeRenderer,
                                  TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  TurboCrudConfigService<DataStoreId, FieldId> configService,
                                  TurboCrudListColumnCallbackRegistry<DataStoreId, FieldId> listColumnFactory,
@@ -33,12 +33,12 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
     ) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        DataStoreId table = route.getDataStore();
+        DataStoreId table = routeRenderer.getDataStore();
         TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(route.getDataStore());
-        RouteConfiguration<DataStoreId, FieldId> gridOrListConfiguration = route.getConfiguration();
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStore());
+        RouteRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration = routeRenderer.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
@@ -52,7 +52,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
             if (dataStoreField == null) {
                 throw new IllegalStateException("Field '" + resolver.getKeyForFieldId(fieldName) + "' not found in the config unter table '" + table + "'");
             }
-            listColumnFactory.getCallback(route).addColumn(this, field, table, resolver.getKeyForFieldId(fieldName), dataStoreField);
+            listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, resolver.getKeyForFieldId(fieldName), dataStoreField);
         }
 
         setDataProvider(dataProvider);

@@ -22,6 +22,7 @@ import org.jooq.Table;
 import org.jooq.TableField;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +38,9 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
     @Override
     public Application<Table<?>, TableField<?, ?>> get() {
 
-        Route<Table<?>, TableField<?, ?>> taskForm = JooqRoute.of(FormRouteFactory.class)
+        RouteRenderer<Table<?>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
-                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
                         .withChildren(
                                 new JooqFormElement(TASKS.TITLE, "field", "route.tasks.labels.title"),
@@ -50,13 +51,13 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>,TableField<?, ?>>of(TASK_COMMENTS)
+                                                .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
                                                         .withOneToMany(new OneToMany<>(TASK_COMMENTS.TASK_ID))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                                .withChild(JooqRoute.of(FormRouteFactory.class)
-                                                        .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                                                .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
+                                                        .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                                                 .withChildren(
                                                                         new JooqFormElement(TASK_COMMENTS.COMMENT_TEXT, "field", "route.tasks.labels.comment")
                                                                 )
@@ -67,7 +68,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 JooqFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>,TableField<?, ?>>of(TASKS)
+                                                .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
                                                         .withManyToMany(new ManyToMany<>(TASK_HAS_TASK,
                                                                 TASK_HAS_TASK.ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
@@ -82,10 +83,10 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .build())
                 .build();
 
-        Route<Table<?>, TableField<?, ?>> projectForm = JooqRoute.of(FormRouteFactory.class)
+        RouteRenderer<Table<?>, TableField<?, ?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(PROJECTS)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withChildren(
                                 new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
@@ -96,10 +97,10 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                         .build())
                 .build();
 
-        Route<Table<?>, TableField<?, ?>> imageForm = JooqRoute.of(FormRouteFactory.class)
+        RouteRenderer<Table<?>, TableField<?, ?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(IMAGES)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withChildren(
                                 new JooqFormElement(IMAGES.TITLE, "field", "route.images.labels.title"),
@@ -149,95 +150,95 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldConfiguration<>(FileProvider.class))
+                                        .withConfiguration(new ImageFieldRendererConfiguration<>(FileProvider.class))
                                         .build()))
                         .build());
 
-        Map<String, Route<Table<?>, TableField<?, ?>>> routes = Map.of(
-                "projects-cards", JooqRoute.of(GridRouteFactory.class)
-                        .withDefaultRoute(true)
-                        .withDataStore(PROJECTS)
-                        .withIconFactory(FACTORY::create)
-                        .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withTitleField(PROJECTS.NAME)
-                                .withDescriptionField(PROJECTS.DESCRIPTION)
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(projectForm)
-                        .build(),
-                "projects-list", JooqRoute.of(ListRouteFactory.class)
-                        .withDataStore(PROJECTS)
-                        .withIconFactory(FACTORY::create)
-                        .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withInlineEdit(true)
-                                .withFilterField(PROJECTS.NAME)
-                                .withChildren(
-                                        new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
-                                        new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
-                                        new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
-                                        new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
-                                )
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(projectForm)
-                        .build(),
-                "tasks", JooqRoute.of(SubmenuRouteFactory.class)
-                        .withIconFactory(VaadinIcon.TASKS::create)
-                        .withDataStore(TASKS)
-                        .withTitle("route.tasks.title")
-                        .withChildrenMap(Map.of("open",
-                                JooqRoute.of(KanbanDetailFactory.class)
-                                        .withIconFactory(VaadinIcon.TASKS::create)
-                                        .withDataStore(TASKS)
-                                        .withTitle("route.open-tasks.title")
-                                        .withConfiguration(Kanban.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                                .withTitleField(TASKS.TITLE)
-                                                .withDescriptionField(TASKS.DESCRIPTION)
-                                                .withColumnField(TASKS.STATUS)
-                                                .build())
-                                        .withChild(taskForm)
-                                        .build(),
-                                "done",
-                                JooqRoute.of(MasterDetailRouteFactory.class)
-                                        .withIconFactory(CHECK_CIRCLE::create)
-                                        .withDataStore(TASKS)
-                                        .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                                .withTitleField(TASKS.TITLE)
-                                                .withDescriptionField(TASKS.DESCRIPTION)
-                                                .build())
-                                        .withChild(taskForm)
-                                        .build()))
-                        .build(),
-                "images-grid", JooqRoute.of(GridRouteFactory.class)
-                        .withDataStore(IMAGES)
-                        .withIconFactory(CAMERA::create)
-                        .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withTitleField(IMAGES.TITLE)
-                                .withImageField(IMAGES.URL)
-                                .withImageFactory(FileProvider.class)
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(imageForm)
-                        .build(),
-                "images-list", JooqRoute.of(ListRouteFactory.class)
-                        .withDataStore(IMAGES)
-                        .withIconFactory(CAMERA::create)
-                        .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withInlineEdit(true)
-                                .withFilterField(IMAGES.TITLE)
-                                .withChildren(
-                                        new JooqFormElement(IMAGES.URL, "field", "route.projects.labels.description"),
-                                        new JooqFormElement(IMAGES.TITLE, "field", "route.projects.labels.name")
-                                )
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(imageForm)
-                        .build());
+        LinkedHashMap<String, RouteRenderer<Table<?>, TableField<?, ?>>> routes = new LinkedHashMap<>();
+        routes.put("projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
+                .withDefaultRoute(true)
+                .withDataStore(PROJECTS)
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                        .withTitleField(PROJECTS.NAME)
+                        .withDescriptionField(PROJECTS.DESCRIPTION)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build());
+        routes.put("projects-list", JooqRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore(PROJECTS)
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-list")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField(PROJECTS.NAME)
+                        .withChildren(
+                                new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
+                                new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
+                                new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
+                                new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build());
+        routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+                .withIconFactory(VaadinIcon.TASKS::create)
+                .withDataStore(TASKS)
+                .withTitle("route.tasks.title")
+                .withChildrenMap(Map.of("open",
+                        JooqRouteRenderer.of(KanbanDetailFactory.class)
+                                .withIconFactory(VaadinIcon.TASKS::create)
+                                .withDataStore(TASKS)
+                                .withTitle("route.open-tasks.title")
+                                .withConfiguration(Kanban.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                                        .withTitleField(TASKS.TITLE)
+                                        .withDescriptionField(TASKS.DESCRIPTION)
+                                        .withColumnField(TASKS.STATUS)
+                                        .build())
+                                .withChild(taskForm)
+                                .build(),
+                        "done",
+                        JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+                                .withIconFactory(CHECK_CIRCLE::create)
+                                .withDataStore(TASKS)
+                                .withTitle("route.done-tasks.title")
+                                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                                        .withTitleField(TASKS.TITLE)
+                                        .withDescriptionField(TASKS.DESCRIPTION)
+                                        .build())
+                                .withChild(taskForm)
+                                .build()))
+                .build());
+        routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore(IMAGES)
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-cards")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                        .withTitleField(IMAGES.TITLE)
+                        .withImageField(IMAGES.URL)
+                        .withImageFactory(FileProvider.class)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build());
+        routes.put("images-list", JooqRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore(IMAGES)
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-list")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField(IMAGES.TITLE)
+                        .withChildren(
+                                new JooqFormElement(IMAGES.URL, "field", "route.projects.labels.description"),
+                                new JooqFormElement(IMAGES.TITLE, "field", "route.projects.labels.name")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build());
 
         return JooqApplication.of()
                 .withName("application.name")

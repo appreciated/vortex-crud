@@ -2,7 +2,7 @@ package com.github.appreciated.turbo_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.core.config.model.CollectionData;
 import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
@@ -39,7 +39,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
                              @Nullable FieldId foreignKeyField,
-                             Route<DataStoreId, FieldId> formRoute,
+                             RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
                              CollectionData<DataStoreId, FieldId> config,
                              DataStoreId dataStore,
                              TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
@@ -68,7 +68,7 @@ public class FormDialogFactory <DataStoreId, FieldId> implements TurboCrudDialog
 
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
-        formCreator.bindAndAddToLayout(dataStore, formRoute, formRoute.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(dataStore, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

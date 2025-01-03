@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route;
 
 
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 
 /**
  * Interface for factories that create view containers for different route configurations.
@@ -13,5 +13,5 @@ public interface TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> {
 
     void addFactory(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> key, TurboCrudRouteFactory<DataStoreId, FieldId> factory);
 
-    boolean isContainerRoute(Route<DataStoreId, FieldId> currentRoute);
+    boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId> currentRouteRenderer);
 }

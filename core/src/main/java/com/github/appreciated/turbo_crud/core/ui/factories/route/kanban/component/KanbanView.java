@@ -38,7 +38,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(DataStoreId dataStoreIdentifier,
-                          Route<DataStoreId, FieldId> route,
+                          RouteRenderer<DataStoreId, FieldId> routeRenderer,
                           TurboCrudDataStore<FieldId> dataStore,
                           TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                           TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
@@ -66,11 +66,11 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
-                Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
+                Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                         DataStoreUtil.getId(entity),
                         null,
                         null,
-                        route.getChild(),
+                        routeRenderer.getChild(),
                         null,
                         dataStoreIdentifier,
                         routeFactory,
@@ -107,11 +107,11 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         }
         kanbanBoard.setSizeFull();
 
-        RouteHeader routeHeader = new RouteHeader(route);
+        RouteHeader routeHeader = new RouteHeader(routeRenderer);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, route, dataStoreIdentifier, formCreator, routeFactory),
+                event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStoreIdentifier, formCreator, routeFactory),
                 null,
                 null,
                 routeHeader);
@@ -168,13 +168,13 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         return wrapper;
     }
 
-    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, Route<DataStoreId, FieldId> route, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(TurboCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         GenericEntity entity = new GenericEntity();
-        Dialog dialog = dialogFactoryRegistry.getFactory(route.getChild().getFactory()).create(
+        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,
                 null,
-                route.getChild(),
+                routeRenderer.getChild(),
                 null,
                 dataStore,
                 routeFactory,

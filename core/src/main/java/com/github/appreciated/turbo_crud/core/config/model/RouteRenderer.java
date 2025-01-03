@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateBuilder
-public class Route<DataStoreId, FieldId> {
+public class RouteRenderer<DataStoreId, FieldId> {
 
     private DataStoreId dataStore;
 
@@ -22,13 +22,13 @@ public class Route<DataStoreId, FieldId> {
 
     private boolean hideInMenu;
 
-    private RouteConfiguration<DataStoreId, FieldId> configuration;
+    private RouteRendererConfiguration<DataStoreId, FieldId> configuration;
 
-    private Map<String, Route<DataStoreId, FieldId>> childrenMap = new HashMap<>();
+    private Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap = new HashMap<>();
 
     private SerializableSupplier<Component> iconFactory;
 
-    public Route(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory) {
+    public RouteRenderer(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
@@ -82,27 +82,27 @@ public class Route<DataStoreId, FieldId> {
         this.hideInMenu = hideInMenu;
     }
 
-    public RouteConfiguration<DataStoreId, FieldId> getConfiguration() {
+    public RouteRendererConfiguration<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
+    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
-    public Map<String, Route<DataStoreId, FieldId>> getChildrenMap() {
+    public Map<String, RouteRenderer<DataStoreId, FieldId>> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildrenMap(Map<String, Route<DataStoreId, FieldId>> childrenMap) {
+    public void setChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap) {
         this.childrenMap = childrenMap;
     }
 
-    public Route<DataStoreId, FieldId> getChild() {
+    public RouteRenderer<DataStoreId, FieldId> getChild() {
         return childrenMap.entrySet().stream().findFirst().orElseThrow().getValue();
     }
 
-    public void setChild(Route<DataStoreId, FieldId> child) {
+    public void setChild(RouteRenderer<DataStoreId, FieldId> child) {
         if (!childrenMap.isEmpty()) {
             throw new IllegalArgumentException("Route already has a child. Only one child is allowed when using setChild()");
         }
@@ -119,14 +119,14 @@ public class Route<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private final Route<DataStoreId, FieldId> product;
+        private final RouteRenderer<DataStoreId, FieldId> product;
 
-        public Builder(Route<DataStoreId, FieldId> product) {
+        public Builder(RouteRenderer<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
         public Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudRouteFactory<DataStoreId, FieldId>> factory) {
-            return new Builder<>(new Route<>(factory));
+            return new Builder<>(new RouteRenderer<>(factory));
         }
 
         public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {
@@ -154,17 +154,17 @@ public class Route<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withConfiguration(RouteConfiguration<DataStoreId, FieldId> configuration) {
+        public Builder<DataStoreId, FieldId> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildrenMap(Map<String, Route<DataStoreId, FieldId>> childrenMap) {
+        public Builder<DataStoreId, FieldId> withChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap) {
             product.childrenMap = childrenMap;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChild(Route<DataStoreId, FieldId> child) {
+        public Builder<DataStoreId, FieldId> withChild(RouteRenderer<DataStoreId, FieldId> child) {
             product.setChild(child);
             return this;
         }
@@ -179,7 +179,7 @@ public class Route<DataStoreId, FieldId> {
             return this;
         }
 
-        public Route<DataStoreId, FieldId> build() {
+        public RouteRenderer<DataStoreId, FieldId> build() {
             return product;
         }
     }

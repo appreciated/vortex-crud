@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.GridOrListConfiguration;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.GridOrListRendererConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
@@ -35,7 +35,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
 
 public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
 
-    private final GridOrListConfiguration<DataStoreId, FieldId>  gridOrListConfiguration;
+    private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private TurboCrudPathToRouteResolver<DataStoreId, FieldId>  pathVariables;
     private final TurboCrudDataStore<FieldId>  dataStore;
     private final TurboCrudItemFactory<FieldId>  itemFactory;
@@ -45,7 +45,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
     private final TurboCrudConfigService<DataStoreId, FieldId>  configService;
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final Route<DataStoreId, FieldId>  route;
+    private final RouteRenderer<DataStoreId, FieldId> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<GenericEntity, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
@@ -65,20 +65,20 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
 
-        route = routeResolver.getRouteForIndex(currentPathIndex);
+        routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = dataStoreFactoryRegistry.getFactory(route.getDataStore());
-        this.gridOrListConfiguration = (GridOrListConfiguration<DataStoreId, FieldId> ) route.getConfiguration();
+        this.dataStore = dataStoreFactoryRegistry.getFactory(routeRenderer.getDataStore());
+        this.gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) routeRenderer.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
-        assert route.getChild() != null;
+        assert routeRenderer.getChild() != null;
 
         detailContainer = new VerticalLayout();
         detailContainer.setPadding(false);
         detailContainer.setHeightFull();
         detailContainer.setWidth("unset");
 
-        HorizontalLayout header = new RouteHeader(route);
+        HorizontalLayout header = new RouteHeader(routeRenderer);
 
         Button addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addClickListener(event -> onAdd());
@@ -125,7 +125,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
     private void setDetail(TurboCrudPathToRouteResolver<DataStoreId, FieldId>  routeResolver, boolean creation) {
         detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex)) {
-            Route<DataStoreId, FieldId>  child = route.getChild();
+            RouteRenderer<DataStoreId, FieldId> child = routeRenderer.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
                     currentPathIndex + 1,
                     routeResolver,
@@ -142,7 +142,7 @@ public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
     private void onItemClick(GenericEntity entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
-            pathVariables = new TurboCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
+            pathVariables = new TurboCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers());
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, pathForEntity);
         });

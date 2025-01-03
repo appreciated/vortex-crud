@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.core.config;
 
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.TurboCrudRouteFactory;
@@ -16,11 +16,11 @@ public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactoryRegistry;
     private final String path;
     private String[] sections;
-    private final Map<Integer, Route<DataStoreId,FieldId>> pathRoutes;
-    private final Map<String, Route<DataStoreId,FieldId>> routesConfig;
+    private final Map<Integer, RouteRenderer<DataStoreId,FieldId>> pathRoutes;
+    private final Map<String, RouteRenderer<DataStoreId,FieldId>> routesConfig;
 
     // Konstruktor
-    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactoryRegistry, String path, Map<String, Route<DataStoreId,FieldId>> routesConfig) {
+    public TurboCrudPathToRouteResolver(TurboCrudRouteFactoryRegistry<DataStoreId, FieldId>  routeFactoryRegistry, String path, Map<String, RouteRenderer<DataStoreId,FieldId>> routesConfig) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.pathRoutes = new HashMap<>();
@@ -37,7 +37,7 @@ public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
         traverseRoutes(0, routesConfig);
     }
 
-    private void traverseRoutes(int sectionIndex, Map<String, Route<DataStoreId,FieldId>> currentRoutes) {
+    private void traverseRoutes(int sectionIndex, Map<String, RouteRenderer<DataStoreId,FieldId>> currentRoutes) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
@@ -45,38 +45,38 @@ public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
         String section = sections[sectionIndex];
 
         // Check if the current route exists
-        Route<DataStoreId,FieldId> currentRoute = currentRoutes.get(section);
+        RouteRenderer<DataStoreId,FieldId> currentRouteRenderer = currentRoutes.get(section);
 
-        if (currentRoute == null && currentRoutes.containsKey(null)) {
-            pathRoutes.put(sectionIndex, currentRoute);
-            currentRoute = currentRoutes.get(null);
-        } else if (routeFactoryRegistry.isContainerRoute(currentRoute)) {
-            pathRoutes.put(sectionIndex, currentRoute);
+        if (currentRouteRenderer == null && currentRoutes.containsKey(null)) {
+            pathRoutes.put(sectionIndex, currentRouteRenderer);
+            currentRouteRenderer = currentRoutes.get(null);
+        } else if (routeFactoryRegistry.isContainerRoute(currentRouteRenderer)) {
+            pathRoutes.put(sectionIndex, currentRouteRenderer);
         }
 
-        if (currentRoute == null) {
+        if (currentRouteRenderer == null) {
             throw new IllegalStateException("Current route is null");
         }
 
-        pathRoutes.put(sectionIndex, currentRoute);
+        pathRoutes.put(sectionIndex, currentRouteRenderer);
 
         // If this route has children, recurse into them
-        if (currentRoute.getChildrenMap() != null && !currentRoute.getChildrenMap().isEmpty()) {
-            traverseRoutes(sectionIndex + 1, currentRoute.getChildrenMap());
+        if (currentRouteRenderer.getChildrenMap() != null && !currentRouteRenderer.getChildrenMap().isEmpty()) {
+            traverseRoutes(sectionIndex + 1, currentRouteRenderer.getChildrenMap());
         } else {
             // If no children, continue to the next segment
             traverseRoutes(sectionIndex + 1, currentRoutes);
         }
     }
 
-    public Map<Integer, Route<DataStoreId,FieldId>> getPathRoutes() {
+    public Map<Integer, RouteRenderer<DataStoreId,FieldId>> getPathRoutes() {
         return pathRoutes;
     }
 
     /**
      * This returns the to be rendered route.
      */
-    public Route<DataStoreId,FieldId> getCurrentRoute() {
+    public RouteRenderer<DataStoreId,FieldId> getCurrentRoute() {
         return pathRoutes.get(getCurrentIndex());
     }
 
@@ -104,7 +104,7 @@ public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
         return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
     }
 
-    public Route<DataStoreId,FieldId> getRouteForIndex(Integer currentPathIndex) {
+    public RouteRenderer<DataStoreId,FieldId> getRouteForIndex(Integer currentPathIndex) {
         return pathRoutes.get(currentPathIndex);
     }
 
@@ -115,11 +115,11 @@ public class TurboCrudPathToRouteResolver<DataStoreId, FieldId> {
             Integer currentKey = numbers.get(i);
             Integer nextKey = numbers.get(i + 1);
 
-            Route<DataStoreId,FieldId> currentRoute = pathRoutes.get(currentKey);
-            Route<DataStoreId,FieldId> nextRoute = pathRoutes.get(nextKey);
+            RouteRenderer<DataStoreId,FieldId> currentRouteRenderer = pathRoutes.get(currentKey);
+            RouteRenderer<DataStoreId,FieldId> nextRouteRenderer = pathRoutes.get(nextKey);
 
-            TurboCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRoute.getFactory());
-            TurboCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRoute.getFactory());
+            TurboCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory());
+            TurboCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.getFactory());
 
             if (currentFactory == null) {
                 throw new IllegalStateException("The route does not have a factory set");

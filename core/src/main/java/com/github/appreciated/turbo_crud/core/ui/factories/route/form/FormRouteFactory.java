@@ -2,8 +2,8 @@ package com.github.appreciated.turbo_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
 import com.github.appreciated.turbo_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
-import com.github.appreciated.turbo_crud.core.config.model.RouteConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
@@ -62,26 +62,26 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
             TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        Route<DataStoreId, FieldId> route = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteConfiguration<DataStoreId, FieldId> form = route.getConfiguration();
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRendererConfiguration<DataStoreId, FieldId> form = routeRenderer.getConfiguration();
         assert detailRouteSetting != null;
-        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), route, form);
+        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer, form);
     }
 
-    public VerticalLayout getForm(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, Route<DataStoreId, FieldId> route, RouteConfiguration<DataStoreId, FieldId> formRouteConfiguration) {
+    public VerticalLayout getForm(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, RouteRenderer<DataStoreId, FieldId> routeRenderer, RouteRendererConfiguration<DataStoreId, FieldId> formRouteRendererConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
-        String prefix = !isWrapped ? layout.getTranslation(route.getTitle()) + " / " : "";
+        String prefix = !isWrapped ? layout.getTranslation(routeRenderer.getTitle()) + " / " : "";
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
         if (!creationMode) {
             binder.bind(
                     titleComponent,
-                    entity1 -> prefix + entity1.getString(fieldNameResolver.getKeyForFieldId(formRouteConfiguration.getTitleField())),
+                    entity1 -> prefix + entity1.getString(fieldNameResolver.getKeyForFieldId(formRouteRendererConfiguration.getTitleField())),
                     (entity1, string) -> {
                     }
             );
@@ -89,12 +89,12 @@ public class FormRouteFactory<DataStoreId, FieldId> implements TurboCrudRouteFac
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        DataStoreId table = route.getDataStore();
+        DataStoreId table = routeRenderer.getDataStore();
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         TurboCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);
-        formCreator.bindAndAddToLayout(table, route, formRouteConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
+        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
 
         // Generic Save button

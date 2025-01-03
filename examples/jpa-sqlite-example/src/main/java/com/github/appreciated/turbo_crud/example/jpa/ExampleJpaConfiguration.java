@@ -19,19 +19,20 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.Submenu
 import com.github.appreciated.turbo_crud.jpa.service.*;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<String,String> {
+public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<String, String> {
 
     @Override
     public Application<String, String> get() {
-        Route<String, String> taskForm = JpaRoute.of(FormRouteFactory.class)
+        RouteRenderer<String, String> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore("tasks")
-                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
                                 new JpaFormElement("title", "field", "route.tasks.labels.title"),
@@ -42,13 +43,13 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.<String,String>of("task_comments")
+                                                .withData(CollectionData.Builder.<String, String>of("task_comments")
                                                         .withOneToMany(new OneToMany<>("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                                .withChild(JpaRoute.of(FormRouteFactory.class)
-                                                        .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                                                .withChild(JpaRouteRenderer.of(FormRouteFactory.class)
+                                                        .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
                                                                         new JpaFormElement("comment_text", "field", "route.tasks.labels.comment")
@@ -60,7 +61,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.<String,String>of("tasks")
+                                                .withData(CollectionData.Builder.<String, String>of("tasks")
                                                         .withManyToMany(new ManyToMany<>("task_has_task",
                                                                 "task_id",
                                                                 "related_task_id",
@@ -74,10 +75,10 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         )
                         .build())
                 .build();
-        Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
+        RouteRenderer<String, String> projectForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore("projects")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
                                 new JpaFormElement("name", "field", "route.projects.labels.name"),
@@ -87,10 +88,10 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                         )
                         .build())
                 .build();
-        Route<String, String> imageForm = JpaRoute.of(FormRouteFactory.class)
+        RouteRenderer<String, String> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore("images")
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
                                 new JpaFormElement("title", "field", "route.images.labels.title"),
@@ -141,95 +142,95 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 "url", JpaField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldConfiguration<>(FileProvider.class))
+                                        .withConfiguration(new ImageFieldRendererConfiguration<>(FileProvider.class))
                                         .build()))
                         .build());
 
-        Map<String, Route<String, String>> routes = Map.of(
-                "projects-cards", JpaRoute.of(GridRouteFactory.class)
-                        .withDefaultRoute(true)
-                        .withDataStore("projects")
-                        .withIconFactory(FACTORY::create)
-                        .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                                .withTitleField("name")
-                                .withDescriptionField("description")
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(projectForm)
-                        .build(),
-                "projects-list", JpaRoute.of(ListRouteFactory.class)
-                        .withDataStore("projects")
-                        .withIconFactory(FACTORY::create)
-                        .withTitle("route.projects.title-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                                .withInlineEdit(true)
-                                .withFilterField("name")
-                                .withChildren(
-                                        new JpaFormElement("name", "field", "route.projects.labels.name"),
-                                        new JpaFormElement("description", "field", "route.projects.labels.description"),
-                                        new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
-                                        new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
-                                )
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(projectForm)
-                        .build(),
-                "tasks", JpaRoute.of(SubmenuRouteFactory.class)
-                        .withIconFactory(TASKS::create)
-                        .withDataStore("tasks")
-                        .withTitle("route.tasks.title")
-                        .withChildrenMap(Map.of("open",
-                                JpaRoute.of(KanbanDetailFactory.class)
-                                        .withIconFactory(TASKS::create)
-                                        .withDataStore("tasks")
-                                        .withTitle("route.open-tasks.title")
-                                        .withConfiguration(Kanban.Builder.<String, String>of(CardFactory.class)
-                                                .withTitleField("title")
-                                                .withDescriptionField("description")
-                                                .withColumnField("status")
-                                                .build())
-                                        .withChild(taskForm)
-                                        .build(),
-                                "done",
-                                JpaRoute.of(MasterDetailRouteFactory.class)
-                                        .withIconFactory(CHECK_CIRCLE::create)
-                                        .withDataStore("tasks")
-                                        .withTitle("route.done-tasks.title")
-                                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                                                .withTitleField("title")
-                                                .withDescriptionField("description")
-                                                .build())
-                                        .withChild(taskForm)
-                                        .build()))
-                        .build(),
-                "images-grid", JpaRoute.of(GridRouteFactory.class)
-                        .withDataStore("images")
-                        .withIconFactory(CAMERA::create)
-                        .withTitle("route.images-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                                .withTitleField("title")
-                                .withImageField("url")
-                                .withImageFactory(FileProvider.class)
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(imageForm)
-                        .build(),
-                "images-list", JpaRoute.of(ListRouteFactory.class)
-                        .withDataStore("images")
-                        .withIconFactory(CAMERA::create)
-                        .withTitle("route.images-list")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                                .withInlineEdit(true)
-                                .withFilterField("title")
-                                .withChildren(
-                                        new JpaFormElement("url", "field", "route.projects.labels.description"),
-                                        new JpaFormElement("title", "field", "route.projects.labels.name")
-                                )
-                                .build())
-                        .withRoles(List.of("manager", "admin"))
-                        .withChild(imageForm)
-                        .build());
+        LinkedHashMap<String, RouteRenderer<String, String>> routes = new LinkedHashMap<>();
+        routes.put("projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
+                .withDefaultRoute(true)
+                .withDataStore("projects")
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
+                        .withTitleField("name")
+                        .withDescriptionField("description")
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build());
+        routes.put("projects-list", JpaRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore("projects")
+                .withIconFactory(FACTORY::create)
+                .withTitle("route.projects.title-list")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField("name")
+                        .withChildren(
+                                new JpaFormElement("name", "field", "route.projects.labels.name"),
+                                new JpaFormElement("description", "field", "route.projects.labels.description"),
+                                new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
+                                new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(projectForm)
+                .build());
+        routes.put("tasks", JpaRouteRenderer.of(SubmenuRouteFactory.class)
+                .withIconFactory(TASKS::create)
+                .withDataStore("tasks")
+                .withTitle("route.tasks.title")
+                .withChildrenMap(Map.of("open",
+                        JpaRouteRenderer.of(KanbanDetailFactory.class)
+                                .withIconFactory(TASKS::create)
+                                .withDataStore("tasks")
+                                .withTitle("route.open-tasks.title")
+                                .withConfiguration(Kanban.Builder.<String, String>of(CardFactory.class)
+                                        .withTitleField("title")
+                                        .withDescriptionField("description")
+                                        .withColumnField("status")
+                                        .build())
+                                .withChild(taskForm)
+                                .build(),
+                        "done",
+                        JpaRouteRenderer.of(MasterDetailRouteFactory.class)
+                                .withIconFactory(CHECK_CIRCLE::create)
+                                .withDataStore("tasks")
+                                .withTitle("route.done-tasks.title")
+                                .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
+                                        .withTitleField("title")
+                                        .withDescriptionField("description")
+                                        .build())
+                                .withChild(taskForm)
+                                .build()))
+                .build());
+        routes.put("images-grid", JpaRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore("images")
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-cards")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
+                        .withTitleField("title")
+                        .withImageField("url")
+                        .withImageFactory(FileProvider.class)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build());
+        routes.put("images-list", JpaRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore("images")
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-list")
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField("title")
+                        .withChildren(
+                                new JpaFormElement("url", "field", "route.projects.labels.description"),
+                                new JpaFormElement("title", "field", "route.projects.labels.name")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageForm)
+                .build());
 
         return JpaApplication.of()
                 .withName("application.name")

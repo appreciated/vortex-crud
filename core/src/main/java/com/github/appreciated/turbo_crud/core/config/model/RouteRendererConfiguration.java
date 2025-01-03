@@ -7,7 +7,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class RouteConfiguration<DataStoreId, FieldId> {
+public class RouteRendererConfiguration<DataStoreId, FieldId> {
 
     private Class<? extends TurboCrudItemFactory<FieldId>> factory;
 
@@ -27,7 +27,7 @@ public class RouteConfiguration<DataStoreId, FieldId> {
 
     private List<InternalFormElement<DataStoreId, FieldId>> children;
 
-    public RouteConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
+    public RouteRendererConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         this.factory = factory;
     }
 
@@ -105,9 +105,9 @@ public class RouteConfiguration<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private final RouteConfiguration<DataStoreId, FieldId> product;
+        private final RouteRendererConfiguration<DataStoreId, FieldId> product;
 
-        public Builder(RouteConfiguration<DataStoreId, FieldId> product) {
+        public Builder(RouteRendererConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
@@ -161,7 +161,7 @@ public class RouteConfiguration<DataStoreId, FieldId> {
             return this;
         }
 
-        public RouteConfiguration<DataStoreId, FieldId> build() {
+        public RouteRendererConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

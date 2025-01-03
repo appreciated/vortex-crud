@@ -1,8 +1,8 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.grid.components;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.GridOrListConfiguration;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.GridOrListRendererConfiguration;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
@@ -36,13 +36,13 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private final TurboCrudFileProviderRegistry fileProviderRegistry;
     private final TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final TurboCrudDataStore<FieldId> dataStore;
-    private final GridOrListConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
+    private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
     public VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                               Route<DataStoreId, FieldId> config,
+                               RouteRenderer<DataStoreId, FieldId> config,
                                TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                                TurboCrudFileProviderRegistry fileProviderRegistry,
@@ -54,7 +54,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
         DataStoreId table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getFactory(table);
-        gridOrListConfiguration = (GridOrListConfiguration<DataStoreId, FieldId>) config.getConfiguration();
+        gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) config.getConfiguration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();

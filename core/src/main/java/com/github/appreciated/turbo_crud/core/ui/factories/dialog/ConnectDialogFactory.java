@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.turbo_crud.core.config.model.CollectionData;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStoreFactoryRegistry;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
@@ -33,7 +33,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements TurboCrudDial
     public Dialog create(@Nullable String entityId,
                              @Nullable String foreignKeyValue,
                              @Nullable FieldId foreignKeyField,
-                             Route<DataStoreId, FieldId> formRoute,
+                             RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
                              CollectionData<DataStoreId, FieldId> collectionData,
                              DataStoreId dataStoreIdentifier,
                              TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,

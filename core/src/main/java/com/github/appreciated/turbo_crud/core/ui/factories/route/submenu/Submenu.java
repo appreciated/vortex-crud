@@ -1,7 +1,7 @@
 package com.github.appreciated.turbo_crud.core.ui.factories.route.submenu;
 
 import com.github.appreciated.turbo_crud.core.config.TurboCrudPathToRouteResolver;
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.github.appreciated.turbo_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.DetailRouteSetting;
@@ -24,7 +24,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
 
     private final VerticalLayout routeListLayout = new VerticalLayout();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final Route<DataStoreId, FieldId> route;
+    private final RouteRenderer<DataStoreId, FieldId> routeRenderer;
     private TurboCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final Integer currentPathIndex;
@@ -38,7 +38,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
     ) {
         this.currentPathIndex = currentPathIndex;
         this.configService = configService;
-        route = routeResolver.getRouteForIndex(currentPathIndex);
+        routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.routeFactory = routeFactory;
@@ -47,7 +47,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         masterLayout.setPadding(true);
         masterLayout.setSizeFull();
 
-        HorizontalLayout header = new RouteHeader(route);
+        HorizontalLayout header = new RouteHeader(routeRenderer);
         masterLayout.add(header);
 
         routeListLayout.setPadding(false);
@@ -66,7 +66,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         addToSecondary(detailLayout);
 
         setSizeFull();
-        initializeRouteList(route.getChildrenMap(), currentPathIndex, routeResolver);
+        initializeRouteList(routeRenderer.getChildrenMap(), currentPathIndex, routeResolver);
 
         if (hasActiveSubroute(currentPathIndex, routeResolver)) {
             showRouteDetail(getActiveSubroute(currentPathIndex, routeResolver), routeResolver);
@@ -81,11 +81,11 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         return routeResolver.hasPathForIndex(currentPathIndex + 1);
     }
 
-    private Route<DataStoreId, FieldId> getActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
-        return route.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
+    private RouteRenderer<DataStoreId, FieldId> getActiveSubroute(Integer currentPathIndex, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
+        return routeRenderer.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
-    private void initializeRouteList(Map<String, ? extends Route<DataStoreId, FieldId>> childRoutes, Integer currentPathIndex, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
+    private void initializeRouteList(Map<String, ? extends RouteRenderer<DataStoreId, FieldId>> childRoutes, Integer currentPathIndex, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         childRoutes.forEach((key, value) -> {
             HorizontalLayout routeButton = new HorizontalLayout();
             routeButton.addClassNames("card", "master");
@@ -102,12 +102,12 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
             routeButton.addClickListener(event -> {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
-                    pathVariables = new TurboCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRoutes());
+                    pathVariables = new TurboCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers());
                     ui.getPage().getHistory().pushState(null, pathForEntity);
                     if (active != null) {
                         active.removeClassName("active");
                     }
-                    showRouteDetail(route.getChildrenMap().get(key), pathVariables);
+                    showRouteDetail(routeRenderer.getChildrenMap().get(key), pathVariables);
                     routeButton.addClassName("active");
                     active = routeButton;
                 });
@@ -116,11 +116,11 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
         });
     }
 
-    private void showRouteDetail(Route<DataStoreId, FieldId> subRoute, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
+    private void showRouteDetail(RouteRenderer<DataStoreId, FieldId> subRouteRenderer, TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();
-            TurboCrudRouteFactory<DataStoreId, FieldId> factory = routeFactory.getFactory(subRoute.getFactory());
+            TurboCrudRouteFactory<DataStoreId, FieldId> factory = routeFactory.getFactory(subRouteRenderer.getFactory());
             Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }

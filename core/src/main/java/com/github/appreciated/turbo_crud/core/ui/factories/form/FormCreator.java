@@ -32,8 +32,8 @@ public class FormCreator<DataStoreId, FieldId> {
     }
 
     public void bindAndAddToLayout(DataStoreId table,
-                                                          Route<DataStoreId, FieldId> route,
-                                                          RouteConfiguration<DataStoreId, FieldId> formConfig,
+                                                          RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                                                          RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
                                                           GenericEntity entity,
                                                           TurboCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                                                           DataStoreConfig<DataStoreId, FieldId> tables,
@@ -68,7 +68,7 @@ public class FormCreator<DataStoreId, FieldId> {
                 if (element.getType().equals("collection")) {
                     Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
                             DataStoreUtil.getId(entity),
-                            route,
+                            routeRenderer,
                             element,
                             routeFactory,
                             formCreator

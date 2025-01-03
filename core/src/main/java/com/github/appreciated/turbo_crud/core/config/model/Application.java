@@ -2,6 +2,7 @@ package com.github.appreciated.turbo_crud.core.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @GenerateBuilder
@@ -21,7 +22,7 @@ public class Application<DataStoreId, FieldId> {
 
     private Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores;
 
-    private Map<String, Route<DataStoreId, FieldId>> routes;
+    private LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routes;
 
     public String getName() {
         return name;
@@ -79,12 +80,12 @@ public class Application<DataStoreId, FieldId> {
         this.dataStores = dataStores;
     }
 
-    public Map<String, Route<DataStoreId, FieldId>> getRoutes() {
+    public Map<String, RouteRenderer<DataStoreId, FieldId>> getRouteRenderers() {
         return routes;
     }
 
-    public void setRoutes(Map<String, Route<DataStoreId, FieldId>> routes) {
-        this.routes = routes;
+    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routeRenderers) {
+        this.routes = routeRenderers;
     }
 
     public static class Builder<DataStoreId, FieldId> {
@@ -134,7 +135,7 @@ public class Application<DataStoreId, FieldId> {
             return product;
         }
 
-        public Builder<DataStoreId, FieldId> withRoutes(Map<String, Route<DataStoreId, FieldId>> routes) {
+        public Builder<DataStoreId, FieldId> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routes) {
             product.routes = routes;
             return this;
         }

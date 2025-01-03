@@ -20,7 +20,7 @@ public class Collection<DataStoreId, FieldId> {
 
     private String emptyMessage;
 
-    private Route<DataStoreId, FieldId> child;
+    private RouteRenderer<DataStoreId, FieldId> child;
 
     public String getLabel() {
         return label;
@@ -54,7 +54,7 @@ public class Collection<DataStoreId, FieldId> {
         this.emptyMessage = emptyMessage;
     }
 
-    public Route<DataStoreId, FieldId> getChild() {
+    public RouteRenderer<DataStoreId, FieldId> getChild() {
         return child;
     }
 
@@ -62,7 +62,7 @@ public class Collection<DataStoreId, FieldId> {
         return config;
     }
 
-    public void setChild(Route<DataStoreId, FieldId> child) {
+    public void setChild(RouteRenderer<DataStoreId, FieldId> child) {
         this.child = child;
     }
 
@@ -93,7 +93,7 @@ public class Collection<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withChild(Route<DataStoreId, FieldId> child) {
+        public Builder<DataStoreId,FieldId> withChild(RouteRenderer<DataStoreId, FieldId> child) {
             product.child = child;
             return this;
         }

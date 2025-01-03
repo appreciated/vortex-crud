@@ -45,7 +45,7 @@
 - **Add routes not visible in the menu**
 
 ## Roadmap (in no particular order)
-- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route".
+- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer".
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.

@@ -6,11 +6,11 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfiguration<DataStoreId,FieldId> implements ItemFactory<FieldId> {
+public class GridOrListRendererConfiguration<DataStoreId,FieldId> extends RouteRendererConfiguration<DataStoreId,FieldId> implements ItemFactory<FieldId> {
 
     private List<InternalFormElement<DataStoreId,FieldId>> children;
 
-    public GridOrListConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
+    public GridOrListRendererConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         super(factory);
     }
 
@@ -22,17 +22,17 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
         this.children = children;
     }
 
-    public static class Builder<DataStoreId,FieldId> extends RouteConfiguration.Builder<DataStoreId,FieldId> {
+    public static class Builder<DataStoreId,FieldId> extends RouteRendererConfiguration.Builder<DataStoreId,FieldId> {
 
-        private final GridOrListConfiguration<DataStoreId,FieldId> product;
+        private final GridOrListRendererConfiguration<DataStoreId,FieldId> product;
 
-        private Builder(GridOrListConfiguration<DataStoreId,FieldId> product) {
+        private Builder(GridOrListRendererConfiguration<DataStoreId,FieldId> product) {
             super(product);
             this.product = product;
         }
 
         public static <DataStoreId,FieldId> Builder<DataStoreId,FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder<>(new GridOrListConfiguration<>((Class<? extends TurboCrudItemFactory<FieldId>>)factory));
+            return new Builder<>(new GridOrListRendererConfiguration<>((Class<? extends TurboCrudItemFactory<FieldId>>)factory));
         }
 
         public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {
@@ -55,7 +55,7 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
             return this;
         }
 
-        public GridOrListConfiguration<DataStoreId,FieldId> build() {
+        public GridOrListRendererConfiguration<DataStoreId,FieldId> build() {
             return product;
         }
     }

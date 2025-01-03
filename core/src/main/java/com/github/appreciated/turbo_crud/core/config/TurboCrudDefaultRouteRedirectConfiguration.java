@@ -1,6 +1,6 @@
 package com.github.appreciated.turbo_crud.core.config;
 
-import com.github.appreciated.turbo_crud.core.config.model.Route;
+import com.github.appreciated.turbo_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigService;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -23,23 +23,23 @@ import java.util.Optional;
 @Component
 public class TurboCrudDefaultRouteRedirectConfiguration<DataStoreId, FieldId> implements VaadinServiceInitListener {
 
-    private final Map<String, Route<DataStoreId, FieldId>> routeConfigs;
-    private static Optional<? extends Map.Entry<String, Route<?, ?>>> defaultRoute;
+    private final Map<String, RouteRenderer<DataStoreId, FieldId>> routeConfigs;
+    private static Optional<? extends Map.Entry<String, RouteRenderer<?, ?>>> defaultRoute;
 
     public TurboCrudDefaultRouteRedirectConfiguration(TurboCrudConfigService<DataStoreId, FieldId> configService) {
-        this.routeConfigs = configService.getConfiguration().getRoutes();
+        this.routeConfigs = configService.getConfiguration().getRouteRenderers();
     }
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<? extends Map.Entry<String, Route<DataStoreId, FieldId>>> defaultRoutes = routeConfigs
+        List<? extends Map.Entry<String, RouteRenderer<DataStoreId, FieldId>>> defaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
         if (defaultRoutes.size() > 1) {
             throw new IllegalStateException("More than one default route configured");
         } else {
-            defaultRoute = (Optional<? extends Map.Entry<String, Route<?, ?>>>) (Optional<?>) defaultRoutes.stream().findFirst();
+            defaultRoute = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?>>>) (Optional<?>) defaultRoutes.stream().findFirst();
 
         }
         if (defaultRoute.isPresent()) {
