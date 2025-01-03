@@ -6,7 +6,8 @@ import org.jooq.Table;
 import org.jooq.TableField;
 
 public class JooqRouteConfiguration extends RouteConfiguration<Table<?>, TableField<?,?>> {
-    public JooqRouteConfiguration(Class<? extends TurboCrudItemFactory<TableField<?,?>>> factory) {
+
+    public JooqRouteConfiguration(Class<? extends TurboCrudItemFactory<TableField<?, ?>>> factory) {
         super(factory);
     }
 

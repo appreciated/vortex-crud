@@ -11,6 +11,6 @@ public class JooqRoute extends Route<Table<?>, TableField<?, ?>> {
     }
 
     public static Route.Builder<Table<?>, TableField<?, ?>> of(Class<? extends TurboCrudRouteFactory> factory) {
-        return new Route.Builder<>(new Route<>((Class<? extends TurboCrudRouteFactory<Table<?>, TableField<?, ?>>>) factory));
+        return new Route.Builder<>(new JooqRoute((Class<? extends TurboCrudRouteFactory<Table<?>, TableField<?, ?>>>) factory));
     }
 }
