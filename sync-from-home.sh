@@ -1,1 +1,0 @@
-rsync -avc --delete --exclude 'node_modules' --exclude 'target' --exclude '.git' ~/turbo-crud/* /mnt/c/Users/Johannes/IdeaProjects/turbo-crud

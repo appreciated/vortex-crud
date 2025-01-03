@@ -345,10 +345,9 @@ classDiagram
 ## Getting Started with Development
 
 1. **Clone the repository**
-2. **Run the application**:
-   - Use the provided SQL schema to set up the database.
-   - Configure application properties for SQLite or other databases.
-   - Start the Spring Boot server:
+2. **Run one of the example application**:
+   - The database will be initialized automatically
+   - Start example application:
      ```bash
      ./mvnw spring-boot:run
      ```
