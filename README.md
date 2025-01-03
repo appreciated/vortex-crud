@@ -67,7 +67,7 @@
 - **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
 ## Data Handling and Management
-turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
+turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
 
 ### Core Concept: User-Defined Database Model
 The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
@@ -93,7 +93,7 @@ CREATE TABLE task_comments (...);
 Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using Jooq and JPA:
 
 ### Jooq
-In the following a smallish example on how to use the Jooq integration of TurboCrud
+In the following a smallish example on how to use the Jooq integration of turbo-crud. A more complete example can be found under `examples/jooq-sqlite-example`.
 
 ```java
 @Service
@@ -175,7 +175,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
 ```
 
 ### JPA
-In the following another smallish example on how to use the JPA integration of TurboCrud:
+In the following another smallish example on how to use the JPA integration of turbo-crud. A more complete example can be found under `examples/jpa-sqlite-example`.
 
 ```java
 
@@ -261,7 +261,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 
 ## Architecture
 
-The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration (e.g., "factory" = "grid" or "type" = "form"). A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
+The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
 
 ### Relationship between Routes and Forms
 ```mermaid
@@ -323,7 +323,7 @@ classDiagram
     class SubmenuRoute 
     class MultiFormRoute 
     class FormRoute 
-    class EntityManagerService
+    class DataStore
 
     Route <|-- GridRoute: extends
     Route <|-- KanbanRoute: extends
@@ -334,11 +334,11 @@ classDiagram
     Route <|-- FormRoute: extends
     SubmenuRoute --> Route: contains
     MasterDetailRoute --> Route: contains
-    ListRoute --> EntityManagerService: uses
-    GridRoute --> EntityManagerService: uses
-    FormRoute --> EntityManagerService: uses
-    KanbanRoute --> EntityManagerService: uses
-    MasterDetailRoute --> EntityManagerService: uses
+    ListRoute --> DataStore: uses
+    GridRoute --> DataStore: uses
+    FormRoute --> DataStore: uses
+    KanbanRoute --> DataStore: uses
+    MasterDetailRoute --> DataStore: uses
     MultiFormRoute --> FormRoute: contains
 ```
 
