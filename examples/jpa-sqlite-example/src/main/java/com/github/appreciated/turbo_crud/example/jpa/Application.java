@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @Theme(variant = Lumo.DARK)
 @Push
-@ComponentScan({"com.github.appreciated.turbo_crud.core", "com.github.appreciated.turbo_crud.jpa"})
+@ComponentScan({"com.github.appreciated.turbo_crud"})
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {
