@@ -252,7 +252,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                 .build()))
                         .build())
                 .withRoutes(routes)
-                .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+                .withVersioning(Versioning.Builder.<Table<?>>of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
                 .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status",

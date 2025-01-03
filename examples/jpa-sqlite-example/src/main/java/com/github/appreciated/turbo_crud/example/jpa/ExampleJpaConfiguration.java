@@ -245,7 +245,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 .build()))
                         .build())
                 .withRoutes(routes)
-                .withVersioning(Versioning.Builder.of().withDataStores("projects", "tasks", "task_comments").build())
+                .withVersioning(Versioning.Builder.<String>of().withDataStores("projects", "tasks", "task_comments").build())
                 .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status",

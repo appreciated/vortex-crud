@@ -151,7 +151,8 @@ public class RouteConfiguration<DataStoreId, FieldId> {
             return this;
         }
 
-        public <T extends InternalFormElement<DataStoreId, FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
+        @SafeVarargs
+        public final <T extends InternalFormElement<DataStoreId, FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 

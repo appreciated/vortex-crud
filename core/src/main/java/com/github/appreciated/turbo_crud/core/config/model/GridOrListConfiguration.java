@@ -50,10 +50,6 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
             return this;
         }
 
-        public <T extends InternalFormElement<DataStoreId,FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
-            return withChildren(List.of(children));
-        }
-
         public Builder<DataStoreId,FieldId> addChildren(InternalFormElement<DataStoreId,FieldId> item) {
             product.children.add(item);
             return this;
