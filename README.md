@@ -25,7 +25,7 @@
     - Number
     - Reference
     - Select
-    - TCCheckbox
+    - Checkbox
     - TextArea
     - Text
   - Relationships
