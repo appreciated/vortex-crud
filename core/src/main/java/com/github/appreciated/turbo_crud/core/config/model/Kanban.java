@@ -9,7 +9,7 @@ import java.util.List;
 @GenerateBuilder
 public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId, FieldId> implements ItemFactory<FieldId> {
 
-    public Kanban(Class<? extends TurboCrudItemFactory> factory) {
+    public Kanban(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         super(factory);
     }
 
@@ -22,7 +22,7 @@ public class Kanban<DataStoreId, FieldId> extends RouteConfiguration<DataStoreId
         }
 
         public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder<>(new Kanban<>(factory));
+            return new Builder<>(new Kanban<>(((Class<? extends TurboCrudItemFactory<FieldId>>)factory)));
         }
 
         public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {

@@ -15,8 +15,6 @@ import com.github.appreciated.turbo_crud.core.ui.factories.route.kanban.KanbanDe
 import com.github.appreciated.turbo_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.turbo_crud.jooq.models.tables.TaskHasTask;
-import com.github.appreciated.turbo_crud.jooq.models.tables.Tasks;
 import com.github.appreciated.turbo_crud.jooq.models.tables.Users;
 import com.github.appreciated.turbo_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -38,6 +36,7 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*;
 public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<Table<?>, TableField<?, ?>> {
     @Override
     public Application<Table<?>, TableField<?, ?>> get() {
+
         Route<Table<?>, TableField<?, ?>> taskForm = JooqRoute.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
                 .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
@@ -150,7 +149,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
+                                        .withConfiguration(new ImageFieldConfiguration<>(FileProvider.class))
                                         .build()))
                         .build());
 

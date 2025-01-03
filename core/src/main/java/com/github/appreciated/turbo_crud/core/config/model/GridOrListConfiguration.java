@@ -10,7 +10,7 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
 
     private List<InternalFormElement<DataStoreId,FieldId>> children;
 
-    public GridOrListConfiguration(Class<? extends TurboCrudItemFactory> factory) {
+    public GridOrListConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         super(factory);
     }
 
@@ -32,7 +32,7 @@ public class GridOrListConfiguration<DataStoreId,FieldId> extends RouteConfigura
         }
 
         public static <DataStoreId,FieldId> Builder<DataStoreId,FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder<>(new GridOrListConfiguration<>(factory));
+            return new Builder<>(new GridOrListConfiguration<>((Class<? extends TurboCrudItemFactory<FieldId>>)factory));
         }
 
         public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {

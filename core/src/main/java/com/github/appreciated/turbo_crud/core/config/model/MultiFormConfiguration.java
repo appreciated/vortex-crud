@@ -10,7 +10,7 @@ public class MultiFormConfiguration<DataStoreId, FieldId> extends RouteConfigura
 
     private List<RouteConfiguration<DataStoreId, FieldId>> forms;
 
-    public MultiFormConfiguration(Class<? extends TurboCrudItemFactory<?>> factory) {
+    public MultiFormConfiguration(Class<? extends TurboCrudItemFactory<FieldId>> factory) {
         super(factory);
     }
 
@@ -32,7 +32,7 @@ public class MultiFormConfiguration<DataStoreId, FieldId> extends RouteConfigura
         }
 
         public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends TurboCrudItemFactory> factory) {
-            return new Builder<>(new MultiFormConfiguration<>((Class<? extends TurboCrudItemFactory<?>>) factory));
+            return new Builder<>(new MultiFormConfiguration<>((Class<? extends TurboCrudItemFactory<FieldId>>) factory));
         }
 
         public Builder<DataStoreId, FieldId> withTitleField(FieldId titleField) {
