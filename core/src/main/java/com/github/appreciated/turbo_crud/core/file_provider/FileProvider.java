@@ -5,6 +5,7 @@ import com.vaadin.flow.server.StreamResource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class FileProvider implements TurboCrudFileProvider {
@@ -19,7 +20,11 @@ public class FileProvider implements TurboCrudFileProvider {
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                try {
+                    throw new RuntimeException("Cannot resolve file a path '%s'".formatted(file.getCanonicalFile().getPath()));
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
