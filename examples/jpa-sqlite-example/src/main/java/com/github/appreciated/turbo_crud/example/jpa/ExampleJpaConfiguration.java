@@ -7,7 +7,6 @@ import com.github.appreciated.turbo_crud.core.file_provider.FileProvider;
 import com.github.appreciated.turbo_crud.core.service.TurboCrudConfigurationProvider;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.turbo_crud.core.ui.factories.dialog.TurboCrudDialogFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.CardFactory;
@@ -43,8 +42,8 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.of("task_comments")
-                                                        .withOneToMany(new OneToMany("task_id"))
+                                                .withData(CollectionData.Builder.<String,String>of("task_comments")
+                                                        .withOneToMany(new OneToMany<>("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
@@ -61,8 +60,8 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                 JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.of("tasks")
-                                                        .withManyToMany(new ManyToMany("task_has_task",
+                                                .withData(CollectionData.Builder.<String,String>of("tasks")
+                                                        .withManyToMany(new ManyToMany<>("task_has_task",
                                                                 "task_id",
                                                                 "related_task_id",
                                                                 "id"))
@@ -142,7 +141,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 "url", JpaField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldConfiguration(FileProvider.class))
+                                        .withConfiguration(new ImageFieldConfiguration<>(FileProvider.class))
                                         .build()))
                         .build());
 
