@@ -14,20 +14,38 @@
 - **Declarative definition of UI and Route Generation**: create rapidly complex, user-friendly CRUD applications by describing the application.
 - **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)), to supply custom implementations.
 - **DataStores**: Let `turbo-crud` handle simple entity management; For more complicated use-cases provide a custom implementation.
-- **Database Schema Validation**: Get noticed if the data model does no longer match the data model 
-- **UI Components**: 
+  - **Jooq Support**
+  - **JPA Support**
+    - **Database Schema Validation**: Get noticed if the data model does no longer match the data model
+- **UI Components**
+  - Input
+    - Date
+    - DateTime
+    - Image
+    - Number
+    - Reference
+    - Select
+    - TCCheckbox
+    - TextArea
+    - Text
+  - Relationships
+    - One-To-One
+    - Many-To-One
+    - [WIP] Many-To-Many
+  - Routes
+    - Form
+    - MultiForm
+    - Grid
+    - Cards
+    - Kanban
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (One-To-One, One-To-Many).
 - **Nested Hierarchies**
-- **Multiple Forms at Once**: Create views containing multiple forms simultaneously.
-- **Additional Routes**:
-    - **Kanban Route**
 - **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
 - **[WIP] Media Support**: Manage and view media easily
-- **Allow adding routes not visible in the menu**
+- **Add routes not visible in the menu**
 
 ## Roadmap (in no particular order)
-- **Extended Entity Relationship Support**: Add, remove, and view entities from Many-To-Many relationships.
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "route".
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
@@ -47,7 +65,7 @@
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **API-Endpoints**: Allow defining API endpoints using the configuration file
+- **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
 ## Data Handling and Management
 turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudEntityManagerService`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom EntityManagerService implementations are also supported, requiring only an interface implementation.
