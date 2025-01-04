@@ -44,7 +44,20 @@
 - **[WIP] Media Support**: Manage and view media easily
 - **Add routes not visible in the menu**
 
-## Roadmap (in no particular order)
+## Table of Contents
+1. [Roadmap](#roadmap)
+2. [Data Handling and Management](#data-handling)
+   1. [Core Concept](#core-concept)
+   2. [Example User-Defined Tables](#data-model-example)
+3. [Configuration](#configuration)
+   1. [Jooq](#configuration-jooq)
+   2. [JPA](#configuration-jpa)
+4. [Architecture](#architecture)
+   1. [Relationship between Routes and Forms](#relationship-routes-forms)
+   1. [Data Access](#data-access)
+5. [Getting Started with Development](#getting-started-with-development)
+
+## <a name="roadmap">Roadmap</a>
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer".
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
@@ -66,10 +79,10 @@
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
-## Data Handling and Management
+## <a name="data-handling">Data Handling and Management</a>
 turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
 
-### Core Concept: User-Defined Database Model
+### <a name="core-concept">Core Concept: User-Defined Database Model</a>
 The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
 
 ```sql
@@ -80,7 +93,7 @@ CREATE TABLE user_roles (...);
 CREATE TABLE audit_log (...);
 ```
 
-### Example User-Defined Tables
+### <a name="data-model-example">Example User-Defined Tables</a>
 Users can define tables like `projects`, `tasks`, and `task_comments` as needed:
 
 ```sql
@@ -89,10 +102,10 @@ CREATE TABLE tasks (...);
 CREATE TABLE task_comments (...);
 ```
 
-## Configuration via Java
+## <a name="configuration">Configuration via Java</a>
 Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using Jooq and JPA:
 
-### Jooq
+### <a name="configuration-jooq">Jooq</a>
 In the following a smallish example on how to use the Jooq integration of turbo-crud. A more complete example can be found under `examples/jooq-sqlite-example`.
 
 ```java
@@ -174,7 +187,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
 }
 ```
 
-### JPA
+### <a name="configuration-jpa">JPA</a>
 In the following another smallish example on how to use the JPA integration of turbo-crud. A more complete example can be found under `examples/jpa-sqlite-example`.
 
 ```java
@@ -259,11 +272,11 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 ```
 
 
-## Architecture
+## <a name="architecture">Architecture</a>
 
 The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
 
-### Relationship between Routes and Forms
+### <a name="relationship-routes-forms">Relationship between Routes and Forms</a>
 ```mermaid
 classDiagram
     class Dialog
@@ -309,7 +322,7 @@ classDiagram
     Dialog --> Form: creates
 ```
 
-### Data Access
+### <a name="data-access">Data Access</a>
 
 The following shows a simplified representation on how data is being accessed. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
 ```mermaid
@@ -342,7 +355,7 @@ classDiagram
     MultiFormRoute --> FormRoute: contains
 ```
 
-## Getting Started with Development
+## <a name="getting-started-with-development">Getting Started with Development</a>
 
 1. **Clone the repository**
 2. **Run one of the example application**:
