@@ -123,17 +123,15 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
 
     @Override
     public int count() {
-        return dslContext.selectCount()
-                .from(getTable())
-                .fetchOne(0, int.class);
+        return dslContext.fetchCount(getTable());
     }
 
     @Override
     public int countWhereColumnLike(TableField<?,?> filterField, String filterValue) {
-        return dslContext.selectCount()
-                .from(getTable())
-                .where(filterField.like("%" + filterValue + "%"))
-                .fetchOne(0, int.class);
+        return dslContext.fetchCount(
+                table,
+                DSL.field(filterField).like("%" + filterValue + "%")
+        );
     }
 
 }
