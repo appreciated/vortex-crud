@@ -2,21 +2,19 @@ package com.github.appreciated.turbo_crud.jooq.service;
 
 import com.github.appreciated.turbo_crud.core.entity.data_store.TurboCrudDataStore;
 import com.github.appreciated.turbo_crud.core.model.GenericEntity;
-
 import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
 
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * Service for managing dynamic entities using an EntityManager.
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
-import org.jooq.*;
-import org.jooq.impl.DSL;
-
-import java.util.Map;
-
-public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
+public class JooqDataStore implements TurboCrudDataStore<TableField<?, ?>> {
 
     private final DSLContext dslContext;
     private final Table<?> table;
@@ -59,10 +57,10 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(TableField<?,?> filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(TableField<?, ?> filterField, String filterValue, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
-                .where(((TableField<?,String>)filterField).eq(filterValue))
+                .where(((TableField<?, String>) filterField).eq(filterValue))
                 .limit(limit)
                 .offset(offset)
                 .fetch()
@@ -70,7 +68,7 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnIn(TableField<?,?> filterField, List<String> filterValues, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnIn(TableField<?, ?> filterField, List<String> filterValues, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
                 .where(filterField.in(filterValues))
@@ -81,7 +79,7 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnLike(TableField<?,?> filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnLike(TableField<?, ?> filterField, String filterValue, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
                 .where(filterField.like("%" + filterValue + "%"))
@@ -127,7 +125,7 @@ public class JooqDataStore implements TurboCrudDataStore<TableField<?,?>> {
     }
 
     @Override
-    public int countWhereColumnLike(TableField<?,?> filterField, String filterValue) {
+    public int countWhereColumnLike(TableField<?, ?> filterField, String filterValue) {
         return dslContext.fetchCount(
                 table,
                 DSL.field(filterField).like("%" + filterValue + "%")
