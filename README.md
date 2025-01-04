@@ -11,32 +11,12 @@
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 
 ## Key Features
-- **Declarative definition of UI and Route Generation**: create rapidly complex, user-friendly CRUD applications by describing the application.
-- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)), to supply custom implementations.
-- **DataStores**: Let `turbo-crud` handle simple entity management; For more complicated use-cases provide a custom implementation.
+- **Declarative definition of Forms and Routes**: create rapidly complex, user-friendly CRUD applications by describing the application.
+- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)).
+- **Automatic Entity Management**: Let `turbo-crud` handle basic or more complex cases of entity management; For more complicated use-cases provide a custom implementation.
   - **Jooq Support**
   - **JPA Support**
-    - **Database Schema Validation**: Get noticed if the data model does no longer match the data model
-- **UI Components**
-  - Inputs
-    - Text
-    - Date
-    - DateTime
-    - Image
-    - Number
-    - Select
-    - Checkbox
-    - TextArea
-  - Relationships
-    - One-To-One
-    - Many-To-One
-    - [WIP] Many-To-Many
-  - Routes
-     - Form
-     - MultiForm
-     - Grid
-     - Cards
-     - Kanban
+    - **Database Schema Validation**: Get noticed if the data model does no longer fits to your application
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (One-To-One, One-To-Many).
 - **Nested Hierarchies**
@@ -79,8 +59,33 @@
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
-## <a name="data-handling">Data Handling and Management</a>
-turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
+### <a name="supported-routes-inputs">Available route renders</a>  
+#### Route renderers
+The following possible kinds of route rendering are available   
+##### Viewing
+- Grid
+- Cards
+- Kanban
+##### Editing
+- Form
+- MultiForm
+##### Nesting
+- Subroute
+#### Inputs
+In Form or MultiForm route renderers the following inputs are available
+- Text
+- Date
+- DateTime
+- Image
+- Number
+- Select
+- Checkbox
+- TextArea
+#### Relationships
+In Form or MultiForm route renderers the following inputs are available
+- One-To-One
+- Many-To-One
+- [WIP] Many-To-Many
 
 ### <a name="core-concept">Core Concept: User-Defined Database Model</a>
 The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
@@ -273,6 +278,9 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 
 
 ## <a name="architecture">Architecture</a>
+
+## <a name="data-handling">Data Handling and Management</a>
+turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
 
 The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
 

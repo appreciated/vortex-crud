@@ -12,6 +12,7 @@ import com.github.appreciated.turbo_crud.core.model.GenericEntity;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactory;
 import com.github.appreciated.turbo_crud.core.ui.factories.item.TurboCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.PendingJavaScriptResult;
@@ -42,11 +43,11 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private int currentNumberOfColumns = -1;
 
     public VirtualItemGrid(TurboCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                               RouteRenderer<DataStoreId, FieldId> config,
-                               TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                               TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                               TurboCrudFileProviderRegistry fileProviderRegistry,
-                               TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
+                           RouteRenderer<DataStoreId, FieldId> config,
+                           TurboCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                           TurboCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+                           TurboCrudFileProviderRegistry fileProviderRegistry,
+                           TurboCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
@@ -75,17 +76,23 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private void initRenderer() {
         setRenderer(new ComponentRenderer<>(item -> {
             HorizontalLayout wrapper = new HorizontalLayout();
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.setSpacing(true);
-            layout.setWidthFull();
-            for (GenericEntity entity : item.getList()) {
+            wrapper.setSpacing(true);
+            wrapper.setWidthFull();
+            List<GenericEntity> list = item.getList();
+            for (GenericEntity entity : list) {
                 Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, fieldNameResolver));
-                div.getStyle().set("display", "flex");
+                div.getStyle()
+                        .set("display", "flex")
+                        .set("flex", "0 1 auto")
+                        .set("flex", "0 1 auto")
+                        .set("overflow", "hidden");
+                div.setWidthFull();
                 div.addClickListener(event -> onItemClick(entity));
-                layout.add(div);
+                wrapper.add(div);
             }
-            wrapper.add(layout);
             wrapper.getStyle().set("padding", "10px 0px 0px 0px");
+            int roundedWith = Math.round((float) list.size() / currentNumberOfColumns * 100);
+            wrapper.setWidth(roundedWith, Unit.PERCENTAGE);
             return wrapper;
         }));
     }
@@ -111,7 +118,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
                     }
 
                     List<EntityItemList> wrappers = new ArrayList<>();
-                    for (int i = 0; i < Math.ceil((double) items.size() / (double) currentNumberOfColumns); i++) {
+                    for (int i = 0; i < items.size(); i += currentNumberOfColumns) {
                         List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
                         wrappers.add(new EntityItemList(group));
                     }
