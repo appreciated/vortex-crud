@@ -24,6 +24,7 @@
     - **[Data Handling and Management](#data-handling)**
     - **[Data Access](#data-access)**
 8. **[Roadmap](#roadmap)**
+9. **[Contributing](#contributing)**
 9. **[Further Development](#further-development)**
 
 ## <a name="inspiration">Inspiration</a>
@@ -73,7 +74,7 @@
 ## <a name="configuration">Getting Started</a>
 Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using jOOQ and JPA:
 
-### <a name="configuration-jooq">jOOQ</a>
+### <a name="configuration-jooq">turbo-crud with jOOQ</a>
 In the following a smallish example on how to use the jOOQ integration of `turbo-crud`. A more complete example can be found under `examples/jooq-sqlite-example`.
 
 ```java
@@ -131,7 +132,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
 }
 ```
 
-### <a name="configuration-jpa">JPA</a>
+### <a name="configuration-jpa">turbo-crud with JPA</a>
 In the following another smallish example on how to use the JPA integration of `turbo-crud`. A more complete example can be found under `examples/jpa-sqlite-example`.
 
 ```java
@@ -195,31 +196,20 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 #### Route renderers
 To make entities available via UI, `turbo-crud` relies on RouteRenderers.
 
-The following possible kinds of route rendering are available
-##### Viewing
-- Grid
-- Cards
-- Kanban
-##### Editing
-- Form
-- MultiForm
-##### Nesting
-- Subroute
-#### Inputs
-In Form or MultiForm route renderers the following inputs are available
-- Text
-- Date
-- DateTime
-- Image
-- Number
-- Select
-- Checkbox
-- TextArea
-#### Relationships
-In Form or MultiForm route renderers the following inputs are available
-- One-To-One
-- Many-To-One
-- [WIP] Many-To-Many
+The following possible kinds of route rendering are available:
+- **Viewing**: Grid, Cards, Kanban
+- **Editing**: Form, MultiForm
+- **Nesting**: Subroute
+- **Inputs**
+  - Text
+  - Date
+  - DateTime
+  - Image
+  - Number
+  - Select
+  - Checkbox
+  - TextArea
+- **Relationships**: One-To-One, Many-To-One, [WIP] Many-To-Many
 
 ### <a name="core-concept">Database Modeling</a>
 `turbo-crud` does not provide its own database model. Instead, the user designs the data model and `turbo-crud` hooks onto it. The `turbo-crud` JPA implementation validates the view representation aligns with this model. 
@@ -244,7 +234,7 @@ CREATE TABLE task_comments (...);
 
 ## <a name="architecture">Architecture</a>
 The `turbo-crud` architecture is modular and declarative, simplifying CRUD application development with minimal coding. Built on Vaadin Flow, it dynamically generates routes and manages entities and their relationships automatically using jOOQ or JPA.  
-A FactoryRegistry centralizes factories generating Vaadin Components like routes, forms, and data stores based on configuration metadata, ensuring flexibility and scalability. This architecture enables customization while maintaining seamless integration of data handling, UI rendering, and complex entity management.
+A registry centralizes factories generating Vaadin Components like routes, forms, and data stores based on configuration metadata, ensuring flexibility and scalability. This architecture enables customization while maintaining seamless integration of data handling, UI rendering, and complex entity management.
 
 While the `core` module contains the ui implementations, and the necessary parts to generate routes etc. the dataStore implementations are placed in separate `jooq` and the `jpa` modules. 
 
@@ -348,6 +338,9 @@ classDiagram
     MasterDetailRouteRenderer --> DataStore: uses
     MultiFormRouteRenderer --> FormRouteRenderer: contains
 ```
+
+## <a name="contributing">Contributing</a>
+turbo-crud is open-source and welcomes contributions! If you’d like to contribute open an issue and let's discuss.
 
 ## <a name="further-development">Further Development</a>
 
