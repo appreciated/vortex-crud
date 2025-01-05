@@ -320,7 +320,7 @@ The following diagram provides a simplified view of the architecture, illustrati
 classDiagram
     class Dialog
     class DataStore
-    class Column
+    class Field
     class RouteRenderer 
     class KanbanRouteRenderer
     class AppLayout 
@@ -332,7 +332,7 @@ classDiagram
     class SubmenuRouteRenderer
     class MultiFormRouteRenderer
     class FormRouteRenderer
-    class Field
+    class Element
     class Collection
     
     RouteRenderer <|-- GridRouteRenderer: extends
@@ -350,12 +350,12 @@ classDiagram
     GridRouteRenderer --> FormRouteRenderer: forwards to
     FormRouteRenderer --> Form: contains
     MultiFormRouteRenderer --> FormRouteRenderer: contains
-    Form --> Field: contains
+    Form --> Element: contains
     Form --> Collection: contains
     RouteRenderer --> DataStore: references
-    DataStore --> Column: contains
-    Field --> Column: references
-    Collection --> Column: references
+    DataStore --> Field: contains
+    Element --> Field: references
+    Collection --> Field: references
     Collection --> Dialog: creates
     KanbanRouteRenderer --> Dialog: creates
     Dialog --> Form: creates
