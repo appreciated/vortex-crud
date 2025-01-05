@@ -9,7 +9,7 @@
 2. **[Tech-Stack](#tech-stack)**
 3. **[Key Features](#key-features)**
 4. **[Getting Started](#getting-started)**
-    - **[Jooq Configuration](#configuration-jooq)**
+    - **[jOOQ Configuration](#configuration-jooq)**
     - **[JPA Configuration](#configuration-jpa)**
 5. **[Core Concepts](#core-concepts)**
     - **[User-Defined Database Model](#core-concept)**
@@ -32,12 +32,13 @@
 ## <a name="tech-stack">Tech-Stack</a>
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
+- **JPA or jOOQ**: `turbo-crud` supports either accessing the database using JPA or jOOQ 
 
 ## <a name="key-features">Key Features</a>
 - **Declarative definition of Forms and Routes**: create rapidly complex, user-friendly CRUD applications by describing the application.
-- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)).
+- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible [architecture](#architecture).
 - **Automatic Entity Management**: Let `turbo-crud` handle basic or more complex cases of entity management; For more complicated use-cases provide a custom implementation.
-  - **Jooq Support**
+  - **jOOQ Support**
   - **JPA Support**
     - **Database Schema Validation**: Get noticed if the data model does no longer fits to your application
 - **i18n Support**
@@ -70,10 +71,10 @@
 - **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
 ## <a name="configuration">Getting Started</a>
-Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using Jooq and JPA:
+Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using jOOQ and JPA:
 
-### <a name="configuration-jooq">Jooq</a>
-In the following a smallish example on how to use the Jooq integration of `turbo-crud`. A more complete example can be found under `examples/jooq-sqlite-example`.
+### <a name="configuration-jooq">jOOQ</a>
+In the following a smallish example on how to use the jOOQ integration of `turbo-crud`. A more complete example can be found under `examples/jooq-sqlite-example`.
 
 ```java
 @Service
@@ -192,6 +193,8 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 
 ### <a name="supported-routes-inputs">Available route renders</a>
 #### Route renderers
+To make entities available via UI, `turbo-crud` relies on RouteRenderers.
+
 The following possible kinds of route rendering are available
 ##### Viewing
 - Grid
@@ -218,8 +221,9 @@ In Form or MultiForm route renderers the following inputs are available
 - Many-To-One
 - [WIP] Many-To-Many
 
-### <a name="core-concept">Core Concept: User-Defined Database Model</a>
-The database model is defined by the user, with `turbo-crud` validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
+### <a name="core-concept">Database Modeling</a>
+`turbo-crud` does not provide its own database model. Instead, the user designs the data model and `turbo-crud` hooks onto it. The `turbo-crud` JPA implementation validates the view representation aligns with this model. 
+Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
 
 ```sql
 -- Predefined system tables (examples)
@@ -239,7 +243,7 @@ CREATE TABLE task_comments (...);
 ```
 
 ## <a name="architecture">Architecture</a>
-The `turbo-crud` architecture is modular and declarative, simplifying CRUD application development with minimal coding. Built on Vaadin Flow, it dynamically generates routes and manages entities and their relationships automatically using Jooq or JPA.  
+The `turbo-crud` architecture is modular and declarative, simplifying CRUD application development with minimal coding. Built on Vaadin Flow, it dynamically generates routes and manages entities and their relationships automatically using jOOQ or JPA.  
 A FactoryRegistry centralizes factories generating Vaadin Components like routes, forms, and data stores based on configuration metadata, ensuring flexibility and scalability. This architecture enables customization while maintaining seamless integration of data handling, UI rendering, and complex entity management.
 
 While the `core` module contains the ui implementations, and the necessary parts to generate routes etc. the dataStore implementations are placed in separate `jooq` and the `jpa` modules. 
@@ -267,7 +271,6 @@ The following diagram provides a simplified view of the architecture, illustrati
 
 ### <a name="relationship-routes-forms">Relationship between Route renderers and Forms</a>
  
-
 ```mermaid
 classDiagram
     class Dialog
@@ -315,7 +318,7 @@ classDiagram
 
 ### <a name="data-access">Data Access</a>
 
-The following shows a simplified representation on how data is being accessed. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
+The following shows a simplified representation on how the data renderers access data. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
 ```mermaid
 classDiagram
     class RouteRenderer
