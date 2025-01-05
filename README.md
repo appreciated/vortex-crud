@@ -25,17 +25,29 @@
 - **Add routes not visible in the menu**
 
 ## Table of Contents
-1. [Roadmap](#roadmap)
-2. [Data Handling and Management](#data-handling)
-   1. [Core Concept](#core-concept)
-   2. [Example User-Defined Tables](#data-model-example)
-3. [Configuration](#configuration)
-   1. [Jooq](#configuration-jooq)
+
+1. **[Getting Started](#getting-started)**  
+   1. [Jooq](#configuration-jooq)  
    2. [JPA](#configuration-jpa)
-4. [Architecture](#architecture)
-   1. [Relationship between Routes and Forms](#relationship-routes-forms)
-   1. [Data Access](#data-access)
-5. [Getting Started with Development](#getting-started-with-development)
+
+2. **[Data Handling and Management](#data-handling)**  
+   1. [Core Concept](#core-concept)  
+   2. [Example User-Defined Tables](#data-model-example)
+
+3. **[Available Route Renderers and Inputs](#supported-routes-inputs)**  
+   1. [Viewing Routes](#route-renderers)  
+   2. [Editing Routes](#editing-routes)  
+   3. [Nesting Routes](#nesting-routes)  
+   4. [Input Types](#inputs)  
+   5. [Relationships](#relationships)
+
+4. **[Roadmap](#roadmap)**
+
+5. **[Architecture](#architecture)**  
+   1. [Relationship Between Routes and Forms](#relationship-routes-forms)  
+   2. [Data Access Flow](#data-access)
+
+6. **[Further Development](#further-development)**
 
 ## <a name="roadmap">Roadmap</a>
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer".
@@ -59,59 +71,11 @@
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
 
-### <a name="supported-routes-inputs">Available route renders</a>  
-#### Route renderers
-The following possible kinds of route rendering are available   
-##### Viewing
-- Grid
-- Cards
-- Kanban
-##### Editing
-- Form
-- MultiForm
-##### Nesting
-- Subroute
-#### Inputs
-In Form or MultiForm route renderers the following inputs are available
-- Text
-- Date
-- DateTime
-- Image
-- Number
-- Select
-- Checkbox
-- TextArea
-#### Relationships
-In Form or MultiForm route renderers the following inputs are available
-- One-To-One
-- Many-To-One
-- [WIP] Many-To-Many
-
-### <a name="core-concept">Core Concept: User-Defined Database Model</a>
-The database model is defined by the user, with turbo-crud validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
-
-```sql
--- Predefined system tables (examples)
-CREATE TABLE users (...);
-CREATE TABLE roles (...);
-CREATE TABLE user_roles (...);
-CREATE TABLE audit_log (...);
-```
-
-### <a name="data-model-example">Example User-Defined Tables</a>
-Users can define tables like `projects`, `tasks`, and `task_comments` as needed:
-
-```sql
-CREATE TABLE projects (...);
-CREATE TABLE tasks (...);
-CREATE TABLE task_comments (...);
-```
-
-## <a name="configuration">Configuration via Java</a>
+## <a name="configuration">Getting Started</a>
 Turbo-crud supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using Jooq and JPA:
 
 ### <a name="configuration-jooq">Jooq</a>
-In the following a smallish example on how to use the Jooq integration of turbo-crud. A more complete example can be found under `examples/jooq-sqlite-example`.
+In the following a smallish example on how to use the Jooq integration of `turbo-crud`. A more complete example can be found under `examples/jooq-sqlite-example`.
 
 ```java
 @Service
@@ -193,7 +157,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
 ```
 
 ### <a name="configuration-jpa">JPA</a>
-In the following another smallish example on how to use the JPA integration of turbo-crud. A more complete example can be found under `examples/jpa-sqlite-example`.
+In the following another smallish example on how to use the JPA integration of `turbo-crud`. A more complete example can be found under `examples/jpa-sqlite-example`.
 
 ```java
 
@@ -276,57 +240,124 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
 }
 ```
 
+### <a name="supported-routes-inputs">Available route renders</a>
+#### Route renderers
+The following possible kinds of route rendering are available
+##### Viewing
+- Grid
+- Cards
+- Kanban
+##### Editing
+- Form
+- MultiForm
+##### Nesting
+- Subroute
+#### Inputs
+In Form or MultiForm route renderers the following inputs are available
+- Text
+- Date
+- DateTime
+- Image
+- Number
+- Select
+- Checkbox
+- TextArea
+#### Relationships
+In Form or MultiForm route renderers the following inputs are available
+- One-To-One
+- Many-To-One
+- [WIP] Many-To-Many
+
+### <a name="core-concept">Core Concept: User-Defined Database Model</a>
+The database model is defined by the user, with `turbo-crud` validating that the view representation aligns with this model. Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
+
+```sql
+-- Predefined system tables (examples)
+CREATE TABLE users (...);
+CREATE TABLE roles (...);
+CREATE TABLE user_roles (...);
+CREATE TABLE audit_log (...);
+```
+
+### <a name="data-model-example">Example User-Defined Tables</a>
+Users can define tables like `projects`, `tasks`, and `task_comments` as needed:
+
+```sql
+CREATE TABLE projects (...);
+CREATE TABLE tasks (...);
+CREATE TABLE task_comments (...);
+```
 
 ## <a name="architecture">Architecture</a>
+The `turbo-crud` architecture is modular and declarative, simplifying CRUD application development with minimal coding. Built on Vaadin Flow, it dynamically generates routes and manages entities and their relationships automatically using Jooq or JPA.  
+A FactoryRegistry centralizes factories generating Vaadin Components like routes, forms, and data stores based on configuration metadata, ensuring flexibility and scalability. This architecture enables customization while maintaining seamless integration of data handling, UI rendering, and complex entity management.
 
-## <a name="data-handling">Data Handling and Management</a>
-turbo-crud utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
+While the `core` module contains the ui implementations, and the necessary parts to generate routes etc. the dataStore implementations are placed in separate `jooq` and the `jpa` modules. 
+
+### Basic principle
+`turbo-crud` relies heavily on dependency injection, the root is a `TurboCrudConfigService`. The implementation of this service will be provided by the user. Based on configuration provided by the `TurboCrudConfigService` the `DynamicRouteGenerator` will register the necessary routes.
+
+```mermaid
+classDiagram
+    class TurboCrudConfigService
+    class DynamicRouteGenerator
+    class RouteRenderer
+    class DataStore
+
+    DynamicRouteGenerator --> TurboCrudConfigService: references
+    DynamicRouteGenerator --> RouteRenderer: registers
+    RouteRenderer --> DataStore: references
+    
+```
+
+### <a name="data-handling">Data Handling and Management</a>
+`turbo-crud` utilizes the SQLite database during development. The database is accessed by the service `TurboCrudDataStore`, while the `TurboCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
 
 The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
 
-### <a name="relationship-routes-forms">Relationship between Routes and Forms</a>
+### <a name="relationship-routes-forms">Relationship between Route renderers and Forms</a>
 ```mermaid
 classDiagram
     class Dialog
     class DataStore
     class Column
-    class Route 
-    class KanbanRoute
+    class RouteRenderer 
+    class KanbanRouteRenderer
     class AppLayout 
     class MenuItem
-    class FormRoute
-    class GridRoute
-    class ListRoute
-    class MasterDetailRoute
-    class SubmenuRoute
-    class MultiFormRoute
-    class FormRoute
+    class FormRouteRenderer
+    class GridRouteRenderer
+    class ListRouteRenderer
+    class MasterDetailRouteRenderer
+    class SubmenuRouteRenderer
+    class MultiFormRouteRenderer
+    class FormRouteRenderer
     class Field
     class Collection
     
-    Route <|-- GridRoute: extends
-    Route <|-- KanbanRoute: extends
-    Route <|-- ListRoute: extends
-    Route <|-- MasterDetailRoute: extends
-    Route <|-- SubmenuRoute: extends
-    Route <|-- MultiFormRoute: extends
-    Route <|-- FormRoute: extends
-    Route --> AppLayout: contains
-    SubmenuRoute --> Route: contains
-    MasterDetailRoute --> Route: contains
+    RouteRenderer <|-- GridRouteRenderer: extends
+    RouteRenderer <|-- KanbanRouteRenderer: extends
+    RouteRenderer <|-- ListRouteRenderer: extends
+    RouteRenderer <|-- MasterDetailRouteRenderer: extends
+    RouteRenderer <|-- SubmenuRouteRenderer: extends
+    RouteRenderer <|-- MultiFormRouteRenderer: extends
+    RouteRenderer <|-- FormRouteRenderer: extends
+    RouteRenderer --> AppLayout: contains
+    SubmenuRouteRenderer --> RouteRenderer: contains
+    MasterDetailRouteRenderer --> RouteRenderer: contains
     AppLayout --> MenuItem: contains
-    ListRoute --> FormRoute: forwards to
-    GridRoute --> FormRoute: forwards to
-    FormRoute --> Form: contains
-    MultiFormRoute --> FormRoute: contains
+    ListRouteRenderer --> FormRouteRenderer: forwards to
+    GridRouteRenderer --> FormRouteRenderer: forwards to
+    FormRouteRenderer --> Form: contains
+    MultiFormRouteRenderer --> FormRouteRenderer: contains
     Form --> Field: contains
     Form --> Collection: contains
-    Route --> DataStore: references
+    RouteRenderer --> DataStore: references
     DataStore --> Column: contains
     Field --> Column: references
     Collection --> Column: references
     Collection --> Dialog: creates
-    KanbanRoute --> Dialog: creates
+    KanbanRouteRenderer --> Dialog: creates
     Dialog --> Form: creates
 ```
 
@@ -335,35 +366,35 @@ classDiagram
 The following shows a simplified representation on how data is being accessed. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
 ```mermaid
 classDiagram
-    class Route
-    class FormRoute
-    class GridRoute 
-    class KanbanRoute 
-    class ListRoute 
-    class MasterDetailRoute 
-    class SubmenuRoute 
-    class MultiFormRoute 
-    class FormRoute 
+    class RouteRenderer
+    class FormRouteRenderer
+    class GridRouteRenderer 
+    class KanbanRouteRenderer 
+    class ListRouteRenderer 
+    class MasterDetailRouteRenderer 
+    class SubmenuRouteRenderer 
+    class MultiFormRouteRenderer 
+    class FormRouteRenderer 
     class DataStore
 
-    Route <|-- GridRoute: extends
-    Route <|-- KanbanRoute: extends
-    Route <|-- ListRoute: extends
-    Route <|-- MasterDetailRoute: extends
-    Route <|-- SubmenuRoute: extends
-    Route <|-- MultiFormRoute: extends
-    Route <|-- FormRoute: extends
-    SubmenuRoute --> Route: contains
-    MasterDetailRoute --> Route: contains
-    ListRoute --> DataStore: uses
-    GridRoute --> DataStore: uses
-    FormRoute --> DataStore: uses
-    KanbanRoute --> DataStore: uses
-    MasterDetailRoute --> DataStore: uses
-    MultiFormRoute --> FormRoute: contains
+    RouteRenderer <|-- GridRouteRenderer: extends
+    RouteRenderer <|-- KanbanRouteRenderer: extends
+    RouteRenderer <|-- ListRouteRenderer: extends
+    RouteRenderer <|-- MasterDetailRouteRenderer: extends
+    RouteRenderer <|-- SubmenuRouteRenderer: extends
+    RouteRenderer <|-- MultiFormRouteRenderer: extends
+    RouteRenderer <|-- FormRouteRenderer: extends
+    SubmenuRouteRenderer --> RouteRenderer: contains
+    MasterDetailRouteRenderer --> RouteRenderer: contains
+    ListRouteRenderer --> DataStore: uses
+    GridRouteRenderer --> DataStore: uses
+    FormRouteRenderer --> DataStore: uses
+    KanbanRouteRenderer --> DataStore: uses
+    MasterDetailRouteRenderer --> DataStore: uses
+    MultiFormRouteRenderer --> FormRouteRenderer: contains
 ```
 
-## <a name="getting-started-with-development">Getting Started with Development</a>
+## <a name="further-development">Further Development</a>
 
 1. **Clone the repository**
 2. **Run one of the example application**:
