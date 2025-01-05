@@ -3,14 +3,37 @@
 
 `turbo-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD applications. It uses a declarative configuration approach to define routes, UI components, entities, relationships and data bindings, reducing the need for manual coding. By providing multiple abstraction layers, turbo-crud leverages Vaadin Flow to dynamically generate routes and offers default implementations for UI representation, allowing developers to quickly build and manage CRUD interfaces with minimal effort.
 
-## Inspiration
+## Table of Contents
+
+1. **[Inspiration](#inspiration)**
+2. **[Tech-Stack](#tech-stack)**
+3. **[Key Features](#key-features)**
+4. **[Getting Started](#getting-started)**
+    - **[Jooq Configuration](#configuration-jooq)**
+    - **[JPA Configuration](#configuration-jpa)**
+5. **[Core Concepts](#core-concepts)**
+    - **[User-Defined Database Model](#core-concept)**
+    - **[Example User-Defined Tables](#data-model-example)**
+6. **[Available Route Renderers and Inputs](#supported-routes-inputs)**
+    - **[Route Renderers](#route-renderers)**
+    - **[Input Types](#inputs)**
+    - **[Entity Relationships](#relationships)**
+7. **[Architecture](#architecture)**
+    - **[Basic Principles](#basic-principle)**
+    - **[Relationship Between Routes and Forms](#relationship-routes-forms)**
+    - **[Data Handling and Management](#data-handling)**
+    - **[Data Access](#data-access)**
+8. **[Roadmap](#roadmap)**
+9. **[Further Development](#further-development)**
+
+## <a name="inspiration">Inspiration</a>
 `turbo-crud` was inspired by systems such as [Directus](https://github.com/directus/directus), which enable user-friendly management of entities, structures and ui.
 
-## Tech-Stack
+## <a name="tech-stack">Tech-Stack</a>
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
 
-## Key Features
+## <a name="key-features">Key Features</a>
 - **Declarative definition of Forms and Routes**: create rapidly complex, user-friendly CRUD applications by describing the application.
 - **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible architecture ([see under Architecture](#Architecture)).
 - **Automatic Entity Management**: Let `turbo-crud` handle basic or more complex cases of entity management; For more complicated use-cases provide a custom implementation.
@@ -23,31 +46,6 @@
 - **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
 - **[WIP] Media Support**: Manage and view media easily
 - **Add routes not visible in the menu**
-
-## Table of Contents
-
-1. **[Getting Started](#getting-started)**  
-   1. [Jooq](#configuration-jooq)  
-   2. [JPA](#configuration-jpa)
-
-2. **[Data Handling and Management](#data-handling)**  
-   1. [Core Concept](#core-concept)  
-   2. [Example User-Defined Tables](#data-model-example)
-
-3. **[Available Route Renderers and Inputs](#supported-routes-inputs)**  
-   1. [Viewing Routes](#route-renderers)  
-   2. [Editing Routes](#editing-routes)  
-   3. [Nesting Routes](#nesting-routes)  
-   4. [Input Types](#inputs)  
-   5. [Relationships](#relationships)
-
-4. **[Roadmap](#roadmap)**
-
-5. **[Architecture](#architecture)**  
-   1. [Relationship Between Routes and Forms](#relationship-routes-forms)  
-   2. [Data Access Flow](#data-access)
-
-6. **[Further Development](#further-development)**
 
 ## <a name="roadmap">Roadmap</a>
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer".
@@ -86,12 +84,10 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
             PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
                     .withFields(Map.of(
                             PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
-                            PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                            PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                            PROJECTS.START_DATE, new JooqField(DateFieldFactory.class),
-                            PROJECTS.END_DATE, new JooqField(DateFieldFactory.class),
-                            PROJECTS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
-                            PROJECTS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
+                            PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true),
+                            PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false)
+                            // ...
+                    ))
                     .build()
             // ...
     );
@@ -102,10 +98,8 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
             .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
                     .withTitleField(PROJECTS.NAME)
                     .withChildren(
-                            new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
-                            new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
-                            new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
-                            new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
+                            new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name")
+                            // ...
                     )
                     .build())
             .build();
@@ -129,27 +123,7 @@ public class ExampleJooqConfiguration implements TurboCrudConfigurationProvider<
     return JooqApplication.of()
             .withName("application.name")
             .withI18nBundlePrefix("some_i18n")
-            .withUserManagement(UserManagement.Builder.of()
-                    .withEnabled(true)
-                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
-                    .withSignUp(true)
-                    .withAdditionalFields(List.of(AdditionalField.Builder.of()
-                            .withName("start_date")
-                            .withType("date")
-                            .build()))
-                    .build())
             .withRoutes(routes)
-            .withVersioning(Versioning.Builder.<Table<?>>of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
-            .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
-            .withSelects(Selects.Builder.of().withConfigs(
-                    Map.of("task-status",
-                            Map.of(
-                                    "open", "selects.task-status.open",
-                                    "todo", "selects.task-status.todo",
-                                    "work-in-progress", "selects.task-status.progress",
-                                    "closed", "selects.task-status.closed"
-                            )
-                    )).build())
             .withDataStores(dataStores)
             .build();
   }
@@ -172,10 +146,8 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
             .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
                     .withTitleField("name")
                     .withChildren(
-                            new JpaFormElement("name", "field", "route.projects.labels.name"),
-                            new JpaFormElement("description", "field", "route.projects.labels.description"),
-                            new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
-                            new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
+                            new JpaFormElement("name", "field", "route.projects.labels.name")
+                            // ...
                     )
                     .build())
             .build();
@@ -184,12 +156,10 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
             "projects", JpaDataStoreConfig.of(JpaDataStore.class)
                     .withFields(Map.of(
                             "id", new JpaField(IdFieldFactory.class, true),
-                            "name", new JpaField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
-                            "description", new JpaField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(500).build()),
-                            "start_date", new JpaField(DateFieldFactory.class),
-                            "end_date", new JpaField(DateFieldFactory.class),
-                            "created_at", new JpaField(DateTimePickerFactory.class),
-                            "updated_at", new JpaField(DateTimePickerFactory.class)))
+                            "name", new JpaField(TextFieldFactory.class, true, true),
+                            "description", new JpaField(TextAreaFieldFactory.class, false, false)
+                            // ...
+                    ))
                     .build()
             //...
     );
@@ -213,27 +183,7 @@ public class ExampleJpaConfiguration implements TurboCrudConfigurationProvider<S
     return JpaApplication.of()
             .withName("application.name")
             .withI18nBundlePrefix("some_i18n")
-            .withUserManagement(UserManagement.Builder.of()
-                    .withEnabled(true)
-                    .withAccessControl(AccessControl.Builder.of().withRoles(List.of("manager", "admin")).build())
-                    .withSignUp(true)
-                    .withAdditionalFields(List.of(AdditionalField.Builder.of()
-                            .withName("start_date")
-                            .withType("date")
-                            .build()))
-                    .build())
             .withRoutes(routes)
-            .withVersioning(Versioning.Builder.<String>of().withDataStores("projects", "tasks", "task_comments").build())
-            .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
-            .withSelects(Selects.Builder.of().withConfigs(
-                    Map.of("task-status",
-                            Map.of(
-                                    "open", "selects.task-status.open",
-                                    "todo", "selects.task-status.todo",
-                                    "work-in-progress", "selects.task-status.progress",
-                                    "closed", "selects.task-status.closed"
-                            )
-                    )).build())
             .withDataStores(dataStores)
             .build();
   }
@@ -305,9 +255,9 @@ classDiagram
     class DataStore
 
     DynamicRouteGenerator --> TurboCrudConfigService: references
-    DynamicRouteGenerator --> RouteRenderer: registers
-    RouteRenderer --> DataStore: references
-    
+    DynamicRouteGenerator --> DynamicRoute: registers as wildcard Vaadin Route
+    DynamicRoute --> RouteRenderer: Based on the URL a RouteRenderer will be resolved and rendered
+    RouteRenderer --> DataStore: uses one or multiple for data access
 ```
 
 ### <a name="data-handling">Data Handling and Management</a>
@@ -316,6 +266,8 @@ classDiagram
 The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
 
 ### <a name="relationship-routes-forms">Relationship between Route renderers and Forms</a>
+ 
+
 ```mermaid
 classDiagram
     class Dialog
@@ -403,3 +355,4 @@ classDiagram
      ```bash
      ./mvnw spring-boot:run
      ```
+
