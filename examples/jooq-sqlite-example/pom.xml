@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.appreciated.turbo-crud</groupId>
+	<groupId>com.github.appreciated.vortex-crud</groupId>
 	<artifactId>jooq-sqlite-example</artifactId>
 	<name>turbo-crud-jooq-example</name>
 	<version>1.0.0-SNAPSHOT</version>
@@ -43,7 +43,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.appreciated.turbo-crud</groupId>
+			<groupId>com.github.appreciated.vortex-crud</groupId>
 			<artifactId>jooq</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
@@ -128,7 +128,7 @@
 							<name>org.jooq.meta.sqlite.SQLiteDatabase</name>
 						</database>
 						<target>
-							<packageName>com.github.appreciated.turbo_crud.jooq.models</packageName>
+							<packageName>com.github.appreciated.vortex_crud.jooq.models</packageName>
 							<directory>target/generated-sources</directory>
 						</target>
 					</generator>
