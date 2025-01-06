@@ -1,5 +1,5 @@
 databaseChangeLog:
   - includeAll:
-      path: db/changelog/turbo-crud/
+      path: db/changelog/vortex-crud/
   - includeAll:
       path: db/changelog/database/

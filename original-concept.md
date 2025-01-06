@@ -1,4 +1,4 @@
-**Detailed Concept for a turbo-crud**
+**Detailed Concept for a vortex-crud**
 
 1. **Overview**
 

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service for loading and providing access to the Turbo CRUD configuration.
+ * Service for loading and providing access to the vortex-crud configuration.
  * Reads configuration from a resource file and offers methods to retrieve route and application settings.
  */
 
