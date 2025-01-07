@@ -74,8 +74,8 @@
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using jOOQ and JPA:
 
-### <a name="configuration-jooq">turbo-crud with jOOQ</a>
-Here is a brief example of how to use the jOOQ integration with turbo-crud. For a more comprehensive example, please refer to the `examples/jooq-sqlite-example` directory.
+### <a name="configuration-jooq">vortex-crud with jOOQ</a>
+Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, please refer to the `examples/jooq-sqlite-example` directory.
 
 ```java
 @Service
@@ -132,8 +132,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 }
 ```
 
-### <a name="configuration-jpa">turbo-crud with JPA</a>
-Below is another brief example of how to use the JPA integration with turbo-crud. A more detailed example can be found in the `examples/jpa-sqlite-example` directory.
+### <a name="configuration-jpa">vortex-crud with JPA</a>
+Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found in the `examples/jpa-sqlite-example` directory.
 
 ```java
 
@@ -255,7 +255,7 @@ classDiagram
 ```
 
 ### <a name="data-handling">Data Handling and Management</a>
-`turbo-crud` uses an SQLite database during development. The database is accessed through the `TurboCrudDataStore` service, the validation of the data model is data store specific to ensure that the schema matches the configuration. 
+`vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, the validation of the data model is data store specific to ensure that the schema matches the configuration. 
 Custom `DataStore` implementations are also supported, requiring only the implementation of a relevant interface.
 
 The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; rather, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
@@ -340,7 +340,7 @@ classDiagram
 ```
 
 ## <a name="contributing">Contributing</a>
-vortex-crud is open-source and welcomes contributions! If you’d like to contribute open an issue and let's discuss.
+`vortex-crud` is open-source and welcomes contributions! If you’d like to contribute open an issue and let's discuss.
 
 ## <a name="further-development">Further Development</a>
 
