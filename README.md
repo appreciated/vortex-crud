@@ -1,12 +1,12 @@
 # vortex-crud 
 <img width="120px" alt="vortex-crud Logo" src="vortex-crud.png"/>
 
-`vortex-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD applications. It uses a declarative configuration approach to define routes, UI components, entities, relationships and data bindings, reducing the need for manual coding. By providing multiple abstraction layers, vortex-crud leverages Vaadin Flow to dynamically generate routes and offers default implementations for UI representation, allowing developers to quickly build and manage CRUD interfaces with minimal effort.
+`vortex-crud` is a high-level framework built on top of Vaadin Flow, designed to simplify the creation of CRUD applications. It uses a declarative configuration approach to define routes, UI components, entities, relationships, and data bindings, reducing the need for manual coding. By providing multiple abstraction layers, `vortex-crud` leverages Vaadin Flow to dynamically generate routes and offers default implementations for UI representation, allowing developers to quickly build and manage CRUD interfaces with minimal effort.
 
 ## Table of Contents
 
 1. **[Inspiration](#inspiration)**
-2. **[Tech-Stack](#tech-stack)**
+2. **[Tech Stack](#tech-stack)**
 3. **[Key Features](#key-features)**
 4. **[Getting Started](#getting-started)**
     - **[jOOQ Configuration](#configuration-jooq)**
@@ -25,43 +25,42 @@
     - **[Data Access](#data-access)**
 8. **[Roadmap](#roadmap)**
 9. **[Contributing](#contributing)**
-9. **[Further Development](#further-development)**
+10. **[Further Development](#further-development)**
 
 ## <a name="inspiration">Inspiration</a>
 `vortex-crud` was inspired by systems like [Directus](https://github.com/directus/directus), which enable user-friendly management of entities and their relationships. However, unlike Directus, which offers a dynamic, configuration-based solution that requires no code, `vortex-crud` takes a different approach.
 
-Unlike **Directus**, `vortex-crud` relies on static Java code for configuration, providing developers with fine-grained control over the data models and underlying logic. This means database schema validation happens directly within the Java code, ensuring that the schema stays consistent and aligned with the application. As a result, developers can flexibly extend and reuse the schema, benefiting from a clear and verifiable structure.
+Unlike **Directus**, `vortex-crud` relies on static Java code for configuration, providing developers with fine-grained control over data models and underlying logic. This means database schema validation happens directly within the Java code, ensuring the schema stays consistent and aligned with the application. As a result, developers can flexibly extend and reuse the schema, benefiting from a clear and verifiable structure.
 
-Another key distinction from **Vaadin Flow** is that `vortex-crud` operates at a much higher level of abstraction. While Vaadin is a framework for building UI components, `vortex-crud` goes a step further: it simplifies the creation and management of CRUD applications by offering a declarative configuration for routes, UI components, and data bindings. Developers can focus less on manual coding, as the framework automatically handles many tasks such as generating routes and UI elements based on the defined model.
+Another key distinction from **Vaadin Flow** is that `vortex-crud` operates at a much higher level of abstraction. While Vaadin is a framework for building UI components, `vortex-crud` simplifies the creation and management of CRUD applications by offering a declarative configuration for routes, UI components, and data bindings. Developers can focus less on manual coding, as the framework automatically handles many tasks, such as generating routes and UI elements based on the defined model.
 
 Thanks to its **modular** design, `vortex-crud` allows developers to fully customize the user interface using Vaadin components. This provides high flexibility in designing the frontend while still benefiting from the default implementations of `vortex-crud`, which can be extended or replaced as needed.
 
-At its core, `vortex-crud` provides a solid foundation for CRUD applications, with a focus on flexibility, maintainability, and a clean separation of logic and presentation.
+At its core, `vortex-crud` provides a solid foundation for CRUD applications, focusing on flexibility, maintainability, and a clean separation of logic and presentation.
 
-
-## <a name="tech-stack">Tech-Stack</a>
+## <a name="tech-stack">Tech Stack</a>
 - **Spring Boot**: Backend API development and dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
-- **JPA or jOOQ**: `vortex-crud` supports either accessing the database using JPA or jOOQ 
+- **JPA or jOOQ**: `vortex-crud` supports accessing the database using either JPA or jOOQ
 
 ## <a name="key-features">Key Features</a>
-- **Declarative definition of Forms and Routes**: create rapidly complex, user-friendly CRUD applications by describing the application.
-- **Modular Architecture**: If default implementations don't suffice, rely on a fully modular and flexible [architecture](#architecture).
-- **Automatic Entity Management**: Let `vortex-crud` handle basic or more complex cases of entity management; For more complicated use-cases provide a custom implementation.
-  - **jOOQ Support**
-  - **JPA Support**
-    - **Database Schema Validation**: Get noticed if the data model does no longer fits to your application
+- **Declarative definition of Forms and Routes**: Rapidly create complex, user-friendly CRUD applications by describing the application.
+- **Modular Architecture**: If the default implementations don't suffice, rely on a fully modular and flexible [architecture](#architecture).
+- **Automatic Entity Management**: Let `vortex-crud` handle basic or more complex cases of entity management. For more complicated use cases, provide a custom implementation.
+    - **jOOQ Support**
+    - **JPA Support**
+        - **Database Schema Validation**: Receive notifications if the data model no longer fits your application.
 - **i18n Support**
-- **Entity Relationship Support**: Manage relationships between entities (One-To-One, One-To-Many).
+- **Entity Relationship Support**: Manage relationships between entities (One-to-One, One-to-Many).
 - **Nested Hierarchies**
-- **Filtering data**: Filter entity lists in "grid," "list," and "master-detail" routes.
-- **[WIP] Media Support**: Manage and view media easily
-- **Add routes not visible in the menu**
+- **Data Filtering**: Filter entity lists in "grid," "list," and "master-detail" routes.
+- **[WIP] Media Support**: Easily manage and view media.
+- **Custom Routes**: Add routes not visible in the menu.
 
 ## <a name="roadmap">Roadmap</a>
-- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer".
+- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
 - **Field Validation**: Support for basic and advanced field validation hooks.
-- **User and Role Management & Authentication**: (optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
+- **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Role-Based Access Control (RBAC)**
 - **Entity Versioning**
@@ -78,13 +77,13 @@ At its core, `vortex-crud` provides a solid foundation for CRUD applications, wi
 - **Styling**: Improve styling options.
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
-- **API-Endpoints**: Allow providing API endpoints to access the data stores programmatically
+- **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
 
 ## <a name="configuration">Getting Started</a>
-`vortex-crud` supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using jOOQ and JPA:
+`vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
 
 ### <a name="configuration-jooq">vortex-crud with jOOQ</a>
-Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, please refer to the `examples/jooq-sqlite-example` directory.
+Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, refer to the `examples/jooq-sqlite-example` directory.
 
 ```java
 @Service
@@ -142,13 +141,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 ```
 
 ### <a name="configuration-jpa">vortex-crud with JPA</a>
-Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found in the `examples/jpa-sqlite-example` directory.
+Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example
+
+can be found in the `examples/jpa-postgresql-example` directory.
 
 ```java
-
 @Service
-public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<String,String> {
-
+public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<Entity, Object> {
   @Override
   public Application<String, String> get() {
     Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
@@ -172,7 +171,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                             // ...
                     ))
                     .build()
-            //...
+            // ...
     );
 
     Map<String, Route<String, String>> routes = Map.of(
@@ -188,7 +187,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                     .withRoles(List.of("manager", "admin"))
                     .withChild(projectForm)
                     .build()
-            //...
+            // ...
     );
 
     return JpaApplication.of()
@@ -201,24 +200,24 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 }
 ```
 
-### <a name="supported-routes-inputs">Available route renders</a>
-#### Route renderers
-To make entities available via UI, `vortex-crud` relies on RouteRenderers.
+### <a name="supported-routes-inputs">Available Route Renderers</a>
+#### Route Renderers
+To make entities available via the UI, `vortex-crud` relies on Route Renderers.
 
-The following possible kinds of route rendering are available:
+The following types of route rendering are available:
 - **Viewing**: Grid, Cards, Kanban
 - **Editing**: Form, MultiForm
 - **Nesting**: Subroute
-- **Inputs**
-  - Text
-  - Date
-  - DateTime
-  - Image
-  - Number
-  - Select
-  - Checkbox
-  - TextArea
-- **Relationships**: One-To-One, Many-To-One, [WIP] Many-To-Many
+- **Inputs**:
+    - Text
+    - Date
+    - DateTime
+    - Image
+    - Number
+    - Select
+    - Checkbox
+    - TextArea
+- **Relationships**: One-to-One, Many-to-One, [WIP] Many-to-Many
 
 ### <a name="core-concept">Database Modeling</a>
 `vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
@@ -243,7 +242,7 @@ CREATE TABLE task_comments (...);
 ## <a name="architecture">Architecture</a>
 The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
 
-A collection of central registries acts as the core for generating Vaadin components, including routes, forms, and data stores, all based on configuration metadata. This approach ensures flexibility, scalability, and seamless integration, while allowing for easy customization of data handling, UI rendering, and complex entity management.
+A collection of central registries acts as the core for generating Vaadin components, including routes, forms, and data stores, all based on configuration metadata. This approach ensures flexibility, scalability, and seamless integration while allowing for easy customization of data handling, UI rendering, and complex entity management.
 
 While the `core` module handles the UI implementations and the generation of routes, the data store implementations are separated into the `jooq` and `jpa` modules for better modularity.
 
@@ -259,17 +258,17 @@ classDiagram
 
     DynamicRouteGenerator --> VortexCrudConfigService: references
     DynamicRouteGenerator --> DynamicRoute: registers as wildcard Vaadin Route
-    DynamicRoute --> RouteRenderer: Based on the URL a RouteRenderer will be resolved and rendered
-    RouteRenderer --> DataStore: uses one or multiple for data access
+    DynamicRoute --> RouteRenderer: Based on the URL, a RouteRenderer will be resolved and rendered
+    RouteRenderer --> DataStore: uses one or more for data access
 ```
 
 ### <a name="data-handling">Data Handling and Management</a>
-`vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, the validation of the data model is data store specific to ensure that the schema matches the configuration. 
-Custom `DataStore` implementations are also supported, requiring only the implementation of a relevant interface.
+`vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, and the validation of the data model is data store-specific to ensure that the schema matches the configuration. Custom `DataStore` implementations are also supported, requiring only the implementation of the relevant interface.
 
-The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; rather, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
-### <a name="relationship-routes-forms">Relationship between Route renderers and Forms</a>
- 
+The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; instead, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
+
+### <a name="relationship-routes-forms">Relationship Between Route Renderers and Forms</a>
+
 ```mermaid
 classDiagram
     class Dialog
@@ -318,6 +317,7 @@ classDiagram
 ### <a name="data-access">Data Access</a>
 
 The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
+
 ```mermaid
 classDiagram
     class RouteRenderer
@@ -349,15 +349,15 @@ classDiagram
 ```
 
 ## <a name="contributing">Contributing</a>
-`vortex-crud` is open-source and welcomes contributions! If you’d like to contribute open an issue and let's discuss.
+`vortex-crud` is open-source and welcomes contributions! If you’d like to contribute, open an issue and let's discuss.
 
 ## <a name="further-development">Further Development</a>
 
 1. **Clone the repository**
-2. **Run one of the example application**:
-   - The database will be initialized automatically
-   - Start example application:
-     ```bash
-     ./mvnw spring-boot:run
-     ```
-
+2. **Run one of the example applications**:
+    - The database will be initialized automatically.
+    - Start the example application:
+      ```bash
+      ./mvnw spring-boot:run
+      ```
+      
