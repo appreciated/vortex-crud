@@ -74,8 +74,8 @@
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` supports currently only configuration using java to define routes and data stores. Here’s smaller example on how to configure a part of a project management application using jOOQ and JPA:
 
-### <a name="configuration-jooq">vortex-crud with jOOQ</a>
-In the following a smallish example on how to use the jOOQ integration of `vortex-crud`. A more complete example can be found under `examples/jooq-sqlite-example`.
+### <a name="configuration-jooq">turbo-crud with jOOQ</a>
+Here is a brief example of how to use the jOOQ integration with turbo-crud. For a more comprehensive example, please refer to the `examples/jooq-sqlite-example` directory.
 
 ```java
 @Service
@@ -132,8 +132,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 }
 ```
 
-### <a name="configuration-jpa">vortex-crud with JPA</a>
-In the following another smallish example on how to use the JPA integration of `vortex-crud`. A more complete example can be found under `examples/jpa-sqlite-example`.
+### <a name="configuration-jpa">turbo-crud with JPA</a>
+Below is another brief example of how to use the JPA integration with turbo-crud. A more detailed example can be found in the `examples/jpa-sqlite-example` directory.
 
 ```java
 
@@ -212,8 +212,7 @@ The following possible kinds of route rendering are available:
 - **Relationships**: One-To-One, Many-To-One, [WIP] Many-To-Many
 
 ### <a name="core-concept">Database Modeling</a>
-`vortex-crud` does not provide its own database model. Instead, the user designs the data model and `vortex-crud` hooks onto it. The `vortex-crud` JPA implementation validates the view representation aligns with this model. 
-Some system-defined tables, such as those for auditing, user, and role management, are exceptions:
+`vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
 
 ```sql
 -- Predefined system tables (examples)
@@ -224,7 +223,7 @@ CREATE TABLE audit_log (...);
 ```
 
 ### <a name="data-model-example">Example User-Defined Tables</a>
-Users can define tables like `projects`, `tasks`, and `task_comments` as needed:
+Users can define custom tables as needed, such as `projects`, `tasks`, and `task_comments`:
 
 ```sql
 CREATE TABLE projects (...);
@@ -233,13 +232,14 @@ CREATE TABLE task_comments (...);
 ```
 
 ## <a name="architecture">Architecture</a>
-The `vortex-crud` architecture is modular and declarative, simplifying CRUD application development with minimal coding. Built on Vaadin Flow, it dynamically generates routes and manages entities and their relationships automatically using jOOQ or JPA.  
-A registry centralizes factories generating Vaadin Components like routes, forms, and data stores based on configuration metadata, ensuring flexibility and scalability. This architecture enables customization while maintaining seamless integration of data handling, UI rendering, and complex entity management.
+The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
 
-While the `core` module contains the ui implementations, and the necessary parts to generate routes etc. the dataStore implementations are placed in separate `jooq` and the `jpa` modules. 
+A collection of central registries acts as the core for generating Vaadin components, including routes, forms, and data stores, all based on configuration metadata. This approach ensures flexibility, scalability, and seamless integration, while allowing for easy customization of data handling, UI rendering, and complex entity management.
 
-### Basic principle
-`vortex-crud` relies heavily on dependency injection, the root is a `VortexCrudConfigService`. The implementation of this service will be provided by the user. Based on configuration provided by the `VortexCrudConfigService` the `DynamicRouteGenerator` will register the necessary routes.
+While the `core` module handles the UI implementations and the generation of routes, the data store implementations are separated into the `jooq` and `jpa` modules for better modularity.
+
+### Basic Principle
+At its core, `vortex-crud` relies on dependency injection, with the `VortexCrudConfigService` as the entry point. The implementation of this service is provided by the user. Based on the configuration defined in `VortexCrudConfigService`, the `DynamicRouteGenerator` automatically registers the necessary routes.
 
 ```mermaid
 classDiagram
@@ -255,10 +255,10 @@ classDiagram
 ```
 
 ### <a name="data-handling">Data Handling and Management</a>
-`vortex-crud` utilizes the SQLite database during development. The database is accessed by the service `VortexCrudDataStore`, while the `VortexCrudDatabaseSchemaValidator` ensures the schema aligns with the Java configuration at startup. Custom DataStore implementations are also supported, requiring only an interface implementation.
+`turbo-crud` uses an SQLite database during development. The database is accessed through the `TurboCrudDataStore` service, the validation of the data model is data store specific to ensure that the schema matches the configuration. 
+Custom `DataStore` implementations are also supported, requiring only the implementation of a relevant interface.
 
-The following diagram provides a simplified view of the architecture, illustrating relationships between various components. Note that classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration. A `FactoryRegistry` retrieves and returns the appropriate component factory based on this configuration.
-
+The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; rather, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
 ### <a name="relationship-routes-forms">Relationship between Route renderers and Forms</a>
  
 ```mermaid
@@ -308,7 +308,7 @@ classDiagram
 
 ### <a name="data-access">Data Access</a>
 
-The following shows a simplified representation on how the data renderers access data. As previously the same applies here, classes are not instantiated directly; instead, they are instantiated based on types specified in the configuration.
+The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
 ```mermaid
 classDiagram
     class RouteRenderer
