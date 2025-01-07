@@ -28,7 +28,16 @@
 9. **[Further Development](#further-development)**
 
 ## <a name="inspiration">Inspiration</a>
-`vortex-crud` was inspired by systems such as [Directus](https://github.com/directus/directus), which enable user-friendly management of entities, structures and ui.
+`vortex-crud` was inspired by systems like [Directus](https://github.com/directus/directus), which enable user-friendly management of entities and their relationships. However, unlike Directus, which offers a dynamic, configuration-based solution that requires no code, `vortex-crud` takes a different approach.
+
+Unlike **Directus**, `vortex-crud` relies on static Java code for configuration, providing developers with fine-grained control over the data models and underlying logic. This means database schema validation happens directly within the Java code, ensuring that the schema stays consistent and aligned with the application. As a result, developers can flexibly extend and reuse the schema, benefiting from a clear and verifiable structure.
+
+Another key distinction from **Vaadin Flow** is that `vortex-crud` operates at a much higher level of abstraction. While Vaadin is a framework for building UI components, `vortex-crud` goes a step further: it simplifies the creation and management of CRUD applications by offering a declarative configuration for routes, UI components, and data bindings. Developers can focus less on manual coding, as the framework automatically handles many tasks such as generating routes and UI elements based on the defined model.
+
+Thanks to its **modular** design, `vortex-crud` allows developers to fully customize the user interface using Vaadin components. This provides high flexibility in designing the frontend while still benefiting from the default implementations of `vortex-crud`, which can be extended or replaced as needed.
+
+At its core, `vortex-crud` provides a solid foundation for CRUD applications, with a focus on flexibility, maintainability, and a clean separation of logic and presentation.
+
 
 ## <a name="tech-stack">Tech-Stack</a>
 - **Spring Boot**: Backend API development and dependency injection
