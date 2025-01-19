@@ -93,7 +93,7 @@ At its core, `vortex-crud` provides a solid foundation for CRUD applications, fo
 **Relationships**: Routes connect to data stores, and forms are nested within routes. Forms handle CRUD operations on data fetched via stores, including related entities (e.g., tasks with comments or related tasks).
 
 ### <a name="configuration-jooq">vortex-crud with jOOQ</a>
-Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, refer to the `examples/jooq-sqlite-example` directory.
+Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, refer to `examples/jooq-sqlite-example`.
 
 ```java
 @Service
@@ -151,9 +151,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 ```
 
 ### <a name="configuration-jpa">vortex-crud with JPA</a>
-Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example
-
-can be found in the `examples/jpa-postgresql-example` directory.
+Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found under `examples/jpa-postgresql-example`.
 
 ```java
 @Service
