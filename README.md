@@ -145,7 +145,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         // Configure a grid route for displaying and navigating PROJECTS entries
         Map<String, Route<Table<?>, TableField<?, ?>>> routes = Map.of(
-                "projects-cards", JooqRoute.of(GridRouteFactory.class)
+                "projects-cards", JooqRoute.of(GridRouteFactory.class) // will register a grid route under f.e. localhost:8080/projects-cards to make PROJECTS editable
                         .withDefaultRoute(true)
                         .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
@@ -155,7 +155,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .withDescriptionField(PROJECTS.DESCRIPTION) // Displayed as the grid description
                                 .build())
                         .withRoles(List.of("manager", "admin")) // Restrict access to specific roles
-                        .withChild(projectForm) // Attach the form view as a child route
+                        .withChild(projectForm) // register child form route to edit PROJECTS entities f.e. localhost:8080/projects-cards/1
                         .build()
                 // ...
         );
