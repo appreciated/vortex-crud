@@ -53,32 +53,50 @@ At its core, `vortex-crud` provides a solid foundation for CRUD applications, fo
         - **Database Schema Validation**: Receive notifications if the data model no longer fits your application.
 - **i18n Support**
 - **Entity Relationship Support**: Manage relationships between entities (One-to-One, One-to-Many).
+- **Menu**
+- **Appbar**: With app name and icon
 - **Nested Hierarchies**
 - **Data Filtering**: Filter entity lists in "grid," "list," and "master-detail" routes.
 - **[WIP] Media Support**: Easily manage and view media.
 - **Custom Routes**: Add routes not visible in the menu.
 
-## <a name="roadmap">Roadmap</a>
-- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
-- **Field Validation**: Support for basic and advanced field validation hooks.
-- **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
-- **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
-- **Role-Based Access Control (RBAC)**
-- **Entity Versioning**
-- **Entity Auditing**
-- **Hook Points**: Add custom hook points for enhanced flexibility.
-- **Prefiltered Routes**: Display only specific items in routes as needed.
-- **Additional Routes**:
-    - **Calendar Route**: Example from [Directus](https://directus.pizza/admin/content/posts?bookmark=45)
-    - **Map Route**: Display entities on a map based on latitude and longitude columns.
-    - **Generic Block Route**: Support for generic blocks with a flexible factory system.
-- **Custom Menu Routes**: Add custom routes to the menu.
-- **Alternative Collection Editing**: Offer different ways to edit collections.
-- **Configuration Pre-Checks**: Validate the application configuration fully at startup.
-- **Styling**: Improve styling options.
-- **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
-- **Route Filters**: Add filtering options for "kanban" routes.
-- **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
+### <a name="supported-routes-inputs">Features in Detail</a>
+
+The main point of this project is, that it decouples rendering from data. 
+
+#### Route Renderers
+To make entities available via the UI, `vortex-crud` relies on Route Renderers.
+
+#### **Listing Data**
+##### Grid  
+<img width="600px" src="./img/screenshot-grid-view.png">  
+
+##### Cards 
+<img width="600px" src="./img/screenshot-card-view.png">
+
+##### Kanban 
+<img width="600px" src="./img/screenshot-kanban-view.png">
+
+##### Master-Detail
+<img width="600px" src="./img/screenshot-master-detail-view.png">
+
+#### **Editing Data Route Renderers**
+<img width="600px" src="./img/screenshot-form-view.png">
+
+#### **Nesting routes using Subroute**
+<img width="600px" src="./img/screenshot-subroute-view.png">
+
+#### Input
+- **Inputs**:
+  - Text
+  - Date
+  - DateTime
+  - Image
+  - Number
+  - Select
+  - Checkbox
+  - TextArea
+- **Relationships**: One-to-One, Many-to-One, [WIP] Many-to-Many
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
@@ -211,26 +229,30 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 }
 ```
 
-### <a name="supported-routes-inputs">Available Route Renderers</a>
-#### Route Renderers
-To make entities available via the UI, `vortex-crud` relies on Route Renderers.
+## <a name="roadmap">Roadmap</a>
+- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
+- **Field Validation**: Support for basic and advanced field validation hooks.
+- **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
+- **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
+- **Role-Based Access Control (RBAC)**
+- **Entity Versioning**
+- **Entity Auditing**
+- **Hook Points**: Add custom hook points for enhanced flexibility.
+- **Prefiltered Routes**: Display only specific items in routes as needed.
+- **Additional Routes**:
+  - **Calendar Route**: Example from [Directus](https://directus.pizza/admin/content/posts?bookmark=45)
+  - **Map Route**: Display entities on a map based on latitude and longitude columns.
+  - **Generic Block Route**: Support for generic blocks with a flexible factory system.
+- **Custom Menu Routes**: Add custom routes to the menu.
+- **Alternative Collection Editing**: Offer different ways to edit collections.
+- **Configuration Pre-Checks**: Validate the application configuration fully at startup.
+- **Styling**: Improve styling options.
+- **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
+- **Route Filters**: Add filtering options for "kanban" routes.
+- **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
 
-The following types of route rendering are available:
-- **Viewing**: Grid, Cards, Kanban
-- **Editing**: Form, MultiForm
-- **Nesting**: Subroute
-- **Inputs**:
-    - Text
-    - Date
-    - DateTime
-    - Image
-    - Number
-    - Select
-    - Checkbox
-    - TextArea
-- **Relationships**: One-to-One, Many-to-One, [WIP] Many-to-Many
 
-### <a name="core-concept">Database Modeling</a>
+## <a name="core-concept">Database Modeling</a>
 `vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
 
 ```sql
@@ -362,7 +384,9 @@ classDiagram
 ## <a name="contributing">Contributing</a>
 `vortex-crud` is open-source and welcomes contributions! If you’d like to contribute, open an issue and let's discuss.
 
-## <a name="further-development">Further Development</a>
+## <a name="further-development">Setup development environment for open source development</a>
+
+To get started for using this framework see in the chapter [Getting Started](#getting-started).
 
 1. **Clone the repository**
 2. **Run one of the example applications**:
