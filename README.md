@@ -229,6 +229,26 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 }
 ```
 
+## <a name="core-concept">Database Modeling</a>
+`vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
+
+```sql
+-- Predefined system tables (examples)
+CREATE TABLE users (...);
+CREATE TABLE roles (...);
+CREATE TABLE user_roles (...);
+CREATE TABLE audit_log (...);
+```
+
+### <a name="data-model-example">Example User-Defined Tables</a>
+Users can define custom tables as needed, such as `projects`, `tasks`, and `task_comments`:
+
+```sql
+CREATE TABLE projects (...);
+CREATE TABLE tasks (...);
+CREATE TABLE task_comments (...);
+```
+
 ## <a name="roadmap">Roadmap</a>
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
 - **Field Validation**: Support for basic and advanced field validation hooks.
@@ -250,27 +270,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 - **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
-
-
-## <a name="core-concept">Database Modeling</a>
-`vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
-
-```sql
--- Predefined system tables (examples)
-CREATE TABLE users (...);
-CREATE TABLE roles (...);
-CREATE TABLE user_roles (...);
-CREATE TABLE audit_log (...);
-```
-
-### <a name="data-model-example">Example User-Defined Tables</a>
-Users can define custom tables as needed, such as `projects`, `tasks`, and `task_comments`:
-
-```sql
-CREATE TABLE projects (...);
-CREATE TABLE tasks (...);
-CREATE TABLE task_comments (...);
-```
 
 ## <a name="architecture">Architecture</a>
 The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
