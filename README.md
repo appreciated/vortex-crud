@@ -98,55 +98,58 @@ Here is a brief example of how to use the jOOQ integration with `vortex-crud`. F
 ```java
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<Table<?>, TableField<?, ?>> {
-  @Override
-  public Application<Table<?>, TableField<?, ?>> get() {
-    Map<Table<?>, DataStoreConfig<Table<?>, TableField<?, ?>>> dataStores = Map.of(
-            PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
-                    .withFields(Map.of(
-                            PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
-                            PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true),
-                            PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false)
-                            // ...
-                    ))
-                    .build()
-            // ...
-    );
+    @Override
+    public Application<Table<?>, TableField<?, ?>> get() {
+        // Configure accessible data and its editable fields for vortex-crud
+        Map<Table<?>, DataStoreConfig<Table<?>, TableField<?, ?>>> dataStores = Map.of(
+                PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
+                        .withFields(Map.of(
+                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true), // Render projects.id as id field
+                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true), // Render projects.name as required text field
+                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false) // Render projects.description as optional text area
+                        ))
+                        .build()
+                // ...
+        );
 
-    Route<Table<?>, TableField<?, ?>> projectForm = JooqRoute.of(FormRouteFactory.class)
-            .withDataStore(PROJECTS)
-            .withTitle("route.projects.title-cards")
-            .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                    .withTitleField(PROJECTS.NAME)
-                    .withChildren(
-                            new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name")
-                            // ...
-                    )
-                    .build())
-            .build();
+        // Define a reusable form for editing entities from the "PROJECTS" datastore
+        Route<Table<?>, TableField<?, ?>> projectForm = JooqRoute.of(FormRouteFactory.class)
+                .withDataStore(PROJECTS)
+                .withTitle("route.projects.title-cards") // i18n key for the title
+                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
+                        .withTitleField(PROJECTS.NAME) // Field to display as the card title
+                        .withChildren(
+                                new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name") // Form element with i18n key
+                                // ...
+                        )
+                        .build())
+                .build();
 
-    Map<String, Route<Table<?>, TableField<?, ?>>> routes = Map.of(
-            "projects-cards", JooqRoute.of(GridRouteFactory.class)
-                    .withDefaultRoute(true)
-                    .withDataStore(PROJECTS)
-                    .withIconFactory(FACTORY::create)
-                    .withTitle("route.projects.title-cards")
-                    .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                            .withTitleField(PROJECTS.NAME)
-                            .withDescriptionField(PROJECTS.DESCRIPTION)
-                            .build())
-                    .withRoles(List.of("manager", "admin"))
-                    .withChild(projectForm)
-                    .build()
-            // ...
-    );
+        // Configure a grid route for displaying and navigating PROJECTS entries
+        Map<String, Route<Table<?>, TableField<?, ?>>> routes = Map.of(
+                "projects-cards", JooqRoute.of(GridRouteFactory.class)
+                        .withDefaultRoute(true)
+                        .withDataStore(PROJECTS)
+                        .withIconFactory(FACTORY::create)
+                        .withTitle("route.projects.title-cards")
+                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                                .withTitleField(PROJECTS.NAME) // Displayed as the grid title
+                                .withDescriptionField(PROJECTS.DESCRIPTION) // Displayed as the grid description
+                                .build())
+                        .withRoles(List.of("manager", "admin")) // Restrict access to specific roles
+                        .withChild(projectForm) // Attach the form view as a child route
+                        .build()
+                // ...
+        );
 
-    return JooqApplication.of()
-            .withName("application.name")
-            .withI18nBundlePrefix("some_i18n")
-            .withRoutes(routes)
-            .withDataStores(dataStores)
-            .build();
-  }
+        // Build the vortex-crud application using defined routes and datastores
+        return JooqApplication.of()
+                .withName("application.name")
+                .withI18nBundlePrefix("some_i18n")
+                .withRoutes(routes)
+                .withDataStores(dataStores)
+                .build();
+    }
 }
 ```
 
@@ -156,55 +159,55 @@ Below is another brief example of how to use the JPA integration with `vortex-cr
 ```java
 @Service
 public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<Entity, Object> {
-  @Override
-  public Application<String, String> get() {
-    Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
-            .withDataStore("projects")
-            .withTitle("route.projects.title-cards")
-            .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
-                    .withTitleField("name")
-                    .withChildren(
-                            new JpaFormElement("name", "field", "route.projects.labels.name")
-                            // ...
-                    )
-                    .build())
-            .build();
-
-    Map<String, DataStoreConfig<String, String>> dataStores = Map.of(
-            "projects", JpaDataStoreConfig.of(JpaDataStore.class)
-                    .withFields(Map.of(
-                            "id", new JpaField(IdFieldFactory.class, true),
-                            "name", new JpaField(TextFieldFactory.class, true, true),
-                            "description", new JpaField(TextAreaFieldFactory.class, false, false)
-                            // ...
-                    ))
-                    .build()
-            // ...
-    );
-
-    Map<String, Route<String, String>> routes = Map.of(
-            "projects-cards", JpaRoute.of(GridRouteFactory.class)
-                    .withDefaultRoute(true)
-                    .withDataStore("projects")
-                    .withIconFactory(FACTORY::create)
-                    .withTitle("route.projects.title-cards")
-                    .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
-                            .withTitleField("name")
-                            .withDescriptionField("description")
-                            .build())
-                    .withRoles(List.of("manager", "admin"))
-                    .withChild(projectForm)
-                    .build()
-            // ...
-    );
-
-    return JpaApplication.of()
-            .withName("application.name")
-            .withI18nBundlePrefix("some_i18n")
-            .withRoutes(routes)
-            .withDataStores(dataStores)
-            .build();
-  }
+    @Override
+    public Application<String, String> get() {
+        Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
+                .withDataStore("projects")
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                        .withTitleField("name")
+                        .withChildren(
+                                new JpaFormElement("name", "field", "route.projects.labels.name")
+                                // ...
+                        )
+                        .build())
+                .build();
+    
+        Map<String, DataStoreConfig<String, String>> dataStores = Map.of(
+                "projects", JpaDataStoreConfig.of(JpaDataStore.class)
+                        .withFields(Map.of(
+                                "id", new JpaField(IdFieldFactory.class, true),
+                                "name", new JpaField(TextFieldFactory.class, true, true),
+                                "description", new JpaField(TextAreaFieldFactory.class, false, false)
+                                // ...
+                        ))
+                        .build()
+                // ...
+        );
+    
+        Map<String, Route<String, String>> routes = Map.of(
+                "projects-cards", JpaRoute.of(GridRouteFactory.class)
+                        .withDefaultRoute(true)
+                        .withDataStore("projects")
+                        .withIconFactory(FACTORY::create)
+                        .withTitle("route.projects.title-cards")
+                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
+                                .withTitleField("name")
+                                .withDescriptionField("description")
+                                .build())
+                        .withRoles(List.of("manager", "admin"))
+                        .withChild(projectForm)
+                        .build()
+                // ...
+        );
+  
+        return JpaApplication.of()
+                .withName("application.name")
+                .withI18nBundlePrefix("some_i18n")
+                .withRoutes(routes)
+                .withDataStores(dataStores)
+                .build();
+    }
 }
 ```
 
