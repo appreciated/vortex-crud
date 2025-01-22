@@ -28,7 +28,7 @@
    - **[Example User-Defined Tables](#example-user-defined-tables)**
 5. **[Architecture](#architecture)**
    - **[Basic Principles](#basic-principles)**
-   - **[Relationship Between Routes and Forms](#relationship-between-routes-and-forms)**
+   - **[Relationship Between Routes and Forms](#relationship-routes-forms)**
    - **[Data Handling](#data-handling)**
    - **[Data Access](#data-access)**
 6. **[Roadmap](#roadmap)**
