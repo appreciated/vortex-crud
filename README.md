@@ -85,7 +85,7 @@ The main point of this project is, that it decouples rendering from data.
 ### Master-Detail
 <img width="600px" src="./img/screenshot-master-detail-view.png">
 
-### **Editing Data Route Renderers**
+### **Edit Data with a Form Route**
 <img width="600px" src="./img/screenshot-form-view.png">
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
