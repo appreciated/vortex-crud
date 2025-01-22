@@ -5,29 +5,37 @@
 
 ## Table of Contents
 
-1. **[Inspiration](#inspiration)**
-2. **[Tech Stack](#tech-stack)**
-3. **[Key Features](#key-features)**
-4. **[Getting Started](#getting-started)**
-    - **[Terminology](#terminology)**
-    - **[jOOQ Configuration](#configuration-jooq)**
-    - **[JPA Configuration](#configuration-jpa)**
-5. **[Core Concepts](#core-concepts)**
-    - **[User-Defined Database Model](#core-concept)**
-    - **[Example User-Defined Tables](#data-model-example)**
-6. **[Available Route Renderers and Inputs](#supported-routes-inputs)**
-    - **[Route Renderers](#route-renderers)**
-    - **[Input Types](#inputs)**
-    - **[Entity Relationships](#relationships)**
-7. **[Architecture](#architecture)**
-    - **[Basic Principles](#basic-principle)**
-    - **[Relationship Between Routes and Forms](#relationship-routes-forms)**
-    - **[Data Handling and Management](#data-handling)**
-    - **[Data Access](#data-access)**
-8. **[Roadmap](#roadmap)**
-9. **[Contributing](#contributing)**
-10. **[Further Development](#further-development)**
+1. **[Introduction](#introduction)**
+   - **[Inspiration](#inspiration)**
+   - **[Tech Stack](#tech-stack)**
+   - **[Key Features](#key-features)**
+2. **[Features in Detail](#features-in-detail)**
+   - **[Listing Data](#listing-data)**
+      - **[Grid](#grid)**
+      - **[Cards](#cards)**
+      - **[Kanban](#kanban)**
+      - **[Master-Detail](#master-detail)**
+   - **[Nesting routes using Subroute](#nesting-routes-using-subroute)**
+   - **[Editing Data](#editing-data)**
+      - **[Input Types](#input-types)**
+      - **[Relationships](#relationships)**
+3. **[Getting Started](#getting-started)**
+   - **[Terminology](#terminology)**
+   - **[Configuration with jOOQ](#configuration-with-jooq)**
+   - **[Configuration with JPA](#configuration-with-jpa)**
+4. **[Database Modeling](#database-modeling)**
+   - **[System-Defined Tables](#system-defined-tables)**
+   - **[Example User-Defined Tables](#example-user-defined-tables)**
+5. **[Architecture](#architecture)**
+   - **[Basic Principles](#basic-principles)**
+   - **[Relationship Between Routes and Forms](#relationship-between-routes-and-forms)**
+   - **[Data Handling](#data-handling)**
+   - **[Data Access](#data-access)**
+6. **[Roadmap](#roadmap)**
+7. **[Contributing](#contributing)**
+8. **[Further Development](#further-development)**
 
+# <a name="untroduction">Introduction</a>
 ## <a name="inspiration">Inspiration</a>
 `vortex-crud` was inspired by systems like [Directus](https://github.com/directus/directus), which enable user-friendly management of entities and their relationships. However, unlike Directus, which offers a dynamic, configuration-based solution that requires no code, `vortex-crud` takes a different approach.
 
@@ -60,33 +68,31 @@ At its core, `vortex-crud` provides a solid foundation for CRUD applications, fo
 - **[WIP] Media Support**: Easily manage and view media.
 - **Custom Routes**: Add routes not visible in the menu.
 
-### <a name="supported-routes-inputs">Features in Detail</a>
+# <a name="supported-routes-inputs">Features in Detail</a>
 
 The main point of this project is, that it decouples rendering from data. 
 
-#### Route Renderers
-To make entities available via the UI, `vortex-crud` relies on Route Renderers.
-
-#### **Listing Data**
-##### Grid  
+## <a name="listing-data">Listing Data</a>
+### Grid  
 <img width="600px" src="./img/screenshot-grid-view.png">  
 
-##### Cards 
+### Cards 
 <img width="600px" src="./img/screenshot-card-view.png">
 
-##### Kanban 
+### Kanban 
 <img width="600px" src="./img/screenshot-kanban-view.png">
 
-##### Master-Detail
+### Master-Detail
 <img width="600px" src="./img/screenshot-master-detail-view.png">
 
-#### **Editing Data Route Renderers**
+### **Editing Data Route Renderers**
 <img width="600px" src="./img/screenshot-form-view.png">
 
-#### **Nesting routes using Subroute**
+## a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
 <img width="600px" src="./img/screenshot-subroute-view.png">
 
-#### Input
+## <a name="editing-data">Editing Data</a>
+### Input
 - **Inputs**:
   - Text
   - Date
@@ -229,7 +235,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 }
 ```
 
-## <a name="core-concept">Database Modeling</a>
+# <a name="core-concept">Database Modeling</a>
 `vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
 
 ```sql
@@ -240,7 +246,7 @@ CREATE TABLE user_roles (...);
 CREATE TABLE audit_log (...);
 ```
 
-### <a name="data-model-example">Example User-Defined Tables</a>
+## <a name="data-model-example">Example User-Defined Tables</a>
 Users can define custom tables as needed, such as `projects`, `tasks`, and `task_comments`:
 
 ```sql
@@ -249,7 +255,7 @@ CREATE TABLE tasks (...);
 CREATE TABLE task_comments (...);
 ```
 
-## <a name="roadmap">Roadmap</a>
+# <a name="roadmap">Roadmap</a>
 - **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
 - **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
@@ -271,14 +277,14 @@ CREATE TABLE task_comments (...);
 - **Route Filters**: Add filtering options for "kanban" routes.
 - **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
 
-## <a name="architecture">Architecture</a>
+# <a name="architecture">Architecture</a>
 The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
 
 A collection of central registries acts as the core for generating Vaadin components, including routes, forms, and data stores, all based on configuration metadata. This approach ensures flexibility, scalability, and seamless integration while allowing for easy customization of data handling, UI rendering, and complex entity management.
 
 While the `core` module handles the UI implementations and the generation of routes, the data store implementations are separated into the `jooq` and `jpa` modules for better modularity.
 
-### Basic Principle
+## Basic Principles
 At its core, `vortex-crud` relies on dependency injection, with the `VortexCrudConfigService` as the entry point. The implementation of this service is provided by the user. Based on the configuration defined in `VortexCrudConfigService`, the `DynamicRouteGenerator` automatically registers the necessary routes.
 
 ```mermaid
@@ -294,12 +300,12 @@ classDiagram
     RouteRenderer --> DataStore: uses one or more for data access
 ```
 
-### <a name="data-handling">Data Handling and Management</a>
+## <a name="data-handling">Data Handling and Management</a>
 `vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, and the validation of the data model is data store-specific to ensure that the schema matches the configuration. Custom `DataStore` implementations are also supported, requiring only the implementation of the relevant interface.
 
 The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; instead, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
 
-### <a name="relationship-routes-forms">Relationship Between Route Renderers and Forms</a>
+## <a name="relationship-routes-forms">Relationship Between Route Renderers and Forms</a>
 
 ```mermaid
 classDiagram
@@ -346,7 +352,7 @@ classDiagram
     Dialog --> Form: creates
 ```
 
-### <a name="data-access">Data Access</a>
+## <a name="data-access">Data Access</a>
 
 The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
 
@@ -380,10 +386,10 @@ classDiagram
     MultiFormRouteRenderer --> FormRouteRenderer: contains
 ```
 
-## <a name="contributing">Contributing</a>
+# <a name="contributing">Contributing</a>
 `vortex-crud` is open-source and welcomes contributions! If you’d like to contribute, open an issue and let's discuss.
 
-## <a name="further-development">Setup development environment for open source development</a>
+# <a name="further-development">Further Development</a>
 
 To get started for using this framework see in the chapter [Getting Started](#getting-started).
 
