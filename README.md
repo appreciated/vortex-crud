@@ -35,7 +35,7 @@
 7. **[Contributing](#contributing)**
 8. **[Further Development](#further-development)**
 
-# <a name="untroduction">Introduction</a>
+# <a name="introduction">Introduction</a>
 ## <a name="inspiration">Inspiration</a>
 `vortex-crud` was inspired by systems like [Directus](https://github.com/directus/directus), which enable user-friendly management of entities and their relationships. However, unlike Directus, which offers a dynamic, configuration-based solution that requires no code, `vortex-crud` takes a different approach.
 
