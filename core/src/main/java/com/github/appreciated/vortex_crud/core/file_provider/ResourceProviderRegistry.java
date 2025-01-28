@@ -14,12 +14,12 @@ import java.util.Optional;
  */
 
 @Service
-public class FileProviderRegistry implements VortexCrudFileProviderRegistry {
+public class ResourceProviderRegistry implements VortexCrudFileProviderRegistry {
 
     private final Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> factories = new HashMap<>();
 
-    public FileProviderRegistry() {
-        factories.put(ResourceProvider.class, new ResourceProvider());
+    public ResourceProviderRegistry() {
+        factories.put(ImageResourceProvider.class, new ImageResourceProvider());
     }
 
     public Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> getFactories() {
