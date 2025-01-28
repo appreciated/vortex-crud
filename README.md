@@ -108,13 +108,11 @@ The main point of this project is, that it decouples rendering from data.
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
 
 ### <a name="terminology">Terminology</a>
-**Routes**: Define navigational paths and display configurations (e.g., grids, lists, or Kanban boards). They connect to specific data stores for fetching and displaying data.
-
-**Data Stores**: Represent database tables, including field configurations (e.g., input types, validations) and relationships (e.g., one-to-many, many-to-many).
-
-**Forms**: Child components of routes used for creating or editing data. Forms use data stores to render fields and manage relationships through collections.
-
-**Relationships**: Routes connect to data stores, and forms are nested within routes. Forms handle CRUD operations on data fetched via stores, including related entities (e.g., tasks with comments or related tasks).
+**Data Store**: A abstraction layer (similar to a Spring Repository or a DAO) that manages data for a single database tables
+ - **Field**: Child components of data stores representing a database column
+**Route**: Define navigational paths and display configurations (e.g., grids, lists, or Kanban boards). They connect to specific data stores for fetching and displaying data.
+ - **Form**: A specific route that contains element to creating or editing data using one or even multiple datastore, depending on the contained elements.
+   - **Element**: Child components of form the ui field that binds to a field
 
 ### <a name="configuration-jooq">vortex-crud with jOOQ</a>
 Here is a brief example of how to use the jOOQ integration with `vortex-crud`. For a more comprehensive example, refer to `examples/jooq-sqlite-example`.
