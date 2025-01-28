@@ -232,6 +232,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withChild(imageForm)
                 .build());
 
+        LinkedHashMap<String, String> taskStatuses = new LinkedHashMap<>();
+        taskStatuses.put("todo", "selects.task-status.todo");
+        taskStatuses.put("open", "selects.task-status.open");
+        taskStatuses.put("work-in-progress", "selects.task-status.progress");
+        taskStatuses.put("closed", "selects.task-status.closed");
+
         return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
@@ -248,14 +254,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withVersioning(Versioning.Builder.<String>of().withDataStores("projects", "tasks", "task_comments").build())
                 .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
-                        Map.of("task-status",
-                                Map.of(
-                                        "open", "selects.task-status.open",
-                                        "todo", "selects.task-status.todo",
-                                        "work-in-progress", "selects.task-status.progress",
-                                        "closed", "selects.task-status.closed"
-                                )
-                        )).build())
+                        Map.of("task-status", taskStatuses)).build())
                 .withDataStores(dataStores)
                 .build();
     }

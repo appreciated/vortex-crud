@@ -70,7 +70,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
                                                         .withManyToMany(new ManyToMany<>(TASK_HAS_TASK,
-                                                                TASK_HAS_TASK.ID,
+                                                                TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
                                                                 TASKS.ID))
                                                         .withChildren("title")
@@ -240,6 +240,12 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withChild(imageForm)
                 .build());
 
+        LinkedHashMap<String, String> taskStatuses = new LinkedHashMap<>();
+        taskStatuses.put("todo", "selects.task-status.todo");
+        taskStatuses.put("open", "selects.task-status.open");
+        taskStatuses.put("work-in-progress", "selects.task-status.progress");
+        taskStatuses.put("closed", "selects.task-status.closed");
+
         return JooqApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
@@ -256,14 +262,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withVersioning(Versioning.Builder.<Table<?>>of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
                 .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
                 .withSelects(Selects.Builder.of().withConfigs(
-                        Map.of("task-status",
-                                Map.of(
-                                        "open", "selects.task-status.open",
-                                        "todo", "selects.task-status.todo",
-                                        "work-in-progress", "selects.task-status.progress",
-                                        "closed", "selects.task-status.closed"
-                                )
-                        )).build())
+                        Map.of("task-status", taskStatuses)).build())
                 .withDataStores(dataStores)
                 .build();
     }

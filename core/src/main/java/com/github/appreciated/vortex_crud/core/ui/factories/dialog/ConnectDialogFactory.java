@@ -2,8 +2,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionData;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -17,16 +19,20 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDialogFactory<DataStoreId, FieldId> {
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
-    public ConnectDialogFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry) {
+    public ConnectDialogFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
+        this.fieldNameResolver = fieldNameResolver;
     }
 
     @Override
@@ -41,6 +47,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                              FormCreator<DataStoreId, FieldId> formCreator) {
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
+        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getFactory(collectionData.getManyToMany().getAssociativeDataStore());
+        FieldId associativeTargetIdField = collectionData.getManyToMany().getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -52,19 +60,24 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Fetch available connections
         List<GenericEntity> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
+        Set<String> currentlySelectedConnectionIds = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream()
+                .map(record -> record.getString(fieldNameResolver.getKeyForFieldId(associativeTargetIdField))).collect(Collectors.toSet());
+        Set<GenericEntity> currentlySelectedConnections = availableConnections.stream().filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity))).collect(Collectors.toSet());
+
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
         connectionList.setItemLabelGenerator(genericEntity -> collectionData.getChildren().stream().map(genericEntity::getString).collect(Collectors.joining(",")));
+        connectionList.setValue(currentlySelectedConnections);
 
         layout.add(connectionList);
 
         // Footer buttons
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
-            Set<GenericEntity> selectedConnections = connectionList.getSelectedItems();
-            if (!selectedConnections.isEmpty()) {
-                // Process selected connections
+            Set<GenericEntity> newSelectedConnections = connectionList.getSelectedItems();
+            if (!newSelectedConnections.isEmpty()) {
+                // Store newly selected connections
                 listener.onStore();
                 dialog.close();
             } else {

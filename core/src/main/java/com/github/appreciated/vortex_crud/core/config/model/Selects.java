@@ -2,18 +2,19 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @GenerateBuilder
 public class Selects {
 
-    private Map<String, Map<String, String>> configs;
+    private Map<String, LinkedHashMap<String, String>> configs;
 
-    public Map<String, Map<String, String>> getConfigs() {
+    public Map<String, LinkedHashMap<String, String>> getConfigs() {
         return configs;
     }
 
-    public void setConfigs(Map<String, Map<String, String>> configs) {
+    public void setConfigs(Map<String, LinkedHashMap<String, String>> configs) {
         this.configs = configs;
     }
 
@@ -29,7 +30,7 @@ public class Selects {
             return new Builder(new Selects());
         }
 
-        public Builder withConfigs(Map<String, Map<String, String>> configs) {
+        public Builder withConfigs(Map<String, LinkedHashMap<String, String>> configs) {
             product.configs = configs;
             return this;
         }

@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * A generic entity class representing a map of properties.
@@ -29,11 +30,25 @@ public class GenericEntity {
     }
 
     public String getString(String name) {
-        return (String) properties.get(name);
+        Object obj = properties.get(name);
+        if (obj instanceof Integer){
+            return String.valueOf(obj);
+        }
+        return (String) obj;
     }
 
     public void put(String name, Object value) {
         this.properties.put(name, value);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof GenericEntity that)) return false;
+        return Objects.equals(getProperties(), that.getProperties());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getProperties());
+    }
 }

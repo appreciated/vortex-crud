@@ -25,7 +25,7 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Vorte
     public DefaultDialogFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId> configService, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver));
     }
 
     public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId>> getFactories() {

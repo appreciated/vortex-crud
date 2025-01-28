@@ -182,8 +182,8 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
             OneToMany<FieldId> oneToMany = collectionData.getOneToMany();
             return oneToMany.getReferenceField();
         } else if (collectionData.getManyToMany() != null) {
-            ManyToMany<DataStoreId, FieldId> oneToMany = collectionData.getManyToMany();
-            return oneToMany.getDataStoreField();
+            ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
+            return manyToMany.getAssociativeSourceIdField();
         } else {
             throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
         }
