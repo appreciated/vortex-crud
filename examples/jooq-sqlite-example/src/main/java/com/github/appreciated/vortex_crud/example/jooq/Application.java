@@ -18,6 +18,9 @@ import org.springframework.context.annotation.ComponentScan;
 @Theme(variant = Lumo.DARK)
 @Push
 @ComponentScan({"com.github.appreciated.vortex_crud"})
+//
+// Make sure the working directory is set to the module path
+//
 public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {

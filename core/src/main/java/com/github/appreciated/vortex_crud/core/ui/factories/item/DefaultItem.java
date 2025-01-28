@@ -24,12 +24,12 @@ public class DefaultItem<FieldId> extends VerticalLayout {
 
         // Optional image
         ImageDisplayComponent image = null;
-        FieldId imageField = config.getImageField();
-        if (imageField != null) {
+        FieldId imageFieldId = config.getImageField();
+        if (imageFieldId != null) {
             if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
-            String imagePath = entity.getString(resolver.getKeyForFieldId(imageField));
+            String imagePath = entity.getString(resolver.getKeyForFieldId(imageFieldId));
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
             image.setWidthFull();

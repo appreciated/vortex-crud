@@ -269,6 +269,8 @@ CREATE TABLE task_comments (...);
   - **Calendar Route**: Example from [Directus](https://directus.pizza/admin/content/posts?bookmark=45)
   - **Map Route**: Display entities on a map based on latitude and longitude columns.
   - **Generic Block Route**: Support for generic blocks with a flexible factory system.
+- **Additional Fields**:
+  - **Date range Field**  
 - **Custom Menu Routes**: Add custom routes to the menu.
 - **Alternative Collection Editing**: Offer different ways to edit collections.
 - **Configuration Pre-Checks**: Validate the application configuration fully at startup.
@@ -389,15 +391,12 @@ classDiagram
 # <a name="contributing">Contributing</a>
 `vortex-crud` is open-source and welcomes contributions! If you’d like to contribute, open an issue and let's discuss.
 
-# <a name="further-development">Further Development</a>
+# <a name="further-development">Setup a development environment</a>
 
-To get started for using this framework see in the chapter [Getting Started](#getting-started).
+To get started with development
 
 1. **Clone the repository**
-2. **Run one of the example applications**:
-    - The database will be initialized automatically.
-    - Start the example application:
-      ```bash
-      ./mvnw spring-boot:run
-      ```
-      
+2. **Run**: `mvn clean install` in the root directory.
+3. **Run for example the jooq example application**:
+    - Go to: `examples\jooq-sqlite-example\`
+    - Run `com.github.appreciated.vortex_crud.example.jooq.Application`

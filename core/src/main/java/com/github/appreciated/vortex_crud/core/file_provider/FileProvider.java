@@ -10,7 +10,14 @@ import java.nio.file.Path;
 
 public class FileProvider implements VortexCrudFileProvider {
 
+    private final String basePath;
+
+    public FileProvider(String basePath) {
+        this.basePath = basePath;
+    }
+
     public FileProvider() {
+        this("images");
     }
 
     @Override
@@ -31,6 +38,6 @@ public class FileProvider implements VortexCrudFileProvider {
 
     @Override
     public Path getPathForFile(String fileName) {
-        return Path.of("images", fileName);
+        return Path.of(basePath, fileName);
     }
 }

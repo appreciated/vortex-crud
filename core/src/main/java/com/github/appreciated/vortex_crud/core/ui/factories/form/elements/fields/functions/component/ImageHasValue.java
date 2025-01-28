@@ -64,11 +64,6 @@ public class ImageHasValue extends CustomField<String> {
         });
     }
 
-    public ImageHasValue(String path, VortexCrudFileProvider vortexCrudFileProvider) {
-        this(vortexCrudFileProvider);
-        setValue(path);
-    }
-
     private void setImageFromStream(String fileName) {
         image.setImageSource(fileName);
         setValue(fileName);
