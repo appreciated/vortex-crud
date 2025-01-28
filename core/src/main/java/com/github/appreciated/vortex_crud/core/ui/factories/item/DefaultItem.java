@@ -32,8 +32,9 @@ public class DefaultItem<FieldId> extends VerticalLayout {
             String imagePath = entity.getString(resolver.getKeyForFieldId(imageField));
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
-            image.setMaxWidth("150px");
+            image.setWidthFull();
             image.setMaxHeight("150px");
+            image.setObjectFit("");
             image.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
         }
 

@@ -14,7 +14,7 @@ public class ImageDisplayComponent extends Div {
         image = new Image();
         image.setSizeFull();
         image.setHeight("150px");
-        image.getStyle().set("object-fit", "cover");
+        setObjectFit("cover");
         add(image);
         getStyle().set("overflow", "hidden");
     }
@@ -26,5 +26,9 @@ public class ImageDisplayComponent extends Div {
         } else {
             image.setVisible(false);
         }
+    }
+
+    public void setObjectFit(String cover) {
+        image.getStyle().set("object-fit", cover);
     }
 }
