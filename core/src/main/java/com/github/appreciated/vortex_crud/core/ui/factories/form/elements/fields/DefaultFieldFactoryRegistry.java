@@ -32,7 +32,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements Vortex
         factories.put(NumberFieldFactory.class, new NumberFieldFactory<>());
         factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(dataStoreFactoryRegistry));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
-        factories.put(TCCheckboxFieldFactory.class, new TCCheckboxFieldFactory<>());
+        factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
     }
 
