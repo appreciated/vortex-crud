@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 
 public interface ItemFactory<FieldId> {
@@ -13,5 +13,5 @@ public interface ItemFactory<FieldId> {
 
     FieldId getImageField();
 
-    Class<? extends VortexCrudFileProvider> getImageFactory();
+    Class<? extends VortexCrudResourceProvider> getImageFactory();
 }

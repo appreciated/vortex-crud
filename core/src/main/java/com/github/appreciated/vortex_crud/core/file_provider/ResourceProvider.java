@@ -8,15 +8,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class FileProvider implements VortexCrudFileProvider {
+public class ResourceProvider implements VortexCrudResourceProvider {
 
     private final String basePath;
 
-    public FileProvider(String basePath) {
+    public ResourceProvider(String basePath) {
         this.basePath = basePath;
     }
 
-    public FileProvider() {
+    public ResourceProvider() {
         this("images");
     }
 

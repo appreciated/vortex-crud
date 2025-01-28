@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
@@ -45,7 +45,7 @@ public class Kanban<DataStoreId, FieldId> extends RouteRendererConfiguration<Dat
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudFileProvider> imageFactory) {
+        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.setImageFactory(imageFactory);
             return this;
         }

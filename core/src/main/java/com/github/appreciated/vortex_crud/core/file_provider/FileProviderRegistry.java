@@ -16,23 +16,23 @@ import java.util.Optional;
 @Service
 public class FileProviderRegistry implements VortexCrudFileProviderRegistry {
 
-    private final Map<Class<? extends VortexCrudFileProvider>, VortexCrudFileProvider> factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> factories = new HashMap<>();
 
     public FileProviderRegistry() {
-        factories.put(FileProvider.class, new FileProvider());
+        factories.put(ResourceProvider.class, new ResourceProvider());
     }
 
-    public Map<Class<? extends VortexCrudFileProvider>, VortexCrudFileProvider> getFactories() {
+    public Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudFileProvider getFactory(Class<? extends VortexCrudFileProvider> type) {
+    public VortexCrudResourceProvider getFactory(Class<? extends VortexCrudResourceProvider> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudFileProvider> key, VortexCrudFileProvider factory) {
+    public void addFactory(Class<? extends VortexCrudResourceProvider> key, VortexCrudResourceProvider factory) {
         factories.put(key, factory);
     }
 }

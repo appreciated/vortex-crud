@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.file_provider.FileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.ResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -150,7 +150,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(FileProvider.class))
+                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ResourceProvider.class))
                                         .build()))
                         .build());
 
@@ -219,7 +219,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withImageField(IMAGES.URL)
-                        .withImageFactory(FileProvider.class)
+                        .withImageFactory(ResourceProvider.class)
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageForm)

@@ -24,7 +24,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
 
     public Grid(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                 RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> vortexCrudDataStoreFactoryRegistry,
+                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                 FormCreator<DataStoreId, FieldId> formCreator,
                 VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                 VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
@@ -43,7 +43,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                 routeHeader);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid<>(routeResolver, routeRenderer, vortexCrudDataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry, resolver);
+        virtualGrid = new VirtualItemGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry, resolver);
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);

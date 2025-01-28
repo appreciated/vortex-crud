@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
@@ -19,7 +19,7 @@ public class RouteRendererConfiguration<DataStoreId, FieldId> {
 
     private FieldId imageField;
 
-    private Class<? extends VortexCrudFileProvider> imageFactory;
+    private Class<? extends VortexCrudResourceProvider> imageFactory;
 
     private boolean inlineEdit;
 
@@ -71,11 +71,11 @@ public class RouteRendererConfiguration<DataStoreId, FieldId> {
         this.imageField = imageField;
     }
 
-    public Class<? extends VortexCrudFileProvider> getImageFactory() {
+    public Class<? extends VortexCrudResourceProvider> getImageFactory() {
         return imageFactory;
     }
 
-    public void setImageFactory(Class<? extends VortexCrudFileProvider> imageFactory) {
+    public void setImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
         this.imageFactory = imageFactory;
     }
 
@@ -131,7 +131,7 @@ public class RouteRendererConfiguration<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudFileProvider> imageFactory) {
+        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }

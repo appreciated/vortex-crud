@@ -13,15 +13,15 @@ import java.util.Set;
 @Component
 public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
-    private final VortexCrudConfigService<?,?> vortexCrudConfigService;
+    private final VortexCrudConfigService<?,?> configService;
 
-    public DynamicRouteGenerator(VortexCrudConfigService<?,?> vortexCrudConfigService) {
-        this.vortexCrudConfigService = vortexCrudConfigService;
+    public DynamicRouteGenerator(VortexCrudConfigService<?,?> configService) {
+        this.configService = configService;
     }
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        Set<String> keys = vortexCrudConfigService.getConfiguration().getRouteRenderers().keySet();
+        Set<String> keys = configService.getConfiguration().getRouteRenderers().keySet();
         keys.forEach(this::registerRoute);
     }
 

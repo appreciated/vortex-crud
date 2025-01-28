@@ -24,8 +24,8 @@ public class DefaultJooqDataStoreFactoryRegistry implements VortexCrudDataStoreF
 
     private final HashMap<Table<?>, VortexCrudDataStore<TableField<?,?>>> factories = new HashMap<>();
 
-    public DefaultJooqDataStoreFactoryRegistry(VortexCrudConfigService<Table<?>, TableField<?,?>> vortexCrudConfigService, DSLContext dslContext) {
-        for (Map.Entry<Table<?>, DataStoreConfig<Table<?>, TableField<?,?>>> entry : vortexCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+    public DefaultJooqDataStoreFactoryRegistry(VortexCrudConfigService<Table<?>, TableField<?,?>> configService, DSLContext dslContext) {
+        for (Map.Entry<Table<?>, DataStoreConfig<Table<?>, TableField<?,?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             Table<?> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }

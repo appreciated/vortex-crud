@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component;
 
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.customfield.CustomField;
@@ -21,8 +21,8 @@ public class ImageHasValue extends CustomField<String> {
 
     private String value;
 
-    public ImageHasValue(VortexCrudFileProvider vortexCrudFileProvider) {
-        image = new ImageDisplayComponent(vortexCrudFileProvider);
+    public ImageHasValue(VortexCrudResourceProvider resourceProvider) {
+        image = new ImageDisplayComponent(resourceProvider);
         image.setSizeFull();
         image.getStyle().set("border-radius", "3px");
 
@@ -42,12 +42,12 @@ public class ImageHasValue extends CustomField<String> {
                 .set("height", "100%")
                 .set("overflow", "hidden");
 
-        buffer = new FileBuffer(fileName -> vortexCrudFileProvider.getPathForFile(fileName).toFile());
+        buffer = new FileBuffer(fileName -> resourceProvider.getPathForFile(fileName).toFile());
         upload = new Upload(buffer);
         upload.setSizeFull();
         upload.setMaxFiles(1);
         upload.setMaxFileSize(10000000);
-        upload.addSucceededListener(event -> setImageFromStream(vortexCrudFileProvider.getPathForFile(event.getFileName()).toString()));
+        upload.addSucceededListener(event -> setImageFromStream(resourceProvider.getPathForFile(event.getFileName()).toString()));
 
         Div container = new Div(imageWrapper, upload);
         container.getStyle().set("overflow", "hidden")

@@ -8,8 +8,8 @@ package com.github.appreciated.vortex_crud.core.file_provider;
 
 public interface VortexCrudFileProviderRegistry {
 
-    VortexCrudFileProvider getFactory(Class<? extends VortexCrudFileProvider> type);
+    VortexCrudResourceProvider getFactory(Class<? extends VortexCrudResourceProvider> type);
 
-    void addFactory(Class<? extends VortexCrudFileProvider> key, VortexCrudFileProvider factory);
+    void addFactory(Class<? extends VortexCrudResourceProvider> key, VortexCrudResourceProvider factory);
 
 }

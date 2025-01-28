@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.file_provider.FileProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.ResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -142,7 +142,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         .withValidation(Validation.Builder.of().withMaxLength(255).build())
                                         .build(),
                                 "url", JpaField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(FileProvider.class))
+                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ResourceProvider.class))
                                         .build()))
                         .build());
 
@@ -211,7 +211,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(GridOrListRendererConfiguration.Builder.<String, String>of(CardFactory.class)
                         .withTitleField("title")
                         .withImageField("url")
-                        .withImageFactory(FileProvider.class)
+                        .withImageFactory(ResourceProvider.class)
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageForm)

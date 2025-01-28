@@ -4,7 +4,7 @@ import com.vaadin.flow.server.StreamResource;
 
 import java.nio.file.Path;
 
-public interface VortexCrudFileProvider {
+public interface VortexCrudResourceProvider {
     StreamResource getResource(String src);
 
     Path getPathForFile(String fileName);

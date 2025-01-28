@@ -23,8 +23,8 @@ public class DefaultJpaDataStoreFactoryRegistry implements VortexCrudDataStoreFa
 
     private final HashMap<String, VortexCrudDataStore> factories = new HashMap<>();
 
-    public DefaultJpaDataStoreFactoryRegistry(VortexCrudConfigService<String, String> vortexCrudConfigService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
-        for (Map.Entry<String, DataStoreConfig<String, String>> entry : vortexCrudConfigService.getConfiguration().getDataStores().entrySet()) {
+    public DefaultJpaDataStoreFactoryRegistry(VortexCrudConfigService<String, String> configService, EntityManager entityManager, TransactionTemplate transactionTemplate) {
+        for (Map.Entry<String, DataStoreConfig<String, String>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             String table = entry.getKey();
             factories.put(table, new JpaDataStore(table, entityManager, transactionTemplate));
         }
