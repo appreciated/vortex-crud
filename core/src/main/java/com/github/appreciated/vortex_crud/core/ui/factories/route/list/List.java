@@ -67,7 +67,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
                 dataStore,
                 routeFactory,
                 () -> {
-
+                    System.out.println();
                 },
                 formCreator);
         dialog.open();

@@ -77,7 +77,29 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
             Set<GenericEntity> newSelectedConnections = connectionList.getSelectedItems();
             if (!newSelectedConnections.isEmpty()) {
-                // Store newly selected connections
+                // Determine the IDs of the newly selected connections
+                Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
+                        .map(DataStoreUtil::getId)
+                        .collect(Collectors.toSet());
+
+                // Remove the connections that are no longer selected
+                Set<String> idsToRemove = currentlySelectedConnections.stream()
+                        .map(DataStoreUtil::getId)
+                        .filter(id -> !newSelectedConnectionIds.contains(id))
+                        .collect(Collectors.toSet());
+                idsToRemove.forEach(associativeDatastore::deleteRecordById);
+
+                // Add new connections
+                Set<GenericEntity> connectionsToAdd = newSelectedConnections.stream()
+                        .filter(connection -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(connection)))
+                        .collect(Collectors.toSet());
+                connectionsToAdd.forEach(connection -> {
+                    GenericEntity newAssociation = new GenericEntity();
+                    newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                    newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), DataStoreUtil.getId(connection));
+                    associativeDatastore.insertRecord(newAssociation);
+                });
+
                 listener.onStore();
                 dialog.close();
             } else {

@@ -172,7 +172,9 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
+                () -> {
+                    loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header);
+                },
                 formCreator);
         dialog.open();
     }
