@@ -7,7 +7,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
-import com.github.appreciated.vortex_crud.jooq.service.JooqFormElement;
+import com.github.appreciated.vortex_crud.jooq.service.JooqFieldElement;
 import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRenderer;
 import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
@@ -43,10 +43,10 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<Table<?>, TableF
                         .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                 .withTitleField(PROJECTS.NAME)
                                 .withChildren(
-                                        new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
-                                        new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
-                                        new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
-                                        new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
+                                        new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
+                                        new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                                        new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                                        new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
                                 )
                                 .build())
                         .build())

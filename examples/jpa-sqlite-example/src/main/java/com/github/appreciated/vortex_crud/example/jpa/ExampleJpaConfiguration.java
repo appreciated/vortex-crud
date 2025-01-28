@@ -35,12 +35,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new JpaFormElement("title", "field", "route.tasks.labels.title"),
-                                new JpaFormElement("description", "field", "route.tasks.labels.description"),
-                                new JpaFormElement("status", "field", "route.tasks.labels.status"),
-                                new JpaFormElement("due_date", "field", "route.tasks.labels.due_date"),
-                                new JpaFormElement("assigned_to", "field", "route.tasks.labels.assigned_to"),
-                                JpaFormElement.of(null, "collection", "route.tasks.labels.comments")
+                                new JpaFieldElement("title", "route.tasks.labels.title"),
+                                new JpaFieldElement("description", "route.tasks.labels.description"),
+                                new JpaFieldElement("status", "route.tasks.labels.status"),
+                                new JpaFieldElement("due_date", "route.tasks.labels.due_date"),
+                                new JpaFieldElement("assigned_to", "route.tasks.labels.assigned_to"),
+                                JpaCollectionElement.of("route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<String, String>of("task_comments")
@@ -52,13 +52,13 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                                         .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                                                                 .withTitleField("name")
                                                                 .withChildren(
-                                                                        new JpaFormElement("comment_text", "field", "route.tasks.labels.comment")
+                                                                        new JpaFieldElement("comment_text", "route.tasks.labels.comment")
                                                                 )
                                                                 .build())
                                                         .build())
                                                 .build())
                                         .build(),
-                                JpaFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
+                                JpaCollectionElement.of( "route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<String, String>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<String, String>of("tasks")
@@ -81,10 +81,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new JpaFormElement("name", "field", "route.projects.labels.name"),
-                                new JpaFormElement("description", "field", "route.projects.labels.description"),
-                                new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
-                                new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
+                                new JpaFieldElement("name", "route.projects.labels.name"),
+                                new JpaFieldElement("description", "route.projects.labels.description"),
+                                new JpaFieldElement("start_date", "route.projects.labels.start_date"),
+                                new JpaFieldElement("end_date", "route.projects.labels.end_date")
                         )
                         .build())
                 .build();
@@ -94,8 +94,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withChildren(
-                                new JpaFormElement("title", "field", "route.images.labels.title"),
-                                new JpaFormElement("url", "field", "route.images.labels.image")
+                                new JpaFieldElement("title", "route.images.labels.title"),
+                                new JpaFieldElement("url", "route.images.labels.image")
                         )
                         .build())
                 .build();
@@ -167,10 +167,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withInlineEdit(true)
                         .withFilterField("name")
                         .withChildren(
-                                new JpaFormElement("name", "field", "route.projects.labels.name"),
-                                new JpaFormElement("description", "field", "route.projects.labels.description"),
-                                new JpaFormElement("start_date", "field", "route.projects.labels.start_date"),
-                                new JpaFormElement("end_date", "field", "route.projects.labels.end_date")
+                                new JpaFieldElement("name", "route.projects.labels.name"),
+                                new JpaFieldElement("description", "route.projects.labels.description"),
+                                new JpaFieldElement("start_date", "route.projects.labels.start_date"),
+                                new JpaFieldElement("end_date", "route.projects.labels.end_date")
                         )
                         .build())
                 .withRoles(List.of("manager", "admin"))
@@ -224,8 +224,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withInlineEdit(true)
                         .withFilterField("title")
                         .withChildren(
-                                new JpaFormElement("url", "field", "route.projects.labels.description"),
-                                new JpaFormElement("title", "field", "route.projects.labels.name")
+                                new JpaFieldElement("url", "route.projects.labels.description"),
+                                new JpaFieldElement("title", "route.projects.labels.name")
                         )
                         .build())
                 .withRoles(List.of("manager", "admin"))

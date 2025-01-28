@@ -43,12 +43,12 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
                         .withChildren(
-                                new JooqFormElement(TASKS.TITLE, "field", "route.tasks.labels.title"),
-                                new JooqFormElement(TASKS.DESCRIPTION, "field", "route.tasks.labels.description"),
-                                new JooqFormElement(TASKS.STATUS, "field", "route.tasks.labels.status"),
-                                new JooqFormElement(TASKS.DUE_DATE, "field", "route.tasks.labels.due_date"),
-                                new JooqFormElement(TASKS.ASSIGNED_TO, "field", "route.tasks.labels.assigned_to"),
-                                JooqFormElement.of(null, "collection", "route.tasks.labels.comments")
+                                new JooqFieldElement(TASKS.TITLE, "route.tasks.labels.title"),
+                                new JooqFieldElement(TASKS.DESCRIPTION, "route.tasks.labels.description"),
+                                new JooqFieldElement(TASKS.STATUS, "route.tasks.labels.status"),
+                                new JooqFieldElement(TASKS.DUE_DATE, "route.tasks.labels.due_date"),
+                                new JooqFieldElement(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to"),
+                                JooqCollectionElement.of("route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
@@ -59,13 +59,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
                                                         .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                                                 .withChildren(
-                                                                        new JooqFormElement(TASK_COMMENTS.COMMENT_TEXT, "field", "route.tasks.labels.comment")
+                                                                        new JooqFieldElement(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment")
                                                                 )
                                                                 .build())
                                                         .build())
                                                 .build())
                                         .build(),
-                                JooqFormElement.of(null, "collection", "route.tasks.labels.related-tasks")
+                                JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
@@ -89,10 +89,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withChildren(
-                                new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
-                                new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
-                                new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
-                                new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
+                                new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
+                                new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                                new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                                new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
                         )
                         .build())
                 .build();
@@ -103,8 +103,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withChildren(
-                                new JooqFormElement(IMAGES.TITLE, "field", "route.images.labels.title"),
-                                new JooqFormElement(IMAGES.URL, "field", "route.images.labels.image")
+                                new JooqFieldElement(IMAGES.TITLE, "route.images.labels.title"),
+                                new JooqFieldElement(IMAGES.URL, "route.images.labels.image")
                         )
                         .build())
                 .build();
@@ -175,10 +175,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .withInlineEdit(true)
                         .withFilterField(PROJECTS.NAME)
                         .withChildren(
-                                new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name"),
-                                new JooqFormElement(PROJECTS.DESCRIPTION, "field", "route.projects.labels.description"),
-                                new JooqFormElement(PROJECTS.START_DATE, "field", "route.projects.labels.start_date"),
-                                new JooqFormElement(PROJECTS.END_DATE, "field", "route.projects.labels.end_date")
+                                new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
+                                new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                                new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                                new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
                         )
                         .build())
                 .withRoles(List.of("manager", "admin"))
@@ -232,8 +232,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .withInlineEdit(true)
                         .withFilterField(IMAGES.TITLE)
                         .withChildren(
-                                new JooqFormElement(IMAGES.URL, "field", "route.projects.labels.description"),
-                                new JooqFormElement(IMAGES.TITLE, "field", "route.projects.labels.name")
+                                new JooqFieldElement(IMAGES.URL, "route.projects.labels.description"),
+                                new JooqFieldElement(IMAGES.TITLE, "route.projects.labels.name")
                         )
                         .build())
                 .withRoles(List.of("manager", "admin"))
