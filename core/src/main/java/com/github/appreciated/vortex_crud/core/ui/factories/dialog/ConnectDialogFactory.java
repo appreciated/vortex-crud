@@ -21,6 +21,7 @@ import jakarta.annotation.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,7 +61,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Fetch available connections
         List<GenericEntity> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
-        Set<String> currentlySelectedConnectionIds = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream()
+        List<GenericEntity> currentAssociativeEntries = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream().toList();
+        Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(record -> record.getString(fieldNameResolver.getKeyForFieldId(associativeTargetIdField))).collect(Collectors.toSet());
         Set<GenericEntity> currentlySelectedConnections = availableConnections.stream().filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity))).collect(Collectors.toSet());
 
@@ -76,36 +78,31 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
             Set<GenericEntity> newSelectedConnections = connectionList.getSelectedItems();
-            if (!newSelectedConnections.isEmpty()) {
-                // Determine the IDs of the newly selected connections
-                Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
-                        .map(DataStoreUtil::getId)
-                        .collect(Collectors.toSet());
+            // Determine the IDs of the newly selected connections
+            Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
+                    .filter(genericEntity -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity)))
+                    .map(DataStoreUtil::getId)
+                    .collect(Collectors.toSet());
 
-                // Remove the connections that are no longer selected
-                Set<String> idsToRemove = currentlySelectedConnections.stream()
-                        .map(DataStoreUtil::getId)
-                        .filter(id -> !newSelectedConnectionIds.contains(id))
-                        .collect(Collectors.toSet());
-                idsToRemove.forEach(associativeDatastore::deleteRecordById);
+            newSelectedConnectionIds.forEach(associativeTargetIdFieldValue -> {
+                GenericEntity newAssociation = new GenericEntity();
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), associativeTargetIdFieldValue);
+                associativeDatastore.insertRecord(newAssociation);
+            });
 
-                // Add new connections
-                Set<GenericEntity> connectionsToAdd = newSelectedConnections.stream()
-                        .filter(connection -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(connection)))
-                        .collect(Collectors.toSet());
-                connectionsToAdd.forEach(connection -> {
-                    GenericEntity newAssociation = new GenericEntity();
-                    newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
-                    newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), DataStoreUtil.getId(connection));
-                    associativeDatastore.insertRecord(newAssociation);
-                });
+            // Remove the connections that are no longer selected
+            Set<GenericEntity> idsToRemove = currentlySelectedConnections.stream()
+                    .filter(o -> !newSelectedConnections.contains(o))
+                    .map(genericEntity -> currentAssociativeEntries.stream()
+                            .filter(genericEntity1 -> Objects.equals(DataStoreUtil.getId(genericEntity), genericEntity1.getString(fieldNameResolver.getKeyForFieldId(associativeTargetIdField))))
+                            .findFirst()
+                            .orElseThrow())
+                    .collect(Collectors.toSet());
+            idsToRemove.forEach(record -> associativeDatastore.deleteRecordById(DataStoreUtil.getId(record)));
 
-                listener.onStore();
-                dialog.close();
-            } else {
-                Notification notification = Notification.show(dialog.getTranslation("dialog.notification.no-selection"));
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            }
+            listener.onStore();
+            dialog.close();
         });
         connectButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
