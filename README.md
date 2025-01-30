@@ -394,7 +394,8 @@ classDiagram
 To get started with development
 
 1. **Clone the repository**
-2. **Run**: `mvn clean install` in the root directory.
-3. **Run for example the jooq example application**:
+2. **Run the `install` goal at the project root module `vortex-crud`**
+3. **Run the jooq example application**:
     - Go to: `examples\jooq-sqlite-example\`
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
+    - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
