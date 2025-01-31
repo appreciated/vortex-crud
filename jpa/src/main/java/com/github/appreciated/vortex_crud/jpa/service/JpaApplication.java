@@ -5,6 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 public class JpaApplication extends Application<String, String> {
 
     public static Application.Builder<String, String> of() {
-        return new Application.Builder<>(new Application<String, String>());
+        return new Application.Builder<>(new JpaApplication());
     }
 }

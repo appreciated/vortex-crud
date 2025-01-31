@@ -1,14 +1,16 @@
-package com.github.appreciated.vortex_crud.jpa.service;
+package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -16,9 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@DataJpaTest
-@Transactional
+@SpringBootTest
 class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
     @Autowired
@@ -42,13 +42,17 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
     // Dynamically create a test table
     private void createTestTable() {
-        entityManager.createNativeQuery("CREATE TABLE test_table (id SERIAL PRIMARY KEY, name VARCHAR(255), age INT)")
-                .executeUpdate();
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            entityManager.createNativeQuery("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), age INT)")
+                    .executeUpdate();
+        });
     }
 
     // Drop the test table after each test
     private void dropTestTable() {
-        entityManager.createNativeQuery("DROP TABLE IF EXISTS test_table").executeUpdate();
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            entityManager.createNativeQuery("DROP TABLE IF EXISTS test_table").executeUpdate();
+        });
     }
 
     @Test
@@ -58,7 +62,6 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         values.put("age", 30);
 
         service.insertRecord(values);
-        entityManager.flush();  // Force the persistence context to synchronize with the database
 
         List<GenericEntity> records = service.getRecordsFromTable(0, 10);
         assertEquals(1, records.size());

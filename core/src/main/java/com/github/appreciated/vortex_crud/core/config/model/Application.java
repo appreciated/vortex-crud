@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @GenerateBuilder
-public class Application<DataStoreId, FieldId> {
+public abstract class Application<DataStoreId, FieldId> {
 
     private String name;
 

@@ -27,18 +27,18 @@ class JooqDataStoreTest {
 
     @BeforeEach
     void setUp() {
+        createTestTable();
         service = new JooqDataStore(Tables.TEST_TABLE, dslContext);
     }
 
     @AfterEach
     void tearDown() {
-        dslContext.truncate(Tables.TEST_TABLE).execute();
+        dslContext.execute("DROP TABLE IF EXISTS test_table");
     }
 
     private void createTestTable() {
-        dslContext.execute("CREATE TABLE test_table (id SERIAL PRIMARY KEY, name VARCHAR(255), age INT)");
+        dslContext.execute("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), age INT)");
     }
-
 
     @Test
     void testInsertRecord() {

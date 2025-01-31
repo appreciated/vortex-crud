@@ -1,10 +1,12 @@
-package com.github.appreciated.vortex_crud.jpa.service;
+package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.jpa.service.AliasToEntityMapTupleTransformer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.hibernate.query.NativeQuery;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.Date;
@@ -42,6 +44,7 @@ public class JpaDataStore implements VortexCrudDataStore<String> {
      * @param values A map of column names and values to be inserted.
      */
 
+    @Transactional
     public Object insertRecord(GenericEntity values) {
         return transactionTemplate.execute(status -> {
             StringBuilder sql = new StringBuilder("INSERT INTO %s (".formatted(getTable()));
@@ -68,7 +71,7 @@ public class JpaDataStore implements VortexCrudDataStore<String> {
             query.executeUpdate();
 
             // Get the last inserted ID
-            Query idQuery = entityManager.createNativeQuery("SELECT SCOPE_IDENTITY()");
+            Query idQuery = entityManager.createNativeQuery("SELECT last_insert_rowid()");
             return idQuery.getSingleResult();
         });
     }
@@ -178,6 +181,7 @@ public class JpaDataStore implements VortexCrudDataStore<String> {
      * @param id     The ID of the record to update.
      * @param values A map of column names and new values to update.
      */
+    @Transactional
     public void updateRecordById(Object id, GenericEntity values) {
         transactionTemplate.executeWithoutResult(status -> {
             StringBuilder sql = new StringBuilder("UPDATE %s SET ".formatted(getTable()));

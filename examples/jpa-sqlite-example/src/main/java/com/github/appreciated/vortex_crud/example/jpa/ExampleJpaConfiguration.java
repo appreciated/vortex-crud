@@ -17,6 +17,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.jpa.service.*;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStore;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;

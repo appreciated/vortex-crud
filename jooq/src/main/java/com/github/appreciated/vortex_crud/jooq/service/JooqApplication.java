@@ -7,6 +7,6 @@ import org.jooq.TableField;
 public class JooqApplication extends Application<Table<?>, TableField<?,?>> {
 
     public static Application.Builder<Table<?>, TableField<?,?>> of() {
-        return new Application.Builder<>(new Application<Table<?>,TableField<?,?>>());
+        return new Application.Builder<>(new JooqApplication());
     }
 }

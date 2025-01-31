@@ -102,7 +102,7 @@ The main point of this project is, that it decouples rendering from data.
   - Select
   - Checkbox
   - TextArea
-- **Relationships**: One-to-One, Many-to-One, [WIP] Many-to-Many
+- **Relationships**: One-to-One, Many-to-One, Many-to-Many
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
@@ -254,14 +254,13 @@ CREATE TABLE task_comments (...);
 ```
 
 # <a name="roadmap">Roadmap</a>
-- **Form Navigation**: Enable navigation within forms to other routes or sub-routes using a new input type called "routeRenderer."
-- **Field Validation**: Support for basic and advanced field validation hooks.
 - **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
-- **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Role-Based Access Control (RBAC)**
 - **Entity Versioning**
+- **Field Validation**: Support for basic and advanced field validation hooks.
 - **Entity Auditing**
 - **Hook Points**: Add custom hook points for enhanced flexibility.
+- **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Prefiltered Routes**: Display only specific items in routes as needed.
 - **Additional Routes**:
   - **Calendar Route**: Example from [Directus](https://directus.pizza/admin/content/posts?bookmark=45)
