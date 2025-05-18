@@ -1,5 +1,8 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
 import jakarta.persistence.*;
 
 /**
@@ -13,9 +16,11 @@ public class TestEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @JpaFieldRenderer(TextFieldFactory.class)
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @JpaFieldRenderer(NumberFieldFactory.class)
     @Column(name = "age", nullable = false)
     private Integer age;
 

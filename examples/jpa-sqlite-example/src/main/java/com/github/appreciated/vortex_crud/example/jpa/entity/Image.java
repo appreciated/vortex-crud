@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 @Entity
 @Table(name = "images")
@@ -10,8 +13,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JpaFieldRenderer(TextFieldFactory.class)
     private String title;
 
+    @JpaFieldRenderer(TextFieldFactory.class)
     private String url;
 
     // Getters and Setters

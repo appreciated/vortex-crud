@@ -5,10 +5,13 @@ import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 
 public class JpaField extends Field<JpaRepository<?, ?>, String> {
-
 
     public JpaField(Class<? extends VortexCrudFieldFactory> factory) {
         super((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>) factory);
@@ -58,4 +61,3 @@ public class JpaField extends Field<JpaRepository<?, ?>, String> {
         return new Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>)factory));
     }
 }
-

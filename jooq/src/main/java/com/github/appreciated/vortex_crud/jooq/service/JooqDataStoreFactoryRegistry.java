@@ -20,11 +20,11 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultJooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<Table<?>, TableField<?,?>> {
+public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<Table<?>, TableField<?,?>> {
 
     private final HashMap<Table<?>, VortexCrudDataStore<TableField<?,?>>> factories = new HashMap<>();
 
-    public DefaultJooqDataStoreFactoryRegistry(VortexCrudConfigService<Table<?>, TableField<?,?>> configService, DSLContext dslContext) {
+    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<Table<?>, TableField<?,?>> configService, DSLContext dslContext) {
         for (Map.Entry<Table<?>, DataStoreConfig<Table<?>, TableField<?,?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             Table<?> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));

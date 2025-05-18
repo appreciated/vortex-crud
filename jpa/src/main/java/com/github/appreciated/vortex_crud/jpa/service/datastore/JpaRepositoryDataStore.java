@@ -35,24 +35,28 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     }
 
     public Class<T> getEntityClass(JpaRepository<?, ?> repository) {
-        Class<?> repoInterfaceOpt = Arrays.stream(repository.getClass().getInterfaces())
-                .filter(i -> i.isInterface() && JpaRepository.class.isAssignableFrom(i))
-                .findFirst()
-                .orElseThrow();
+        try {
+            Class<?> repoInterfaceOpt = Arrays.stream(repository.getClass().getInterfaces())
+                    .filter(i -> i.isInterface() && JpaRepository.class.isAssignableFrom(i))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Could not find JpaRepository interface in " + repository.getClass().getName()));
 
-        return Arrays.stream(repoInterfaceOpt.getGenericInterfaces())
-                .filter(type -> type instanceof ParameterizedType)
-                .map(type -> (ParameterizedType) type)
-                .filter(paramType -> {
-                    Type rawType = paramType.getRawType();
-                    return rawType instanceof Class &&
-                           JpaRepository.class.isAssignableFrom((Class<?>) rawType);
-                })
-                .map(paramType -> paramType.getActualTypeArguments()[0])
-                .filter(t -> t instanceof Class<?>)
-                .map(t -> (Class<T>) t)
-                .findFirst()
-                .orElseThrow();
+            return Arrays.stream(repoInterfaceOpt.getGenericInterfaces())
+                    .filter(type -> type instanceof ParameterizedType)
+                    .map(type -> (ParameterizedType) type)
+                    .filter(paramType -> {
+                        Type rawType = paramType.getRawType();
+                        return rawType instanceof Class &&
+                               JpaRepository.class.isAssignableFrom((Class<?>) rawType);
+                    })
+                    .map(paramType -> paramType.getActualTypeArguments()[0])
+                    .filter(t -> t instanceof Class<?>)
+                    .map(t -> (Class<T>) t)
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Could not determine entity class from repository " + repository.getClass().getName() + ". For testing with mocks, use the constructor that accepts an explicit entity class."));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error determining entity class from repository " + repository.getClass().getName() + ". For testing with mocks, use the constructor that accepts an explicit entity class.", e);
+        }
     }
 
     /**
@@ -189,4 +193,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         ));
     }
 
+    public Field[] getFields() {
+        return fields;
+    }
 }
