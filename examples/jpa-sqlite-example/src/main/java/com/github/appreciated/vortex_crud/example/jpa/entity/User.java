@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
+    @Nonnull
     private String username;
 
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -10,10 +10,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "url")
     private String url;
 
     // Getters and Setters

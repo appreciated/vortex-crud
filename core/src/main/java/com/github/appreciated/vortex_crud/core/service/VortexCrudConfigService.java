@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 /**
  * Service for loading and providing access to the vortex-crud configuration.
  * Reads configuration from a resource file and offers methods to retrieve route and application settings.
@@ -14,7 +15,8 @@ public class VortexCrudConfigService<DataStoreId, FieldId> {
 
     private final Application<DataStoreId, FieldId> configuration;
 
-    public VortexCrudConfigService(@Autowired VortexCrudConfigurationProvider<DataStoreId, FieldId> configurationProvider) {
+    @Autowired
+    public VortexCrudConfigService(@Autowired(required = false) VortexCrudConfigurationProvider<DataStoreId, FieldId> configurationProvider) {
         configuration = configurationProvider.get();
     }
 

@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.Length;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,7 +13,7 @@ public class TaskComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "comment_text", length = 1000)
+    @Length(max = 1000)
     private String commentText;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,7 +24,6 @@ public class TaskComment {
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     // Getters and Setters

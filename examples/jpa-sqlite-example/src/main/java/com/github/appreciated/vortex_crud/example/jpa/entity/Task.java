@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.Length;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,25 +20,24 @@ public class Task {
     private Long id;
 
     @Column(name = "title", nullable = false, length = 255)
+
+    @Nonnull
+    @Length(max = 255)
     private String title;
 
-    @Column(name = "description", length = 1000)
+    @Length(max = 1000)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @Column(name = "status", length = 50)
+    @Length(max = 50)
     private String status;
 
-    @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -43,9 +45,9 @@ public class Task {
 
     @ManyToMany
     @JoinTable(
-        name = "task_has_task",
-        joinColumns = @JoinColumn(name = "task_id"),
-        inverseJoinColumns = @JoinColumn(name = "related_task_id")
+            name = "task_has_task",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_task_id")
     )
     private Set<Task> relatedTasks = new HashSet<>();
 

@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +20,6 @@ public class TaskHasTask {
     @JoinColumn(name = "related_task_id", nullable = false)
     private Task relatedTask;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     // Getters and Setters
