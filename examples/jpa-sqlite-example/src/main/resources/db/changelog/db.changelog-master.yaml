@@ -1,3 +1,5 @@
 databaseChangeLog:
   - includeAll:
-      path: db/changelog/vortex-crud/
+      path: src/main/resources/db/changelog/vortex-crud/
+  - includeAll:
+      path: src/main/resources/db/changelog/database/

@@ -108,7 +108,7 @@
 			<plugin>
 				<groupId>org.jooq</groupId>
 				<artifactId>jooq-codegen-maven</artifactId>
-				<version>3.19.16</version>
+				<version>3.19.22</version>
 				<executions>
 					<execution>
 						<id>generate-jooq</id>
