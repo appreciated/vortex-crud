@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class JpaDataStore<T> implements VortexCrudDataStore<String> {
+public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     private final JpaRepository<T, Object> repository;
     private final Class<?> repositoryModelClass;
     private final Field[] fields;
 
-    public JpaDataStore(JpaRepository<T, ?> repository) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.fields = repositoryModelClass.getDeclaredFields();

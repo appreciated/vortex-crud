@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.jpa.service;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaRepositoryDataStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class DefaultJpaDataStoreFactoryRegistry implements VortexCrudDataStoreFa
     private final HashMap<JpaRepository<?, ?>, VortexCrudDataStore<String>> factories = new HashMap<>();
 
     public DefaultJpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList) {
-        repositoryList.forEach(repository -> factories.put(repository, new JpaDataStore(repository)));
+        repositoryList.forEach(repository -> factories.put(repository, new JpaRepositoryDataStore(repository)));
     }
 
     public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {
