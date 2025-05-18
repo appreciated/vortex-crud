@@ -1,5 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
@@ -19,25 +23,30 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JpaFieldRenderer(TextFieldFactory.class)
     @Column(name = "title", nullable = false, length = 255)
-
     @Nonnull
     @Length(max = 255)
     private String title;
 
+    @JpaFieldRenderer(TextFieldFactory.class)
     @Length(max = 1000)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User assignedTo;
 
+    @JpaFieldRenderer(TextFieldFactory.class)
     @Length(max = 50)
     private String status;
 
+    @JpaFieldRenderer(DateFieldFactory.class)
     private LocalDate dueDate;
 
+    @JpaFieldRenderer(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
+    @JpaFieldRenderer(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
