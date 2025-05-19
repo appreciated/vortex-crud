@@ -91,7 +91,7 @@
 				<version>4.29.0</version>
 				<configuration>
 					<changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
-					<url>jdbc:sqlite:mydatabase.db</url>
+					<url>jdbc:sqlite:${project.basedir}/jooq-example-database.db</url>
 					<driver>org.sqlite.JDBC</driver>
 				</configuration>
 				<executions>
@@ -121,7 +121,7 @@
 				<configuration>
 					<jdbc>
 						<driver>org.sqlite.JDBC</driver>
-						<url>jdbc:sqlite:mydatabase.db</url>
+						<url>jdbc:sqlite:${project.basedir}/jooq-example-database.db</url>
 					</jdbc>
 					<generator>
 						<database>

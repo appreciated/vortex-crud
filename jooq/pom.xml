@@ -55,13 +55,13 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.29.0</version>
                 <configuration>
-                    <changeLogFile>src/main/resources/db/changelog/changelog.xml</changeLogFile>
-                    <url>jdbc:sqlite:mydatabase.db</url>
+                    <changeLogFile>src/test/resources/db/changelog/changelog.xml</changeLogFile>
                     <driver>org.sqlite.JDBC</driver>
+                    <url>jdbc:sqlite:${project.basedir}/jooq-database.db</url>
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
                             <goal>update</goal>
                         </goals>
@@ -78,7 +78,7 @@
                 <executions>
                     <execution>
                         <id>generate-jooq</id>
-                        <phase>generate-sources</phase>
+                        <phase>generate-test-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -87,7 +87,7 @@
                 <configuration>
                     <jdbc>
                         <driver>org.sqlite.JDBC</driver>
-                        <url>jdbc:sqlite:mydatabase.db</url>
+                        <url>jdbc:sqlite:${project.basedir}/jooq-database.db</url>
                     </jdbc>
                     <generator>
                         <database>
@@ -95,7 +95,7 @@
                         </database>
                         <target>
                             <packageName>com.github.appreciated.vortex_crud.jooq.models</packageName>
-                            <directory>target/generated-sources</directory>
+                            <directory>target/generated-test-sources</directory>
                         </target>
                     </generator>
                 </configuration>
@@ -107,8 +107,27 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>add-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-test-sources</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 
 </project>
