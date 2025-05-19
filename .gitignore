@@ -31,9 +31,7 @@ webpack.generated.js
 /.vaadin-node-tasks.lock
 
 # SQLite database
-/mydatabase.db
 /core/target/
-/jpa-example/mydatabase.db
 /examples/example-base/src/main/frontend/generated/
 /examples/jooq-sqlite-example/src/main/frontend/generated/
 /examples/jpa-sqlite-example/src/main/frontend/generated/
@@ -60,7 +58,8 @@ webpack.generated.js
 /examples/jooq-sqlite-example/tsconfig.json
 /examples/jooq-sqlite-example/types.d.ts
 /examples/jooq-sqlite-example/vite.config.ts
-/examples/jooq-sqlite-example/mydatabase.db
-/jooq/mydatabase.db
-/examples/jpa-sqlite-example/mydatabase.db
-/jpa/mydatabase.db
+
+
+/examples/jooq-sqlite-example/jooq-example-database.db
+/examples/jpa-sqlite-example/jpa-example-database.db
+/jooq/jooq-database.db
