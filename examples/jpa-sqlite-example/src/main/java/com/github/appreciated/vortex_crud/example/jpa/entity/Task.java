@@ -2,8 +2,10 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.JpaSelectValues;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
@@ -33,11 +35,12 @@ public class Task {
     @Length(max = 1000)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @JpaFieldRenderer(TextFieldFactory.class)
+    @JpaFieldRenderer(SelectFieldFactory.class)
+    @JpaSelectValues("task-status")
     @Length(max = 50)
     private String status;
 
@@ -50,10 +53,10 @@ public class Task {
     @JpaFieldRenderer(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TaskComment> comments = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "task_has_task",
             joinColumns = @JoinColumn(name = "task_id"),
@@ -61,7 +64,7 @@ public class Task {
     )
     private Set<Task> relatedTasks = new HashSet<>();
 
-    @ManyToMany(mappedBy = "relatedTasks")
+    @ManyToMany(mappedBy = "relatedTasks", fetch = FetchType.EAGER)
     private Set<Task> relatedToTasks = new HashSet<>();
 
     // Getters and Setters

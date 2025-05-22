@@ -34,22 +34,19 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskCommentRepository taskCommentRepository;
     private final TaskHasTaskRepository taskHasTaskRepository;
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
             TaskCommentRepository taskCommentRepository,
             TaskHasTaskRepository taskHasTaskRepository,
-            TaskRepository taskRepository,
-            UserRepository userRepository
+            TaskRepository taskRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.taskCommentRepository = taskCommentRepository;
         this.taskHasTaskRepository = taskHasTaskRepository;
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -156,12 +153,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
         routes.put("tasks", JpaRouteRenderer.of(SubmenuRouteFactory.class)
                 .withIconFactory(TASKS::create)
-                .withDataStore(taskCommentRepository)
+                .withDataStore(taskRepository)
                 .withTitle("route.tasks.title")
                 .withChildrenMap(Map.of("open",
                         JpaRouteRenderer.of(KanbanDetailFactory.class)
                                 .withIconFactory(TASKS::create)
-                                .withDataStore(taskCommentRepository)
+                                .withDataStore(taskRepository)
                                 .withTitle("route.open-tasks.title")
                                 .withConfiguration(Kanban.Builder.<JpaRepository<?, ?>, String>of(CardFactory.class)
                                         .withTitleField("title")
@@ -173,7 +170,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         "done",
                         JpaRouteRenderer.of(MasterDetailRouteFactory.class)
                                 .withIconFactory(CHECK_CIRCLE::create)
-                                .withDataStore(taskCommentRepository)
+                                .withDataStore(taskRepository)
                                 .withTitle("route.done-tasks.title")
                                 .withConfiguration(GridOrListRendererConfiguration.Builder.<JpaRepository<?, ?>, String>of(CardFactory.class)
                                         .withTitleField("title")

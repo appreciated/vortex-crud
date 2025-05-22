@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.JpaSelectValues;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +53,22 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String>>) test.getValue().getClass()));
     }
 
-    public Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForJpaRepository(JpaRepositoryDataStore<?> test) {
-        return Arrays.stream(test.getFields())
+    public Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForJpaRepository(JpaRepositoryDataStore<?> dataStore) {
+        return Arrays.stream(dataStore.getFields())
                 .filter(field -> field.isAnnotationPresent(JpaFieldRenderer.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
                     JpaFieldRenderer annotation = entityField.getAnnotation(JpaFieldRenderer.class);
                     boolean isPrimary = entityField.isAnnotationPresent(Id.class);
                     boolean isNullable = !entityField.isAnnotationPresent(Column.class) || entityField.getAnnotation(Column.class).nullable();
-                    return JpaField.of(annotation.value(), isPrimary, isNullable).build();
+
+                    // If field is a select
+                    if (entityField.isAnnotationPresent(JpaSelectValues.class)){
+                        String jpaSelectValue = entityField.getAnnotation(JpaSelectValues.class).value();
+                        return JpaField.of(annotation.value(), jpaSelectValue).build();
+                    } else {
+                        // Otherwise it is a field that can use the basic field initialization
+                        return JpaField.of(annotation.value(), isPrimary, isNullable).build();
+                    }
                 }));
     }
 }
