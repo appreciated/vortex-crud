@@ -46,10 +46,10 @@ Unlike **Directus**, `vortex-crud` relies on static Java code for configuration,
 The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much higher level of abstraction. While Vaadin is a framework for building UI components, `vortex-crud` simplifies the creation and management of CRUD applications by offering a declarative configuration for routes, UI components, and data bindings. Developers can focus less on manual coding, as the framework automatically handles many tasks, such as generating routes and UI elements based on the defined model. As a side note, Vaadin and `vortex-crud` can both be used at once.
 
 ## <a name="tech-stack">Tech Stack</a>
-- **Spring Boot**: Backend API development and dependency injection
+- **Spring Boot**: Making heavy use of dependency injection
 - **Vaadin Flow**: Frontend UI components for building interactive applications
-- **JPA or jOOQ**: `vortex-crud` supports accessing the database using either JPA or jOOQ
-
+- **JPA or jOOQ**: To access your database either use JPA or jOOQ
+ 
 ## <a name="key-features">Key Features</a>
 - **Declarative definition of Forms and Routes**: Rapidly create complex, user-friendly CRUD applications by describing the application.
 - **Modular Architecture**: If the default implementations don't suffice, rely on a fully modular and flexible [architecture](#architecture).
