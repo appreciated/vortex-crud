@@ -14,7 +14,7 @@ public class TaskComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @JpaFieldRenderer(TextFieldFactory.class)
     @Length(max = 1000)
@@ -33,11 +33,11 @@ public class TaskComment {
     private LocalDateTime createdAt;
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

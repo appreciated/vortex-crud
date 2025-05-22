@@ -21,7 +21,7 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @JpaFieldRenderer(TextFieldFactory.class)
     @Column(name = "title", nullable = false, length = 255)
@@ -34,6 +34,7 @@ public class Task {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
     @JpaFieldRenderer(TextFieldFactory.class)
@@ -64,11 +65,11 @@ public class Task {
     private Set<Task> relatedToTasks = new HashSet<>();
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
