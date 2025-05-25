@@ -1,16 +1,9 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
-import com.github.appreciated.vortex_crud.jpa.service.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -27,8 +20,11 @@ import java.util.stream.Collectors;
 public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<JpaRepository<?, ?>, String> {
 
     private final HashMap<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> factories = new HashMap<>();
+    private final JpaFieldService jpaFieldService;
 
-    public JpaDataStoreFactoryRegistry(@Autowired List<JpaRepository<?, ?>> repositoryList) {
+    public JpaDataStoreFactoryRegistry(@Autowired List<JpaRepository<?, ?>> repositoryList, 
+                                      @Autowired JpaFieldService jpaFieldService) {
+        this.jpaFieldService = jpaFieldService;
         repositoryList.forEach(repository -> factories.put(repository, new JpaRepositoryDataStore(repository)));
     }
 
@@ -46,36 +42,12 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                 Map.Entry::getKey,
                 test -> {
                     DataStoreConfig.Builder<JpaRepository<?, ?>, String> builder = createBuilder(test);
-                    builder.withFields(getFieldsForDataStore(test.getValue()));
+                    builder.withFields(jpaFieldService.getFieldsForDataStore(test.getValue()));
                     return builder.build();
                 }));
     }
 
     private DataStoreConfig.Builder<JpaRepository<?, ?>, String> createBuilder(Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> test) {
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String>>) test.getValue().getClass()));
-    }
-
-    private Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore) {
-        return Arrays.stream(dataStore.getFields())
-                .filter(field -> field.isAnnotationPresent(FieldRenderer.class))
-                .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
-                    FieldRenderer annotation = entityField.getAnnotation(FieldRenderer.class);
-                    boolean isPrimary = entityField.isAnnotationPresent(Id.class);
-                    boolean isNullable = !entityField.isAnnotationPresent(Column.class) || entityField.getAnnotation(Column.class).nullable();
-
-                    if (entityField.isAnnotationPresent(ImageFieldRendererConfiguration.class)) {
-                        Class<? extends VortexCrudResourceProvider> imageFieldConfiguration = entityField.getAnnotation(ImageFieldRendererConfiguration.class).value();
-                        return JpaField.of(annotation.value(), isPrimary, isNullable)
-                                .withConfiguration(new com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration<>(imageFieldConfiguration))
-                                .build();
-                    } else if (entityField.isAnnotationPresent(SelectValues.class)) {
-                        // If field is a select
-                        String jpaSelectValue = entityField.getAnnotation(SelectValues.class).value();
-                        return JpaField.of(annotation.value(), jpaSelectValue).build();
-                    } else {
-                        // Otherwise it is a field that can use the basic field initialization
-                        return JpaField.of(annotation.value(), isPrimary, isNullable).build();
-                    }
-                }));
     }
 }

@@ -20,13 +20,15 @@ class JpaDataStoreFactoryRegistryTest {
     @Autowired
     private JpaDataStoreFactoryRegistry registry;
     @Autowired
+    private JpaFieldService fieldService;
+    @Autowired
     private TestRepository testRepository;
 
     @Test
     void testGetFieldsForDataStore() {
         // Call the method under test
         Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String>> fields =
-                registry.getFieldsForDataStore((JpaRepositoryDataStore<?>) registry.getFactory(testRepository));
+                fieldService.getFieldsForDataStore((JpaRepositoryDataStore<?>) registry.getFactory(testRepository));
 
         // Verify the results
         assertNotNull(fields);
