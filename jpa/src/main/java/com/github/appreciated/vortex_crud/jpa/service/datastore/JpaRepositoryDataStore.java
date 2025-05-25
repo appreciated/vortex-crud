@@ -107,14 +107,17 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     }
 
     private GenericEntity convertToGenericEntity(T t) {
-        Map<String, Object> mappingResult = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, field -> {
-            try {
-                field.setAccessible(true);
-                return field.get(t);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }));
+        Map<String, Object> mappingResult = Arrays.stream(fields)
+                .filter(field -> field.canAccess(t))
+                .collect(Collectors.toMap(Field::getName, field -> {
+                            try {
+                                field.setAccessible(true);
+                                return field.get(t);
+                            } catch (IllegalAccessException e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                );
         return new GenericEntity(mappingResult);
     }
 
