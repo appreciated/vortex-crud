@@ -4,8 +4,8 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
-import com.github.appreciated.vortex_crud.jpa.service.JpaSelectValues;
+import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
@@ -25,13 +25,13 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JpaFieldRenderer(TextFieldFactory.class)
+    @FieldRenderer(TextFieldFactory.class)
     @Column(name = "title", nullable = false, length = 255)
     @Nonnull
     @Length(max = 255)
     private String title;
 
-    @JpaFieldRenderer(TextFieldFactory.class)
+    @FieldRenderer(TextFieldFactory.class)
     @Length(max = 1000)
     private String description;
 
@@ -39,18 +39,18 @@ public class Task {
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @JpaFieldRenderer(SelectFieldFactory.class)
-    @JpaSelectValues("task-status")
+    @FieldRenderer(SelectFieldFactory.class)
+    @SelectValues("task-status")
     @Length(max = 50)
     private String status;
 
-    @JpaFieldRenderer(DateFieldFactory.class)
+    @FieldRenderer(DateFieldFactory.class)
     private LocalDate dueDate;
 
-    @JpaFieldRenderer(DateTimePickerFactory.class)
+    @FieldRenderer(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
-    @JpaFieldRenderer(DateTimePickerFactory.class)
+    @FieldRenderer(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

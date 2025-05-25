@@ -4,9 +4,11 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
-import com.github.appreciated.vortex_crud.jpa.service.JpaSelectValues;
+import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.ImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +57,20 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
 
     public Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForJpaRepository(JpaRepositoryDataStore<?> dataStore) {
         return Arrays.stream(dataStore.getFields())
-                .filter(field -> field.isAnnotationPresent(JpaFieldRenderer.class))
+                .filter(field -> field.isAnnotationPresent(FieldRenderer.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
-                    JpaFieldRenderer annotation = entityField.getAnnotation(JpaFieldRenderer.class);
+                    FieldRenderer annotation = entityField.getAnnotation(FieldRenderer.class);
                     boolean isPrimary = entityField.isAnnotationPresent(Id.class);
                     boolean isNullable = !entityField.isAnnotationPresent(Column.class) || entityField.getAnnotation(Column.class).nullable();
 
-                    // If field is a select
-                    if (entityField.isAnnotationPresent(JpaSelectValues.class)){
-                        String jpaSelectValue = entityField.getAnnotation(JpaSelectValues.class).value();
+                    if (entityField.isAnnotationPresent(ImageFieldRendererConfiguration.class)) {
+                        Class<? extends VortexCrudResourceProvider> imageFieldConfiguration = entityField.getAnnotation(ImageFieldRendererConfiguration.class).value();
+                        return JpaField.of(annotation.value(), isPrimary, isNullable)
+                                .withConfiguration(new com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration<>(imageFieldConfiguration))
+                                .build();
+                    } else if (entityField.isAnnotationPresent(SelectValues.class)) {
+                        // If field is a select
+                        String jpaSelectValue = entityField.getAnnotation(SelectValues.class).value();
                         return JpaField.of(annotation.value(), jpaSelectValue).build();
                     } else {
                         // Otherwise it is a field that can use the basic field initialization

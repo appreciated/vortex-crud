@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.JpaFieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.ImageFieldRendererConfiguration;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,10 +15,11 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @JpaFieldRenderer(TextFieldFactory.class)
+    @FieldRenderer(TextFieldFactory.class)
     private String title;
 
-    @JpaFieldRenderer(TextFieldFactory.class)
+    @FieldRenderer(ImageFieldFactory.class)
+    @ImageFieldRendererConfiguration(ImageResourceProvider.class)
     private String url;
 
     // Getters and Setters
