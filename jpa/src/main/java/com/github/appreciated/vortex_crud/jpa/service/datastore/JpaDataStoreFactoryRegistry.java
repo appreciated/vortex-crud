@@ -46,7 +46,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                 Map.Entry::getKey,
                 test -> {
                     DataStoreConfig.Builder<JpaRepository<?, ?>, String> builder = createBuilder(test);
-                    builder.withFields(getFieldsForJpaRepository(test.getValue()));
+                    builder.withFields(getFieldsForDataStore(test.getValue()));
                     return builder.build();
                 }));
     }
@@ -55,7 +55,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String>>) test.getValue().getClass()));
     }
 
-    public Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForJpaRepository(JpaRepositoryDataStore<?> dataStore) {
+    private Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore) {
         return Arrays.stream(dataStore.getFields())
                 .filter(field -> field.isAnnotationPresent(FieldRenderer.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
