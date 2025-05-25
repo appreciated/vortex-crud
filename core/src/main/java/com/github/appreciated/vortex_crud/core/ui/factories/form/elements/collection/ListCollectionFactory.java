@@ -141,7 +141,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
             return foreignKeyValue == null ? List.of() :
                     dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
         } else if (collectionData.getManyToMany() != null) {
-            // If we need to resolve a many-to-many relation it is necessary to do two selects one over the associative
+            // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
             // datastore and one over the target datastore and one with the actual entries.
             // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
             // of resolving the following data.
@@ -172,9 +172,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
-                () -> {
-                    loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header);
-                },
+                () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
     }

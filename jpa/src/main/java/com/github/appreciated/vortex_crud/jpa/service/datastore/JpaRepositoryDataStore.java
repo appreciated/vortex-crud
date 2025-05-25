@@ -123,7 +123,13 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, String filterValue, int offset, int limit) {
-        return repository.findAll(Pageable.ofSize(limit).withPage(offset / limit))
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(filterField, filterValue);
+        Example<T> example = Example.of(
+                mapToEntity(new GenericEntity(properties)),
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
+        );
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
                 .map(this::convertToGenericEntity)
                 .toList();
     }
@@ -137,7 +143,13 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, String filterValue, int offset, int limit) {
-        return repository.findAll(Pageable.ofSize(limit).withPage(offset / limit))
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(filterField, filterValue);
+        Example<T> example = Example.of(
+                mapToEntity(new GenericEntity(properties)),
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+        );
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
                 .map(this::convertToGenericEntity)
                 .toList();
     }
@@ -190,10 +202,11 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Override
     public int countWhereColumnLike(String filterField, String filterValue) {
-        return (int) repository.count(Example.of(mapToEntity(
+        Example<T> example = Example.of(mapToEntity(
                         new GenericEntity(new HashMap<>())),
                 ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-        ));
+        );
+        return (int) repository.count(example);
     }
 
     public Field[] getFields() {
