@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,12 +22,12 @@ public class JpaFieldService {
 
     /**
      * Extracts and processes fields from a JpaRepositoryDataStore
-     * 
+     *
      * @param dataStore The data store containing fields to process
      * @return A map of field names to configure Field objects
      */
     public Map<String, Field<JpaRepository<?, ?>, String>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore) {
-        return Arrays.stream(dataStore.getFields())
+        return dataStore.getFields().stream()
                 .filter(field -> field.isAnnotationPresent(FieldRenderer.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
                     FieldRenderer annotation = entityField.getAnnotation(FieldRenderer.class);
