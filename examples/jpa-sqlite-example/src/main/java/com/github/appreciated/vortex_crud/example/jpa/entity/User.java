@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
@@ -16,7 +16,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     @Nonnull
     private String username;
 

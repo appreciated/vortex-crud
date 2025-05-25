@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -16,7 +16,7 @@ public class TaskComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     @Length(max = 1000)
     private String commentText;
 
@@ -24,12 +24,12 @@ public class TaskComment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
     // Getters and Setters

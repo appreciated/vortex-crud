@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -17,22 +17,22 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     private String name;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     private String description;
 
-    @FieldRenderer(DateFieldFactory.class)
+    @Field(DateFieldFactory.class)
     private LocalDate startDate;
 
-    @FieldRenderer(DateFieldFactory.class)
+    @Field(DateFieldFactory.class)
     private LocalDate endDate;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
     // Getters and Setters

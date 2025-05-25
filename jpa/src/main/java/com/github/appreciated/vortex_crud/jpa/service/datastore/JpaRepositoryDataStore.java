@@ -2,18 +2,17 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
+import jakarta.persistence.Id;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service for managing dynamic entities using an EntityManager.
@@ -23,8 +22,8 @@ import java.util.stream.Collectors;
 public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     private final JpaRepository<T, Object> repository;
-    private final Class<?> repositoryModelClass;
-    private final List<Field> fields;
+    private final Class<T> repositoryModelClass;
+    private final List<java.lang.reflect.Field> fields;
 
     public JpaRepositoryDataStore(JpaRepository<T, ?> repository) {
         this.repository = (JpaRepository<T, Object>) repository;
@@ -32,9 +31,10 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         this.fields = getModelFields();
     }
 
-    private List<Field> getModelFields() {
+    private List<java.lang.reflect.Field> getModelFields() {
         return Arrays.stream(repositoryModelClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(FieldRenderer.class)).toList();
+                .filter(field -> field.isAnnotationPresent(Field.class) || field.isAnnotationPresent(Id.class))
+                .toList();
     }
 
     public Class<T> getEntityClass(JpaRepository<?, ?> repository) {
@@ -111,7 +111,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     private GenericEntity convertToGenericEntity(T t) {
         Map<String, Object> mappingResult = new HashMap<>();
-        for (Field field : fields) {
+        for (java.lang.reflect.Field field : fields) {
             try {
                 field.setAccessible(true);
                 Object value = field.get(t);
@@ -213,7 +213,11 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return (int) repository.count(example);
     }
 
-    public Collection<Field> getFields() {
+    public Collection<java.lang.reflect.Field> getFields() {
         return fields;
+    }
+
+    public Class<T> getModel() {
+        return this.repositoryModelClass;
     }
 }

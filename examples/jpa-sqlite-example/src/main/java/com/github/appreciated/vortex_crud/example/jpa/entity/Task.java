@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
@@ -25,13 +25,13 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     @Column(name = "title", nullable = false, length = 255)
     @Nonnull
     @Length(max = 255)
     private String title;
 
-    @FieldRenderer(TextFieldFactory.class)
+    @Field(TextFieldFactory.class)
     @Length(max = 1000)
     private String description;
 
@@ -39,18 +39,18 @@ public class Task {
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @FieldRenderer(SelectFieldFactory.class)
+    @Field(SelectFieldFactory.class)
     @SelectValues("task-status")
     @Length(max = 50)
     private String status;
 
-    @FieldRenderer(DateFieldFactory.class)
+    @Field(DateFieldFactory.class)
     private LocalDate dueDate;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

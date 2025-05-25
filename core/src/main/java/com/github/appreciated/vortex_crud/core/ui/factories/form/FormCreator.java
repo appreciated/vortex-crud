@@ -48,7 +48,7 @@ public class FormCreator<DataStoreId, FieldId> {
             if (!element.getType().equals("collection")) {
                 Field<DataStoreId, FieldId> field = fieldsConfig.get(fieldName);
                 if (field == null) {
-                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config unter table '" + table + "'");
+                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + table + "'");
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
-import com.github.appreciated.vortex_crud.jpa.service.FieldRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -22,7 +22,7 @@ public class TaskHasTask {
     @JoinColumn(name = "related_task_id", nullable = false)
     private Task relatedTask;
 
-    @FieldRenderer(DateTimePickerFactory.class)
+    @Field(DateTimePickerFactory.class)
     private LocalDateTime createdAt;
 
     // Getters and Setters
