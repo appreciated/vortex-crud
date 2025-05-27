@@ -57,11 +57,6 @@ public class Task {
     private List<TaskComment> comments = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "task_has_task",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "related_task_id")
-    )
     private Set<Task> relatedTasks = new HashSet<>();
 
     @ManyToMany(mappedBy = "relatedTasks", fetch = FetchType.EAGER)

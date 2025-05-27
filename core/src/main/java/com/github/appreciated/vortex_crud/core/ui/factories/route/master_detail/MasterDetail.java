@@ -33,7 +33,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.BETWEEN;
 
-public class MasterDetail<DataStoreId, FieldId>  extends SplitLayout {
+public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
 
     private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;

@@ -52,7 +52,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
-                                                        .withOneToMany(new OneToMany<>(TASK_COMMENTS.TASK_ID))
+                                                        .withOneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
@@ -69,7 +69,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
-                                                        .withManyToMany(new ManyToMany<>(TASK_HAS_TASK,
+                                                        .withManyToMany(new JooqManyToMany(TASK_HAS_TASK,
                                                                 TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
                                                                 TASKS.ID))

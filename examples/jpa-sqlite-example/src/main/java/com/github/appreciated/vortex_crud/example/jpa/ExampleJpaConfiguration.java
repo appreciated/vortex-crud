@@ -15,7 +15,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanD
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.vortex_crud.example.jpa.repository.*;
+import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.TaskRepository;
 import com.github.appreciated.vortex_crud.jpa.service.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -32,20 +35,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
     private final TaskCommentRepository taskCommentRepository;
-    private final TaskHasTaskRepository taskHasTaskRepository;
     private final TaskRepository taskRepository;
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
             TaskCommentRepository taskCommentRepository,
-            TaskHasTaskRepository taskHasTaskRepository,
             TaskRepository taskRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.taskCommentRepository = taskCommentRepository;
-        this.taskHasTaskRepository = taskHasTaskRepository;
         this.taskRepository = taskRepository;
     }
 
@@ -65,7 +65,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<JpaRepository<?, ?>, String>of(FormDialogFactory.class)
                                                 .withData(CollectionData.Builder.<JpaRepository<?, ?>, String>of(taskCommentRepository)
-                                                        .withOneToMany(new OneToMany<>("task_id"))
+                                                        .withOneToMany(new JpaOneToMany("task_id"))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
@@ -83,10 +83,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<JpaRepository<?, ?>, String>of(ConnectDialogFactory.class)
                                                 .withData(CollectionData.Builder.<JpaRepository<?, ?>, String>of(taskRepository)
-                                                        .withManyToMany(new ManyToMany<>(taskHasTaskRepository,
-                                                                "task_id",
-                                                                "related_task_id",
-                                                                "id"))
+                                                        .withManyToMany(new JpaManyToMany(""))
                                                         .withChildren("title")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")

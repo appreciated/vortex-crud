@@ -1,52 +1,19 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-public class ManyToMany<DataStoreId, FieldId> {
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.google.common.collect.Table;
 
-    private DataStoreId associativeDataStore;
+import java.util.List;
 
-    private FieldId associativeSourceIdField;
+public interface ManyToMany<DataStoreId, FieldId> {
 
-    private FieldId associativeTargetIdField;
+    List<GenericEntity> getData(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData);
 
-    private FieldId dataStoreField;
+    FieldId getReferenceField(CollectionData<DataStoreId, FieldId> collectionData);
 
-    public ManyToMany(DataStoreId associativeDataStore, FieldId associativeSourceIdField, FieldId associativeTargetIdField, FieldId dataStoreField) {
-        this.associativeDataStore = associativeDataStore;
-        this.associativeSourceIdField = associativeSourceIdField;
-        this.associativeTargetIdField = associativeTargetIdField;
-        this.dataStoreField = dataStoreField;
-    }
+    DataStoreId getAssociativeDataStore();
 
-    public DataStoreId getAssociativeDataStore() {
-        return associativeDataStore;
-    }
-
-    public void setAssociativeDataStore(DataStoreId associativeDataStore) {
-        this.associativeDataStore = associativeDataStore;
-    }
-
-    public FieldId getAssociativeSourceIdField() {
-        return associativeSourceIdField;
-    }
-
-    public void setAssociativeSourceIdField(FieldId associativeSourceIdField) {
-        this.associativeSourceIdField = associativeSourceIdField;
-    }
-
-    public FieldId getAssociativeTargetIdField() {
-        return associativeTargetIdField;
-    }
-
-    public void setAssociativeTargetIdField(FieldId associativeTargetIdField) {
-        this.associativeTargetIdField = associativeTargetIdField;
-    }
-
-    public FieldId getDataStoreField() {
-        return dataStoreField;
-    }
-
-    public void setDataStoreField(FieldId dataStoreField) {
-        this.dataStoreField = dataStoreField;
-    }
-
+    FieldId getAssociativeTargetIdField();
 }

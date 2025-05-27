@@ -73,7 +73,10 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         CollectionData<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
-        List<GenericEntity> records = getDataByConfig(foreignKeyValue, dataStore, data);
+        List<GenericEntity> records = (data.getManyToMany() != null) ?
+                data.getManyToMany().getData(dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
+                data.getOneToMany().getData(foreignKeyValue, dataStore, data);
+
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
         } else if (internalFormElement.getConfiguration().getData().getManyToMany() != null) {
@@ -87,7 +90,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
     }
 
     private void addManyToManyItems(String foreignKeyValue,
-                                    InternalFormElement<DataStoreId, FieldId>  internalFormElement,
+                                    InternalFormElement<DataStoreId, FieldId> internalFormElement,
                                     VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                                     FormCreator<DataStoreId, FieldId> formCreator,
                                     VerticalLayout list,
@@ -136,26 +139,6 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         }
     }
 
-    private List<GenericEntity> getDataByConfig(String foreignKeyValue, VortexCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData) {
-        if (collectionData.getOneToMany() != null) {
-            return foreignKeyValue == null ? List.of() :
-                    dataStore.getRecordsFromTableWhereColumnEquals(collectionData.getOneToMany().getReferenceField(), foreignKeyValue, 0, Integer.MAX_VALUE);
-        } else if (collectionData.getManyToMany() != null) {
-            // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
-            // datastore and one over the target datastore and one with the actual entries.
-            // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
-            // of resolving the following data.
-            ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
-            VortexCrudDataStore<FieldId> associativeDataStore = dataStoreFactoryRegistry.getFactory(manyToMany.getAssociativeDataStore());
-            List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(manyToMany.getAssociativeSourceIdField(), foreignKeyValue, 0, Integer.MAX_VALUE);
-            List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(fieldNameResolver.getKeyForFieldId(manyToMany.getAssociativeTargetIdField()))).map(Object::toString).toList();
-            return foreignKeyValue == null ? List.of() :
-                    dataStore.getRecordsFromTableWhereColumnIn(manyToMany.getDataStoreField(), associativeRecordIds, 0, Integer.MAX_VALUE);
-        } else {
-            throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
-        }
-    }
-
     private void openDialog(String entityId,
                             String foreignKey,
                             InternalFormElement<DataStoreId, FieldId> internalFormElement,
@@ -164,10 +147,15 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                             VerticalLayout list,
                             HorizontalLayout header) {
         Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();
+        CollectionData<DataStoreId, FieldId> data = collectionData.getData();
+        FieldId referenceField = (data.getManyToMany() != null) ?
+                data.getManyToMany().getReferenceField(data) :
+                data.getOneToMany().getReferenceField(data);
+
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(
                 entityId,
                 foreignKey,
-                getReferenceField(collectionData.getData()),
+                referenceField,
                 collectionData.getChild(),
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
@@ -175,17 +163,5 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                 () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 formCreator);
         dialog.open();
-    }
-
-    private static <DataStoreId, FieldId> FieldId getReferenceField(CollectionData<DataStoreId, FieldId> collectionData) {
-        if (collectionData.getOneToMany() != null) {
-            OneToMany<FieldId> oneToMany = collectionData.getOneToMany();
-            return oneToMany.getReferenceField();
-        } else if (collectionData.getManyToMany() != null) {
-            ManyToMany<DataStoreId, FieldId> manyToMany = collectionData.getManyToMany();
-            return manyToMany.getAssociativeSourceIdField();
-        } else {
-            throw new IllegalArgumentException("Either getOneToMany or getManyToMany must be specified");
-        }
     }
 }

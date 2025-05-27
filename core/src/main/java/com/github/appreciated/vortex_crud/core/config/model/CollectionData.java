@@ -9,7 +9,7 @@ public class CollectionData<DataStoreId, FieldId> {
 
     private DataStoreId dataStore;
 
-    private OneToMany<FieldId> oneToMany;
+    private OneToMany<DataStoreId, FieldId> oneToMany;
 
     private ManyToMany<DataStoreId, FieldId> manyToMany;
 
@@ -27,11 +27,11 @@ public class CollectionData<DataStoreId, FieldId> {
         this.dataStore = dataStore;
     }
 
-    public OneToMany<FieldId>  getOneToMany() {
+    public OneToMany<DataStoreId, FieldId> getOneToMany() {
         return oneToMany;
     }
 
-    public void setOneToMany(OneToMany<FieldId>  oneToMany) {
+    public void setOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
         this.oneToMany = oneToMany;
     }
 
@@ -63,7 +63,7 @@ public class CollectionData<DataStoreId, FieldId> {
             return new Builder<>(new CollectionData<>(dataStore));
         }
 
-        public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<FieldId> oneToMany) {
+        public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
             product.oneToMany = oneToMany;
             return this;
         }
