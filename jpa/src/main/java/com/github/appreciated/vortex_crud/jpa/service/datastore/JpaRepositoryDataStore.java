@@ -126,7 +126,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, Object filterValue, int offset, int limit) {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put(filterField, filterValue);
         Example<T> example = Example.of(

@@ -86,14 +86,14 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
             return cardWrapper;
         });
 
-        String selectName = dataStoreField.getValues();
-        Map<String, String> selectConfig = selects.getConfigs().get(selectName);
+        Object selectName = dataStoreField.getValues();
+        Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
         }
 
-        Set<String> strings = selectConfig.keySet();
+        Set<?> strings = selectConfig.keySet();
 
         HorizontalLayout kanbanBoard = new HorizontalLayout();
 
@@ -101,7 +101,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                 .set("flex", "1 1 auto")
                 .set("overflow", "auto");
 
-        for (String string : strings) {
+        for (Object string : strings) {
             VerticalLayout column = createColumn(getTranslation(selectConfig.get(string)), string);
             kanbanBoard.add(column);
         }
@@ -125,7 +125,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         setPadding(true);
     }
 
-    private VerticalLayout createColumn(String title, String columnDatabaseValue) {
+    private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         VerticalLayout column = new VerticalLayout();
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();

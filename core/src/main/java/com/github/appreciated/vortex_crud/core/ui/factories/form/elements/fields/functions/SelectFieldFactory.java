@@ -21,19 +21,19 @@ public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudField
 
     @Override
     public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
-        Select<String> select = new Select<>();
+        Select<Object> select = new Select<>();
 
         DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);
         Field<DataStoreId, FieldId> tableField = dataStoreConfig.getFields().get(field);
 
         String selectName = tableField.getValues();
-        Map<String, String> selectConfig = selects.getConfigs().get(selectName);
+        Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
         }
 
-        Set<String> strings = selectConfig.keySet();
+        Set<Object> strings = (Set<Object>) selectConfig.keySet();
         select.setItems(new ArrayList<>(strings));
         select.setItemLabelGenerator(item -> select.getTranslation(selectConfig.get(item)));
 

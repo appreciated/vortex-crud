@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.jpa.service;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionData;
+import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
@@ -17,13 +17,13 @@ public class JpaOneToMany implements OneToMany<JpaRepository<?, ?>, String> {
     }
 
     @Override
-    public List<GenericEntity> getData(String foreignKeyValue, VortexCrudDataStore<String> dataStore, CollectionData<JpaRepository<?, ?>, String> collectionData) {
+    public List<GenericEntity> getData(String foreignKeyValue, VortexCrudDataStore<String> dataStore, CollectionConfiguration<JpaRepository<?, ?>, String> collectionConfiguration) {
         return foreignKeyValue == null ? List.of() :
                 dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 
     @Override
-    public String getReferenceField(CollectionData<JpaRepository<?, ?>, String> collectionData) {
+    public String getReferenceField(CollectionConfiguration<JpaRepository<?, ?>, String> collectionConfiguration) {
         return referenceField;
     }
 

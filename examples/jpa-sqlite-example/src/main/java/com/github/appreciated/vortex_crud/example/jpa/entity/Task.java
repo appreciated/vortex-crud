@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.annotation.Nonnull;
@@ -35,6 +32,7 @@ public class Task {
     @Length(max = 1000)
     private String description;
 
+    @Field(ReferenceFieldFactory.class)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
@@ -53,12 +51,20 @@ public class Task {
     @Field(DateTimePickerFactory.class)
     private LocalDateTime updatedAt;
 
+    @Field(ReferenceFieldFactory.class)
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TaskComment> comments = new ArrayList<>();
 
+    @Field(ReferenceFieldFactory.class)
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "task_has_task",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_task_id")
+    )
     private Set<Task> relatedTasks = new HashSet<>();
 
+    @Field(ReferenceFieldFactory.class)
     @ManyToMany(mappedBy = "relatedTasks", fetch = FetchType.EAGER)
     private Set<Task> relatedToTasks = new HashSet<>();
 

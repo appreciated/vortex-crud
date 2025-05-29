@@ -8,13 +8,13 @@ import java.util.Map;
 @GenerateBuilder
 public class Selects {
 
-    private Map<String, LinkedHashMap<String, String>> configs;
+    private Map<String, LinkedHashMap<?, String>> configs;
 
-    public Map<String, LinkedHashMap<String, String>> getConfigs() {
+    public Map<String, LinkedHashMap<?, String>> getConfigs() {
         return configs;
     }
 
-    public void setConfigs(Map<String, LinkedHashMap<String, String>> configs) {
+    public void setConfigs(Map<String, LinkedHashMap<?, String>> configs) {
         this.configs = configs;
     }
 
@@ -30,7 +30,7 @@ public class Selects {
             return new Builder(new Selects());
         }
 
-        public Builder withConfigs(Map<String, LinkedHashMap<String, String>> configs) {
+        public Builder withConfigs(Map<String, LinkedHashMap<?, String>> configs) {
             product.configs = configs;
             return this;
         }

@@ -9,7 +9,7 @@ import java.util.List;
 @GenerateBuilder
 public interface OneToMany<DataStoreId, FieldId> {
 
-    List<GenericEntity> getData(String foreignKeyValue, VortexCrudDataStore<FieldId> dataStore, CollectionData<DataStoreId, FieldId> collectionData);
+    List<GenericEntity> getData(String foreignKeyValue, VortexCrudDataStore<FieldId> dataStore, CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration);
 
-    FieldId getReferenceField(CollectionData<DataStoreId, FieldId> collectionData);
+    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration);
 }

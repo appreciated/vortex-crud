@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
@@ -11,15 +12,17 @@ import java.util.List;
 
 public class ReferenceFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
 
+    private final VortexCrudDataStoreFieldNameResolver<FieldId> resolver;
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry;
 
-    public ReferenceFieldFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry) {
+    public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldId> resolver, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry) {
+        this.resolver = resolver;
         this.managerFactoryRegistry = managerFactoryRegistry;
     }
 
     @Override
     public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
-        return new EntityComboBoxWrapper<>(managerFactoryRegistry, dataStoreField);
+        return new EntityComboBoxWrapper<>(resolver, managerFactoryRegistry, dataStoreField);
     }
 
     @Override

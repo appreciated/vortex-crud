@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionData;
+import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -37,15 +37,15 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                              @Nullable String foreignKeyValue,
                              @Nullable FieldId foreignKeyField,
                              RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
-                             CollectionData<DataStoreId, FieldId> collectionData,
+                             CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
                              DataStoreId dataStoreIdentifier,
                              VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                              OnStoreListener listener,
                              FormCreator<DataStoreId, FieldId> formCreator) {
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
-        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getFactory(collectionData.getManyToMany().getAssociativeDataStore());
-        FieldId associativeTargetIdField = collectionData.getManyToMany().getAssociativeTargetIdField();
+        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getFactory(collectionConfiguration.getManyToMany().getAssociativeDataStore());
+        FieldId associativeTargetIdField = collectionConfiguration.getManyToMany().getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -65,7 +65,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(genericEntity -> collectionData.getChildren().stream().map(genericEntity::getString).collect(Collectors.joining(",")));
+        connectionList.setItemLabelGenerator(genericEntity -> collectionConfiguration.getChildren().stream().map(genericEntity::getString).collect(Collectors.joining(",")));
         connectionList.setValue(currentlySelectedConnections);
 
         layout.add(connectionList);

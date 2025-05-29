@@ -5,7 +5,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class CollectionData<DataStoreId, FieldId> {
+public class CollectionConfiguration<DataStoreId, FieldId> {
 
     private DataStoreId dataStore;
 
@@ -15,7 +15,7 @@ public class CollectionData<DataStoreId, FieldId> {
 
     private List<String> children;
 
-    public CollectionData(DataStoreId dataStore) {
+    public CollectionConfiguration(DataStoreId dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -53,14 +53,14 @@ public class CollectionData<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private final CollectionData<DataStoreId, FieldId> product;
+        private final CollectionConfiguration<DataStoreId, FieldId> product;
 
-        private Builder(CollectionData<DataStoreId, FieldId> product) {
+        private Builder(CollectionConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
         public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(DataStoreId dataStore) {
-            return new Builder<>(new CollectionData<>(dataStore));
+            return new Builder<>(new CollectionConfiguration<>(dataStore));
         }
 
         public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
@@ -87,7 +87,7 @@ public class CollectionData<DataStoreId, FieldId> {
             return this;
         }
 
-        public CollectionData<DataStoreId, FieldId> build() {
+        public CollectionConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

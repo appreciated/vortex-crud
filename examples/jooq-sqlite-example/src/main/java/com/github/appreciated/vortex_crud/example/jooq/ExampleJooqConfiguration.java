@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jooq;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PROJECTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
@@ -51,7 +52,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
+                                                .withData(CollectionConfiguration.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
                                                         .withOneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
                                                         .withChildren("comment_text")
                                                         .build())
@@ -68,7 +69,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
-                                                .withData(CollectionData.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
+                                                .withData(CollectionConfiguration.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
                                                         .withManyToMany(new JooqManyToMany(TASK_HAS_TASK,
                                                                 TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
@@ -124,7 +125,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 TASKS.ID, new JooqField(IdFieldFactory.class, true),
                                 TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
                                 TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of("username")) /* 1:1 Relation */,
+                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new JooqField(SelectFieldFactory.class, "task-status"),
                                 TASKS.DUE_DATE, JooqField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
@@ -240,11 +241,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withChild(imageForm)
                 .build());
 
-        LinkedHashMap<String, String> taskStatuses = new LinkedHashMap<>();
-        taskStatuses.put("todo", "selects.task-status.todo");
-        taskStatuses.put("open", "selects.task-status.open");
-        taskStatuses.put("work-in-progress", "selects.task-status.progress");
-        taskStatuses.put("closed", "selects.task-status.closed");
+        LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
+        taskStatuses.put(TODO, "selects.task-status.todo");
+        taskStatuses.put(OPEN, "selects.task-status.open");
+        taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
+        taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         return JooqApplication.of()
                 .withName("application.name")

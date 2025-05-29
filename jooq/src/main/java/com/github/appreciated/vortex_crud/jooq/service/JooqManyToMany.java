@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionData;
+import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -25,7 +25,7 @@ public class JooqManyToMany implements ManyToMany<Table<?>, TableField<?, ?>> {
     }
 
     @Override
-    public List<GenericEntity> getData(VortexCrudDataStoreFactoryRegistry<Table<?>, TableField<?, ?>> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>> targetDataStore, CollectionData<Table<?>, TableField<?, ?>> collectionData) {
+    public List<GenericEntity> getData(VortexCrudDataStoreFactoryRegistry<Table<?>, TableField<?, ?>> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>> targetDataStore, CollectionConfiguration<Table<?>, TableField<?, ?>> collectionConfiguration) {
         // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
@@ -38,7 +38,7 @@ public class JooqManyToMany implements ManyToMany<Table<?>, TableField<?, ?>> {
     }
 
     @Override
-    public TableField<?, ?> getReferenceField(CollectionData<Table<?>, TableField<?, ?>> collectionData) {
+    public TableField<?, ?> getReferenceField(CollectionConfiguration<Table<?>, TableField<?, ?>> collectionConfiguration) {
         return dataStoreField;
     }
 

@@ -10,7 +10,7 @@ public interface VortexCrudDataStore<FieldId> {
 
     List<GenericEntity> getRecordsFromTable(int offset, int limit);
 
-    List<GenericEntity> getRecordsFromTableWhereColumnEquals(FieldId filterField, String filterValue, int offset, int limit);
+    List<GenericEntity> getRecordsFromTableWhereColumnEquals(FieldId filterField, Object filterValue, int offset, int limit);
 
     List<GenericEntity> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit);
 

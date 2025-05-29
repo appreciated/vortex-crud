@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionData;
+import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -12,7 +12,7 @@ public interface VortexCrudDialogFactory<DataStoreId, FieldId> {
                       @Nullable String foreignKeyValue,
                       @Nullable FieldId foreignKeyField,
                       RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
-                      CollectionData<DataStoreId, FieldId> config,
+                      CollectionConfiguration<DataStoreId, FieldId> config,
                       DataStoreId dataStore,
                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                       OnStoreListener listener,

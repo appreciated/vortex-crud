@@ -70,7 +70,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        CollectionData<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
+        CollectionConfiguration<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
         List<GenericEntity> records = (data.getManyToMany() != null) ?
@@ -147,7 +147,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                             VerticalLayout list,
                             HorizontalLayout header) {
         Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();
-        CollectionData<DataStoreId, FieldId> data = collectionData.getData();
+        CollectionConfiguration<DataStoreId, FieldId> data = collectionData.getData();
         FieldId referenceField = (data.getManyToMany() != null) ?
                 data.getManyToMany().getReferenceField(data) :
                 data.getOneToMany().getReferenceField(data);

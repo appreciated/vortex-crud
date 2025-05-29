@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
@@ -19,7 +20,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     private final VortexCrudDataStore<FieldId> dataStore;
     private Integer currentValue;
 
-    public EntityComboBoxWrapper(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
+    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 
@@ -30,6 +31,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
         );
 
         comboBox.setItemLabelGenerator(item -> dataStoreField.getChildren().stream()
+                .map(resolver::getKeyForFieldId)
                 .map(item::getString)
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

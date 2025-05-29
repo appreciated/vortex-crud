@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
@@ -22,7 +23,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements Vortex
 
     private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId> configService, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry) {
+    public DefaultFieldFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId> configService, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
         Application<DataStoreId, FieldId> configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
@@ -30,7 +31,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements Vortex
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
         factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.getSelects(), configuration.getDataStores()));
         factories.put(NumberFieldFactory.class, new NumberFieldFactory<>());
-        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(dataStoreFactoryRegistry));
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(resolver, dataStoreFactoryRegistry));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
