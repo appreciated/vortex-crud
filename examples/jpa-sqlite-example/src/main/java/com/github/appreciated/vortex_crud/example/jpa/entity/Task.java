@@ -23,9 +23,8 @@ public class Task {
     private Integer id;
 
     @Field(TextFieldFactory.class)
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(name = "title", nullable = false)
     @Nonnull
-    @Length(max = 255)
     private String title;
 
     @Field(TextFieldFactory.class)
@@ -39,8 +38,8 @@ public class Task {
 
     @Field(SelectFieldFactory.class)
     @SelectValues("task-status")
-    @Length(max = 50)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Field(DateFieldFactory.class)
     private LocalDate dueDate;
@@ -101,11 +100,11 @@ public class Task {
         this.assignedTo = assignedTo;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -15,6 +15,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanD
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
@@ -27,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.example.jpa.entity.Status.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
@@ -204,11 +206,11 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withChild(imageForm)
                 .build());
 
-        LinkedHashMap<String, String> taskStatuses = new LinkedHashMap<>();
-        taskStatuses.put("todo", "selects.task-status.todo");
-        taskStatuses.put("open", "selects.task-status.open");
-        taskStatuses.put("work-in-progress", "selects.task-status.progress");
-        taskStatuses.put("closed", "selects.task-status.closed");
+        LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
+        taskStatuses.put(TODO, "selects.task-status.todo");
+        taskStatuses.put(OPEN, "selects.task-status.open");
+        taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
+        taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         return JpaApplication.of()
                 .withName("application.name")
