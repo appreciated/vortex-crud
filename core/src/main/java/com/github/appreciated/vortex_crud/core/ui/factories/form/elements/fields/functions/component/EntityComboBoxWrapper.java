@@ -14,11 +14,11 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Integer>, Integer>, HasLabel {
+public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<GenericEntity> comboBox;
     private final VortexCrudDataStore<FieldId> dataStore;
-    private Integer currentValue;
+    private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
@@ -38,7 +38,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
         );
 
         // Add a value change listener to handle when a new value is selected
-        comboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? (Integer) event.getValue().get("id") : null);
+        comboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? event.getValue().get("id") : null);
         comboBox.setWidthFull();
         add(comboBox);
     }
@@ -50,18 +50,18 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
 
     // Implementing getValue() to return the current Id
     @Override
-    public Integer getValue() {
+    public Object getValue() {
         return currentValue;
     }
 
     @Override
-    public Registration addValueChangeListener(ValueChangeListener<? super ValueChangeEvent<Integer>> listener) {
+    public Registration addValueChangeListener(ValueChangeListener<? super ValueChangeEvent<Object>> listener) {
         return comboBox.addValueChangeListener((ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<GenericEntity>, GenericEntity>>) listener);
     }
 
     // Implementing setValue() to load an entity based on the Id
     @Override
-    public void setValue(Integer id) {
+    public void setValue(Object id) {
         if (id != null) {
             GenericEntity entity = dataStore.getRecordById(id);
             comboBox.setValue(entity);
