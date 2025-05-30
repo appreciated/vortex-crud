@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -23,23 +22,23 @@ public class FormCreator<DataStoreId, FieldId> {
 
     private final DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final VortexCrudFormFieldBinder<FieldId> formFieldBinder;
 
-    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory, VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
+    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory, VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry, VortexCrudFormFieldBinder<FieldId> formFieldBinder) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
-        this.fieldNameResolver = fieldNameResolver;
+        this.formFieldBinder = formFieldBinder;
     }
 
     public void bindAndAddToLayout(DataStoreId table,
-                                                          RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                                                          RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
-                                                          GenericEntity entity,
-                                                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                                          DataStoreConfig<DataStoreId, FieldId> tables,
-                                                          Binder<GenericEntity> binder,
-                                                          FormLayout form,
-                                                          FormCreator<DataStoreId, FieldId> formCreator) {
+                                   RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                                   RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
+                                   GenericEntity entity,
+                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                                   DataStoreConfig<DataStoreId, FieldId> tables,
+                                   Binder<GenericEntity> binder,
+                                   FormLayout form,
+                                   FormCreator<DataStoreId, FieldId> formCreator) {
         Map<FieldId, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
@@ -52,7 +51,9 @@ public class FormCreator<DataStoreId, FieldId> {
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);
-                binder.bind((HasValue) component, entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o));
+                binder.bind((HasValue) component,
+                        entity2 -> formFieldBinder.extractEntityForField(entity2, fieldName),
+                        (entity1, o) -> formFieldBinder.updateFieldInEntity(entity1, fieldName, o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }
