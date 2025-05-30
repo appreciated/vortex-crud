@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jpa.entity.Status.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
@@ -226,7 +227,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .withRoutes(routes)
                 .withVersioning(Versioning.Builder.<JpaRepository<?, ?>>of().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())
-                .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+                .withAuditing(Auditing.Builder.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status", taskStatuses)).build())
                 .build();

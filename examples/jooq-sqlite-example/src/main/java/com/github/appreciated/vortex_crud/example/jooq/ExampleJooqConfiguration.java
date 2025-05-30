@@ -26,6 +26,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PROJECTS;
@@ -261,7 +262,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .withRoutes(routes)
                 .withVersioning(Versioning.Builder.<Table<?>>of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
-                .withAuditing(Auditing.Builder.of().withActions("create", "update", "delete", "login", "logout").build())
+                .withAuditing(Auditing.Builder.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
                 .withSelects(Selects.Builder.of().withConfigs(
                         Map.of("task-status", taskStatuses)).build())
                 .withDataStores(dataStores)

@@ -85,7 +85,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
             return instance;
         } catch (Exception e) {
-            throw new RuntimeException("Error creating entity instance", e);
+            throw new RuntimeException("Error creating instance of entity class %s".formatted(repositoryModelClass.getName()), e);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class Auditing {
 
     private boolean enabled;
 
-    private List<String> actions;
+    private List<AuditingAction> actions;
 
     public boolean isEnabled() {
         return enabled;
@@ -19,11 +20,11 @@ public class Auditing {
         this.enabled = enabled;
     }
 
-    public List<String> getActions() {
+    public List<AuditingAction> getActions() {
         return actions;
     }
 
-    public void setActions(List<String> actions) {
+    public void setActions(List<AuditingAction> actions) {
         this.actions = actions;
     }
 
@@ -44,16 +45,16 @@ public class Auditing {
             return this;
         }
 
-        public Builder withActions(List<String> actions) {
+        public Builder withActions(List<AuditingAction> actions) {
             product.actions = actions;
             return this;
         }
 
-        public Builder withActions(String... actions) {
+        public Builder withActions(AuditingAction... actions) {
             return withActions(List.of(actions));
         }
 
-        public Builder addAction(String item) {
+        public Builder addAction(AuditingAction item) {
             product.actions.add(item);
             return this;
         }
