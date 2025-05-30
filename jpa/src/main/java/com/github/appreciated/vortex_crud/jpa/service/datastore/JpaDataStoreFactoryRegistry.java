@@ -33,7 +33,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                                        @Autowired EntityManager entityManager) {
         this.jpaFieldService = jpaFieldService;
         this.entityManager = entityManager;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, this)));
     }
 
     public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {

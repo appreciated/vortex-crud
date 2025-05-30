@@ -1,9 +1,12 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +26,13 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     private final JpaRepository<T, Object> repository;
     private final Class<T> repositoryModelClass;
+    private final JpaDataStoreFactoryRegistry registry;
     private final List<java.lang.reflect.Field> fields;
 
-    public JpaRepositoryDataStore(JpaRepository<T, ?> repository) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaDataStoreFactoryRegistry registry) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
+        this.registry = registry;
         this.fields = getModelFields();
     }
 
@@ -70,16 +75,23 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      */
     private T mapToEntity(GenericEntity entity) {
         try {
-            T instance = (T) repositoryModelClass.getDeclaredConstructor().newInstance();
+            T instance = repositoryModelClass.getDeclaredConstructor().newInstance();
 
             entity.getProperties().forEach((key, value) -> {
                 try {
                     String fieldName = key.substring(0, 1).toLowerCase() + key.substring(1);
                     java.lang.reflect.Field field = repositoryModelClass.getDeclaredField(fieldName);
                     field.setAccessible(true);
-                    field.set(instance, value);
+                    if (field.isAnnotationPresent(ManyToOne.class)) {
+                        JpaRepository<?, Object> repo = (JpaRepository<?, Object>) registry.getFactory(field.getType());
+                        field.set(instance, repo.findById(value).orElse(null));
+                    } else {
+                        field.set(instance, value);
+                    }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error mapping field " + key, e);
+                } catch (Exception e){
+                    throw e;
                 }
             });
 
