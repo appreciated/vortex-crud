@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
+import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.TextField;
 
@@ -9,8 +10,8 @@ import java.util.List;
 
 public class IdFieldFactory<DataStoreId, FieldId> extends TextFieldFactory<DataStoreId, FieldId> {
 
-    @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+     @Override
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField, GenericEntityMapper mapper) {
         TextField textField = new TextField();
         textField.setReadOnly(true);
         return textField;

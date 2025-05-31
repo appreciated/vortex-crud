@@ -42,7 +42,7 @@ public class JpaFieldService {
 
                     if (annotation.value() == ReferenceFieldFactory.class) {
                         Metamodel metamodel = entityManager.getMetamodel();
-                        Class<?> model = dataStore.getModel();
+                        Class<?> model = dataStore.getModelClass();
                         EntityType<?> entityType = metamodel.entity(model);
                         Attribute<?, ?> attribute = entityType.getAttribute(entityField.getName());
                         Attribute.PersistentAttributeType type = attribute.getPersistentAttributeType();

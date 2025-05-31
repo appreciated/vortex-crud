@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -14,13 +15,23 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.UUID;
+
 public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<GenericEntity> comboBox;
     private final VortexCrudDataStore<FieldId> dataStore;
+    private final Field<DataStoreId, FieldId> dataStoreField;
+    private final GenericEntityMapper entityMapper;
     private Object currentValue;
 
-    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver, VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, Field<DataStoreId, FieldId> dataStoreField) {
+    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
+                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                                 Field<DataStoreId, FieldId> dataStoreField,
+                                 GenericEntityMapper entityMapper
+    ) {
+        this.dataStoreField = dataStoreField;
+        this.entityMapper = entityMapper;
         this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 
@@ -63,9 +74,13 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     @Override
     public void setValue(Object id) {
         if (id != null) {
-            GenericEntity entity = dataStore.getRecordById(id);
-            comboBox.setValue(entity);
-            currentValue = id;
+            if (!(id instanceof Number || id instanceof UUID)) {
+                comboBox.setValue(entityMapper.mapFromEntity(id, dataStore.getFields()));
+            } else {
+                GenericEntity entity = dataStore.getRecordById(id);
+                comboBox.setValue(entity);
+                currentValue = id;
+            }
         } else {
             comboBox.clear();
             currentValue = null;

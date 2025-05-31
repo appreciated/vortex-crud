@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.ImageHasValue;
 import com.vaadin.flow.component.Component;
@@ -18,7 +19,7 @@ public class ImageFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldF
     }
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField, GenericEntityMapper mapper) {
         return new ImageHasValue(fileProviderRegistry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
     }
 

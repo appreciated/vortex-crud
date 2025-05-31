@@ -4,8 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
+import com.github.appreciated.vortex_crud.jpa.service.JpaGenericEntityMapper;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +28,13 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     private final JpaFieldService jpaFieldService;
     private final EntityManager entityManager;
 
-    public JpaDataStoreFactoryRegistry(@Autowired List<JpaRepository<?, ?>> repositoryList,
-                                       @Autowired JpaFieldService jpaFieldService,
-                                       @Autowired EntityManager entityManager) {
+    public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
+                                       JpaFieldService jpaFieldService,
+                                       EntityManager entityManager,
+                                       JpaGenericEntityMapper mapper) {
         this.jpaFieldService = jpaFieldService;
         this.entityManager = entityManager;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, this)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, mapper)));
     }
 
     public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {
@@ -43,7 +44,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     @Override
     public void addFactory(JpaRepository<?, ?> key, VortexCrudDataStore<String> factory) {
         factories.put(key, (JpaRepositoryDataStore<String>) factory);
-        modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModel(), key);
+        modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), key);
     }
 
     public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String>> getDataStores() {

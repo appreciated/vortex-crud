@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.jpa.service.JpaGenericEntityMapper;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +33,13 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @Autowired
     private JpaDataStoreFactoryRegistry jpaDataStoreFactoryRegistry;
 
+    @Autowired
+    private JpaGenericEntityMapper mapper;
+
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, jpaDataStoreFactoryRegistry);
+        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper);
     }
 
     @AfterEach
