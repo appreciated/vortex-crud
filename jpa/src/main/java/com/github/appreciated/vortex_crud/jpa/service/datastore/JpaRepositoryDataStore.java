@@ -113,18 +113,22 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return getRecordsForFieldAndValueAndMatcher(
                 filterField,
                 filterValue,
-                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT),
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING),
                 limit,
                 offset
         );
     }
 
     private List<GenericEntity> getRecordsForFieldAndValueAndMatcher(String filterField, Object filterValue, ExampleMatcher matcher, int limit, int offset) {
-        GenericEntity genericEntity = generateGenericEntityFormParameters(filterField, filterValue);
-        Example<T> example = Example.of(mapper.mapToEntity(genericEntity, getModelClass()), matcher);
+        Example<T> example = getExample(filterField, filterValue, matcher);
         return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
                 .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
+    }
+
+    private Example<T> getExample(String filterField, Object filterValue, ExampleMatcher matcher) {
+        GenericEntity entity = generateGenericEntityFormParameters(filterField, filterValue);
+        return Example.of(mapper.mapToEntity(entity, getModelClass()), matcher);
     }
 
     /**
@@ -175,8 +179,9 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Override
     public int countWhereColumnLike(String filterField, String filterValue) {
-        Example<T> example = Example.of(
-                mapper.mapToEntity(new GenericEntity(new HashMap<>()), getModelClass()),
+        Example<T> example = getExample(
+                filterField,
+                filterValue,
                 ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
         );
         return (int) repository.count(example);
