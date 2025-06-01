@@ -16,7 +16,7 @@ public interface VortexCrudDataStore<FieldId> {
 
     List<GenericEntity> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit);
 
-    List<GenericEntity> getRecordsFromTableWhereColumnLike(FieldId filterField, String filterValue, int offset, int limit);
+    List<GenericEntity> getRecordsFromTableWhereColumnLike(FieldId filterField, Object filterValue, int offset, int limit);
 
     GenericEntity getRecordById(Object id);
 

@@ -27,15 +27,13 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     private final JpaRepository<T, Object> repository;
     private final Class<T> repositoryModelClass;
     private final JpaGenericEntityMapper mapper;
-    private final JpaDataStoreFactoryRegistry registry;
     private final JpaFieldTypeResolverService resolverService;
     private final Map<String, java.lang.reflect.Field> fields;
 
-    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaDataStoreFactoryRegistry registry, JpaFieldTypeResolverService resolverService) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaFieldTypeResolverService resolverService) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.mapper = mapper;
-        this.registry = registry;
         this.resolverService = resolverService;
         this.fields = getModelFields();
     }
@@ -94,41 +92,13 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, Object filterValue, int offset, int limit) {
-        GenericEntity genericEntity = generateGenericEntityFormParameters(filterField, filterValue);
-        Example<T> example = Example.of(
-                mapper.mapToEntity(genericEntity, getModelClass()),
-                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
+        return getRecordsForFieldAndValueAndMatcher(
+                filterField,
+                filterValue,
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT),
+                limit,
+                offset
         );
-        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
-                .map(t -> mapper.mapFromEntity(t, fields.values()))
-                .toList();
-    }
-
-    private GenericEntity generateGenericEntityFormParameters(String filterField, Object filterValue) {
-        HashMap<String, Object> properties = new HashMap<>();
-        java.lang.reflect.Field field = fields.get(filterField);
-        if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class){
-            Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
-            try {
-                Object value = targetFieldType.getDeclaredConstructor().newInstance();
-                // Find the ID field in the target entity and set it
-                java.lang.reflect.Field idField = findIdField(targetFieldType);
-                if (idField != null) {
-                    idField.setAccessible(true);
-                    // Convert the filterValue to the appropriate type for the ID field
-                    Object convertedValue = convertToFieldType(filterValue, idField.getType());
-                    idField.set(value, convertedValue);
-                    properties.put(filterField, value);
-                } else {
-                    throw new RuntimeException("Could not find ID field in " + targetFieldType.getName());
-                }
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            properties.put(filterField, filterValue);
-        }
-        return new GenericEntity(properties);
     }
 
     @Override
@@ -139,13 +109,19 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, String filterValue, int offset, int limit) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put(filterField, filterValue);
-        Example<T> example = Example.of(
-                mapper.mapToEntity(new GenericEntity(properties), getModelClass()),
-                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+    public List<GenericEntity> getRecordsFromTableWhereColumnLike(String filterField, Object filterValue, int offset, int limit) {
+        return getRecordsForFieldAndValueAndMatcher(
+                filterField,
+                filterValue,
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT),
+                limit,
+                offset
         );
+    }
+
+    private List<GenericEntity> getRecordsForFieldAndValueAndMatcher(String filterField, Object filterValue, ExampleMatcher matcher, int limit, int offset) {
+        GenericEntity genericEntity = generateGenericEntityFormParameters(filterField, filterValue);
+        Example<T> example = Example.of(mapper.mapToEntity(genericEntity, getModelClass()), matcher);
         return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
                 .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
@@ -206,6 +182,34 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return (int) repository.count(example);
     }
 
+    private GenericEntity generateGenericEntityFormParameters(String filterField, Object filterValue) {
+        HashMap<String, Object> properties = new HashMap<>();
+        java.lang.reflect.Field field = fields.get(filterField);
+        if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class) {
+            Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
+            try {
+                Object value = targetFieldType.getDeclaredConstructor().newInstance();
+                // Find the ID field in the target entity and set it
+                java.lang.reflect.Field idField = findIdField(targetFieldType);
+                if (idField != null) {
+                    idField.setAccessible(true);
+                    // Convert the filterValue to the appropriate type for the ID field
+                    Object convertedValue = convertToFieldType(filterValue, idField.getType());
+                    idField.set(value, convertedValue);
+                    properties.put(filterField, value);
+                } else {
+                    throw new RuntimeException("Could not find ID field in " + targetFieldType.getName());
+                }
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            properties.put(filterField, filterValue);
+        }
+        return new GenericEntity(properties);
+    }
+
     public Collection<java.lang.reflect.Field> getFields() {
         return fields.values();
     }
@@ -216,7 +220,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     /**
      * Find the ID field in the given entity class.
-     * 
+     *
      * @param entityClass The entity class to search in.
      * @return The ID field, or null if not found.
      */
@@ -231,8 +235,8 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     /**
      * Converts a value to the specified field type.
-     * 
-     * @param value The value to convert
+     *
+     * @param value      The value to convert
      * @param targetType The target type to convert to
      * @return The converted value
      */
@@ -280,7 +284,8 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
             if (value instanceof String) {
                 return targetType.getConstructor(String.class).newInstance(value);
             }
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
             // Ignore and fall through to default
         }
 

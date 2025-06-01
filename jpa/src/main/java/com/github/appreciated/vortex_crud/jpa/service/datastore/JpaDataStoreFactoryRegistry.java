@@ -24,15 +24,14 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     private final HashMap<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> factories = new HashMap<>();
     private final HashMap<Class<?>, JpaRepository<?, ?>> modelFactoryMapping = new HashMap<>();
     private final JpaFieldService jpaFieldService;
-    private final JpaFieldTypeResolverService fieldTypeResolverService;
 
 
     public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
                                        JpaFieldService jpaFieldService,
-                                       JpaGenericEntityMapper mapper, JpaFieldTypeResolverService fieldTypeResolverService) {
-        this.fieldTypeResolverService = fieldTypeResolverService;
+                                       JpaGenericEntityMapper mapper,
+                                       JpaFieldTypeResolverService fieldTypeResolverService) {
         this.jpaFieldService = jpaFieldService;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, mapper, this, fieldTypeResolverService)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, mapper, fieldTypeResolverService)));
     }
 
     public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {

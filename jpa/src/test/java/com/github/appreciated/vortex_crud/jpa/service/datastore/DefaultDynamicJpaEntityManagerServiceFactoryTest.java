@@ -41,7 +41,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper, jpaDataStoreFactoryRegistry, fieldTypeResolver);
+        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper, fieldTypeResolver);
     }
 
     @AfterEach

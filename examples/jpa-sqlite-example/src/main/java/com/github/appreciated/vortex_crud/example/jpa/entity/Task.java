@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.ReferenceFieldConfiguration;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
@@ -32,6 +33,7 @@ public class Task {
     private String description;
 
     @Field(ReferenceFieldFactory.class)
+    @ReferenceFieldConfiguration("username")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;

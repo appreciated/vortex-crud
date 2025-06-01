@@ -46,7 +46,8 @@ public class JpaFieldService {
                     if (annotation.value() == ReferenceFieldFactory.class) {
                         Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
                         JpaRepository<?, ?> fieldEntityFactory = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
-                        return JpaField.of(annotation.value(), null, null, fieldEntityFactory, List.of()).build();
+                        String filterField = entityField.isAnnotationPresent(ReferenceFieldConfiguration.class) ? entityField.getAnnotation(ReferenceFieldConfiguration.class).value() : null;
+                        return JpaField.of(annotation.value(), entityField.getName(), filterField, fieldEntityFactory, List.of()).build();
                     }
                     if (entityField.isAnnotationPresent(ImageFieldConfiguration.class)) {
                         Class<? extends VortexCrudResourceProvider> imageFieldConfiguration = entityField.getAnnotation(ImageFieldConfiguration.class).value();
