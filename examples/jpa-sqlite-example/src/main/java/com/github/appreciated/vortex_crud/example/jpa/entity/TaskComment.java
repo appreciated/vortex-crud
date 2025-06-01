@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.ReferenceFieldConfiguration;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -22,6 +23,7 @@ public class TaskComment {
     private String commentText;
 
     @Field(ReferenceFieldFactory.class)
+    @ReferenceFieldConfiguration(value = "username")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

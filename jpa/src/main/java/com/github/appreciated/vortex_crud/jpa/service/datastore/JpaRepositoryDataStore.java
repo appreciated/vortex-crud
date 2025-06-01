@@ -151,7 +151,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      */
     @Transactional
     public void updateRecordById(Object id, GenericEntity entity) {
-        entity.put("id", id);
+        entity.put("id", convertToFieldType(id, fields.get("id").getType()));
         insertRecord(entity);
     }
 

@@ -11,7 +11,8 @@ import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,8 @@ public class JpaFieldService {
                         Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
                         JpaRepository<?, ?> fieldEntityFactory = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
                         String filterField = entityField.isAnnotationPresent(ReferenceFieldConfiguration.class) ? entityField.getAnnotation(ReferenceFieldConfiguration.class).value() : null;
-                        return JpaField.of(annotation.value(), entityField.getName(), filterField, fieldEntityFactory, List.of()).build();
+                        String[] filterFields = entityField.isAnnotationPresent(ReferenceFieldConfiguration.class) && entityField.getAnnotation(ReferenceFieldConfiguration.class).fields().length > 0 ? entityField.getAnnotation(ReferenceFieldConfiguration.class).fields() : null;
+                        return JpaField.of(annotation.value(), entityField.getName(), filterField, fieldEntityFactory, filterFields == null ? Collections.singletonList(filterField) : Arrays.stream(filterFields).toList()).build();
                     }
                     if (entityField.isAnnotationPresent(ImageFieldConfiguration.class)) {
                         Class<? extends VortexCrudResourceProvider> imageFieldConfiguration = entityField.getAnnotation(ImageFieldConfiguration.class).value();

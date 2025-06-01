@@ -33,7 +33,7 @@ public class Task {
     private String description;
 
     @Field(ReferenceFieldFactory.class)
-    @ReferenceFieldConfiguration("username")
+    @ReferenceFieldConfiguration(value = "username")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;

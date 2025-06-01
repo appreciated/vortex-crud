@@ -1,7 +1,5 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,4 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReferenceFieldConfiguration {
     String value();
+
+    String[] fields() default {};
 }
