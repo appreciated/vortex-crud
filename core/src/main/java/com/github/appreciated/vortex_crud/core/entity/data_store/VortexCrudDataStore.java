@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.entity.data_store;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 
 public interface VortexCrudDataStore<FieldId> {
@@ -31,5 +32,5 @@ public interface VortexCrudDataStore<FieldId> {
 
     Class<?> getModelClass();
 
-    List<Field> getFields();
+    Collection<Field> getFields();
 }

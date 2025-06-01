@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
@@ -20,11 +21,12 @@ public class TaskComment {
     @Length(max = 1000)
     private String commentText;
 
+    @Field(ReferenceFieldFactory.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Field(TextFieldFactory.class)
+    @Field(ReferenceFieldFactory.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;

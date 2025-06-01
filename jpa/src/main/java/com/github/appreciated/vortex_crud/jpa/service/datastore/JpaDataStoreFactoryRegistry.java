@@ -4,8 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
-import com.github.appreciated.vortex_crud.jpa.service.JpaGenericEntityMapper;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +24,15 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     private final HashMap<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> factories = new HashMap<>();
     private final HashMap<Class<?>, JpaRepository<?, ?>> modelFactoryMapping = new HashMap<>();
     private final JpaFieldService jpaFieldService;
-    private final EntityManager entityManager;
+    private final JpaFieldTypeResolverService fieldTypeResolverService;
+
 
     public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
                                        JpaFieldService jpaFieldService,
-                                       EntityManager entityManager,
-                                       JpaGenericEntityMapper mapper) {
+                                       JpaGenericEntityMapper mapper, JpaFieldTypeResolverService fieldTypeResolverService) {
+        this.fieldTypeResolverService = fieldTypeResolverService;
         this.jpaFieldService = jpaFieldService;
-        this.entityManager = entityManager;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, mapper)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, mapper, this, fieldTypeResolverService)));
     }
 
     public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {
@@ -52,7 +50,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                 Map.Entry::getKey,
                 test -> {
                     DataStoreConfig.Builder<JpaRepository<?, ?>, String> builder = createBuilder(test);
-                    builder.withFields(jpaFieldService.getFieldsForDataStore(test.getValue(), entityManager, this));
+                    builder.withFields(jpaFieldService.getFieldsForDataStore(test.getValue(), this));
                     return builder.build();
                 }));
     }

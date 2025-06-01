@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.JpaGenericEntityMapper;
 import jakarta.persistence.Id;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -11,11 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Service for managing dynamic entities using an EntityManager.
@@ -27,19 +27,23 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     private final JpaRepository<T, Object> repository;
     private final Class<T> repositoryModelClass;
     private final JpaGenericEntityMapper mapper;
-    private final List<java.lang.reflect.Field> fields;
+    private final JpaDataStoreFactoryRegistry registry;
+    private final JpaFieldTypeResolverService resolverService;
+    private final Map<String, java.lang.reflect.Field> fields;
 
-    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaDataStoreFactoryRegistry registry, JpaFieldTypeResolverService resolverService) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.mapper = mapper;
+        this.registry = registry;
+        this.resolverService = resolverService;
         this.fields = getModelFields();
     }
 
-    private List<java.lang.reflect.Field> getModelFields() {
+    private Map<String, java.lang.reflect.Field> getModelFields() {
         return Arrays.stream(repositoryModelClass.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Field.class) || field.isAnnotationPresent(Id.class))
-                .toList();
+                .collect(Collectors.toMap(java.lang.reflect.Field::getName, field -> field));
     }
 
     public Class<T> getEntityClass(JpaRepository<?, ?> repository) {
@@ -84,27 +88,53 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     public List<GenericEntity> getRecordsFromTable(int offset, int limit) {
         return repository.findAll(Pageable.ofSize(limit).withPage(offset / limit))
                 .stream()
-                .map(t -> mapper.mapFromEntity(t, fields))
+                .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
     }
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnEquals(String filterField, Object filterValue, int offset, int limit) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put(filterField, filterValue);
+        GenericEntity genericEntity = generateGenericEntityFormParameters(filterField, filterValue);
         Example<T> example = Example.of(
-                mapper.mapToEntity(new GenericEntity(properties), getModelClass()),
+                mapper.mapToEntity(genericEntity, getModelClass()),
                 ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
         );
         return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
-                .map(t -> mapper.mapFromEntity(t, fields))
+                .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
+    }
+
+    private GenericEntity generateGenericEntityFormParameters(String filterField, Object filterValue) {
+        HashMap<String, Object> properties = new HashMap<>();
+        java.lang.reflect.Field field = fields.get(filterField);
+        if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class){
+            Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
+            try {
+                Object value = targetFieldType.getDeclaredConstructor().newInstance();
+                // Find the ID field in the target entity and set it
+                java.lang.reflect.Field idField = findIdField(targetFieldType);
+                if (idField != null) {
+                    idField.setAccessible(true);
+                    // Convert the filterValue to the appropriate type for the ID field
+                    Object convertedValue = convertToFieldType(filterValue, idField.getType());
+                    idField.set(value, convertedValue);
+                    properties.put(filterField, value);
+                } else {
+                    throw new RuntimeException("Could not find ID field in " + targetFieldType.getName());
+                }
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            properties.put(filterField, filterValue);
+        }
+        return new GenericEntity(properties);
     }
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnIn(String filterField, List<String> filterValues, int offset, int limit) {
         return repository.findAll(Pageable.ofSize(limit).withPage(offset / limit))
-                .map(t -> mapper.mapFromEntity(t, fields))
+                .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
     }
 
@@ -117,7 +147,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
                 ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
         );
         return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
-                .map(t -> mapper.mapFromEntity(t, fields))
+                .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .toList();
     }
 
@@ -129,7 +159,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      */
     public GenericEntity getRecordById(Object id) {
         return repository.findById(id)
-                .map(t -> mapper.mapFromEntity(t, fields))
+                .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .orElse(null);
     }
 
@@ -176,11 +206,85 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return (int) repository.count(example);
     }
 
-    public List<java.lang.reflect.Field> getFields() {
-        return fields;
+    public Collection<java.lang.reflect.Field> getFields() {
+        return fields.values();
     }
 
     public Class<T> getModelClass() {
         return this.repositoryModelClass;
+    }
+
+    /**
+     * Find the ID field in the given entity class.
+     * 
+     * @param entityClass The entity class to search in.
+     * @return The ID field, or null if not found.
+     */
+    private java.lang.reflect.Field findIdField(Class<?> entityClass) {
+        for (java.lang.reflect.Field field : entityClass.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Id.class)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Converts a value to the specified field type.
+     * 
+     * @param value The value to convert
+     * @param targetType The target type to convert to
+     * @return The converted value
+     */
+    private Object convertToFieldType(Object value, Class<?> targetType) {
+        if (value == null) {
+            return null;
+        }
+
+        // If the value is already of the target type, return it
+        if (targetType.isInstance(value)) {
+            return value;
+        }
+
+        // Handle conversion from String to various types
+        if (value instanceof String) {
+            String stringValue = (String) value;
+
+            if (targetType == String.class) {
+                return stringValue;
+            } else if (targetType == Integer.class || targetType == int.class) {
+                return Integer.parseInt(stringValue);
+            } else if (targetType == Long.class || targetType == long.class) {
+                return Long.parseLong(stringValue);
+            } else if (targetType == Double.class || targetType == double.class) {
+                return Double.parseDouble(stringValue);
+            } else if (targetType == Float.class || targetType == float.class) {
+                return Float.parseFloat(stringValue);
+            } else if (targetType == Boolean.class || targetType == boolean.class) {
+                return Boolean.parseBoolean(stringValue);
+            } else if (targetType == Short.class || targetType == short.class) {
+                return Short.parseShort(stringValue);
+            } else if (targetType == Byte.class || targetType == byte.class) {
+                return Byte.parseByte(stringValue);
+            } else if (targetType == Character.class || targetType == char.class) {
+                return stringValue.length() > 0 ? stringValue.charAt(0) : '\0';
+            } else if (targetType.isEnum()) {
+                return Enum.valueOf((Class<Enum>) targetType, stringValue);
+            } else if (targetType == UUID.class) {
+                return UUID.fromString(stringValue);
+            }
+        }
+
+        // If no specific conversion is available, try to use the string constructor
+        try {
+            if (value instanceof String) {
+                return targetType.getConstructor(String.class).newInstance(value);
+            }
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            // Ignore and fall through to default
+        }
+
+        // If all else fails, return the original value and hope for the best
+        return value;
     }
 }

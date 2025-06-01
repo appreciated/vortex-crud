@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.model;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Collection;
 
 public interface GenericEntityMapper {
 
@@ -13,5 +13,5 @@ public interface GenericEntityMapper {
      */
      <T> T mapToEntity(GenericEntity entity, Class<T> repositoryModelClass);
 
-     <T> GenericEntity mapFromEntity(T entity, List<Field> fields);
+     <T> GenericEntity mapFromEntity(T entity, Collection<Field> fields);
 }

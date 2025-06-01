@@ -1,12 +1,12 @@
-package com.github.appreciated.vortex_crud.jpa.service;
+package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -35,7 +35,7 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
     }
 
     @Override
-    public <T> GenericEntity mapFromEntity(T entity, List<Field> fields) {
+    public <T> GenericEntity mapFromEntity(T entity, Collection<Field> fields) {
         Map<String, Object> mappingResult = new HashMap<>();
         for (Field field : fields) {
             try {
