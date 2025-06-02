@@ -21,7 +21,11 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                     String fieldName = key.substring(0, 1).toLowerCase() + key.substring(1);
                     Field field = repositoryModelClass.getDeclaredField(fieldName);
                     field.setAccessible(true);
-                    field.set(instance, value);
+                    if (value instanceof GenericEntity) {
+                        field.set(instance, mapToEntity((GenericEntity) value, field.getType()));
+                    } else {
+                        field.set(instance, value);
+                    }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error mapping field " + key, e);
                 } catch (Exception e) {
@@ -46,6 +50,9 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                 }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
+            }
+            catch (Exception e) {
+                throw e;
             }
         }
         return new GenericEntity(mappingResult);

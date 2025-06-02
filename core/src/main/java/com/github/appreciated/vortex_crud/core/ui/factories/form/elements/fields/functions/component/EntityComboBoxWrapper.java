@@ -47,7 +47,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
         );
 
         // Add a value change listener to handle when a new value is selected
-        comboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? event.getValue().get("id") : null);
+        comboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? event.getValue() : null);
         comboBox.setWidthFull();
         add(comboBox);
     }
@@ -73,7 +73,8 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     public void setValue(Object id) {
         if (id != null) {
             if (!(id instanceof Number || id instanceof UUID)) {
-                comboBox.setValue(entityMapper.mapFromEntity(id, dataStore.getFields()));
+                GenericEntity value = entityMapper.mapFromEntity(id, dataStore.getFields());
+                comboBox.setValue(value);
             } else {
                 GenericEntity entity = dataStore.getRecordById(id);
                 comboBox.setValue(entity);

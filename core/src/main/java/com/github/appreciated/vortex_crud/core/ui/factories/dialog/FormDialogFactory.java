@@ -90,7 +90,6 @@ public class FormDialogFactory <DataStoreId, FieldId> implements VortexCrudDialo
                 } else {
                     dataStore.updateRecordById(DataStoreUtil.getId(entity), entity);
                 }
-                binder.setBean(entity);
                 dialog.close();
                 listener.onStore();
             } catch (ValidationException e) {

@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
@@ -129,8 +130,9 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     }
 
     private Example<T> getExample(String filterField, Object filterValue, ExampleMatcher matcher) {
-        GenericEntity entity = generateGenericEntityFormParameters(filterField, filterValue);
-        return Example.of(mapper.mapToEntity(entity, getModelClass()), matcher);
+        GenericEntity genericEntity = new GenericEntity();
+        updatePropertiesForField(genericEntity, filterField, filterValue);
+        return Example.of(mapper.mapToEntity(genericEntity, getModelClass()), matcher);
     }
 
     /**
@@ -154,7 +156,6 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     @Transactional
     public void updateRecordById(Object id, GenericEntity entity) {
         entity.put("id", convertToFieldType(id, fields.get("id").getType()));
-
         insertRecord(entity);
     }
 
@@ -190,9 +191,8 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return (int) repository.count(example);
     }
 
-    private GenericEntity generateGenericEntityFormParameters(String filterField, Object filterValue) {
-        HashMap<String, Object> properties = new HashMap<>();
-        java.lang.reflect.Field field = fields.get(filterField);
+    private void updatePropertiesForField(GenericEntity entity, String targetField, Object targetValue) {
+        java.lang.reflect.Field field = fields.get(targetField);
         if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class) {
             Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
             try {
@@ -201,21 +201,26 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
                 java.lang.reflect.Field idField = findIdField(targetFieldType);
                 if (idField != null) {
                     idField.setAccessible(true);
-                    // Convert the filterValue to the appropriate type for the ID field
-                    Object convertedValue = convertToFieldType(filterValue, idField.getType());
+                    // Convert the targetValue to the appropriate type for the ID field
+                    Object convertedValue = convertToFieldType(targetValue, idField.getType());
                     idField.set(value, convertedValue);
-                    properties.put(filterField, value);
+                    if (field.isAnnotationPresent(OneToMany.class)){
+                        entity.put(targetField, Arrays.asList(value));
+                    } else {
+                        entity.put(targetField, value);
+                    }
                 } else {
                     throw new RuntimeException("Could not find ID field in " + targetFieldType.getName());
                 }
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                      InvocationTargetException e) {
                 throw new RuntimeException(e);
+            } catch (Exception e){
+                throw e;
             }
         } else {
-            properties.put(filterField, filterValue);
+            entity.put(targetField, targetValue);
         }
-        return new GenericEntity(properties);
     }
 
     public Collection<java.lang.reflect.Field> getFields() {
