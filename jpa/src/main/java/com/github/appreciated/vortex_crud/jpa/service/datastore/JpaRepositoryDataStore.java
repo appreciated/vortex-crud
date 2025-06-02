@@ -28,13 +28,15 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     private final Class<T> repositoryModelClass;
     private final JpaGenericEntityMapper mapper;
     private final JpaFieldTypeResolverService resolverService;
+    private final JpaDataStoreFactoryRegistry registry;
     private final Map<String, java.lang.reflect.Field> fields;
 
-    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaFieldTypeResolverService resolverService) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaFieldTypeResolverService resolverService, JpaDataStoreFactoryRegistry registry) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.mapper = mapper;
         this.resolverService = resolverService;
+        this.registry = registry;
         this.fields = getModelFields();
     }
 
@@ -152,6 +154,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     @Transactional
     public void updateRecordById(Object id, GenericEntity entity) {
         entity.put("id", convertToFieldType(id, fields.get("id").getType()));
+
         insertRecord(entity);
     }
 

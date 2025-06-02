@@ -30,7 +30,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     private TestRepository testRepository;
 
     @Autowired
-    private JpaDataStoreFactoryRegistry jpaDataStoreFactoryRegistry;
+    private JpaDataStoreFactoryRegistry storeFactoryRegistry;
 
     @Autowired
     private JpaGenericEntityMapper mapper;
@@ -41,7 +41,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper, fieldTypeResolver);
+        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper, fieldTypeResolver, storeFactoryRegistry);
     }
 
     @AfterEach
