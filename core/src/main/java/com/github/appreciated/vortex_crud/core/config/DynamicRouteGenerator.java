@@ -27,7 +27,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     public void registerRoute(String path) {
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
-        configuration.setRoute(path+"/:path?", InternalDynamicRoute.class, ProxyRouterLayout.class);
+        configuration.setRoute(path+"/:path*", InternalDynamicRoute.class, ProxyRouterLayout.class);
     }
 
 }
