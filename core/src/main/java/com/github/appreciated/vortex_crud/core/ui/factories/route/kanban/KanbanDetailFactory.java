@@ -54,7 +54,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
 
         return new KanbanView<>(routeRenderer.getDataStore(),
                 routeRenderer,
-                dataStoreFactoryRegistry.getFactory(routeRenderer.getDataStore()),
+                dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStore()),
                 routeFactory,
                 itemFactory,
                 (Kanban<DataStoreId, FieldId>) routeRenderer.getConfiguration(),

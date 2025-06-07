@@ -43,8 +43,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                              OnStoreListener listener,
                              FormCreator<DataStoreId, FieldId> formCreator) {
 
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(dataStoreIdentifier);
-        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getFactory(collectionConfiguration.getManyToMany().getAssociativeDataStore());
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
+        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getDataStore(collectionConfiguration.getManyToMany().getAssociativeDataStore());
         FieldId associativeTargetIdField = collectionConfiguration.getManyToMany().getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");

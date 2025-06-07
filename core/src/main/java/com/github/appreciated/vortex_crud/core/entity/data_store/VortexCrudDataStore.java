@@ -33,4 +33,6 @@ public interface VortexCrudDataStore<FieldId> {
     Class<?> getModelClass();
 
     Collection<Field> getFields();
+
+    Field getField(FieldId foreignKeyField);
 }

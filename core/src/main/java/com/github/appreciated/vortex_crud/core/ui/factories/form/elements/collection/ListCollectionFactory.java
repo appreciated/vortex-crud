@@ -72,7 +72,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         list.add(header);
         CollectionConfiguration<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(data.getDataStore());
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
         List<GenericEntity> records = (data.getManyToMany() != null) ?
                 data.getManyToMany().getData(dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
                 data.getOneToMany().getData(foreignKeyValue, dataStore, data);

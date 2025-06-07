@@ -34,7 +34,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore<>(repository, mapper, fieldTypeResolverService)));
     }
 
-    public VortexCrudDataStore<String> getFactory(JpaRepository<?, ?> table) {
+    public VortexCrudDataStore<String> getDataStore(JpaRepository<?, ?> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 

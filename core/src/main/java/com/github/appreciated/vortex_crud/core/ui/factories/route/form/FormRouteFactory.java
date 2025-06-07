@@ -92,7 +92,7 @@ public class FormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
         DataStoreId table = routeRenderer.getDataStore();
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);

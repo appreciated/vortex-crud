@@ -30,7 +30,7 @@ public class JooqManyToMany implements ManyToMany<Table<?>, TableField<?, ?>> {
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
         // of resolving the following data.
-        VortexCrudDataStore<TableField<?, ?>> associativeDataStore = dataStoreFactoryRegistry.getFactory(sourceDataStore);
+        VortexCrudDataStore<TableField<?, ?>> associativeDataStore = dataStoreFactoryRegistry.getDataStore(sourceDataStore);
         List<GenericEntity> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
         List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(associativeTargetIdField.getName())).map(Object::toString).toList();
         return foreignKeyValue == null ? List.of() :

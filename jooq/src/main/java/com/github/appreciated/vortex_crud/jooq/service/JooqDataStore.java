@@ -6,6 +6,9 @@ import org.jooq.*;
 import org.jooq.Record;
 import org.jooq.impl.DSL;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +37,9 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
     @Override
     public Object insertRecord(GenericEntity values) {
         Map<String, Object> properties = values.getProperties();
-        Field<Object>[] fields = properties.keySet().stream()
+        org.jooq.Field<?>[] fields = properties.keySet().stream()
                 .map(DSL::field)
-                .toArray(Field[]::new);
+                .toArray(org.jooq.Field[]::new);
 
         return dslContext.insertInto(getTable())
                 .columns(fields)
@@ -79,7 +82,7 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
     }
 
     @Override
-    public List<GenericEntity> getRecordsFromTableWhereColumnLike(TableField<?, ?> filterField, String filterValue, int offset, int limit) {
+    public List<GenericEntity> getRecordsFromTableWhereColumnLike(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
                 .where(filterField.like("%" + filterValue + "%"))
@@ -130,6 +133,21 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 table,
                 DSL.field(filterField).like("%" + filterValue + "%")
         );
+    }
+
+    @Override
+    public Class<?> getModelClass() {
+        return GenericEntity.class;
+    }
+
+    @Override
+    public Collection<java.lang.reflect.Field> getFields() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Field getField(TableField<?, ?> foreignKeyField) {
+        return null;
     }
 
 }

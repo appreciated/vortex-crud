@@ -187,7 +187,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      */
     @Transactional
     public void updateRecordById(Object id, GenericEntity entity) {
-        entity.put("id", convertToFieldType(id, fields.get("id").getType()));
+        entity.put("id", mapper.convertToFieldType(id, fields.get("id").getType()));
         insertRecord(entity);
     }
 
@@ -234,10 +234,10 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
                 if (idField != null) {
                     idField.setAccessible(true);
                     // Convert the targetValue to the appropriate type for the ID field
-                    Object convertedValue = convertToFieldType(targetValue, idField.getType());
+                    Object convertedValue = mapper.convertToFieldType(targetValue, idField.getType());
                     idField.set(value, convertedValue);
                     if (field.isAnnotationPresent(OneToMany.class)) {
-                        entity.put(targetField, Arrays.asList(value));
+                        entity.put(targetField, List.of(value));
                     } else {
                         entity.put(targetField, value);
                     }
@@ -259,6 +259,11 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return fields.values();
     }
 
+    @Override
+    public java.lang.reflect.Field getField(String foreignKeyField) {
+        return fields.get(foreignKeyField);
+    }
+
     public Class<T> getModelClass() {
         return this.repositoryModelClass;
     }
@@ -276,65 +281,5 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
             }
         }
         return null;
-    }
-
-    /**
-     * Converts a value to the specified field type.
-     *
-     * @param value      The value to convert
-     * @param targetType The target type to convert to
-     * @return The converted value
-     */
-    private Object convertToFieldType(Object value, Class<?> targetType) {
-        if (value == null) {
-            return null;
-        }
-
-        // If the value is already of the target type, return it
-        if (targetType.isInstance(value)) {
-            return value;
-        }
-
-        // Handle conversion from String to various types
-        if (value instanceof String) {
-            String stringValue = (String) value;
-
-            if (targetType == String.class) {
-                return stringValue;
-            } else if (targetType == Integer.class || targetType == int.class) {
-                return Integer.parseInt(stringValue);
-            } else if (targetType == Long.class || targetType == long.class) {
-                return Long.parseLong(stringValue);
-            } else if (targetType == Double.class || targetType == double.class) {
-                return Double.parseDouble(stringValue);
-            } else if (targetType == Float.class || targetType == float.class) {
-                return Float.parseFloat(stringValue);
-            } else if (targetType == Boolean.class || targetType == boolean.class) {
-                return Boolean.parseBoolean(stringValue);
-            } else if (targetType == Short.class || targetType == short.class) {
-                return Short.parseShort(stringValue);
-            } else if (targetType == Byte.class || targetType == byte.class) {
-                return Byte.parseByte(stringValue);
-            } else if (targetType == Character.class || targetType == char.class) {
-                return stringValue.length() > 0 ? stringValue.charAt(0) : '\0';
-            } else if (targetType.isEnum()) {
-                return Enum.valueOf((Class<Enum>) targetType, stringValue);
-            } else if (targetType == UUID.class) {
-                return UUID.fromString(stringValue);
-            }
-        }
-
-        // If no specific conversion is available, try to use the string constructor
-        try {
-            if (value instanceof String) {
-                return targetType.getConstructor(String.class).newInstance(value);
-            }
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-                 InvocationTargetException e) {
-            // Ignore and fall through to default
-        }
-
-        // If all else fails, return the original value and hope for the best
-        return value;
     }
 }

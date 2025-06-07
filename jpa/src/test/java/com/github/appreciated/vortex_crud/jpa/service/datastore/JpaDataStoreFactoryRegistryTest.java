@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +28,7 @@ class JpaDataStoreFactoryRegistryTest {
     void testGetFieldsForDataStore() {
         // Call the method under test
         Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String>> fields =
-                fieldService.getFieldsForDataStore((JpaRepositoryDataStore<?>) registry.getFactory(testRepository), registry);
+                fieldService.getFieldsForDataStore((JpaRepositoryDataStore<?>) registry.getDataStore(testRepository), registry);
 
         // Verify the results
         assertNotNull(fields);

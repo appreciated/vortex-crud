@@ -54,7 +54,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
         this.fieldNameResolver = fieldNameResolver;
         DataStoreId table = config.getDataStore();
 
-        this.dataStore = dataStoreFactoryRegistry.getFactory(table);
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
         gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) config.getConfiguration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());

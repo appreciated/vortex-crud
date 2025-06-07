@@ -2,9 +2,7 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -43,7 +41,7 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
     public <T> GenericEntity mapFromEntity(T entity, Collection<Field> fields) {
         Map<String, Object> mappingResult = new HashMap<>();
         for (Field field : fields) {
-            if (!(field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class))) {
+            if (!(field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class))) {
                 try {
                     field.setAccessible(true);
                     Object value = field.get(entity);
@@ -84,5 +82,55 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
 
     private static boolean isEntity(Object value) {
         return value.getClass().isAnnotationPresent(Entity.class);
+    }
+
+
+    /**
+     * Converts a value to the specified field type.
+     *
+     * @param value      The value to convert
+     * @param targetType The target type to convert to
+     * @return The converted value
+     */
+    public Object convertToFieldType(Object value, Class<?> targetType) {
+        if (value == null) {
+            return null;
+        }
+
+        // If the value is already of the target type, return it
+        if (targetType.isInstance(value)) {
+            return value;
+        }
+
+        // Handle conversion from String to various types
+        if (value instanceof String) {
+            String stringValue = (String) value;
+
+            if (targetType == String.class) {
+                return stringValue;
+            } else if (targetType == Integer.class || targetType == int.class) {
+                return Integer.parseInt(stringValue);
+            } else if (targetType == Long.class || targetType == long.class) {
+                return Long.parseLong(stringValue);
+            } else if (targetType == Double.class || targetType == double.class) {
+                return Double.parseDouble(stringValue);
+            } else if (targetType == Float.class || targetType == float.class) {
+                return Float.parseFloat(stringValue);
+            } else if (targetType == Boolean.class || targetType == boolean.class) {
+                return Boolean.parseBoolean(stringValue);
+            } else if (targetType == Short.class || targetType == short.class) {
+                return Short.parseShort(stringValue);
+            } else if (targetType == Byte.class || targetType == byte.class) {
+                return Byte.parseByte(stringValue);
+            } else if (targetType == Character.class || targetType == char.class) {
+                return stringValue.length() > 0 ? stringValue.charAt(0) : '\0';
+            } else if (targetType.isEnum()) {
+                return Enum.valueOf((Class<Enum>) targetType, stringValue);
+            } else if (targetType == UUID.class) {
+                return UUID.fromString(stringValue);
+            }
+        }
+        // If all else fails, return the original value and hope for the best
+        return value;
     }
 }

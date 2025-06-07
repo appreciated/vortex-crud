@@ -31,7 +31,7 @@ public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryR
         }
     }
 
-    public VortexCrudDataStore<TableField<?,?>> getFactory(Table<?> table) {
+    public VortexCrudDataStore<TableField<?,?>> getDataStore(Table<?> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 

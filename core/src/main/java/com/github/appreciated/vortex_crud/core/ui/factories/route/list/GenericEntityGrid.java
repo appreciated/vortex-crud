@@ -34,7 +34,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         DataStoreId table = routeRenderer.getDataStore();
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getFactory(table);
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         // Set up the data provider with lazy loading and filtering
 
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStore());

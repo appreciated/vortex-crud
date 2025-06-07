@@ -15,8 +15,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.UUID;
-
 public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<GenericEntity> comboBox;
@@ -30,7 +28,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
                                  GenericEntityMapper entityMapper
     ) {
         this.entityMapper = entityMapper;
-        this.dataStore = dataStoreFactoryRegistry.getFactory(dataStoreField.getDataStore());
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
