@@ -29,15 +29,15 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
     private final Class<T> repositoryModelClass;
     private final JpaGenericEntityMapper mapper;
     private final JpaFieldTypeResolverService resolverService;
-    private final JpaDataStoreFactoryRegistry registry;
     private final Map<String, java.lang.reflect.Field> fields;
 
-    public JpaRepositoryDataStore(JpaRepository<T, ?> repository, JpaGenericEntityMapper mapper, JpaFieldTypeResolverService resolverService, JpaDataStoreFactoryRegistry registry) {
+    public JpaRepositoryDataStore(JpaRepository<T, ?> repository,
+                                  JpaGenericEntityMapper mapper,
+                                  JpaFieldTypeResolverService resolverService) {
         this.repository = (JpaRepository<T, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.mapper = mapper;
         this.resolverService = resolverService;
-        this.registry = registry;
         this.fields = getModelFields();
     }
 
@@ -75,6 +75,34 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
     @Transactional
     public Object insertRecord(GenericEntity entity) {
+        // Check if entity has an ID (for update case)
+        Object id = entity.get("id");
+        if (id != null) {
+            // Fetch the current state of the entity
+            Optional<T> existingEntityOpt = repository.findById(id);
+            if (existingEntityOpt.isPresent()) {
+                T existingEntity = existingEntityOpt.get();
+                T mappedEntity = mapper.mapToEntity(entity, getModelClass());
+
+                // Update only non-relationship fields
+                for (java.lang.reflect.Field field : getModelClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    // Skip ManyToMany and OneToMany fields
+                    if (field.isAnnotationPresent(jakarta.persistence.ManyToMany.class) ||
+                        field.isAnnotationPresent(jakarta.persistence.OneToMany.class)) {
+                        try {
+                            // Keep the original value for relationship fields
+                            field.set(mappedEntity, field.get(existingEntity));
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException("Error preserving relationship field: " + field.getName(), e);
+                        }
+                    }
+                }
+                return repository.save(mappedEntity);
+            }
+        }
+
+        // For new entities or if existing entity not found
         T mappedEntity = mapper.mapToEntity(entity, getModelClass());
         return repository.save(mappedEntity);
     }
@@ -143,6 +171,9 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      */
     @Transactional(readOnly = true)
     public GenericEntity getRecordById(Object id) {
+        if (id == null) {
+            return null;
+        }
         return repository.findById(id)
                 .map(t -> mapper.mapFromEntity(t, fields.values()))
                 .orElse(null);
@@ -205,7 +236,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
                     // Convert the targetValue to the appropriate type for the ID field
                     Object convertedValue = convertToFieldType(targetValue, idField.getType());
                     idField.set(value, convertedValue);
-                    if (field.isAnnotationPresent(OneToMany.class)){
+                    if (field.isAnnotationPresent(OneToMany.class)) {
                         entity.put(targetField, Arrays.asList(value));
                     } else {
                         entity.put(targetField, value);
@@ -216,7 +247,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
             } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                      InvocationTargetException e) {
                 throw new RuntimeException(e);
-            } catch (Exception e){
+            } catch (Exception e) {
                 throw e;
             }
         } else {
