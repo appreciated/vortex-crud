@@ -141,6 +141,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      * @param id The ID of the record to fetch.
      * @return The record (as a map of column names and values) or null if not found.
      */
+    @Transactional(readOnly = true)
     public GenericEntity getRecordById(Object id) {
         return repository.findById(id)
                 .map(t -> mapper.mapFromEntity(t, fields.values()))

@@ -72,9 +72,8 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     @Override
     public void setValue(Object id) {
         if (id != null) {
-            if (!(id instanceof Number || id instanceof UUID)) {
-                GenericEntity value = entityMapper.mapFromEntity(id, dataStore.getFields());
-                comboBox.setValue(value);
+            if (id instanceof GenericEntity) {
+                comboBox.setValue((GenericEntity) id);
             } else {
                 GenericEntity entity = dataStore.getRecordById(id);
                 comboBox.setValue(entity);
