@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 
 public class ImageDisplayComponent extends Image {

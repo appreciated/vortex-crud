@@ -12,7 +12,6 @@ import com.vaadin.flow.component.card.CardVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("master-detail-styles.css")
 public class DefaultItem<FieldId> extends Card {

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.model.GenericEntityMapper;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.NumberField;

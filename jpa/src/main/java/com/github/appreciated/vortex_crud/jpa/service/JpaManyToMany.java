@@ -5,16 +5,12 @@ import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaRepositoryDataStore;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
 
