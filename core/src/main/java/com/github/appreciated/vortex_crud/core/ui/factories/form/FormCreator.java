@@ -54,7 +54,11 @@ public class FormCreator<DataStoreId, FieldId> {
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(table, fieldName, field);
-                binder.bind((HasValue) component, entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o));
+                binder.bind(
+                        (HasValue) component,
+                        entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)),
+                        (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o)
+                );
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }

@@ -2,14 +2,13 @@ package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
-import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .limit(limit)
                 .offset(offset)
                 .fetch()
-                .map(record -> new GenericEntity(record.intoMap()));
+                .map(JooqDataStore::getGenericEntity);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .limit(limit)
                 .offset(offset)
                 .fetch()
-                .map(record -> new GenericEntity(record.intoMap()));
+                .map(JooqDataStore::getGenericEntity);
     }
 
     @Override
@@ -83,7 +82,7 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .limit(limit)
                 .offset(offset)
                 .fetch()
-                .map(record -> new GenericEntity(record.intoMap()));
+                .map(JooqDataStore::getGenericEntity);
     }
 
     @Override
@@ -94,17 +93,22 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .limit(limit)
                 .offset(offset)
                 .fetch()
-                .map(record -> new GenericEntity(record.intoMap()));
+                .map(JooqDataStore::getGenericEntity);
+    }
+
+    @NotNull
+    private static GenericEntity getGenericEntity(Record record) {
+        return new GenericEntity(record.intoMap());
     }
 
     @Override
     public GenericEntity getRecordById(Object id) {
-        Record record = dslContext.select()
+        return dslContext.select()
                 .from(getTable())
                 .where(DSL.field("id").eq(id))
-                .fetchOne();
-
-        return record != null ? new GenericEntity(record.intoMap()) : null;
+                .fetchOptional()
+                .map(JooqDataStore::getGenericEntity)
+                .orElse(null);
     }
 
     @Override
@@ -138,16 +142,6 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 table,
                 DSL.field(filterField).like("%" + filterValue + "%")
         );
-    }
-
-    @Override
-    public Collection<java.lang.reflect.Field> getFields() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Field getField(TableField<?, ?> foreignKeyField) {
-        return null;
     }
 
 }

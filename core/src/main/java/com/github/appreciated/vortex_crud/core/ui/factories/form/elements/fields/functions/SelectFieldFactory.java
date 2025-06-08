@@ -8,6 +8,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.select.Select;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
 
@@ -21,22 +22,25 @@ public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudField
 
     @Override
     public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
-        Select<Object> select = new Select<>();
+        Select<String> select = new Select<>();
 
         DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);
         Field<DataStoreId, FieldId> tableField = dataStoreConfig.getFields().get(field);
 
         String selectName = tableField.getValues();
-        Map<?, String> selectConfig = selects.getConfigs().get(selectName);
+        Map<String, String> selectConfig = selects.getConfigs()
+                .get(selectName)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Object::toString, Map.Entry::getValue));
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
         }
 
-        Set<Object> strings = (Set<Object>) selectConfig.keySet();
+        Set<String> strings = selectConfig.keySet();
         select.setItems(new ArrayList<>(strings));
         select.setItemLabelGenerator(item -> select.getTranslation(selectConfig.get(item)));
-
         return select;
     }
 
