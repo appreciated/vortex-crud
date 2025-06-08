@@ -4,31 +4,21 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceP
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 
-public class ImageDisplayComponent extends Div {
+public class ImageDisplayComponent extends Image {
 
-    private final Image image;
     private final VortexCrudResourceProvider resourceProvider;
 
     public ImageDisplayComponent(VortexCrudResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
-        image = new Image();
-        image.setSizeFull();
-        image.setHeight("150px");
-        setObjectFit("cover");
-        add(image);
-        getStyle().set("overflow", "hidden");
     }
 
     public void setImageSource(String src) {
         if (src != null) {
-            image.setSrc(resourceProvider.getResource(src));
-            image.setVisible(true);
+            setSrc(resourceProvider.getResource(src));
+            setVisible(true);
         } else {
-            image.setVisible(false);
+            setVisible(false);
         }
     }
 
-    public void setObjectFit(String cover) {
-        image.getStyle().set("object-fit", cover);
-    }
 }

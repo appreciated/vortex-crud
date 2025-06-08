@@ -6,21 +6,21 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.Unit;
+import com.vaadin.flow.component.card.Card;
+import com.vaadin.flow.component.card.CardVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @CssImport("card-styles.css")
-public class DefaultItem<FieldId> extends VerticalLayout {
+public class DefaultItem<FieldId> extends Card {
 
     public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
         if (maxWidth != null) {
-            setMaxWidth(maxWidth + "px");
+            setMaxWidth(maxWidth, Unit.PIXELS);
         }
-        addClassName("card");
-        setPadding(false);
-        setSpacing(false);
 
         // Optional image
         ImageDisplayComponent image = null;
@@ -32,30 +32,21 @@ public class DefaultItem<FieldId> extends VerticalLayout {
             String imagePath = entity.getString(resolver.getKeyForFieldId(imageFieldId));
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
-            image.setWidthFull();
-            image.setMaxHeight("150px");
-            image.setObjectFit("");
-            image.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
         }
 
-        // Vertical layout for title and description
-        VerticalLayout textContainer = new VerticalLayout();
-        textContainer.setPadding(true);
-        textContainer.setSpacing(false);
-
         H4 title = new H4(entity.getString(resolver.getKeyForFieldId(config.getTitleField())));
-        Div titleDiv = new Div(title);
-        textContainer.add(titleDiv);
+        setTitle(title);
 
         if (config.getDescriptionField() != null) {
             Text description = new Text(entity.getString(resolver.getKeyForFieldId(config.getDescriptionField())));
             Div descriptionDiv = new Div(description);
-            textContainer.add(descriptionDiv);
+            setSubtitle(descriptionDiv);
         }
 
         if (image != null) {
-            add(image);
+            setMedia(image);
         }
-        add(textContainer);
+
+        addThemeVariants(CardVariant.LUMO_COVER_MEDIA);
     }
 }

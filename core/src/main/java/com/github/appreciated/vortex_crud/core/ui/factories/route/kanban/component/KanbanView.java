@@ -132,7 +132,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         wrapper.setWidth("300px");
         wrapper.getStyle().set("overflow", "hidden");
         wrapper.getStyle().set("flex", "0 0 auto");
-        wrapper.addClassNames("card", "no-hover");
+        wrapper.addClassNames("no-hover");
         wrapper.setSpacing(false);
         column.setPadding(false);
         column.setHeightFull();

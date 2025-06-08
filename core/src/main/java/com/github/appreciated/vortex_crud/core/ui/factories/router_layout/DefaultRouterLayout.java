@@ -55,6 +55,9 @@ public class DefaultRouterLayout<DataStoreId, FieldId> extends AppLayout {
                 if (value.getIconFactory() != null) {
                     icon = value.getIconFactory().get();
                 }
+                icon.getStyle()
+                        .set("color", "var(--lumo-primary-text-color)")
+                        .set("opacity", "0.5");
                 nav.addItem(new SideNavItem(translation, path, icon));
             }
         });

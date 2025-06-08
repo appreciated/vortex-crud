@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSet
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -87,11 +88,16 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
 
     private void initializeRouteList(Map<String, ? extends RouteRenderer<DataStoreId, FieldId>> childRoutes, Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         childRoutes.forEach((key, value) -> {
-            HorizontalLayout routeButton = new HorizontalLayout();
-            routeButton.addClassNames("card", "master");
+            Card routeButton = new Card();
+            routeButton.addClassNames("master");
+
             Component icon = value.getIconFactory().get();
-            routeButton.add(icon);
-            routeButton.add(new H4(routeButton.getTranslation(value.getTitle())));
+            icon.getStyle()
+                    .set("color", "var(--lumo-primary-text-color)")
+                    .set("opacity", "0.5");
+            routeButton.setHeaderPrefix(icon);
+
+            routeButton.setTitle(new H4(routeButton.getTranslation(value.getTitle())));
             routeButton.setWidthFull();
 
             if (hasActiveSubroute(currentPathIndex, routeResolver) && value == getActiveSubroute(currentPathIndex, routeResolver)) {
@@ -99,7 +105,7 @@ public class Submenu<DataStoreId, FieldId> extends SplitLayout {
                 active = routeButton;
             }
 
-            routeButton.addClickListener(event -> {
+            routeButton.getElement().addEventListener("click",event -> {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
                     pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers());
