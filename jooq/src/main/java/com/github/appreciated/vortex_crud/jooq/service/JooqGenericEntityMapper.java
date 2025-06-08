@@ -24,8 +24,6 @@ public class JooqGenericEntityMapper implements GenericEntityMapper {
                     field.set(instance, value);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error mapping field " + key, e);
-                } catch (Exception e) {
-                    throw e;
                 }
             });
             return instance;

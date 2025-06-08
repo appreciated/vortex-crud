@@ -27,8 +27,6 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error mapping field " + key, e);
-                } catch (Exception e) {
-                    throw e;
                 }
             });
             return instance;
@@ -48,9 +46,8 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                     if (value != null) {
                         // Recursively map complex objects to GenericEntity
                         if (isEntity(value) || value instanceof Collection<?>) {
-                            if (value instanceof Collection<?>) {
+                            if (value instanceof Collection<?> collection) {
                                 // Handle collections of objects
-                                Collection<?> collection = (Collection<?>) value;
                                 List<Object> mappedCollection = new ArrayList<>();
                                 for (Object item : collection) {
                                     if (isEntity(item)) {
@@ -72,8 +69,6 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                     }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
-                } catch (Exception e) {
-                    throw e;
                 }
             }
         }
