@@ -15,8 +15,34 @@
     <description>Spring Boot Data JOOQ starter for vortex-crud</description>
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>24.7.4</vaadin.version>
+        <vaadin.version>24.8.0.beta3</vaadin.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>
+                https://maven.vaadin.com/vaadin-prereleases/
+            </url>
+        </repository>
+        <repository>
+            <id>Vaadin Directory</id>
+            <url>https://maven.vaadin.com/vaadin-addons</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>
+                https://maven.vaadin.com/vaadin-prereleases/
+            </url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>com.github.appreciated.vortex-crud</groupId>

@@ -131,7 +131,7 @@ VALUES ('Design Homepage', 'Create the design for the homepage of the web app', 
        ('SEO Optimization', 'Optimize the website for better search engine rankings', 8, 'OPEN', '2024-03-01 00:00:00.000', CURRENT_TIMESTAMP,CURRENT_TIMESTAMP),
        ('Mobile App Deployment', 'Deploy the mobile app to the App Store and Play Store', 7, 'CLOSED', '2023-10-10 00:00:00.000',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        ('Email Notifications', 'Set up automated email notifications for user actions', 2, 'WORK_IN_PROGRESS','2023-12-20 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-       ('Accessibility Review', 'Review the app for accessibility compliance', 4, 'WORK_IN_PROGRESS', '2023-11-17 00:00:00.000',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       ('Accessibility Review', 'Review the app for accessibility compliance', 4, 'WORK_IN_PROGRESS', '2023-11-17 00:00:00.000',CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- changeset test-project:10
 INSERT INTO task_comments (comment_text, user_id, created_at, task_id)
