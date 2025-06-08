@@ -58,6 +58,10 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String>>) test.getValue().getClass()));
     }
 
+    public JpaRepositoryDataStore<String> getDataStore(Class<?> model) {
+        return factories.get(getFactory(model));
+    }
+
     public JpaRepository<?, ?> getFactory(Class<?> model) {
         return Optional.ofNullable(modelFactoryMapping.get(model)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), model)));
     }

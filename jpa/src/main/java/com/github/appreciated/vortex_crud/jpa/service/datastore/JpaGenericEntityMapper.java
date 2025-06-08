@@ -41,7 +41,7 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
     public <T> GenericEntity mapFromEntity(T entity, Collection<Field> fields) {
         Map<String, Object> mappingResult = new HashMap<>();
         for (Field field : fields) {
-            if (!(field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class) || field.isAnnotationPresent(ManyToOne.class))) {
+            if (!(field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToMany.class))) {
                 try {
                     field.setAccessible(true);
                     Object value = field.get(entity);

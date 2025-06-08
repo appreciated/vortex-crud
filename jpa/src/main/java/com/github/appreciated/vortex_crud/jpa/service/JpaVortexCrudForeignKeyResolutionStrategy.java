@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForei
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaRepositoryDataStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,9 @@ public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudFore
                                   VortexCrudDataStoreFieldNameResolver<String> fieldNameResolver) {
         if (foreignKeyField != null && foreignKeyValue != null) {
             Field field = dataStore.getField(foreignKeyField);
-            JpaRepository<?, ?> factory = dataStoreRegistryFactory.getFactory(field.getType());
-            VortexCrudDataStore<String> factory1 = dataStoreRegistryFactory.getDataStore(factory);
-            entity.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), factory1.getRecordById(dataStore.getRecordById(foreignKeyValue)) );
+            JpaRepositoryDataStore<String> fieldDataStore = dataStoreRegistryFactory.getDataStore(field.getType());
+            GenericEntity recordById = fieldDataStore.getRecordById(foreignKeyValue);
+            entity.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
         }
     }
 }
