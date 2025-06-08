@@ -61,6 +61,9 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
 
     @Override
     public List<GenericEntity> getRecordsFromTableWhereColumnEquals(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
+        if (filterValue == null) {
+            return Collections.emptyList();
+        }
         return dslContext.select()
                 .from(getTable())
                 .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
