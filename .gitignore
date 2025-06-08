@@ -63,3 +63,9 @@ webpack.generated.js
 /examples/jooq-sqlite-example/jooq-example-database.db
 /examples/jpa-sqlite-example/jpa-example-database.db
 /jooq/jooq-database.db
+/jooq/package.json
+/jooq/package-lock.json
+/jooq/tsconfig.json
+/jooq/types.d.ts
+/jooq/src/main/frontend/generated/
+/jooq/src/main/frontend/index.html
