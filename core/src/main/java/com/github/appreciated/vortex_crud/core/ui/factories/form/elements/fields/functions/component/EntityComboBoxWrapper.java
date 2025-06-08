@@ -19,15 +19,12 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
 
     private final ComboBox<GenericEntity> comboBox;
     private final VortexCrudDataStore<FieldId> dataStore;
-    private final GenericEntityMapper entityMapper;
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                  VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                 Field<DataStoreId, FieldId> dataStoreField,
-                                 GenericEntityMapper entityMapper
+                                 Field<DataStoreId, FieldId> dataStoreField
     ) {
-        this.entityMapper = entityMapper;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 

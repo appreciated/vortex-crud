@@ -30,8 +30,6 @@ public interface VortexCrudDataStore<FieldId> {
 
     int countWhereColumnLike(FieldId filterField, String filterValue);
 
-    Class<?> getModelClass();
-
     Collection<Field> getFields();
 
     Field getField(FieldId foreignKeyField);

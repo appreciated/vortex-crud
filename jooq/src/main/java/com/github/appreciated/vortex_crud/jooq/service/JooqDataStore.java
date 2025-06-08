@@ -139,11 +139,6 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
     }
 
     @Override
-    public Class<?> getModelClass() {
-        return GenericEntity.class;
-    }
-
-    @Override
     public Collection<java.lang.reflect.Field> getFields() {
         return Collections.emptyList();
     }

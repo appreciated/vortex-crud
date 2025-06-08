@@ -25,16 +25,13 @@ public class FormCreator<DataStoreId, FieldId> {
     private final DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final GenericEntityMapper mapper;
 
     public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory,
                        VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry,
-                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                       GenericEntityMapper mapper) {
+                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
-        this.mapper = mapper;
     }
 
     public void bindAndAddToLayout(DataStoreId table,
@@ -57,7 +54,7 @@ public class FormCreator<DataStoreId, FieldId> {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + table + "'");
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
-                Component component = factory.createComponent(table, fieldName, field, mapper);
+                Component component = factory.createComponent(table, fieldName, field);
                 binder.bind((HasValue) component, entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)), (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o));
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();

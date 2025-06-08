@@ -21,7 +21,7 @@ public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudField
     }
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField, GenericEntityMapper mapper) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         Select<Object> select = new Select<>();
 
         DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);
