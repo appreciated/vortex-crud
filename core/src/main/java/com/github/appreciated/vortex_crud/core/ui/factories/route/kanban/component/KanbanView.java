@@ -38,17 +38,17 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(DataStoreId dataStoreIdentifier,
-                          RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                          VortexCrudDataStore<FieldId> dataStore,
-                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                          VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                          Kanban<DataStoreId, FieldId> kanbanConfig,
-                          Application<DataStoreId, FieldId> configService,
-                          VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-                          VortexCrudFileProviderRegistry fileProviderRegistry,
-                          VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                          FormCreator<DataStoreId, FieldId> formCreator,
-                          DetailRouteSetting detailRouteSetting) {
+                      RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                      VortexCrudDataStore<FieldId> dataStore,
+                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                      VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+                      Kanban<DataStoreId, FieldId> kanbanConfig,
+                      Application<DataStoreId, FieldId> configService,
+                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                      VortexCrudFileProviderRegistry fileProviderRegistry,
+                      VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                      FormCreator<DataStoreId, FieldId> formCreator,
+                      DetailRouteSetting detailRouteSetting) {
         this.dataStore = dataStore;
         this.fieldNameResolver = fieldNameResolver;
         Selects selects = configService.getSelects();
@@ -130,13 +130,12 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
         wrapper.setWidth("300px");
-        wrapper.getStyle().set("overflow", "hidden");
-        wrapper.getStyle().set("flex", "0 0 auto");
+        wrapper.getStyle()                .set("flex", "0 0 auto")
+                .set("background", "var(--lumo-contrast-5pct)")
+                .set("border-radius", "var(--lumo-border-radius-l)");
         wrapper.addClassNames("no-hover");
         wrapper.setSpacing(false);
         column.setPadding(false);
-        column.setHeightFull();
-        column.getStyle().set("overflow", "auto");
 
         // Enable drag and drop and drop targets
         DropTarget<VerticalLayout> dropTarget = DropTarget.create(column);

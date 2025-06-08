@@ -58,7 +58,9 @@ public class DefaultRouterLayout<DataStoreId, FieldId> extends AppLayout {
                 icon.getStyle()
                         .set("color", "var(--lumo-primary-text-color)")
                         .set("opacity", "0.5");
-                nav.addItem(new SideNavItem(translation, path, icon));
+                SideNavItem sideNavItem = new SideNavItem(translation, path, icon);
+                sideNavItem.setMatchNested(true);
+                nav.addItem(sideNavItem);
             }
         });
         return nav;

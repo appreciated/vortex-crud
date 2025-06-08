@@ -151,7 +151,7 @@ public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
             Component component = itemFactory.renderItem(gridOrListConfiguration, item, null, fileProviderRegistry, fieldNameResolver);
-            component.addClassNames("master", "no-padding");
+            component.addClassNames("master");
             Div div = new Div(component);
             if (DataStoreUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");

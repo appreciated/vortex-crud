@@ -14,7 +14,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-@CssImport("card-styles.css")
+@CssImport("master-detail-styles.css")
 public class DefaultItem<FieldId> extends Card {
 
     public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {

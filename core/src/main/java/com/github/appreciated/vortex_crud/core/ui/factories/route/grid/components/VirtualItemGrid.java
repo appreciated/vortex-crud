@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -80,12 +81,14 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
             wrapper.setWidthFull();
             List<GenericEntity> list = item.getList();
             for (GenericEntity entity : list) {
-                Div div = new Div(itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, fieldNameResolver));
+                Component component = itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, fieldNameResolver);
+                component.getStyle().setWidth("100%");
+                Div div = new Div(component);
                 div.getStyle()
                         .set("display", "flex")
                         .set("flex", "0 1 auto")
-                        .set("flex", "0 1 auto")
-                        .set("overflow", "hidden");
+                        .set("flex", "0 1 auto");
+
                 div.setWidthFull();
                 div.addClickListener(event -> onItemClick(entity));
                 wrapper.add(div);
