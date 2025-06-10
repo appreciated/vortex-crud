@@ -52,4 +52,9 @@ public class JooqManyToMany implements ManyToMany<Table<?>, TableField<?, ?>> {
         return associativeTargetIdField;
     }
 
+    @Override
+    public TableField<?, ?> getAssociativeSourceIdField() {
+        return associativeSourceIdField;
+    }
+
 }

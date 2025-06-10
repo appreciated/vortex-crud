@@ -92,4 +92,9 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
     public String getAssociativeTargetIdField() {
         return ""; // Not needed for JPA implementation
     }
+
+    @Override
+    public String getAssociativeSourceIdField() {
+        return "";
+    }
 }

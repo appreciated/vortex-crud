@@ -15,4 +15,7 @@ public interface ManyToMany<DataStoreId, FieldId> {
     DataStoreId getAssociativeDataStore();
 
     FieldId getAssociativeTargetIdField();
+
+    FieldId getAssociativeSourceIdField();
+
 }

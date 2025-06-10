@@ -34,18 +34,18 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
     @Override
     public Dialog create(@Nullable String entityId,
-                             @Nullable String foreignKeyValue,
-                             @Nullable FieldId foreignKeyField,
-                             RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
-                             CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
-                             DataStoreId dataStoreIdentifier,
-                             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                             OnStoreListener listener,
-                             FormCreator<DataStoreId, FieldId> formCreator) {
+                         @Nullable String foreignKeyValue,
+                         @Nullable FieldId foreignKeyField,
+                         RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
+                         CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
+                         DataStoreId dataStoreIdentifier,
+                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                         OnStoreListener listener,
+                         FormCreator<DataStoreId, FieldId> formCreator) {
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
         VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getDataStore(collectionConfiguration.getManyToMany().getAssociativeDataStore());
-        FieldId associativeTargetIdField = collectionConfiguration.getManyToMany().getAssociativeTargetIdField();
+        FieldId associativeSourceIdField = collectionConfiguration.getManyToMany().getAssociativeSourceIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -59,7 +59,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
         List<GenericEntity> currentAssociativeEntries = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream().toList();
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(record -> record.getString(fieldNameResolver.getKeyForFieldId(associativeTargetIdField))).collect(Collectors.toSet());
+                .map(record -> record.getString(fieldNameResolver.getKeyForFieldId(foreignKeyField))).collect(Collectors.toSet());
         Set<GenericEntity> currentlySelectedConnections = availableConnections.stream().filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity))).collect(Collectors.toSet());
 
         // Create a list of selectable items
@@ -80,18 +80,18 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                     .map(DataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
-            newSelectedConnectionIds.forEach(associativeTargetIdFieldValue -> {
+            newSelectedConnectionIds.stream().map(value -> {
                 GenericEntity newAssociation = new GenericEntity();
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), associativeTargetIdFieldValue);
-                associativeDatastore.insertRecord(newAssociation);
-            });
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), value);
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeSourceIdField), foreignKeyValue);
+                return newAssociation;
+            }).forEach(associativeDatastore::insertRecord);
 
             // Remove the connections that are no longer selected
             Set<GenericEntity> idsToRemove = currentlySelectedConnections.stream()
                     .filter(o -> !newSelectedConnections.contains(o))
                     .map(genericEntity -> currentAssociativeEntries.stream()
-                            .filter(genericEntity1 -> Objects.equals(DataStoreUtil.getId(genericEntity), genericEntity1.getString(fieldNameResolver.getKeyForFieldId(associativeTargetIdField))))
+                            .filter(genericEntity1 -> Objects.equals(DataStoreUtil.getId(genericEntity), genericEntity1.getString(fieldNameResolver.getKeyForFieldId(foreignKeyField))))
                             .findFirst()
                             .orElseThrow())
                     .collect(Collectors.toSet());
