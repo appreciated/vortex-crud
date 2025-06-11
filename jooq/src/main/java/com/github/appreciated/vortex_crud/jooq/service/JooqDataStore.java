@@ -9,6 +9,7 @@ import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +143,11 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 table,
                 DSL.field(filterField).like("%" + filterValue + "%")
         );
+    }
+
+    @Override
+    public Field getField(String foreignKeyField) {
+        return null;
     }
 
 }

@@ -27,4 +27,7 @@ public interface VortexCrudDataStore<FieldId> {
     int count();
 
     int countWhereColumnLike(FieldId filterField, String filterValue);
+
+    java.lang.reflect.Field getField(String foreignKeyField);
+ 
 }
