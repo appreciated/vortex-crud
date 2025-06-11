@@ -18,7 +18,6 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -62,7 +61,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
         List<GenericEntity> currentAssociativeEntries = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream().toList();
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(DataStoreUtil::getId).collect(Collectors.toSet());
+                .map(genericEntity -> genericEntity.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
         Set<GenericEntity> currentlySelectedConnections = availableConnections.stream()
                 .filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity)))
                 .collect(Collectors.toSet());
