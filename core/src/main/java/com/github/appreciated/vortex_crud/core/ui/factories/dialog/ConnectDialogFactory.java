@@ -19,7 +19,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -92,14 +91,20 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             }).forEach(associativeDatastore::insertRecord);
 
             // Remove the connections that are no longer selected
-            Set<GenericEntity> idsToRemove = currentAssociativeEntries.stream()
-                    .filter(o -> !newSelectedConnections.contains(o))
-                    .map(genericEntity -> currentAssociativeEntries.stream()
-                            .filter(genericEntity1 -> Objects.equals(DataStoreUtil.getId(genericEntity), genericEntity1.getString(fieldNameResolver.getKeyForFieldId(foreignKeyField))))
-                            .findFirst()
-                            .orElseThrow())
+            Set<String> newSelectedIds = newSelectedConnections.stream()
+                    .map(DataStoreUtil::getId)
                     .collect(Collectors.toSet());
-            idsToRemove.forEach(record -> associativeDatastore.deleteRecordById(DataStoreUtil.getId(record)));
+
+            // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
+            currentAssociativeEntries.stream()
+                    .filter(entry -> {
+                        Object targetIdObj = entry.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
+                        if (targetIdObj == null) {
+                            return false;
+                        }
+                        return !newSelectedIds.contains(targetIdObj.toString());
+                    })
+                    .forEach(record -> associativeDatastore.deleteRecordById(DataStoreUtil.getId(record)));
 
             listener.onStore();
             dialog.close();
