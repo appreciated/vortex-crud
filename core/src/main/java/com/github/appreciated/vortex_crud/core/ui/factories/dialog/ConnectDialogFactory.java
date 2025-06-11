@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -17,6 +18,7 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -44,8 +46,9 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                          FormCreator<DataStoreId, FieldId> formCreator) {
 
         VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
-        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getDataStore(collectionConfiguration.getManyToMany().getAssociativeDataStore());
-        FieldId associativeSourceIdField = collectionConfiguration.getManyToMany().getAssociativeSourceIdField();
+        ManyToMany<DataStoreId, FieldId> manyToMany = collectionConfiguration.getManyToMany();
+        VortexCrudDataStore<FieldId> associativeDatastore = dataStoreFactoryRegistry.getDataStore(manyToMany.getAssociativeDataStore());
+        FieldId associativeTargetIdField = manyToMany.getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -59,8 +62,10 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
         List<GenericEntity> currentAssociativeEntries = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream().toList();
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(record -> record.getString(fieldNameResolver.getKeyForFieldId(foreignKeyField))).collect(Collectors.toSet());
-        Set<GenericEntity> currentlySelectedConnections = availableConnections.stream().filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity))).collect(Collectors.toSet());
+                .map(DataStoreUtil::getId).collect(Collectors.toSet());
+        Set<GenericEntity> currentlySelectedConnections = availableConnections.stream()
+                .filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity)))
+                .collect(Collectors.toSet());
 
         // Create a list of selectable items
         MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
@@ -82,13 +87,13 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
             newSelectedConnectionIds.stream().map(value -> {
                 GenericEntity newAssociation = new GenericEntity();
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), value);
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeSourceIdField), foreignKeyValue);
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
                 return newAssociation;
             }).forEach(associativeDatastore::insertRecord);
 
             // Remove the connections that are no longer selected
-            Set<GenericEntity> idsToRemove = currentlySelectedConnections.stream()
+            Set<GenericEntity> idsToRemove = currentAssociativeEntries.stream()
                     .filter(o -> !newSelectedConnections.contains(o))
                     .map(genericEntity -> currentAssociativeEntries.stream()
                             .filter(genericEntity1 -> Objects.equals(DataStoreUtil.getId(genericEntity), genericEntity1.getString(fieldNameResolver.getKeyForFieldId(foreignKeyField))))

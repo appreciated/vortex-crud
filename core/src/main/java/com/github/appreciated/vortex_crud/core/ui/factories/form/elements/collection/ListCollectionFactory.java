@@ -149,7 +149,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();
         CollectionConfiguration<DataStoreId, FieldId> data = collectionData.getData();
         FieldId referenceField = (data.getManyToMany() != null) ?
-                data.getManyToMany().getAssociativeTargetIdField() :
+                data.getManyToMany().getAssociativeSourceIdField() :
                 data.getOneToMany().getReferenceField(data);
 
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(

@@ -3,10 +3,8 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.DSLContext;
+import org.jooq.*;
 import org.jooq.Record;
-import org.jooq.Table;
-import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
 import java.util.Collections;
