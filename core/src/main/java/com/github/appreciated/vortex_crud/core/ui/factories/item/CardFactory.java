@@ -15,6 +15,6 @@ public class CardFactory<FieldId> implements VortexCrudItemFactory<FieldId> {
 
     @Override
     public Component renderItem(ItemFactory<FieldId> itemFactory, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry fileProvider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
-        return new DefaultItem<>(itemFactory, entity, maxWidth, fileProvider, resolver);
+        return new DefaultCardItem<>(itemFactory, entity, maxWidth, fileProvider, resolver);
     }
 }

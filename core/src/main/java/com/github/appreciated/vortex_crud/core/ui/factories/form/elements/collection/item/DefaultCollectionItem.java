@@ -1,23 +1,24 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-@CssImport("master-detail-styles.css")
-public class DefaultCollectionItem extends HorizontalLayout {
+@CssImport("vortex-crud-default-card-item-styles.css")
+public class DefaultCollectionItem extends Card {
 
     private final VerticalLayout contentLayout;
     private final VerticalLayout actionsLayout;
 
     public DefaultCollectionItem() {
         setWidthFull();
-        addClassNames("card", "collection");
+        addClassNames("hoverable");
+        getStyle().set("--vaadin-card-padding", "var(--lumo-space-s)");
 
         contentLayout = new VerticalLayout();
         contentLayout.setPadding(false);
-        contentLayout.setJustifyContentMode(JustifyContentMode.CENTER);
         actionsLayout = new VerticalLayout();
         actionsLayout.setPadding(false);
         actionsLayout.getElement().getStyle().set("flex", "0 0 28px");
@@ -25,8 +26,7 @@ public class DefaultCollectionItem extends HorizontalLayout {
         contentLayout.addClassName("content");
         actionsLayout.addClassName("actions");
 
-        add(contentLayout, actionsLayout);
-        expand(contentLayout);
+        add(new HorizontalLayout(contentLayout, actionsLayout));
     }
 
     public void addContent(Component content) {

@@ -91,6 +91,7 @@ public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
         headerContainer.setJustifyContentMode(BETWEEN);
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
+        textField.getStyle().set("--lumo-border-radius-m", "var(--vaadin-card-border-radius)");
 
         HorizontalLayout searchContainer = new HorizontalLayout(textField);
         searchContainer.setPadding(false);

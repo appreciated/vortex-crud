@@ -13,10 +13,11 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 
-@CssImport("master-detail-styles.css")
-public class DefaultItem<FieldId> extends Card {
+@CssImport("vortex-crud-default-card-item-styles.css")
+public class DefaultCardItem<FieldId> extends Card {
 
-    public DefaultItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
+    public DefaultCardItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
+        setClassName("hoverable");
         if (maxWidth != null) {
             setMaxWidth(maxWidth, Unit.PIXELS);
         }

@@ -1,0 +1,19 @@
+.hoverable:hover {
+    background: var(--lumo-contrast-20pct);
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.master {
+    background: transparent;
+
+    &.active {
+        transition: box-shadow 0.3s ease;
+        background: var(--lumo-primary-color-10pct);
+        box-shadow: var(--lumo-box-shadow-xs);
+    }
+
+    &.actions {
+        opacity: 0;
+    }
+}
