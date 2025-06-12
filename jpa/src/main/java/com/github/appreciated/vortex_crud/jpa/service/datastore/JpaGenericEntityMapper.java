@@ -25,7 +25,11 @@ public class JpaGenericEntityMapper implements GenericEntityMapper {
                     if (value instanceof GenericEntity) {
                         field.set(instance, mapToEntity((GenericEntity) value, field.getType()));
                     } else {
-                        field.set(instance, value);
+                        if (field.getType().isEnum()) {
+                            field.set(instance, Enum.valueOf((Class<Enum>) field.getType(), value.toString()));
+                        } else {
+                            field.set(instance, value);
+                        }
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     throw new RuntimeException("Error mapping field " + key, e);

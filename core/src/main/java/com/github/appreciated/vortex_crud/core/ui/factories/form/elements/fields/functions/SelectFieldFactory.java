@@ -32,7 +32,7 @@ public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudField
                 .get(selectName)
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(Object::toString, Map.Entry::getValue));
+                .collect(Collectors.toMap(entry -> getStringForEntry(entry.getKey()), Map.Entry::getValue));
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
@@ -42,6 +42,14 @@ public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudField
         select.setItems(new ArrayList<>(strings));
         select.setItemLabelGenerator(item -> select.getTranslation(selectConfig.get(item)));
         return select;
+    }
+
+    private String getStringForEntry(Object key) {
+        if (key instanceof Enum<?>) {
+            return ((Enum<?>) key).name();
+        } else {
+            return key.toString();
+        }
     }
 
     @Override
