@@ -7,12 +7,13 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqFieldElement;
 import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRenderer;
 import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
-import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.TableRecord;
 
 import java.util.List;
 
@@ -20,25 +21,25 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PRO
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Route("test/:path?")
-public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<Table<?>, TableField<?, ?>> {
+public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<Class<? extends TableRecord<?>>, TableField<?, ?>> {
 
-    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<Table<?>, TableField<?, ?>> routeFactoryRegistry) {
+    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?, ?>> routeFactoryRegistry) {
         super(routeFactoryRegistry);
     }
 
     @Override
-    protected RouteRenderer<Table<?>, TableField<?, ?>> getConfiguration() {
+    protected RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> getConfiguration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(PROJECTS)
+                .withDataStore(ProjectsRecord.class)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withDescriptionField(PROJECTS.DESCRIPTION)
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
-                        .withDataStore(PROJECTS)
+                        .withDataStore(ProjectsRecord.class)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                 .withTitleField(PROJECTS.NAME)

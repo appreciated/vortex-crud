@@ -3,14 +3,14 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import org.jetbrains.annotations.NotNull;
-import org.jooq.DSLContext;
+import org.jooq.*;
 import org.jooq.Record;
-import org.jooq.Table;
-import org.jooq.TableField;
 import org.jooq.impl.DSL;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,33 +22,53 @@ import java.util.Map;
 public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
 
     private final DSLContext dslContext;
-    private final Table<?> table;
+    private final Class<? extends TableRecord<?>> record;
 
-    public JooqDataStore(Table<?> table, DSLContext dslContext) {
+    public JooqDataStore(Class<? extends TableRecord<?>> record, DSLContext dslContext) {
         this.dslContext = dslContext;
-        if (table == null) {
+        if (record == null) {
             throw new IllegalArgumentException("Table name cannot be null");
         }
-        this.table = table;
+        this.record = record;
     }
 
-    private Table<?> getTable() {
-        return table;
+    private Class<? extends TableRecord<?>> getRecord() {
+        return record;
     }
 
     @Override
     public Object insertRecord(GenericEntity values) {
         Map<String, Object> properties = values.getProperties();
-        org.jooq.Field<?>[] fields = properties.keySet().stream()
-                .map(DSL::field)
-                .toArray(org.jooq.Field[]::new);
-
-        return dslContext.insertInto(getTable())
-                .columns(fields)
-                .values(properties.values())
-                .returning(DSL.field("id")) // Assuming "id" is the primary key
-                .fetchOne()
-                .getValue(DSL.field("id"));
+        try {
+            TableRecord<?> o = getRecord().newInstance();
+            // Map properties to record
+            for (Map.Entry<String, Object> entry : properties.entrySet()) {
+                String propertyName = entry.getKey();
+                Object propertyValue = entry.getValue();
+                if (propertyValue != null) {
+                    // Convert property name to setter method name (e.g., "name" -> "setName")
+                    String setterMethodName = "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
+                    try {
+                        // Find the setter method
+                        Method[] methods = o.getClass().getMethods();
+                        for (Method method : methods) {
+                            if (method.getName().equals(setterMethodName) && method.getParameterCount() == 1) {
+                                // Call the setter method
+                                method.invoke(o, propertyValue);
+                                break;
+                            }
+                        }
+                    } catch (Exception e) {
+                        // Ignore if setter method not found or invocation fails
+                    }
+                }
+            }
+            return dslContext.executeInsert(o);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -57,8 +77,10 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .from(getTable())
                 .limit(limit)
                 .offset(offset)
-                .fetch()
-                .map(JooqDataStore::getGenericEntity);
+                .fetchInto(record)
+                .stream()
+                .map(JooqDataStore::getGenericEntity)
+                .toList();
     }
 
     @Override
@@ -71,8 +93,10 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
                 .limit(limit)
                 .offset(offset)
-                .fetch()
-                .map(JooqDataStore::getGenericEntity);
+                .fetchInto(record)
+                .stream()
+                .map(JooqDataStore::getGenericEntity)
+                .toList();
     }
 
     @Override
@@ -82,8 +106,10 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .where(filterField.in(filterValues))
                 .limit(limit)
                 .offset(offset)
-                .fetch()
-                .map(JooqDataStore::getGenericEntity);
+                .fetchInto(record)
+                .stream()
+                .map(JooqDataStore::getGenericEntity)
+                .toList();
     }
 
     @Override
@@ -93,8 +119,10 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
                 .where(filterField.like("%" + filterValue + "%"))
                 .limit(limit)
                 .offset(offset)
-                .fetch()
-                .map(JooqDataStore::getGenericEntity);
+                .fetchInto(record)
+                .stream()
+                .map(JooqDataStore::getGenericEntity)
+                .toList();
     }
 
     @NotNull
@@ -107,17 +135,36 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
         return dslContext.select()
                 .from(getTable())
                 .where(DSL.field("id").eq(id))
-                .fetchOptional()
+                .fetchOptionalInto(record)
                 .map(JooqDataStore::getGenericEntity)
                 .orElse(null);
     }
 
     @Override
     public void updateRecordById(Object id, GenericEntity values) {
-        dslContext.update(getTable())
-                .set(values.getProperties())
-                .where(DSL.field("id").eq(id))
-                .execute();
+        try {
+            // Get the table record class
+            TableRecord<?> recordInstance = getRecord().newInstance();
+            // Create a map for field names to values
+            Map<String, Object> fieldMap = new HashMap<>();
+
+            // Map properties to fields
+            for (Map.Entry<String, Object> entry : values.getProperties().entrySet()) {
+                String propertyName = entry.getKey();
+                Object propertyValue = entry.getValue();
+                if (propertyValue != null) {
+                    fieldMap.put(propertyName, propertyValue);
+                }
+            }
+
+            // Execute the update
+            dslContext.update(getTable())
+                    .set(fieldMap)
+                    .where(DSL.field("id").eq(id))
+                    .execute();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -140,9 +187,18 @@ public class JooqDataStore implements VortexCrudDataStore<TableField<?, ?>> {
     @Override
     public int countWhereColumnLike(TableField<?, ?> filterField, String filterValue) {
         return dslContext.fetchCount(
-                table,
+                getTable(),
                 DSL.field(filterField).like("%" + filterValue + "%")
         );
+    }
+
+    @NotNull
+    private Table<?> getTable() {
+        try {
+            return getRecord().newInstance().getTable();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

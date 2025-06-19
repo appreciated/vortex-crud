@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.jooq.models.Tables;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,7 @@ class JooqDataStoreTest {
     @BeforeEach
     void setUp() {
         createTestTable();
-        service = new JooqDataStore(Tables.TEST_TABLE, dslContext);
+        service = new JooqDataStore(TestTableRecord.class, dslContext);
     }
 
     @AfterEach

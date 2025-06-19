@@ -16,10 +16,11 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.Users;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.TableRecord;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -36,12 +37,12 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<Table<?>, TableField<?, ?>> {
+public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<Class<? extends TableRecord<?>>, TableField<?, ?>> {
     @Override
-    public Application<Table<?>, TableField<?, ?>> get() {
+    public Application<Class<? extends TableRecord<?>>, TableField<?, ?>> get() {
 
-        RouteRenderer<Table<?>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(TASKS)
+        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(TasksRecord.class)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
                         .withChildren(
@@ -52,9 +53,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 new JooqFieldElement(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to"),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(FormDialogFactory.class)
-                                                .withData(CollectionConfiguration.Builder.<Table<?>, TableField<?, ?>>of(TASK_COMMENTS)
-                                                        .withOneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
+                                        .withConfiguration(Collection.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(FormDialogFactory.class)
+                                                .withData(CollectionConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(TaskCommentsRecord.class)
+                                                        .withOneToMany(new JooqOneToMany(TASK_COMMENTS.ID))
                                                         .withChildren("comment_text")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
@@ -69,9 +70,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build(),
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(Collection.Builder.<Table<?>, TableField<?, ?>>of(ConnectDialogFactory.class)
-                                                .withData(CollectionConfiguration.Builder.<Table<?>, TableField<?, ?>>of(TASKS)
-                                                        .withManyToMany(new JooqManyToMany(TASK_HAS_TASK,
+                                        .withConfiguration(Collection.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(ConnectDialogFactory.class)
+                                                .withData(CollectionConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(TasksRecord.class)
+                                                        .withManyToMany(new JooqManyToMany(TaskHasTaskRecord.class,
                                                                 TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
                                                                 TASKS.ID))
@@ -85,8 +86,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
-        RouteRenderer<Table<?>, TableField<?, ?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(PROJECTS)
+        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(ProjectsRecord.class)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
@@ -99,8 +100,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
-        RouteRenderer<Table<?>, TableField<?, ?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(IMAGES)
+        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(ImagesRecord.class)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
@@ -110,8 +111,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         )
                         .build())
                 .build();
-        Map<Table<?>, DataStoreConfig<Table<?>, TableField<?, ?>>> dataStores = Map.of(
-                PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
+        Map<Class<? extends TableRecord<?>>, DataStoreConfig<Class<? extends TableRecord<?>>, TableField<?, ?>>> dataStores = Map.of(
+                ProjectsRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
                                 PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
@@ -121,30 +122,30 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 PROJECTS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
                                 PROJECTS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
                         .build(),
-                TASKS, JooqDataStoreConfig.of(JooqDataStore.class)
+                TasksRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASKS.ID, new JooqField(IdFieldFactory.class, true),
                                 TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, Validation.Builder.of().withMaxLength(255).build()),
                                 TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
+                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, UsersRecord.class, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new JooqField(SelectFieldFactory.class, "task-status"),
                                 TASKS.DUE_DATE, JooqField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
                                 TASKS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
                         .build(),
-                TASK_HAS_TASK, JooqDataStoreConfig.of(JooqDataStore.class)
+                TaskHasTaskRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_HAS_TASK.TASK_ID, new JooqField(IdFieldFactory.class),
                                 TASK_HAS_TASK.RELATED_TASK_ID, new JooqField(IdFieldFactory.class)))
                         .build(),
-                TASK_COMMENTS, JooqDataStoreConfig.of(JooqDataStore.class)
+                TaskCommentsRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new JooqField(IdFieldFactory.class, true),
                                 TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, Validation.Builder.of().withMaxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new JooqField(NumberFieldFactory.class),
                                 TASK_COMMENTS.CREATED_AT, JooqField.of(DateTimePickerFactory.class).build()))
                         .build(),
-                IMAGES, JooqDataStoreConfig.of(JooqDataStore.class)
+                ImagesRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 IMAGES.ID, new JooqField(IdFieldFactory.class, true),
                                 IMAGES.TITLE, JooqField.of(TextFieldFactory.class)
@@ -156,13 +157,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build()))
                         .build());
 
-        LinkedHashMap<String, RouteRenderer<Table<?>, TableField<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
-                .withDataStore(PROJECTS)
+                .withDataStore(ProjectsRecord.class)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withDescriptionField(PROJECTS.DESCRIPTION)
                         .build())
@@ -170,10 +171,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withChild(projectForm)
                 .build());
         routes.put("projects-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(PROJECTS)
+                .withDataStore(ProjectsRecord.class)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-list")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                         .withInlineEdit(true)
                         .withFilterField(PROJECTS.NAME)
                         .withChildren(
@@ -188,14 +189,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
         routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
                 .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(TASKS)
+                .withDataStore(TasksRecord.class)
                 .withTitle("route.tasks.title")
                 .withChildrenMap(Map.of("open",
                         JooqRouteRenderer.of(KanbanDetailFactory.class)
                                 .withIconFactory(VaadinIcon.TASKS::create)
-                                .withDataStore(TASKS)
+                                .withDataStore(TasksRecord.class)
                                 .withTitle("route.open-tasks.title")
-                                .withConfiguration(Kanban.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                                .withConfiguration(Kanban.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                                         .withTitleField(TASKS.TITLE)
                                         .withDescriptionField(TASKS.DESCRIPTION)
                                         .withColumnField(TASKS.STATUS)
@@ -205,9 +206,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         "done",
                         JooqRouteRenderer.of(MasterDetailRouteFactory.class)
                                 .withIconFactory(CHECK_CIRCLE::create)
-                                .withDataStore(TASKS)
+                                .withDataStore(TasksRecord.class)
                                 .withTitle("route.done-tasks.title")
-                                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                                         .withTitleField(TASKS.TITLE)
                                         .withDescriptionField(TASKS.DESCRIPTION)
                                         .build())
@@ -215,10 +216,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .build()))
                 .build());
         routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(IMAGES)
+                .withDataStore(ImagesRecord.class)
                 .withIconFactory(CAMERA::create)
                 .withTitle("route.images-cards")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withImageField(IMAGES.URL)
                         .withImageFactory(ImageResourceProvider.class)
@@ -227,10 +228,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withChild(imageForm)
                 .build());
         routes.put("images-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(IMAGES)
+                .withDataStore(ImagesRecord.class)
                 .withIconFactory(CAMERA::create)
                 .withTitle("route.images-list")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
                         .withInlineEdit(true)
                         .withFilterField(IMAGES.TITLE)
                         .withChildren(
@@ -261,10 +262,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .build()))
                         .build())
                 .withRoutes(routes)
-                .withVersioning(Versioning.Builder.<Table<?>>of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
+                .withVersioning(Versioning.Builder.<Class<? extends TableRecord<?>>>of().withDataStores(ProjectsRecord.class, TasksRecord.class, TaskCommentsRecord.class).build())
                 .withAuditing(Auditing.Builder.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
-                .withSelects(Selects.Builder.of().withConfigs(
-                        Map.of("task-status", taskStatuses)).build())
+                .withSelects(Selects.Builder.of()
+                        .withConfigs(Map.of("task-status", taskStatuses))
+                        .build())
                 .withDataStores(dataStores)
                 .build();
     }

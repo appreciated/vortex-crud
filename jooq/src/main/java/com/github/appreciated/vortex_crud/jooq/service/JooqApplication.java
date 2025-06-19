@@ -1,12 +1,12 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import org.jooq.Table;
 import org.jooq.TableField;
+import org.jooq.TableRecord;
 
-public class JooqApplication extends Application<Table<?>, TableField<?,?>> {
+public class JooqApplication extends Application<Class<? extends TableRecord<?>>, TableField<?,?>> {
 
-    public static Application.Builder<Table<?>, TableField<?,?>> of() {
+    public static Application.Builder<Class<? extends TableRecord<?>>, TableField<?,?>> of() {
         return new Application.Builder<>(new JooqApplication());
     }
 }
