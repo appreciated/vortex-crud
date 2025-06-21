@@ -13,16 +13,12 @@ public class Kanban<DataStoreId, FieldId> extends RouteRendererConfiguration<Dat
         super(factory);
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public static abstract class Builder<DataStoreId, FieldId> {
 
         private final Kanban<DataStoreId, FieldId> product;
 
-        private Builder(Kanban<DataStoreId, FieldId> product) {
+        protected Builder(Kanban<DataStoreId, FieldId> product) {
             this.product = product;
-        }
-
-        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudItemFactory> factory) {
-            return new Builder<>(new Kanban<>(((Class<? extends VortexCrudItemFactory<FieldId>>)factory)));
         }
 
         public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {

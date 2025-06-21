@@ -13,9 +13,9 @@ public class JpaCollectionConfiguration extends CollectionConfiguration<JpaRepos
         public Builder(CollectionConfiguration<JpaRepository<?, ?>, String> product) {
             super(product);
         }
+    }
 
-        public static JpaCollectionConfiguration.Builder of(JpaRepository<?, ?> factory) {
-            return new JpaCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
-        }
+    public static JpaCollectionConfiguration.Builder of(JpaRepository<?, ?> factory) {
+        return new JpaCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
     }
 }

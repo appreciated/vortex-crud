@@ -25,10 +25,6 @@ public class AccessControl {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new AccessControl());
-        }
-
         public Builder withRoles(List<String> roles) {
             product.roles = roles;
             return this;
@@ -42,5 +38,9 @@ public class AccessControl {
         public AccessControl build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new AccessControl());
     }
 }

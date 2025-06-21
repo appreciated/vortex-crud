@@ -33,10 +33,6 @@ public class AdditionalField {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new AdditionalField());
-        }
-
         public Builder withName(String name) {
             product.name = name;
             return this;
@@ -50,5 +46,9 @@ public class AdditionalField {
         public AdditionalField build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new AdditionalField());
     }
 }

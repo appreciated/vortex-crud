@@ -26,10 +26,6 @@ public class Selects {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Selects());
-        }
-
         public Builder withConfigs(Map<String, LinkedHashMap<?, String>> configs) {
             product.configs = configs;
             return this;
@@ -38,5 +34,9 @@ public class Selects {
         public Selects build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new Selects());
     }
 }

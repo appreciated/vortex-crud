@@ -9,6 +9,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRoute
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRenderer;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
@@ -33,7 +34,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<Class<? extends 
                 .withDataStore(ProjectsRecord.class)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(GridOrListRendererConfiguration.Builder.<Class<? extends TableRecord<?>>, TableField<?, ?>>of(CardFactory.class)
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withDescriptionField(PROJECTS.DESCRIPTION)
                         .build())

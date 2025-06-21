@@ -14,9 +14,9 @@ public class JooqCollectionConfiguration extends CollectionConfiguration<Class<?
         public Builder(CollectionConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> product) {
             super(product);
         }
+    }
 
-        public static JooqCollectionConfiguration.Builder of(Class<? extends TableRecord<?>> factory) {
-            return new JooqCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
-        }
+    public static JooqCollectionConfiguration.Builder of(Class<? extends TableRecord<?>> factory) {
+        return new JooqCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
     }
 }

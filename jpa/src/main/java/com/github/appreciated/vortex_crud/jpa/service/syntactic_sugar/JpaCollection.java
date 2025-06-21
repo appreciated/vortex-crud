@@ -14,9 +14,9 @@ public class JpaCollection extends Collection<JpaRepository<?, ?>, String> {
         public Builder(Collection<JpaRepository<?, ?>, String> product) {
             super(product);
         }
+    }
 
-        public static JpaCollection.Builder of(Class<? extends VortexCrudDialogFactory> factory) {
-            return new Builder(new Collection<>((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String>>) factory));
-        }
+    public static JpaCollection.Builder of(Class<? extends VortexCrudDialogFactory> factory) {
+        return new Builder(new Collection<>((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String>>) factory));
     }
 }

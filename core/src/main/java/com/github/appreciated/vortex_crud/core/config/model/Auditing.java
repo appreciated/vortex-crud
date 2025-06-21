@@ -35,10 +35,6 @@ public class Auditing {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Auditing());
-        }
-
         public Builder withEnabled(boolean enabled) {
             product.enabled = enabled;
             return this;
@@ -61,5 +57,9 @@ public class Auditing {
         public Auditing build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new Auditing());
     }
 }

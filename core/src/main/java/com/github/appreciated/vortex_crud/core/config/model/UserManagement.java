@@ -55,10 +55,6 @@ public class UserManagement {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new UserManagement());
-        }
-
         public Builder withEnabled(boolean enabled) {
             product.enabled = enabled;
             return this;
@@ -87,5 +83,9 @@ public class UserManagement {
         public UserManagement build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new UserManagement());
     }
 }

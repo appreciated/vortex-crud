@@ -23,10 +23,6 @@ public class Validation {
             this.product = product;
         }
 
-        public static Builder of() {
-            return new Builder(new Validation());
-        }
-
         public Builder withMaxLength(int maxLength) {
             product.maxLength = maxLength;
             return this;
@@ -35,5 +31,9 @@ public class Validation {
         public Validation build() {
             return product;
         }
+    }
+
+    public static Builder of() {
+        return new Builder(new Validation());
     }
 }

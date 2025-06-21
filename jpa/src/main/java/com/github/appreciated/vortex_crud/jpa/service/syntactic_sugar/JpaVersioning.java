@@ -9,9 +9,9 @@ public class JpaVersioning extends Versioning<JpaRepository<?, ?>> {
         public Builder(Versioning<JpaRepository<?, ?>> product) {
             super(product);
         }
+    }
 
-        public static JpaVersioning.Builder of() {
-            return new JpaVersioning.Builder(new Versioning<>());
-        }
+    public static JpaVersioning.Builder of() {
+        return new JpaVersioning.Builder(new Versioning<>());
     }
 }

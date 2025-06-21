@@ -13,9 +13,9 @@ public class JpaRouteRenderer extends RouteRenderer<JpaRepository<?, ?>, String>
         public Builder(RouteRenderer<DataStoreId, FieldId> product) {
             super(product);
         }
+    }
 
-        public static JpaRouteRenderer.Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudRouteFactory> factory) {
-            return new JpaRouteRenderer.Builder<>(new JpaRouteRenderer((Class<? extends VortexCrudRouteFactory<JpaRepository<?, ?>, String>>) factory));
-        }
+    public static JpaRouteRenderer.Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudRouteFactory> factory) {
+        return new JpaRouteRenderer.Builder<>(new JpaRouteRenderer((Class<? extends VortexCrudRouteFactory<JpaRepository<?, ?>, String>>) factory));
     }
 }

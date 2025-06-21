@@ -15,9 +15,9 @@ public class JooqCollection extends Collection<Class<? extends TableRecord<?>>, 
         public Builder(Collection<Class<? extends TableRecord<?>>, TableField<?, ?>> product) {
             super(product);
         }
+    }
 
-        public static JooqCollection.Builder of(Class<? extends VortexCrudDialogFactory> factory) {
-            return new Builder(new Collection<>((Class<? extends VortexCrudDialogFactory<Class<? extends TableRecord<?>>, TableField<?, ?>>>) factory));
-        }
+    public static JooqCollection.Builder of(Class<? extends VortexCrudDialogFactory> factory) {
+        return new Builder(new Collection<>((Class<? extends VortexCrudDialogFactory<Class<? extends TableRecord<?>>, TableField<?, ?>>>) factory));
     }
 }

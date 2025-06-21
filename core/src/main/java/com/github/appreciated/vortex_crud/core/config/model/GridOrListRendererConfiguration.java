@@ -22,17 +22,13 @@ public class GridOrListRendererConfiguration<DataStoreId,FieldId> extends RouteR
         this.children = children;
     }
 
-    public static class Builder<DataStoreId,FieldId> extends RouteRendererConfiguration.Builder<DataStoreId,FieldId> {
+    public static abstract class Builder<DataStoreId,FieldId> extends RouteRendererConfiguration.Builder<DataStoreId,FieldId> {
 
         private final GridOrListRendererConfiguration<DataStoreId,FieldId> product;
 
-        private Builder(GridOrListRendererConfiguration<DataStoreId,FieldId> product) {
+        protected Builder(GridOrListRendererConfiguration<DataStoreId, FieldId> product) {
             super(product);
             this.product = product;
-        }
-
-        public static <DataStoreId,FieldId> Builder<DataStoreId,FieldId> of(Class<? extends VortexCrudItemFactory> factory) {
-            return new Builder<>(new GridOrListRendererConfiguration<>((Class<? extends VortexCrudItemFactory<FieldId>>)factory));
         }
 
         public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {
@@ -55,7 +51,7 @@ public class GridOrListRendererConfiguration<DataStoreId,FieldId> extends RouteR
             return this;
         }
 
-        public GridOrListRendererConfiguration<DataStoreId,FieldId> build() {
+        public RouteRendererConfiguration<DataStoreId,FieldId> build() {
             return product;
         }
     }
