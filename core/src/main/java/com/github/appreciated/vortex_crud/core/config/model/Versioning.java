@@ -27,16 +27,12 @@ public class Versioning<DataStoreId> {
         this.dataStores = dataStores;
     }
 
-    public static class Builder<DataStoreId> {
+    public static abstract class Builder<DataStoreId> {
 
         private final Versioning<DataStoreId> product;
 
-        private Builder(Versioning<DataStoreId> product) {
+        protected Builder(Versioning<DataStoreId> product) {
             this.product = product;
-        }
-
-        public static <DataStoreId> Builder<DataStoreId> of() {
-            return new Builder<>(new Versioning<>());
         }
 
         public Builder<DataStoreId> withEnabled(boolean enabled) {

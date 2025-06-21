@@ -1,7 +1,8 @@
-package com.github.appreciated.vortex_crud.jpa.service;
+package com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 
 public class JpaFieldElement extends InternalFormElement<JpaRepository<?, ?>, String> {
 

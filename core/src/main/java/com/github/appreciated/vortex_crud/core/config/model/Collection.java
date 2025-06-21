@@ -66,16 +66,12 @@ public class Collection<DataStoreId, FieldId> {
         this.child = child;
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public abstract static class Builder<DataStoreId, FieldId> {
 
         private final Collection<DataStoreId, FieldId> product;
 
-        private Builder(Collection<DataStoreId, FieldId> product) {
+        protected Builder(Collection<DataStoreId, FieldId> product) {
             this.product = product;
-        }
-
-        public static <DataStoreId, FieldId> Builder <DataStoreId, FieldId> of(Class<? extends VortexCrudDialogFactory> factory) {
-            return new Builder<>(new Collection<>((Class<? extends VortexCrudDialogFactory<DataStoreId,FieldId>>)factory));
         }
 
         public Builder<DataStoreId,FieldId> withLabel(String label) {

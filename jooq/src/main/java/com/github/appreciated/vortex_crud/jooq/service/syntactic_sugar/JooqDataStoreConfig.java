@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jooq.service;
+package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;

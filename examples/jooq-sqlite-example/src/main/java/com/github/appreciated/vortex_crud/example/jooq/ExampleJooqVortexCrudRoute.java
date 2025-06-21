@@ -8,9 +8,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
-import com.github.appreciated.vortex_crud.jooq.service.JooqFieldElement;
-import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRenderer;
-import com.github.appreciated.vortex_crud.jooq.service.JooqRouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRenderer;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
 import org.jooq.TableField;
 import org.jooq.TableRecord;

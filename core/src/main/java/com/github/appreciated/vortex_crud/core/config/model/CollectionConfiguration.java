@@ -51,16 +51,12 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
         this.children = children;
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public abstract static class Builder<DataStoreId, FieldId> {
 
         private final CollectionConfiguration<DataStoreId, FieldId> product;
 
-        private Builder(CollectionConfiguration<DataStoreId, FieldId> product) {
+        protected Builder(CollectionConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
-        }
-
-        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(DataStoreId dataStore) {
-            return new Builder<>(new CollectionConfiguration<>(dataStore));
         }
 
         public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {

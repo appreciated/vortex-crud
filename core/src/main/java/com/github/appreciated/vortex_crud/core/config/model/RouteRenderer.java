@@ -117,16 +117,12 @@ public class RouteRenderer<DataStoreId, FieldId> {
         this.roles = roles;
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public abstract static class Builder<DataStoreId, FieldId> {
 
         private final RouteRenderer<DataStoreId, FieldId> product;
 
-        public Builder(RouteRenderer<DataStoreId, FieldId> product) {
+        public  Builder(RouteRenderer<DataStoreId, FieldId> product) {
             this.product = product;
-        }
-
-        public Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory) {
-            return new Builder<>(new RouteRenderer<>(factory));
         }
 
         public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {

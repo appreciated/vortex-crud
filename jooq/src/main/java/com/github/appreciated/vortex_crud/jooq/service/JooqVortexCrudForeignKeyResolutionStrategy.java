@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 /**
  * Default implementation of the ForeignKeyResolutionStrategy interface.
  * This implementation simply sets the foreign key value in the entity using the field name resolver.
- *
- * @param <FieldId> The type of the field identifier
  */
 @Service
 public class JooqVortexCrudForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy<TableField<?, ?>> {
