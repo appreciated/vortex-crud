@@ -148,6 +148,14 @@
                     <generator>
                         <database>
                             <name>org.jooq.meta.sqlite.SQLiteDatabase</name>
+                            <forcedTypes>
+                                <forcedType>
+                                    <userType>com.github.appreciated.vortex_crud.example.jooq.Status</userType>
+                                    <converter>org.jooq.impl.EnumConverter</converter>
+                                    <includeExpression>tasks.status</includeExpression>
+                                    <includeTypes>VARCHAR</includeTypes>
+                                </forcedType>
+                            </forcedTypes>
                         </database>
                         <target>
                             <packageName>com.github.appreciated.vortex_crud.jooq.models</packageName>
