@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.data_store.RecordRetrievalStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -26,10 +27,15 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final RecordRetrievalStrategy<FieldId> recordRetrievalStrategy;
 
-    public ConnectDialogFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
+    public ConnectDialogFactory(
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, 
+            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+            RecordRetrievalStrategy<FieldId> recordRetrievalStrategy) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.recordRetrievalStrategy = recordRetrievalStrategy;
     }
 
     @Override
@@ -58,7 +64,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Fetch available connections
         List<GenericEntity> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
-        List<GenericEntity> currentAssociativeEntries = associativeDatastore.getRecordsFromTableWhereColumnEquals(foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE).stream().toList();
+        List<GenericEntity> currentAssociativeEntries = recordRetrievalStrategy.getRecordsWhereColumnEquals(
+                associativeDatastore, foreignKeyField, foreignKeyValue, 0, Integer.MAX_VALUE);
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(genericEntity -> genericEntity.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
         Set<GenericEntity> currentlySelectedConnections = availableConnections.stream()

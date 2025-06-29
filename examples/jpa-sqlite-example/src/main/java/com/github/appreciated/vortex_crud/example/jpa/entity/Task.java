@@ -65,10 +65,6 @@ public class Task {
     )
     private Set<Task> relatedTasks = new HashSet<>();
 
-    @Field(ReferenceFieldFactory.class)
-    @ManyToMany(mappedBy = "relatedTasks", fetch = FetchType.EAGER)
-    private Set<Task> relatedToTasks = new HashSet<>();
-
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -148,13 +144,5 @@ public class Task {
 
     public void setRelatedTasks(Set<Task> relatedTasks) {
         this.relatedTasks = relatedTasks;
-    }
-
-    public Set<Task> getRelatedToTasks() {
-        return relatedToTasks;
-    }
-
-    public void setRelatedToTasks(Set<Task> relatedToTasks) {
-        this.relatedToTasks = relatedToTasks;
     }
 }

@@ -88,7 +88,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(JpaCollection.of(ConnectDialogFactory.class)
                                                 .withData(JpaCollectionConfiguration.of(taskRepository)
-                                                        .withManyToMany(new JpaManyToMany(""))
+                                                        .withManyToMany(new JpaManyToMany("relatedTasks"))
                                                         .withChildren("title")
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
