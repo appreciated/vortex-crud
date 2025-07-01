@@ -3,29 +3,32 @@ package com.github.appreciated.vortex_crud.jpa.service;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * JPA implementation of the RecordRetrievalStrategy.
+ * JPA implementation of the ManyToManyPersistenceStrategy.
+ * Uses reflection to work with model classes directly instead of GenericEntity.
+ *
+ * @param <T> The model class type
  */
 @Component
-public class JpaManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy<String, String> {
+public class JpaManyToManyPersistenceStrategy<T> implements ManyToManyPersistenceStrategy<String, String, T> {
 
     @Override
-    public List<GenericEntity> getManyToMany(VortexCrudDataStore<String> dataStore, ManyToMany<String, String> manyToMany) {
+    public List<T> getManyToMany(VortexCrudDataStore<String> dataStore, ManyToMany<String, String> manyToMany, Class<T> modelClass) {
+        // Implementation will use reflection to work with the model class
         return List.of();
     }
 
     @Override
-    public void insert(List<GenericEntity> genericEntities) {
-
+    public <E> void insert(List<E> entities, Class<E> modelClass) {
+        // Implementation will use reflection to work with the model class
     }
 
     @Override
-    public void deleteAll(List<GenericEntity> list) {
-
+    public <E> void deleteAll(List<E> entities, Class<E> modelClass) {
+        // Implementation will use reflection to work with the model class
     }
 }
