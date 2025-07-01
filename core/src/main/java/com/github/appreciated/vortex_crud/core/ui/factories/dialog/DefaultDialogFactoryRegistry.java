@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.RecordRetrievalStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
@@ -28,11 +28,11 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Vorte
                                         VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                         VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                         VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
-                                        RecordRetrievalStrategy<FieldId> recordRetrievalStrategy
+                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver, recordRetrievalStrategy));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver, manyToManyPersistenceStrategy));
     }
 
     public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId>> getFactories() {

@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
+import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 
 import java.util.List;
@@ -10,23 +11,20 @@ import java.util.List;
  *
  * @param <FieldId> The type used to identify fields in the data store
  */
-public interface RecordRetrievalStrategy<FieldId> {
+public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId> {
     
     /**
      * Retrieves records from a data store where a specific column equals a given value.
      *
      * @param dataStore The data store to retrieve records from
-     * @param filterField The field to filter on
-     * @param filterValue The value to filter by
-     * @param offset The offset for pagination
-     * @param limit The maximum number of records to return
      * @return A list of records matching the criteria
      */
-    List<GenericEntity> getRecordsWhereColumnEquals(
+    List<GenericEntity> getManyToMany(
             VortexCrudDataStore<FieldId> dataStore,
-            FieldId filterField, 
-            Object filterValue, 
-            int offset, 
-            int limit
+            ManyToMany<DataStoreId, FieldId> manyToMany
     );
+
+    void insert(List<GenericEntity> genericEntities);
+
+    void deleteAll(List<GenericEntity> list);
 }
