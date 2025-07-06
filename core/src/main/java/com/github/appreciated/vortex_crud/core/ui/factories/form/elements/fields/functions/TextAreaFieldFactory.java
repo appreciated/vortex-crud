@@ -8,10 +8,10 @@ import com.vaadin.flow.component.textfield.TextArea;
 import java.util.Collection;
 import java.util.List;
 
-public class TextAreaFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
+public class TextAreaFieldFactory<DataStoreId, FieldId, ModelClass>  implements VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>  {
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId, ModelClass>  dataStoreField) {
         return new TextArea();
     }
 

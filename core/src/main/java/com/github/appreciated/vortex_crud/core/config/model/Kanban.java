@@ -7,56 +7,56 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Kanban<DataStoreId, FieldId> extends RouteRendererConfiguration<DataStoreId, FieldId> implements ItemFactory<FieldId> {
+public class Kanban<DataStoreId, FieldId, ModelClass> extends RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> implements ItemFactory<FieldId> {
 
     public Kanban(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
         super(factory);
     }
 
-    public static abstract class Builder<DataStoreId, FieldId> {
+    public static abstract class Builder<DataStoreId, FieldId, ModelClass> {
 
-        private final Kanban<DataStoreId, FieldId> product;
+        private final Kanban<DataStoreId, FieldId, ModelClass> product;
 
-        protected Builder(Kanban<DataStoreId, FieldId> product) {
+        protected Builder(Kanban<DataStoreId, FieldId, ModelClass> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {
+        public Builder<DataStoreId,FieldId, ModelClass> withColumnField(FieldId columnField) {
             product.setColumnField(columnField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withTitleField(FieldId titleField) {
+        public Builder<DataStoreId,FieldId, ModelClass> withTitleField(FieldId titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withDescriptionField(FieldId descriptionField) {
+        public Builder<DataStoreId,FieldId, ModelClass> withDescriptionField(FieldId descriptionField) {
             product.setDescriptionField(descriptionField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageField(FieldId imageField) {
+        public Builder<DataStoreId,FieldId, ModelClass> withImageField(FieldId imageField) {
             product.setImageField(imageField);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
+        public Builder<DataStoreId,FieldId, ModelClass> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.setImageFactory(imageFactory);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> withChildren(List<InternalFormElement<DataStoreId,FieldId>> children) {
+        public Builder<DataStoreId,FieldId, ModelClass> withChildren(List<InternalFormElement<DataStoreId,FieldId, ModelClass>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder<DataStoreId,FieldId> addChildren(InternalFormElement<DataStoreId,FieldId> item) {
+        public Builder<DataStoreId,FieldId, ModelClass> addChildren(InternalFormElement<DataStoreId,FieldId, ModelClass> item) {
             product.getChildren().add(item);
             return this;
         }
 
-        public Kanban<DataStoreId,FieldId> build() {
+        public Kanban<DataStoreId,FieldId, ModelClass> build() {
             return product;
         }
     }

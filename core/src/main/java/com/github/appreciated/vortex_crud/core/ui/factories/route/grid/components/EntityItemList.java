@@ -1,17 +1,15 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components;
 
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
-
 import java.util.List;
 
-public class EntityItemList {
-    private final List<GenericEntity> list;
+public class EntityItemList<ModelClass> {
+    private final List<ModelClass> list;
 
-    public EntityItemList(List<GenericEntity> list) {
+    public EntityItemList(List<ModelClass> list) {
         this.list = list;
     }
 
-    public List<GenericEntity> getList() {
+    public List<ModelClass> getList() {
         return list;
     }
 }

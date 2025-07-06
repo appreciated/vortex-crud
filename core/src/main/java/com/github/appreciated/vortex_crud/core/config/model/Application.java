@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @GenerateBuilder
-public abstract class Application<DataStoreId, FieldId> {
+public abstract class Application<DataStoreId, FieldId, ModelClass> {
 
     private String name;
 
@@ -20,9 +20,9 @@ public abstract class Application<DataStoreId, FieldId> {
 
     private Auditing auditing;
 
-    private Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores;
+    private Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId, ModelClass>> dataStores;
 
-    private LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routes;
+    private LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, ModelClass>> routes;
 
     public String getName() {
         return name;
@@ -72,70 +72,70 @@ public abstract class Application<DataStoreId, FieldId> {
         this.auditing = auditing;
     }
 
-    public Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> getDataStores() {
+    public Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId, ModelClass>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
+    public void setDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId, ModelClass>> dataStores) {
         this.dataStores = dataStores;
     }
 
-    public Map<String, RouteRenderer<DataStoreId, FieldId>> getRouteRenderers() {
+    public Map<String, RouteRenderer<DataStoreId, FieldId, ModelClass>> getRouteRenderers() {
         return routes;
     }
 
-    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routeRenderers) {
+    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, ModelClass>> routeRenderers) {
         this.routes = routeRenderers;
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public static class Builder<DataStoreId, FieldId, ModelClass> {
 
-        private final Application<DataStoreId,FieldId> product;
+        private final Application<DataStoreId,FieldId, ModelClass> product;
 
-        public Builder(Application<DataStoreId,FieldId> product) {
+        public Builder(Application<DataStoreId,FieldId, ModelClass> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId> withName(String name) {
+        public Builder<DataStoreId, FieldId, ModelClass> withName(String name) {
             product.name = name;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withI18nBundlePrefix(String i18nBundlePrefix) {
+        public Builder<DataStoreId, FieldId, ModelClass> withI18nBundlePrefix(String i18nBundlePrefix) {
             product.i18nBundlePrefix = i18nBundlePrefix;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withUserManagement(UserManagement userManagement) {
+        public Builder<DataStoreId, FieldId, ModelClass> withUserManagement(UserManagement userManagement) {
             product.userManagement = userManagement;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withSelects(Selects selects) {
+        public Builder<DataStoreId, FieldId, ModelClass> withSelects(Selects selects) {
             product.selects = selects;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withVersioning(Versioning<DataStoreId> versioning) {
+        public Builder<DataStoreId, FieldId, ModelClass> withVersioning(Versioning<DataStoreId> versioning) {
             product.versioning = versioning;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withAuditing(Auditing auditing) {
+        public Builder<DataStoreId, FieldId, ModelClass> withAuditing(Auditing auditing) {
             product.auditing = auditing;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
+        public Builder<DataStoreId, FieldId, ModelClass> withDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId, ModelClass>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
-        public Application<DataStoreId, FieldId> build() {
+        public Application<DataStoreId, FieldId, ModelClass> build() {
             return product;
         }
 
-        public Builder<DataStoreId, FieldId> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routes) {
+        public Builder<DataStoreId, FieldId, ModelClass> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, ModelClass>> routes) {
             product.routes = routes;
             return this;
         }

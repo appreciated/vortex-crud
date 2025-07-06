@@ -10,8 +10,8 @@ public class JooqRouteRenderer extends RouteRenderer<Class<? extends TableRecord
         super(factory);
     }
 
-    public static class Builder<DataStoreId, FieldId> extends RouteRenderer.Builder<DataStoreId, FieldId> {
-        public Builder(RouteRenderer<DataStoreId, FieldId> product) {
+    public static class Builder<DataStoreId, FieldId, ModelClass>  extends RouteRenderer.Builder<DataStoreId, FieldId, ModelClass>  {
+        public Builder(RouteRenderer<DataStoreId, FieldId, ModelClass>  product) {
             super(product);
         }
     }

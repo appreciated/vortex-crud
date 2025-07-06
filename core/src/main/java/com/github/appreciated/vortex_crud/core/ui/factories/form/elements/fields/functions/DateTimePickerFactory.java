@@ -11,10 +11,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-public class DateTimePickerFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
+public class DateTimePickerFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass> {
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId, ModelClass> dataStoreField) {
         DateTimePicker datePicker = new DateTimePicker();
         DatePicker.DatePickerI18n datePickerI18n = new DatePicker.DatePickerI18n();
 

@@ -20,32 +20,32 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> {
+public class DefaultDialogFactoryRegistry<DataStoreId, FieldId, ModelClass> implements VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass>  {
 
-    private final Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId>> factories = new HashMap<>();
+    private final Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass> > factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId> configService,
-                                        VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+    public DefaultDialogFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService,
+                                        VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
                                         VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                        VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
-                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy
+                                        VortexCrudForeignKeyResolutionStrategy<FieldId, ModelClass> foreignKeyResolutionStrategy,
+                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId, ModelClass> manyToManyPersistenceStrategy
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver, manyToManyPersistenceStrategy));
     }
 
-    public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId>> getFactories() {
+    public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass> > getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudDialogFactory<DataStoreId, FieldId> getFactory(Class<?> type) {
+    public VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>  getFactory(Class<?> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<?> key, VortexCrudDialogFactory<DataStoreId, FieldId> factory) {
+    public void addFactory(Class<?> key, VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>  factory) {
         factories.put(key, factory);
     }
 }

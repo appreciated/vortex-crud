@@ -12,21 +12,21 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId> implements VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId> {
+public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId, ModelClass> implements VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, ModelClass> {
 
-    private final HashMap<String, VortexCrudListColumnCallback<DataStoreId, FieldId>> callbacks = new HashMap<>();
+    private final HashMap<String, VortexCrudListColumnCallback<DataStoreId, FieldId, ModelClass>> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistry(VortexCrudFileProviderRegistry fileProviderRegistry) {
         callbacks.put("default", new DefaultListColumnImplCallback<>(fileProviderRegistry));
     }
 
     @Override
-    public VortexCrudListColumnCallback<DataStoreId, FieldId> getCallback(RouteRenderer<DataStoreId, FieldId> config) {
+    public VortexCrudListColumnCallback<DataStoreId, FieldId, ModelClass> getCallback(RouteRenderer<DataStoreId, FieldId, ModelClass> config) {
         return callbacks.get("default");
     }
 
     @Override
-    public void addCallback(String key, VortexCrudListColumnCallback<DataStoreId, FieldId> factory) {
+    public void addCallback(String key, VortexCrudListColumnCallback<DataStoreId, FieldId, ModelClass> factory) {
         callbacks.put(key, factory);
     }
 }

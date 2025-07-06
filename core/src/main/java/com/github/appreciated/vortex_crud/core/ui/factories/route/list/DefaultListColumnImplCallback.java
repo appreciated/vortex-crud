@@ -3,14 +3,13 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
-public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements VortexCrudListColumnCallback<DataStoreId, FieldId> {
+public class DefaultListColumnImplCallback<DataStoreId, FieldId, ModelClass>  implements VortexCrudListColumnCallback<DataStoreId, FieldId, ModelClass>  {
 
     private final VortexCrudFileProviderRegistry registry;
 
@@ -19,7 +18,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Vort
     }
 
     @Override
-    public void addColumn(Grid<GenericEntity> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField) {
+    public void addColumn(Grid<ModelClass> grid, InternalFormElement<DataStoreId, FieldId, ModelClass>  field, Object table, String fieldName, Field<DataStoreId, FieldId, ModelClass>  dataStoreField) {
         // TODO Check if cast can be removed, removal causes compile issues
         if (((Class<? extends VortexCrudFieldFactory>)dataStoreField.getFactory()) == ImageFieldFactory.class) {
             if (dataStoreField.getConfiguration() == null) {

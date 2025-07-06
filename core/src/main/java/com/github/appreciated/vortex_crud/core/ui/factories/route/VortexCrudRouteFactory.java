@@ -9,11 +9,11 @@ import jakarta.annotation.Nullable;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface VortexCrudRouteFactory<DataStoreId, FieldId> {
+public interface VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass> {
 
     Component renderRoute(
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+            VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     );
 

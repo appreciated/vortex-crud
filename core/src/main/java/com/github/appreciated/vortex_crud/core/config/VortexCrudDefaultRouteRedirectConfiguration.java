@@ -21,25 +21,25 @@ import java.util.Optional;
  */
 
 @Component
-public class VortexCrudDefaultRouteRedirectConfiguration<DataStoreId, FieldId> implements VaadinServiceInitListener {
+public class VortexCrudDefaultRouteRedirectConfiguration<DataStoreId, FieldId, ModelClass> implements VaadinServiceInitListener {
 
-    private final Map<String, RouteRenderer<DataStoreId, FieldId>> routeConfigs;
-    private static Optional<? extends Map.Entry<String, RouteRenderer<?, ?>>> defaultRoute;
+    private final Map<String, RouteRenderer<DataStoreId, FieldId, ModelClass>> routeConfigs;
+    private static Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>> defaultRoute;
 
-    public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<DataStoreId, FieldId> configService) {
+    public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService) {
         this.routeConfigs = configService.getConfiguration().getRouteRenderers();
     }
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<? extends Map.Entry<String, RouteRenderer<DataStoreId, FieldId>>> defaultRoutes = routeConfigs
+        List<? extends Map.Entry<String, RouteRenderer<DataStoreId, FieldId, ModelClass>>> defaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
         if (defaultRoutes.size() > 1) {
             throw new IllegalStateException("More than one default route configured");
         } else {
-            defaultRoute = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?>>>) (Optional<?>) defaultRoutes.stream().findFirst();
+            defaultRoute = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>>) (Optional<?>) defaultRoutes.stream().findFirst();
 
         }
         if (defaultRoute.isPresent()) {

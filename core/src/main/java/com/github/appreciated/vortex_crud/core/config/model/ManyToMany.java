@@ -11,7 +11,7 @@ import java.util.List;
  * @param <DataStoreId> The type used to identify data stores
  * @param <FieldId> The type used to identify fields in the data store
  */
-public interface ManyToMany<DataStoreId, FieldId> {
+public interface ManyToMany<DataStoreId, FieldId, ModelClass> {
 
     /**
      * Gets data from the many-to-many relationship.
@@ -24,10 +24,10 @@ public interface ManyToMany<DataStoreId, FieldId> {
      * @return A list of entities matching the criteria
      */
     <T> List<T> getData(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, 
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
             String foreignKeyValue, 
-            VortexCrudDataStore<FieldId> dataStore, 
-            CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
+            VortexCrudDataStore<FieldId, ModelClass> dataStore,
+            CollectionConfiguration<DataStoreId, FieldId, ModelClass> collectionConfiguration,
             Class<T> modelClass
     );
 
@@ -37,7 +37,7 @@ public interface ManyToMany<DataStoreId, FieldId> {
      * @param collectionConfiguration The collection configuration
      * @return The reference field ID
      */
-    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration);
+    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId, ModelClass> collectionConfiguration);
 
     /**
      * Gets the associative data store for the many-to-many relationship.

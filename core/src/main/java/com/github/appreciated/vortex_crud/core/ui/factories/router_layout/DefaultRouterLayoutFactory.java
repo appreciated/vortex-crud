@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class DefaultRouterLayoutFactory<DataStoreId, FieldId> implements VortexCrudRouterLayoutFactory {
+public class DefaultRouterLayoutFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudRouterLayoutFactory {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
+    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService;
 
-    public DefaultRouterLayoutFactory(VortexCrudConfigService<DataStoreId, FieldId> configService) {
+    public DefaultRouterLayoutFactory(VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService) {
         this.configService = configService;
     }
 

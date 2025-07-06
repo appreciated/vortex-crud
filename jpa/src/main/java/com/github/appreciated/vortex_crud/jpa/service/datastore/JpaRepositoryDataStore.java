@@ -74,7 +74,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
 
 
     @Transactional
-    public Object insertRecord(GenericEntity entity) {
+    public Object insertRecord(ModelClass entity) {
         // Check if entity has an ID (for update case)
         Object id = entity.get("id");
         if (id != null) {
@@ -186,7 +186,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
      * @param entity A map of column names and new entity to update.
      */
     @Transactional
-    public void updateRecordById(Object id, GenericEntity entity) {
+    public void updateRecordById(Object id, ModelClass entity) {
         entity.put("id", mapper.convertToFieldType(id, fields.get("id").getType()));
         insertRecord(entity);
     }
@@ -223,7 +223,7 @@ public class JpaRepositoryDataStore<T> implements VortexCrudDataStore<String> {
         return (int) repository.count(example);
     }
 
-    private void updatePropertiesForField(GenericEntity entity, String targetField, Object targetValue) {
+    private void updatePropertiesForField(ModelClass entity, String targetField, Object targetValue) {
         java.lang.reflect.Field field = fields.get(targetField);
         if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class) {
             Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
