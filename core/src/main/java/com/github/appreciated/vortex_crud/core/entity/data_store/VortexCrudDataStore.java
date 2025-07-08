@@ -71,10 +71,9 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
     /**
      * Updates a record by ID.
      *
-     * @param id     The ID of the record to update
      * @param entity The entity with updated values
      */
-    void updateRecordById(Object id, ModelClass entity);
+    void updateRecordById(ModelClass entity);
 
     /**
      * Deletes a record by ID.

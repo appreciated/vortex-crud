@@ -27,11 +27,11 @@ public class JooqManyToMany<DataModel extends TableRecord<?>> implements ManyToM
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
         // of resolving the following data.
-        VortexCrudDataStore<TableField<?, ?>, ?> associativeDataStore = dataStoreFactoryRegistry.getDataStore(sourceDataStore);
-        List<DataModel> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
+        VortexCrudDataStore<TableField<?, ?>, ?> associativeDataStore = dataStoreFactoryRegistry.getDataStore(null);
+        List<DataModel> associativeRecords = (List<DataModel>) associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
         List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(associativeTargetIdField.getName())).map(Object::toString).toList();
         return foreignKeyValue == null ? List.of() :
-                targetDataStore.getRecordsFromTableWhereColumnIn(dataStoreField, associativeRecordIds, 0, Integer.MAX_VALUE);
+                dataStore.getRecordsFromTableWhereColumnIn(dataStoreField, associativeRecordIds, 0, Integer.MAX_VALUE);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class JooqManyToMany<DataModel extends TableRecord<?>> implements ManyToM
 
     @Override
     public DataModel getAssociativeDataStore() {
-        return sourceDataStore;
+        return null;
     }
 
     @Override

@@ -16,8 +16,9 @@ public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId> implements 
 
     private final HashMap<String, VortexCrudListColumnCallback<DataStoreId, FieldId>> callbacks = new HashMap<>();
 
-    public DefaultListColumnCallbackRegistry(VortexCrudFileProviderRegistry fileProviderRegistry) {
-        callbacks.put("default", new DefaultListColumnImplCallback<>(fileProviderRegistry));
+    public DefaultListColumnCallbackRegistry(VortexCrudFileProviderRegistry fileProviderRegistry, 
+                                         com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService) {
+        callbacks.put("default", new DefaultListColumnImplCallback<DataStoreId, FieldId>(fileProviderRegistry, reflectionService));
     }
 
     @Override

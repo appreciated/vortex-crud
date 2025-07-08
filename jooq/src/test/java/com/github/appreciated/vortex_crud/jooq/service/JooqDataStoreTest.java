@@ -1,7 +1,5 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
-import com.github.appreciated.vortex_crud.jooq.models.Tables;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
@@ -24,12 +22,12 @@ class JooqDataStoreTest {
     @Autowired
     private DSLContext dslContext;
 
-    private JooqDataStore service;
+    private JooqDataStore<TestTableRecord> service;
 
     @BeforeEach
     void setUp() {
         createTestTable();
-        service = new JooqDataStore(TestTableRecord.class, dslContext);
+        service = new JooqDataStore<>(TestTableRecord.class, dslContext);
     }
 
     @AfterEach
@@ -43,16 +41,16 @@ class JooqDataStoreTest {
 
     @Test
     void testInsertRecord() {
-        GenericEntity values = new GenericEntity();
-        values.put("name", "John Doe");
-        values.put("age", 30);
+        TestTableRecord values = new TestTableRecord();
+        values.setName("John Doe");
+        values.setAge(30);
 
         service.insertRecord(values);
 
-        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
+        List<TestTableRecord> records = service.getRecordsFromTable(0, 10);
         assertEquals(1, records.size());
 
-        GenericEntity record = records.get(0);
+        TestTableRecord record = records.get(0);
         assertEquals("John Doe", record.get("name"));
         assertEquals(30, record.get("age"));
     }
@@ -62,14 +60,14 @@ class JooqDataStoreTest {
         insertTestRecord("Alice", 25);
         insertTestRecord("Bob", 35);
 
-        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
+        List<TestTableRecord> records = service.getRecordsFromTable(0, 10);
         assertEquals(2, records.size());
 
-        GenericEntity firstRecord = records.get(0);
+        TestTableRecord firstRecord = records.get(0);
         assertEquals("Alice", firstRecord.get("name"));
         assertEquals(25, firstRecord.get("age"));
 
-        GenericEntity secondRecord = records.get(1);
+        TestTableRecord secondRecord = records.get(1);
         assertEquals("Bob", secondRecord.get("name"));
         assertEquals(35, secondRecord.get("age"));
     }
@@ -77,7 +75,7 @@ class JooqDataStoreTest {
     @Test
     void testGetRecordById() {
         insertTestRecord("Alice", 25);
-        GenericEntity record = service.getRecordById(1);
+        TestTableRecord record = service.getRecordById(1);
         assertNotNull(record);
         assertEquals("Alice", record.get("name"));
         assertEquals(25, record.get("age"));
@@ -86,13 +84,13 @@ class JooqDataStoreTest {
     @Test
     void testUpdateRecordById() {
         insertTestRecord("Alice", 25);
-        GenericEntity updatedValues = new GenericEntity();
-        updatedValues.put("name", "Alice Updated");
-        updatedValues.put("age", 30);
+        TestTableRecord updatedValues = new TestTableRecord();
+        updatedValues.setName("Alice Updated");
+        updatedValues.setAge(30);
 
-        service.updateRecordById(1, updatedValues);
+        service.updateRecordById(updatedValues);
 
-        GenericEntity updatedRecord = service.getRecordById(1);
+        TestTableRecord updatedRecord = service.getRecordById(1);
         assertNotNull(updatedRecord);
         assertEquals("Alice Updated", updatedRecord.get("name"));
         assertEquals(30, updatedRecord.get("age"));
@@ -103,7 +101,7 @@ class JooqDataStoreTest {
         insertTestRecord("Alice", 25);
         service.deleteRecordById(1);
 
-        GenericEntity record = service.getRecordById(1);
+        TestTableRecord record = service.getRecordById(1);
         assertNull(record);
     }
 
@@ -114,14 +112,14 @@ class JooqDataStoreTest {
 
         service.deleteAllRecords();
 
-        List<GenericEntity> records = service.getRecordsFromTable(0, 10);
+        List<TestTableRecord> records = service.getRecordsFromTable(0, 10);
         assertTrue(records.isEmpty());
     }
 
     private void insertTestRecord(String name, int age) {
-        GenericEntity values = new GenericEntity();
-        values.put("name", name);
-        values.put("age", age);
+        TestTableRecord values = new TestTableRecord();
+        values.setName( name);
+        values.setAge(age);
         service.insertRecord(values);
     }
 

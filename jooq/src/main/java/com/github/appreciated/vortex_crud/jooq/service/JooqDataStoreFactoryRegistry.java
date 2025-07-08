@@ -20,23 +20,23 @@ import java.util.Optional;
  */
 
 @Service
-public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?,?>> {
+public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?, ?>> {
 
-    private final HashMap<Class<? extends TableRecord<?>>, VortexCrudDataStore<TableField<?,?>>> factories = new HashMap<>();
+    private final HashMap<Class<? extends TableRecord<?>>, VortexCrudDataStore<TableField<?, ?>, ?>> factories = new HashMap<>();
 
-    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<Class<? extends TableRecord<?>>, TableField<?,?>> configService, DSLContext dslContext) {
-        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<Class<? extends TableRecord<?>>, TableField<?,?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
+    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<Class<? extends TableRecord<?>>, TableField<?, ?>> configService, DSLContext dslContext) {
+        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<Class<? extends TableRecord<?>>, TableField<?, ?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             Class<? extends TableRecord<?>> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }
     }
 
-    public VortexCrudDataStore<TableField<?,?>> getDataStore(Class<? extends TableRecord<?>> table) {
+    public VortexCrudDataStore<TableField<?, ?>, ?> getDataStore(Class<? extends TableRecord<?>> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override
-    public void addFactory(Class<? extends TableRecord<?>> key, VortexCrudDataStore<TableField<?,?>> factory) {
+    public void addFactory(Class<? extends TableRecord<?>> key, VortexCrudDataStore<TableField<?, ?>, ?> factory) {
         factories.put(key, factory);
     }
 }

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaDataStoreConfig extends DataStoreConfig<JpaRepository<?, ?>, String> {
     public JpaDataStoreConfig(Class<? extends VortexCrudDataStore> factory) {
-        super((Class<? extends VortexCrudDataStore<String>>) factory);
+        super((Class<? extends VortexCrudDataStore<String, ?>>) factory);
     }
 
     public static DataStoreConfig.Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudDataStore> factory) {
-        return new DataStoreConfig.Builder<>(new DataStoreConfig<JpaRepository<?, ?>, String>((Class<? extends VortexCrudDataStore<String>>) factory));
+        return new DataStoreConfig.Builder<>(new DataStoreConfig<JpaRepository<?, ?>, String>((Class<? extends VortexCrudDataStore<String, ?>>) factory));
     }
 }

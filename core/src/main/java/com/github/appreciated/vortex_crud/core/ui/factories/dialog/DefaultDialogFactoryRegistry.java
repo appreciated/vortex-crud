@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersi
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
@@ -28,11 +29,12 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Vorte
                                         VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                         VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                         VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
-                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId,?> manyToManyPersistenceStrategy
+                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy,
+                                        ReflectionService reflectionService
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver, manyToManyPersistenceStrategy));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, resolver, manyToManyPersistenceStrategy, reflectionService));
     }
 
     public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId>> getFactories() {

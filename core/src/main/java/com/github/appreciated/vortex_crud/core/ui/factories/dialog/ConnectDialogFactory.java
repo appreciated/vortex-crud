@@ -27,13 +27,13 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, ?> manyToManyPersistenceStrategy;
+    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy;
     private final ReflectionService reflectionService;
 
     public ConnectDialogFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-            ManyToManyPersistenceStrategy<DataStoreId, FieldId, ?> manyToManyPersistenceStrategy,
+            ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy,
             ReflectionService reflectionService) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
@@ -66,7 +66,16 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Fetch available connections
         List<?> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
-        List<?> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(dataStore, manyToMany, dataStore.getModelClass());
+        // Use reflection to call getManyToMany with the correct type
+        List<?> currentAssociativeEntries;
+        try {
+            java.lang.reflect.Method getManyToManyMethod = manyToManyPersistenceStrategy.getClass().getMethod("getManyToMany", 
+                VortexCrudDataStore.class, ManyToMany.class, Class.class);
+            currentAssociativeEntries = (List<?>) getManyToManyMethod.invoke(manyToManyPersistenceStrategy, 
+                dataStore, manyToMany, Object.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to call getManyToMany", e);
+        }
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(entity -> reflectionService.getValue(entity, fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
@@ -76,7 +85,19 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Create a list of selectable items
         MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(Object -> collectionConfiguration.getChildren().stream().map(Object::getString).collect(Collectors.joining(",")));
+        connectionList.setItemLabelGenerator(obj -> {
+            // Use reflection to get values from the object based on the children configuration
+            return collectionConfiguration.getChildren().stream()
+                .map(child -> {
+                    try {
+                        Object value = reflectionService.getValue(obj, child.toString());
+                        return value != null ? value.toString() : "";
+                    } catch (Exception e) {
+                        return "";
+                    }
+                })
+                .collect(Collectors.joining(","));
+        });
         connectionList.setValue(currentlySelectedConnections);
 
         layout.add(connectionList);
@@ -97,7 +118,13 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                 reflectionService.setValue(newAssociation, fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
                 return newAssociation;
             }).toList();
-            manyToManyPersistenceStrategy.insert(toBeInserted);
+            // Use reflection to call insert with the correct type
+            try {
+                java.lang.reflect.Method insertMethod = manyToManyPersistenceStrategy.getClass().getMethod("insert", List.class, Class.class);
+                insertMethod.invoke(manyToManyPersistenceStrategy, toBeInserted, Object.class);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to call insert", e);
+            }
 
             // Remove the connections that are no longer selected
             Set<String> newSelectedIds = newSelectedConnections.stream()
@@ -105,15 +132,22 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                     .collect(Collectors.toSet());
 
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
-            List<Object> toBeDeleted = currentAssociativeEntries.stream()
+            List<?> entriesToDelete = currentAssociativeEntries.stream()
                     .filter(entry -> {
-                        Object targetIdObj = entry.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
+                        Object targetIdObj = reflectionService.getValue(entry, fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
                         if (targetIdObj == null) {
                             return false;
                         }
                         return !newSelectedIds.contains(targetIdObj.toString());
                     }).toList();
-            manyToManyPersistenceStrategy.deleteAll(toBeDeleted);
+
+            // Use reflection to call deleteAll with the correct type
+            try {
+                java.lang.reflect.Method deleteAllMethod = manyToManyPersistenceStrategy.getClass().getMethod("deleteAll", List.class, Class.class);
+                deleteAllMethod.invoke(manyToManyPersistenceStrategy, entriesToDelete, Object.class);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to call deleteAll", e);
+            }
 
             listener.onStore();
             dialog.close();

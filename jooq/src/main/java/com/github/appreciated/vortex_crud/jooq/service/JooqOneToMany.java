@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
@@ -18,9 +17,9 @@ public class JooqOneToMany implements OneToMany<Class<? extends TableRecord<?>>,
     }
 
     @Override
-    public List<GenericEntity> getData(String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>> dataStore, CollectionConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> collectionConfiguration) {
+    public List<Class<? extends TableRecord<?>>> getData(String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, CollectionConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> collectionConfiguration) {
         return foreignKeyValue == null ? List.of() :
-                dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
+                (List<Class<? extends TableRecord<?>>>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
 public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId,FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudConfigService<DataStoreId, FieldId> configService;
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactory;
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
@@ -26,6 +26,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService;
 
     public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                VortexCrudConfigService<DataStoreId, FieldId> configService,
@@ -34,7 +35,8 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
                                FormCreator<DataStoreId, FieldId> formCreator,
                                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                VortexCrudFileProviderRegistry fileProviderRegistry,
-                               VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
+                               VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                               com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -44,6 +46,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.reflectionService = reflectionService;
     }
 
     @Override
@@ -52,7 +55,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView<>(routeRenderer.getDataStore(),
+        return new KanbanView<DataStoreId, FieldId>(routeRenderer.getDataStore(),
                 routeRenderer,
                 dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStore()),
                 routeFactory,
@@ -63,8 +66,9 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
                 fileProviderRegistry,
                 fieldNameResolver,
                 formCreator,
-                detailRouteSetting
-               );
+                detailRouteSetting,
+                reflectionService
+        );
     }
 
     @Override

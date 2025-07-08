@@ -16,7 +16,7 @@ import java.util.List;
  * JPA implementation of the ManyToMany interface.
  * Uses reflection to work with model classes directly.
  */
-public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
+public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String> {
 
     private final String referenceField;
 
@@ -25,13 +25,7 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
     }
 
     @Override
-    public <T> List<T> getData(
-            VortexCrudDataStoreFactoryRegistry<JpaRepository<?, ?>, String> dataStoreFactoryRegistry,
-            String foreignKeyValue,
-            VortexCrudDataStore<String> dataStore,
-            CollectionConfiguration<JpaRepository<?, ?>, String> collectionConfiguration,
-            Class<T> modelClass) {
-
+    public <ModelClass1> List<ModelClass1> getData(VortexCrudDataStoreFactoryRegistry<ModelClass, String> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<String, ModelClass1> dataStore, CollectionConfiguration<ModelClass, String> collectionConfiguration) {
         if (foreignKeyValue == null) {
             return List.of();
         }
@@ -51,6 +45,11 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
         }
 
         return List.of();
+    }
+
+    @Override
+    public String getReferenceField(CollectionConfiguration<ModelClass, String> collectionConfiguration) {
+        return "";
     }
 
     /**
@@ -73,7 +72,7 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
      * Creates a new instance of the entity class and sets its ID field.
      *
      * @param entityClass The entity class to instantiate
-     * @param id The ID value to set
+     * @param id          The ID value to set
      * @return A new instance of the entity class with ID set
      */
     private <T> T createEntityInstance(Class<T> entityClass, Object id) {
@@ -99,7 +98,7 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
     /**
      * Gets a property value from an object using reflection.
      *
-     * @param obj The object to get the property from
+     * @param obj          The object to get the property from
      * @param propertyName The name of the property
      * @return The property value
      */
@@ -122,13 +121,12 @@ public class JpaManyToMany implements ManyToMany<JpaRepository<?, ?>, String> {
         }
     }
 
-    @Override
-    public String getReferenceField(CollectionConfiguration<JpaRepository<?, ?>, String> collectionConfiguration) {
+    public String getReferenceField() {
         return referenceField;
     }
 
     @Override
-    public JpaRepository<?, ?> getAssociativeDataStore() {
+    public ModelClass getAssociativeDataStore() {
         return null; // Not needed for JPA implementation
     }
 

@@ -28,18 +28,17 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
 
     public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
                                        JpaFieldService jpaFieldService,
-                                       JpaGenericEntityMapper mapper,
                                        JpaFieldTypeResolverService fieldTypeResolverService) {
         this.jpaFieldService = jpaFieldService;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore<>(repository, mapper, fieldTypeResolverService)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore<>(repository, fieldTypeResolverService)));
     }
 
-    public VortexCrudDataStore<String> getDataStore(JpaRepository<?, ?> table) {
+    public VortexCrudDataStore<String, ?> getDataStore(JpaRepository<?, ?> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override
-    public void addFactory(JpaRepository<?, ?> key, VortexCrudDataStore<String> factory) {
+    public void addFactory(JpaRepository<?, ?> key, VortexCrudDataStore<String, ?> factory) {
         factories.put(key, (JpaRepositoryDataStore<String>) factory);
         modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), key);
     }
@@ -55,7 +54,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     }
 
     private DataStoreConfig.Builder<JpaRepository<?, ?>, String> createBuilder(Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> test) {
-        return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String>>) test.getValue().getClass()));
+        return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String, ?>>) test.getValue().getClass()));
     }
 
     public JpaRepositoryDataStore<String> getDataStore(Class<?> model) {

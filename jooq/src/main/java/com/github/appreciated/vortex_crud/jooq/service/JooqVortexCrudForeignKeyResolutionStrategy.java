@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.jooq.TableField;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +15,16 @@ import org.springframework.stereotype.Service;
 public class JooqVortexCrudForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy<TableField<?, ?>> {
 
 
+    private final ReflectionService reflectionService;
+
+    public JooqVortexCrudForeignKeyResolutionStrategy(ReflectionService reflectionService) {
+        this.reflectionService = reflectionService;
+    }
 
     @Override
-    public void resolveForeignKey(GenericEntity entity,
-                                  TableField<?, ?> foreignKeyField,
-                                  String foreignKeyValue,
-                                  VortexCrudDataStore<TableField<?, ?>> dataStore,
-                                  VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver) {
+    public void resolveForeignKey(Object entity, TableField<?, ?> foreignKeyField, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver) {
         if (foreignKeyField != null && foreignKeyValue != null) {
-            entity.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+            reflectionService.setValue(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
         }
     }
 }

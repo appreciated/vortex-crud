@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

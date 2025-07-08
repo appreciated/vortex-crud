@@ -28,7 +28,7 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
-    private VortexCrudDataStore<FieldId, ?> dataStore;
+    private VortexCrudDataStore<FieldId, Object> dataStore;
 
     public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId> configService,
                              VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -52,13 +52,13 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
                          OnStoreListener listener,
                          FormCreator<DataStoreId, FieldId> formCreator) {
 
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStore);
+        this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
         Object recordById = this.dataStore.getRecordById(entityId);
         if (recordById == null) {
-            recordById = new Object();
+            recordById = this.dataStore.newInstance();
         }
 
         if (DataStoreUtil.isNew(recordById)) {
@@ -94,7 +94,7 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
                         dataStore.insertRecord(entity);
                     }
                 } else {
-                    dataStore.updateRecordById(DataStoreUtil.getId(entity), entity);
+                    dataStore.updateRecordById(entity);
                 }
                 dialog.close();
                 listener.onStore();

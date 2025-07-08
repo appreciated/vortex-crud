@@ -10,9 +10,8 @@ import java.util.List;
  *
  * @param <DataStoreId> The type used to identify data stores
  * @param <FieldId> The type used to identify fields in the data store
- * @param <ModelClass> The model class type
  */
-public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, ModelClass> {
+public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId> {
 
     /**
      * Retrieves records from a data store based on many-to-many relationship.
@@ -22,10 +21,10 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, ModelClass>
      * @param modelClass The class of the model to retrieve
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getManyToMany(
+    List<DataStoreId> getManyToMany(
             VortexCrudDataStore<FieldId, ?> dataStore,
             ManyToMany<DataStoreId, FieldId> manyToMany,
-            Class<ModelClass> modelClass
+            Class<DataStoreId> modelClass
     );
 
     /**

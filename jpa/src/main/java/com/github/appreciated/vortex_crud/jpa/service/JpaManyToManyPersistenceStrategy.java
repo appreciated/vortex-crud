@@ -11,14 +11,13 @@ import java.util.List;
  * JPA implementation of the ManyToManyPersistenceStrategy.
  * Uses reflection to work with model classes directly instead of GenericEntity.
  *
- * @param <T> The model class type
+ * @param <DataStoreId> The model class type
  */
 @Component
-public class JpaManyToManyPersistenceStrategy<T> implements ManyToManyPersistenceStrategy<String, String, T> {
+public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String> {
 
     @Override
-    public List<T> getManyToMany(VortexCrudDataStore<String> dataStore, ManyToMany<String, String> manyToMany, Class<T> modelClass) {
-        // Implementation will use reflection to work with the model class
+    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String> manyToMany, Class<DataStoreId> modelClass) {
         return List.of();
     }
 
