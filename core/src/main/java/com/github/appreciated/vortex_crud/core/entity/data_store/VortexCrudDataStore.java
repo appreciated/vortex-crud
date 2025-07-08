@@ -8,75 +8,80 @@ import java.util.List;
  *
  * @param <FieldId> The type used to identify fields in the data store
  */
-public interface VortexCrudDataStore<FieldId, ModelClass> {
-
-    Class<ModelClass> getModelClass();
+public interface VortexCrudDataStore<FieldId> {
 
     /**
      * Inserts a record into the data store.
      *
      * @param entity The entity to insert
+     * @param modelClass The class of the model to insert
      * @return The ID of the inserted record
      */
-    ModelClass insertRecord(ModelClass entity);
+    <T> Object insertRecord(T entity, Class<T> modelClass);
 
     /**
      * Gets records from the data store with pagination.
      *
      * @param offset The offset for pagination
-     * @param limit  The limit for pagination
+     * @param limit The limit for pagination
+     * @param modelClass The class of the model to retrieve
      * @return A list of records
      */
-    List<ModelClass> getRecordsFromTable(int offset, int limit);
+    <T> List<T> getRecordsFromTable(int offset, int limit, Class<T> modelClass);
 
     /**
      * Gets records from the data store where a column equals a value, with pagination.
      *
      * @param filterField The field to filter on
      * @param filterValue The value to filter by
-     * @param offset      The offset for pagination
-     * @param limit       The limit for pagination
+     * @param offset The offset for pagination
+     * @param limit The limit for pagination
+     * @param modelClass The class of the model to retrieve
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnEquals(FieldId filterField, Object filterValue, int offset, int limit);
+    <T> List<T> getRecordsFromTableWhereColumnEquals(FieldId filterField, Object filterValue, int offset, int limit, Class<T> modelClass);
 
     /**
      * Gets records from the data store where a column is in a list of values, with pagination.
      *
      * @param filterField The field to filter on
      * @param filterValue The list of values to filter by
-     * @param offset      The offset for pagination
-     * @param limit       The limit for pagination
+     * @param offset The offset for pagination
+     * @param limit The limit for pagination
+     * @param modelClass The class of the model to retrieve
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit);
+    <T> List<T> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit, Class<T> modelClass);
 
     /**
      * Gets records from the data store where a column is like a value, with pagination.
      *
      * @param filterField The field to filter on
      * @param filterValue The value to filter by
-     * @param offset      The offset for pagination
-     * @param limit       The limit for pagination
+     * @param offset The offset for pagination
+     * @param limit The limit for pagination
+     * @param modelClass The class of the model to retrieve
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnLike(FieldId filterField, Object filterValue, int offset, int limit);
+    <T> List<T> getRecordsFromTableWhereColumnLike(FieldId filterField, Object filterValue, int offset, int limit, Class<T> modelClass);
 
     /**
      * Gets a record by ID.
      *
      * @param id The ID of the record to retrieve
+     * @param modelClass The class of the model to retrieve
      * @return The record with the specified ID
      */
-    ModelClass getRecordById(Object id);
+    <T> T getRecordById(Object id, Class<T> modelClass);
 
     /**
      * Updates a record by ID.
      *
-     * @param id     The ID of the record to update
+     * @param id The ID of the record to update
      * @param entity The entity with updated values
+     * @param modelClass The class of the model to update
      */
-    void updateRecordById(Object id, ModelClass entity);
+    <T> void updateRecordById(Object id, T entity, Class<T> modelClass);
 
     /**
      * Deletes a record by ID.
@@ -114,12 +119,12 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      */
     java.lang.reflect.Field getField(String foreignKeyField);
 
-    default ModelClass createModelInstance() {
-        try {
-            return getModelClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    /**
+     * For backward compatibility with existing code that uses GenericEntity.
+     * This method should be removed once all code is migrated to use model classes directly.
+     *
+     * @param id The ID of the record to retrieve
+     * @return The record with the specified ID as an Object
+     */
+    Object getRecordById(Object id);
 }

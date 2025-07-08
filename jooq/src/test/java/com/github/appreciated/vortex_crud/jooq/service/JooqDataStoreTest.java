@@ -75,7 +75,7 @@ class JooqDataStoreTest {
     }
 
     @Test
-    void testGetModelClassById() {
+    void testGetRecordById() {
         insertTestRecord("Alice", 25);
         GenericEntity record = service.getRecordById(1);
         assertNotNull(record);
