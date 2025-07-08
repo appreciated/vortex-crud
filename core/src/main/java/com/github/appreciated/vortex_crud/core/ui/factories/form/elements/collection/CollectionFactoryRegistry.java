@@ -18,25 +18,25 @@ import java.util.Optional;
  */
 
 @Service
-public class CollectionFactoryRegistry<DataStoreId, FieldId, ModelClass>  implements VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, ModelClass>  {
+public class CollectionFactoryRegistry<DataStoreId, FieldId> implements VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> {
 
-    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass> > factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId>> factories = new HashMap<>();
 
-    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass>  dataStoreFactoryRegistry, VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass>  dialogFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
+    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
         factories.put(ListCollectionFactory.class, new ListCollectionFactory<>(dataStoreFactoryRegistry, dialogFactoryRegistry, resolver));
     }
 
-    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass> > getFactories() {
+    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>  getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass> > factory) {
+    public VortexCrudCollectionFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass> > key, VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>  factory) {
+    public void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> key, VortexCrudCollectionFactory<DataStoreId, FieldId> factory) {
         factories.put(key, factory);
     }
 }

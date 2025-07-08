@@ -5,13 +5,13 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class CollectionConfiguration<DataStoreId, FieldId, ModelClass> {
+public class CollectionConfiguration<DataStoreId, FieldId> {
 
     private DataStoreId dataStore;
 
-    private OneToMany<DataStoreId, FieldId, ModelClass> oneToMany;
+    private OneToMany<DataStoreId, FieldId> oneToMany;
 
-    private ManyToMany<DataStoreId, FieldId, ModelClass> manyToMany;
+    private ManyToMany<DataStoreId, FieldId> manyToMany;
 
     private List<String> children;
 
@@ -27,19 +27,19 @@ public class CollectionConfiguration<DataStoreId, FieldId, ModelClass> {
         this.dataStore = dataStore;
     }
 
-    public OneToMany<DataStoreId, FieldId, ModelClass> getOneToMany() {
+    public OneToMany<DataStoreId, FieldId> getOneToMany() {
         return oneToMany;
     }
 
-    public void setOneToMany(OneToMany<DataStoreId, FieldId, ModelClass> oneToMany) {
+    public void setOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
         this.oneToMany = oneToMany;
     }
 
-    public ManyToMany<DataStoreId, FieldId, ModelClass> getManyToMany() {
+    public ManyToMany<DataStoreId, FieldId> getManyToMany() {
         return manyToMany;
     }
 
-    public void setManyToMany(ManyToMany<DataStoreId, FieldId, ModelClass> manyToMany) {
+    public void setManyToMany(ManyToMany<DataStoreId, FieldId> manyToMany) {
         this.manyToMany = manyToMany;
     }
 
@@ -51,39 +51,39 @@ public class CollectionConfiguration<DataStoreId, FieldId, ModelClass> {
         this.children = children;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId, ModelClass> {
+    public abstract static class Builder<DataStoreId, FieldId> {
 
-        private final CollectionConfiguration<DataStoreId, FieldId, ModelClass> product;
+        private final CollectionConfiguration<DataStoreId, FieldId> product;
 
-        protected Builder(CollectionConfiguration<DataStoreId, FieldId, ModelClass> product) {
+        protected Builder(CollectionConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withOneToMany(OneToMany<DataStoreId, FieldId, ModelClass> oneToMany) {
+        public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
             product.oneToMany = oneToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withManyToMany(ManyToMany<DataStoreId, FieldId, ModelClass> manyToMany) {
+        public Builder<DataStoreId, FieldId> withManyToMany(ManyToMany<DataStoreId, FieldId> manyToMany) {
             product.manyToMany = manyToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withChildren(List<String> children) {
+        public Builder<DataStoreId, FieldId> withChildren(List<String> children) {
             product.children = children;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withChildren(String... children) {
+        public Builder<DataStoreId, FieldId> withChildren(String... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> addChildren(String item) {
+        public Builder<DataStoreId, FieldId> addChildren(String item) {
             product.children.add(item);
             return this;
         }
 
-        public CollectionConfiguration<DataStoreId, FieldId, ModelClass> build() {
+        public CollectionConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

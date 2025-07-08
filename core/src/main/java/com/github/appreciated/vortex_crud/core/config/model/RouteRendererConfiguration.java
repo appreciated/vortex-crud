@@ -7,7 +7,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> {
+public class RouteRendererConfiguration<DataStoreId, FieldId> {
 
     private Class<? extends VortexCrudItemFactory<FieldId>> factory;
 
@@ -25,7 +25,7 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> {
 
     private FieldId filterField;
 
-    private List<InternalFormElement<DataStoreId, FieldId, ModelClass>> children;
+    private List<InternalFormElement<DataStoreId, FieldId>> children;
 
     public RouteRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
         this.factory = factory;
@@ -95,73 +95,73 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> {
         this.filterField = filterField;
     }
 
-    public List<InternalFormElement<DataStoreId, FieldId, ModelClass>> getChildren() {
+    public List<InternalFormElement<DataStoreId, FieldId>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<InternalFormElement<DataStoreId, FieldId, ModelClass>> children) {
+    public void setChildren(List<InternalFormElement<DataStoreId, FieldId>> children) {
         this.children = children;
     }
 
-    public static class Builder<DataStoreId, FieldId, ModelClass> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private final RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> product;
+        private final RouteRendererConfiguration<DataStoreId, FieldId> product;
 
-        public Builder(RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> product) {
+        public Builder(RouteRendererConfiguration<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withTitleField(FieldId titleField) {
+        public Builder<DataStoreId,FieldId> withTitleField(FieldId titleField) {
             product.titleField = titleField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withDescriptionField(FieldId descriptionField) {
+        public Builder<DataStoreId,FieldId> withDescriptionField(FieldId descriptionField) {
             product.descriptionField = descriptionField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withColumnField(FieldId columnField) {
+        public Builder<DataStoreId,FieldId> withColumnField(FieldId columnField) {
             product.columnField = columnField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withImageField(FieldId imageField) {
+        public Builder<DataStoreId,FieldId> withImageField(FieldId imageField) {
             product.imageField = imageField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
+        public Builder<DataStoreId,FieldId> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.imageFactory = imageFactory;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withInlineEdit(boolean inlineEdit) {
+        public Builder<DataStoreId,FieldId> withInlineEdit(boolean inlineEdit) {
             product.inlineEdit = inlineEdit;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withFilterField(FieldId filterField) {
+        public Builder<DataStoreId,FieldId> withFilterField(FieldId filterField) {
             product.filterField = filterField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withChildren(List<InternalFormElement<DataStoreId, FieldId, ModelClass>> children) {
+        public Builder<DataStoreId,FieldId> withChildren(List<InternalFormElement<DataStoreId, FieldId>> children) {
             product.children = children;
             return this;
         }
 
         @SafeVarargs
-        public final <T extends InternalFormElement<DataStoreId, FieldId, ModelClass>> Builder<DataStoreId, FieldId, ModelClass> withChildren(T... children) {
+        public final <T extends InternalFormElement<DataStoreId, FieldId>> Builder<DataStoreId,FieldId> withChildren(T... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> addChildren(InternalFormElement<DataStoreId, FieldId, ModelClass> item) {
+        public Builder<DataStoreId,FieldId> addChildren(InternalFormElement<DataStoreId, FieldId> item) {
             product.children.add(item);
             return this;
         }
 
-        public RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> build() {
+        public RouteRendererConfiguration<DataStoreId, FieldId> build() {
             return product;
         }
     }

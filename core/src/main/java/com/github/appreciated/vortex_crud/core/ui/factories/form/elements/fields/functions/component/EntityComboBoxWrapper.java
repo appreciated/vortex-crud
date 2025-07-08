@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -13,15 +14,15 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-public class EntityComboBoxWrapper<DataStoreId, FieldId, ModelClass> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
+public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
-    private final ComboBox<ModelClass> comboBox;
-    private final VortexCrudDataStore<FieldId, ModelClass> dataStore;
+    private final ComboBox<GenericEntity> comboBox;
+    private final VortexCrudDataStore<FieldId> dataStore;
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-                                 Field<DataStoreId, FieldId, ModelClass>  dataStoreField
+                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                                 Field<DataStoreId, FieldId> dataStoreField
     ) {
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
@@ -58,21 +59,17 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId, ModelClass> extends Hor
 
     @Override
     public Registration addValueChangeListener(ValueChangeListener<? super ValueChangeEvent<Object>> listener) {
-        return comboBox.addValueChangeListener((ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<ModelClass>, ModelClass>>) listener);
+        return comboBox.addValueChangeListener((ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<GenericEntity>, GenericEntity>>) listener);
     }
 
     // Implementing setValue() to load an entity based on the Id
     @Override
     public void setValue(Object id) {
         if (id != null) {
-            // Check if id is of the correct type for our ModelClass
-            if (dataStore.getModelClass().isInstance(id)) {
-                @SuppressWarnings("unchecked")
-                ModelClass typedEntity = (ModelClass) id;
-                comboBox.setValue(typedEntity);
+            if (id instanceof GenericEntity) {
+                comboBox.setValue((GenericEntity) id);
             } else {
-                // Load the entity by ID
-                ModelClass entity = dataStore.getRecordById(id);
+                GenericEntity entity = dataStore.getRecordById(id);
                 comboBox.setValue(entity);
                 currentValue = id;
             }

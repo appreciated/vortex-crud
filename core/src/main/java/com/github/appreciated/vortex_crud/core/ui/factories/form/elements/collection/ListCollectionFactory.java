@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item.DefaultCollectionItem;
@@ -22,14 +23,14 @@ import java.util.List;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
-public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass> {
+public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCollectionFactory<DataStoreId, FieldId> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry;
-    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass> dialogFactory;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
-    public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-                                 VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass> dialogFactory,
+    public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                                 VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory,
                                  VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
@@ -39,10 +40,10 @@ public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements 
 
     @Override
     public Component createCollection(String foreignKey,
-                                      RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer,
-                                      InternalFormElement<DataStoreId, FieldId, ModelClass> factoryConfig,
-                                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactory,
-                                      FormCreator<DataStoreId, FieldId, ModelClass> formCreator) {
+                                      RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                                      InternalFormElement<DataStoreId, FieldId> factoryConfig,
+                                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                                      FormCreator<DataStoreId, FieldId> formCreator) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.setSpacing(false);
@@ -62,16 +63,16 @@ public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements 
     }
 
     private void loadCollection(String foreignKeyValue,
-                                InternalFormElement<DataStoreId, FieldId, ModelClass> internalFormElement,
-                                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactoryRegistry,
-                                FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
+                                InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                FormCreator<DataStoreId, FieldId> formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        CollectionConfiguration<DataStoreId, FieldId, ModelClass> data = internalFormElement.getConfiguration().getData();
+        CollectionConfiguration<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
-        VortexCrudDataStore<FieldId, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
         List<GenericEntity> records = (data.getManyToMany() != null) ?
                 data.getManyToMany().getData(dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
                 data.getOneToMany().getData(foreignKeyValue, dataStore, data);
@@ -89,14 +90,14 @@ public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements 
     }
 
     private void addManyToManyItems(String foreignKeyValue,
-                                    InternalFormElement<DataStoreId, FieldId, ModelClass> internalFormElement,
-                                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactoryRegistry,
-                                    FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
+                                    InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                    FormCreator<DataStoreId, FieldId> formCreator,
                                     VerticalLayout list,
                                     HorizontalLayout header,
-                                    List<ModelClass> records,
-                                    VortexCrudDataStore<FieldId, ModelClass> dataStore) {
-        for (ModelClass record : records) {
+                                    List<GenericEntity> records,
+                                    VortexCrudDataStore<FieldId> dataStore) {
+        for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<String> children = internalFormElement.getConfiguration().getData().getChildren();
@@ -112,18 +113,18 @@ public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements 
     }
 
     private void addOneToManyItems(String foreignKeyValue,
-                                   InternalFormElement<DataStoreId, FieldId, ModelClass> internalFormElement,
-                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactoryRegistry,
-                                   FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
+                                   InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                                   FormCreator<DataStoreId, FieldId> formCreator,
                                    VerticalLayout list,
                                    HorizontalLayout header,
-                                   List<ModelClass> records,
-                                   VortexCrudDataStore<FieldId, ModelClass> dataStore) {
-        for (ModelClass record : records) {
+                                   List<GenericEntity> records,
+                                   VortexCrudDataStore<FieldId> dataStore) {
+        for (GenericEntity record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> form = internalFormElement.getConfiguration().getChild().getConfiguration();
-            for (InternalFormElement<DataStoreId, FieldId, ModelClass> child : form.getChildren()) {
+            RouteRendererConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
+            for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
                 Object o = record.get(fieldNameResolver.getKeyForFieldId(child.getField()));
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
@@ -140,13 +141,13 @@ public class ListCollectionFactory<DataStoreId, FieldId, ModelClass> implements 
 
     private void openDialog(String entityId,
                             String foreignKey,
-                            InternalFormElement<DataStoreId, FieldId, ModelClass> internalFormElement,
-                            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactoryRegistry,
-                            FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
+                            InternalFormElement<DataStoreId, FieldId> internalFormElement,
+                            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                            FormCreator<DataStoreId, FieldId> formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-        Collection<DataStoreId, FieldId, ModelClass> collectionData = internalFormElement.getConfiguration();
-        CollectionConfiguration<DataStoreId, FieldId, ModelClass> data = collectionData.getData();
+        Collection<DataStoreId, FieldId> collectionData = internalFormElement.getConfiguration();
+        CollectionConfiguration<DataStoreId, FieldId> data = collectionData.getData();
         FieldId referenceField = (data.getManyToMany() != null) ?
                 data.getManyToMany().getAssociativeSourceIdField() :
                 data.getOneToMany().getReferenceField(data);

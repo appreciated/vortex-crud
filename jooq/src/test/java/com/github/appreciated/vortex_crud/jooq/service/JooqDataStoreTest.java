@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.jooq.models.Tables;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;

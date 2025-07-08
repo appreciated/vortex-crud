@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -22,18 +23,18 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory<DataStoreId, FieldId, ModelClass>  implements VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>  {
+public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialogFactory<DataStoreId, FieldId> {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService;
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass>  dataStoreFactoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId>  fieldNameResolver;
-    private final VortexCrudForeignKeyResolutionStrategy<FieldId, ModelClass>  foreignKeyResolutionStrategy;
-    private VortexCrudDataStore<FieldId, ModelClass>  dataStore;
+    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
+    private VortexCrudDataStore<FieldId> dataStore;
 
-    public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService,
-                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass>  dataStoreFactoryRegistry,
-                             VortexCrudDataStoreFieldNameResolver<FieldId>  fieldNameResolver,
-                             VortexCrudForeignKeyResolutionStrategy<FieldId, ModelClass>  foreignKeyResolutionStrategy
+    public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId> configService,
+                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                             VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy
     ) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
@@ -45,20 +46,20 @@ public class FormDialogFactory<DataStoreId, FieldId, ModelClass>  implements Vor
     public Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
-                         RouteRenderer<DataStoreId, FieldId, ModelClass>  formRouteRenderer,
-                         CollectionConfiguration<DataStoreId, FieldId, ModelClass>  config,
+                         RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
+                         CollectionConfiguration<DataStoreId, FieldId> config,
                          DataStoreId dataStore,
-                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass>  routeFactory,
+                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                          OnStoreListener listener,
-                         FormCreator<DataStoreId, FieldId, ModelClass>  formCreator) {
+                         FormCreator<DataStoreId, FieldId> formCreator) {
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStore);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
-        ModelClass recordById = this.dataStore.getRecordById(entityId);
+        GenericEntity recordById = this.dataStore.getRecordById(entityId);
         if (recordById == null) {
-            recordById = this.dataStore.createModelInstance();
+            recordById = new GenericEntity();
         }
 
         if (DataStoreUtil.isNew(recordById)) {
@@ -67,12 +68,12 @@ public class FormDialogFactory<DataStoreId, FieldId, ModelClass>  implements Vor
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
         }
 
-        Binder<ModelClass> binder = new Binder<>(this.dataStore.getModelClass());
+        Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
         binder.setBean(recordById);
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<DataStoreId, FieldId, ModelClass>  tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
 
         formCreator.bindAndAddToLayout(dataStore, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
@@ -83,7 +84,7 @@ public class FormDialogFactory<DataStoreId, FieldId, ModelClass>  implements Vor
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<ModelClass> binder, ModelClass entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {

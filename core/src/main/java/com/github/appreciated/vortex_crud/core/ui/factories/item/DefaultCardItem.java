@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.item;
 import com.github.appreciated.vortex_crud.core.config.model.ItemFactory;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.Unit;
@@ -13,9 +14,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 
 @CssImport("vortex-crud-default-card-item-styles.css")
-public class DefaultCardItem<FieldId, ModelClass> extends Card {
+public class DefaultCardItem<FieldId> extends Card {
 
-    public DefaultCardItem(ItemFactory<FieldId> config, ModelClass entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
+    public DefaultCardItem(ItemFactory<FieldId> config, GenericEntity entity, Integer maxWidth, VortexCrudFileProviderRegistry provider, VortexCrudDataStoreFieldNameResolver<FieldId> resolver) {
         setClassName("hoverable");
         if (maxWidth != null) {
             setMaxWidth(maxWidth, Unit.PIXELS);

@@ -8,10 +8,10 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import java.util.Collection;
 import java.util.List;
 
-public class CheckboxFieldFactory<DataStoreId, FieldId, ModelClass>  implements VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>  {
+public class CheckboxFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId, ModelClass>  dataStoreField) {
+    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         return new Checkbox();
     }
 

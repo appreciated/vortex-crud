@@ -18,11 +18,11 @@ import java.util.Map;
  * It configures the navigation drawer and the application title based on the {@link VortexCrudConfigService} configuration.
  */
 
-public class DefaultRouterLayout<DataStoreId, FieldId, ModelClass> extends AppLayout {
+public class DefaultRouterLayout<DataStoreId, FieldId> extends AppLayout {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService;
+    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
 
-    public DefaultRouterLayout(VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService) {
+    public DefaultRouterLayout(VortexCrudConfigService<DataStoreId, FieldId> configService) {
         this.configService = configService;
     }
 
@@ -47,7 +47,7 @@ public class DefaultRouterLayout<DataStoreId, FieldId, ModelClass> extends AppLa
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Map<String, ? extends RouteRenderer<DataStoreId, FieldId, ModelClass>> routes = configService.getConfiguration().getRouteRenderers();
+        Map<String, ? extends RouteRenderer<DataStoreId, FieldId>> routes = configService.getConfiguration().getRouteRenderers();
         routes.forEach((path, value) -> {
             if (!value.isHideInMenu()) {
                 String translation = getTranslation(value.getTitle());

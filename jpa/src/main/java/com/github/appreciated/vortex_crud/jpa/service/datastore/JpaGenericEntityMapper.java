@@ -14,7 +14,7 @@ import java.util.*;
 public class JpaGenericEntityMapper implements GenericEntityMapper {
 
     @Override
-    public <T> T mapToEntity(Object entity, Class<T> repositoryModelClass) {
+    public <T> T mapToEntity(GenericEntity entity, Class<T> repositoryModelClass) {
         try {
             T instance = repositoryModelClass.getDeclaredConstructor().newInstance();
             entity.getProperties().forEach((key, value) -> {

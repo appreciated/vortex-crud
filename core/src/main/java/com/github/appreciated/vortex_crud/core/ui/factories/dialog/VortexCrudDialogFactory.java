@@ -7,14 +7,14 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;
 
-public interface VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass> {
+public interface VortexCrudDialogFactory<DataStoreId, FieldId> {
     Dialog create(@Nullable String entityId,
                       @Nullable String foreignKeyValue,
                       @Nullable FieldId foreignKeyField,
-                      RouteRenderer<DataStoreId, FieldId, ModelClass> formRouteRenderer,
-                      CollectionConfiguration<DataStoreId, FieldId, ModelClass> config,
+                      RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
+                      CollectionConfiguration<DataStoreId, FieldId> config,
                       DataStoreId dataStore,
-                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactory,
+                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                       OnStoreListener listener,
-                      FormCreator<DataStoreId, FieldId, ModelClass> formCreator);
+                      FormCreator<DataStoreId, FieldId> formCreator);
 }

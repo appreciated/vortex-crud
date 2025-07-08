@@ -17,7 +17,7 @@ public class JooqVortexCrudForeignKeyResolutionStrategy implements VortexCrudFor
 
 
     @Override
-    public void resolveForeignKey(ModelClass entity,
+    public void resolveForeignKey(GenericEntity entity,
                                   TableField<?, ?> foreignKeyField,
                                   String foreignKeyValue,
                                   VortexCrudDataStore<TableField<?, ?>> dataStore,

@@ -6,11 +6,11 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class InternalFormElement<DataStoreId, FieldId, ModelClass> {
+public class InternalFormElement<DataStoreId, FieldId> {
 
     private FieldId field;
 
-    private Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>> factory;
+    private Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> factory;
 
     private boolean readOnly;
 
@@ -22,7 +22,7 @@ public class InternalFormElement<DataStoreId, FieldId, ModelClass> {
 
     private Integer span = null;
 
-    Collection<DataStoreId, FieldId, ModelClass> configuration;
+    Collection<DataStoreId, FieldId> configuration;
 
     public InternalFormElement() {
     }
@@ -41,12 +41,12 @@ public class InternalFormElement<DataStoreId, FieldId, ModelClass> {
         this.field = field;
     }
 
-    public Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>> getFactory() {
+    public Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
     public void setFactory(Class<? extends VortexCrudCollectionFactory> factory) {
-        this.factory = (Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>>) factory;
+        this.factory = (Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>>) factory;
     }
 
     public boolean isReadOnly() {
@@ -89,72 +89,72 @@ public class InternalFormElement<DataStoreId, FieldId, ModelClass> {
         this.span = span;
     }
 
-    public Collection<DataStoreId, FieldId, ModelClass> getConfiguration() {
+    public Collection<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(Collection<DataStoreId, FieldId, ModelClass> configuration) {
+    public void setConfiguration(Collection<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
-    public static class Builder<DataStoreId, FieldId, ModelClass> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private final InternalFormElement<DataStoreId, FieldId, ModelClass> product;
+        private final InternalFormElement<DataStoreId, FieldId> product;
 
-        public Builder(InternalFormElement<DataStoreId, FieldId, ModelClass> product) {
+        public Builder(InternalFormElement<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of() {
+        public static <DataStoreId, FieldId> Builder<DataStoreId,FieldId> of() {
             return new Builder<>(new InternalFormElement<>());
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withField(FieldId field) {
+        public Builder<DataStoreId,FieldId> withField(FieldId field) {
             product.field = field;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withFactory(Class<? extends VortexCrudCollectionFactory> factory) {
-            product.factory = (Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, ModelClass>>) factory;
+        public Builder<DataStoreId,FieldId> withFactory(Class<? extends VortexCrudCollectionFactory> factory) {
+            product.factory = (Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>>) factory;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withReadOnly(boolean readOnly) {
+        public Builder<DataStoreId,FieldId> withReadOnly(boolean readOnly) {
             product.readOnly = readOnly;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withReadOnlyForRoles(List<String> readOnlyForRoles) {
+        public Builder<DataStoreId,FieldId> withReadOnlyForRoles(List<String> readOnlyForRoles) {
             product.readOnlyForRoles = readOnlyForRoles;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withLabel(String label) {
+        public Builder<DataStoreId,FieldId> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withType(String type) {
+        public Builder<DataStoreId,FieldId> withType(String type) {
             product.type = type;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withSpan(Integer span) {
+        public Builder<DataStoreId,FieldId> withSpan(Integer span) {
             product.span = span;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withConfiguration(Collection<DataStoreId, FieldId, ModelClass> configuration) {
+        public Builder<DataStoreId,FieldId> withConfiguration(Collection<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> addReadOnlyForRole(String item) {
+        public Builder<DataStoreId,FieldId> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
         }
 
-        public InternalFormElement<DataStoreId, FieldId, ModelClass> build() {
+        public InternalFormElement<DataStoreId, FieldId> build() {
             return product;
         }
 

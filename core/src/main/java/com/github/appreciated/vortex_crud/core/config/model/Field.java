@@ -6,9 +6,9 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Field<DataStoreId, FieldId, ModelClass> {
+public class Field<DataStoreId, FieldId> {
 
-    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory;
+    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory;
 
     private boolean primary;
 
@@ -30,36 +30,36 @@ public class Field<DataStoreId, FieldId, ModelClass> {
 
     private List<String> readOnlyForRoles;
 
-    RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> configuration;
+    RouteRendererConfiguration<DataStoreId, FieldId> configuration;
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory) {
         if (factory == null) {
             throw new IllegalArgumentException("The factory must not be null");
         }
         this.factory = factory;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary) {
         this(factory);
         this.primary = primary;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, String values) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, String values) {
         this(factory);
         this.values = values;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary, boolean required) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required) {
         this(factory, primary);
         this.required = required;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary, boolean required, Validation validation) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required, Validation validation) {
         this(factory, primary, required);
         this.validation = validation;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
         this(factory);
         this.field = field;
         this.filterField = filterField;
@@ -67,11 +67,11 @@ public class Field<DataStoreId, FieldId, ModelClass> {
         this.children = children;
     }
 
-    public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> getFactory() {
+    public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory) {
+    public void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
@@ -147,120 +147,120 @@ public class Field<DataStoreId, FieldId, ModelClass> {
         this.children = children;
     }
 
-    public RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> getConfiguration() {
+    public RouteRendererConfiguration<DataStoreId, FieldId> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> configuration) {
+    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
         this.configuration = configuration;
     }
 
-    public static class Builder<DataStoreId, FieldId, ModelClass> {
+    public static class Builder<DataStoreId, FieldId> {
 
-        private final Field<DataStoreId, FieldId, ModelClass> product;
+        private final Field<DataStoreId, FieldId> product;
 
-        public Builder(Field<DataStoreId, FieldId, ModelClass> product) {
+        public Builder(Field<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory) {
             return new Builder<>(new Field<>(factory));
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withPrimary(boolean primary) {
+        public Builder<DataStoreId, FieldId> withPrimary(boolean primary) {
             product.primary = primary;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withRequired(boolean required) {
+        public Builder<DataStoreId, FieldId> withRequired(boolean required) {
             product.required = required;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withValidation(Validation validation) {
+        public Builder<DataStoreId, FieldId> withValidation(Validation validation) {
             product.validation = validation;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withDefaultValue(String defaultValue) {
+        public Builder<DataStoreId, FieldId> withDefaultValue(String defaultValue) {
             product.defaultValue = defaultValue;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withValues(String values) {
+        public Builder<DataStoreId, FieldId> withValues(String values) {
             product.values = values;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withDataStore(DataStoreId dataStore) {
+        public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {
             product.dataStore = dataStore;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withField(FieldId field) {
+        public Builder<DataStoreId, FieldId> withField(FieldId field) {
             product.field = field;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withFilterField(FieldId filterField) {
+        public Builder<DataStoreId, FieldId> withFilterField(FieldId filterField) {
             product.filterField = filterField;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withChildren(List<FieldId> children) {
+        public Builder<DataStoreId, FieldId> withChildren(List<FieldId> children) {
             product.children = children;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withReadOnlyForRoles(String... readOnlyForRoles) {
+        public Builder<DataStoreId, FieldId> withReadOnlyForRoles(String... readOnlyForRoles) {
             product.readOnlyForRoles = List.of(readOnlyForRoles);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> configuration) {
+        public Builder<DataStoreId, FieldId> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> addChildren(FieldId item) {
+        public Builder<DataStoreId, FieldId> addChildren(FieldId item) {
             product.children.add(item);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> addReadOnlyForRole(String item) {
+        public Builder<DataStoreId, FieldId> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> add(boolean primary) {
+        public Builder<DataStoreId, FieldId> add(boolean primary) {
             return withPrimary(primary);
         }
 
-        public Builder<DataStoreId, FieldId, ModelClass> add(boolean primary, boolean required) {
+        public Builder<DataStoreId, FieldId> add(boolean primary, boolean required) {
             return withPrimary(primary).withRequired(required);
         }
 
-        public Field<DataStoreId, FieldId, ModelClass> build() {
+        public Field<DataStoreId, FieldId> build() {
             return product;
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary) {
             return new Builder<>(new Field<>(factory, primary));
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, String values) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, String values) {
             return new Builder<>(new Field<>(factory, values));
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary, boolean required) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required) {
             return new Builder<>(new Field<>(factory, primary, required));
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, boolean primary, boolean required, Validation validation) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, boolean primary, boolean required, Validation validation) {
             return new Builder<>(new Field<>(factory, primary, required, validation));
         }
 
-        public static <DataStoreId, FieldId, ModelClass> Builder<DataStoreId, FieldId, ModelClass> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, ModelClass>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
             return new Builder<>(new Field<>(factory, field, filterField, dataStore, children));
         }
     }

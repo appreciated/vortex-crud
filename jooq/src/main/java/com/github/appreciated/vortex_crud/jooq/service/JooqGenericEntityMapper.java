@@ -13,7 +13,7 @@ import java.util.Map;
 public class JooqGenericEntityMapper implements GenericEntityMapper {
 
     @Override
-    public <T> T mapToEntity(Object entity, Class<T> repositoryModelClass) {
+    public <T> T mapToEntity(GenericEntity entity, Class<T> repositoryModelClass) {
         try {
             T instance = repositoryModelClass.getDeclaredConstructor().newInstance();
             entity.getProperties().forEach((key, value) -> {

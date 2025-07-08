@@ -4,23 +4,23 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDia
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class Collection<DataStoreId, FieldId, ModelClass> {
+public class Collection<DataStoreId, FieldId> {
 
     private CollectionConfig config;
 
-    public Collection(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>> factory) {
+    public Collection(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
     private String label;
 
-    private Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>> factory;
+    private Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId>> factory;
 
-    private CollectionConfiguration<DataStoreId, FieldId, ModelClass> data;
+    private CollectionConfiguration<DataStoreId, FieldId> data;
 
     private String emptyMessage;
 
-    private RouteRenderer<DataStoreId, FieldId, ModelClass> child;
+    private RouteRenderer<DataStoreId, FieldId> child;
 
     public String getLabel() {
         return label;
@@ -30,19 +30,19 @@ public class Collection<DataStoreId, FieldId, ModelClass> {
         this.label = label;
     }
 
-    public Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>> getFactory() {
+    public Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>> factory) {
+    public void setFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId>> factory) {
         this.factory = factory;
     }
 
-    public CollectionConfiguration<DataStoreId, FieldId, ModelClass> getData() {
+    public CollectionConfiguration<DataStoreId, FieldId> getData() {
         return data;
     }
 
-    public void setData(CollectionConfiguration<DataStoreId, FieldId, ModelClass> data) {
+    public void setData(CollectionConfiguration<DataStoreId, FieldId> data) {
         this.data = data;
     }
 
@@ -54,7 +54,7 @@ public class Collection<DataStoreId, FieldId, ModelClass> {
         this.emptyMessage = emptyMessage;
     }
 
-    public RouteRenderer<DataStoreId, FieldId, ModelClass> getChild() {
+    public RouteRenderer<DataStoreId, FieldId> getChild() {
         return child;
     }
 
@@ -62,48 +62,48 @@ public class Collection<DataStoreId, FieldId, ModelClass> {
         return config;
     }
 
-    public void setChild(RouteRenderer<DataStoreId, FieldId, ModelClass> child) {
+    public void setChild(RouteRenderer<DataStoreId, FieldId> child) {
         this.child = child;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId, ModelClass> {
+    public abstract static class Builder<DataStoreId, FieldId> {
 
-        private final Collection<DataStoreId, FieldId, ModelClass> product;
+        private final Collection<DataStoreId, FieldId> product;
 
-        protected Builder(Collection<DataStoreId, FieldId, ModelClass> product) {
+        protected Builder(Collection<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withLabel(String label) {
+        public Builder<DataStoreId,FieldId> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withData(CollectionConfiguration<DataStoreId, FieldId, ModelClass> data) {
+        public Builder<DataStoreId,FieldId> withData(CollectionConfiguration<DataStoreId, FieldId> data) {
             product.data = data;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withEmptyMessage(String emptyMessage) {
+        public Builder<DataStoreId,FieldId> withEmptyMessage(String emptyMessage) {
             product.emptyMessage = emptyMessage;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withChild(RouteRenderer<DataStoreId, FieldId, ModelClass> child) {
+        public Builder<DataStoreId,FieldId> withChild(RouteRenderer<DataStoreId, FieldId> child) {
             product.child = child;
             return this;
         }
 
-        public Collection<DataStoreId, FieldId, ModelClass> build() {
+        public Collection<DataStoreId, FieldId> build() {
             return product;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, ModelClass>> connect) {
+        public Builder<DataStoreId,FieldId> withFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId>> connect) {
             product.factory = connect;
             return this;
         }
 
-        public Builder<DataStoreId,FieldId, ModelClass> withConfiguration(CollectionConfig title) {
+        public Builder<DataStoreId,FieldId> withConfiguration(CollectionConfig title) {
             product.config = title;
             return this;
         }

@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -34,18 +35,18 @@ import jakarta.annotation.Nullable;
  * such as saving and deleting entities.
  */
 
-public class FormRouteFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass> {
+public class FormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry;
-    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService;
-    private final FormCreator<DataStoreId, FieldId, ModelClass> formCreator;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> factoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
-    public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-                            VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService,
-                            FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
-                            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> factoryRegistry,
+    public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                            VortexCrudConfigService<DataStoreId, FieldId> configService,
+                            FormCreator<DataStoreId, FieldId> formCreator,
+                            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
@@ -58,16 +59,16 @@ public class FormRouteFactory<DataStoreId, FieldId, ModelClass> implements Vorte
     @Override
     public Component renderRoute(
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass> routeResolver,
+            VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> form = routeRenderer.getConfiguration();
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRendererConfiguration<DataStoreId, FieldId> form = routeRenderer.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer, form);
     }
 
-    public VerticalLayout getForm(VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer, RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> formRouteRendererConfiguration) {
+    public VerticalLayout getForm(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver, boolean isWrapped, boolean isHeaderHidden, boolean creationMode, RouteRenderer<DataStoreId, FieldId> routeRenderer, RouteRendererConfiguration<DataStoreId, FieldId> formRouteRendererConfiguration) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -75,11 +76,8 @@ public class FormRouteFactory<DataStoreId, FieldId, ModelClass> implements Vorte
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
         String prefix = !isWrapped ? layout.getTranslation(routeRenderer.getTitle()) + " / " : "";
 
-        DataStoreId table = routeRenderer.getDataStore();
-        VortexCrudDataStore<FieldId, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
-
         H2WithHasValue titleComponent = new H2WithHasValue();
-        Binder<ModelClass> binder = new Binder<>(dataStore.getModelClass());
+        Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
         if (!creationMode) {
             binder.bind(
                     titleComponent,
@@ -91,9 +89,11 @@ public class FormRouteFactory<DataStoreId, FieldId, ModelClass> implements Vorte
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        DataStoreConfig<DataStoreId, FieldId, ModelClass> tables = configService.getConfiguration().getDataStores().get(table);
+        DataStoreId table = routeRenderer.getDataStore();
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
-        ModelClass entity = creationMode ? dataStore.createModelInstance() : dataStore.getRecordById(lastSegment);
+        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        GenericEntity entity = creationMode ? new GenericEntity() : dataStore.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);
 

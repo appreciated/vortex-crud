@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.jpa.service;
 
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
@@ -27,7 +26,7 @@ public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudFore
     }
 
     @Override
-    public void resolveForeignKey(Object entity,
+    public void resolveForeignKey(GenericEntity entity,
                                   String foreignKeyField,
                                   String foreignKeyValue,
                                   VortexCrudDataStore<String> dataStore,
@@ -35,7 +34,7 @@ public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudFore
         if (foreignKeyField != null && foreignKeyValue != null) {
             Field field = dataStore.getField(foreignKeyField);
             JpaRepositoryDataStore<String> fieldDataStore = dataStoreRegistryFactory.getDataStore(field.getType());
-            Object recordById = fieldDataStore.getRecordById(foreignKeyValue);
+            GenericEntity recordById = fieldDataStore.getRecordById(foreignKeyValue);
             entity.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
         }
     }

@@ -35,9 +35,8 @@ public class JooqDataStore<ModelClass extends TableRecord<?>> implements VortexC
     }
 
     @Override
-    public ModelClass insertRecord(ModelClass entity) {
-        dslContext.executeInsert(entity);
-        return entity;
+    public Object insertRecord(ModelClass entity) {
+        return dslContext.executeInsert(entity);
     }
 
     @Override
@@ -100,12 +99,30 @@ public class JooqDataStore<ModelClass extends TableRecord<?>> implements VortexC
     }
 
     @Override
-    public void updateRecordById(Object id, ModelClass entity) {
-        // Execute the update using the entity directly
-        dslContext.update(getTable())
-                .set(entity)
-                .where(DSL.field("id").eq(id))
-                .execute();
+    public void updateRecordById(ModelClass values) {
+        try {
+            // Get the table record class
+            TableRecord<?> recordInstance = getModelClass().newInstance();
+            // Create a map for field names to values
+            Map<String, ModelClass> fieldMap = new HashMap<>();
+
+            // Map properties to fields
+            for (Map.Entry<String, ModelClass> entry : values.getProperties().entrySet()) {
+                String propertyName = entry.getKey();
+                ModelClass propertyValue = entry.getValue();
+                if (propertyValue != null) {
+                    fieldMap.put(propertyName, propertyValue);
+                }
+            }
+
+            // Execute the update
+            dslContext.update(getTable())
+                    .set(fieldMap)
+                    .where(DSL.field("id").eq(id))
+                    .execute();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

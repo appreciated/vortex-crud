@@ -17,22 +17,22 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.compone
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class KanbanDetailFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass>  {
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId,FieldId, ModelClass> dataStoreFactoryRegistry;
-    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService;
+public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId,FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactory;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactory;
-    private final FormCreator<DataStoreId, FieldId, ModelClass>  formCreator;
-    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass>  dialogFactoryRegistry;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
+    private final FormCreator<DataStoreId, FieldId> formCreator;
+    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
 
-    public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-                               VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService,
+    public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                               VortexCrudConfigService<DataStoreId, FieldId> configService,
                                VortexCrudItemFactoryRegistry<FieldId> itemFactory,
-                               VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactory,
-                               FormCreator<DataStoreId, FieldId, ModelClass>  formCreator,
-                               VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass>  dialogFactoryRegistry,
+                               VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                               FormCreator<DataStoreId, FieldId> formCreator,
+                               VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                VortexCrudFileProviderRegistry fileProviderRegistry,
                                VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
     ) {
@@ -48,16 +48,16 @@ public class KanbanDetailFactory<DataStoreId, FieldId, ModelClass> implements Vo
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver,
+                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new KanbanView<>(routeRenderer.getDataStore(),
                 routeRenderer,
                 dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStore()),
                 routeFactory,
                 itemFactory,
-                (Kanban<DataStoreId, FieldId, ModelClass> ) routeRenderer.getConfiguration(),
+                (Kanban<DataStoreId, FieldId>) routeRenderer.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

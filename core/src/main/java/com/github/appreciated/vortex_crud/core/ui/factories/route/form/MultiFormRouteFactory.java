@@ -15,31 +15,31 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
 
-public class MultiFormRouteFactory<DataStoreId, FieldId, ModelClass> implements VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass> {
+public class MultiFormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
 
-    private final FormRouteFactory<DataStoreId, FieldId, ModelClass> formRouteFactory;
+    private final FormRouteFactory<DataStoreId, FieldId> formRouteFactory;
 
     private String titleColumn;
 
     public MultiFormRouteFactory(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-            VortexCrudConfigService<DataStoreId, FieldId, ModelClass> configService,
-            FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
-            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> factoryRegistry,
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+            VortexCrudConfigService<DataStoreId, FieldId> configService,
+            FormCreator<DataStoreId, FieldId> formCreator,
+            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-        this.formRouteFactory = new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, resolver);
+        this.formRouteFactory = new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry,resolver);
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass> routeResolver,
+                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormRendererConfiguration<DataStoreId, FieldId, ModelClass>  formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId, ModelClass> ) routeRenderer.getConfiguration();
+        MultiFormRendererConfiguration<DataStoreId, FieldId> formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId>) routeRenderer.getConfiguration();
         Div div = new Div();
-        for (RouteRendererConfiguration<DataStoreId, FieldId, ModelClass> child : formConfiguration.getForms()) {
+        for (RouteRendererConfiguration<DataStoreId, FieldId> child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), routeRenderer, child));
         }

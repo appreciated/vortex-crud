@@ -8,10 +8,10 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> {
-    VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass>> factory);
+public interface VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> {
+    VortexCrudRouteFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory);
 
-    void addFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass>> key, VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass> factory);
+    void addFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> key, VortexCrudRouteFactory<DataStoreId, FieldId> factory);
 
-    boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId, ModelClass> currentRouteRenderer);
+    boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId> currentRouteRenderer);
 }

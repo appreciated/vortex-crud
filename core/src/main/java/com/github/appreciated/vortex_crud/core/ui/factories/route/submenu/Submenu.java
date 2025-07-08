@@ -21,21 +21,21 @@ import java.util.Map;
  * Factory for a submenu meaning it can render multiple routes as its children, one for each button.
  * A vertical list of routes is displayed on the left and the detailed view of the selected route on the right.
  */
-public class Submenu<DataStoreId, FieldId, ModelClass>  extends SplitLayout {
+public class Submenu<DataStoreId, FieldId> extends SplitLayout {
 
     private final VerticalLayout routeListLayout = new VerticalLayout();
     private final VerticalLayout detailLayout = new VerticalLayout();
-    private final RouteRenderer<DataStoreId, FieldId, ModelClass>  routeRenderer;
-    private VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  pathVariables;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass>  routeFactory;
+    private final RouteRenderer<DataStoreId, FieldId> routeRenderer;
+    private VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
     private final Integer currentPathIndex;
-    private final VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService;
+    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
     private Component active;
 
     public Submenu(Integer currentPathIndex,
-                   VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver,
-                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass>  routeFactory,
-                   VortexCrudConfigService<DataStoreId, FieldId, ModelClass>  configService
+                   VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                   VortexCrudConfigService<DataStoreId, FieldId> configService
     ) {
         this.currentPathIndex = currentPathIndex;
         this.configService = configService;
@@ -78,15 +78,15 @@ public class Submenu<DataStoreId, FieldId, ModelClass>  extends SplitLayout {
         addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
     }
 
-    private static <DataStoreId, FieldId, ModelClass>  boolean hasActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver) {
+    private static <DataStoreId, FieldId> boolean hasActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         return routeResolver.hasPathForIndex(currentPathIndex + 1);
     }
 
-    private RouteRenderer<DataStoreId, FieldId, ModelClass>  getActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver) {
+    private RouteRenderer<DataStoreId, FieldId> getActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         return routeRenderer.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
-    private void initializeRouteList(Map<String, ? extends RouteRenderer<DataStoreId, FieldId, ModelClass> > childRoutes, Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver) {
+    private void initializeRouteList(Map<String, ? extends RouteRenderer<DataStoreId, FieldId>> childRoutes, Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         childRoutes.forEach((key, value) -> {
             Card routeButton = new Card();
             routeButton.addClassNames("master");
@@ -122,11 +122,11 @@ public class Submenu<DataStoreId, FieldId, ModelClass>  extends SplitLayout {
         });
     }
 
-    private void showRouteDetail(RouteRenderer<DataStoreId, FieldId, ModelClass>  subRouteRenderer, VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass>  routeResolver) {
+    private void showRouteDetail(RouteRenderer<DataStoreId, FieldId> subRouteRenderer, VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();
-            VortexCrudRouteFactory<DataStoreId, FieldId, ModelClass>  factory = routeFactory.getFactory(subRouteRenderer.getFactory());
+            VortexCrudRouteFactory<DataStoreId, FieldId> factory = routeFactory.getFactory(subRouteRenderer.getFactory());
             Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }

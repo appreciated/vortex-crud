@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
+import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.vaadin.flow.component.grid.Grid;
 
 /**
@@ -9,6 +10,6 @@ import com.vaadin.flow.component.grid.Grid;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface VortexCrudListColumnCallback<DataStoreId, FieldId, ModelClass> {
-    void addColumn(Grid<ModelClass> grid, InternalFormElement<DataStoreId, FieldId, ModelClass> field, Object table, String fieldName, Field<DataStoreId, FieldId, ModelClass> dataStoreField);
+public interface VortexCrudListColumnCallback<DataStoreId, FieldId> {
+    void addColumn(Grid<GenericEntity> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField);
 }

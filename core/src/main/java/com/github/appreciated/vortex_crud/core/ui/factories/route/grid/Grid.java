@@ -19,15 +19,15 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class Grid<DataStoreId, FieldId, ModelClass> extends VerticalLayout {
-    private final VirtualItemGrid<DataStoreId, FieldId, ModelClass> virtualGrid;
+public class Grid<DataStoreId, FieldId> extends VerticalLayout {
+    private final VirtualItemGrid<DataStoreId, FieldId> virtualGrid;
 
-    public Grid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, ModelClass> routeResolver,
-                RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer,
-                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, ModelClass> dataStoreFactoryRegistry,
-                FormCreator<DataStoreId, FieldId, ModelClass> formCreator,
-                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass> dialogFactoryRegistry,
-                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass> routeFactoryRegistry,
+    public Grid(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+                FormCreator<DataStoreId, FieldId> formCreator,
+                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                 VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldId> resolver
@@ -59,7 +59,7 @@ public class Grid<DataStoreId, FieldId, ModelClass> extends VerticalLayout {
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, ModelClass> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId, ModelClass> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId, ModelClass> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, ModelClass>  routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,
