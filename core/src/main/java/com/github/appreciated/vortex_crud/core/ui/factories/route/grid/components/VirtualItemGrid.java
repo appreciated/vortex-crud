@@ -7,8 +7,8 @@ import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
@@ -31,13 +31,14 @@ import java.util.List;
  * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
  */
 
-public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityItemList> {
+public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityItemList<DataStoreId>> {
 
     private final VortexCrudItemFactory<FieldId> itemFactory;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final VortexCrudDataStore<FieldId> dataStore;
+    private final ReflectionService reflectionService;
+    private final VortexCrudDataStore<FieldId, ?> dataStore;
     private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
@@ -48,11 +49,14 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
                            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
-                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
+                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                           ReflectionService reflectionService
+
     ) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.reflectionService = reflectionService;
         DataStoreId table = config.getDataStore();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
@@ -79,9 +83,14 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
             HorizontalLayout wrapper = new HorizontalLayout();
             wrapper.setSpacing(true);
             wrapper.setWidthFull();
-            List<GenericEntity> list = item.getList();
-            for (GenericEntity entity : list) {
-                Component component = itemFactory.renderItem(gridOrListConfiguration, entity, maxWidth, fileProviderRegistry, fieldNameResolver);
+            List<DataStoreId> list = item.getList();
+            for (DataStoreId entity : list) {
+                Component component = itemFactory.renderItem(gridOrListConfiguration,
+                        entity,
+                        maxWidth,
+                        fileProviderRegistry,
+                        fieldNameResolver,
+                        reflectionService);
                 component.getStyle().setWidth("100%");
                 Div div = new Div(component);
                 div.getStyle()
@@ -100,30 +109,30 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
         }));
     }
 
-    private void onItemClick(GenericEntity entity) {
+    private void onItemClick(Object entity) {
         String s = pathVariables.getPath() + "/" + DataStoreUtil.getId(entity);
         getUI().ifPresent(ui -> ui.navigate(s));
     }
 
     private void initLazyLoadingDataProvider() {
-        CallbackDataProvider<EntityItemList, String> dataProvider = DataProvider.fromFilteringCallbacks(
+        CallbackDataProvider<EntityItemList<DataStoreId>, String> dataProvider = DataProvider.fromFilteringCallbacks(
                 // Fetching the data from the database for a given offset and limit
                 query -> {
                     int offset = query.getOffset() * currentNumberOfColumns;
                     int limit = query.getLimit() * currentNumberOfColumns;
-                    List<GenericEntity> items;
+                    List<DataStoreId> items;
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        items = dataStore.getRecordsFromTable(offset, limit);
+                        items = (List<DataStoreId>) dataStore.getRecordsFromTable(offset, limit);
                     } else {
-                        items = dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
+                        items = (List<DataStoreId>) dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
-                    List<EntityItemList> wrappers = new ArrayList<>();
+                    List<EntityItemList<DataStoreId>> wrappers = new ArrayList<>();
                     for (int i = 0; i < items.size(); i += currentNumberOfColumns) {
-                        List<GenericEntity> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
-                        wrappers.add(new EntityItemList(group));
+                        List<DataStoreId> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
+                        wrappers.add(new EntityItemList<>(group));
                     }
 
                     return wrappers.stream();

@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -49,7 +48,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
     }
 
     private void applyFilter(String filterText) {
-        DataProvider<GenericEntity, ?> dataProvider = entityGrid.getDataProvider();
+        DataProvider<Object, ?> dataProvider = entityGrid.getDataProvider();
         if (dataProvider != null) {
             if (dataProvider instanceof ConfigurableFilterDataProvider) {
                 ((ConfigurableFilterDataProvider<?, Void, String>) dataProvider).setFilter(filterText);

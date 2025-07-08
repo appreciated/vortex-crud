@@ -20,15 +20,13 @@ public interface ManyToMany<DataStoreId, FieldId> {
      * @param foreignKeyValue The foreign key value to filter by
      * @param dataStore The data store to retrieve records from
      * @param collectionConfiguration The collection configuration
-     * @param modelClass The class of the model to retrieve
      * @return A list of entities matching the criteria
      */
-    <T> List<T> getData(
+    <ModelClass> List<ModelClass> getData(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, 
             String foreignKeyValue, 
-            VortexCrudDataStore<FieldId> dataStore, 
-            CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
-            Class<T> modelClass
+            VortexCrudDataStore<FieldId,ModelClass> dataStore,
+            CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration
     );
 
     /**

@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 
@@ -80,14 +79,6 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId> {
         return pathRoutes.get(getCurrentIndex());
     }
 
-    public Integer maxMapKey() {
-        return pathRoutes.keySet().stream().max(Integer::compareTo).orElseThrow();
-    }
-
-    public String[] getSections() {
-        return sections;
-    }
-
     public String getPath() {
         return path;
     }
@@ -96,11 +87,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId> {
         return sections[sections.length - 1];
     }
 
-    public boolean isLastPathIdentifier() {
-        return maxMapKey() < sections.length - 1;
-    }
-
-    public String getPathForEntity(Integer currentPathIndex, GenericEntity entity) {
+    public String getPathForEntity(Integer currentPathIndex, Object entity) {
         return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
     }
 

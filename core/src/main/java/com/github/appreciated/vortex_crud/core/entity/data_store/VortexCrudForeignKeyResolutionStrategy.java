@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 
 /**
  * Strategy interface for resolving foreign key values in entities.
@@ -19,9 +18,9 @@ public interface VortexCrudForeignKeyResolutionStrategy<FieldId> {
      * @param foreignKeyValue The value of the foreign key
      * @param fieldNameResolver The resolver to get the field name from the field identifier
      */
-    void resolveForeignKey(GenericEntity entity, 
+    void resolveForeignKey(Object entity, 
                           FieldId foreignKeyField, 
                           String foreignKeyValue,
-                          VortexCrudDataStore<FieldId> dataStore,
+                          VortexCrudDataStore<FieldId, ?> dataStore,
                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver);
 }

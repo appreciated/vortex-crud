@@ -8,7 +8,6 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -29,7 +28,7 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
-    private VortexCrudDataStore<FieldId> dataStore;
+    private VortexCrudDataStore<FieldId, ?> dataStore;
 
     public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId> configService,
                              VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -57,9 +56,9 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
-        GenericEntity recordById = this.dataStore.getRecordById(entityId);
+        Object recordById = this.dataStore.getRecordById(entityId);
         if (recordById == null) {
-            recordById = new GenericEntity();
+            recordById = new Object();
         }
 
         if (DataStoreUtil.isNew(recordById)) {
@@ -68,7 +67,7 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
         }
 
-        Binder<GenericEntity> binder = new Binder<>(GenericEntity.class);
+        Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(recordById);
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
@@ -84,14 +83,16 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<GenericEntity> binder, GenericEntity entity, Dialog dialog, OnStoreListener listener) {
+    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
                 foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, fieldNameResolver);
                 if (DataStoreUtil.isNew(entity)) {
-                    dataStore.insertRecord(entity);
+                    if (dataStore.getModelClass().isInstance(entity)) {
+                        dataStore.insertRecord(entity);
+                    }
                 } else {
                     dataStore.updateRecordById(DataStoreUtil.getId(entity), entity);
                 }

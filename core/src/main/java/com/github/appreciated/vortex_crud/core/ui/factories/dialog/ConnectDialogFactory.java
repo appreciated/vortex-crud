@@ -8,7 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersi
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Unit;
@@ -27,15 +27,18 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy;
+    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, ?> manyToManyPersistenceStrategy;
+    private final ReflectionService reflectionService;
 
     public ConnectDialogFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-            ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy) {
+            ManyToManyPersistenceStrategy<DataStoreId, FieldId, ?> manyToManyPersistenceStrategy,
+            ReflectionService reflectionService) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
+        this.reflectionService = reflectionService;
     }
 
     @Override
@@ -49,7 +52,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                          OnStoreListener listener,
                          FormCreator<DataStoreId, FieldId> formCreator) {
 
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
+        VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
         ManyToMany<DataStoreId, FieldId> manyToMany = collectionConfiguration.getManyToMany();
         FieldId associativeTargetIdField = manyToMany.getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
@@ -61,19 +64,19 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         layout.setSpacing(false);
 
         // Fetch available connections
-        List<GenericEntity> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
+        List<?> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
-        List<GenericEntity> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(dataStore, manyToMany);
+        List<?> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(dataStore, manyToMany, dataStore.getModelClass());
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(genericEntity -> genericEntity.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
-        Set<GenericEntity> currentlySelectedConnections = availableConnections.stream()
-                .filter(genericEntity -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity)))
+                .map(entity -> reflectionService.getValue(entity, fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
+        Set<Object> currentlySelectedConnections = availableConnections.stream()
+                .filter(Object -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
                 .collect(Collectors.toSet());
 
         // Create a list of selectable items
-        MultiSelectListBox<GenericEntity> connectionList = new MultiSelectListBox<>();
+        MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(genericEntity -> collectionConfiguration.getChildren().stream().map(genericEntity::getString).collect(Collectors.joining(",")));
+        connectionList.setItemLabelGenerator(Object -> collectionConfiguration.getChildren().stream().map(Object::getString).collect(Collectors.joining(",")));
         connectionList.setValue(currentlySelectedConnections);
 
         layout.add(connectionList);
@@ -81,17 +84,17 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         // Footer buttons
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
-            Set<GenericEntity> newSelectedConnections = connectionList.getSelectedItems();
+            Set<Object> newSelectedConnections = connectionList.getSelectedItems();
             // Determine the IDs of the newly selected connections
             Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
-                    .filter(genericEntity -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(genericEntity)))
+                    .filter(Object -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
                     .map(DataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
-            List<GenericEntity> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
-                GenericEntity newAssociation = new GenericEntity();
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
-                newAssociation.put(fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
+            List<Object> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
+                Object newAssociation = new Object();
+                reflectionService.setValue(newAssociation, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                reflectionService.setValue(newAssociation, fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
                 return newAssociation;
             }).toList();
             manyToManyPersistenceStrategy.insert(toBeInserted);
@@ -102,7 +105,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                     .collect(Collectors.toSet());
 
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
-            List<GenericEntity> toBeDeleted = currentAssociativeEntries.stream()
+            List<Object> toBeDeleted = currentAssociativeEntries.stream()
                     .filter(entry -> {
                         Object targetIdObj = entry.get(fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
                         if (targetIdObj == null) {

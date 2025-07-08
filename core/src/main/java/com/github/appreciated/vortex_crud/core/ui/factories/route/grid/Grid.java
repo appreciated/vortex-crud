@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -30,8 +31,8 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                 VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
                 VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
-                VortexCrudDataStoreFieldNameResolver<FieldId> resolver
-    ) {
+                VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
+                ReflectionService reflectionService) {
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         DataStoreId dataStore = routeRenderer.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
@@ -43,7 +44,13 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                 routeHeader);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, itemFactoryRegistry, fileProviderRegistry, resolver);
+        virtualGrid = new VirtualItemGrid<>(routeResolver,
+                routeRenderer,
+                dataStoreFactoryRegistry,
+                itemFactoryRegistry,
+                fileProviderRegistry,
+                resolver,
+                reflectionService);
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);
@@ -51,7 +58,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
     }
 
     private void applyFilter(String filterText) {
-        DataProvider<EntityItemList, ?> dataProvider = virtualGrid.getDataProvider();
+        DataProvider<EntityItemList<DataStoreId>, ?> dataProvider = virtualGrid.getDataProvider();
         if (dataProvider != null) {
             if (dataProvider instanceof ConfigurableFilterDataProvider) {
                 ((ConfigurableFilterDataProvider<?, Void, String>) dataProvider).setFilter(filterText);

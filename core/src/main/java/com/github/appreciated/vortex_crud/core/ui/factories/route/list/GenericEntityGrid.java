@@ -7,7 +7,6 @@ import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -15,12 +14,12 @@ import com.vaadin.flow.component.grid.GridVariant;
 import java.util.Map;
 
 /**
- * A custom {@link Grid} component for displaying {@link GenericEntity} objects with lazy loading. This grid is
+ * A custom {@link Grid} component for displaying {@link Object} objects with lazy loading. This grid is
  * configured with a data provider that retrieves and counts records dynamically based on the specified table in the
  * {@link RouteRenderer}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
-public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity> {
+public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<Object> {
 
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
 
@@ -34,14 +33,14 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         DataStoreId table = routeRenderer.getDataStore();
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         // Set up the data provider with lazy loading and filtering
 
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStore());
         RouteRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration = routeRenderer.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
-        com.vaadin.flow.data.provider.DataProvider<GenericEntity, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
         Map<?, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
@@ -63,9 +62,9 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<GenericEntity>
     /**
      * Handles click events for each entity row, navigating to the detailed view based on the entity's ID.
      *
-     * @param entity the clicked GenericEntity
+     * @param entity the clicked Object
      */
-    private void onItemClick(GenericEntity entity) {
+    private void onItemClick(Object entity) {
         String v = pathVariables.getPath() + "/" + DataStoreUtil.getId(entity);
         getUI().ifPresent(ui -> ui.navigate(v));
     }

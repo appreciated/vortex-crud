@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -23,6 +24,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final ReflectionService reflectionService;
 
     public GridRouteFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -31,7 +33,8 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
             VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
             VortexCrudFileProviderRegistry fileProviderRegistry,
-            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
+            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+            ReflectionService reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
@@ -40,6 +43,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.reflectionService = reflectionService;
     }
 
     @Override
@@ -57,7 +61,8 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
                 routeFactoryRegistry,
                 itemFactoryRegistry,
                 fileProviderRegistry,
-                fieldNameResolver);
+                fieldNameResolver,
+                reflectionService);
     }
 
     @Override

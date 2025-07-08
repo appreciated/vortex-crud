@@ -88,7 +88,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build()))
                         .build());
 
-        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TasksRecord, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TasksRecord.class)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)

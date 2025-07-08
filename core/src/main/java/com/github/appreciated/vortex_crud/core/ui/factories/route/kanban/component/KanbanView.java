@@ -4,8 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
@@ -32,14 +32,15 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
 
     private final VortexCrudItemFactory<FieldId> itemFactory;
     private final Kanban<DataStoreId, FieldId> kanbanConfig;
-    private final ComponentRenderer<Component, GenericEntity> itemRenderer;
-    private final VortexCrudDataStore<FieldId> dataStore;
+    private final ComponentRenderer<Component, Object> itemRenderer;
+    private final VortexCrudDataStore<FieldId, ?> dataStore;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final ReflectionService reflectionService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(DataStoreId dataStoreIdentifier,
                       RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                      VortexCrudDataStore<FieldId> dataStore,
+                      VortexCrudDataStore<FieldId, ?> dataStore,
                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                       VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                       Kanban<DataStoreId, FieldId> kanbanConfig,
@@ -48,9 +49,12 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                       VortexCrudFileProviderRegistry fileProviderRegistry,
                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                       FormCreator<DataStoreId, FieldId> formCreator,
-                      DetailRouteSetting detailRouteSetting) {
+                      DetailRouteSetting detailRouteSetting,
+                      ReflectionService reflectionService
+                      ) {
         this.dataStore = dataStore;
         this.fieldNameResolver = fieldNameResolver;
+        this.reflectionService = reflectionService;
         Selects selects = configService.getSelects();
         DataStoreConfig<DataStoreId, FieldId> config = configService.getDataStores().get(dataStoreIdentifier);
         Field<DataStoreId, FieldId> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
@@ -61,7 +65,12 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
 
         itemRenderer = new ComponentRenderer<>(entity -> {
             // Create a component for the card via the VortexCrudItemFactory
-            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig, entity, null, fileProviderRegistry, fieldNameResolver));
+            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig,
+                    entity,
+                    null,
+                    fileProviderRegistry,
+                    fieldNameResolver,
+                    reflectionService));
             // Allow dragging the card
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
@@ -76,9 +85,14 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                         routeFactory,
                         () -> {
                             //TODO handle if the column was edited, requiring the element to move
-                            GenericEntity recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
+                            Object recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
                             cardWrapper.removeAll();
-                            cardWrapper.add(itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver));
+                            cardWrapper.add(itemFactory.renderItem(kanbanConfig,
+                                    recordById,
+                                    null,
+                                    fileProviderRegistry,
+                                    fieldNameResolver,
+                                    reflectionService));
                         },
                         formCreator);
                 dialog.open();
@@ -130,7 +144,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
         wrapper.setWidth("300px");
-        wrapper.getStyle()                .set("flex", "0 0 auto")
+        wrapper.getStyle().set("flex", "0 0 auto")
                 .set("background", "var(--lumo-contrast-5pct)")
                 .set("border-radius", "var(--lumo-border-radius-l)");
         wrapper.addClassNames("no-hover");
@@ -145,9 +159,9 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                 column.add(draggedComponent);
             }
             event.getDragData().ifPresent(o -> {
-                if (o instanceof GenericEntity) {
-                    ((GenericEntity) o).put(fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
-                    dataStore.updateRecordById(((GenericEntity) o).get("id"), (GenericEntity) o);
+                if (o instanceof Object) {
+                    ((Object) o).put(fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
+                    dataStore.updateRecordById(((Object) o).get("id"), (Object) o);
                 }
             });
         });
@@ -159,8 +173,8 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         wrapper.add(titleLabel);
         wrapper.add(column);
 
-        List<GenericEntity> recordsFromTableWhereColumnEquals = dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
-        for (GenericEntity record : recordsFromTableWhereColumnEquals) {
+        List<?> recordsFromTableWhereColumnEquals = dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
+        for (Object record : recordsFromTableWhereColumnEquals) {
             column.add(itemRenderer.createComponent(record));
         }
 
@@ -168,7 +182,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     }
 
     private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
-        GenericEntity entity = new GenericEntity();
+        Object entity = new Object();
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,
@@ -178,8 +192,8 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                 dataStore,
                 routeFactory,
                 () -> {
-                    GenericEntity recordById = this.dataStore.getRecordById(DataStoreUtil.getId(entity));
-                    itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver);
+                    Object recordById = this.dataStore.getRecordById(DataStoreUtil.getId(entity));
+                    itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver, reflectionService);
                 },
                 formCreator);
         dialog.open();

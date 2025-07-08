@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -16,26 +16,27 @@ import com.vaadin.flow.shared.Registration;
 
 public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
-    private final ComboBox<GenericEntity> comboBox;
-    private final VortexCrudDataStore<FieldId> dataStore;
+    private final ComboBox<Object> comboBox;
+    private final VortexCrudDataStore<FieldId, ?> dataStore;
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                  VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                 Field<DataStoreId, FieldId> dataStoreField
+                                 Field<DataStoreId, FieldId> dataStoreField,
+                                 ReflectionService reflectionService
     ) {
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> dataStore.getRecordsFromTableWhereColumnLike(dataStoreField.getFilterField(), filterValue, i, i1).stream(),
+                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(dataStoreField.getFilterField(), filterValue, i, i1).stream(),
                 filterValue -> dataStore.countWhereColumnLike(dataStoreField.getFilterField(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> dataStoreField.getChildren().stream()
                 .map(resolver::getKeyForFieldId)
-                .map(item::getString)
+                .map(field -> reflectionService.getString(item, field))
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")
         );
@@ -59,17 +60,17 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
 
     @Override
     public Registration addValueChangeListener(ValueChangeListener<? super ValueChangeEvent<Object>> listener) {
-        return comboBox.addValueChangeListener((ValueChangeListener<? super AbstractField.ComponentValueChangeEvent<ComboBox<GenericEntity>, GenericEntity>>) listener);
+        return comboBox.addValueChangeListener(listener);
     }
 
     // Implementing setValue() to load an entity based on the Id
     @Override
     public void setValue(Object id) {
         if (id != null) {
-            if (id instanceof GenericEntity) {
-                comboBox.setValue((GenericEntity) id);
+            if (id instanceof Object) {
+                comboBox.setValue(id);
             } else {
-                GenericEntity entity = dataStore.getRecordById(id);
+                Object entity = dataStore.getRecordById(id);
                 comboBox.setValue(entity);
                 currentValue = id;
             }

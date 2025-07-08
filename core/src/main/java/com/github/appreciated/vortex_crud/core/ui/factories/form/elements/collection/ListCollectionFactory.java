@@ -1,11 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item.DefaultCollectionItem;
@@ -72,8 +70,8 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         list.add(header);
         CollectionConfiguration<DataStoreId, FieldId> data = internalFormElement.getConfiguration().getData();
 
-        VortexCrudDataStore<FieldId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
-        List<GenericEntity> records = (data.getManyToMany() != null) ?
+        VortexCrudDataStore<FieldId, DataStoreId> dataStore = (VortexCrudDataStore<FieldId, DataStoreId>) dataStoreFactoryRegistry.getDataStore(data.getDataStore());
+        List<DataStoreId> records = (data.getManyToMany() != null) ?
                 data.getManyToMany().getData(dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
                 data.getOneToMany().getData(foreignKeyValue, dataStore, data);
 
@@ -95,9 +93,9 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                                     FormCreator<DataStoreId, FieldId> formCreator,
                                     VerticalLayout list,
                                     HorizontalLayout header,
-                                    List<GenericEntity> records,
-                                    VortexCrudDataStore<FieldId> dataStore) {
-        for (GenericEntity record : records) {
+                                    List<Object> records,
+                                    VortexCrudDataStore<FieldId, ?> dataStore) {
+        for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<String> children = internalFormElement.getConfiguration().getData().getChildren();
@@ -118,9 +116,9 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
                                    FormCreator<DataStoreId, FieldId> formCreator,
                                    VerticalLayout list,
                                    HorizontalLayout header,
-                                   List<GenericEntity> records,
-                                   VortexCrudDataStore<FieldId> dataStore) {
-        for (GenericEntity record : records) {
+                                   List<Object> records,
+                                   VortexCrudDataStore<FieldId, ?> dataStore) {
+        for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();

@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.model.GenericEntity;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
@@ -24,24 +24,27 @@ public class FormCreator<DataStoreId, FieldId> {
     private final DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final ReflectionService reflectionService;
 
     public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory,
                        VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry,
-                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
+                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                       ReflectionService reflectionService) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.reflectionService = reflectionService;
     }
 
     public void bindAndAddToLayout(DataStoreId table,
-                                                          RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                                                          RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
-                                                          GenericEntity entity,
-                                                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                                          DataStoreConfig<DataStoreId, FieldId> tables,
-                                                          Binder<GenericEntity> binder,
-                                                          FormLayout form,
-                                                          FormCreator<DataStoreId, FieldId> formCreator) {
+                                   RouteRenderer<DataStoreId, FieldId> routeRenderer,
+                                   RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
+                                   Object entity,
+                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                                   DataStoreConfig<DataStoreId, FieldId> tables,
+                                   Binder<Object> binder,
+                                   FormLayout form,
+                                   FormCreator<DataStoreId, FieldId> formCreator) {
         Map<FieldId, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
@@ -56,8 +59,8 @@ public class FormCreator<DataStoreId, FieldId> {
                 Component component = factory.createComponent(table, fieldName, field);
                 binder.bind(
                         (HasValue) component,
-                        entity1 -> entity1.get(fieldNameResolver.getKeyForFieldId(fieldName)),
-                        (entity1, o) -> entity1.put(fieldNameResolver.getKeyForFieldId(fieldName), o)
+                        entity1 -> reflectionService.getValue(entity1, fieldNameResolver.getKeyForFieldId(fieldName)),
+                        (entity1, o) -> reflectionService.setValue(entity1, fieldNameResolver.getKeyForFieldId(fieldName), o)
                 );
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
