@@ -29,15 +29,12 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     private TestRepository testRepository;
 
     @Autowired
-    private JpaGenericEntityMapper mapper;
-
-    @Autowired
     private JpaFieldTypeResolverService fieldTypeResolver;
 
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, mapper, fieldTypeResolver);
+        dataStore = new JpaRepositoryDataStore<>(testRepository, fieldTypeResolver);
     }
 
     @AfterEach
@@ -62,18 +59,18 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
     @Test
     void testInsertRecord() {
-        GenericEntity values = new GenericEntity();
-        values.put("name", "John Doe");
-        values.put("age", 30);
+        TestEntity values = new TestEntity();
+        values.setName("John Doe");
+        values.setAge(30);
 
         dataStore.insertRecord(values);
 
-        List<GenericEntity> records = dataStore.getRecordsFromTable(0, 10);
+        List<TestEntity> records = dataStore.getRecordsFromTable(0, 10);
         assertEquals(1, records.size());
 
-        GenericEntity record = records.get(0);
-        assertEquals("John Doe", record.get("name"));
-        assertEquals(30, record.get("age"));
+        TestEntity record = records.get(0);
+        assertEquals("John Doe", record.getName());
+        assertEquals(30, record.getAge());
     }
 
     @Test
@@ -82,42 +79,42 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         insertTestRecord("Alice", 25);
         insertTestRecord("Bob", 35);
 
-        List<GenericEntity> records = dataStore.getRecordsFromTable(0, 10);
+        List<TestEntity> records = dataStore.getRecordsFromTable(0, 10);
         assertEquals(2, records.size());
 
-        GenericEntity firstRecord = records.get(0);
-        assertEquals("Alice", firstRecord.get("name"));
-        assertEquals(25, firstRecord.get("age"));
+        TestEntity firstRecord = records.get(0);
+        assertEquals("Alice", firstRecord.getName());
+        assertEquals(25, firstRecord.getAge());
 
-        GenericEntity secondRecord = records.get(1);
-        assertEquals("Bob", secondRecord.get("name"));
-        assertEquals(35, secondRecord.get("age"));
+        TestEntity secondRecord = records.get(1);
+        assertEquals("Bob", secondRecord.getName());
+        assertEquals(35, secondRecord.getAge());
     }
 
     @Test
     void testGetRecordById() {
         // Insert a record and retrieve it by ID
         insertTestRecord("Alice", 25);
-        GenericEntity record = dataStore.getRecordById(1);
+        TestEntity record = dataStore.getRecordById(1);
         assertNotNull(record);
-        assertEquals("Alice", record.get("name"));
-        assertEquals(25, record.get("age"));
+        assertEquals("Alice", record.getName());
+        assertEquals(25, record.getAge());
     }
 
     @Test
     void testUpdateRecordById() {
         // Insert and update a record
         insertTestRecord("Alice", 25);
-        GenericEntity updatedValues = new GenericEntity();
-        updatedValues.put("name", "Alice Updated");
-        updatedValues.put("age", 30);
+        TestEntity updatedValues = new TestEntity();
+        updatedValues.setName("Alice Updated");
+        updatedValues.setAge(30);
 
         dataStore.updateRecordById(1, updatedValues);
 
-        GenericEntity updatedRecord = dataStore.getRecordById(1);
+        TestEntity updatedRecord = dataStore.getRecordById(1);
         assertNotNull(updatedRecord);
-        assertEquals("Alice Updated", updatedRecord.get("name"));
-        assertEquals(30, updatedRecord.get("age"));
+        assertEquals("Alice Updated", updatedRecord.getName());
+        assertEquals(30, updatedRecord.getAge());
     }
 
     @Test
@@ -126,7 +123,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
         insertTestRecord("Alice", 25);
         dataStore.deleteRecordById(1);
 
-        GenericEntity record = dataStore.getRecordById(1);
+        TestEntity record = dataStore.getRecordById(1);
         assertNull(record);
     }
 
@@ -138,15 +135,15 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
         dataStore.deleteAllRecords();
 
-        List<GenericEntity> records = dataStore.getRecordsFromTable(0, 10);
+        List<TestEntity> records = dataStore.getRecordsFromTable(0, 10);
         assertTrue(records.isEmpty());
     }
 
     // Utility method to insert a test record
     private void insertTestRecord(String name, int age) {
-        GenericEntity values = new GenericEntity();
-        values.put("name", name);
-        values.put("age", age);
+        TestEntity values = new TestEntity();
+        values.setName(name);
+        values.setAge(age);
         dataStore.insertRecord(values);
     }
 
