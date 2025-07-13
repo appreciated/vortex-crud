@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset vortex-crud:1
+-- changeset jooq-sqlite-example-vortex-crud:1
 CREATE TABLE users
 (
     id            INTEGER PRIMARY KEY,
@@ -9,14 +9,14 @@ CREATE TABLE users
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- changeset vortex-crud:2
+-- changeset jooq-sqlite-example-vortex-crud:2
 CREATE TABLE roles
 (
     id   INTEGER PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
 );
 
--- changeset vortex-crud:3
+-- changeset jooq-sqlite-example-vortex-crud:3
 CREATE TABLE user_roles
 (
     user_id INT,
@@ -26,7 +26,7 @@ CREATE TABLE user_roles
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
--- changeset vortex-crud:4
+-- changeset jooq-sqlite-example-vortex-crud:4
 CREATE TABLE audit_log
 (
     id                INTEGER PRIMARY KEY,
