@@ -36,7 +36,8 @@ class JooqDataStoreTest {
     }
 
     private void createTestTable() {
-        dslContext.execute("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), age INT)");
+        dslContext.execute("DROP TABLE IF EXISTS test_table");
+        dslContext.execute("CREATE TABLE test_table (id INTEGER PRIMARY KEY, name VARCHAR(255), age INT)");
     }
 
     @Test
@@ -85,6 +86,7 @@ class JooqDataStoreTest {
     void testUpdateRecordById() {
         insertTestRecord("Alice", 25);
         TestTableRecord updatedValues = new TestTableRecord();
+        updatedValues.setId(1);  // Set the ID to identify which record to update
         updatedValues.setName("Alice Updated");
         updatedValues.setAge(30);
 

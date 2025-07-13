@@ -46,7 +46,11 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public ModelClass newInstance() {
-        return null;
+        try {
+            return record.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create new instance of " + record.getName(), e);
+        }
     }
 
     @Override

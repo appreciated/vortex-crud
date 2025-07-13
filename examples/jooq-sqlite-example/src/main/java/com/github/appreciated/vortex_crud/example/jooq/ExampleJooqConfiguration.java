@@ -88,7 +88,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build()))
                         .build());
 
-        RouteRenderer<TasksRecord, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TasksRecord.class)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
@@ -119,9 +119,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(JooqCollection.of(ConnectDialogFactory.class)
                                                 .withData(JooqCollectionConfiguration.of(TasksRecord.class)
-                                                        .withManyToMany(new JooqManyToMany(TaskHasTaskRecord.class,
+                                                        .withManyToMany(new JooqManyToMany(
                                                                 TASK_HAS_TASK.TASK_ID,
-                                                                TASK_HAS_TASK.RELATED_TASK_ID,
+                                                                TASK_HAS_TASK.ID,
                                                                 TASKS.ID))
                                                         .withChildren("title")
                                                         .build())
