@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultJooqDataStoreFactoryRegistryInit {
 
-    public DefaultJooqDataStoreFactoryRegistryInit(VortexCrudDataStoreFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?, ?>> registry, DSLContext dslContext) {
+    public DefaultJooqDataStoreFactoryRegistryInit(VortexCrudDataStoreFactoryRegistry<TableRecord<?>, TableField<?, ?>> registry, DSLContext dslContext) {
         registry.addFactory(UsersRecord.class, new JooqDataStore(UsersRecord.class, dslContext));
     }
 }

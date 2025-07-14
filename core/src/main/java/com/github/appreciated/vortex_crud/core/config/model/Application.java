@@ -20,7 +20,7 @@ public abstract class Application<DataStoreId, FieldId> {
 
     private Auditing auditing;
 
-    private Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores;
+    private Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> dataStores;
 
     private LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId>> routes;
 
@@ -72,11 +72,11 @@ public abstract class Application<DataStoreId, FieldId> {
         this.auditing = auditing;
     }
 
-    public Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> getDataStores() {
+    public Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
+    public void setDataStores(Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
         this.dataStores = dataStores;
     }
 
@@ -90,9 +90,9 @@ public abstract class Application<DataStoreId, FieldId> {
 
     public static class Builder<DataStoreId, FieldId> {
 
-        private final Application<DataStoreId,FieldId> product;
+        private final Application<DataStoreId, FieldId> product;
 
-        public Builder(Application<DataStoreId,FieldId> product) {
+        public Builder(Application<DataStoreId, FieldId> product) {
             this.product = product;
         }
 
@@ -126,7 +126,7 @@ public abstract class Application<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withDataStores(Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
+        public Builder<DataStoreId, FieldId> withDataStores(Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }

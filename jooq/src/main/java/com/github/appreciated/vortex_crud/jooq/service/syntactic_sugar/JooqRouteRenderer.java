@@ -5,8 +5,8 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqRouteRenderer extends RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> {
-    public JooqRouteRenderer(Class<? extends VortexCrudRouteFactory<Class<? extends TableRecord<?>>, TableField<?, ?>>> factory) {
+public class JooqRouteRenderer extends RouteRenderer<TableRecord<?>, TableField<?, ?>> {
+    public JooqRouteRenderer(Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>>> factory) {
         super(factory);
     }
 
@@ -16,7 +16,7 @@ public class JooqRouteRenderer extends RouteRenderer<Class<? extends TableRecord
         }
     }
 
-    public static JooqRouteRenderer.Builder<Class<? extends TableRecord<?>>, TableField<?, ?>> of(Class<? extends VortexCrudRouteFactory> factory) {
-        return new JooqRouteRenderer.Builder<>(new JooqRouteRenderer((Class<? extends VortexCrudRouteFactory<Class<? extends TableRecord<?>>, TableField<?, ?>>>) factory));
+    public static JooqRouteRenderer.Builder<TableRecord<?>, TableField<?, ?>> of(Class<? extends VortexCrudRouteFactory> factory) {
+        return new JooqRouteRenderer.Builder<>(new JooqRouteRenderer((Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>>>) factory));
     }
 }

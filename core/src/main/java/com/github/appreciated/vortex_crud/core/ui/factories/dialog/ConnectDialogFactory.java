@@ -47,12 +47,12 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
-                         DataStoreId dataStoreIdentifier,
+                         Class<? extends DataStoreId> dataStoreKey,
                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                          OnStoreListener listener,
                          FormCreator<DataStoreId, FieldId> formCreator) {
 
-        VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreIdentifier);
+        VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
         ManyToMany<DataStoreId, FieldId> manyToMany = collectionConfiguration.getManyToMany();
         FieldId associativeTargetIdField = manyToMany.getAssociativeTargetIdField();
         Dialog dialog = new Dialog();

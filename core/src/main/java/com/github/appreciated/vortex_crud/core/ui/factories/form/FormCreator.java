@@ -36,7 +36,7 @@ public class FormCreator<DataStoreId, FieldId> {
         this.reflectionService = reflectionService;
     }
 
-    public void bindAndAddToLayout(DataStoreId table,
+    public void bindAndAddToLayout(Class<? extends DataStoreId> dataStoreKey,
                                    RouteRenderer<DataStoreId, FieldId> routeRenderer,
                                    RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
                                    Object entity,
@@ -53,10 +53,10 @@ public class FormCreator<DataStoreId, FieldId> {
             if (!element.getType().equals("collection")) {
                 Field<DataStoreId, FieldId> field = fieldsConfig.get(fieldName);
                 if (field == null) {
-                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + table + "'");
+                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
-                Component component = factory.createComponent(table, fieldName, field);
+                Component component = factory.createComponent(dataStoreKey, fieldName, field);
                 binder.bind(
                         (HasValue) component,
                         entity1 -> reflectionService.getValue(entity1, fieldName),

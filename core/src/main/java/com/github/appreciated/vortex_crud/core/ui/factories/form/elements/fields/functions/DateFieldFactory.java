@@ -13,7 +13,7 @@ import java.util.List;
 public class DateFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         DatePicker datePicker = new DatePicker();
         DatePicker.DatePickerI18n genericI18n = new DatePicker.DatePickerI18n();
 

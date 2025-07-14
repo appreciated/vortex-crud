@@ -5,13 +5,13 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqKanban extends Kanban<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class JooqKanban extends Kanban<TableRecord<?>, TableField<?, ?>> {
 
     public JooqKanban(Class<? extends VortexCrudItemFactory<TableField<?, ?>>> factory) {
         super(factory);
     }
 
-    public static class Builder extends Kanban.Builder<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+    public static class Builder extends Kanban.Builder<TableRecord<?>, TableField<?, ?>> {
         public Builder(JooqKanban product) {
             super(product);
         }

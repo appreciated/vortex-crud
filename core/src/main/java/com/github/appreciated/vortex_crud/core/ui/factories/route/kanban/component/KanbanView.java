@@ -38,7 +38,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanView(DataStoreId dataStoreIdentifier,
+    public KanbanView(Class<? extends DataStoreId> dataStoreIdentifier,
                       RouteRenderer<DataStoreId, FieldId> routeRenderer,
                       VortexCrudDataStore<FieldId, ?> dataStore,
                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
@@ -181,7 +181,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         return wrapper;
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, DataStoreId dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, Class<? extends DataStoreId> dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
         Object entity = new Object();
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,

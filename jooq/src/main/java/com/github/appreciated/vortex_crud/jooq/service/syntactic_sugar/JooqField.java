@@ -31,7 +31,7 @@ public class JooqField extends Field<TableRecord<?>, TableField<?,?>> {
         super((Class<? extends VortexCrudFieldFactory<TableRecord<?>, TableField<?,?>>>) factory, primary, required, validation);
     }
 
-    public JooqField(Class<? extends VortexCrudFieldFactory> factory, TableField<?,?> field, TableField<?,?> filterField, Class<TableRecord<?>> dataStore, List<TableField<?,?>> children) {
+    public JooqField(Class<? extends VortexCrudFieldFactory> factory, TableField<?,?> field, TableField<?,?> filterField, Class<? extends TableRecord<?>> dataStore, List<TableField<?,?>> children) {
         super((Class<? extends VortexCrudFieldFactory<TableRecord<?>, TableField<?,?>>>) factory, field, filterField, dataStore, children);
     }
 
@@ -40,7 +40,7 @@ public class JooqField extends Field<TableRecord<?>, TableField<?,?>> {
     }
 
     public static Builder<TableRecord<?>, TableField<?,?>> of(Class<? extends VortexCrudFieldFactory> factory, String values) {
-        return new Builder<>(new Field<>(factory, values));
+        return new Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<TableRecord<?>, TableField<?, ?>>>) factory, values));
     }
 
     public static Builder<TableRecord<?>, TableField<?,?>> of(Class<? extends VortexCrudFieldFactory> factory, boolean primary, boolean required) {

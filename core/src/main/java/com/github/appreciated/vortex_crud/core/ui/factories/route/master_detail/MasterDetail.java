@@ -71,7 +71,7 @@ public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
         routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStore());
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey());
         this.gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) routeRenderer.getConfiguration();
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         assert routeRenderer.getChild() != null;

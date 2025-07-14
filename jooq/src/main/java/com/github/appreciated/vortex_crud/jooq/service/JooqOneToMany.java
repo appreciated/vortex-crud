@@ -8,7 +8,7 @@ import org.jooq.TableRecord;
 
 import java.util.List;
 
-public class JooqOneToMany implements OneToMany<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class JooqOneToMany implements OneToMany<TableRecord<?>, TableField<?, ?>> {
 
     private final TableField<?, ?> referenceField;
 
@@ -17,13 +17,13 @@ public class JooqOneToMany implements OneToMany<Class<? extends TableRecord<?>>,
     }
 
     @Override
-    public List<Class<? extends TableRecord<?>>> getData(String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, CollectionConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> collectionConfiguration) {
+    public List<TableRecord<?>> getData(String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, CollectionConfiguration<TableRecord<?>, TableField<?, ?>> collectionConfiguration) {
         return foreignKeyValue == null ? List.of() :
-                (List<Class<? extends TableRecord<?>>>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
+                (List<TableRecord<?>>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 
     @Override
-    public TableField<?, ?> getReferenceField(CollectionConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> collectionConfiguration) {
+    public TableField<?, ?> getReferenceField(CollectionConfiguration<TableRecord<?>, TableField<?, ?>> collectionConfiguration) {
         return referenceField;
     }
 

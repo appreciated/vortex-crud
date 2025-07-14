@@ -57,7 +57,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
-        DataStoreId table = config.getDataStore();
+        Class<? extends DataStoreId> table = config.getDataStoreKey();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
         gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) config.getConfiguration();

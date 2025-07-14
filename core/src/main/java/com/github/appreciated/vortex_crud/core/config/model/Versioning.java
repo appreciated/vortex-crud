@@ -9,7 +9,7 @@ public class Versioning<DataStoreId> {
 
     private boolean enabled;
 
-    private List<DataStoreId> dataStores;
+    private List<Class<? extends DataStoreId>> dataStores;
 
     public boolean isEnabled() {
         return enabled;
@@ -19,11 +19,11 @@ public class Versioning<DataStoreId> {
         this.enabled = enabled;
     }
 
-    public List<DataStoreId> getDataStores() {
+    public List<Class<? extends DataStoreId>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(List<DataStoreId> dataStores) {
+    public void setDataStores(List<Class<? extends DataStoreId>> dataStores) {
         this.dataStores = dataStores;
     }
 
@@ -40,17 +40,17 @@ public class Versioning<DataStoreId> {
             return this;
         }
 
-        public Builder<DataStoreId> withDataStores(List<DataStoreId> dataStores) {
+        public Builder<DataStoreId> withDataStores(List<Class<? extends DataStoreId>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
         @SafeVarargs
-        public final Builder<DataStoreId> withDataStores(DataStoreId... dataStores) {
+        public final Builder<DataStoreId> withDataStores(Class<? extends DataStoreId>... dataStores) {
             return withDataStores(List.of(dataStores));
         }
 
-        public Builder<DataStoreId> addDataStores(DataStoreId item) {
+        public Builder<DataStoreId> addDataStores(Class<? extends DataStoreId> item) {
             product.dataStores.add(item);
             return this;
         }

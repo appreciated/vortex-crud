@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
 
     private final Selects selects;
-    private final Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
+    private final Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<DataStoreId, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         Select<?> select = new Select<>();
 
         DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);

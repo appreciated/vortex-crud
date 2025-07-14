@@ -24,7 +24,7 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId> {
     List<DataStoreId> getManyToMany(
             VortexCrudDataStore<FieldId, ?> dataStore,
             ManyToMany<DataStoreId, FieldId> manyToMany,
-            Class<DataStoreId> modelClass
+            Class<? extends DataStoreId> modelClass
     );
 
     /**

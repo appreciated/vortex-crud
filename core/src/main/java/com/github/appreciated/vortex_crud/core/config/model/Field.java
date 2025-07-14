@@ -20,7 +20,7 @@ public class Field<DataStoreId, FieldId> {
 
     private String values;
 
-    private DataStoreId dataStore;
+    private Class<? extends DataStoreId> dataStore;
 
     private FieldId field;
 
@@ -59,7 +59,7 @@ public class Field<DataStoreId, FieldId> {
         this.validation = validation;
     }
 
-    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
+    public Field(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, Class<? extends DataStoreId> dataStore, List<FieldId> children) {
         this(factory);
         this.field = field;
         this.filterField = filterField;
@@ -115,11 +115,11 @@ public class Field<DataStoreId, FieldId> {
         this.values = values;
     }
 
-    public DataStoreId getDataStore() {
+    public Class<? extends DataStoreId> getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(DataStoreId dataStore) {
+    public void setDataStore(Class<? extends DataStoreId> dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -192,7 +192,7 @@ public class Field<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {
+        public Builder<DataStoreId, FieldId> withDataStore(Class<? extends DataStoreId> dataStore) {
             product.dataStore = dataStore;
             return this;
         }
@@ -260,7 +260,7 @@ public class Field<DataStoreId, FieldId> {
             return new Builder<>(new Field<>(factory, primary, required, validation));
         }
 
-        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, DataStoreId dataStore, List<FieldId> children) {
+        public static <DataStoreId, FieldId> Builder<DataStoreId, FieldId> of(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId>> factory, FieldId field, FieldId filterField, Class<? extends DataStoreId> dataStore, List<FieldId> children) {
             return new Builder<>(new Field<>(factory, field, filterField, dataStore, children));
         }
     }

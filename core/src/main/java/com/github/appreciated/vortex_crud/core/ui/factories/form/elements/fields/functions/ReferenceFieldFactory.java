@@ -27,7 +27,7 @@ public class ReferenceFieldFactory<DataStoreId, FieldId> implements VortexCrudFi
     }
 
     @Override
-    public Component createComponent(DataStoreId table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
         return new EntityComboBoxWrapper<>(resolver, managerFactoryRegistry, dataStoreField, reflectionService);
     }
 

@@ -5,13 +5,13 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqGridOrListRendererConfiguration extends GridOrListRendererConfiguration<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class JooqGridOrListRendererConfiguration extends GridOrListRendererConfiguration<TableRecord<?>, TableField<?, ?>> {
 
     public JooqGridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<TableField<?, ?>>> factory) {
         super(factory);
     }
 
-    public static class Builder extends GridOrListRendererConfiguration.Builder<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+    public static class Builder extends GridOrListRendererConfiguration.Builder<TableRecord<?>, TableField<?, ?>> {
         public Builder(JooqGridOrListRendererConfiguration product) {
             super(product);
         }

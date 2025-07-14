@@ -47,12 +47,12 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId> config,
-                         DataStoreId dataStore,
+                         Class<? extends DataStoreId> dataStoreKey,
                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
                          OnStoreListener listener,
                          FormCreator<DataStoreId, FieldId> formCreator) {
 
-        this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStore);
+        this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -72,9 +72,9 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStore);
+        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
 
-        formCreator.bindAndAddToLayout(dataStore, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
+        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

@@ -20,12 +20,12 @@ import java.util.Optional;
  */
 
 @Service
-public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<TableRecord<?>, TableField<?, ?>> {
 
     private final HashMap<Class<? extends TableRecord<?>>, VortexCrudDataStore<TableField<?, ?>, ?>> factories = new HashMap<>();
 
-    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<Class<? extends TableRecord<?>>, TableField<?, ?>> configService, DSLContext dslContext) {
-        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<Class<? extends TableRecord<?>>, TableField<?, ?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
+    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<TableRecord<?>, TableField<?, ?>> configService, DSLContext dslContext) {
+        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<TableRecord<?>, TableField<?, ?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             Class<? extends TableRecord<?>> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }

@@ -12,7 +12,7 @@ import java.util.Map;
 @GenerateBuilder
 public class RouteRenderer<DataStoreId, FieldId> {
 
-    private DataStoreId dataStore;
+    private Class<? extends DataStoreId> dataStoreKey;
 
     private String title;
 
@@ -34,12 +34,12 @@ public class RouteRenderer<DataStoreId, FieldId> {
 
     private List<String> roles;
 
-    public DataStoreId getDataStore() {
-        return dataStore;
+    public Class<? extends DataStoreId> getDataStoreKey() {
+        return dataStoreKey;
     }
 
-    public void setDataStore(DataStoreId dataStore) {
-        this.dataStore = dataStore;
+    public void setDataStoreKey(Class<? extends DataStoreId> dataStoreKey) {
+        this.dataStoreKey = dataStoreKey;
     }
 
     public String getTitle() {
@@ -125,8 +125,8 @@ public class RouteRenderer<DataStoreId, FieldId> {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId> withDataStore(DataStoreId dataStore) {
-            product.dataStore = dataStore;
+        public Builder<DataStoreId, FieldId> withDataStore(Class<? extends DataStoreId> dataStore) {
+            product.dataStoreKey = dataStore;
             return this;
         }
 

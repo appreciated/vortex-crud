@@ -91,7 +91,7 @@ public class FormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        DataStoreId table = routeRenderer.getDataStore();
+        Class<? extends DataStoreId> table = routeRenderer.getDataStoreKey();
         DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldId, DataStoreId> dataStore = (VortexCrudDataStore<FieldId, DataStoreId>) dataStoreFactoryRegistry.getDataStore(table);

@@ -7,7 +7,7 @@ import java.util.List;
 @GenerateBuilder
 public class CollectionConfiguration<DataStoreId, FieldId> {
 
-    private DataStoreId dataStore;
+    private Class<? extends DataStoreId> dataStore;
 
     private OneToMany<DataStoreId, FieldId> oneToMany;
 
@@ -15,15 +15,15 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
 
     private List<FieldId> children;
 
-    public CollectionConfiguration(DataStoreId dataStore) {
+    public CollectionConfiguration(Class<? extends DataStoreId> dataStore) {
         this.dataStore = dataStore;
     }
 
-    public DataStoreId getDataStore() {
+    public Class<? extends DataStoreId> getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(DataStoreId dataStore) {
+    public void setDataStore(Class<? extends DataStoreId> dataStore) {
         this.dataStore = dataStore;
     }
 

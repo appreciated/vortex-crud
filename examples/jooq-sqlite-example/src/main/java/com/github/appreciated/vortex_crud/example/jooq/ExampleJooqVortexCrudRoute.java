@@ -22,14 +22,14 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PRO
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Route("test/:path?")
-public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, TableField<?, ?>> {
 
-    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<Class<? extends TableRecord<?>>, TableField<?, ?>> routeFactoryRegistry) {
+    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<TableRecord<?>, TableField<?, ?>> routeFactoryRegistry) {
         super(routeFactoryRegistry);
     }
 
     @Override
-    protected RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> getConfiguration() {
+    protected RouteRenderer<TableRecord<?>, TableField<?, ?>> getConfiguration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDataStore(ProjectsRecord.class)
                 .withIconFactory(FACTORY::create)

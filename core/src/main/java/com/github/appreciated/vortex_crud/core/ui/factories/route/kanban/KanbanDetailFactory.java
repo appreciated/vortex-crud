@@ -55,9 +55,9 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView<DataStoreId, FieldId>(routeRenderer.getDataStore(),
+        return new KanbanView<>(routeRenderer.getDataStoreKey(),
                 routeRenderer,
-                dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStore()),
+                dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey()),
                 routeFactory,
                 itemFactory,
                 (Kanban<DataStoreId, FieldId>) routeRenderer.getConfiguration(),

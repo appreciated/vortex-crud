@@ -15,10 +15,11 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanD
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.vortex_crud.jooq.models.tables.Tasks;
 import com.github.appreciated.vortex_crud.jooq.models.tables.Users;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.*;
-import com.github.appreciated.vortex_crud.jooq.service.*;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
+import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.TableField;
@@ -39,11 +40,11 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<Class<? extends TableRecord<?>>, TableField<?, ?>> {
+public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>> {
     @Override
-    public Application<Class<? extends TableRecord<?>>, TableField<?, ?>> get() {
+    public Application<TableRecord<?>, TableField<?, ?>> get() {
 
-        Map<Class<? extends TableRecord<?>>, DataStoreConfig<Class<? extends TableRecord<?>>, TableField<?, ?>>> dataStores = Map.of(
+        Map<Class<? extends TableRecord<?>>, DataStoreConfig<TableRecord<?>, TableField<?, ?>>> dataStores = Map.of(
                 ProjectsRecord.class, JooqDataStoreConfig.of(JooqDataStore.class)
                         .withFields(Map.of(
                                 PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
@@ -89,7 +90,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build()))
                         .build());
 
-        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TasksRecord.class)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
@@ -134,7 +135,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
-        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(ProjectsRecord.class)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -148,7 +149,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
-        RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(ImagesRecord.class)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -160,7 +161,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<Class<? extends TableRecord<?>>, TableField<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
                 .withDataStore(ProjectsRecord.class)
