@@ -103,7 +103,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withConfiguration(JooqCollection.of(FormDialogFactory.class)
                                                 .withData(JooqCollectionConfiguration.of(TaskCommentsRecord.class)
                                                         .withOneToMany(new JooqOneToMany(TASK_COMMENTS.ID))
-                                                        .withChildren("comment_text")
+                                                        .withChildren(TASK_COMMENTS.COMMENT_TEXT)
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.comments-empty-message")
                                                 .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
