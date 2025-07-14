@@ -48,10 +48,7 @@ public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<Object> {
         for (InternalFormElement<DataStoreId, FieldId> field : gridOrListConfiguration.getChildren()) {
             FieldId fieldName = field.getField();
             Field<DataStoreId, FieldId> dataStoreField = fieldsConfig.get(fieldName);
-            if (dataStoreField == null) {
-                throw new IllegalStateException("Field '" + resolver.getKeyForFieldId(fieldName) + "' not found in the config unter table '" + table + "'");
-            }
-            listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, resolver.getKeyForFieldId(fieldName), dataStoreField);
+            listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
         }
 
         setDataProvider(dataProvider);

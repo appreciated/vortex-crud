@@ -13,23 +13,23 @@ import com.vaadin.flow.component.grid.Grid;
 public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements VortexCrudListColumnCallback<DataStoreId, FieldId> {
 
     private final VortexCrudFileProviderRegistry registry;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public DefaultListColumnImplCallback(VortexCrudFileProviderRegistry registry,
-                                         ReflectionService reflectionService) {
+                                         ReflectionService<FieldId> reflectionService) {
         this.registry = registry;
         this.reflectionService = reflectionService;
     }
 
     @Override
-    public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, String fieldName, Field<DataStoreId, FieldId> dataStoreField) {
+    public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, Field<DataStoreId, FieldId> dataStoreField) {
         // TODO Check if cast can be removed, removal causes compile issues
         if (((Class<? extends VortexCrudFieldFactory>) dataStoreField.getFactory()) == ImageFieldFactory.class) {
             if (dataStoreField.getConfiguration() == null) {
-                throw new IllegalArgumentException("The image field '" + fieldName + "' does not provide a imageFieldConfiguration");
+                throw new IllegalArgumentException("The image field '" + dataStoreField.getField() + "' does not provide a imageFieldConfiguration");
             }
             grid.addComponentColumn(entity -> {
-                        String string = reflectionService.getString(entity, fieldName);
+                        String string = reflectionService.getString(entity, dataStoreField.getField());
                         ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
@@ -39,7 +39,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Vort
                     .setResizable(true)
                     .setAutoWidth(true);
         } else {
-            grid.addColumn(entity -> reflectionService.getValue(entity, fieldName))
+            grid.addColumn(entity -> reflectionService.getValue(entity, dataStoreField.getField()))
                     .setHeader(grid.getTranslation(field.getLabel()))
                     .setResizable(true)
                     .setAutoWidth(true);

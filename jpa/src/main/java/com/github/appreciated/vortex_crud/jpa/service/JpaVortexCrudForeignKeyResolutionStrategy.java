@@ -31,7 +31,7 @@ public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudFore
             Field field = dataStore.getField(foreignKeyField);
             JpaRepositoryDataStore<String> fieldDataStore = dataStoreRegistryFactory.getDataStore(field.getType());
             Object recordById = fieldDataStore.getRecordById(foreignKeyValue);
-            reflectionService.setValue(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
+            reflectionService.setValueInternal(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
         }
     }
 }

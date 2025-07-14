@@ -59,8 +59,8 @@ public class FormCreator<DataStoreId, FieldId> {
                 Component component = factory.createComponent(table, fieldName, field);
                 binder.bind(
                         (HasValue) component,
-                        entity1 -> reflectionService.getValue(entity1, fieldNameResolver.getKeyForFieldId(fieldName)),
-                        (entity1, o) -> reflectionService.setValue(entity1, fieldNameResolver.getKeyForFieldId(fieldName), o)
+                        entity1 -> reflectionService.getValueInternal(entity1, fieldNameResolver.getKeyForFieldId(fieldName)),
+                        (entity1, o) -> reflectionService.setValueInternal(entity1, fieldNameResolver.getKeyForFieldId(fieldName), o)
                 );
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();

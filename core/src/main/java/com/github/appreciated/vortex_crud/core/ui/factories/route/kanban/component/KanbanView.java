@@ -160,7 +160,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
             }
             event.getDragData().ifPresent(o -> {
                 if (o instanceof Object) {
-                    reflectionService.setValue(o, fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
+                    reflectionService.setValueInternal(o, fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
                     dataStore.updateRecordById(o);
                 }
             });

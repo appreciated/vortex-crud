@@ -77,7 +77,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             throw new RuntimeException("Failed to call getManyToMany", e);
         }
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(entity -> reflectionService.getValue(entity, fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
+                .map(entity -> reflectionService.getValueInternal(entity, fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
                 .filter(Object -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
                 .collect(Collectors.toSet());
@@ -90,7 +90,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             return collectionConfiguration.getChildren().stream()
                 .map(child -> {
                     try {
-                        Object value = reflectionService.getValue(obj, child.toString());
+                        Object value = reflectionService.getValueInternal(obj, child.toString());
                         return value != null ? value.toString() : "";
                     } catch (Exception e) {
                         return "";
@@ -114,8 +114,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
             List<Object> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
                 Object newAssociation = new Object();
-                reflectionService.setValue(newAssociation, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
-                reflectionService.setValue(newAssociation, fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
+                reflectionService.setValueInternal(newAssociation, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+                reflectionService.setValueInternal(newAssociation, fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
                 return newAssociation;
             }).toList();
             // Use reflection to call insert with the correct type
@@ -134,7 +134,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
             List<?> entriesToDelete = currentAssociativeEntries.stream()
                     .filter(entry -> {
-                        Object targetIdObj = reflectionService.getValue(entry, fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
+                        Object targetIdObj = reflectionService.getValueInternal(entry, fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
                         if (targetIdObj == null) {
                             return false;
                         }

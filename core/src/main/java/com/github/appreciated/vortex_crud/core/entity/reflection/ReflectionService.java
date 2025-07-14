@@ -1,19 +1,25 @@
 package com.github.appreciated.vortex_crud.core.entity.reflection;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Service that provides reflection-based access to entity properties.
  * This replaces the direct get/put/getString methods with reflection-based access.
  */
 @Service
-public class ReflectionService {
+public class ReflectionService<FieldId> {
+
+    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+
+    public ReflectionService(VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
+        this.fieldNameResolver = fieldNameResolver;
+    }
 
     // Cache for fields and methods to improve performance
     private final Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
@@ -21,45 +27,15 @@ public class ReflectionService {
     private final Map<Class<?>, Map<String, Method>> setterCache = new HashMap<>();
 
     /**
-     * Gets a property value from an entity using reflection.
+     * Gets a property value as a String from an entity using reflection.
      *
      * @param entity    The entity object
      * @param fieldName The name of the field to get
      * @param <T>       The type of the entity
-     * @return The value of the field
+     * @return The value of the field as a String
      */
-    public <T> Object getValue(T entity, String fieldName) {
-        if (entity == null) {
-            return null;
-        }
-
-        // First try using get method if entity implements Map
-        if (entity instanceof Map) {
-            return ((Map<?, ?>) entity).get(fieldName);
-        }
-
-        // Then try using a getter method
-        Method getter = findGetter(entity.getClass(), fieldName);
-        if (getter != null) {
-            try {
-                return getter.invoke(entity);
-            } catch (Exception e) {
-                // Fall through to field access
-            }
-        }
-
-        // Finally try direct field access
-        Field field = findField(entity.getClass(), fieldName);
-        if (field != null) {
-            try {
-                field.setAccessible(true);
-                return field.get(entity);
-            } catch (Exception e) {
-                throw new RuntimeException("Error getting field " + fieldName + " from " + entity.getClass().getName(), e);
-            }
-        }
-
-        throw new RuntimeException("Field " + fieldName + " not found in " + entity.getClass().getName());
+    public <T> String getString(T entity, FieldId fieldName) {
+        return getStringInternal(entity, fieldNameResolver.getKeyForFieldId(fieldName));
     }
 
     /**
@@ -70,9 +46,49 @@ public class ReflectionService {
      * @param <T>       The type of the entity
      * @return The value of the field as a String
      */
-    public <T> String getString(T entity, String fieldName) {
-        Object value = getValue(entity, fieldName);
+    private <T> String getStringInternal(T entity, String fieldName) {
+        Object value = getValueInternal(entity, fieldName);
         return value == null ? null : value.toString();
+    }
+
+    public <T> Object getValue(T entity, FieldId field) {
+        return getValueInternal(entity, fieldNameResolver.getKeyForFieldId(field));
+    }
+
+    /**
+     * Gets a property value from an entity using reflection.
+     *
+     * @param entity    The entity object
+     * @param fieldName The name of the field to get
+     * @param <T>       The type of the entity
+     * @return The value of the field
+     */
+    public <T> Object getValueInternal(T entity, String fieldName) {
+        if (entity == null) {
+            return null;
+        }
+
+        // Try direct field access
+        try {
+            Field field = entity.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(entity);
+        } catch (NoSuchFieldException e) {
+            // If field not found in the class, try superclass
+            try {
+                Field field = entity.getClass().getField(fieldName);
+                field.setAccessible(true);
+                return field.get(entity);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(e);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting field " + fieldName + " from " + entity.getClass().getName(), e);
+        }
+    }
+
+    public <T> void setValueInternal(T entity, FieldId fieldName, Object value) {
+        setValueInternal(entity, fieldNameResolver.getKeyForFieldId(fieldName), value);
     }
 
     /**
@@ -83,41 +99,28 @@ public class ReflectionService {
      * @param value     The value to set
      * @param <T>       The type of the entity
      */
-    public <T> void setValue(T entity, String fieldName, Object value) {
+    private <T> void setValueInternal(T entity, String fieldName, Object value) {
         if (entity == null) {
             return;
         }
 
-        // First try using put method if entity implements Map
-        if (entity instanceof Map) {
-            ((Map<String, Object>) entity).put(fieldName, value);
-            return;
-        }
-
-        // Then try using a setter method
-        Method setter = findSetter(entity.getClass(), fieldName, value != null ? value.getClass() : Object.class);
-        if (setter != null) {
+        // Try direct field access
+        try {
+            Field field = entity.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(entity, value);
+        } catch (NoSuchFieldException e) {
+            // If field not found in the class, try superclass
             try {
-                setter.invoke(entity, value);
-                return;
-            } catch (Exception e) {
-                // Fall through to field access
-            }
-        }
-
-        // Finally try direct field access
-        Field field = findField(entity.getClass(), fieldName);
-        if (field != null) {
-            try {
+                Field field = entity.getClass().getField(fieldName);
                 field.setAccessible(true);
                 field.set(entity, value);
-                return;
-            } catch (Exception e) {
-                throw new RuntimeException("Error setting field " + fieldName + " on " + entity.getClass().getName(), e);
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                throw new RuntimeException(e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException("Error setting field " + fieldName + " on " + entity.getClass().getName(), e);
         }
-
-        throw new RuntimeException("Field " + fieldName + " not found in " + entity.getClass().getName());
     }
 
     /**
@@ -132,102 +135,9 @@ public class ReflectionService {
         if (entity == null) {
             return null;
         }
-        
-        Object id = getValue(entity, "id");
+
+        Object id = getValueInternal(entity, "id");
         return id == null ? null : id.toString();
     }
 
-    /**
-     * Checks if an entity is new (has no ID) using reflection.
-     * This replaces DataStoreUtil.isNew(entity).
-     *
-     * @param entity The entity object
-     * @param <T>    The type of the entity
-     * @return True if the entity is new, false otherwise
-     */
-    public <T> boolean isNew(T entity) {
-        return getValue(entity, "id") == null;
-    }
-
-    /**
-     * Compares an entity's ID with a string.
-     * This replaces DataStoreUtil.equals(item, comparing).
-     *
-     * @param entity    The entity object
-     * @param comparing The ID to compare with
-     * @param <T>       The type of the entity
-     * @return True if the entity's ID equals the comparing string, false otherwise
-     */
-    public <T> boolean equals(T entity, String comparing) {
-        return Objects.equals(getId(entity), comparing);
-    }
-
-    // Helper methods for finding fields and methods
-
-    private Field findField(Class<?> clazz, String fieldName) {
-        Map<String, Field> fields = fieldCache.computeIfAbsent(clazz, k -> new HashMap<>());
-        
-        return fields.computeIfAbsent(fieldName, k -> {
-            Class<?> currentClass = clazz;
-            while (currentClass != null) {
-                try {
-                    return currentClass.getDeclaredField(fieldName);
-                } catch (NoSuchFieldException e) {
-                    currentClass = currentClass.getSuperclass();
-                }
-            }
-            return null;
-        });
-    }
-
-    private Method findGetter(Class<?> clazz, String fieldName) {
-        Map<String, Method> getters = getterCache.computeIfAbsent(clazz, k -> new HashMap<>());
-        
-        return getters.computeIfAbsent(fieldName, k -> {
-            String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-            String getterName = "get" + capitalizedFieldName;
-            String isGetterName = "is" + capitalizedFieldName;
-            
-            Class<?> currentClass = clazz;
-            while (currentClass != null) {
-                try {
-                    return currentClass.getMethod(getterName);
-                } catch (NoSuchMethodException e) {
-                    try {
-                        return currentClass.getMethod(isGetterName);
-                    } catch (NoSuchMethodException e2) {
-                        currentClass = currentClass.getSuperclass();
-                    }
-                }
-            }
-            return null;
-        });
-    }
-
-    private Method findSetter(Class<?> clazz, String fieldName, Class<?> paramType) {
-        Map<String, Method> setters = setterCache.computeIfAbsent(clazz, k -> new HashMap<>());
-        
-        String key = fieldName + "_" + paramType.getName();
-        return setters.computeIfAbsent(key, k -> {
-            String capitalizedFieldName = fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-            String setterName = "set" + capitalizedFieldName;
-            
-            Class<?> currentClass = clazz;
-            while (currentClass != null) {
-                try {
-                    return currentClass.getMethod(setterName, paramType);
-                } catch (NoSuchMethodException e) {
-                    // Try with superclasses of the parameter type
-                    for (Method method : currentClass.getMethods()) {
-                        if (method.getName().equals(setterName) && method.getParameterCount() == 1 && 
-                            method.getParameterTypes()[0].isAssignableFrom(paramType)) {
-                            return method;
-                        }
-                    }
-                    currentClass = currentClass.getSuperclass();
-                }
-            }
-            return null;
-        });
-    }
 }

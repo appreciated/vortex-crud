@@ -13,7 +13,7 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
 
     private ManyToMany<DataStoreId, FieldId> manyToMany;
 
-    private List<String> children;
+    private List<FieldId> children;
 
     public CollectionConfiguration(DataStoreId dataStore) {
         this.dataStore = dataStore;
@@ -43,11 +43,11 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
         this.manyToMany = manyToMany;
     }
 
-    public List<String> getChildren() {
+    public List<FieldId> getChildren() {
         return children;
     }
 
-    public void setChildren(List<String> children) {
+    public void setChildren(List<FieldId> children) {
         this.children = children;
     }
 
@@ -69,16 +69,16 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildren(List<String> children) {
+        public Builder<DataStoreId, FieldId> withChildren(List<FieldId> children) {
             product.children = children;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildren(String... children) {
+        public Builder<DataStoreId, FieldId> withChildren(FieldId... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId, FieldId> addChildren(String item) {
+        public Builder<DataStoreId, FieldId> addChildren(FieldId item) {
             product.children.add(item);
             return this;
         }

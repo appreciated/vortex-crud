@@ -28,12 +28,12 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactory,
                                  VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                                 ReflectionService reflectionService
+                                 ReflectionService<FieldId> reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
@@ -103,8 +103,8 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            List<String> children = internalFormElement.getConfiguration().getData().getChildren();
-            children.forEach(s -> item.addContent(new Text(reflectionService.getString(record, s))));
+            List<FieldId> children = internalFormElement.getConfiguration().getData().getChildren();
+            children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
@@ -128,7 +128,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
-                Object o = reflectionService.getValue(record, fieldNameResolver.getKeyForFieldId(child.getField()));
+                Object o = reflectionService.getValueInternal(record, fieldNameResolver.getKeyForFieldId(child.getField()));
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
