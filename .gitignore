@@ -69,3 +69,4 @@ webpack.generated.js
 /jooq/types.d.ts
 /jooq/src/main/frontend/generated/
 /jooq/src/main/frontend/index.html
+/jpa/jpa-database.db
