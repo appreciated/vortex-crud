@@ -18,9 +18,9 @@ import java.lang.reflect.Field;
 public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy<String> {
 
     private final JpaDataStoreFactoryRegistry dataStoreRegistryFactory;
-    private final ReflectionService<FieldId> reflectionService;
+    private final ReflectionService<String> reflectionService;
 
-    public JpaVortexCrudForeignKeyResolutionStrategy(JpaDataStoreFactoryRegistry dataStoreRegistryFactory, ReflectionService<FieldId> reflectionService) {
+    public JpaVortexCrudForeignKeyResolutionStrategy(JpaDataStoreFactoryRegistry dataStoreRegistryFactory, ReflectionService<String> reflectionService) {
         this.dataStoreRegistryFactory = dataStoreRegistryFactory;
         this.reflectionService = reflectionService;
     }
@@ -31,7 +31,7 @@ public class JpaVortexCrudForeignKeyResolutionStrategy implements VortexCrudFore
             Field field = dataStore.getField(foreignKeyField);
             JpaRepositoryDataStore<String> fieldDataStore = dataStoreRegistryFactory.getDataStore(field.getType());
             Object recordById = fieldDataStore.getRecordById(foreignKeyValue);
-            reflectionService.setValueInternal(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
+            reflectionService.setValue(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), recordById);
         }
     }
 }
