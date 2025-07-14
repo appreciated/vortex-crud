@@ -15,6 +15,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanD
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
+import com.github.appreciated.vortex_crud.jooq.models.tables.Tasks;
 import com.github.appreciated.vortex_crud.jooq.models.tables.Users;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.*;
@@ -123,10 +124,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                                 TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.ID,
                                                                 TASKS.ID))
-                                                        .withChildren("title")
+                                                        .withChildren(TASKS.TITLE)
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                                .withConfiguration(new CollectionConfig("title"))
+                                                .withConfiguration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE))
                                                 .build())
                                         .build()
                         )

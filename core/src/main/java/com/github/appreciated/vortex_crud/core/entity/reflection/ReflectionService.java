@@ -5,12 +5,9 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * Service that provides reflection-based access to entity properties.
- * This replaces the direct get/put/getString methods with reflection-based access.
+ * Service that provides property access to entity properties using Spring's BeanWrapper.
  */
 @Service
 public class ReflectionService<FieldId> {
@@ -21,123 +18,110 @@ public class ReflectionService<FieldId> {
         this.fieldNameResolver = fieldNameResolver;
     }
 
-    // Cache for fields and methods to improve performance
-    private final Map<Class<?>, Map<String, Field>> fieldCache = new HashMap<>();
-    private final Map<Class<?>, Map<String, Method>> getterCache = new HashMap<>();
-    private final Map<Class<?>, Map<String, Method>> setterCache = new HashMap<>();
-
-    /**
-     * Gets a property value as a String from an entity using reflection.
-     *
-     * @param entity    The entity object
-     * @param fieldName The name of the field to get
-     * @param <T>       The type of the entity
-     * @return The value of the field as a String
-     */
     public <T> String getString(T entity, FieldId fieldName) {
-        return getStringInternal(entity, fieldNameResolver.getKeyForFieldId(fieldName));
-    }
-
-    /**
-     * Gets a property value as a String from an entity using reflection.
-     *
-     * @param entity    The entity object
-     * @param fieldName The name of the field to get
-     * @param <T>       The type of the entity
-     * @return The value of the field as a String
-     */
-    private <T> String getStringInternal(T entity, String fieldName) {
-        Object value = getValueInternal(entity, fieldName);
-        return value == null ? null : value.toString();
+        Object value = getValue(entity, fieldName);
+        return value != null ? value.toString() : null;
     }
 
     public <T> Object getValue(T entity, FieldId field) {
         return getValueInternal(entity, fieldNameResolver.getKeyForFieldId(field));
     }
 
-    /**
-     * Gets a property value from an entity using reflection.
-     *
-     * @param entity    The entity object
-     * @param fieldName The name of the field to get
-     * @param <T>       The type of the entity
-     * @return The value of the field
-     */
     public <T> Object getValueInternal(T entity, String fieldName) {
         if (entity == null) {
             return null;
         }
 
-        // Try direct field access
+        // First try getter method
+        Object value = getValueByGetter(entity, fieldName);
+        if (value != null) {
+            return value;
+        }
+
+        // Then try direct field access
+        return getValueByField(entity, fieldName);
+    }
+
+    private <T> Object getValueByGetter(T entity, String fieldName) {
+        try {
+            String getterName;
+            if (fieldName.startsWith("is")) {
+                getterName = fieldName;
+            } else {
+                getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            }
+            Method getter = entity.getClass().getMethod(getterName);
+            return getter.invoke(entity);
+        } catch (NoSuchMethodException e) {
+            // Try boolean getter
+            try {
+                String booleanGetter = "is" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                Method getter = entity.getClass().getMethod(booleanGetter);
+                return getter.invoke(entity);
+            } catch (Exception ex) {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private <T> Object getValueByField(T entity, String fieldName) {
         try {
             Field field = entity.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(entity);
-        } catch (NoSuchFieldException e) {
-            // If field not found in the class, try superclass
-            try {
-                Field field = entity.getClass().getField(fieldName);
-                field.setAccessible(true);
-                return field.get(entity);
-            } catch (NoSuchFieldException | IllegalAccessException ex) {
-                throw new RuntimeException(e);
-            }
         } catch (Exception e) {
-            throw new RuntimeException("Error getting field " + fieldName + " from " + entity.getClass().getName(), e);
+            return null;
         }
     }
 
     public <T> void setValueInternal(T entity, FieldId fieldName, Object value) {
-        setValueInternal(entity, fieldNameResolver.getKeyForFieldId(fieldName), value);
-    }
-
-    /**
-     * Sets a property value on an entity using reflection.
-     *
-     * @param entity    The entity object
-     * @param fieldName The name of the field to set
-     * @param value     The value to set
-     * @param <T>       The type of the entity
-     */
-    private <T> void setValueInternal(T entity, String fieldName, Object value) {
         if (entity == null) {
             return;
         }
+        String propertyName = fieldNameResolver.getKeyForFieldId(fieldName);
 
-        // Try direct field access
+        // First try setter method
+        if (setValueBySetter(entity, propertyName, value)) {
+            return;
+        }
+
+        // Then try direct field access
+        setValueByField(entity, propertyName, value);
+    }
+
+    private <T> boolean setValueBySetter(T entity, String fieldName, Object value) {
+        try {
+            String setterName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+            Method[] methods = entity.getClass().getMethods();
+            for (Method method : methods) {
+                if (method.getName().equals(setterName) && method.getParameterCount() == 1) {
+                    method.invoke(entity, value);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            // Ignore and try field access
+        }
+        return false;
+    }
+
+    private <T> void setValueByField(T entity, String fieldName, Object value) {
         try {
             Field field = entity.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(entity, value);
-        } catch (NoSuchFieldException e) {
-            // If field not found in the class, try superclass
-            try {
-                Field field = entity.getClass().getField(fieldName);
-                field.setAccessible(true);
-                field.set(entity, value);
-            } catch (NoSuchFieldException | IllegalAccessException ex) {
-                throw new RuntimeException(e);
-            }
         } catch (Exception e) {
-            throw new RuntimeException("Error setting field " + fieldName + " on " + entity.getClass().getName(), e);
+            // Ignore if we can't set the value
         }
     }
 
-    /**
-     * Gets the ID of an entity using reflection.
-     * This replaces DataStoreUtil.getId(entity).
-     *
-     * @param entity The entity object
-     * @param <T>    The type of the entity
-     * @return The ID of the entity as a String
-     */
     public <T> String getId(T entity) {
         if (entity == null) {
             return null;
         }
-
         Object id = getValueInternal(entity, "id");
-        return id == null ? null : id.toString();
+        return id != null ? id.toString() : null;
     }
-
 }

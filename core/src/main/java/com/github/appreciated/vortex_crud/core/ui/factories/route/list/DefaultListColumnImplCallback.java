@@ -29,7 +29,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Vort
                 throw new IllegalArgumentException("The image field '" + dataStoreField.getField() + "' does not provide a imageFieldConfiguration");
             }
             grid.addComponentColumn(entity -> {
-                        String string = reflectionService.getString(entity, dataStoreField.getField());
+                        String string = reflectionService.getString(entity, field.getField());
                         ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
@@ -39,7 +39,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Vort
                     .setResizable(true)
                     .setAutoWidth(true);
         } else {
-            grid.addColumn(entity -> reflectionService.getValue(entity, dataStoreField.getField()))
+            grid.addColumn(entity -> reflectionService.getValue(entity, field.getField()))
                     .setHeader(grid.getTranslation(field.getLabel()))
                     .setResizable(true)
                     .setAutoWidth(true);

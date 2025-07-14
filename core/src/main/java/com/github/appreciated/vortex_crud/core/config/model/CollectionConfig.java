@@ -1,13 +1,13 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-public class CollectionConfig {
-    private final String titleField;
+public class CollectionConfig<FieldId> {
+    private final FieldId titleField;
 
-    public CollectionConfig(String titleField) {
+    public CollectionConfig(FieldId titleField) {
         this.titleField = titleField;
     }
 
-    public String getTitleField() {
+    public FieldId getTitleField() {
         return titleField;
     }
 }

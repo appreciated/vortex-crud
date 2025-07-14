@@ -5,10 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 class ReflectionServiceTest {
@@ -149,7 +146,7 @@ class ReflectionServiceTest {
         assertEquals("John", reflectionService.getValueByName(entity, "firstName"));
         assertEquals("Doe", reflectionService.getValueByName(entity, "lastName"));
         assertEquals(30, reflectionService.getValueByName(entity, "userAge"));
-        assertEquals(true, reflectionService.getValueByName(entity, "isActive"));
+        assertEquals(true, reflectionService.getValueByName(entity, "active"));
     }
 
     @Test
@@ -159,7 +156,7 @@ class ReflectionServiceTest {
         reflectionService.setValueByName(entity, "firstName", "Jane");
         reflectionService.setValueByName(entity, "lastName", "Smith");
         reflectionService.setValueByName(entity, "userAge", 25);
-        reflectionService.setValueByName(entity, "isActive", false);
+        reflectionService.setValueByName(entity, "active", false);
 
         assertEquals("Jane", entity.getFirstName());
         assertEquals("Smith", entity.getLastName());
@@ -199,12 +196,12 @@ class ReflectionServiceTest {
         when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
         when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
         when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
-        when(mockResolver.getKeyForFieldId("isActive")).thenReturn("isActive");
+        when(mockResolver.getKeyForFieldId("isActive")).thenReturn("active");
 
         assertEquals("John", reflectionService.getString(entity, "firstName"));
         assertEquals("Doe", reflectionService.getString(entity, "lastName"));
-        assertEquals("30", reflectionService.getString(entity, "userAge"));
-        assertEquals("true", reflectionService.getString(entity, "isActive"));
+        assertEquals(30, reflectionService.getValue(entity, "userAge"));
+        assertEquals(true, reflectionService.getValue(entity, "isActive"));
     }
 
     @Test
@@ -218,7 +215,105 @@ class ReflectionServiceTest {
 
         assertEquals("John", reflectionService.getString(entity, "first_name"));
         assertEquals("Doe", reflectionService.getString(entity, "last_name"));
-        assertEquals("30", reflectionService.getString(entity, "user_age"));
-        assertEquals("true", reflectionService.getString(entity, "is_active"));
+        assertEquals(30, reflectionService.getValue(entity, "user_age"));
+        assertEquals(true, reflectionService.getValue(entity, "is_active"));
     }
+
+
+    // Test class with getters/setters but different field names
+    static class GetterSetterOnlyEntity {
+        private String differentFirstName;
+        private String differentLastName;
+        private int differentAge;
+        private boolean differentActive;
+
+        public GetterSetterOnlyEntity() {
+        }
+
+        public String getFirstName() {
+            return differentFirstName;
+        }
+
+        public void setFirstName(String firstName) {
+            this.differentFirstName = firstName;
+        }
+
+        public String getLastName() {
+            return differentLastName;
+        }
+
+        public void setLastName(String lastName) {
+            this.differentLastName = lastName;
+        }
+
+        public int getUserAge() {
+            return differentAge;
+        }
+
+        public void setUserAge(int age) {
+            this.differentAge = age;
+        }
+
+        public boolean isActive() {
+            return differentActive;
+        }
+
+        public void setActive(boolean active) {
+            this.differentActive = active;
+        }
+    }
+
+    @Test
+    void testGetValueInternalWithGetterSetterOnly() {
+        GetterSetterOnlyEntity entity = new GetterSetterOnlyEntity();
+        entity.setFirstName("John");
+        entity.setLastName("Doe");
+        entity.setUserAge(30);
+        entity.setActive(true);
+
+        assertEquals("John", reflectionService.getValueByName(entity, "firstName"));
+        assertEquals("Doe", reflectionService.getValueByName(entity, "lastName"));
+        assertEquals(30, reflectionService.getValueByName(entity, "userAge"));
+        assertEquals(true, reflectionService.getValueByName(entity, "active"));
+    }
+
+    @Test
+    void testSetValueInternalWithGetterSetterOnly() {
+        GetterSetterOnlyEntity entity = new GetterSetterOnlyEntity();
+
+        when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
+        when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
+        when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
+        when(mockResolver.getKeyForFieldId("active")).thenReturn("active");
+
+        reflectionService.setValueByName(entity, "firstName", "Jane");
+        reflectionService.setValueByName(entity, "lastName", "Smith");
+        reflectionService.setValueByName(entity, "userAge", 25);
+        reflectionService.setValueByName(entity, "active", false);
+
+        assertEquals("Jane", entity.getFirstName());
+        assertEquals("Smith", entity.getLastName());
+        assertEquals(25, entity.getUserAge());
+        assertEquals(false, entity.isActive());
+    }
+
+    @Test
+    void testGetStringWithGetterSetterOnly() {
+        GetterSetterOnlyEntity entity = new GetterSetterOnlyEntity();
+        entity.setFirstName("John");
+        entity.setLastName("Doe");
+        entity.setUserAge(30);
+        entity.setActive(true);
+
+        when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
+        when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
+        when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
+        when(mockResolver.getKeyForFieldId("active")).thenReturn("active");
+
+        assertEquals("John", reflectionService.getString(entity, "firstName"));
+        assertEquals("Doe", reflectionService.getString(entity, "lastName"));
+        assertEquals("30", reflectionService.getString(entity, "userAge"));
+        assertEquals("true", reflectionService.getString(entity, "active"));
+    }
+
 }
