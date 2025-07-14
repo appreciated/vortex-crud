@@ -17,7 +17,7 @@ import java.util.List;
 public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String> {
 
     @Override
-    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String> manyToMany, Class<DataStoreId> modelClass) {
+    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String> manyToMany, Class<? extends DataStoreId> modelClass) {
         return List.of();
     }
 

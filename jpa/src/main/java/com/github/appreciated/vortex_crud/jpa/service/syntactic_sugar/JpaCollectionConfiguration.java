@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaCollectionConfiguration extends CollectionConfiguration<JpaRepository<?, ?>, String> {
 
-    public JpaCollectionConfiguration(JpaRepository<?, ?> factory) {
+    public JpaCollectionConfiguration(Class<? extends JpaRepository<?, ?>> factory) {
         super(factory);
     }
 
@@ -15,7 +15,7 @@ public class JpaCollectionConfiguration extends CollectionConfiguration<JpaRepos
         }
     }
 
-    public static JpaCollectionConfiguration.Builder of(JpaRepository<?, ?> factory) {
+    public static JpaCollectionConfiguration.Builder of(Class<? extends JpaRepository<?, ?>> factory) {
         return new JpaCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
     }
 }

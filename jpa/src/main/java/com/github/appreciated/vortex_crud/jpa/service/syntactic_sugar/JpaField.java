@@ -30,7 +30,7 @@ public class JpaField extends Field<JpaRepository<?, ?>, String> {
         super((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>) factory, primary, required, validation);
     }
 
-    public JpaField(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, JpaRepository<?, ?> dataStore, List<String> children) {
+    public JpaField(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, Class<? extends JpaRepository<?, ?>> dataStore, List<String> children) {
         super((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>) factory, field, filterField, dataStore, children);
     }
 
@@ -50,7 +50,7 @@ public class JpaField extends Field<JpaRepository<?, ?>, String> {
         return new Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>)factory, primary, required, validation));
     }
 
-    public static Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, JpaRepository<?, ?> dataStore, List<String> children) {
+    public static Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, Class<? extends JpaRepository<?, ?>> dataStore, List<String> children) {
         return new Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>)factory, field, filterField, dataStore, children));
     }
 

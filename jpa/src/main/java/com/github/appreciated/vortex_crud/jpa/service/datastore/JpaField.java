@@ -21,7 +21,7 @@ class JpaField extends Field<JpaRepository<?, ?>, String> {
         return new Field.Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>) factory, primary, required, validation));
     }
 
-    public static Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, JpaRepository<?, ?> dataStore, List<String> children) {
+    public static Builder<JpaRepository<?, ?>, String> of(Class<? extends VortexCrudFieldFactory> factory, String field, String filterField, Class<?extends JpaRepository<?, ?>> dataStore, List<String> children) {
         return new Field.Builder<>(new Field<>((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String>>) factory, field, filterField, dataStore, children));
     }
 
