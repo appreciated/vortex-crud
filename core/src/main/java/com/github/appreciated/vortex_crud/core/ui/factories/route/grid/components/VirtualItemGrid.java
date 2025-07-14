@@ -37,7 +37,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudDataStore<FieldId, ?> dataStore;
     private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
@@ -50,7 +50,7 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                           ReflectionService reflectionService
+                           ReflectionService<FieldId> reflectionService
 
     ) {
         this.pathVariables = routeResolver;

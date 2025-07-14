@@ -26,7 +26,7 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId> implements VortexCr
     public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                      VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                     ReflectionService reflectionService) {
+                                     ReflectionService<FieldId> reflectionService) {
         factories.put(ListCollectionFactory.class, new ListCollectionFactory<>(dataStoreFactoryRegistry, dialogFactoryRegistry, resolver, reflectionService));
     }
 

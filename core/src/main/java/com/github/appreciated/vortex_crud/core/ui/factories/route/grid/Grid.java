@@ -32,7 +32,7 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
                 VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                ReflectionService reflectionService) {
+                ReflectionService<FieldId> reflectionService) {
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         DataStoreId dataStore = routeRenderer.getDataStore();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,

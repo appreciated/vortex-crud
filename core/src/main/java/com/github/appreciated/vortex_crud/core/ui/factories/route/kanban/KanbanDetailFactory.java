@@ -26,7 +26,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService;
+    private final com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService;
 
     public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                VortexCrudConfigService<DataStoreId, FieldId> configService,
@@ -36,7 +36,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId> implements VortexCrudRout
                                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
                                VortexCrudFileProviderRegistry fileProviderRegistry,
                                VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                               com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService
+                               com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;

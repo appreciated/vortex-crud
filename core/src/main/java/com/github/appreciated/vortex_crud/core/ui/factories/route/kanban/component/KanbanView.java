@@ -35,7 +35,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
     private final ComponentRenderer<Component, Object> itemRenderer;
     private final VortexCrudDataStore<FieldId, Object> dataStore;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(DataStoreId dataStoreIdentifier,
@@ -50,7 +50,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                       FormCreator<DataStoreId, FieldId> formCreator,
                       DetailRouteSetting detailRouteSetting,
-                      ReflectionService reflectionService
+                      ReflectionService<FieldId> reflectionService
     ) {
         this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStore;
         this.fieldNameResolver = fieldNameResolver;
@@ -160,7 +160,7 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
             }
             event.getDragData().ifPresent(o -> {
                 if (o instanceof Object) {
-                    reflectionService.setValueInternal(o, fieldNameResolver.getKeyForFieldId(kanbanConfig.getColumnField()), columnDatabaseValue);
+                    reflectionService.setValue(o, kanbanConfig.getColumnField(), columnDatabaseValue);
                     dataStore.updateRecordById(o);
                 }
             });

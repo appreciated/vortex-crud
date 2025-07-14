@@ -14,17 +14,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class JooqVortexCrudForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy<TableField<?, ?>> {
 
+    private final ReflectionService<TableField<?, ?>> reflectionService;
 
-    private final ReflectionService reflectionService;
-
-    public JooqVortexCrudForeignKeyResolutionStrategy(ReflectionService reflectionService) {
+    public JooqVortexCrudForeignKeyResolutionStrategy(ReflectionService<TableField<?, ?>> reflectionService) {
         this.reflectionService = reflectionService;
     }
 
     @Override
     public void resolveForeignKey(Object entity, TableField<?, ?> foreignKeyField, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver) {
         if (foreignKeyField != null && foreignKeyValue != null) {
-            reflectionService.setValueInternal(entity, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
+            reflectionService.setValue(entity, foreignKeyField, foreignKeyValue);
         }
     }
 }

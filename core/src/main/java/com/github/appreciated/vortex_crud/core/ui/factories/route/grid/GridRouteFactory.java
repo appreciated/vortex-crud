@@ -24,7 +24,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public GridRouteFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
@@ -34,7 +34,7 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
             VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
             VortexCrudFileProviderRegistry fileProviderRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-            ReflectionService reflectionService
+            ReflectionService<FieldId> reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;

@@ -45,7 +45,7 @@ public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
     private final VortexCrudConfigService<DataStoreId, FieldId> configService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
     private final RouteRenderer<DataStoreId, FieldId> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
@@ -59,7 +59,7 @@ public class MasterDetail<DataStoreId, FieldId> extends SplitLayout {
                         VortexCrudConfigService<DataStoreId, FieldId> configService,
                         VortexCrudFileProviderRegistry fileProviderRegistry,
                         VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                        ReflectionService reflectionService
+                        ReflectionService<FieldId> reflectionService
     ) {
         this.currentPathIndex = currentPathIndex;
         this.routeFactory = routeFactory;

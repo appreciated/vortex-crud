@@ -23,7 +23,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                  VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                  Field<DataStoreId, FieldId> dataStoreField,
-                                 ReflectionService reflectionService
+                                 ReflectionService<FieldId> reflectionService
     ) {
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
         this.comboBox = new ComboBox<>();
@@ -35,8 +35,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayou
         );
 
         comboBox.setItemLabelGenerator(item -> dataStoreField.getChildren().stream()
-                .map(resolver::getKeyForFieldId)
-                .map(field -> reflectionService.getString(item, field))
+                .map(fieldId -> reflectionService.getString(item, fieldId))
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")
         );

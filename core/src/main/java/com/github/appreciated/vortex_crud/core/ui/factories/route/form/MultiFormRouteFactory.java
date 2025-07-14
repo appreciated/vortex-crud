@@ -27,7 +27,7 @@ public class MultiFormRouteFactory<DataStoreId, FieldId> implements VortexCrudRo
             FormCreator<DataStoreId, FieldId> formCreator,
             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-            com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService reflectionService
+            com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService
     ) {
         this.formRouteFactory = new FormRouteFactory<DataStoreId, FieldId>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, resolver, reflectionService);
     }

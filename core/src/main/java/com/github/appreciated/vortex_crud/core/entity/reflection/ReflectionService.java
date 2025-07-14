@@ -27,7 +27,7 @@ public class ReflectionService<FieldId> {
         return getValueInternal(entity, fieldNameResolver.getKeyForFieldId(field));
     }
 
-    public <T> Object getValueInternal(T entity, String fieldName) {
+    protected <T> Object getValueInternal(T entity, String fieldName) {
         if (entity == null) {
             return null;
         }
@@ -76,7 +76,7 @@ public class ReflectionService<FieldId> {
         }
     }
 
-    public <T> void setValueInternal(T entity, FieldId fieldName, Object value) {
+    public <T> void setValue(T entity, FieldId fieldName, Object value) {
         if (entity == null) {
             return;
         }

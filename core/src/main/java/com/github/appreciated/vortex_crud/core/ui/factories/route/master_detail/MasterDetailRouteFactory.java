@@ -21,7 +21,7 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId> implements VortexCru
     private final VortexCrudConfigService<DataStoreId, FieldId> configService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public MasterDetailRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                     VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
@@ -29,7 +29,7 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId> implements VortexCru
                                     VortexCrudConfigService<DataStoreId, FieldId> configService,
                                     VortexCrudFileProviderRegistry fileProviderRegistry,
                                     VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                                    ReflectionService reflectionService
+                                    ReflectionService<FieldId> reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;

@@ -28,13 +28,13 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public ConnectDialogFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
             ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy,
-            ReflectionService reflectionService) {
+            ReflectionService<FieldId> reflectionService) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
@@ -77,7 +77,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             throw new RuntimeException("Failed to call getManyToMany", e);
         }
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(entity -> reflectionService.getValueInternal(entity, fieldNameResolver.getKeyForFieldId(associativeTargetIdField)).toString()).collect(Collectors.toSet());
+                .map(entity -> reflectionService.getString(entity, associativeTargetIdField)).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
                 .filter(Object -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
                 .collect(Collectors.toSet());
@@ -88,9 +88,9 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
         connectionList.setItemLabelGenerator(obj -> {
             // Use reflection to get values from the object based on the children configuration
             return collectionConfiguration.getChildren().stream()
-                .map(child -> {
+                .map(fieldId -> {
                     try {
-                        Object value = reflectionService.getValueInternal(obj, child.toString());
+                        Object value = reflectionService.getValue(obj, fieldId);
                         return value != null ? value.toString() : "";
                     } catch (Exception e) {
                         return "";
@@ -114,8 +114,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
 
             List<Object> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
                 Object newAssociation = new Object();
-                reflectionService.setValueInternal(newAssociation, fieldNameResolver.getKeyForFieldId(foreignKeyField), foreignKeyValue);
-                reflectionService.setValueInternal(newAssociation, fieldNameResolver.getKeyForFieldId(associativeTargetIdField), value);
+                reflectionService.setValue(newAssociation, foreignKeyField, foreignKeyValue);
+                reflectionService.setValue(newAssociation, associativeTargetIdField, value);
                 return newAssociation;
             }).toList();
             // Use reflection to call insert with the correct type
@@ -134,7 +134,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
             List<?> entriesToDelete = currentAssociativeEntries.stream()
                     .filter(entry -> {
-                        Object targetIdObj = reflectionService.getValueInternal(entry, fieldNameResolver.getKeyForFieldId(associativeTargetIdField));
+                        Object targetIdObj = reflectionService.getValue(entry, associativeTargetIdField);
                         if (targetIdObj == null) {
                             return false;
                         }

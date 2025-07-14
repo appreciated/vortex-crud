@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.item;
 
 import com.github.appreciated.vortex_crud.core.config.model.ItemFactory;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
@@ -20,8 +19,7 @@ public class DefaultCardItem<FieldId> extends Card {
                            Object entity,
                            Integer maxWidth,
                            VortexCrudFileProviderRegistry provider,
-                           VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                           ReflectionService reflectionService
+                           ReflectionService<FieldId> reflectionService
     ) {
         setClassName("hoverable");
         if (maxWidth != null) {
@@ -35,16 +33,16 @@ public class DefaultCardItem<FieldId> extends Card {
             if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
-            String imagePath = reflectionService.getString(entity, resolver.getKeyForFieldId(imageFieldId));
+            String imagePath = reflectionService.getString(entity, imageFieldId);
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
         }
 
-        H4 title = new H4(reflectionService.getString(entity, resolver.getKeyForFieldId(config.getTitleField())));
+        H4 title = new H4(reflectionService.getString(entity, config.getTitleField()));
         setTitle(title);
 
         if (config.getDescriptionField() != null) {
-            Text description = new Text(reflectionService.getString(entity, resolver.getKeyForFieldId(config.getDescriptionField())));
+            Text description = new Text(reflectionService.getString(entity, config.getDescriptionField()));
             Div descriptionDiv = new Div(description);
             setSubtitle(descriptionDiv);
         }

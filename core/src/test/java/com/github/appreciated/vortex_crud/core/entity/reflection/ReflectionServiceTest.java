@@ -15,16 +15,6 @@ class ReflectionServiceTest {
         public TestReflectionService(VortexCrudDataStoreFieldNameResolver<String> fieldNameResolver) {
             super(fieldNameResolver);
         }
-
-        // Helper method to call the private getValue method directly
-        public <T> Object getValueByName(T entity, String fieldName) {
-            return super.getValueInternal(entity, fieldName);
-        }
-
-        // Helper method to call the private setValue method directly
-        public <T> void setValueByName(T entity, String fieldName, Object value) {
-            super.setValueInternal(entity, fieldName, value);
-        }
     }
 
     private TestReflectionService reflectionService;
@@ -143,20 +133,20 @@ class ReflectionServiceTest {
     void testGetValueInternalWithCamelCase() {
         CamelCaseEntity entity = new CamelCaseEntity("John", "Doe", 30, true);
 
-        assertEquals("John", reflectionService.getValueByName(entity, "firstName"));
-        assertEquals("Doe", reflectionService.getValueByName(entity, "lastName"));
-        assertEquals(30, reflectionService.getValueByName(entity, "userAge"));
-        assertEquals(true, reflectionService.getValueByName(entity, "active"));
+        assertEquals("John", reflectionService.getValue(entity, "firstName"));
+        assertEquals("Doe", reflectionService.getValue(entity, "lastName"));
+        assertEquals(30, reflectionService.getValue(entity, "userAge"));
+        assertEquals(true, reflectionService.getValue(entity, "active"));
     }
 
     @Test
     void testSetValueInternalWithCamelCase() {
         CamelCaseEntity entity = new CamelCaseEntity();
 
-        reflectionService.setValueByName(entity, "firstName", "Jane");
-        reflectionService.setValueByName(entity, "lastName", "Smith");
-        reflectionService.setValueByName(entity, "userAge", 25);
-        reflectionService.setValueByName(entity, "active", false);
+        reflectionService.setValue(entity, "firstName", "Jane");
+        reflectionService.setValue(entity, "lastName", "Smith");
+        reflectionService.setValue(entity, "userAge", 25);
+        reflectionService.setValue(entity, "active", false);
 
         assertEquals("Jane", entity.getFirstName());
         assertEquals("Smith", entity.getLastName());
@@ -168,20 +158,20 @@ class ReflectionServiceTest {
     void testGetValueInternalWithSnakeCase() {
         SnakeCaseEntity entity = new SnakeCaseEntity("John", "Doe", 30, true);
 
-        assertEquals("John", reflectionService.getValueByName(entity, "first_name"));
-        assertEquals("Doe", reflectionService.getValueByName(entity, "last_name"));
-        assertEquals(30, reflectionService.getValueByName(entity, "user_age"));
-        assertEquals(true, reflectionService.getValueByName(entity, "is_active"));
+        assertEquals("John", reflectionService.getValue(entity, "first_name"));
+        assertEquals("Doe", reflectionService.getValue(entity, "last_name"));
+        assertEquals(30, reflectionService.getValue(entity, "user_age"));
+        assertEquals(true, reflectionService.getValue(entity, "is_active"));
     }
 
     @Test
     void testSetValueInternalWithSnakeCase() {
         SnakeCaseEntity entity = new SnakeCaseEntity();
 
-        reflectionService.setValueByName(entity, "first_name", "Jane");
-        reflectionService.setValueByName(entity, "last_name", "Smith");
-        reflectionService.setValueByName(entity, "user_age", 25);
-        reflectionService.setValueByName(entity, "is_active", false);
+        reflectionService.setValue(entity, "first_name", "Jane");
+        reflectionService.setValue(entity, "last_name", "Smith");
+        reflectionService.setValue(entity, "user_age", 25);
+        reflectionService.setValue(entity, "is_active", false);
 
         assertEquals("Jane", entity.getFirst_name());
         assertEquals("Smith", entity.getLast_name());
@@ -271,10 +261,10 @@ class ReflectionServiceTest {
         entity.setUserAge(30);
         entity.setActive(true);
 
-        assertEquals("John", reflectionService.getValueByName(entity, "firstName"));
-        assertEquals("Doe", reflectionService.getValueByName(entity, "lastName"));
-        assertEquals(30, reflectionService.getValueByName(entity, "userAge"));
-        assertEquals(true, reflectionService.getValueByName(entity, "active"));
+        assertEquals("John", reflectionService.getValue(entity, "firstName"));
+        assertEquals("Doe", reflectionService.getValue(entity, "lastName"));
+        assertEquals(30, reflectionService.getValue(entity, "userAge"));
+        assertEquals(true, reflectionService.getValue(entity, "active"));
     }
 
     @Test
@@ -286,10 +276,10 @@ class ReflectionServiceTest {
         when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
         when(mockResolver.getKeyForFieldId("active")).thenReturn("active");
 
-        reflectionService.setValueByName(entity, "firstName", "Jane");
-        reflectionService.setValueByName(entity, "lastName", "Smith");
-        reflectionService.setValueByName(entity, "userAge", 25);
-        reflectionService.setValueByName(entity, "active", false);
+        reflectionService.setValue(entity, "firstName", "Jane");
+        reflectionService.setValue(entity, "lastName", "Smith");
+        reflectionService.setValue(entity, "userAge", 25);
+        reflectionService.setValue(entity, "active", false);
 
         assertEquals("Jane", entity.getFirstName());
         assertEquals("Smith", entity.getLastName());

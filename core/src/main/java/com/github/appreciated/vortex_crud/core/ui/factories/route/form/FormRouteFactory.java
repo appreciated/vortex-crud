@@ -41,14 +41,14 @@ public class FormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
     private final FormCreator<DataStoreId, FieldId> formCreator;
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                             VortexCrudConfigService<DataStoreId, FieldId> configService,
                             FormCreator<DataStoreId, FieldId> formCreator,
                             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                            ReflectionService reflectionService
+                            ReflectionService<FieldId> reflectionService
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -83,7 +83,7 @@ public class FormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
         if (!creationMode) {
             binder.bind(
                     titleComponent,
-                    entity1 -> prefix + reflectionService.getString(entity1, fieldNameResolver.getKeyForFieldId(formRouteRendererConfiguration.getTitleField())),
+                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.getTitleField()),
                     (entity1, string) -> {
                     }
             );

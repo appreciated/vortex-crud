@@ -40,7 +40,7 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements Vortex
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                        FormCreator<DataStoreId, FieldId> formCreatorService,
-                                       ReflectionService reflectionService
+                                       ReflectionService<FieldId> reflectionService
     ) {
         factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService));
         factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver));

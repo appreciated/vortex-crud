@@ -30,7 +30,7 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId> implements Vorte
                                         VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                         VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
                                         ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy,
-                                        ReflectionService reflectionService
+                                        ReflectionService<FieldId> reflectionService
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy));

@@ -15,11 +15,11 @@ public class ReferenceFieldFactory<DataStoreId, FieldId> implements VortexCrudFi
 
     private final VortexCrudDataStoreFieldNameResolver<FieldId> resolver;
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry;
-    private final ReflectionService reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
 
     public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                  VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry,
-                                 ReflectionService reflectionService
+                                 ReflectionService<FieldId> reflectionService
     ) {
         this.resolver = resolver;
         this.managerFactoryRegistry = managerFactoryRegistry;

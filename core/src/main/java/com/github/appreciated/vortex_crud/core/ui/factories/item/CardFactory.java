@@ -19,7 +19,7 @@ public class CardFactory<FieldId> implements VortexCrudItemFactory<FieldId> {
                                 Integer maxWidth,
                                 VortexCrudFileProviderRegistry fileProvider,
                                 VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                ReflectionService reflectionService) {
-        return new DefaultCardItem<>(itemFactory, entity, maxWidth, fileProvider, resolver, reflectionService);
+                                ReflectionService<FieldId> reflectionService) {
+        return new DefaultCardItem<>(itemFactory, entity, maxWidth, fileProvider, reflectionService);
     }
 }

@@ -17,6 +17,6 @@ public interface VortexCrudItemFactory<FieldId> {
                          Integer maxWidth,
                          VortexCrudFileProviderRegistry fileProvider,
                          VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                         ReflectionService reflectionService
+                         ReflectionService<FieldId> reflectionService
     );
 }

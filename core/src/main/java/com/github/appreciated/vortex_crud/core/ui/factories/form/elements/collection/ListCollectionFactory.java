@@ -128,7 +128,7 @@ public class ListCollectionFactory<DataStoreId, FieldId> implements VortexCrudCo
             item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId> child : form.getChildren()) {
-                Object o = reflectionService.getValueInternal(record, fieldNameResolver.getKeyForFieldId(child.getField()));
+                Object o = reflectionService.getValue(record, child.getField());
                 item.addContent(new Text(o.toString()));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);

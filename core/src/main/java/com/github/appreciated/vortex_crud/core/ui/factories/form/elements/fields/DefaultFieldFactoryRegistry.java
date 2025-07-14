@@ -28,7 +28,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements Vortex
                                        VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                       ReflectionService reflectionService) {
+                                       ReflectionService<FieldId> reflectionService) {
         Application<DataStoreId, FieldId> configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
