@@ -5,11 +5,11 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Versioning<DataStoreId> {
+public class Versioning<KeyType> {
 
     private boolean enabled;
 
-    private List<DataStoreId> dataStores;
+    private List<KeyType> dataStores;
 
     public boolean isEnabled() {
         return enabled;
@@ -19,43 +19,43 @@ public class Versioning<DataStoreId> {
         this.enabled = enabled;
     }
 
-    public List<DataStoreId> getDataStores() {
+    public List<KeyType> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(List<DataStoreId> dataStores) {
+    public void setDataStores(List<KeyType> dataStores) {
         this.dataStores = dataStores;
     }
 
-    public static abstract class Builder<DataStoreId> {
+    public static abstract class Builder<KeyType> {
 
-        private final Versioning<DataStoreId> product;
+        private final Versioning<KeyType> product;
 
-        protected Builder(Versioning<DataStoreId> product) {
+        protected Builder(Versioning<KeyType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId> withEnabled(boolean enabled) {
+        public Builder<KeyType> withEnabled(boolean enabled) {
             product.enabled = enabled;
             return this;
         }
 
-        public Builder<DataStoreId> withDataStores(List<DataStoreId> dataStores) {
+        public Builder<KeyType> withDataStores(List<KeyType> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
         @SafeVarargs
-        public final Builder<DataStoreId> withDataStores(DataStoreId... dataStores) {
+        public final Builder<KeyType> withDataStores(KeyType... dataStores) {
             return withDataStores(List.of(dataStores));
         }
 
-        public Builder<DataStoreId> addDataStores(DataStoreId item) {
+        public Builder<KeyType> addDataStores(KeyType item) {
             product.dataStores.add(item);
             return this;
         }
 
-        public Versioning<DataStoreId> build() {
+        public Versioning<KeyType> build() {
             return product;
         }
     }

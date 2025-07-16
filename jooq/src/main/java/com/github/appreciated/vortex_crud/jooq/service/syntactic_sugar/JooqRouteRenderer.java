@@ -2,11 +2,12 @@ package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
+import org.jooq.impl.TableImpl;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqRouteRenderer extends RouteRenderer<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
-    public JooqRouteRenderer(Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>>> factory) {
+public class JooqRouteRenderer extends RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+    public JooqRouteRenderer(Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> factory) {
         super(factory);
     }
 
@@ -16,7 +17,7 @@ public class JooqRouteRenderer extends RouteRenderer<TableRecord<?>, TableField<
         }
     }
 
-    public static JooqRouteRenderer.Builder<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> of(Class<? extends VortexCrudRouteFactory> factory) {
-        return new JooqRouteRenderer.Builder<>(new JooqRouteRenderer((Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>>>) factory));
+    public static JooqRouteRenderer.Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(Class<? extends VortexCrudRouteFactory> factory) {
+        return new JooqRouteRenderer.Builder<>(new JooqRouteRenderer((Class<? extends VortexCrudRouteFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) factory));
     }
 }

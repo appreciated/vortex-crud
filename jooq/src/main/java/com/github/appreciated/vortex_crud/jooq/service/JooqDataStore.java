@@ -4,9 +4,11 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Table;
+import org.jooq.impl.TableImpl;
 import org.jooq.TableField;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.DSL;
+import org.jooq.impl.TableImpl;
 
 import java.lang.reflect.Field;
 import java.util.Collections;

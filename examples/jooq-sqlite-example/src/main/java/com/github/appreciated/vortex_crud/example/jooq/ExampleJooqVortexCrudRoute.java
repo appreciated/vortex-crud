@@ -15,6 +15,7 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRoute
 import com.vaadin.flow.router.Route;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
+import org.jooq.impl.TableImpl;
 
 import java.util.List;
 
@@ -22,16 +23,16 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PRO
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Route("test/:path?")
-public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, TableField<?, ?>> {
+public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
-    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<TableRecord<?>, TableField<?, ?>> routeFactoryRegistry) {
+    public ExampleJooqVortexCrudRoute(VortexCrudRouteFactoryRegistry<TableRecord<?>, TableField<?, ?>, TableImpl<?>> routeFactoryRegistry) {
         super(routeFactoryRegistry);
     }
 
     @Override
-    protected RouteRenderer<TableRecord<?>, TableField<?, ?>> getConfiguration() {
+    protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> getConfiguration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(ProjectsRecord.class)
+                .withDataStore(PROJECTS)
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
@@ -40,7 +41,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
-                        .withDataStore(ProjectsRecord.class)
+                        .withDataStore(PROJECTS)
                         .withTitle("route.projects.title-cards")
                         .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                                 .withTitleField(PROJECTS.NAME)

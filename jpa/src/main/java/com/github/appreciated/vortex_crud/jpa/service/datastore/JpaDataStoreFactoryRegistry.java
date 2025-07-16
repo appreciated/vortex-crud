@@ -43,18 +43,18 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), key);
     }
 
-    public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?,?>>> getDataStores() {
+    public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getDataStores() {
         return factories.entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 test -> {
-                    DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?,?>> builder = createBuilder(test);
+                    DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder = createBuilder(test.getKey());
                     builder.withFields(jpaFieldService.getFieldsForDataStore(test.getValue(), this));
                     return builder.build();
                 }));
     }
 
-    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?> > createBuilder(Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> test) {
-        return new DataStoreConfig.Builder<>(new DataStoreConfig<>((Class<? extends VortexCrudDataStore<String, ?>>) test.getValue().getClass()));
+    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createBuilder(Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> test) {
+        return new DataStoreConfig.Builder<>(new DataStoreConfig<>(test.getValue()));
     }
 
     public JpaRepository<?, ?> getFactory(Class<?> model) {

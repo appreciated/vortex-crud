@@ -16,7 +16,7 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
 
     private Selects selects;
 
-    private Versioning<DataStoreId> versioning;
+    private Versioning versioning;
 
     private Auditing auditing;
 
@@ -56,11 +56,11 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.selects = selects;
     }
 
-    public Versioning<DataStoreId> getVersioning() {
+    public Versioning getVersioning() {
         return versioning;
     }
 
-    public void setVersioning(Versioning<DataStoreId> versioning) {
+    public void setVersioning(Versioning versioning) {
         this.versioning = versioning;
     }
 
@@ -116,7 +116,7 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withVersioning(Versioning<DataStoreId> versioning) {
+        public Builder<DataStoreId, FieldId, KeyType> withVersioning(Versioning versioning) {
             product.versioning = versioning;
             return this;
         }

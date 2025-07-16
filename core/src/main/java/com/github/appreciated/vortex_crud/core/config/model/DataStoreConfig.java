@@ -8,19 +8,19 @@ import java.util.Map;
 @GenerateBuilder
 public class DataStoreConfig<DataStoreId, FieldId, KeyType> {
 
-    private Class<? extends VortexCrudDataStore<FieldId, ?>> factory;
+    private KeyType factory;
 
     private Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields;
 
-    public DataStoreConfig(Class<? extends VortexCrudDataStore<FieldId, ?>> factory) {
+    public DataStoreConfig(KeyType factory) {
         this.factory = factory;
     }
 
-    public Class<? extends VortexCrudDataStore<FieldId, ?>> getFactory() {
+    public KeyType getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends VortexCrudDataStore<FieldId, ?>> factory) {
+    public void setFactory(KeyType factory) {
         this.factory = factory;
     }
 
