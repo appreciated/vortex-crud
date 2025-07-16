@@ -10,7 +10,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
-public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements VortexCrudListColumnCallback<DataStoreId, FieldId> {
+public class DefaultListColumnImplCallback<DataStoreId, FieldId, KeyType> implements VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> {
 
     private final VortexCrudFileProviderRegistry registry;
     private final ReflectionService<FieldId> reflectionService;
@@ -22,7 +22,7 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId> implements Vort
     }
 
     @Override
-    public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, Field<DataStoreId, FieldId> dataStoreField) {
+    public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId, KeyType> field, Object table, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
         // TODO Check if cast can be removed, removal causes compile issues
         if (((Class<? extends VortexCrudFieldFactory>) dataStoreField.getFactory()) == ImageFieldFactory.class) {
             if (dataStoreField.getConfiguration() == null) {

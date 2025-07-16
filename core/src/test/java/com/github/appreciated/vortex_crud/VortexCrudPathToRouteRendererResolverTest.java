@@ -37,21 +37,21 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Test
     void testWrappableRouteReturnsFirstContainer() {
         // Testpfad mit wrappable Routen
-        Map<String, RouteRenderer<String, String>> routesConfig = new HashMap<>();
+        Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
         routeRendererWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
 
-        RouteRenderer<String, String> childRouteRenderer = new RouteRenderer<>(TestContainerRouteFactory.class);
+        RouteRenderer<String, String, String> childRouteRenderer = new RouteRenderer<>(TestContainerRouteFactory.class);
         childRouteRenderer.setTitle("childRouteWithContainer");
         routeRendererWithContainer.setChild(childRouteRenderer);
 
         String path = "routeWithContainer/routeWithContainer";
-        VortexCrudPathToRouteResolver<String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        RouteRenderer<String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
+        RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrapbare Route zurückgegeben wird
         assertEquals("routeWithContainer", currentRouteRenderer.getTitle(), "Die erste wrapbare Route sollte zurückgegeben werden.");
@@ -60,21 +60,21 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Test
     void testNonWrapableRouteReturnsLast() {
         // Testpfad mit zwei aufeinanderfolgenden non-wrappable Routen
-        Map<String, RouteRenderer<String, String>> routesConfig = new HashMap<>();
+        Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
-        RouteRenderer<String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         routeRendererWithoutContainer2.setTitle("routeWithoutContainer2");
         routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        RouteRenderer<String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
+        RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die letzte non-wrappable Route zurückgegeben wird
         assertEquals("routeWithoutContainer2", currentRouteRenderer.getTitle(), "Die letzte nicht-wrapbare Route sollte zurückgegeben werden.");
@@ -83,24 +83,24 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Test
     void testMixedRoutes() {
         // Testpfad mit gemischten wrappable und non-wrappable Routen
-        Map<String, RouteRenderer<String, String>> routesConfig = new HashMap<>();
+        Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
         routeRendererWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
 
-        RouteRenderer<String, String> firstChild = new RouteRenderer<>(TestContainerRouteFactory.class);
+        RouteRenderer<String, String, String> firstChild = new RouteRenderer<>(TestContainerRouteFactory.class);
         firstChild.setTitle("routeWithoutContainer1");
         routeRendererWithContainer.setChild(firstChild);
 
-        RouteRenderer<String, String> secondChild = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> secondChild = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        RouteRenderer<String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
+        RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrappable Route zurückgegeben wird
         assertEquals("routeWithContainer", currentRouteRenderer.getTitle(), "Die erste wrappable Route sollte zurückgegeben werden.");
@@ -109,17 +109,17 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Test
     void testNonWrappableRouteReturnsItself() {
         // Testpfad mit einer non-wrappable Route
-        Map<String, RouteRenderer<String, String>> routesConfig = new HashMap<>();
+        Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
         routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
         String path = "routeWithoutContainer1";
-        VortexCrudPathToRouteResolver<String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der aktuellen Route
-        RouteRenderer<String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
+        RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die Route selbst zurückgegeben wird
         assertEquals("routeWithoutContainer1", currentRouteRenderer.getTitle(), "Die nicht-wrappable Route sollte zurückgegeben werden.");
@@ -128,25 +128,25 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Test
     void testValidPathWithMarkers() {
         // Testpfad mit gültigen Abschnitten
-        Map<String, RouteRenderer<String, String>> routesConfig = new HashMap<>();
+        Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
         routeRendererWithContainer.setTitle("routeWithContainer");
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
 
-        RouteRenderer<String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
         routeRendererWithContainer.setChild(routeRendererWithoutContainer1);
 
-        RouteRenderer<String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
+        RouteRenderer<String, String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
         routeRendererWithoutContainer2.setTitle("routeWithoutContainer2");
         routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
 
         // Abrufen der gesetzten Marker
-        Map<Integer, RouteRenderer<String, String>> routes = vortexCrudPath.getPathRoutes();
+        Map<Integer, RouteRenderer<String, String, String>> routes = vortexCrudPath.getPathRoutes();
 
         // Prüfung der Marker
         assertEquals(3, routes.size(), "Es sollten 3 Marker gesetzt sein.");

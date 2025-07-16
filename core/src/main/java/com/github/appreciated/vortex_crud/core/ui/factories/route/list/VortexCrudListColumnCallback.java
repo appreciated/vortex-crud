@@ -9,6 +9,6 @@ import com.vaadin.flow.component.grid.Grid;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface VortexCrudListColumnCallback<DataStoreId, FieldId> {
-    void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId> field, Object table, Field<DataStoreId, FieldId> dataStoreField);
+public interface VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> {
+    void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId, KeyType> field, Object table, Field<DataStoreId, FieldId, KeyType> dataStoreField);
 }

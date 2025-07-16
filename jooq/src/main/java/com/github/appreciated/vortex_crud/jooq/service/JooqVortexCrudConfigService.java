@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JooqVortexCrudConfigService implements VortexCrudConfigService<TableRecord<?>, TableField<?, ?>> {
+public class JooqVortexCrudConfigService implements VortexCrudConfigService<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
 
-    private final Application<TableRecord<?>, TableField<?, ?>> configuration;
+    private final Application<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> configuration;
 
     @Autowired
-    public JooqVortexCrudConfigService(VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>> configurationProvider) {
+    public JooqVortexCrudConfigService(VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> configurationProvider) {
         configuration = configurationProvider.get();
     }
 
-    public Application<TableRecord<?>, TableField<?, ?>> getConfiguration() {
+    public Application<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> getConfiguration() {
         return configuration;
     }
 

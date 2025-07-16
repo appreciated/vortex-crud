@@ -5,41 +5,41 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class CollectionConfiguration<DataStoreId, FieldId> {
+public class CollectionConfiguration<DataStoreId, FieldId, KeyType> {
 
-    private Class<? extends DataStoreId> dataStore;
+    private KeyType dataStore;
 
-    private OneToMany<DataStoreId, FieldId> oneToMany;
+    private OneToMany<DataStoreId, FieldId, KeyType> oneToMany;
 
-    private ManyToMany<DataStoreId, FieldId> manyToMany;
+    private ManyToMany<DataStoreId, FieldId, KeyType> manyToMany;
 
     private List<FieldId> children;
 
-    public CollectionConfiguration(Class<? extends DataStoreId> dataStore) {
+    public CollectionConfiguration(KeyType dataStore) {
         this.dataStore = dataStore;
     }
 
-    public Class<? extends DataStoreId> getDataStore() {
+    public KeyType getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(Class<? extends DataStoreId> dataStore) {
+    public void setDataStore(KeyType dataStore) {
         this.dataStore = dataStore;
     }
 
-    public OneToMany<DataStoreId, FieldId> getOneToMany() {
+    public OneToMany<DataStoreId, FieldId, KeyType> getOneToMany() {
         return oneToMany;
     }
 
-    public void setOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
+    public void setOneToMany(OneToMany<DataStoreId, FieldId, KeyType> oneToMany) {
         this.oneToMany = oneToMany;
     }
 
-    public ManyToMany<DataStoreId, FieldId> getManyToMany() {
+    public ManyToMany<DataStoreId, FieldId, KeyType> getManyToMany() {
         return manyToMany;
     }
 
-    public void setManyToMany(ManyToMany<DataStoreId, FieldId> manyToMany) {
+    public void setManyToMany(ManyToMany<DataStoreId, FieldId, KeyType> manyToMany) {
         this.manyToMany = manyToMany;
     }
 
@@ -51,39 +51,39 @@ public class CollectionConfiguration<DataStoreId, FieldId> {
         this.children = children;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId> {
+    public abstract static class Builder<DataStoreId, FieldId, KeyType> {
 
-        private final CollectionConfiguration<DataStoreId, FieldId> product;
+        private final CollectionConfiguration<DataStoreId, FieldId, KeyType> product;
 
-        protected Builder(CollectionConfiguration<DataStoreId, FieldId> product) {
+        protected Builder(CollectionConfiguration<DataStoreId, FieldId, KeyType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId> withOneToMany(OneToMany<DataStoreId, FieldId> oneToMany) {
+        public Builder<DataStoreId, FieldId, KeyType> withOneToMany(OneToMany<DataStoreId, FieldId, KeyType> oneToMany) {
             product.oneToMany = oneToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withManyToMany(ManyToMany<DataStoreId, FieldId> manyToMany) {
+        public Builder<DataStoreId, FieldId, KeyType> withManyToMany(ManyToMany<DataStoreId, FieldId, KeyType> manyToMany) {
             product.manyToMany = manyToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildren(List<FieldId> children) {
+        public Builder<DataStoreId, FieldId, KeyType> withChildren(List<FieldId> children) {
             product.children = children;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildren(FieldId... children) {
+        public Builder<DataStoreId, FieldId, KeyType> withChildren(FieldId... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId, FieldId> addChildren(FieldId item) {
+        public Builder<DataStoreId, FieldId, KeyType> addChildren(FieldId item) {
             product.children.add(item);
             return this;
         }
 
-        public CollectionConfiguration<DataStoreId, FieldId> build() {
+        public CollectionConfiguration<DataStoreId, FieldId, KeyType> build() {
             return product;
         }
     }

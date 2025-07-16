@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 
+
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  * @param <DataStoreId> The type used to identify data stores
  * @param <FieldId> The type used to identify fields in the data store
  */
-public interface ManyToMany<DataStoreId, FieldId> {
+public interface ManyToMany<DataStoreId, FieldId, KeyType> {
 
     /**
      * Gets data from the many-to-many relationship.
@@ -23,10 +24,10 @@ public interface ManyToMany<DataStoreId, FieldId> {
      * @return A list of entities matching the criteria
      */
     <ModelClass> List<ModelClass> getData(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry, 
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
             String foreignKeyValue, 
             VortexCrudDataStore<FieldId,ModelClass> dataStore,
-            CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration
+            CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration
     );
 
     /**
@@ -35,7 +36,7 @@ public interface ManyToMany<DataStoreId, FieldId> {
      * @param collectionConfiguration The collection configuration
      * @return The reference field ID
      */
-    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration);
+    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
 
     /**
      * Gets the associative data store for the many-to-many relationship.

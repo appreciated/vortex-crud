@@ -19,35 +19,35 @@ import java.util.Map;
  * {@link RouteRenderer}. It also supports click events for rows to navigate to a detailed view of each entity.
  */
 
-public class GenericEntityGrid<DataStoreId, FieldId> extends Grid<Object> {
+public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Object> {
 
-    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
+    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathVariables;
 
-    public GenericEntityGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                             RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                             VortexCrudConfigService<DataStoreId, FieldId> configService,
-                             VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId> listColumnFactory,
+    public GenericEntityGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                             RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
+                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                             VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                             VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> listColumnFactory,
                              VortexCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
         this.pathVariables = routeResolver;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        Class<? extends DataStoreId> table = routeRenderer.getDataStoreKey();
+        KeyType table = routeRenderer.getDataStoreKey();
         VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStoreKey());
-        RouteRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration = routeRenderer.getConfiguration();
+        DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStoreKey());
+        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration = routeRenderer.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
 
-        Map<?, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
+        Map<?, Field<DataStoreId, FieldId, KeyType>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<DataStoreId, FieldId> field : gridOrListConfiguration.getChildren()) {
+        for (InternalFormElement<DataStoreId, FieldId, KeyType> field : gridOrListConfiguration.getChildren()) {
             FieldId fieldName = field.getField();
-            Field<DataStoreId, FieldId> dataStoreField = fieldsConfig.get(fieldName);
+            Field<DataStoreId, FieldId, KeyType> dataStoreField = fieldsConfig.get(fieldName);
             listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
         }
 

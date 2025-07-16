@@ -5,8 +5,8 @@ import com.vaadin.flow.component.Component;
 
 import java.util.Collection;
 
-public interface VortexCrudFieldFactory<DataStoreId, FieldId> {
-    Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField);
+public interface VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+    Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField);
 
     Collection<String> getValidDatabaseTypesForExpectedType();
 }

@@ -4,14 +4,14 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqCollectionConfiguration extends CollectionConfiguration<TableRecord<?>, TableField<?, ?>> {
+public class JooqCollectionConfiguration extends CollectionConfiguration<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
 
     public JooqCollectionConfiguration(Class<TableRecord<?>> factory) {
         super(factory);
     }
 
-    public static class Builder extends CollectionConfiguration.Builder<TableRecord<?>, TableField<?, ?>> {
-        public Builder(CollectionConfiguration<TableRecord<?>, TableField<?, ?>> product) {
+    public static class Builder extends CollectionConfiguration.Builder<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
+        public Builder(CollectionConfiguration<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> product) {
             super(product);
         }
     }

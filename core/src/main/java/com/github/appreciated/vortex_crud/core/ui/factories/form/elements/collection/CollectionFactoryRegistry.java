@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
+
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,28 +20,28 @@ import java.util.Optional;
  */
 
 @Service
-public class CollectionFactoryRegistry<DataStoreId, FieldId> implements VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> {
+public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> {
 
-    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId>> factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
 
-    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                     VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                                     VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                                      VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                      ReflectionService<FieldId> reflectionService) {
         factories.put(ListCollectionFactory.class, new ListCollectionFactory<>(dataStoreFactoryRegistry, dialogFactoryRegistry, resolver, reflectionService));
     }
 
-    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId>> getFactories() {
+    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudCollectionFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> factory) {
+    public VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId>> key, VortexCrudCollectionFactory<DataStoreId, FieldId> factory) {
+    public void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> key, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> factory) {
         factories.put(key, factory);
     }
 }

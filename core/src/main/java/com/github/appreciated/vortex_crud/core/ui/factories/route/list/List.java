@@ -16,22 +16,22 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class List<DataStoreId, FieldId> extends VerticalLayout {
-    private final GenericEntityGrid<DataStoreId, FieldId> entityGrid;
+public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
+    private final GenericEntityGrid<DataStoreId, FieldId, KeyType> entityGrid;
 
     public List(Integer currentPathIndex,
-                    VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                    VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                    VortexCrudConfigService<DataStoreId, FieldId> configService,
-                    VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId> columnCallbackRegistry,
-                    FormCreator<DataStoreId, FieldId> formCreator,
-                    VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+                    VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                    VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                    VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                    VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> columnCallbackRegistry,
+                    FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+                    VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                     VortexCrudDataStoreFieldNameResolver<FieldId> resolver
     ) {
-        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
-        Class<? extends DataStoreId> dataStore = routeRenderer.getDataStoreKey();
+        KeyType dataStore = routeRenderer.getDataStoreKey();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -56,7 +56,7 @@ public class List<DataStoreId, FieldId> extends VerticalLayout {
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, Class<? extends DataStoreId> dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer, KeyType dataStore, FormCreator<DataStoreId, FieldId, KeyType> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,

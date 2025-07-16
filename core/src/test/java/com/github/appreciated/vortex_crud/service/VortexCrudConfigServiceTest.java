@@ -15,10 +15,10 @@ import static org.mockito.Mockito.when;
 class VortexCrudConfigServiceTest {
 
     @Mock
-    private VortexCrudConfigurationProvider<String, String> configProvider;
+    private VortexCrudConfigurationProvider<String, String, String> configProvider;
 
     @Mock
-    private Application<String, String> application;
+    private Application<String, String, String> application;
 
     private TestVortexCrudConfigService configService;
 
@@ -35,7 +35,7 @@ class VortexCrudConfigServiceTest {
 
     @Test
     void testGetConfiguration() {
-        Application<String, String> config = configService.getConfiguration();
+        Application<String, String, String> config = configService.getConfiguration();
         assertNotNull(config, "Configuration should not be null");
         assertEquals(application, config, "Configuration should match the mocked application");
     }
@@ -49,16 +49,16 @@ class VortexCrudConfigServiceTest {
     /**
      * Test implementation of VortexCrudConfigService for testing purposes.
      */
-    private static class TestVortexCrudConfigService implements VortexCrudConfigService<String, String> {
+    private static class TestVortexCrudConfigService implements VortexCrudConfigService<String, String, String> {
         
-        private final VortexCrudConfigurationProvider<String, String> configProvider;
+        private final VortexCrudConfigurationProvider<String, String, String> configProvider;
         
-        public TestVortexCrudConfigService(VortexCrudConfigurationProvider<String, String> configProvider) {
+        public TestVortexCrudConfigService(VortexCrudConfigurationProvider<String, String, String> configProvider) {
             this.configProvider = configProvider;
         }
         
         @Override
-        public Application<String, String> getConfiguration() {
+        public Application<String, String, String> getConfiguration() {
             return configProvider.get();
         }
         

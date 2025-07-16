@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.jpa.service;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,10 +15,10 @@ import java.util.List;
  * @param <DataStoreId> The model class type
  */
 @Component
-public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String> {
+public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String, JpaRepository<?,?>> {
 
     @Override
-    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String> manyToMany, Class<? extends DataStoreId> modelClass) {
+    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String, JpaRepository<?,?>> manyToMany, JpaRepository<?,?> modelClass) {
         return List.of();
     }
 

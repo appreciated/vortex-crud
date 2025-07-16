@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForei
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,16 +23,16 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialogFactory<DataStoreId, FieldId> {
+public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
     private VortexCrudDataStore<FieldId, Object> dataStore;
 
-    public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId> configService,
-                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+    public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                              VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                              VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy
     ) {
@@ -45,12 +46,12 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
     public Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
-                         RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
-                         CollectionConfiguration<DataStoreId, FieldId> config,
-                         Class<? extends DataStoreId> dataStoreKey,
-                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                         RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
+                         CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
+                         KeyType dataStoreKey,
+                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
                          OnStoreListener listener,
-                         FormCreator<DataStoreId, FieldId> formCreator) {
+                         FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
 
         this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
         Dialog dialog = new Dialog();
@@ -72,7 +73,7 @@ public class FormDialogFactory<DataStoreId, FieldId> implements VortexCrudDialog
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<DataStoreId, FieldId> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
+        DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
 
         formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
 

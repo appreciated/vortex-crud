@@ -5,13 +5,13 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 
 
-public class JooqCollectionElement extends InternalFormElement<TableRecord<?>, TableField<?,?>> {
+public class JooqCollectionElement extends InternalFormElement<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
 
     public JooqCollectionElement(String label) {
         super(null, "collection", label);
     }
 
-    public static Builder<TableRecord<?>, TableField<?,?>> of(String label) {
+    public static Builder<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> of(String label) {
         return new Builder<>(new JooqCollectionElement(label));
     }
 }

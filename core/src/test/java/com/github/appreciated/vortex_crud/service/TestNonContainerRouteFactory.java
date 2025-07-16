@@ -6,9 +6,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class TestNonContainerRouteFactory implements VortexCrudRouteFactory<String, String> {
+public class TestNonContainerRouteFactory implements VortexCrudRouteFactory<String, String, String> {
     @Override
-    public Component renderRoute(Integer currentPathIndex, VortexCrudPathToRouteResolver<String, String> routeResolver, @Nullable DetailRouteSetting detailRouteSetting) {
+    public Component renderRoute(Integer currentPathIndex, VortexCrudPathToRouteResolver<String, String, String> routeResolver, @Nullable DetailRouteSetting detailRouteSetting) {
         return null;
     }
 

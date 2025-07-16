@@ -10,35 +10,35 @@ import java.util.List;
 import java.util.Map;
 
 @GenerateBuilder
-public class RouteRenderer<DataStoreId, FieldId> {
+public class RouteRenderer<DataStoreId, FieldId, KeyType> {
 
-    private Class<? extends DataStoreId> dataStoreKey;
+    private KeyType dataStoreKey;
 
     private String title;
 
     private boolean defaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory;
+    private Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory;
 
     private boolean hideInMenu;
 
-    private RouteRendererConfiguration<DataStoreId, FieldId> configuration;
+    private RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration;
 
-    private Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap = new HashMap<>();
+    private Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> childrenMap = new HashMap<>();
 
     private SerializableSupplier<Component> iconFactory;
 
-    public RouteRenderer(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory) {
+    public RouteRenderer(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory) {
         this.factory = factory;
     }
 
     private List<String> roles;
 
-    public Class<? extends DataStoreId> getDataStoreKey() {
+    public KeyType getDataStoreKey() {
         return dataStoreKey;
     }
 
-    public void setDataStoreKey(Class<? extends DataStoreId> dataStoreKey) {
+    public void setDataStoreKey(KeyType dataStoreKey) {
         this.dataStoreKey = dataStoreKey;
     }
 
@@ -66,11 +66,11 @@ public class RouteRenderer<DataStoreId, FieldId> {
         this.defaultRoute = defaultRoute;
     }
 
-    public Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> getFactory() {
+    public Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory) {
+    public void setFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory) {
         this.factory = factory;
     }
 
@@ -82,27 +82,27 @@ public class RouteRenderer<DataStoreId, FieldId> {
         this.hideInMenu = hideInMenu;
     }
 
-    public RouteRendererConfiguration<DataStoreId, FieldId> getConfiguration() {
+    public RouteRendererConfiguration<DataStoreId, FieldId, KeyType> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
+    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration) {
         this.configuration = configuration;
     }
 
-    public Map<String, RouteRenderer<DataStoreId, FieldId>> getChildrenMap() {
+    public Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> getChildrenMap() {
         return childrenMap;
     }
 
-    public void setChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap) {
+    public void setChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> childrenMap) {
         this.childrenMap = childrenMap;
     }
 
-    public RouteRenderer<DataStoreId, FieldId> getChild() {
+    public RouteRenderer<DataStoreId, FieldId, KeyType> getChild() {
         return childrenMap.entrySet().stream().findFirst().orElseThrow().getValue();
     }
 
-    public void setChild(RouteRenderer<DataStoreId, FieldId> child) {
+    public void setChild(RouteRenderer<DataStoreId, FieldId, KeyType> child) {
         if (!childrenMap.isEmpty()) {
             throw new IllegalArgumentException("Route already has a child. Only one child is allowed when using setChild()");
         }
@@ -117,65 +117,65 @@ public class RouteRenderer<DataStoreId, FieldId> {
         this.roles = roles;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId> {
+    public abstract static class Builder<DataStoreId, FieldId, KeyType> {
 
-        private final RouteRenderer<DataStoreId, FieldId> product;
+        private final RouteRenderer<DataStoreId, FieldId, KeyType> product;
 
-        public  Builder(RouteRenderer<DataStoreId, FieldId> product) {
+        public  Builder(RouteRenderer<DataStoreId, FieldId, KeyType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId> withDataStore(Class<? extends DataStoreId> dataStore) {
+        public Builder<DataStoreId, FieldId, KeyType> withDataStore(KeyType dataStore) {
             product.dataStoreKey = dataStore;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withTitle(String title) {
+        public Builder<DataStoreId, FieldId, KeyType> withTitle(String title) {
             product.title = title;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withIconFactory(SerializableSupplier<Component> iconFactory) {
+        public Builder<DataStoreId, FieldId, KeyType> withIconFactory(SerializableSupplier<Component> iconFactory) {
             product.iconFactory = iconFactory;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withDefaultRoute(boolean defaultRoute) {
+        public Builder<DataStoreId, FieldId, KeyType> withDefaultRoute(boolean defaultRoute) {
             product.defaultRoute = defaultRoute;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withHideInMenu(boolean hideInMenu) {
+        public Builder<DataStoreId, FieldId, KeyType> withHideInMenu(boolean hideInMenu) {
             product.hideInMenu = hideInMenu;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId> configuration) {
+        public Builder<DataStoreId, FieldId, KeyType> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration) {
             product.configuration = configuration;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId>> childrenMap) {
+        public Builder<DataStoreId, FieldId, KeyType> withChildrenMap(Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> childrenMap) {
             product.childrenMap = childrenMap;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withChild(RouteRenderer<DataStoreId, FieldId> child) {
+        public Builder<DataStoreId, FieldId, KeyType> withChild(RouteRenderer<DataStoreId, FieldId, KeyType> child) {
             product.setChild(child);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> withRoles(List<String> roles) {
+        public Builder<DataStoreId, FieldId, KeyType> withRoles(List<String> roles) {
             product.roles = roles;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId> addRole(String item) {
+        public Builder<DataStoreId, FieldId, KeyType> addRole(String item) {
             product.roles.add(item);
             return this;
         }
 
-        public RouteRenderer<DataStoreId, FieldId> build() {
+        public RouteRenderer<DataStoreId, FieldId, KeyType> build() {
             return product;
         }
     }

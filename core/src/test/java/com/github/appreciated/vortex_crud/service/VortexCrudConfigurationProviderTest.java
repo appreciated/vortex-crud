@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class VortexCrudConfigurationProviderTest {
 
     @Mock
-    private Application<String, String> application;
+    private Application<String, String, String> application;
 
     private TestVortexCrudConfigurationProvider configProvider;
 
@@ -25,7 +25,7 @@ class VortexCrudConfigurationProviderTest {
 
     @Test
     void testGet() {
-        Application<String, String> result = configProvider.get();
+        Application<String, String, String> result = configProvider.get();
         assertNotNull(result, "Configuration should not be null");
         assertEquals(application, result, "Configuration should match the mocked application");
     }
@@ -33,16 +33,16 @@ class VortexCrudConfigurationProviderTest {
     /**
      * Test implementation of VortexCrudConfigurationProvider for testing purposes.
      */
-    private static class TestVortexCrudConfigurationProvider implements VortexCrudConfigurationProvider<String, String> {
+    private static class TestVortexCrudConfigurationProvider implements VortexCrudConfigurationProvider<String, String, String> {
         
-        private final Application<String, String> application;
+        private final Application<String, String, String> application;
         
-        public TestVortexCrudConfigurationProvider(Application<String, String> application) {
+        public TestVortexCrudConfigurationProvider(Application<String, String, String> application) {
             this.application = application;
         }
         
         @Override
-        public Application<String, String> get() {
+        public Application<String, String, String> get() {
             return application;
         }
     }

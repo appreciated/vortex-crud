@@ -10,22 +10,22 @@ import com.vaadin.flow.component.select.Select;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class SelectFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
+public class SelectFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
 
     private final Selects selects;
-    private final Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> tablesConfig;
+    private final Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> tablesConfig;
 
-    public SelectFieldFactory(Selects selects, Map<Class<? extends DataStoreId>, DataStoreConfig<DataStoreId, FieldId>> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> tablesConfig) {
         this.selects = selects;
         this.tablesConfig = tablesConfig;
     }
 
     @Override
-    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
         Select<?> select = new Select<>();
 
-        DataStoreConfig<DataStoreId, FieldId> dataStoreConfig = tablesConfig.get(table);
-        Field<DataStoreId, FieldId> tableField = dataStoreConfig.getFields().get(field);
+        DataStoreConfig<DataStoreId, FieldId, KeyType> dataStoreConfig = tablesConfig.get(table);
+        Field<DataStoreId, FieldId, KeyType> tableField = dataStoreConfig.getFields().get(field);
 
         String selectName = tableField.getValues();
         Map<?, String> selectConfig = selects.getConfigs().get(selectName);

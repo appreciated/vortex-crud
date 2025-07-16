@@ -15,32 +15,32 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import jakarta.annotation.Nullable;
 
-public class MultiFormRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
+public class MultiFormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> {
 
-    private final FormRouteFactory<DataStoreId, FieldId> formRouteFactory;
+    private final FormRouteFactory<DataStoreId, FieldId, KeyType> formRouteFactory;
 
     private String titleColumn;
 
     public MultiFormRouteFactory(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-            VortexCrudConfigService<DataStoreId, FieldId> configService,
-            FormCreator<DataStoreId, FieldId> formCreator,
-            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> factoryRegistry,
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+            VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+            FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> factoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService
     ) {
-        this.formRouteFactory = new FormRouteFactory<DataStoreId, FieldId>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, resolver, reflectionService);
+        this.formRouteFactory = new FormRouteFactory<DataStoreId, FieldId, KeyType>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, resolver, reflectionService);
     }
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormRendererConfiguration<DataStoreId, FieldId> formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId>) routeRenderer.getConfiguration();
+        MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration();
         Div div = new Div();
-        for (RouteRendererConfiguration<DataStoreId, FieldId> child : formConfiguration.getForms()) {
+        for (RouteRendererConfiguration<DataStoreId, FieldId, KeyType> child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), routeRenderer, child));
         }

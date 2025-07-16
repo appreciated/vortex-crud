@@ -36,7 +36,7 @@ public class JpaFieldService {
      * @param jpaDataStoreFactoryRegistry
      * @return A map of field names to configure Field objects
      */
-    public Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore, JpaDataStoreFactoryRegistry jpaDataStoreFactoryRegistry) {
+    public Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore, JpaDataStoreFactoryRegistry jpaDataStoreFactoryRegistry) {
         return dataStore.getFields().stream()
                 .filter(field -> field.isAnnotationPresent(Field.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, entityField -> {
@@ -46,7 +46,7 @@ public class JpaFieldService {
 
                     if (annotation.value() == ReferenceFieldFactory.class) {
                         Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
-                        Class<?extends JpaRepository<?, ?>> fieldEntityFactory = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
+                        JpaRepository<?, ?> fieldEntityFactory = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
                         String filterField = entityField.isAnnotationPresent(ReferenceFieldConfiguration.class) ? entityField.getAnnotation(ReferenceFieldConfiguration.class).value() : null;
                         String[] filterFields = entityField.isAnnotationPresent(ReferenceFieldConfiguration.class) && entityField.getAnnotation(ReferenceFieldConfiguration.class).fields().length > 0 ? entityField.getAnnotation(ReferenceFieldConfiguration.class).fields() : null;
                         return JpaField.of(annotation.value(), entityField.getName(), filterField, fieldEntityFactory, filterFields == null ? Collections.singletonList(filterField) : Arrays.stream(filterFields).toList()).build();

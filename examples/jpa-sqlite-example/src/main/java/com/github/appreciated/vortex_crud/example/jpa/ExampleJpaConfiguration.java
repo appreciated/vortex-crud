@@ -35,7 +35,7 @@ import static com.github.appreciated.vortex_crud.example.jpa.entity.Status.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
-public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String> {
+public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
@@ -55,8 +55,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     }
 
     @Override
-    public Application<JpaRepository<?, ?>, String> get() {
-        RouteRenderer<JpaRepository<?, ?>, String> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
+    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(taskRepository)
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
@@ -98,7 +98,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         )
                         .build())
                 .build();
-        RouteRenderer<JpaRepository<?, ?>, String> projectForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(projectRepository)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -111,7 +111,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         )
                         .build())
                 .build();
-        RouteRenderer<JpaRepository<?, ?>, String> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(imageRepository)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -123,7 +123,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
                 .withDataStore(projectRepository)

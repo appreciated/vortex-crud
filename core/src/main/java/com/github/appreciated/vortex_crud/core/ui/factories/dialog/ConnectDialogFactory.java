@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -23,17 +24,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDialogFactory<DataStoreId, FieldId> {
+public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy;
+    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy;
     private final ReflectionService<FieldId> reflectionService;
 
     public ConnectDialogFactory(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-            ManyToManyPersistenceStrategy<DataStoreId, FieldId> manyToManyPersistenceStrategy,
+            ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy,
             ReflectionService<FieldId> reflectionService) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
@@ -45,15 +46,15 @@ public class ConnectDialogFactory<DataStoreId, FieldId> implements VortexCrudDia
     public Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
-                         RouteRenderer<DataStoreId, FieldId> formRouteRenderer,
-                         CollectionConfiguration<DataStoreId, FieldId> collectionConfiguration,
-                         Class<? extends DataStoreId> dataStoreKey,
-                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                         RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
+                         CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration,
+                         KeyType dataStoreKey,
+                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
                          OnStoreListener listener,
-                         FormCreator<DataStoreId, FieldId> formCreator) {
+                         FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
 
         VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
-        ManyToMany<DataStoreId, FieldId> manyToMany = collectionConfiguration.getManyToMany();
+        ManyToMany<DataStoreId, FieldId, KeyType> manyToMany = collectionConfiguration.getManyToMany();
         FieldId associativeTargetIdField = manyToMany.getAssociativeTargetIdField();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");

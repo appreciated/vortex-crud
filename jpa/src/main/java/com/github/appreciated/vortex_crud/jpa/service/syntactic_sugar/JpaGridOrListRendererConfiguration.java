@@ -4,13 +4,13 @@ import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererCo
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public class JpaGridOrListRendererConfiguration extends GridOrListRendererConfiguration<JpaRepository<?, ?>, String> {
+public class JpaGridOrListRendererConfiguration extends GridOrListRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?> > {
 
     public JpaGridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<String>> factory) {
         super(factory);
     }
 
-    public static class Builder extends GridOrListRendererConfiguration.Builder<JpaRepository<?, ?>, String> {
+    public static class Builder extends GridOrListRendererConfiguration.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?> > {
         public Builder(JpaGridOrListRendererConfiguration product) {
             super(product);
         }

@@ -5,12 +5,12 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
-public class JooqDataStoreConfig extends DataStoreConfig<TableRecord<?>, TableField<?, ?>> {
+public class JooqDataStoreConfig extends DataStoreConfig<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
     public JooqDataStoreConfig(Class<? extends VortexCrudDataStore> factory) {
         super((Class<? extends VortexCrudDataStore<TableField<?, ?>, ?>>) factory);
     }
 
-    public static DataStoreConfig.Builder<TableRecord<?>, TableField<?, ?>> of(Class<? extends VortexCrudDataStore> factory) {
-        return new DataStoreConfig.Builder<>(new DataStoreConfig<TableRecord<?>, TableField<?, ?>>((Class<? extends VortexCrudDataStore<TableField<?, ?>, ?>>) factory));
+    public static DataStoreConfig.Builder<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> of(Class<? extends VortexCrudDataStore> factory) {
+        return new DataStoreConfig.Builder<>(new DataStoreConfig<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>>((Class<? extends VortexCrudDataStore<TableField<?, ?>, ?>>) factory));
     }
 }

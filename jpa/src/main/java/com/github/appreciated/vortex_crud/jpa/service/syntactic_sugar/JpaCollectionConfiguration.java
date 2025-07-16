@@ -3,19 +3,19 @@ package com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public class JpaCollectionConfiguration extends CollectionConfiguration<JpaRepository<?, ?>, String> {
+public class JpaCollectionConfiguration extends CollectionConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?> > {
 
-    public JpaCollectionConfiguration(Class<? extends JpaRepository<?, ?>> factory) {
+    public JpaCollectionConfiguration(JpaRepository<?, ?> factory) {
         super(factory);
     }
 
-    public static class Builder extends CollectionConfiguration.Builder<JpaRepository<?, ?>, String> {
-        public Builder(CollectionConfiguration<JpaRepository<?, ?>, String> product) {
+    public static class Builder extends CollectionConfiguration.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?> > {
+        public Builder(CollectionConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?> > product) {
             super(product);
         }
     }
 
-    public static JpaCollectionConfiguration.Builder of(Class<? extends JpaRepository<?, ?>> factory) {
+    public static JpaCollectionConfiguration.Builder of(JpaRepository<?, ?> factory) {
         return new JpaCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
     }
 }

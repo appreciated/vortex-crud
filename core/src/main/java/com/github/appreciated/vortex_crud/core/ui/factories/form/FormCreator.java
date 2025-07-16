@@ -19,15 +19,15 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class FormCreator<DataStoreId, FieldId> {
+public class FormCreator<DataStoreId, FieldId, KeyType> {
 
-    private final DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory;
-    private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry;
+    private final DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory;
+    private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
 
-    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId> componentFactory,
-                       VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId> collectionFactoryRegistry,
+    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory,
+                       VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry,
                        VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                        ReflectionService<FieldId> reflectionService) {
         this.componentFactory = componentFactory;
@@ -36,26 +36,26 @@ public class FormCreator<DataStoreId, FieldId> {
         this.reflectionService = reflectionService;
     }
 
-    public void bindAndAddToLayout(Class<? extends DataStoreId> dataStoreKey,
-                                   RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                                   RouteRendererConfiguration<DataStoreId, FieldId> formConfig,
+    public void bindAndAddToLayout(KeyType dataStoreKey,
+                                   RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
+                                   RouteRendererConfiguration<DataStoreId, FieldId, KeyType> formConfig,
                                    Object entity,
-                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                   DataStoreConfig<DataStoreId, FieldId> tables,
+                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
+                                   DataStoreConfig<DataStoreId, FieldId, KeyType> tables,
                                    Binder<Object> binder,
                                    FormLayout form,
-                                   FormCreator<DataStoreId, FieldId> formCreator) {
-        Map<FieldId, Field<DataStoreId, FieldId>> fieldsConfig = tables.getFields();
+                                   FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
+        Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<DataStoreId, FieldId> element : formConfig.getChildren()) {
+        for (InternalFormElement<DataStoreId, FieldId, KeyType> element : formConfig.getChildren()) {
             FieldId fieldName = element.getField();
             if (!element.getType().equals("collection")) {
-                Field<DataStoreId, FieldId> field = fieldsConfig.get(fieldName);
+                Field<DataStoreId, FieldId, KeyType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
-                VortexCrudFieldFactory<DataStoreId, FieldId> factory = componentFactory.getFactory(field.getFactory());
+                VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
                 binder.bind(
                         (HasValue) component,

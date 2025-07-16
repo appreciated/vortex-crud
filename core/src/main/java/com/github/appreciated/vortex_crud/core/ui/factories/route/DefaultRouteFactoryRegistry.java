@@ -28,18 +28,18 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> {
+public class DefaultRouteFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> {
 
-    final HashMap<Class<? extends VortexCrudRouteFactory>, VortexCrudRouteFactory<DataStoreId, FieldId>> factories = new HashMap<>();
+    final HashMap<Class<? extends VortexCrudRouteFactory>, VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
 
     public DefaultRouteFactoryRegistry(VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                                       VortexCrudConfigService<DataStoreId, FieldId> configService,
-                                       VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId> listColumnCallbackRegistry,
-                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                       VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                                       VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                                       VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> listColumnCallbackRegistry,
+                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                                       VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                       FormCreator<DataStoreId, FieldId> formCreatorService,
+                                       FormCreator<DataStoreId, FieldId, KeyType> formCreatorService,
                                        ReflectionService<FieldId> reflectionService
     ) {
         factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService));
@@ -51,17 +51,17 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId> implements Vortex
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService));
     }
 
-    public VortexCrudRouteFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> factory) {
+    public VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory) {
         return factories.get(factory);
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId>> key, VortexCrudRouteFactory<DataStoreId, FieldId> factory) {
+    public void addFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> key, VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> factory) {
         factories.put(key, factory);
     }
 
     @Override
-    public boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId> currentRouteRenderer) {
+    public boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer) {
         return factories.get(currentRouteRenderer.getFactory()).isContainerRoute();
     }
 }

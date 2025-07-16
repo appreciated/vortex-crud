@@ -9,7 +9,7 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class ImageFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
+public class ImageFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
 
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
@@ -18,7 +18,7 @@ public class ImageFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldF
     }
 
     @Override
-    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
         return new ImageHasValue(fileProviderRegistry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
     }
 

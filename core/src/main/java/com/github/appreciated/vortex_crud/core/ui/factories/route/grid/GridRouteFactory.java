@@ -15,22 +15,22 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
+public class GridRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
-    private final FormCreator<DataStoreId, FieldId> formCreator;
-    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
+    private final FormCreator<DataStoreId, FieldId, KeyType> formCreator;
+    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
 
     public GridRouteFactory(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-            FormCreator<DataStoreId, FieldId> formCreator,
-            VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+            FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+            VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
             VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
             VortexCrudFileProviderRegistry fileProviderRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
@@ -48,10 +48,10 @@ public class GridRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFa
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
 
-        RouteRenderer<DataStoreId, FieldId> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new Grid<>(routeResolver,
                 routeRenderer,

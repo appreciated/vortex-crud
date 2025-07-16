@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
-public interface VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> {
-    VortexCrudDataStore<FieldId, ?> getDataStore(Class<? extends DataStoreId> table);
+public interface VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> {
+   VortexCrudDataStore<FieldId, ?> getDataStore(KeyType table);
 
-    void addFactory(Class<? extends DataStoreId> table, VortexCrudDataStore<FieldId, ?> factory);
+    void addFactory(KeyType table, VortexCrudDataStore<FieldId, ?> factory);
 }

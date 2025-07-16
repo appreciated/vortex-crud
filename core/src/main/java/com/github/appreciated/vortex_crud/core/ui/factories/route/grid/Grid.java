@@ -16,20 +16,21 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.EntityItemList;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.VirtualItemGrid;
+
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
-public class Grid<DataStoreId, FieldId> extends VerticalLayout {
-    private final VirtualItemGrid<DataStoreId, FieldId> virtualGrid;
+public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
+    private final VirtualItemGrid<DataStoreId, FieldId, KeyType> virtualGrid;
 
-    public Grid(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                RouteRenderer<DataStoreId, FieldId> routeRenderer,
-                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                FormCreator<DataStoreId, FieldId> formCreator,
-                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
-                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry,
+    public Grid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
+                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                 VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
@@ -66,7 +67,11 @@ public class Grid<DataStoreId, FieldId> extends VerticalLayout {
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, Class<? extends DataStoreId> dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
+                       KeyType dataStore,
+                       FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,
                 null,

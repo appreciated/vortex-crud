@@ -6,11 +6,11 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class DataStoreConfig<DataStoreId, FieldId> {
+public class DataStoreConfig<DataStoreId, FieldId, KeyType> {
 
     private Class<? extends VortexCrudDataStore<FieldId, ?>> factory;
 
-    private Map<FieldId, Field<DataStoreId, FieldId>> fields;
+    private Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields;
 
     public DataStoreConfig(Class<? extends VortexCrudDataStore<FieldId, ?>> factory) {
         this.factory = factory;
@@ -24,28 +24,28 @@ public class DataStoreConfig<DataStoreId, FieldId> {
         this.factory = factory;
     }
 
-    public Map<FieldId, Field<DataStoreId, FieldId>> getFields() {
+    public Map<FieldId, Field<DataStoreId, FieldId, KeyType>> getFields() {
         return fields;
     }
 
-    public void setFields(Map<FieldId, Field<DataStoreId, FieldId>> fields) {
+    public void setFields(Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields) {
         this.fields = fields;
     }
 
-    public static class Builder<DataStoreId, FieldId> {
+    public static class Builder<DataStoreId, FieldId, KeyType> {
 
-        private final DataStoreConfig<DataStoreId, FieldId> product;
+        private final DataStoreConfig<DataStoreId, FieldId, KeyType> product;
 
-        public Builder(DataStoreConfig<DataStoreId, FieldId> product) {
+        public Builder(DataStoreConfig<DataStoreId, FieldId, KeyType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId> withFields(Map<FieldId, Field<DataStoreId, FieldId>> fields) {
+        public Builder<DataStoreId, FieldId, KeyType> withFields(Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields) {
             product.fields = fields;
             return this;
         }
 
-        public DataStoreConfig<DataStoreId, FieldId> build() {
+        public DataStoreConfig<DataStoreId, FieldId, KeyType> build() {
             return product;
         }
     }

@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
 class TranslationServiceTest {
 
     @Mock
-    private VortexCrudConfigService<String, String> configService;
+    private VortexCrudConfigService<String, String, String> configService;
 
     @Mock
-    private Application<String, String> application;
+    private Application<String, String, String> application;
 
     @Mock
     private ResourcePatternResolver patternResolver;

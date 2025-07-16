@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
+
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,16 +21,16 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements VortexCrudFieldFactoryRegistry<DataStoreId, FieldId> {
+public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactoryRegistry<DataStoreId, FieldId, KeyType> {
 
-    private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId>> factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId> configService,
-                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+    public DefaultFieldFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                        ReflectionService<FieldId> reflectionService) {
-        Application<DataStoreId, FieldId> configuration = configService.getConfiguration();
+        Application<DataStoreId, FieldId, KeyType> configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
         factories.put(DateFieldFactory.class, new DateFieldFactory<>());
@@ -42,17 +43,17 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId> implements Vortex
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
     }
 
-    public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId>> getFactories() {
+    public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudFieldFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudFieldFactory> type) {
+    public VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudFieldFactory> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<DataStoreId, FieldId> factory) {
+    public void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory) {
         factories.put(key, factory);
     }
 }

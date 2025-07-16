@@ -6,9 +6,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
  * the specified FieldConfig.
  */
 
-public interface VortexCrudFieldFactoryRegistry<DataStoreId, FieldId> {
+public interface VortexCrudFieldFactoryRegistry<DataStoreId, FieldId, KeyType> {
 
-    VortexCrudFieldFactory<DataStoreId, FieldId> getFactory(Class<? extends VortexCrudFieldFactory> type);
+    VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudFieldFactory> type);
 
-    void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<DataStoreId, FieldId> factory);
+    void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory);
 }

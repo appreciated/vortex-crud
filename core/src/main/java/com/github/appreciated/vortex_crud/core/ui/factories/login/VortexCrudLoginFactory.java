@@ -8,9 +8,9 @@ import com.vaadin.flow.component.Component;
  * Implementations should return a component representing the rendered view for the specified route.
  */
 
-public interface VortexCrudLoginFactory<DataStoreId, FieldId> {
+public interface VortexCrudLoginFactory<DataStoreId, FieldId, KeyType> {
     Component getLoginView(
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver
+            VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver
     );
 }

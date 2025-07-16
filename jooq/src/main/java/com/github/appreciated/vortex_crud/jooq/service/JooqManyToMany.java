@@ -4,12 +4,13 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
 import java.util.List;
 
-public class JooqManyToMany<DataModel extends TableRecord<?>> implements ManyToMany<DataModel, TableField<?, ?>> {
+public class JooqManyToMany<DataModel extends TableRecord<?>, KeyType> implements ManyToMany<DataModel, TableField<?, ?>, KeyType> {
 
     private final TableField<?, ?> associativeSourceIdField;
     private final TableField<?, ?> associativeTargetIdField;
@@ -22,7 +23,7 @@ public class JooqManyToMany<DataModel extends TableRecord<?>> implements ManyToM
     }
 
     @Override
-    public <ModelClass> List<ModelClass> getData(VortexCrudDataStoreFactoryRegistry<DataModel, TableField<?, ?>> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ModelClass> dataStore, CollectionConfiguration<DataModel, TableField<?, ?>> collectionConfiguration) {
+    public <ModelClass> List<ModelClass> getData(VortexCrudDataStoreFactoryRegistry<DataModel, TableField<?, ?>, KeyType> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ModelClass> dataStore, CollectionConfiguration<DataModel, TableField<?, ?>, KeyType> collectionConfiguration) {
         // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
@@ -35,7 +36,7 @@ public class JooqManyToMany<DataModel extends TableRecord<?>> implements ManyToM
     }
 
     @Override
-    public TableField<?, ?> getReferenceField(CollectionConfiguration<DataModel, TableField<?, ?>> collectionConfiguration) {
+    public TableField<?, ?> getReferenceField(CollectionConfiguration<DataModel, TableField<?, ?>, KeyType> collectionConfiguration) {
         return dataStoreField;
     }
 

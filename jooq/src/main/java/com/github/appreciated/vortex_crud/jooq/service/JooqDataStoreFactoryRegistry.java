@@ -20,17 +20,18 @@ import java.util.Optional;
  */
 
 @Service
-public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<TableRecord<?>, TableField<?, ?>> {
+public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> {
 
     private final HashMap<Class<? extends TableRecord<?>>, VortexCrudDataStore<TableField<?, ?>, ?>> factories = new HashMap<>();
 
-    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<TableRecord<?>, TableField<?, ?>> configService, DSLContext dslContext) {
-        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<TableRecord<?>, TableField<?, ?>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
+    public JooqDataStoreFactoryRegistry(VortexCrudConfigService<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>> configService, DSLContext dslContext) {
+        for (Map.Entry<Class<? extends TableRecord<?>>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, Class<? extends TableRecord<?>>>> entry : configService.getConfiguration().getDataStores().entrySet()) {
             Class<? extends TableRecord<?>> table = entry.getKey();
             factories.put(table, new JooqDataStore(table, dslContext));
         }
     }
 
+    @Override
     public VortexCrudDataStore<TableField<?, ?>, ?> getDataStore(Class<? extends TableRecord<?>> table) {
         return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }

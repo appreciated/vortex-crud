@@ -28,27 +28,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
+public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
     private final VortexCrudItemFactory<FieldId> itemFactory;
-    private final Kanban<DataStoreId, FieldId> kanbanConfig;
+    private final Kanban<DataStoreId, FieldId, KeyType> kanbanConfig;
     private final ComponentRenderer<Component, Object> itemRenderer;
     private final VortexCrudDataStore<FieldId, Object> dataStore;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
-    public KanbanView(Class<? extends DataStoreId> dataStoreIdentifier,
-                      RouteRenderer<DataStoreId, FieldId> routeRenderer,
+    public KanbanView(KeyType dataStoreIdentifier,
+                      RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
                       VortexCrudDataStore<FieldId, ?> dataStore,
-                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
+                      VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
                       VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                      Kanban<DataStoreId, FieldId> kanbanConfig,
-                      Application<DataStoreId, FieldId> configService,
-                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry,
+                      Kanban<DataStoreId, FieldId, KeyType> kanbanConfig,
+                      Application<DataStoreId, FieldId, KeyType> configService,
+                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                       VortexCrudFileProviderRegistry fileProviderRegistry,
                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                      FormCreator<DataStoreId, FieldId> formCreator,
+                      FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                       DetailRouteSetting detailRouteSetting,
                       ReflectionService<FieldId> reflectionService
     ) {
@@ -56,8 +56,8 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
         Selects selects = configService.getSelects();
-        DataStoreConfig<DataStoreId, FieldId> config = configService.getDataStores().get(dataStoreIdentifier);
-        Field<DataStoreId, FieldId> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
+        DataStoreConfig<DataStoreId, FieldId, KeyType> config = configService.getDataStores().get(dataStoreIdentifier);
+        Field<DataStoreId, FieldId, KeyType> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
 
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
@@ -181,7 +181,11 @@ public class KanbanView<DataStoreId, FieldId> extends VerticalLayout {
         return wrapper;
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId> dialogFactoryRegistry, RouteRenderer<DataStoreId, FieldId> routeRenderer, Class<? extends DataStoreId> dataStore, FormCreator<DataStoreId, FieldId> formCreator, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
+                       KeyType dataStore,
+                       FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory) {
         Object entity = new Object();
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 null,

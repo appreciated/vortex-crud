@@ -9,18 +9,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRepository<?, ?>, String> {
+public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final Application<JpaRepository<?, ?>, String> configuration;
+    private final Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration;
     private final JpaDataStoreFactoryRegistry registry;
 
     @Autowired
-    public JpaVortexCrudConfigService(VortexCrudConfigurationProvider<JpaRepository<?, ?>, String> configurationProvider, JpaDataStoreFactoryRegistry registry) {
+    public JpaVortexCrudConfigService(VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configurationProvider, JpaDataStoreFactoryRegistry registry) {
         configuration = configurationProvider.get();
         this.registry = registry;
     }
 
-    public Application<JpaRepository<?, ?>, String> getConfiguration() {
+    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> getConfiguration() {
         configuration.setDataStores(registry.getDataStores());
         return configuration;
     }

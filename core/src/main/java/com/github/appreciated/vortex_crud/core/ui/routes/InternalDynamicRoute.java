@@ -18,12 +18,12 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
-public class InternalDynamicRoute<DataStoreId, FieldId> extends Div implements BeforeEnterObserver {
+public class InternalDynamicRoute<DataStoreId, FieldId, KeyType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry;
+    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
 
-    public InternalDynamicRoute(VortexCrudConfigService<DataStoreId, FieldId> configService, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactoryRegistry) {
+    public InternalDynamicRoute(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
         setSizeFull();
@@ -36,8 +36,8 @@ public class InternalDynamicRoute<DataStoreId, FieldId> extends Div implements B
             path = "/" + path;
         }
         removeAll();
-        VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathRoutes = new VortexCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRouteRenderers());
-        RouteRenderer<DataStoreId, FieldId> currentRouteRenderer = pathRoutes.getCurrentRoute();
+        VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathRoutes = new VortexCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRouteRenderers());
+        RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));

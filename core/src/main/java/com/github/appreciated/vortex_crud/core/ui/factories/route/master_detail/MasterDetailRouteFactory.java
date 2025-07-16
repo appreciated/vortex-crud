@@ -10,23 +10,24 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class MasterDetailRouteFactory<DataStoreId, FieldId> implements VortexCrudRouteFactory<DataStoreId, FieldId> {
+public class MasterDetailRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory;
-    private final VortexCrudConfigService<DataStoreId, FieldId> configService;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory;
+    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
 
-    public MasterDetailRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+    public MasterDetailRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                     VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId> routeFactory,
-                                    VortexCrudConfigService<DataStoreId, FieldId> configService,
+                                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
+                                    VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
                                     VortexCrudFileProviderRegistry fileProviderRegistry,
                                     VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                                     ReflectionService<FieldId> reflectionService
@@ -42,7 +43,7 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId> implements VortexCru
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
+                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         return new MasterDetail<>(currentPathIndex,
                 routeResolver,

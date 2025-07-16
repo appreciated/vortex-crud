@@ -16,7 +16,7 @@ import java.util.List;
  * JPA implementation of the ManyToMany interface.
  * Uses reflection to work with model classes directly.
  */
-public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String> {
+public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String, JpaRepository<?,?>> {
 
     private final String referenceField;
 
@@ -25,7 +25,7 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String>
     }
 
     @Override
-    public <ModelClass1> List<ModelClass1> getData(VortexCrudDataStoreFactoryRegistry<ModelClass, String> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<String, ModelClass1> dataStore, CollectionConfiguration<ModelClass, String> collectionConfiguration) {
+    public <ModelClass1> List<ModelClass1> getData(VortexCrudDataStoreFactoryRegistry<ModelClass, String, JpaRepository<?,?>> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<String, ModelClass1> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
         if (foreignKeyValue == null) {
             return List.of();
         }
@@ -48,7 +48,7 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String>
     }
 
     @Override
-    public String getReferenceField(CollectionConfiguration<ModelClass, String> collectionConfiguration) {
+    public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
         return "";
     }
 

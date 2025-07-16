@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -14,15 +15,15 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-public class EntityComboBoxWrapper<DataStoreId, FieldId> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
+public class EntityComboBoxWrapper<DataStoreId, FieldId, KeyType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<Object> comboBox;
     private final VortexCrudDataStore<FieldId, ?> dataStore;
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
-                                 Field<DataStoreId, FieldId> dataStoreField,
+                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                                 Field<DataStoreId, FieldId, KeyType> dataStoreField,
                                  ReflectionService<FieldId> reflectionService
     ) {
         this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());

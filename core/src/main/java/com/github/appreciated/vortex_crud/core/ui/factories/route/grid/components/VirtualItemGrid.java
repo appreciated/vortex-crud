@@ -31,22 +31,22 @@ import java.util.List;
  * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
  */
 
-public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityItemList<DataStoreId>> {
+public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<EntityItemList<DataStoreId>> {
 
     private final VortexCrudItemFactory<FieldId> itemFactory;
-    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId> pathVariables;
+    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathVariables;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudDataStore<FieldId, ?> dataStore;
-    private final GridOrListRendererConfiguration<DataStoreId, FieldId> gridOrListConfiguration;
+    private final GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
-    public VirtualItemGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId> routeResolver,
-                           RouteRenderer<DataStoreId, FieldId> config,
-                           VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> dataStoreFactoryRegistry,
+    public VirtualItemGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                           RouteRenderer<DataStoreId, FieldId, KeyType> config,
+                           VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
@@ -57,10 +57,10 @@ public class VirtualItemGrid<DataStoreId, FieldId> extends VirtualList<EntityIte
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
-        Class<? extends DataStoreId> table = config.getDataStoreKey();
+        KeyType table = config.getDataStoreKey();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
-        gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId>) config.getConfiguration();
+        gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType>) config.getConfiguration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();

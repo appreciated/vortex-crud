@@ -11,14 +11,14 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class ReferenceFieldFactory<DataStoreId, FieldId> implements VortexCrudFieldFactory<DataStoreId, FieldId> {
+public class ReferenceFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
 
     private final VortexCrudDataStoreFieldNameResolver<FieldId> resolver;
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> managerFactoryRegistry;
     private final ReflectionService<FieldId> reflectionService;
 
     public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId> managerFactoryRegistry,
+                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> managerFactoryRegistry,
                                  ReflectionService<FieldId> reflectionService
     ) {
         this.resolver = resolver;
@@ -27,7 +27,7 @@ public class ReferenceFieldFactory<DataStoreId, FieldId> implements VortexCrudFi
     }
 
     @Override
-    public Component createComponent(Class<? extends DataStoreId> table, FieldId field, Field<DataStoreId, FieldId> dataStoreField) {
+    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
         return new EntityComboBoxWrapper<>(resolver, managerFactoryRegistry, dataStoreField, reflectionService);
     }
 
