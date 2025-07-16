@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;

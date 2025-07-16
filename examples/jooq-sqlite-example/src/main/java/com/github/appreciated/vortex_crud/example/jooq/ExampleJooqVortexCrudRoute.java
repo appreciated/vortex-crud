@@ -1,13 +1,11 @@
 package com.github.appreciated.vortex_crud.example.jooq;
 
-import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
-import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRenderer;

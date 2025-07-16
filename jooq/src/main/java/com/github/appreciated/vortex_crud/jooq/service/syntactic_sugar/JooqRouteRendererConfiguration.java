@@ -2,9 +2,9 @@ package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import org.jooq.impl.TableImpl;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
+import org.jooq.impl.TableImpl;
 
 public class JooqRouteRendererConfiguration extends RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 

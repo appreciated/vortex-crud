@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaDataStoreConfig extends DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?> > {

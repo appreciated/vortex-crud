@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import org.jooq.impl.TableImpl;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
+import org.jooq.impl.TableImpl;
 
 import java.util.List;
 

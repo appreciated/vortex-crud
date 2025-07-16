@@ -9,7 +9,6 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

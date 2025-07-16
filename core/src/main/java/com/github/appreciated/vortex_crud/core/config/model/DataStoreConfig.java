@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.Map;

@@ -20,7 +20,8 @@ import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository
 import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.TaskRepository;
-import com.github.appreciated.vortex_crud.jpa.service.*;
+import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
+import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
