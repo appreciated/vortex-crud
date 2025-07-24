@@ -3,10 +3,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -22,15 +21,17 @@ import java.util.Map;
 public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Object> {
 
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathVariables;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                              RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
                              VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                              VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
                              VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> listColumnFactory,
-                             VortexCrudDataStoreFieldNameResolver<FieldId> resolver
+                             VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.pathVariables = routeResolver;
+        this.dataStoreUtil = dataStoreUtil;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         KeyType table = routeRenderer.getDataStoreKey();
         VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
@@ -62,7 +63,7 @@ public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Objec
      * @param entity the clicked Object
      */
     private void onItemClick(Object entity) {
-        String v = pathVariables.getPath() + "/" + DataStoreUtil.getId(entity);
+        String v = pathVariables.getPath() + "/" + dataStoreUtil.getId(entity);
         getUI().ifPresent(ui -> ui.navigate(v));
     }
 }

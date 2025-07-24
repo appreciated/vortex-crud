@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -20,14 +21,15 @@ public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final GenericEntityGrid<DataStoreId, FieldId, KeyType> entityGrid;
 
     public List(Integer currentPathIndex,
-                    VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
-                    VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                    VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                    VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> columnCallbackRegistry,
-                    FormCreator<DataStoreId, FieldId, KeyType> formCreator,
-                    VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
-                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
-                    VortexCrudDataStoreFieldNameResolver<FieldId> resolver
+                VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> columnCallbackRegistry,
+                FormCreator<DataStoreId, FieldId, KeyType> formCreator,
+                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
+                VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
+                VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
@@ -40,7 +42,7 @@ public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 null,
                 routeHeader);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, resolver);
+        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);
         add(headerBar, textField, entityGrid);
         setSizeFull();
         setPadding(true);

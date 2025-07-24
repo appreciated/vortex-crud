@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -27,18 +27,19 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactory;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                  VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactory,
                                  VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                                 ReflectionService<FieldId> reflectionService
+                                 ReflectionService<FieldId> reflectionService,
+                                 VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
-        this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -102,13 +103,13 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                     VortexCrudDataStore<FieldId, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(dataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<FieldId> children = internalFormElement.getConfiguration().getData().getChildren();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
-                dataStore.deleteRecordById(DataStoreUtil.getId(record));
+                dataStore.deleteRecordById(dataStoreUtil.getId(record));
                 loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
             });
             list.add(item);
@@ -125,7 +126,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                    VortexCrudDataStore<FieldId, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(DataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(dataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId, KeyType> child : form.getChildren()) {
                 Object o = reflectionService.getValue(record, child.getField());
@@ -133,7 +134,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
-                    dataStore.deleteRecordById(DataStoreUtil.getId(record));
+                    dataStore.deleteRecordById(dataStoreUtil.getId(record));
                     loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
                 });
                 item.addActions(remove);

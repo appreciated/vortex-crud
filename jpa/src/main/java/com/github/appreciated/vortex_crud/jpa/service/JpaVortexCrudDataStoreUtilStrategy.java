@@ -1,10 +1,14 @@
-package com.github.appreciated.vortex_crud.core.entity;
+package com.github.appreciated.vortex_crud.jpa.service;
+
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
 
-public class DataStoreUtil {
-    public static String getId(Object record) {
+@Component
+public class JpaVortexCrudDataStoreUtilStrategy implements VortexCrudDataStoreUtilStrategy {
+    public String getId(Object record) {
         if (record == null) {
             return null;
         }
@@ -18,11 +22,11 @@ public class DataStoreUtil {
         }
     }
 
-    public static boolean isNew(Object entity) {
+    public boolean isNew(Object entity) {
         return getId(entity) == null;
     }
 
-    public static boolean equals(Object item, String comparing) {
+    public boolean equals(Object item, String comparing) {
         return Objects.equals(getId(item), comparing);
     }
 }

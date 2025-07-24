@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.service.TestContainerRouteFactory;
 import com.github.appreciated.vortex_crud.service.TestNonContainerRouteFactory;
@@ -21,6 +22,9 @@ class VortexCrudPathToRouteRendererResolverTest {
     @Mock
     private VortexCrudRouteFactoryRegistry registry;
 
+    @Mock
+    private VortexCrudDataStoreUtilStrategy dataStoreUtil;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -32,6 +36,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         TestNonContainerRouteFactory nonContainerFactory = mock(TestNonContainerRouteFactory.class);
         when(nonContainerFactory.isContainerRoute()).thenReturn(false);  // Non-wrappable Routen
         when(registry.getFactory(TestNonContainerRouteFactory.class)).thenReturn(nonContainerFactory);
+
     }
 
     @Test
@@ -48,7 +53,12 @@ class VortexCrudPathToRouteRendererResolverTest {
         routeRendererWithContainer.setChild(childRouteRenderer);
 
         String path = "routeWithContainer/routeWithContainer";
-        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
+                registry,
+                path,
+                routesConfig,
+                dataStoreUtil
+        );
 
         // Abrufen der aktuellen Route
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
@@ -71,7 +81,12 @@ class VortexCrudPathToRouteRendererResolverTest {
         routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
+                registry,
+                path,
+                routesConfig,
+                dataStoreUtil
+        );
 
         // Abrufen der aktuellen Route
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
@@ -97,7 +112,12 @@ class VortexCrudPathToRouteRendererResolverTest {
         secondChild.setTitle("routeWithoutContainer2");
         firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
+                registry,
+                path,
+                routesConfig,
+                dataStoreUtil
+        );
 
         // Abrufen der aktuellen Route
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
@@ -116,7 +136,12 @@ class VortexCrudPathToRouteRendererResolverTest {
         routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
         String path = "routeWithoutContainer1";
-        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
+                registry,
+                path,
+                routesConfig,
+                dataStoreUtil
+        );
 
         // Abrufen der aktuellen Route
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
@@ -143,7 +168,12 @@ class VortexCrudPathToRouteRendererResolverTest {
         routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
-        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(registry, path, routesConfig);
+        VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
+                registry,
+                path,
+                routesConfig,
+                dataStoreUtil
+        );
 
         // Abrufen der gesetzten Marker
         Map<Integer, RouteRenderer<String, String, String>> routes = vortexCrudPath.getPathRoutes();

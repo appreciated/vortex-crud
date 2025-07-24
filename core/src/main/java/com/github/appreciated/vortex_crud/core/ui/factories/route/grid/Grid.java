@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -32,7 +33,9 @@ public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                ReflectionService<FieldId> reflectionService) {
+                ReflectionService<FieldId> reflectionService,
+                VortexCrudDataStoreUtilStrategy dataStoreUtil
+    ) {
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
@@ -49,7 +52,9 @@ public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 itemFactoryRegistry,
                 fileProviderRegistry,
                 resolver,
-                reflectionService);
+                reflectionService,
+                dataStoreUtil
+        );
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);

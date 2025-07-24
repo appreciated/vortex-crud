@@ -1,8 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -23,17 +22,17 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
 
     private final DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory,
                        VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry,
-                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                       ReflectionService<FieldId> reflectionService) {
+                       ReflectionService<FieldId> reflectionService,
+                       VortexCrudDataStoreUtilStrategy dataStoreUtil) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
-        this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     public void bindAndAddToLayout(KeyType dataStoreKey,
@@ -76,7 +75,7 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
             } else {
                 if (element.getType().equals("collection")) {
                     Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
-                            DataStoreUtil.getId(entity),
+                            dataStoreUtil.getId(entity),
                             routeRenderer,
                             element,
                             routeFactory,

@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -28,17 +28,20 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private VortexCrudDataStore<FieldId, Object> dataStore;
 
     public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
                              VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                              VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                             VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy
+                             VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
+                             VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.configService = configService;
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
             recordById = this.dataStore.newInstance();
         }
 
-        if (DataStoreUtil.isNew(recordById)) {
+        if (dataStoreUtil.isNew(recordById)) {
             dialog.setHeaderTitle(dialog.getTranslation("button.create.title"));
         } else {
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
@@ -89,7 +92,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
             try {
                 binder.writeBean(entity);
                 foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, fieldNameResolver);
-                if (DataStoreUtil.isNew(entity)) {
+                if (dataStoreUtil.isNew(entity)) {
                     if (dataStore.getModelClass().isInstance(entity)) {
                         dataStore.insertRecord(entity);
                     }

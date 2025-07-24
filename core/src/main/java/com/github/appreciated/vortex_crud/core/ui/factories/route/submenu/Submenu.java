@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.submenu;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
@@ -30,15 +31,18 @@ public class Submenu<DataStoreId, FieldId, KeyType> extends SplitLayout {
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory;
     private final Integer currentPathIndex;
     private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private Component active;
 
     public Submenu(Integer currentPathIndex,
                    VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                   VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService
+                   VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                   VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.currentPathIndex = currentPathIndex;
         this.configService = configService;
+        this.dataStoreUtil = dataStoreUtil;
         routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
@@ -105,10 +109,10 @@ public class Submenu<DataStoreId, FieldId, KeyType> extends SplitLayout {
                 active = routeButton;
             }
 
-            routeButton.getElement().addEventListener("click",event -> {
+            routeButton.getElement().addEventListener("click", event -> {
                 getUI().ifPresent(ui -> {
                     String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
-                    pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers());
+                    pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers(), dataStoreUtil);
                     ui.getPage().getHistory().pushState(null, pathForEntity);
                     if (active != null) {
                         active.removeClassName("active");

@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -46,6 +46,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
@@ -59,7 +60,8 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
                         VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
                         VortexCrudFileProviderRegistry fileProviderRegistry,
                         VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                        ReflectionService<FieldId> reflectionService
+                        ReflectionService<FieldId> reflectionService,
+                        VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.currentPathIndex = currentPathIndex;
         this.routeFactory = routeFactory;
@@ -67,6 +69,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
 
         routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
@@ -146,7 +149,10 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
     private void onItemClick(Object entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
-            pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers());
+            pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory,
+                    pathForEntity,
+                    configService.getConfiguration().getRouteRenderers(),
+                    dataStoreUtil);
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, pathForEntity);
         });
@@ -162,7 +168,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
                     reflectionService);
             component.addClassNames("master");
             Div div = new Div(component);
-            if (DataStoreUtil.equals(item, pathVariables.getLastSegment())) {
+            if (dataStoreUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
                 setNewActive(component);
             }

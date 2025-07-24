@@ -3,8 +3,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.Kanban;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
@@ -26,7 +28,8 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService;
+    private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
@@ -36,7 +39,9 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
                                VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                                VortexCrudFileProviderRegistry fileProviderRegistry,
                                VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                               com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService
+                               ReflectionService<FieldId> reflectionService,
+                               VortexCrudDataStoreUtilStrategy dataStoreUtil
+
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -47,6 +52,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -67,7 +73,8 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
                 fieldNameResolver,
                 formCreator,
                 detailRouteSetting,
-                reflectionService
+                reflectionService,
+                dataStoreUtil
         );
     }
 

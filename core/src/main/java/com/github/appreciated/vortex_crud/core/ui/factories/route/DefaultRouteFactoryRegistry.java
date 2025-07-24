@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -40,15 +41,16 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                        FormCreator<DataStoreId, FieldId, KeyType> formCreatorService,
-                                       ReflectionService<FieldId> reflectionService
+                                       ReflectionService<FieldId> reflectionService,
+                                       VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService));
-        factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver));
-        factories.put(GridRouteFactory.class, new GridRouteFactory<>(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver, reflectionService));
+        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver, dataStoreUtil));
+        factories.put(GridRouteFactory.class, new GridRouteFactory<>(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(FormRouteFactory.class, new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService));
         factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService));
-        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService));
-        factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService));
+        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
     }
 
     public VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory) {

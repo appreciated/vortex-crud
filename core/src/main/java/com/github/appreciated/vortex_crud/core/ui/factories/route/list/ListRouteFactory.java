@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -21,6 +22,7 @@ public class ListRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry;
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public ListRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                             VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
@@ -28,7 +30,8 @@ public class ListRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
                             FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                             VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
-                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver
+                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
+                            VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -37,6 +40,7 @@ public class ListRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -50,7 +54,10 @@ public class ListRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
                 columnCallbackRegistry,
                 formCreator,
                 dialogFactoryRegistry,
-                routeFactoryRegistry, fieldNameResolver);
+                routeFactoryRegistry,
+                fieldNameResolver,
+                dataStoreUtil
+        );
     }
 
     @Override

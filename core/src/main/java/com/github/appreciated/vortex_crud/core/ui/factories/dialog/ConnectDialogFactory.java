@@ -3,11 +3,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -26,19 +25,19 @@ import java.util.stream.Collectors;
 public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
 
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public ConnectDialogFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
             ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy,
-            ReflectionService<FieldId> reflectionService) {
+            ReflectionService<FieldId> reflectionService,
+            VortexCrudDataStoreUtilStrategy dataStoreUtil) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
-        this.fieldNameResolver = fieldNameResolver;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -79,7 +78,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(entity -> reflectionService.getString(entity, associativeTargetIdField)).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
-                .filter(Object -> currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
+                .filter(Object -> currentlySelectedConnectionIds.contains(dataStoreUtil.getId(Object)))
                 .collect(Collectors.toSet());
 
         // Create a list of selectable items
@@ -108,8 +107,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
             Set<Object> newSelectedConnections = connectionList.getSelectedItems();
             // Determine the IDs of the newly selected connections
             Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
-                    .filter(Object -> !currentlySelectedConnectionIds.contains(DataStoreUtil.getId(Object)))
-                    .map(DataStoreUtil::getId)
+                    .filter(Object -> !currentlySelectedConnectionIds.contains(dataStoreUtil.getId(Object)))
+                    .map(dataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
             List<Object> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
@@ -128,7 +127,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
 
             // Remove the connections that are no longer selected
             Set<String> newSelectedIds = newSelectedConnections.stream()
-                    .map(DataStoreUtil::getId)
+                    .map(dataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them

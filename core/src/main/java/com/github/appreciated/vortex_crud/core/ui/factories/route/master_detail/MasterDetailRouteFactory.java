@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -22,6 +23,7 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId, KeyType> implements 
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public MasterDetailRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                     VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
@@ -29,7 +31,8 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId, KeyType> implements 
                                     VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
                                     VortexCrudFileProviderRegistry fileProviderRegistry,
                                     VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                                    ReflectionService<FieldId> reflectionService
+                                    ReflectionService<FieldId> reflectionService,
+                                    VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
@@ -38,6 +41,7 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId, KeyType> implements 
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -52,7 +56,9 @@ public class MasterDetailRouteFactory<DataStoreId, FieldId, KeyType> implements 
                 configService,
                 fileProviderRegistry,
                 fieldNameResolver,
-                reflectionService);
+                reflectionService,
+                dataStoreUtil
+        );
     }
 
     @Override

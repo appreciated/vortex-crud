@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DefaultRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
@@ -22,10 +23,15 @@ public class InternalDynamicRoute<DataStoreId, FieldId, KeyType> extends Div imp
 
     private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public InternalDynamicRoute(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry) {
+    public InternalDynamicRoute(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+                                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
+                                VortexCrudDataStoreUtilStrategy dataStoreUtil
+    ) {
         this.configService = configService;
         this.routeFactoryRegistry = routeFactoryRegistry;
+        this.dataStoreUtil = dataStoreUtil;
         setSizeFull();
     }
 
@@ -36,7 +42,12 @@ public class InternalDynamicRoute<DataStoreId, FieldId, KeyType> extends Div imp
             path = "/" + path;
         }
         removeAll();
-        VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathRoutes = new VortexCrudPathToRouteResolver<>(routeFactoryRegistry, "%s%s".formatted(event.getLocation().getFirstSegment(), path), configService.getConfiguration().getRouteRenderers());
+        VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathRoutes = new VortexCrudPathToRouteResolver<>(
+                routeFactoryRegistry,
+                "%s%s".formatted(event.getLocation().getFirstSegment(), path),
+                configService.getConfiguration().getRouteRenderers(),
+                dataStoreUtil
+        );
         RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.getCurrentIndex();
         Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())

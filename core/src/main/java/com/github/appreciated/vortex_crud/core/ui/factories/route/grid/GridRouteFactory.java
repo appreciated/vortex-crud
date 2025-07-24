@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -25,6 +26,7 @@ public class GridRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public GridRouteFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
@@ -34,7 +36,8 @@ public class GridRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
             VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
             VortexCrudFileProviderRegistry fileProviderRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-            ReflectionService<FieldId> reflectionService
+            ReflectionService<FieldId> reflectionService,
+            VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
@@ -44,6 +47,7 @@ public class GridRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -62,7 +66,9 @@ public class GridRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
                 itemFactoryRegistry,
                 fileProviderRegistry,
                 fieldNameResolver,
-                reflectionService);
+                reflectionService,
+                dataStoreUtil
+        );
     }
 
     @Override

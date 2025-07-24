@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 
@@ -13,15 +13,21 @@ import java.util.Map;
 public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
 
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final String path;
     private String[] sections;
     private final Map<Integer, RouteRenderer<DataStoreId, FieldId, KeyType>> pathRoutes;
     private final Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig;
 
     // Konstruktor
-    public VortexCrudPathToRouteResolver(VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry, String path, Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig) {
+    public VortexCrudPathToRouteResolver(VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
+                                         String path,
+                                         Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig,
+                                         VortexCrudDataStoreUtilStrategy dataStoreUtil
+                                         ) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
+        this.dataStoreUtil = dataStoreUtil;
         this.pathRoutes = new HashMap<>();
         this.routesConfig = routesConfig;
         splitPathAndAddMarkers();
@@ -88,7 +94,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
     }
 
     public String getPathForEntity(Integer currentPathIndex, Object entity) {
-        return generateSubRoute(currentPathIndex, DataStoreUtil.getId(entity));
+        return generateSubRoute(currentPathIndex, dataStoreUtil.getId(entity));
     }
 
     public RouteRenderer<DataStoreId, FieldId, KeyType> getRouteForIndex(Integer currentPathIndex) {

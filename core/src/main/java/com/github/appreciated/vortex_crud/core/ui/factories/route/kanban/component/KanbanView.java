@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.component;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -36,6 +36,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudDataStore<FieldId, Object> dataStore;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
     public KanbanView(KeyType dataStoreIdentifier,
@@ -50,11 +51,13 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                       VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                       FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                       DetailRouteSetting detailRouteSetting,
-                      ReflectionService<FieldId> reflectionService
+                      ReflectionService<FieldId> reflectionService,
+                      VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStore;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
         Selects selects = configService.getSelects();
         DataStoreConfig<DataStoreId, FieldId, KeyType> config = configService.getDataStores().get(dataStoreIdentifier);
         Field<DataStoreId, FieldId, KeyType> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
@@ -76,7 +79,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
                 Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
-                        DataStoreUtil.getId(entity),
+                        dataStoreUtil.getId(entity),
                         null,
                         null,
                         routeRenderer.getChild(),
@@ -85,7 +88,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                         routeFactory,
                         () -> {
                             //TODO handle if the column was edited, requiring the element to move
-                            Object recordById = dataStore.getRecordById(DataStoreUtil.getId(entity));
+                            Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
                             cardWrapper.removeAll();
                             cardWrapper.add(itemFactory.renderItem(kanbanConfig,
                                     recordById,
@@ -196,7 +199,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 dataStore,
                 routeFactory,
                 () -> {
-                    Object recordById = this.dataStore.getRecordById(DataStoreUtil.getId(entity));
+                    Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
                     itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver, reflectionService);
                 },
                 formCreator);

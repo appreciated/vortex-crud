@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -22,9 +23,14 @@ import java.util.Map;
 public abstract class VortexCrudRoute<DataStoreId, FieldId, KeyType> extends Div implements BeforeEnterObserver {
 
     private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public VortexCrudRoute(VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry) {
+    public VortexCrudRoute(
+            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
+            VortexCrudDataStoreUtilStrategy dataStoreUtil
+    ) {
         this.routeFactoryRegistry = routeFactoryRegistry;
+        this.dataStoreUtil = dataStoreUtil;
         setSizeFull();
     }
 
@@ -48,13 +54,14 @@ public abstract class VortexCrudRoute<DataStoreId, FieldId, KeyType> extends Div
         removeAll();
 
         String routePattern = getUrl();
-        if (routePattern.contains("/")){
+        if (routePattern.contains("/")) {
             throw new IllegalArgumentException("The routePattern must not contain a '/'");
         }
         VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                Map.of(routePattern,getConfiguration())
+                Map.of(routePattern, getConfiguration()),
+                dataStoreUtil
         );
 
         RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer = pathRoutes.getCurrentRoute();

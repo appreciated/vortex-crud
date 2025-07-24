@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.DataStoreUtil;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -38,6 +38,7 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudDataStore<FieldId, ?> dataStore;
     private final GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
@@ -50,13 +51,14 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                           ReflectionService<FieldId> reflectionService
-
+                           ReflectionService<FieldId> reflectionService,
+                           VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.pathVariables = routeResolver;
         this.fileProviderRegistry = fileProviderRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.dataStoreUtil = dataStoreUtil;
         KeyType table = config.getDataStoreKey();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
@@ -110,7 +112,7 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
     }
 
     private void onItemClick(Object entity) {
-        String s = pathVariables.getPath() + "/" + DataStoreUtil.getId(entity);
+        String s = pathVariables.getPath() + "/" + dataStoreUtil.getId(entity);
         getUI().ifPresent(ui -> ui.navigate(s));
     }
 
