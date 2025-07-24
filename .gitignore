@@ -70,3 +70,10 @@ webpack.generated.js
 /jooq/src/main/frontend/generated/
 /jooq/src/main/frontend/index.html
 /jpa/jpa-database.db
+/ui-test/target/classes/com/github/appreciated/vortex_crud/uitest/pages/ProjectCardsTest.class
+/ui-test/target/classes/com/github/appreciated/vortex_crud/uitest/BaseUITest.class
+/ui-test/target/classes/com/github/appreciated/vortex_crud/uitest/VortexCrudBaseUiTestSuite.class
+/ui-test/target/maven-archiver/pom.properties
+/ui-test/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/ui-test/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+/ui-test/target/ui-test-1.0.0-SNAPSHOT.jar
