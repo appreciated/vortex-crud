@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class ProjectCardsTest extends BaseUITest {
 
@@ -20,10 +21,11 @@ public class ProjectCardsTest extends BaseUITest {
     @Test
     void checkIfNavigationPossible() {
         navigateTo("");
-        WebElement card = waitForElement(By.tagName("vaadin-text-field"));
+        WebElement card = waitForElement(By.tagName("vaadin-card"));
         card.click();
-
+        waitForUrlToBe("projects-cards/1");
         WebElement inputField = waitForElement(By.tagName("vaadin-text-field"));
-        Assertions.assertTrue(inputField.getDomAttribute("value").startsWith("Project Alpha"));
+        String value = inputField.getAttribute("value");
+        Assertions.assertTrue(value.startsWith("Project Alpha"));
     }
 }

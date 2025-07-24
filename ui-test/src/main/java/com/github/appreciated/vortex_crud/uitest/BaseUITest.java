@@ -59,7 +59,11 @@ public abstract class BaseUITest {
      * @param path the path to navigate to
      */
     protected void navigateTo(String path) {
-        driver.get("http://127.0.0.1:%s/%s".formatted(port, path));
+        driver.get(getUrl(path));
+    }
+
+    private String getUrl(String path) {
+        return "http://127.0.0.1:%s/%s".formatted(port, path);
     }
 
     /**
@@ -69,7 +73,11 @@ public abstract class BaseUITest {
      * @return the visible WebElement
      */
     protected WebElement waitForElement(By by) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
+    }
+
+    protected void waitForUrlToBe(String path) {
+        wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.urlToBe(getUrl(path)));
     }
 
     /**
