@@ -4,5 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="test-application-context" class="com.github.appreciated.vortex_crud.example.jpa.Application" />
+    <bean class="com.github.appreciated.vortex_crud.example.jpa.Application" />
+    <bean class="com.github.appreciated.vortex_crud.example.jpa.JpaTestConfiguration"/>
 </beans>
