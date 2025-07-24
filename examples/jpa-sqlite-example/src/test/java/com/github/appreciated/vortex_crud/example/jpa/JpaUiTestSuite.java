@@ -1,8 +1,7 @@
-package com.github.appreciated.vortex_crud.example.jooq;
+package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.uitest.VortexCrudBaseUiTestSuite;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-public class JooqUiTestSuite extends VortexCrudBaseUiTestSuite {
-}
+public class JpaUiTestSuite extends VortexCrudBaseUiTestSuite {}
