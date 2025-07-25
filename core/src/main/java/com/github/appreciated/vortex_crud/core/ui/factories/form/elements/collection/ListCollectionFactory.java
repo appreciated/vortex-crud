@@ -129,8 +129,8 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
             item.getContent().addClickListener(event -> openDialog(dataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId, KeyType> child : form.getChildren()) {
-                Object o = reflectionService.getValue(record, child.getField());
-                item.addContent(new Text(o.toString()));
+                String textValue = reflectionService.getString(record, child.getField());
+                item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
