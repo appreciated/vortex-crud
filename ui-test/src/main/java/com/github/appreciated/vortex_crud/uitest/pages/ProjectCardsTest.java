@@ -1,9 +1,7 @@
 package com.github.appreciated.vortex_crud.uitest.pages;
 
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,17 +11,15 @@ public class ProjectCardsTest extends BaseUITest {
     @Test
     void checkIfListingVisible() {
         navigateTo("projects-cards");
-        WebElement webElement = waitForElement(By.xpath("//*[contains(text(), 'Project Alpha')]"));
+        WebElement webElement = waitForElementContainingText("Project Alpha");
         assertEquals("h4", webElement.getTagName());
     }
 
     @Test
     void checkIfNavigationPossible() {
         navigateTo("projects-cards");
-        waitForElement(By.xpath("//*[contains(text(), 'Project Alpha')]")).click();
+        waitForElementContainingText("Project Alpha").click();
         waitForUrlToBe("projects-cards/1");
-        WebElement inputField = waitForElement(By.tagName("vaadin-text-field"));
-        String value = inputField.getAttribute("value");
-        Assertions.assertTrue(value.startsWith("Project Alpha"));
+        waitForElementWithTagAndValue("vaadin-text-field", "Project Alpha");
     }
 }

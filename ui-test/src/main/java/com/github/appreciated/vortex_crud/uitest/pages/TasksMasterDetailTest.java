@@ -3,10 +3,6 @@ package com.github.appreciated.vortex_crud.uitest.pages;
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import java.util.List;
 
 public class TasksMasterDetailTest extends BaseUITest {
 
@@ -14,22 +10,18 @@ public class TasksMasterDetailTest extends BaseUITest {
     void testNestedEntityNavigation() {
         navigateTo("tasks");
 
-        waitForElement(By.xpath("//*[contains(text(), 'Abgeschlossen')]")).click();
+        waitForElementContainingText("Abgeschlossen").click();
         waitForUrlToBe("tasks/done");
 
-        waitForElement(By.xpath("//*[contains(text(), 'Design Homepage')]")).click();
+        waitForElementContainingText("Design Homepage").click();
         waitForUrlToBe("tasks/done/1");
 
-        Assertions.assertTrue(hasWebElementWithTagAndValue("vaadin-text-field", "Design Homepage"));
-        Assertions.assertTrue(hasWebElementWithTagAndValue("vaadin-text-field", "Create the design for the homepage of the web app"));
-        Assertions.assertTrue(hasWebElementWithTagAndValue("vaadin-combo-box", "Design Homepage"));
-    }
-
-    private boolean hasWebElementWithTagAndValue(String tagName, String value) {
-        List<WebElement> webElements = waitForElements(By.tagName(tagName));
-        return webElements.stream()
-                .map(e -> e.getAttribute("value"))
-                .anyMatch(s -> s != null && s.startsWith(value));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-field", "Design Homepage"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-combo-box", "In Arbeit"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-combo-box", "max@mustermann.de"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-date-picker", "1.12.2013"));
+        Assertions.assertTrue(hasElementContainingText("We need to finalize the design by the end of the week."));
     }
 
 }

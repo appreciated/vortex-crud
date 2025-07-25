@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Base class for UI tests that provides common setup, teardown, and utility methods.
@@ -78,6 +79,10 @@ public abstract class BaseUITest {
         return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
+    protected WebElement waitForElementContainingText(String text) {
+        return waitForElement(By.xpath("//*[contains(text(), '%s')]".formatted(text)));
+    }
+
     protected void waitForUrlToBe(String path) {
         wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.urlToBe(getUrl(path)));
     }
@@ -89,41 +94,28 @@ public abstract class BaseUITest {
      * @return the list of visible WebElements
      */
     protected List<WebElement> waitForElements(By by) {
-        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
-    /**
-     * Wait for an element to be clickable and return it.
-     *
-     * @param by the locator to find the element
-     * @return the clickable WebElement
-     */
-    protected WebElement waitForClickable(By by) {
-        return wait.until(ExpectedConditions.elementToBeClickable(by));
+    protected boolean hasElementContainingText(String text) {
+        waitForElementContainingText(text);
+        return true;
     }
 
-    /**
-     * Check if an element exists on the page.
-     *
-     * @param by the locator to find the element
-     * @return true if the element exists, false otherwise
-     */
-    protected boolean elementExists(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    protected boolean hasElementWithTagAndValue(String tagName, String value) {
+        waitForElementWithTagAndValue(tagName, value);
+        return true;
     }
 
-    /**
-     * Wait for the page to load completely.
-     */
-    protected void waitForPageLoad() {
-        wait.until(driver -> {
-            String state = (String) ((ChromeDriver) driver).executeScript("return document.readyState");
-            return "complete".equals(state);
-        });
+    protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
+        List<WebElement> webElements = waitForElements(By.tagName(tagName));
+        Optional<WebElement> value1 = webElements.stream()
+                .filter(webElement ->
+                        {
+                            String value2 = webElement.getAttribute("value");
+                            return value2.startsWith(value);
+                        }
+                ).findFirst();
+        return value1.orElseThrow();
     }
 }
