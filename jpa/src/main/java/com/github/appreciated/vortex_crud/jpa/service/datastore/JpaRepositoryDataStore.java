@@ -221,6 +221,29 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
             return Boolean.parseBoolean(value.toString());
         }
 
+        // Handle entity relationships - if the target type is an entity class
+        // and the value is a primitive or String, create an entity instance with its ID set
+        if (targetType.isAnnotationPresent(jakarta.persistence.Entity.class)) {
+            try {
+                // Create a new instance of the entity
+                Object entity = targetType.getDeclaredConstructor().newInstance();
+                
+                // Find the ID field
+                java.lang.reflect.Field idField = findIdField(targetType);
+                if (idField != null) {
+                    idField.setAccessible(true);
+                    // Convert the value to the ID field's type and set it
+                    Object convertedId = convertToFieldType(value, idField.getType());
+                    idField.set(entity, convertedId);
+                    return entity;
+                }
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException e) {
+                // Log the error but continue with other conversion attempts
+                System.err.println("Error creating entity instance for " + targetType.getName() + ": " + e.getMessage());
+            }
+        }
+
         // For other types, try to find a constructor that takes the value's type
         try {
             if (value instanceof String) {
