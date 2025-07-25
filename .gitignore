@@ -77,3 +77,4 @@ webpack.generated.js
 /ui-test/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 /ui-test/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 /ui-test/target/ui-test-1.0.0-SNAPSHOT.jar
+/ui-test/target/

@@ -59,9 +59,9 @@ public class ImageHasValue extends CustomField<String> {
         updateVisibility();
 
         imageWrapper.getStyle().set("cursor", "pointer");
-        imageWrapper.addClickListener(e -> {
-            deleteButton.getStyle().set("visibility", deleteButton.getStyle().get("visibility").equals("visible") ? "hidden" : "visible");
-        });
+        imageWrapper.addClickListener(
+                e -> deleteButton.getStyle().set("visibility", deleteButton.getStyle().get("visibility").equals("visible") ? "hidden" : "visible")
+        );
     }
 
     private void setImageFromStream(String fileName) {
