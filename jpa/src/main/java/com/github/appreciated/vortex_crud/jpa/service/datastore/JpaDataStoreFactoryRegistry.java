@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRegistry<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final HashMap<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> factories = new HashMap<>();
+    private final HashMap<JpaRepository<?, ?>, VortexCrudDataStore<String, JpaRepository<?, ?>>> factories = new HashMap<>();
     private final HashMap<Class<?>, JpaRepository<?, ?>> modelFactoryMapping = new HashMap<>();
     private final JpaFieldService jpaFieldService;
 
@@ -29,18 +29,20 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                                        JpaFieldService jpaFieldService,
                                        JpaFieldTypeResolverService fieldTypeResolverService) {
         this.jpaFieldService = jpaFieldService;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore<>(repository, fieldTypeResolverService)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, fieldTypeResolverService)));
     }
 
     @Override
-    public VortexCrudDataStore<String, ?> getDataStore(JpaRepository<?, ?> table) {
-        return Optional.ofNullable(factories.get(table)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
+    public VortexCrudDataStore<String, JpaRepository<?, ?>> getDataStore(JpaRepository<?, ?> table) {
+        return Optional.ofNullable(
+                factories.get(table))
+                .orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
     @Override
-    public void addFactory(JpaRepository<?, ?> key, VortexCrudDataStore<String, ?> factory) {
-        factories.put(key, (JpaRepositoryDataStore<String>) factory);
-        modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), key);
+    public void addFactory(JpaRepository<?, ?> table, VortexCrudDataStore<String, JpaRepository<?, ?>> factory) {
+        factories.put(table, factory);
+        modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), table);
     }
 
     public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getDataStores() {
@@ -48,12 +50,12 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                 Map.Entry::getKey,
                 entry -> {
                     DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder = createBuilder(entry);
-                    builder.withFields(jpaFieldService.getFieldsForDataStore(entry.getValue(), this));
+                    builder.withFields(jpaFieldService.getFieldsForDataStore((JpaRepositoryDataStore<?>) entry.getValue(), this));
                     return builder.build();
                 }));
     }
 
-    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createBuilder(Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<String>> test) {
+    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createBuilder(Map.Entry<JpaRepository<?, ?>,  VortexCrudDataStore<String, JpaRepository<?, ?>>> test) {
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>(test.getKey()));
     }
 
