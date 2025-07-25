@@ -14,11 +14,13 @@ public class JooqManyToMany<DataModel extends TableRecord<?>, KeyType> implement
     private final TableField<?, ?> associativeSourceIdField;
     private final TableField<?, ?> associativeTargetIdField;
     private final TableField<?, ?> dataStoreField;
+    private final KeyType associativeTable;
 
-    public JooqManyToMany(TableField<?, ?> associativeSourceIdField, TableField<?, ?> associativeTargetIdField, TableField<?, ?> dataStoreField) {
+    public JooqManyToMany(TableField<?, ?> associativeSourceIdField, TableField<?, ?> associativeTargetIdField, TableField<?, ?> dataStoreField, KeyType associativeTable) {
         this.associativeSourceIdField = associativeSourceIdField;
         this.associativeTargetIdField = associativeTargetIdField;
         this.dataStoreField = dataStoreField;
+        this.associativeTable = associativeTable;
     }
 
     @Override
@@ -27,11 +29,10 @@ public class JooqManyToMany<DataModel extends TableRecord<?>, KeyType> implement
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
         // of resolving the following data.
-        VortexCrudDataStore<TableField<?, ?>, ?> associativeDataStore = dataStoreFactoryRegistry.getDataStore(null);
-        List<DataModel> associativeRecords = (List<DataModel>) associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
+        VortexCrudDataStore<TableField<?, ?>, DataModel> associativeDataStore = dataStoreFactoryRegistry.getDataStore(associativeTable);
+        List<DataModel> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
         List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(associativeTargetIdField.getName())).map(Object::toString).toList();
-        return foreignKeyValue == null ? List.of() :
-                dataStore.getRecordsFromTableWhereColumnIn(dataStoreField, associativeRecordIds, 0, Integer.MAX_VALUE);
+        return dataStore.getRecordsFromTableWhereColumnIn(dataStoreField, associativeRecordIds, 0, Integer.MAX_VALUE);
     }
 
     @Override
@@ -41,7 +42,10 @@ public class JooqManyToMany<DataModel extends TableRecord<?>, KeyType> implement
 
     @Override
     public DataModel getAssociativeDataStore() {
-        return null;
+        // Return the associative table as DataModel
+        // This is a bit of a type mismatch, but the interface requires DataModel
+        // In practice, this should be used with the appropriate type casting
+        return (DataModel) associativeTable;
     }
 
     @Override

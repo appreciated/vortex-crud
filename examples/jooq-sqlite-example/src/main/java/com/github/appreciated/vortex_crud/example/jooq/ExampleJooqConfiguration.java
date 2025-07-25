@@ -122,8 +122,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 .withData(JooqCollectionConfiguration.of(TASKS)
                                                         .withManyToMany(new JooqManyToMany(
                                                                 TASK_HAS_TASK.TASK_ID,
-                                                                TASK_HAS_TASK.ID,
-                                                                TASKS.ID))
+                                                                TASK_HAS_TASK.RELATED_TASK_ID,
+                                                                TASKS.ID,
+                                                                TASK_HAS_TASK))
                                                         .withChildren(TASKS.TITLE)
                                                         .build())
                                                 .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
