@@ -21,5 +21,7 @@ public class ProjectCardsTest extends BaseUITest {
         waitForAnyElementContainingText("Project Alpha").click();
         waitForUrlToBe("projects-cards/1");
         waitForElementWithTagAndValue("vaadin-text-field", "Project Alpha");
+        waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
+        waitForElementWithTagAndValue("vaadin-date-picker", "2023-12-31");
     }
 }
