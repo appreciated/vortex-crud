@@ -11,14 +11,14 @@ public class ProjectGridTest extends BaseUITest {
     @Test
     void checkIfListingVisible() {
         navigateTo("projects-list");
-        WebElement webElement = waitForElementContainingText("Project Alpha");
+        WebElement webElement = waitForAnyElementContainingText("Project Alpha");
         assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
     }
 
     @Test
     void checkIfNavigationPossible() {
         navigateTo("projects-list");
-        waitForElementContainingText("Project Alpha").click();
+        waitForAnyElementContainingText("Project Alpha").click();
         waitForUrlToBe("projects-list/1");
         waitForElementWithTagAndValue("vaadin-text-field", "Project Alpha");
     }

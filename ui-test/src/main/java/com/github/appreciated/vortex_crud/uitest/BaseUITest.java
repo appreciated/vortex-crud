@@ -78,8 +78,13 @@ public abstract class BaseUITest {
         return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
-    protected WebElement waitForElementContainingText(String text) {
+    protected WebElement waitForAnyElementContainingText(String text) {
         return waitForElement(By.xpath("//*[contains(text(), '%s')]".formatted(text)));
+    }
+
+    protected WebElement waitForElementContainingText(String tagName, String text) {
+        String pattern = "//%s[contains(., '%s')]".formatted(tagName, text);
+        return waitForElement(By.xpath(pattern));
     }
 
     protected void waitForUrlToBe(String path) {
@@ -94,21 +99,6 @@ public abstract class BaseUITest {
      */
     protected List<WebElement> waitForElements(By by) {
         return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
-    }
-
-    protected boolean hasElementContainingText(String text) {
-        waitForElementContainingText(text);
-        return true;
-    }
-
-    protected boolean hasElementWithTagAndValue(String tagName, String value) {
-        waitForElementWithTagAndValue(tagName, value);
-        return true;
-    }
-
-    protected boolean hasElementWithTagAndInputValue(String tagName, String value) {
-        waitForElementWithTagAndInputValue(tagName, value);
-        return true;
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {

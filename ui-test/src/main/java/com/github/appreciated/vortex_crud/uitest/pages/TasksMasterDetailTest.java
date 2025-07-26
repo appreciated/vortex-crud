@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.uitest.pages;
 
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class TasksMasterDetailTest extends BaseUITest {
@@ -10,36 +9,44 @@ public class TasksMasterDetailTest extends BaseUITest {
     void testNestedMasterDetailEntityNavigation() {
         navigateTo("tasks");
 
-        waitForElementContainingText("Abgeschlossen").click();
+        waitForAnyElementContainingText("Abgeschlossen").click();
         waitForUrlToBe("tasks/done");
 
-        waitForElementContainingText("Design Homepage").click();
+        waitForAnyElementContainingText("Design Homepage").click();
         waitForUrlToBe("tasks/done/1");
 
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-field", "Design Homepage"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-select-item", "In Arbeit"));
-        Assertions.assertTrue(hasElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-date-picker", "2023-12-01"));
-        Assertions.assertTrue(hasElementContainingText("We need to finalize the design by the end of the week."));
+        waitForElementWithTagAndValue("vaadin-text-field", "Design Homepage");
+        waitForElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app");
+        waitForElementWithTagAndValue("vaadin-select-item", "In Arbeit");
+        waitForElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de");
+        waitForElementWithTagAndValue("vaadin-date-picker", "2023-12-01");
+        waitForElementContainingText("vaadin-card", "need to finalize the design by the end of the week.");
+
+        waitForElementContainingText("vaadin-card", "Database Setup");
+        waitForElementContainingText("vaadin-card", "User Authentication");
+        waitForElementContainingText("vaadin-card", "Frontend Integration");
     }
 
     @Test
     void testNestedMasterDetailKanbanEntityNavigation() {
         navigateTo("tasks");
 
-        waitForElementContainingText("Offen").click();
+        waitForAnyElementContainingText("Offen").click();
         waitForUrlToBe("tasks/open");
 
-        waitForElementContainingText("Design Homepage").click();
+        waitForAnyElementContainingText("Design Homepage").click();
         waitForUrlToBe("tasks/open/1");
 
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-field", "Design Homepage"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-select-item", "In Arbeit"));
-        Assertions.assertTrue(hasElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-date-picker", "2023-12-01"));
-        Assertions.assertTrue(hasElementContainingText("We need to finalize the design by the end of the week."));
+        waitForElementWithTagAndValue("vaadin-text-field", "Design Homepage");
+        waitForElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app");
+        waitForElementWithTagAndValue("vaadin-select-item", "In Arbeit");
+        waitForElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de");
+        waitForElementWithTagAndValue("vaadin-date-picker", "2023-12-01");
+        waitForElementContainingText("vaadin-card", "We need to finalize the design by the end of the week.");
+
+        waitForElementContainingText("vaadin-card", "Database Setup");
+        waitForElementContainingText("vaadin-card", "User Authentication");
+        waitForElementContainingText("vaadin-card", "Frontend Integration");
     }
 
 }

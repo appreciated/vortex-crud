@@ -11,14 +11,14 @@ public class ProjectCardsTest extends BaseUITest {
     @Test
     void checkIfListingVisible() {
         navigateTo("projects-cards");
-        WebElement webElement = waitForElementContainingText("Project Alpha");
+        WebElement webElement = waitForAnyElementContainingText("Project Alpha");
         assertEquals("h4", webElement.getTagName());
     }
 
     @Test
     void checkIfNavigationPossible() {
         navigateTo("projects-cards");
-        waitForElementContainingText("Project Alpha").click();
+        waitForAnyElementContainingText("Project Alpha").click();
         waitForUrlToBe("projects-cards/1");
         waitForElementWithTagAndValue("vaadin-text-field", "Project Alpha");
     }
