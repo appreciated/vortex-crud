@@ -21,10 +21,10 @@ public class TasksMasterDetailTest extends BaseUITest {
         waitForElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-12-01");
         waitForElementContainingText("vaadin-card", "need to finalize the design by the end of the week.");
-
-        waitForElementContainingText("vaadin-card", "Database Setup");
-        waitForElementContainingText("vaadin-card", "User Authentication");
-        waitForElementContainingText("vaadin-card", "Frontend Integration");
+        // The vaadin-card//vaadin-vertical-layout is important, as the same element is visible in another form in the ui
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Database Setup");
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "User Authentication");
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Frontend Integration");
     }
 
     @Test
@@ -43,10 +43,10 @@ public class TasksMasterDetailTest extends BaseUITest {
         waitForElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-12-01");
         waitForElementContainingText("vaadin-card", "We need to finalize the design by the end of the week.");
-
-        waitForElementContainingText("vaadin-card", "Database Setup");
-        waitForElementContainingText("vaadin-card", "User Authentication");
-        waitForElementContainingText("vaadin-card", "Frontend Integration");
+        // The vaadin-card//vaadin-vertical-layout is important, as the same element is visible in another form in the ui
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Database Setup");
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "User Authentication");
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Frontend Integration");
     }
 
 }
