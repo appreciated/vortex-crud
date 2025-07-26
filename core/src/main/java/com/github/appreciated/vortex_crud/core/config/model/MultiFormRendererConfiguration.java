@@ -22,7 +22,6 @@ public class MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> exten
         this.forms = children;
     }
 
-
     public static class Builder<DataStoreId, FieldId, KeyType> {
 
         private final MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> product;

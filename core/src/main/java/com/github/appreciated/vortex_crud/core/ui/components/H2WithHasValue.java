@@ -28,7 +28,6 @@ public class H2WithHasValue extends H2 implements HasValue<HasValue.ValueChangeE
 
     @Override
     public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
-
     }
 
     @Override

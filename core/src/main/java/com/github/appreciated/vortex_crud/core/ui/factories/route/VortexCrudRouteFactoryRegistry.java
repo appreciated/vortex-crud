@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route;
 
-
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 
 /**

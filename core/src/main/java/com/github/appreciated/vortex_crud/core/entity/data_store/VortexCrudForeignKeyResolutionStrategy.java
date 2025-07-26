@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
-
 /**
  * Strategy interface for resolving foreign key values in entities.
  * This interface is used to extract the logic for resolving foreign key values

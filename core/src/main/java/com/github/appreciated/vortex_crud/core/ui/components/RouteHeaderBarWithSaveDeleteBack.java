@@ -21,7 +21,6 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
                                             ComponentEventListener<ClickEvent<Button>> onBack,
                                             Component titleComponent) {
 
-
         if (!isWrapped && onBack != null) {
             Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), onBack);
             back.getStyle().set("font-size", "1.6em")
