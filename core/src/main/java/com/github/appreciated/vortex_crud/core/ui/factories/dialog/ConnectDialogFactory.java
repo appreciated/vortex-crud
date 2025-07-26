@@ -67,15 +67,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         List<?> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
 
         // Use reflection to call getManyToMany with the correct type
-        List<?> currentAssociativeEntries;
-        try {
-            java.lang.reflect.Method getManyToManyMethod = manyToManyPersistenceStrategy.getClass().getMethod("getManyToMany", 
-                VortexCrudDataStore.class, ManyToMany.class, Class.class);
-            currentAssociativeEntries = (List<?>) getManyToManyMethod.invoke(manyToManyPersistenceStrategy, 
-                dataStore, manyToMany, Object.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to call getManyToMany", e);
-        }
+        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(dataStore, manyToMany, dataStoreKey);
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(entity -> reflectionService.getString(entity, associativeTargetIdField)).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
@@ -122,12 +114,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 return newAssociation;
             }).toList();
             // Use reflection to call insert with the correct type
-            try {
-                java.lang.reflect.Method insertMethod = manyToManyPersistenceStrategy.getClass().getMethod("insert", List.class, Class.class);
-                insertMethod.invoke(manyToManyPersistenceStrategy, toBeInserted, Object.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to call insert", e);
-            }
+            manyToManyPersistenceStrategy.insert(toBeInserted, Object.class);
 
             // Remove the connections that are no longer selected
             Set<String> newSelectedIds = newSelectedConnections.stream()
@@ -135,7 +122,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                     .collect(Collectors.toSet());
 
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
-            List<?> entriesToDelete = currentAssociativeEntries.stream()
+            List<Object> entriesToDelete = (List<Object>) currentAssociativeEntries.stream()
                     .filter(entry -> {
                         Object targetIdObj = reflectionService.getValue(entry, associativeTargetIdField);
                         if (targetIdObj == null) {
@@ -145,12 +132,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                     }).toList();
 
             // Use reflection to call deleteAll with the correct type
-            try {
-                java.lang.reflect.Method deleteAllMethod = manyToManyPersistenceStrategy.getClass().getMethod("deleteAll", List.class, Class.class);
-                deleteAllMethod.invoke(manyToManyPersistenceStrategy, entriesToDelete, Object.class);
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to call deleteAll", e);
-            }
+            manyToManyPersistenceStrategy.deleteAll(entriesToDelete, Object.class);
 
             storeListener.onStore();
             dialog.close();
