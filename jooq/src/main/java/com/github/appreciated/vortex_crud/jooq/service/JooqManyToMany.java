@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 
@@ -24,7 +25,12 @@ public class JooqManyToMany<DataModel extends TableRecord<?>, KeyType> implement
     }
 
     @Override
-    public <ModelClass> List<ModelClass> getData(VortexCrudDataStoreFactoryRegistry<DataModel, TableField<?, ?>, KeyType> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ModelClass> dataStore, CollectionConfiguration<DataModel, TableField<?, ?>, KeyType> collectionConfiguration) {
+    public <ModelClass> List<ModelClass> getData(
+            ReflectionService<TableField<?, ?>> reflectionService,
+            VortexCrudDataStoreFactoryRegistry<DataModel, TableField<?, ?>, KeyType> dataStoreFactoryRegistry,
+            String foreignKeyValue,
+            VortexCrudDataStore<TableField<?, ?>, ModelClass> dataStore,
+            CollectionConfiguration<DataModel, TableField<?, ?>, KeyType> collectionConfiguration) {
         // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
         // datastore and one over the target datastore and one with the actual entries.
         // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake

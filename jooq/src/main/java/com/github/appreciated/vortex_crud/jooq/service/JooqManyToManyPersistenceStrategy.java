@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * jOOQ implementation of the RecordRetrievalStrategy.
- * Uses jOOQ's DSL to create a query with a where clause.
+ * jOOQ implementation of the ManyToManyPersistenceStrategy.
+ * Uses jOOQ's DSL to create and execute queries for many-to-many relationships.
  */
 @Component
 public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy<Object, TableField<?, ?>, TableImpl<?>> {

@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * JPA implementation of the ManyToMany interface.
  * Uses reflection to work with model classes directly.
  */
-public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String, JpaRepository<?,?>> {
+public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String, JpaRepository<?, ?>> {
 
     private final String referenceField;
 
@@ -25,30 +26,25 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String,
     }
 
     @Override
-    public <ModelClass1> List<ModelClass1> getData(VortexCrudDataStoreFactoryRegistry<ModelClass, String, JpaRepository<?,?>> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<String, ModelClass1> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
+    public <ModelClass1> List<ModelClass1> getData(ReflectionService<String> reflectionService,
+                                                   VortexCrudDataStoreFactoryRegistry<ModelClass, String, JpaRepository<?, ?>> dataStoreFactoryRegistry,
+                                                   String foreignKeyValue,
+                                                   VortexCrudDataStore<String, ModelClass1> dataStore,
+                                                   CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
         if (foreignKeyValue == null) {
             return List.of();
         }
 
-        try {
-            // Get the entity by ID using reflection
-            Object entity = dataStore.getRecordById(foreignKeyValue);
-            if (entity == null) {
-                return List.of();
-            }
-
-            // Implementation will use reflection to work with the model class
-            // This is a stub implementation that returns an empty list
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Get the entity by ID using reflection
+        Object entity = dataStore.getRecordById(foreignKeyValue);
+        if (entity == null) {
+            return List.of();
         }
-
-        return List.of();
+        return (List<ModelClass1>) reflectionService.getValue(entity, referenceField);
     }
 
     @Override
-    public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
+    public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
         return "";
     }
 

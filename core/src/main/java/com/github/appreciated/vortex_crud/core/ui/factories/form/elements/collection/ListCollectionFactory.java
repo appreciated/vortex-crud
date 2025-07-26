@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -32,7 +31,6 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
 
     public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                  VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactory,
-                                 VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                                  ReflectionService<FieldId> reflectionService,
                                  VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
@@ -76,9 +74,9 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         list.add(header);
         CollectionConfiguration<DataStoreId, FieldId, KeyType> data = internalFormElement.getConfiguration().getData();
 
-        VortexCrudDataStore<FieldId, DataStoreId> dataStore = (VortexCrudDataStore<FieldId, DataStoreId>) dataStoreFactoryRegistry.getDataStore(data.getDataStore());
+        VortexCrudDataStore<FieldId, DataStoreId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
         List<Object> records = (data.getManyToMany() != null) ?
-                (List<Object>) data.getManyToMany().getData(dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
+                (List<Object>) data.getManyToMany().getData(reflectionService, dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
                 (List<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
 
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {

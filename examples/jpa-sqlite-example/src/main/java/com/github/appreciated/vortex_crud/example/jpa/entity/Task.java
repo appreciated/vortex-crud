@@ -11,9 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -63,7 +61,7 @@ public class Task {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "related_task_id")
     )
-    private Set<Task> relatedTasks = new HashSet<>();
+    private List<Task> relatedTasks = new ArrayList<>();
 
     // Getters and Setters
     public Integer getId() {
@@ -138,11 +136,11 @@ public class Task {
         this.comments = comments;
     }
 
-    public Set<Task> getRelatedTasks() {
+    public List<Task> getRelatedTasks() {
         return relatedTasks;
     }
 
-    public void setRelatedTasks(Set<Task> relatedTasks) {
+    public void setRelatedTasks(List<Task> relatedTasks) {
         this.relatedTasks = relatedTasks;
     }
 }

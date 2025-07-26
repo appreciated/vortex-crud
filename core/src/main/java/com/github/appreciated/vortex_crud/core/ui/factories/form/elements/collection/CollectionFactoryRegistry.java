@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -26,7 +25,6 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements
 
     public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
-                                     VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
                                      ReflectionService<FieldId> reflectionService,
                                      VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
@@ -35,7 +33,6 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements
                 new ListCollectionFactory<>(
                         dataStoreFactoryRegistry,
                         dialogFactoryRegistry,
-                        resolver,
                         reflectionService,
                         dataStoreUtil
                 )
