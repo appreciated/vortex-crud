@@ -111,7 +111,7 @@ public class Submenu<DataStoreId, FieldId, KeyType> extends SplitLayout {
 
             routeButton.getElement().addEventListener("click", event -> {
                 getUI().ifPresent(ui -> {
-                    String pathForEntity = pathVariables.generateSubRoute(this.currentPathIndex, key);
+                    String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
                     pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers(), dataStoreUtil);
                     ui.getPage().getHistory().pushState(null, pathForEntity);
                     if (active != null) {

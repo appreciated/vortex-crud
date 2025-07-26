@@ -19,7 +19,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
     private final Map<Integer, RouteRenderer<DataStoreId, FieldId, KeyType>> pathRoutes;
     private final Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig;
 
-    // Konstruktor
+    // Constructor
     public VortexCrudPathToRouteResolver(VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                                          String path,
                                          Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig,
@@ -30,19 +30,19 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
         this.dataStoreUtil = dataStoreUtil;
         this.pathRoutes = new HashMap<>();
         this.routesConfig = routesConfig;
-        splitPathAndAddMarkers();
+        splitPathAndInitializeRoutes();
     }
 
-    // Methode zum Zerlegen des Pfades und Hinzufügen der Marker
-    private void splitPathAndAddMarkers() {
-        // Pfad in Abschnitte zerlegen
+    // Method to split the path and initialize routes
+    private void splitPathAndInitializeRoutes() {
+        // Split path into sections
         this.sections = path.split("/");
 
-        // Starte bei Root
-        traverseRoutes(0, routesConfig);
+        // Start at root
+        buildRouteMapForPathSection(0, routesConfig);
     }
 
-    private void traverseRoutes(int sectionIndex, Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> currentRoutes) {
+    private void buildRouteMapForPathSection(int sectionIndex, Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> currentRoutes) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
@@ -67,10 +67,10 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
 
         // If this route has children, recurse into them
         if (currentRouteRenderer.getChildrenMap() != null && !currentRouteRenderer.getChildrenMap().isEmpty()) {
-            traverseRoutes(sectionIndex + 1, currentRouteRenderer.getChildrenMap());
+            buildRouteMapForPathSection(sectionIndex + 1, currentRouteRenderer.getChildrenMap());
         } else {
             // If no children, continue to the next segment
-            traverseRoutes(sectionIndex + 1, currentRoutes);
+            buildRouteMapForPathSection(sectionIndex + 1, currentRoutes);
         }
     }
 
@@ -82,7 +82,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
      * This returns the to be rendered route.
      */
     public RouteRenderer<DataStoreId, FieldId, KeyType> getCurrentRoute() {
-        return pathRoutes.get(getCurrentIndex());
+        return pathRoutes.get(determineActiveRouteIndex());
     }
 
     public String getPath() {
@@ -94,14 +94,14 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
     }
 
     public String getPathForEntity(Integer currentPathIndex, Object entity) {
-        return generateSubRoute(currentPathIndex, dataStoreUtil.getId(entity));
+        return buildPathUpToIndex(currentPathIndex, dataStoreUtil.getId(entity));
     }
 
     public RouteRenderer<DataStoreId, FieldId, KeyType> getRouteForIndex(Integer currentPathIndex) {
         return pathRoutes.get(currentPathIndex);
     }
 
-    public Integer getCurrentIndex() {
+    public Integer determineActiveRouteIndex() {
         List<Integer> numbers = pathRoutes.keySet().stream().toList().reversed();
         Integer currentPointer = numbers.getFirst();
         for (int i = 0; i < numbers.size() - 1; i++) {
@@ -124,23 +124,23 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
             boolean currentIsContainer = currentFactory.isContainerRoute();
             boolean nextIsContainer = nextFactory.isContainerRoute();
 
-            // Wenn beide Container-Routen sind, gib die erste Route<DataStoreId> zurück
+            // If both are container routes, return the first route
             if (currentIsContainer && nextIsContainer) {
                 return nextKey;
             }
 
-            // Wenn auf einen Container eine nicht-Container-Route folgt, gib den Container zurück
+            // If a container is followed by a non-container route, return the container
             if (currentIsContainer && !nextIsContainer) {
                 return currentKey;
             }
 
-            // Wenn auf einen Container eine nicht-Container-Route folgt, gib den Container zurück
+            // If next is a container route, update the pointer
             if (nextIsContainer) {
                 currentPointer = nextKey;
             }
         }
 
-        // Falls nur eine Route<DataStoreId> vorhanden ist oder keine der Bedingungen zutrifft, gib die erste Route<DataStoreId> zurück
+        // If only one route exists or none of the conditions apply, return the first route
         return currentPointer;
     }
 
@@ -148,7 +148,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
         return sections.length - 1 <= currentPathIndex;
     }
 
-    public String generateSubRoute(Integer currentPathIndex, String route) {
+    public String buildPathUpToIndex(Integer currentPathIndex, String route) {
         String[] array = Arrays.copyOfRange(sections, 0, currentPathIndex + 1);
         String lastIndex = route != null ? "/" + route : "";
         return Arrays.stream(array)

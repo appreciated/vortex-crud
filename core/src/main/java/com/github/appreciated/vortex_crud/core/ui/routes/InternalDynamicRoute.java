@@ -49,7 +49,7 @@ public class InternalDynamicRoute<DataStoreId, FieldId, KeyType> extends Div imp
                 dataStoreUtil
         );
         RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer = pathRoutes.getCurrentRoute();
-        Integer currentIndex = pathRoutes.getCurrentIndex();
+        Integer currentIndex = pathRoutes.determineActiveRouteIndex();
         Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);

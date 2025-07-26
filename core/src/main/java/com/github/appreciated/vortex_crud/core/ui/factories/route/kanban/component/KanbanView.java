@@ -95,7 +95,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
-                String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, dataStoreUtil.getId(entity));
+                String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, dataStoreUtil.getId(entity));
                 getUI().ifPresent(ui -> ui.navigate(nextRoute));
             });
             return cardWrapper;
@@ -160,12 +160,12 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                             fileProviderRegistry,
                             fieldNameResolver,
                             reflectionService));
-                    String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
                 () -> {
-                    String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
@@ -176,7 +176,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        Integer currentIndex = routeResolver.getCurrentIndex();
+        Integer currentIndex = routeResolver.determineActiveRouteIndex();
         int i = currentIndex + 2;
         if (routeResolver.hasPathForIndex(i)) {
             String pathForIndex = routeResolver.getPathForIndex(i);
