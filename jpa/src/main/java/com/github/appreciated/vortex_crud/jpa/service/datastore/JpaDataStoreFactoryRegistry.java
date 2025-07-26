@@ -35,7 +35,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     @Override
     public VortexCrudDataStore<String, JpaRepository<?, ?>> getDataStore(JpaRepository<?, ?> table) {
         return Optional.ofNullable(
-                factories.get(table))
+                        factories.get(table))
                 .orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), table)));
     }
 
@@ -55,7 +55,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
                 }));
     }
 
-    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createBuilder(Map.Entry<JpaRepository<?, ?>,  VortexCrudDataStore<String, JpaRepository<?, ?>>> test) {
+    private DataStoreConfig.Builder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createBuilder(Map.Entry<JpaRepository<?, ?>, VortexCrudDataStore<String, JpaRepository<?, ?>>> test) {
         return new DataStoreConfig.Builder<>(new DataStoreConfig<>(test.getKey()));
     }
 

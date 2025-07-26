@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public class JpaOneToMany<ModelClass> implements OneToMany<ModelClass, String, JpaRepository<?,?>> {
+public class JpaOneToMany<ModelClass> implements OneToMany<ModelClass, String, JpaRepository<?, ?>> {
 
     private final String referenceField;
 
@@ -17,13 +17,13 @@ public class JpaOneToMany<ModelClass> implements OneToMany<ModelClass, String, J
 
 
     @Override
-    public List<ModelClass> getData(String foreignKeyValue, VortexCrudDataStore<String, ?> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
+    public List<ModelClass> getData(String foreignKeyValue, VortexCrudDataStore<String, ?> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
         return foreignKeyValue == null ? List.of() :
                 (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 
     @Override
-    public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?,?>> collectionConfiguration) {
+    public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
         return referenceField;
     }
 

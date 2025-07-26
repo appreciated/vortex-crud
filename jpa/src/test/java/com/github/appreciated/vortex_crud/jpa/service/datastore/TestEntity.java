@@ -25,7 +25,8 @@ public class TestEntity {
     private Integer age;
 
     // Default constructor
-    public TestEntity() {}
+    public TestEntity() {
+    }
 
     // Getters and setters
     public Integer getId() {
@@ -55,9 +56,9 @@ public class TestEntity {
     @Override
     public String toString() {
         return "TestEntity{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", age=" + age +
+               '}';
     }
 }

@@ -29,7 +29,7 @@ public class TranslationService implements I18NProvider {
      *
      * @param configService The configuration service to get the i18n bundle prefix.
      */
-    public TranslationService(VortexCrudConfigService<?,?,?> configService) {
+    public TranslationService(VortexCrudConfigService<?, ?, ?> configService) {
         this.i18nBundlePrefix = configService.getConfiguration().getI18nBundlePrefix();
         this.supportedLocales = discoverAvailableLocales();
     }

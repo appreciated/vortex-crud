@@ -120,7 +120,7 @@ class JooqDataStoreTest {
 
     private void insertTestRecord(String name, int age) {
         TestTableRecord values = new TestTableRecord();
-        values.setName( name);
+        values.setName(name);
         values.setAge(age);
         service.insertRecord(values);
     }

@@ -79,7 +79,7 @@ class ReflectionServiceTest {
             isActive = active;
         }
     }
-    
+
     // Test class with snake case fields but camel case getters/setters
     static class SnakeCaseToCamelCaseEntity {
         private String start_date;

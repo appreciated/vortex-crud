@@ -1,10 +1,12 @@
 # Vortex CRUD UI Tests
 
-This module contains UI tests for the Vortex CRUD application. The tests use Selenium WebDriver with WebDriverManager to interact with the browser and verify that the application's views are accessible and functioning correctly.
+This module contains UI tests for the Vortex CRUD application. The tests use Selenium WebDriver with WebDriverManager to
+interact with the browser and verify that the application's views are accessible and functioning correctly.
 
 ## Test Structure
 
-The tests are organized using the Page Object Model (POM) pattern, which separates the page structure from the test logic. This makes the tests more maintainable and easier to understand.
+The tests are organized using the Page Object Model (POM) pattern, which separates the page structure from the test
+logic. This makes the tests more maintainable and easier to understand.
 
 ### Page Objects
 
@@ -12,18 +14,18 @@ Page objects represent the different views in the application:
 
 - `BasePage`: Abstract base class for all page objects
 - Projects views:
-  - `ProjectsCardsPage`: Represents the projects-cards view
-  - `ProjectsListPage`: Represents the projects-list view
-  - `ProjectDetailPage`: Represents the project detail view
+    - `ProjectsCardsPage`: Represents the projects-cards view
+    - `ProjectsListPage`: Represents the projects-list view
+    - `ProjectDetailPage`: Represents the project detail view
 - Tasks views:
-  - `TasksPage`: Represents the main tasks view
-  - `TasksOpenPage`: Represents the open tasks view
-  - `TasksDonePage`: Represents the done tasks view
-  - `TaskDetailPage`: Represents the task detail view
+    - `TasksPage`: Represents the main tasks view
+    - `TasksOpenPage`: Represents the open tasks view
+    - `TasksDonePage`: Represents the done tasks view
+    - `TaskDetailPage`: Represents the task detail view
 - Images views:
-  - `ImagesGridPage`: Represents the images-grid view
-  - `ImagesListPage`: Represents the images-list view
-  - `ImageDetailPage`: Represents the image detail view
+    - `ImagesGridPage`: Represents the images-grid view
+    - `ImagesListPage`: Represents the images-list view
+    - `ImageDetailPage`: Represents the image detail view
 
 ### Test Classes
 
@@ -69,7 +71,8 @@ The tests cover the following URLs:
 
 ## Running the Tests
 
-To run the tests, you need to have the application running locally on port 8080. The tests assume that the application is accessible at `http://127.0.0.1:8080`.
+To run the tests, you need to have the application running locally on port 8080. The tests assume that the application
+is accessible at `http://127.0.0.1:8080`.
 
 You can run the tests using Maven:
 

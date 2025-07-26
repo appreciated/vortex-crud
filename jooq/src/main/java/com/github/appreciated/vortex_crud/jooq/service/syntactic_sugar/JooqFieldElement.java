@@ -12,7 +12,7 @@ public class JooqFieldElement extends InternalFormElement<TableRecord<?>, TableF
         super(field, "field", label);
     }
 
-    public static Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableField<?,?> field, String label) {
+    public static Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableField<?, ?> field, String label) {
         return new Builder<>(new JooqFieldElement(field, label));
     }
 }

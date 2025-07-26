@@ -121,7 +121,7 @@ public class RouteRenderer<DataStoreId, FieldId, KeyType> {
 
         private final RouteRenderer<DataStoreId, FieldId, KeyType> product;
 
-        public  Builder(RouteRenderer<DataStoreId, FieldId, KeyType> product) {
+        public Builder(RouteRenderer<DataStoreId, FieldId, KeyType> product) {
             this.product = product;
         }
 

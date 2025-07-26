@@ -10,7 +10,7 @@ import java.util.List;
  * Interface representing a many-to-many relationship between entities.
  *
  * @param <DataStoreId> The type used to identify data stores
- * @param <FieldId> The type used to identify fields in the data store
+ * @param <FieldId>     The type used to identify fields in the data store
  */
 public interface ManyToMany<DataStoreId, FieldId, KeyType> {
 
@@ -18,16 +18,16 @@ public interface ManyToMany<DataStoreId, FieldId, KeyType> {
      * Gets data from the many-to-many relationship.
      *
      * @param dataStoreFactoryRegistry The registry for data store factories
-     * @param foreignKeyValue The foreign key value to filter by
-     * @param dataStore The data store to retrieve records from
-     * @param collectionConfiguration The collection configuration
+     * @param foreignKeyValue          The foreign key value to filter by
+     * @param dataStore                The data store to retrieve records from
+     * @param collectionConfiguration  The collection configuration
      * @return A list of entities matching the criteria
      */
     <ModelClass> List<ModelClass> getData(
             ReflectionService<FieldId> reflectionService,
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-            String foreignKeyValue, 
-            VortexCrudDataStore<FieldId,ModelClass> dataStore,
+            String foreignKeyValue,
+            VortexCrudDataStore<FieldId, ModelClass> dataStore,
             CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration
     );
 

@@ -15,10 +15,10 @@ import java.util.List;
  * @param <DataStoreId> The model class type
  */
 @Component
-public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String, JpaRepository<?,?>> {
+public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String, JpaRepository<?, ?>> {
 
     @Override
-    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String, JpaRepository<?,?>> manyToMany, JpaRepository<?,?> modelClass) {
+    public List<DataStoreId> getManyToMany(VortexCrudDataStore<String, ?> dataStore, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany, JpaRepository<?, ?> modelClass) {
         return List.of();
     }
 

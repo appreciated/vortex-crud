@@ -80,15 +80,15 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         connectionList.setItemLabelGenerator(obj -> {
             // Use reflection to get values from the object based on the children configuration
             return collectionConfiguration.getChildren().stream()
-                .map(fieldId -> {
-                    try {
-                        Object value = reflectionService.getValue(obj, fieldId);
-                        return value != null ? value.toString() : "";
-                    } catch (Exception e) {
-                        return "";
-                    }
-                })
-                .collect(Collectors.joining(","));
+                    .map(fieldId -> {
+                        try {
+                            Object value = reflectionService.getValue(obj, fieldId);
+                            return value != null ? value.toString() : "";
+                        } catch (Exception e) {
+                            return "";
+                        }
+                    })
+                    .collect(Collectors.joining(","));
         });
         connectionList.setValue(currentlySelectedConnections);
 

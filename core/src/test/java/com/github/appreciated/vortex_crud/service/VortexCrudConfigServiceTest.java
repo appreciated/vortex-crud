@@ -25,11 +25,11 @@ class VortexCrudConfigServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        
+
         // Mock the configuration provider
         when(configProvider.get()).thenReturn(application);
         when(application.getName()).thenReturn("Test Application");
-        
+
         configService = new TestVortexCrudConfigService(configProvider);
     }
 
@@ -50,18 +50,18 @@ class VortexCrudConfigServiceTest {
      * Test implementation of VortexCrudConfigService for testing purposes.
      */
     private static class TestVortexCrudConfigService implements VortexCrudConfigService<String, String, String> {
-        
+
         private final VortexCrudConfigurationProvider<String, String, String> configProvider;
-        
+
         public TestVortexCrudConfigService(VortexCrudConfigurationProvider<String, String, String> configProvider) {
             this.configProvider = configProvider;
         }
-        
+
         @Override
         public Application<String, String, String> getConfiguration() {
             return configProvider.get();
         }
-        
+
         @Override
         public String getApplicationName() {
             return getConfiguration().getName();

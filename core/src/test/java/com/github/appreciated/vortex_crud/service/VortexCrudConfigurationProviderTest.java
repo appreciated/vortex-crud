@@ -34,13 +34,13 @@ class VortexCrudConfigurationProviderTest {
      * Test implementation of VortexCrudConfigurationProvider for testing purposes.
      */
     private static class TestVortexCrudConfigurationProvider implements VortexCrudConfigurationProvider<String, String, String> {
-        
+
         private final Application<String, String, String> application;
-        
+
         public TestVortexCrudConfigurationProvider(Application<String, String, String> application) {
             this.application = application;
         }
-        
+
         @Override
         public Application<String, String, String> get() {
             return application;

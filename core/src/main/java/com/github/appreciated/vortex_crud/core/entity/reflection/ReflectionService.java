@@ -50,10 +50,10 @@ public class ReflectionService<FieldId> {
         if (fieldName == null || !fieldName.contains("_")) {
             return fieldName;
         }
-        
+
         StringBuilder result = new StringBuilder();
         boolean capitalizeNext = false;
-        
+
         for (int i = 0; i < fieldName.length(); i++) {
             char c = fieldName.charAt(i);
             if (c == '_') {
@@ -65,25 +65,25 @@ public class ReflectionService<FieldId> {
                 result.append(c);
             }
         }
-        
+
         return result.toString();
     }
-    
+
     /**
      * Creates a method name for a getter or setter based on the field name.
      * Handles conversion from snake_case to camelCase.
      */
     private String determineMethodName(String fieldName, String prefix) {
         String camelCaseField = toCamelCase(fieldName);
-        
-        if (prefix.equals("is") && camelCaseField.startsWith("is") && 
+
+        if (prefix.equals("is") && camelCaseField.startsWith("is") &&
             camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
             return camelCaseField;
         }
-        
+
         return prefix + Character.toUpperCase(camelCaseField.charAt(0)) + camelCaseField.substring(1);
     }
-    
+
     private <T> Object getValueByGetter(T entity, String fieldName) {
         try {
             String getterName = determineMethodName(fieldName, "get");

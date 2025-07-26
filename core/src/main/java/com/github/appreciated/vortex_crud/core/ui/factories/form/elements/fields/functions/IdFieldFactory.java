@@ -9,7 +9,7 @@ import java.util.List;
 
 public class IdFieldFactory<DataStoreId, FieldId, KeyType> extends TextFieldFactory<DataStoreId, FieldId, KeyType> {
 
-     @Override
+    @Override
     public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
         TextField textField = new TextField();
         textField.setReadOnly(true);

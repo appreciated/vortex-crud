@@ -12,14 +12,14 @@ public interface VortexCrudForeignKeyResolutionStrategy<FieldId> {
     /**
      * Resolves a foreign key value and applies it to the entity.
      *
-     * @param entity The entity to which the foreign key value should be applied
-     * @param foreignKeyField The field identifier of the foreign key
-     * @param foreignKeyValue The value of the foreign key
+     * @param entity            The entity to which the foreign key value should be applied
+     * @param foreignKeyField   The field identifier of the foreign key
+     * @param foreignKeyValue   The value of the foreign key
      * @param fieldNameResolver The resolver to get the field name from the field identifier
      */
-    void resolveForeignKey(Object entity, 
-                          FieldId foreignKeyField, 
-                          String foreignKeyValue,
-                          VortexCrudDataStore<FieldId, ?> dataStore,
-                          VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver);
+    void resolveForeignKey(Object entity,
+                           FieldId foreignKeyField,
+                           String foreignKeyValue,
+                           VortexCrudDataStore<FieldId, ?> dataStore,
+                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver);
 }

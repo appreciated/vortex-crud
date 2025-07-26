@@ -227,7 +227,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
             try {
                 // Create a new instance of the entity
                 Object entity = targetType.getDeclaredConstructor().newInstance();
-                
+
                 // Find the ID field
                 java.lang.reflect.Field idField = findIdField(targetType);
                 if (idField != null) {
