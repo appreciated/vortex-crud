@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 
 class ReflectionServiceTest {
@@ -78,54 +79,54 @@ class ReflectionServiceTest {
             isActive = active;
         }
     }
+    
+    // Test class with snake case fields but camel case getters/setters
+    static class SnakeCaseToCamelCaseEntity {
+        private String start_date;
+        private String end_date;
+        private int user_count;
+        private boolean is_completed;
 
-    // Test class with snake case fields
-    static class SnakeCaseEntity {
-        private String first_name;
-        private String last_name;
-        private int user_age;
-        private boolean is_active;
-
-        public SnakeCaseEntity() {
+        public SnakeCaseToCamelCaseEntity() {
         }
 
-        public SnakeCaseEntity(String first_name, String last_name, int user_age, boolean is_active) {
-            this.first_name = first_name;
-            this.last_name = last_name;
-            this.user_age = user_age;
-            this.is_active = is_active;
+        public SnakeCaseToCamelCaseEntity(String start_date, String end_date, int user_count, boolean is_completed) {
+            this.start_date = start_date;
+            this.end_date = end_date;
+            this.user_count = user_count;
+            this.is_completed = is_completed;
         }
 
-        public String getFirst_name() {
-            return first_name;
+        public String getStartDate() {
+            return start_date;
         }
 
-        public void setFirst_name(String first_name) {
-            this.first_name = first_name;
+        public void setStartDate(String start_date) {
+            this.start_date = start_date;
         }
 
-        public String getLast_name() {
-            return last_name;
+        public String getEndDate() {
+            return end_date;
         }
 
-        public void setLast_name(String last_name) {
-            this.last_name = last_name;
+        public void setEndDate(String end_date) {
+            this.end_date = end_date;
         }
 
-        public int getUser_age() {
-            return user_age;
+        public int getUserCount() {
+            return user_count;
         }
 
-        public void setUser_age(int user_age) {
-            this.user_age = user_age;
+        public void setUserCount(int user_count) {
+            this.user_count = user_count;
         }
 
-        public boolean isIs_active() {
-            return is_active;
+        public boolean isCompleted() {
+            return is_completed;
         }
 
-        public void setIs_active(boolean is_active) {
-            this.is_active = is_active;
+        public void setCompleted(boolean is_completed) {
+            this.is_completed = is_completed;
         }
     }
 
@@ -155,31 +156,6 @@ class ReflectionServiceTest {
     }
 
     @Test
-    void testGetValueInternalWithSnakeCase() {
-        SnakeCaseEntity entity = new SnakeCaseEntity("John", "Doe", 30, true);
-
-        assertEquals("John", reflectionService.getValue(entity, "first_name"));
-        assertEquals("Doe", reflectionService.getValue(entity, "last_name"));
-        assertEquals(30, reflectionService.getValue(entity, "user_age"));
-        assertEquals(true, reflectionService.getValue(entity, "is_active"));
-    }
-
-    @Test
-    void testSetValueInternalWithSnakeCase() {
-        SnakeCaseEntity entity = new SnakeCaseEntity();
-
-        reflectionService.setValue(entity, "first_name", "Jane");
-        reflectionService.setValue(entity, "last_name", "Smith");
-        reflectionService.setValue(entity, "user_age", 25);
-        reflectionService.setValue(entity, "is_active", false);
-
-        assertEquals("Jane", entity.getFirst_name());
-        assertEquals("Smith", entity.getLast_name());
-        assertEquals(25, entity.getUser_age());
-        assertEquals(false, entity.isIs_active());
-    }
-
-    @Test
     void testGetStringWithCamelCase() {
         CamelCaseEntity entity = new CamelCaseEntity("John", "Doe", 30, true);
 
@@ -193,22 +169,6 @@ class ReflectionServiceTest {
         assertEquals(30, reflectionService.getValue(entity, "userAge"));
         assertEquals(true, reflectionService.getValue(entity, "isActive"));
     }
-
-    @Test
-    void testGetStringWithSnakeCase() {
-        SnakeCaseEntity entity = new SnakeCaseEntity("John", "Doe", 30, true);
-
-        when(mockResolver.getKeyForFieldId("first_name")).thenReturn("first_name");
-        when(mockResolver.getKeyForFieldId("last_name")).thenReturn("last_name");
-        when(mockResolver.getKeyForFieldId("user_age")).thenReturn("user_age");
-        when(mockResolver.getKeyForFieldId("is_active")).thenReturn("is_active");
-
-        assertEquals("John", reflectionService.getString(entity, "first_name"));
-        assertEquals("Doe", reflectionService.getString(entity, "last_name"));
-        assertEquals(30, reflectionService.getValue(entity, "user_age"));
-        assertEquals(true, reflectionService.getValue(entity, "is_active"));
-    }
-
 
     // Test class with getters/setters but different field names
     static class GetterSetterOnlyEntity {
@@ -306,4 +266,43 @@ class ReflectionServiceTest {
         assertEquals("true", reflectionService.getString(entity, "active"));
     }
 
+    @Test
+    void testGetValueWithSnakeCaseToCamelCase() {
+        SnakeCaseToCamelCaseEntity entity = new SnakeCaseToCamelCaseEntity("2023-01-01", "2023-12-31", 100, true);
+
+        assertEquals("2023-01-01", reflectionService.getValue(entity, "start_date"));
+        assertEquals("2023-12-31", reflectionService.getValue(entity, "end_date"));
+        assertEquals(100, reflectionService.getValue(entity, "user_count"));
+        assertEquals(true, reflectionService.getValue(entity, "is_completed"));
+    }
+
+    @Test
+    void testSetValueWithSnakeCaseToCamelCase() {
+        SnakeCaseToCamelCaseEntity entity = new SnakeCaseToCamelCaseEntity();
+
+        reflectionService.setValue(entity, "start_date", "2024-01-01");
+        reflectionService.setValue(entity, "end_date", "2024-12-31");
+        reflectionService.setValue(entity, "user_count", 200);
+        reflectionService.setValue(entity, "is_completed", false);
+
+        assertEquals("2024-01-01", entity.getStartDate());
+        assertEquals("2024-12-31", entity.getEndDate());
+        assertEquals(200, entity.getUserCount());
+        assertFalse(entity.isCompleted());
+    }
+
+    @Test
+    void testGetStringWithSnakeCaseToCamelCase() {
+        SnakeCaseToCamelCaseEntity entity = new SnakeCaseToCamelCaseEntity("2023-01-01", "2023-12-31", 100, true);
+
+        when(mockResolver.getKeyForFieldId("start_date")).thenReturn("start_date");
+        when(mockResolver.getKeyForFieldId("end_date")).thenReturn("end_date");
+        when(mockResolver.getKeyForFieldId("user_count")).thenReturn("user_count");
+        when(mockResolver.getKeyForFieldId("is_completed")).thenReturn("is_completed");
+
+        assertEquals("2023-01-01", reflectionService.getString(entity, "start_date"));
+        assertEquals("2023-12-31", reflectionService.getString(entity, "end_date"));
+        assertEquals("100", reflectionService.getString(entity, "user_count"));
+        assertEquals("true", reflectionService.getString(entity, "is_completed"));
+    }
 }

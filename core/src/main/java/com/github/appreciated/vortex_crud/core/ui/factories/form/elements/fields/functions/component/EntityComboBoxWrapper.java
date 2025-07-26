@@ -65,7 +65,7 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId, KeyType> extends Horizo
     @Override
     public void setValue(Object id) {
         if (id != null) {
-            if (id instanceof Object) {
+            if (!(id instanceof Number)) {
                 comboBox.setValue(id);
             } else {
                 Object entity = dataStore.getRecordById(id);
