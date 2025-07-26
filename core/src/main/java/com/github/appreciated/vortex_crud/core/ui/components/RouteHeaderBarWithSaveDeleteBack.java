@@ -35,7 +35,6 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
         if (onAdd != null) {
             Button add = new Button(getTranslation("button.create.title"), onAdd);
             add.addThemeVariants(LUMO_PRIMARY);
-
             add(add);
         }
 

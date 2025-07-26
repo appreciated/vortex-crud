@@ -13,9 +13,9 @@ import java.util.Set;
 @Component
 public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
-    private final VortexCrudConfigService<?,?,?> configService;
+    private final VortexCrudConfigService<?, ?, ?> configService;
 
-    public DynamicRouteGenerator(VortexCrudConfigService<?,?,?> configService) {
+    public DynamicRouteGenerator(VortexCrudConfigService<?, ?, ?> configService) {
         this.configService = configService;
     }
 
@@ -27,7 +27,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     public void registerRoute(String path) {
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
-        configuration.setRoute(path+"/:path*", InternalDynamicRoute.class, ProxyRouterLayout.class);
+        configuration.setRoute(path + "/:path*", InternalDynamicRoute.class, ProxyRouterLayout.class);
     }
 
 }
