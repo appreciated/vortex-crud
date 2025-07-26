@@ -86,6 +86,9 @@ public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 () -> {
 
                 },
+                () -> {
+
+                },
                 formCreator);
         dialog.open();
     }

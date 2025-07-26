@@ -70,6 +70,9 @@ public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 () -> {
                     System.out.println();
                 },
+                () -> {
+
+                },
                 formCreator);
         dialog.open();
     }

@@ -165,6 +165,8 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
+                () -> {
+                },
                 formCreator);
         dialog.open();
     }

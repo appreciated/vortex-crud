@@ -15,6 +15,7 @@ public interface VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
                   CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
                   KeyType dataStoreKey,
                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                  OnStoreListener listener,
+                  OnStoreListener storeListener,
+                  OnCancelListener cancelListener,
                   FormCreator<DataStoreId, FieldId, KeyType> formCreator);
 }

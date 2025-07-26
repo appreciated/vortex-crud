@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.component;
 
+import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -14,7 +15,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.dnd.DragSource;
 import com.vaadin.flow.component.dnd.DropTarget;
@@ -26,6 +29,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
@@ -33,11 +37,17 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudItemFactory<FieldId> itemFactory;
     private final Kanban<DataStoreId, FieldId, KeyType> kanbanConfig;
     private final ComponentRenderer<Component, Object> itemRenderer;
+    private final KeyType dataStoreIdentifier;
+    private final RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer;
     private final VortexCrudDataStore<FieldId, Object> dataStore;
+    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory;
+    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final FormCreator<DataStoreId, FieldId, KeyType> formCreator;
     private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
+    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
 
     public KanbanView(KeyType dataStoreIdentifier,
                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
@@ -52,12 +62,19 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                       FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                       DetailRouteSetting detailRouteSetting,
                       ReflectionService<FieldId> reflectionService,
-                      VortexCrudDataStoreUtilStrategy dataStoreUtil
+                      VortexCrudDataStoreUtilStrategy dataStoreUtil,
+                      VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver
     ) {
+        this.dataStoreIdentifier = dataStoreIdentifier;
+        this.routeRenderer = routeRenderer;
         this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStore;
+        this.routeFactory = routeFactory;
+        this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
+        this.formCreator = formCreator;
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
+        this.routeResolver = routeResolver;
         Selects selects = configService.getSelects();
         DataStoreConfig<DataStoreId, FieldId, KeyType> config = configService.getDataStores().get(dataStoreIdentifier);
         Field<DataStoreId, FieldId, KeyType> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
@@ -78,27 +95,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             DragSource<Component> dragSource = DragSource.create(cardWrapper);
             dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
-                Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
-                        dataStoreUtil.getId(entity),
-                        null,
-                        null,
-                        routeRenderer.getChild(),
-                        null,
-                        dataStoreIdentifier,
-                        routeFactory,
-                        () -> {
-                            //TODO handle if the column was edited, requiring the element to move
-                            Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
-                            cardWrapper.removeAll();
-                            cardWrapper.add(itemFactory.renderItem(kanbanConfig,
-                                    recordById,
-                                    null,
-                                    fileProviderRegistry,
-                                    fieldNameResolver,
-                                    reflectionService));
-                        },
-                        formCreator);
-                dialog.open();
+                String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, dataStoreUtil.getId(entity));
+                getUI().ifPresent(ui -> ui.navigate(nextRoute));
             });
             return cardWrapper;
         });
@@ -140,6 +138,66 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         add(kanbanBoard);
         setSizeFull();
         setPadding(true);
+    }
+
+    private void openDialog(KeyType dataStoreIdentifier, RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer, VortexCrudDataStore<FieldId, ?> dataStore, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory, Kanban<DataStoreId, FieldId, KeyType> kanbanConfig, VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver, FormCreator<DataStoreId, FieldId, KeyType> formCreator, ReflectionService<FieldId> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtil, VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver, Object entity, Div cardWrapper) {
+        // Navigate to the entity URL
+        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
+                dataStoreUtil.getId(entity),
+                null,
+                null,
+                routeRenderer.getChild(),
+                null,
+                dataStoreIdentifier,
+                routeFactory,
+                () -> {
+                    //TODO handle if the column was edited, requiring the element to move
+                    Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
+                    cardWrapper.removeAll();
+                    cardWrapper.add(itemFactory.renderItem(kanbanConfig,
+                            recordById,
+                            null,
+                            fileProviderRegistry,
+                            fieldNameResolver,
+                            reflectionService));
+                    String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, null);
+                    Optional<UI> ui1 = getUI();
+                    ui1.ifPresent(ui -> ui.navigate(nextRoute));
+                },
+                () -> {
+                    String nextRoute = routeResolver.generateSubRoute(routeResolver.getCurrentIndex() + 1, null);
+                    Optional<UI> ui1 = getUI();
+                    ui1.ifPresent(ui -> ui.navigate(nextRoute));
+                },
+                formCreator);
+        dialog.open();
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        Integer currentIndex = routeResolver.getCurrentIndex();
+        int i = currentIndex + 2;
+        if (routeResolver.hasPathForIndex(i)) {
+            String pathForIndex = routeResolver.getPathForIndex(i);
+            Object recordById = dataStore.getRecordById(pathForIndex);
+            openDialog(
+                    dataStoreIdentifier,
+                    routeRenderer,
+                    dataStore,
+                    routeFactory,
+                    kanbanConfig,
+                    dialogFactoryRegistry,
+                    fileProviderRegistry,
+                    fieldNameResolver,
+                    formCreator,
+                    reflectionService,
+                    dataStoreUtil,
+                    routeResolver,
+                    recordById,
+                    null
+            );
+        }
     }
 
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
@@ -201,6 +259,9 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 () -> {
                     Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
                     itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver, reflectionService);
+                },
+                () -> {
+
                 },
                 formCreator);
         dialog.open();

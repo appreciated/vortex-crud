@@ -24,7 +24,7 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
                                          String path,
                                          Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routesConfig,
                                          VortexCrudDataStoreUtilStrategy dataStoreUtil
-                                         ) {
+    ) {
         this.path = path;
         this.routeFactoryRegistry = routeFactoryRegistry;
         this.dataStoreUtil = dataStoreUtil;
@@ -150,8 +150,9 @@ public class VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> {
 
     public String generateSubRoute(Integer currentPathIndex, String route) {
         String[] array = Arrays.copyOfRange(sections, 0, currentPathIndex + 1);
+        String lastIndex = route != null ? "/" + route : "";
         return Arrays.stream(array)
-                .reduce((s, s2) -> s + "/" + s2).orElseThrow() + "/" + route;
+                       .reduce((s, s2) -> s + "/" + s2).orElseThrow() + lastIndex;
     }
 
     public boolean hasPathForIndex(int i) {

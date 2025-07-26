@@ -74,7 +74,8 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
                 formCreator,
                 detailRouteSetting,
                 reflectionService,
-                dataStoreUtil
+                dataStoreUtil,
+                routeResolver
         );
     }
 

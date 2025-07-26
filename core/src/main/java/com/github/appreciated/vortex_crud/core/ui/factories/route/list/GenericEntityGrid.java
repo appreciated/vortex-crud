@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Object> {
 
-    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathVariables;
+    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
@@ -30,7 +30,7 @@ public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Objec
                              VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> listColumnFactory,
                              VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        this.pathVariables = routeResolver;
+        this.routeResolver = routeResolver;
         this.dataStoreUtil = dataStoreUtil;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         KeyType table = routeRenderer.getDataStoreKey();
@@ -63,7 +63,7 @@ public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Objec
      * @param entity the clicked Object
      */
     private void onItemClick(Object entity) {
-        String v = pathVariables.getPath() + "/" + dataStoreUtil.getId(entity);
-        getUI().ifPresent(ui -> ui.navigate(v));
+        String nextRoute = routeResolver.getPathForIndex(Integer.parseInt(dataStoreUtil.getId(entity)));
+        getUI().ifPresent(ui -> ui.navigate(nextRoute));
     }
 }

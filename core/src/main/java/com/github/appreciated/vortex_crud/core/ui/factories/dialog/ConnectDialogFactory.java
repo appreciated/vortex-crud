@@ -48,7 +48,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration,
                          KeyType dataStoreKey,
                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                         OnStoreListener listener,
+                         OnStoreListener storeListener,
+                         OnCancelListener cancelListener,
                          FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
 
         VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
@@ -102,7 +103,10 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         layout.add(connectionList);
 
         // Footer buttons
-        Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
+        Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
+            cancelListener.onCancel();
+            dialog.close();
+        });
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
             Set<Object> newSelectedConnections = connectionList.getSelectedItems();
             // Determine the IDs of the newly selected connections
@@ -148,7 +152,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 throw new RuntimeException("Failed to call deleteAll", e);
             }
 
-            listener.onStore();
+            storeListener.onStore();
             dialog.close();
         });
         connectButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

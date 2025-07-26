@@ -52,7 +52,8 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
                          KeyType dataStoreKey,
                          VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                         OnStoreListener listener,
+                         OnStoreListener storeListener,
+                         OnCancelListener onCancelListener,
                          FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
 
         this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
@@ -72,7 +73,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(recordById);
-        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, listener);
+        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
         DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
@@ -86,8 +87,11 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener) {
-        Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> dialog.close());
+    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
+        Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
+            onCancelListener.onCancel();
+            dialog.close();
+        });
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
