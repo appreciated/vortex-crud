@@ -63,7 +63,7 @@ public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Objec
      * @param entity the clicked Object
      */
     private void onItemClick(Object entity) {
-        String nextRoute = routeResolver.getPathForIndex(Integer.parseInt(dataStoreUtil.getId(entity)));
+        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
         getUI().ifPresent(ui -> ui.navigate(nextRoute));
     }
 }
