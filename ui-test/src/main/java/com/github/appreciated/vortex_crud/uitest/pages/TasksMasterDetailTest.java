@@ -18,9 +18,9 @@ public class TasksMasterDetailTest extends BaseUITest {
 
         Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-field", "Design Homepage"));
         Assertions.assertTrue(hasElementWithTagAndValue("vaadin-text-area", "Create the design for the homepage of the web app"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-combo-box", "In Arbeit"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-combo-box", "max@mustermann.de"));
-        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-date-picker", "1.12.2013"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-select-item", "In Arbeit"));
+        Assertions.assertTrue(hasElementWithTagAndInputValue("vaadin-combo-box", "max@mustermann.de"));
+        Assertions.assertTrue(hasElementWithTagAndValue("vaadin-date-picker", "2023-12-01"));
         Assertions.assertTrue(hasElementContainingText("We need to finalize the design by the end of the week."));
     }
 

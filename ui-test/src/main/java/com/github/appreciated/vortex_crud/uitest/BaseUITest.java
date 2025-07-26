@@ -18,7 +18,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Base class for UI tests that provides common setup, teardown, and utility methods.
@@ -107,15 +106,26 @@ public abstract class BaseUITest {
         return true;
     }
 
-    protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
-        List<WebElement> webElements = waitForElements(By.tagName(tagName));
-        Optional<WebElement> value1 = webElements.stream()
-                .filter(webElement ->
-                        {
-                            String value2 = webElement.getAttribute("value");
-                            return value2.startsWith(value);
-                        }
-                ).findFirst();
-        return value1.orElseThrow();
+    protected boolean hasElementWithTagAndInputValue(String tagName, String value) {
+        waitForElementWithTagAndInputValue(tagName, value);
+        return true;
     }
+
+    protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
+        return waitForElements(By.tagName(tagName)).stream()
+                .filter(webElement -> webElement.getAttribute("value").startsWith(value))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    protected WebElement waitForElementWithTagAndInputValue(String tagName, String value) {
+        return waitForElements(By.tagName(tagName)).stream()
+                .filter(webElement -> {
+                    WebElement input = webElement.findElement(By.tagName("input"));
+                    return input.getAttribute("value").startsWith(value);
+                })
+                .findFirst()
+                .orElseThrow();
+    }
+
 }
