@@ -16,19 +16,21 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
     /**
      * Retrieves records from a data store based on many-to-many relationship.
      *
-     * @param dataStore  The data store to retrieve records from
-     * @param manyToMany The many-to-many relationship configuration
-     * @param modelClass The class of the model to retrieve
+     * @param targetDataStore The data store for which n:n records need to be retrieved. This can be handy f.e. JPA.
+     * @param manyToMany      The many-to-many relationship configuration containing implementation-specific
+     *                        configuration to retrieve the necessary data
+     * @param modelClass      The class of the model to retrieve
      * @return A list of records matching the criteria
      */
     List<DataStoreId> getManyToMany(
-            VortexCrudDataStore<FieldId, ?> dataStore,
+            VortexCrudDataStore<FieldId, ?> targetDataStore,
             ManyToMany<DataStoreId, FieldId, KeyType> manyToMany,
-            KeyType modelClass
+            KeyType modelClass,
+            Object sourceId
     );
 
     /**
-     * Inserts a list of entities into the data store.
+     * Connects a list of new relations for a datapoint.
      *
      * @param entities   The entities to insert
      * @param modelClass The class of the model to insert
@@ -36,7 +38,7 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
     <E> void insert(List<E> entities, Class<E> modelClass);
 
     /**
-     * Deletes all entities in the provided list from the data store.
+     * Removes a list of entities from a relation for a datapoint.
      *
      * @param entities   The entities to delete
      * @param modelClass The class of the model to delete

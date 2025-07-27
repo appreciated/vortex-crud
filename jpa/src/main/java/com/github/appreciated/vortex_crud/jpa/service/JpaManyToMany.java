@@ -122,7 +122,7 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String,
     }
 
     @Override
-    public ModelClass getAssociativeDataStore() {
+    public ModelClass getAssociativeDataStoreKey() {
         return null; // Not needed for JPA implementation
     }
 

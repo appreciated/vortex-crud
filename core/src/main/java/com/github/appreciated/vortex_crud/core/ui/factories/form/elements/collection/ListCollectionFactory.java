@@ -101,7 +101,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                     VortexCrudDataStore<FieldId, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(dataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<FieldId> children = internalFormElement.getConfiguration().getData().getChildren();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());

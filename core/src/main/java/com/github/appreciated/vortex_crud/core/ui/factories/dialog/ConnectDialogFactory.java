@@ -40,6 +40,19 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         this.dataStoreUtil = dataStoreUtil;
     }
 
+    /**
+     *
+     * @param entityId
+     * @param foreignKeyField
+     * @param formRouteRenderer
+     * @param collectionConfiguration
+     * @param dataStoreKey
+     * @param routeFactory
+     * @param storeListener
+     * @param cancelListener
+     * @param formCreator
+     * @return
+     */
     @Override
     public Dialog create(@Nullable String entityId,
                          @Nullable String foreignKeyValue,
@@ -64,10 +77,17 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         layout.setSpacing(false);
 
         // Fetch available connections
-        List<?> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE);
+        List<Object> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE)
+                .stream()
+                .map(o -> (Object) o)
+                .toList();
 
-        // Use reflection to call getManyToMany with the correct type
-        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(dataStore, manyToMany, dataStoreKey);
+        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(
+                dataStore,
+                manyToMany,
+                dataStoreKey,
+                entityId
+        );
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
                 .map(entity -> reflectionService.getString(entity, associativeTargetIdField)).collect(Collectors.toSet());
         Set<Object> currentlySelectedConnections = availableConnections.stream()
@@ -77,19 +97,18 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         // Create a list of selectable items
         MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections);
-        connectionList.setItemLabelGenerator(obj -> {
-            // Use reflection to get values from the object based on the children configuration
-            return collectionConfiguration.getChildren().stream()
-                    .map(fieldId -> {
-                        try {
-                            Object value = reflectionService.getValue(obj, fieldId);
-                            return value != null ? value.toString() : "";
-                        } catch (Exception e) {
-                            return "";
-                        }
-                    })
-                    .collect(Collectors.joining(","));
-        });
+        List<FieldId> children = collectionConfiguration.getChildren();
+        connectionList.setItemLabelGenerator(obj -> children.stream()
+                .map(fieldId -> {
+                    try {
+                        Object value = reflectionService.getValue(obj, fieldId);
+                        return value != null ? value.toString() : "";
+                    } catch (Exception e) {
+                        return "";
+                    }
+                })
+                .collect(Collectors.joining(","))
+        );
         connectionList.setValue(currentlySelectedConnections);
 
         layout.add(connectionList);

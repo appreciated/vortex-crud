@@ -44,7 +44,7 @@ public interface ManyToMany<DataStoreId, FieldId, KeyType> {
      *
      * @return The associative data store ID
      */
-    DataStoreId getAssociativeDataStore();
+    DataStoreId getAssociativeDataStoreKey();
 
     /**
      * Gets the associative target ID field for the many-to-many relationship.
