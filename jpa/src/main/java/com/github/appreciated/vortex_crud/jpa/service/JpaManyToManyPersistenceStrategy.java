@@ -8,7 +8,10 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * JPA implementation of the ManyToManyPersistenceStrategy.
@@ -18,31 +21,56 @@ import java.util.List;
  */
 @Component
 public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToManyPersistenceStrategy<DataStoreId, String, JpaRepository<?, ?>> {
-    
+
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final ReflectionService<String> reflectionService;
-    
+
     public JpaManyToManyPersistenceStrategy(VortexCrudDataStoreUtilStrategy dataStoreUtil, ReflectionService<String> reflectionService) {
         this.dataStoreUtil = dataStoreUtil;
         this.reflectionService = reflectionService;
     }
-    
+
     @Override
     public List<DataStoreId> resolveManyToMany(VortexCrudDataStore<String, ?> targetDataStore, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany, Object sourceId) {
-        // Implementation would use JPA and reflection to resolve many-to-many relationships
-        return List.of();
+        if (sourceId == null) {
+            return List.of();
+        }
+
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        Object sourceEntity = repository.findById(sourceId).orElse(null);
+        return (List<DataStoreId>) reflectionService.getValue(sourceEntity, manyToMany.getAssociativeTargetIdField());
     }
 
     @Override
     public void insert(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany) {
-        // Implementation would use JPA and reflection to insert many-to-many relationships
+        if (sourceId == null || targetObjects == null || targetObjects.isEmpty()) {
+            return;
+        }
+
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        Object sourceEntity = repository.findById(sourceId).orElse(null);
+        if (sourceEntity == null) {
+            throw new RuntimeException("Source entity not found");
+        }
+        reflectionService.addAll(sourceEntity, manyToMany.getAssociativeTargetIdField(), targetObjects);
+        repository.save(sourceEntity);
     }
 
     @Override
     public void deleteAll(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany) {
-        // Implementation would use JPA and reflection to delete many-to-many relationships
+        if (sourceId == null || targetObjects == null || targetObjects.isEmpty()) {
+            return;
+        }
+
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        Object sourceEntity = repository.findById(sourceId).orElse(null);
+        if (sourceEntity == null) {
+            throw new RuntimeException("Source entity not found");
+        }
+        reflectionService.removeAll(sourceEntity, manyToMany.getAssociativeTargetIdField(), targetObjects);
+        repository.save(sourceEntity);
     }
-    
+
     @Override
     public String getObjectId(Object object) {
         return dataStoreUtil.getId(object);
