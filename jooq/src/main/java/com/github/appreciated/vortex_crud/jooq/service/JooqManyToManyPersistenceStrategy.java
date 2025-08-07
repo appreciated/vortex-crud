@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyRelation;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.*;
@@ -25,9 +24,11 @@ import java.util.stream.Collectors;
 public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     private final DSLContext dslContext;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public JooqManyToManyPersistenceStrategy(DSLContext dslContext) {
+    public JooqManyToManyPersistenceStrategy(DSLContext dslContext, VortexCrudDataStoreUtilStrategy dataStoreUtil) {
         this.dslContext = dslContext;
+        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -51,8 +52,8 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
     }
 
     @Override
-    public void insert(List<ManyToManyRelation> entities, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany) {
-        if (entities == null || entities.isEmpty()) {
+    public void insert(Object sourceId, List<Object> targetObjects, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany) {
+        if (targetObjects == null || targetObjects.isEmpty() || sourceId == null) {
             return;
         }
 
@@ -62,11 +63,10 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
         TableImpl<?> junctionTable = (TableImpl<?>) sourceIdField.getTable();
 
         // Insert records one by one instead of using batch
-        for (ManyToManyRelation entity : entities) {
-            Object sourceId = entity.getForeignKeyValue();
-            Object targetId = entity.getValue();
+        for (Object targetObject : targetObjects) {
+            Object targetId = getObjectId(targetObject);
 
-            if (sourceId != null && targetId != null) {
+            if (targetId != null) {
                 @NotNull Row2 row = DSL.row(sourceId, targetId);
                 dslContext.insertInto(junctionTable)
                         .columns(sourceIdField, targetIdField)
@@ -77,8 +77,8 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
     }
 
     @Override
-    public void deleteAll(List<ManyToManyRelation> entities, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany) {
-        if (entities == null || entities.isEmpty()) {
+    public void deleteAll(Object sourceId, List<Object> targetObjects, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany) {
+        if (targetObjects == null || targetObjects.isEmpty() || sourceId == null) {
             return;
         }
 
@@ -95,15 +95,19 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
         );
 
         // Add each entity to the batch
-        for (ManyToManyRelation entity : entities) {
-            Object sourceId = entity.getForeignKeyValue();
-            Object targetId = entity.getValue();
+        for (Object targetObject : targetObjects) {
+            Object targetId = getObjectId(targetObject);
 
-            if (sourceId != null && targetId != null) {
+            if (targetId != null) {
                 batch.bind(sourceId, targetId);
             }
         }
 
         batch.execute();
+    }
+    
+    @Override
+    public String getObjectId(Object object) {
+        return dataStoreUtil.getId(object);
     }
 }

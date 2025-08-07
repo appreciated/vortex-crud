@@ -30,14 +30,26 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
     /**
      * Connects a list of new relations for a datapoint.
      *
-     * @param entities The entities to insert
+     * @param sourceId The ID of the source entity
+     * @param targetObjects The target objects to connect to the source entity
+     * @param manyToMany The many-to-many relationship configuration
      */
-    void insert(List<ManyToManyRelation> entities, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
+    void insert(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
 
     /**
      * Removes a list of entities from a relation for a datapoint.
      *
-     * @param entities   The entities to delete
+     * @param sourceId The ID of the source entity
+     * @param targetObjects The target objects to disconnect from the source entity
+     * @param manyToMany The many-to-many relationship configuration
      */
-    void deleteAll(List<ManyToManyRelation> entities, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
+    void deleteAll(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
+    
+    /**
+     * Retrieves the ID of an object.
+     *
+     * @param object The object to get the ID from
+     * @return The ID of the object
+     */
+    String getObjectId(Object object);
 }
