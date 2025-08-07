@@ -52,7 +52,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");
         }
-        reflectionService.addAll(sourceEntity, manyToMany.getAssociativeTargetIdField(), targetObjects);
+        reflectionService.addAll(sourceEntity, manyToMany.getReferenceField(null), targetObjects);
         repository.save(sourceEntity);
     }
 
@@ -67,7 +67,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");
         }
-        reflectionService.removeAll(sourceEntity, manyToMany.getAssociativeTargetIdField(), targetObjects);
+        reflectionService.removeAll(sourceEntity, manyToMany.getReferenceField(null), targetObjects);
         repository.save(sourceEntity);
     }
 
