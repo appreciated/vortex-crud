@@ -36,7 +36,7 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId, KeyType> impleme
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, manyToManyPersistenceStrategy, reflectionService));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, manyToManyPersistenceStrategy, reflectionService, dataStoreUtil));
     }
 
     public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> getFactories() {

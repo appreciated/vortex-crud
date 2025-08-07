@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
@@ -142,5 +143,17 @@ public class Task {
 
     public void setRelatedTasks(List<Task> relatedTasks) {
         this.relatedTasks = relatedTasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(id, task.id) && Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(assignedTo, task.assignedTo) && status == task.status && Objects.equals(dueDate, task.dueDate) && Objects.equals(createdAt, task.createdAt) && Objects.equals(updatedAt, task.updatedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, assignedTo, status, dueDate, createdAt, updatedAt);
     }
 }

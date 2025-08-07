@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -17,7 +18,9 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import jakarta.annotation.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,14 +29,16 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
     private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
     private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy;
     private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy;
 
     public ConnectDialogFactory(
             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
             ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy,
-            ReflectionService<FieldId> reflectionService) {
+            ReflectionService<FieldId> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.reflectionService = reflectionService;
+        this.dataStoreUtilStrategy = dataStoreUtilStrategy;
     }
 
     /**
@@ -74,22 +79,23 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         layout.setSpacing(false);
 
         // Fetch available connections
-        List<Object> availableConnections = dataStore.getRecordsFromTable(0, Integer.MAX_VALUE)
+        HashMap<String, Object> availableConnections = new HashMap<>(dataStore.getRecordsFromTable(0, Integer.MAX_VALUE)
                 .stream()
                 .map(o -> (Object) o)
-                .toList();
+                .collect(Collectors.toMap(dataStoreUtilStrategy::getId, o -> o)));
 
-        Set<Object> previousAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
-                        dataStore,
-                        manyToMany,
-                        entityId
-                ).stream()
-                .map(dataStoreId -> (Object) dataStoreId)
+        List<DataStoreId> list = manyToManyPersistenceStrategy.resolveManyToMany(
+                dataStore,
+                manyToMany,
+                entityId
+        ).stream().toList();
+        Set<Object> previousAssociativeEntries = list.stream()
+                .map(dataStoreId -> availableConnections.get(dataStoreUtilStrategy.getId(dataStoreId)))
                 .collect(Collectors.toSet());
 
         // Create a list of selectable items
         MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
-        connectionList.setItems(availableConnections);
+        connectionList.setItems(availableConnections.values());
         List<FieldId> children = collectionConfiguration.getChildren();
         connectionList.setItemLabelGenerator(obj -> children.stream()
                 .map(fieldId -> {
