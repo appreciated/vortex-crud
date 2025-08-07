@@ -134,7 +134,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
 
             List<ManyToManyRelation> toBeDeleted = previousAssociativeEntries.stream()
                     .filter(connection -> !newSelectedConnections.contains(connection))
-                    .map(entry -> reflectionService.getValue(entry, associativeTargetIdField))
+                    .map(dataStoreUtil::getId)
                     .map(o -> new ManyToManyRelation(foreignKeyValue, o))
                     .toList();
 
