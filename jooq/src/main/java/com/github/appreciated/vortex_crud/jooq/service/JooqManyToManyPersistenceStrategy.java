@@ -26,11 +26,8 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
 
     private final DSLContext dslContext;
 
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-
-    public JooqManyToManyPersistenceStrategy(DSLContext dslContext, VortexCrudDataStoreUtilStrategy dataStoreUtil) {
+    public JooqManyToManyPersistenceStrategy(DSLContext dslContext) {
         this.dslContext = dslContext;
-        this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
@@ -80,27 +77,33 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
     }
 
     @Override
-    public <E> void deleteAll(List<E> entities, Class<E> modelClass) {
+    public void deleteAll(List<ManyToManyRelation> entities, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany) {
         if (entities == null || entities.isEmpty()) {
             return;
         }
 
-        // Get the junction table and ID fields
-        // In a real implementation, we would need to determine these based on the modelClass
-        // For now, we'll use placeholder values
+        // Extract necessary fields from the ManyToMany configuration
+        TableField sourceIdField = manyToMany.getAssociativeSourceIdField();
+        TableField targetIdField = manyToMany.getAssociativeTargetIdField();
+        TableImpl<?> junctionTable = (TableImpl<?>) sourceIdField.getTable();
 
-        // Extract IDs using VortexCrudDataStoreUtilStrategy
-        List<String> entityIds = entities.stream()
-                .map(dataStoreUtil::getId)
-                .filter(id -> id != null)
-                .collect(Collectors.toList());
+        // Create a batch delete statement
+        BatchBindStep batch = dslContext.batch(
+                dslContext.delete(junctionTable)
+                        .where(sourceIdField.eq(DSL.param("sourceId"))
+                                .and(targetIdField.eq(DSL.param("targetId"))))
+        );
 
-        if (!entityIds.isEmpty()) {
-            // Use "where in" clause for better performance
-            // In a real implementation, we would use the actual junction table and field names
-            dslContext.deleteFrom(DSL.table("junction_table"))
-                    .where(DSL.field("source_id").in(entityIds))
-                    .execute();
+        // Add each entity to the batch
+        for (ManyToManyRelation entity : entities) {
+            Object sourceId = entity.getForeignKeyValue();
+            Object targetId = entity.getValue();
+
+            if (sourceId != null && targetId != null) {
+                batch.bind(sourceId, targetId);
+            }
         }
+
+        batch.execute();
     }
 }

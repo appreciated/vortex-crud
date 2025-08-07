@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.core.entity.data_store;
 public class ManyToManyRelation {
 
     private final String foreignKeyValue;
-    private final String value;
+    private final Object value;
 
-    public ManyToManyRelation(String foreignKeyValue, String value) {
+    public ManyToManyRelation(String foreignKeyValue, Object value) {
         this.foreignKeyValue = foreignKeyValue;
         this.value = value;
     }
@@ -14,7 +14,7 @@ public class ManyToManyRelation {
         return foreignKeyValue;
     }
 
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 }

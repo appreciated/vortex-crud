@@ -38,7 +38,6 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      * Removes a list of entities from a relation for a datapoint.
      *
      * @param entities   The entities to delete
-     * @param modelClass The class of the model to delete
      */
-    <E> void deleteAll(List<E> entities, Class<E> modelClass);
+    void deleteAll(List<ManyToManyRelation> entities, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
 }

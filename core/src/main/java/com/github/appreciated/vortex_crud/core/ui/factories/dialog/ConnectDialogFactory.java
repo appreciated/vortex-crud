@@ -22,6 +22,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
 
@@ -85,7 +86,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 .map(o -> (Object) o)
                 .toList();
 
-        Set<Object> currentAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
+        Set<Object> previousAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
                         dataStore,
                         manyToMany,
                         entityId
@@ -108,7 +109,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 })
                 .collect(Collectors.joining(","))
         );
-        connectionList.setValue(currentAssociativeEntries);
+        connectionList.setValue(previousAssociativeEntries);
 
         layout.add(connectionList);
 
@@ -121,7 +122,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
             Set<Object> newSelectedConnections = connectionList.getSelectedItems();
             // Determine the IDs of the newly selected connections
             Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
-                    .filter(selection -> !currentAssociativeEntries.contains(selection))
+                    .filter(selection -> !previousAssociativeEntries.contains(selection))
                     .map(dataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
@@ -131,23 +132,14 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
             // Use reflection to call insert with the correct type
             manyToManyPersistenceStrategy.insert(toBeInserted, manyToMany);
 
-            // Remove the connections that are no longer selected
-            Set<String> newSelectedIds = newSelectedConnections.stream()
-                    .map(dataStoreUtil::getId)
-                    .collect(Collectors.toSet());
-
-            // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
-            List<Object> entriesToDelete = currentAssociativeEntries.stream()
-                    .filter(entry -> {
-                        Object targetIdObj = reflectionService.getValue(entry, associativeTargetIdField);
-                        if (targetIdObj == null) {
-                            return false;
-                        }
-                        return !newSelectedIds.contains(targetIdObj.toString());
-                    }).toList();
+            List<ManyToManyRelation> toBeDeleted = previousAssociativeEntries.stream()
+                    .filter(connection -> !newSelectedConnections.contains(connection))
+                    .map(entry -> reflectionService.getValue(entry, associativeTargetIdField))
+                    .map(o -> new ManyToManyRelation(foreignKeyValue, o))
+                    .toList();
 
             // Use reflection to call deleteAll with the correct type
-            manyToManyPersistenceStrategy.deleteAll(entriesToDelete, Object.class);
+            manyToManyPersistenceStrategy.deleteAll(toBeDeleted, manyToMany);
 
             storeListener.onStore();
             dialog.close();
