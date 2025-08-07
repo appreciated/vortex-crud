@@ -44,7 +44,7 @@ public class JooqManyToMany<RecordType extends TableRecord<?>, DataStoreId exten
     }
 
     @Override
-    public DataStoreId getModelClass() {
+    public DataStoreId getDatastore() {
         return dataStoreId;
     }
 

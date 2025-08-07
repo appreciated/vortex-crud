@@ -33,7 +33,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return List.of();
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
         Object sourceEntity = repository.findById(sourceId).orElse(null);
         return (List<DataStoreId>) reflectionService.getValue(sourceEntity, manyToMany.getAssociativeTargetIdField());
     }
@@ -44,7 +44,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return;
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
         Object sourceEntity = repository.findById(sourceId).orElse(null);
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");
@@ -59,7 +59,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return;
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getModelClass();
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
         Object sourceEntity = repository.findById(sourceId).orElse(null);
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");

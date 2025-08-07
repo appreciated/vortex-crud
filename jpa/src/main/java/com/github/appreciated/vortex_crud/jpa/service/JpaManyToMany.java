@@ -19,28 +19,13 @@ import java.util.List;
  */
 public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String, JpaRepository<?, ?>> {
 
+    private final JpaRepository<?, ?> jpaRepository;
     private final String referenceField;
 
-    public JpaManyToMany(String referenceField) {
+    public JpaManyToMany(JpaRepository<?, ?> jpaRepository
+            , String referenceField) {
+        this.jpaRepository = jpaRepository;
         this.referenceField = referenceField;
-    }
-
-    @Override
-    public <ModelClass1> List<ModelClass1> getData(ReflectionService<String> reflectionService,
-                                                   VortexCrudDataStoreFactoryRegistry<ModelClass, String, JpaRepository<?, ?>> dataStoreFactoryRegistry,
-                                                   String foreignKeyValue,
-                                                   VortexCrudDataStore<String, ModelClass1> dataStore,
-                                                   CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
-        if (foreignKeyValue == null) {
-            return List.of();
-        }
-
-        // Get the entity by ID using reflection
-        Object entity = dataStore.getRecordById(foreignKeyValue);
-        if (entity == null) {
-            return List.of();
-        }
-        return (List<ModelClass1>) reflectionService.getValue(entity, referenceField);
     }
 
     @Override
@@ -134,5 +119,10 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String,
     @Override
     public String getAssociativeSourceIdField() {
         return "";
+    }
+
+    @Override
+    public JpaRepository<?, ?> getDatastore() {
+        return jpaRepository;
     }
 }

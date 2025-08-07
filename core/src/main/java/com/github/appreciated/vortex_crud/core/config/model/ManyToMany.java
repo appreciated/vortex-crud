@@ -37,5 +37,5 @@ public interface ManyToMany<DataStoreId, FieldId, KeyType> {
      */
     FieldId getAssociativeSourceIdField();
 
-    KeyType getModelClass();
+    KeyType getDatastore();
 }
