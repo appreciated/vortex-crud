@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyRelation;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -41,17 +42,19 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
     }
 
     /**
+     * Creates a dialog for managing many-to-many relationships between entities.
      *
-     * @param entityId
-     * @param foreignKeyField
-     * @param formRouteRenderer
-     * @param collectionConfiguration
-     * @param dataStoreKey
-     * @param routeFactory
-     * @param storeListener
-     * @param cancelListener
-     * @param formCreator
-     * @return
+     * @param entityId                The ID of the source entity for which connections are being managed. Can be null for new entities.
+     * @param foreignKeyValue         The value of the foreign key field in the associative table. Can be null for new entities.
+     * @param foreignKeyField         The field in the associative table that references the source entity.
+     * @param formRouteRenderer       The renderer configuration for the form route.
+     * @param collectionConfiguration Configuration for the collection, including many-to-many relationship details.
+     * @param dataStoreKey            The key identifying the target data store.
+     * @param routeFactory            Registry for route factories.
+     * @param storeListener           Callback to be executed when changes are stored successfully.
+     * @param cancelListener          Callback to be executed when the operation is cancelled.
+     * @param formCreator             Factory for creating forms.
+     * @return A Dialog component allowing users to manage entity connections.
      */
     @Override
     public Dialog create(@Nullable String entityId,
@@ -82,15 +85,12 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 .map(o -> (Object) o)
                 .toList();
 
-        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
-                dataStore,
-                manyToMany,
-                entityId
-        );
-        Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()
-                .map(entity -> reflectionService.getString(entity, associativeTargetIdField)).collect(Collectors.toSet());
-        Set<Object> currentlySelectedConnections = availableConnections.stream()
-                .filter(Object -> currentlySelectedConnectionIds.contains(dataStoreUtil.getId(Object)))
+        Set<Object> currentAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
+                        dataStore,
+                        manyToMany,
+                        entityId
+                ).stream()
+                .map(dataStoreId -> (Object) dataStoreId)
                 .collect(Collectors.toSet());
 
         // Create a list of selectable items
@@ -108,7 +108,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 })
                 .collect(Collectors.joining(","))
         );
-        connectionList.setValue(currentlySelectedConnections);
+        connectionList.setValue(currentAssociativeEntries);
 
         layout.add(connectionList);
 
@@ -121,18 +121,15 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
             Set<Object> newSelectedConnections = connectionList.getSelectedItems();
             // Determine the IDs of the newly selected connections
             Set<String> newSelectedConnectionIds = newSelectedConnections.stream()
-                    .filter(Object -> !currentlySelectedConnectionIds.contains(dataStoreUtil.getId(Object)))
+                    .filter(selection -> !currentAssociativeEntries.contains(selection))
                     .map(dataStoreUtil::getId)
                     .collect(Collectors.toSet());
 
-            List<Object> toBeInserted = newSelectedConnectionIds.stream().map(value -> {
-                Object newAssociation = new Object();
-                reflectionService.setValue(newAssociation, foreignKeyField, foreignKeyValue);
-                reflectionService.setValue(newAssociation, associativeTargetIdField, value);
-                return newAssociation;
-            }).toList();
+            List<ManyToManyRelation> toBeInserted = newSelectedConnectionIds.stream()
+                    .map(value -> new ManyToManyRelation(foreignKeyValue, value))
+                    .toList();
             // Use reflection to call insert with the correct type
-            manyToManyPersistenceStrategy.insert(toBeInserted, Object.class);
+            manyToManyPersistenceStrategy.insert(toBeInserted, manyToMany);
 
             // Remove the connections that are no longer selected
             Set<String> newSelectedIds = newSelectedConnections.stream()
@@ -140,7 +137,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                     .collect(Collectors.toSet());
 
             // Find all current entries whose target id is **not** present in the new selection, i.e. remove them
-            List<Object> entriesToDelete = (List<Object>) currentAssociativeEntries.stream()
+            List<Object> entriesToDelete = currentAssociativeEntries.stream()
                     .filter(entry -> {
                         Object targetIdObj = reflectionService.getValue(entry, associativeTargetIdField);
                         if (targetIdObj == null) {

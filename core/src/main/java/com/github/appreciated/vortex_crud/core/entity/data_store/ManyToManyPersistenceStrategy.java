@@ -30,10 +30,9 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
     /**
      * Connects a list of new relations for a datapoint.
      *
-     * @param entities   The entities to insert
-     * @param modelClass The class of the model to insert
+     * @param entities The entities to insert
      */
-    <E> void insert(List<E> entities, Class<E> modelClass);
+    void insert(List<ManyToManyRelation> entities, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
 
     /**
      * Removes a list of entities from a relation for a datapoint.
