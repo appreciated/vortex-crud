@@ -6,15 +6,11 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersi
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.*;
-import org.jooq.Record;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * jOOQ implementation of the ManyToManyPersistenceStrategy.

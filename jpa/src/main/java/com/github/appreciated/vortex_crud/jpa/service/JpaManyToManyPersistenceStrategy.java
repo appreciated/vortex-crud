@@ -8,10 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * JPA implementation of the ManyToManyPersistenceStrategy.

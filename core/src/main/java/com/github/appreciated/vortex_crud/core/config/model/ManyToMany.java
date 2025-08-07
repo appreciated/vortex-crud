@@ -1,11 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-
-import java.util.List;
-
 /**
  * Interface representing a many-to-many relationship between entities.
  *
