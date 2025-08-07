@@ -19,7 +19,6 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      * @param targetDataStore The data store for which n:n records need to be retrieved. This can be handy f.e. JPA.
      * @param manyToMany      The many-to-many relationship configuration containing implementation-specific
      *                        configuration to retrieve the necessary data
-     * @param modelClass      The class of the model to retrieve
      * @return A list of records matching the criteria
      */
     List<DataStoreId> resolveManyToMany(
