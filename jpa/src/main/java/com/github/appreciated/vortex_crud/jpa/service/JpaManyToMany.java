@@ -30,7 +30,7 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String,
 
     @Override
     public String getReferenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
-        return "";
+        return referenceField;
     }
 
     /**
@@ -100,10 +100,6 @@ public class JpaManyToMany<ModelClass> implements ManyToMany<ModelClass, String,
             e.printStackTrace();
             return null;
         }
-    }
-
-    public String getReferenceField() {
-        return referenceField;
     }
 
     @Override

@@ -33,9 +33,12 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return List.of();
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
-        Object sourceEntity = repository.findById(sourceId).orElse(null);
-        return (List<DataStoreId>) reflectionService.getValue(sourceEntity, manyToMany.getAssociativeTargetIdField());
+        // Get the entity by ID using reflection
+        Object entity = targetDataStore.getRecordById(sourceId);
+        if (entity == null) {
+            return List.of();
+        }
+        return (List<DataStoreId>) reflectionService.getValue(entity, manyToMany.getReferenceField(null));
     }
 
     @Override

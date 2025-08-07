@@ -104,7 +104,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                     HorizontalLayout header,
                                     List<Object> records,
                                     VortexCrudDataStore<FieldId, ?> dataStore) {
-        for (Object record : records) {
+         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             List<FieldId> children = internalFormElement.getConfiguration().getData().getChildren();
