@@ -32,7 +32,7 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
     }
 
     @Override
-    public List<TableRecord<?>> getManyToMany(VortexCrudDataStore<TableField<?, ?>, ?> targetDataStore, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany, TableImpl<?> modelClass, Object sourceId) {
+    public List<TableRecord<?>> resolveManyToMany(VortexCrudDataStore<TableField<?, ?>, ?> targetDataStore, ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany, Object sourceId) {
         TableField sourceIdField = manyToMany.getAssociativeSourceIdField();
         TableField targetIdField = manyToMany.getAssociativeTargetIdField();
         TableField dataStoreField = manyToMany.getReferenceField(null);

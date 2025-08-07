@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -28,16 +29,19 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
     private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactory;
     private final ReflectionService<FieldId> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy;
 
     public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                  VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactory,
                                  ReflectionService<FieldId> reflectionService,
-                                 VortexCrudDataStoreUtilStrategy dataStoreUtil
+                                 VortexCrudDataStoreUtilStrategy dataStoreUtil,
+                                 ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
+        this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
     }
 
     @Override
@@ -75,8 +79,9 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         CollectionConfiguration<DataStoreId, FieldId, KeyType> data = internalFormElement.getConfiguration().getData();
 
         VortexCrudDataStore<FieldId, DataStoreId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
+
         List<Object> records = (data.getManyToMany() != null) ?
-                (List<Object>) data.getManyToMany().getData(reflectionService, dataStoreFactoryRegistry, foreignKeyValue, dataStore, data) :
+                (List<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.getManyToMany(), foreignKeyValue) :
                 (List<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
 
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {

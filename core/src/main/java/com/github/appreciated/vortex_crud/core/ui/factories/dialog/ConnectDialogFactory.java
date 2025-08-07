@@ -82,10 +82,9 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 .map(o -> (Object) o)
                 .toList();
 
-        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.getManyToMany(
+        List<DataStoreId> currentAssociativeEntries = manyToManyPersistenceStrategy.resolveManyToMany(
                 dataStore,
                 manyToMany,
-                dataStoreKey,
                 entityId
         );
         Set<String> currentlySelectedConnectionIds = currentAssociativeEntries.stream()

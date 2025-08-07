@@ -15,23 +15,6 @@ import java.util.List;
 public interface ManyToMany<DataStoreId, FieldId, KeyType> {
 
     /**
-     * Gets data from the many-to-many relationship.
-     *
-     * @param dataStoreFactoryRegistry The registry for data store factories
-     * @param foreignKeyValue          The foreign key value to filter by
-     * @param dataStore                The data store to retrieve records from
-     * @param collectionConfiguration  The collection configuration
-     * @return A list of entities matching the criteria
-     */
-    <ModelClass> List<ModelClass> getData(
-            ReflectionService<FieldId> reflectionService,
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-            String foreignKeyValue,
-            VortexCrudDataStore<FieldId, ModelClass> dataStore,
-            CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration
-    );
-
-    /**
      * Gets the reference field for the many-to-many relationship.
      *
      * @param collectionConfiguration The collection configuration
@@ -59,4 +42,6 @@ public interface ManyToMany<DataStoreId, FieldId, KeyType> {
      * @return The associative source ID field
      */
     FieldId getAssociativeSourceIdField();
+
+    KeyType getModelClass();
 }

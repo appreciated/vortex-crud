@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
@@ -26,7 +27,8 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements
     public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
                                      VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                                      ReflectionService<FieldId> reflectionService,
-                                     VortexCrudDataStoreUtilStrategy dataStoreUtil
+                                     VortexCrudDataStoreUtilStrategy dataStoreUtil,
+                                     ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy
     ) {
         factories.put(
                 ListCollectionFactory.class,
@@ -34,7 +36,8 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements
                         dataStoreFactoryRegistry,
                         dialogFactoryRegistry,
                         reflectionService,
-                        dataStoreUtil
+                        dataStoreUtil,
+                        manyToManyPersistenceStrategy
                 )
         );
     }

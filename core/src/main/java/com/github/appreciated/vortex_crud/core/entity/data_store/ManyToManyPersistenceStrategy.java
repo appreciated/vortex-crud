@@ -22,10 +22,9 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      * @param modelClass      The class of the model to retrieve
      * @return A list of records matching the criteria
      */
-    List<DataStoreId> getManyToMany(
+    List<DataStoreId> resolveManyToMany(
             VortexCrudDataStore<FieldId, ?> targetDataStore,
             ManyToMany<DataStoreId, FieldId, KeyType> manyToMany,
-            KeyType modelClass,
             Object sourceId
     );
 

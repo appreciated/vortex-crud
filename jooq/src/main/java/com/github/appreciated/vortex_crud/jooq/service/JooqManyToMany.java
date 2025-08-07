@@ -29,18 +29,6 @@ public class JooqManyToMany<RecordType extends TableRecord<?>, DataStoreId exten
     }
 
     @Override
-    public <ModelClass> List<ModelClass> getData(ReflectionService<TableField<?, ?>> reflectionService, VortexCrudDataStoreFactoryRegistry<RecordType, TableField<?, ?>, DataStoreId> dataStoreFactoryRegistry, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ModelClass> dataStore, CollectionConfiguration<RecordType, TableField<?, ?>, DataStoreId> collectionConfiguration) {
-        // If we need to resolve a many-to-many relation, it is necessary to do two selects one over the associative
-        // datastore and one over the target datastore and one with the actual entries.
-        // This could be improved upon, if it was allowed to provide a custom datastore / interface for the sake
-        // of resolving the following data.
-        VortexCrudDataStore<TableField<?, ?>, RecordType> associativeDataStore = dataStoreFactoryRegistry.getDataStore(dataStoreId);
-        List<RecordType> associativeRecords = associativeDataStore.getRecordsFromTableWhereColumnEquals(associativeSourceIdField, foreignKeyValue, 0, Integer.MAX_VALUE);
-        List<String> associativeRecordIds = associativeRecords.stream().map(genericEntity -> genericEntity.get(associativeTargetIdField.getName())).map(Object::toString).toList();
-        return dataStore.getRecordsFromTableWhereColumnIn(dataStoreField, associativeRecordIds, 0, Integer.MAX_VALUE);
-    }
-
-    @Override
     public TableField<?, ?> getReferenceField(CollectionConfiguration<RecordType, TableField<?, ?>, DataStoreId> collectionConfiguration) {
         return dataStoreField;
     }
@@ -58,6 +46,11 @@ public class JooqManyToMany<RecordType extends TableRecord<?>, DataStoreId exten
     @Override
     public TableField<?, ?> getAssociativeSourceIdField() {
         return associativeSourceIdField;
+    }
+
+    @Override
+    public DataStoreId getModelClass() {
+        return dataStoreId;
     }
 
 }
