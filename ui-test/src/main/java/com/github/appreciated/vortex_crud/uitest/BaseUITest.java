@@ -108,6 +108,11 @@ public abstract class BaseUITest {
                 .orElseThrow();
     }
 
+    protected WebElement waitForAnyElementContainingTextWithAttribute(String path, String text, String attributeName) {
+        String xpathPattern = "//%s[@%s]/*[contains(text(), '%s')]".formatted(path, attributeName, text);
+        return waitForElement(By.xpath(xpathPattern));
+    }
+
     protected WebElement waitForElementWithTagAndInputValue(String tagName, String value) {
         return waitForElements(By.tagName(tagName)).stream()
                 .filter(webElement -> {

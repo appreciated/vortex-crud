@@ -49,4 +49,22 @@ public class TasksMasterDetailTest extends BaseUITest {
         waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Frontend Integration");
     }
 
+
+    @Test
+    void testManyToMany() {
+        navigateTo("tasks");
+
+        waitForAnyElementContainingText("Offen").click();
+        waitForUrlToBe("tasks/open");
+
+        waitForAnyElementContainingText("Design Homepage").click();
+        waitForUrlToBe("tasks/open/1");
+
+        // The vaadin-card//vaadin-vertical-layout is important, as the same element is visible in another form in the ui
+        waitForElementContainingText("vaadin-card//vaadin-vertical-layout", "Database Setup").click();
+        waitForAnyElementContainingTextWithAttribute("vaadin-item", "Database Setup", "selected");
+        waitForAnyElementContainingTextWithAttribute("vaadin-item", "User Authentication", "selected");
+        waitForAnyElementContainingTextWithAttribute("vaadin-item", "Frontend Integration", "selected");
+    }
+
 }
