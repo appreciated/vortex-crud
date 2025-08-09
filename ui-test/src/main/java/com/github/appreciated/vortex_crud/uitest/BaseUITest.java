@@ -22,9 +22,6 @@ import java.util.List;
 /**
  * Base class for UI tests that provides common setup, teardown, and utility methods.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(locations = "classpath:/test-context.xml")
-@EnableAutoConfiguration
 public abstract class BaseUITest {
 
     @Value(value = "${local.server.port}")

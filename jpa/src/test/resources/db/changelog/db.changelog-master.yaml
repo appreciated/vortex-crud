@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: configuration/basic_config_test.sql
+      relativeToChangelogFile: true
+  - include:
+      file: configuration/field_validation_test.sql
+      relativeToChangelogFile: true
+  - include:
+      file: forms/form_elements_test.sql
+      relativeToChangelogFile: true
+  - include:
+      file: forms/nested_forms_test.sql
+      relativeToChangelogFile: true
+  - include:
+      file: relationships/one_to_many_test.sql
+      relativeToChangelogFile: true
+  - include:
+      file: relationships/many_to_many_test.sql
+      relativeToChangelogFile: true

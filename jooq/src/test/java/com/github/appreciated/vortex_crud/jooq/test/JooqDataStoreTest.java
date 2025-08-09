@@ -1,6 +1,7 @@
-package com.github.appreciated.vortex_crud.jooq.service;
+package com.github.appreciated.vortex_crud.jooq.test;
 
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
