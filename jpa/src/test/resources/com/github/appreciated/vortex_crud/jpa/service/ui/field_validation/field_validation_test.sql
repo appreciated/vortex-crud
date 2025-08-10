@@ -12,5 +12,5 @@ CREATE TABLE jpa_validation_test (
 
 INSERT INTO jpa_validation_test (id, required_field, email_field, numeric_field, date_field, enum_field)
 VALUES
-    (1, 'Test Value', 'test@example.com', 42, '2023-01-01', 'OPTION1'),
-    (2, 'Another Value', 'user@domain.org', 100, '2023-02-15', 'OPTION2');
+    (1, 'Test Value', 'test@example.com', 42, '2023-01-01 00:00:00.000', 'OPTION1'),
+    (2, 'Another Value', 'user@domain.org', 100, '2023-02-15 00:00:00.000', 'OPTION2');

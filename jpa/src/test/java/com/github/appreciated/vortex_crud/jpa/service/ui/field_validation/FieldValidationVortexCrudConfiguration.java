@@ -68,7 +68,7 @@ public class FieldValidationVortexCrudConfiguration implements VortexCrudConfigu
         enumOptions.put("OPTION3", "enums.option3");
 
         return JpaApplication.of()
-                .withName("validation.application.name")
+                .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)
                 .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
