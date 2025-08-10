@@ -43,7 +43,7 @@ public class FieldValidationEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "enum_field")
     @Field(SelectFieldFactory.class)
-    @SelectValues("task-status")
+    @SelectValues("enum-options")
     private TestEnum enumField;
 
     public enum TestEnum {

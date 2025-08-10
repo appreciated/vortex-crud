@@ -45,10 +45,11 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
     @Test
     void testRequiredFieldValidation() {
-        navigateTo(getValidationPath() + "/new");
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Erstellen").click();
         
         // Try to save without filling required fields
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Check for validation error message
         WebElement errorMessage = waitForAnyElementContainingText("required");
@@ -74,7 +75,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
     @Test
     void testEmailValidation() {
-        navigateTo(getValidationPath() + "/new");
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Erstellen").click();
         
         // Fill required field
         WebElement requiredField = driver.findElement(By.cssSelector("vaadin-text-field[required]"));
@@ -108,7 +110,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
     @Test
     void testNumericValidation() {
-        navigateTo(getValidationPath() + "/new");
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Erstellen").click();
         
         // Fill required field
         WebElement requiredField = driver.findElement(By.cssSelector("vaadin-text-field[required]"));
