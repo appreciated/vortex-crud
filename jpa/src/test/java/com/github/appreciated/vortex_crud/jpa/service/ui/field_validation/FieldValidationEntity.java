@@ -1,5 +1,11 @@
 package com.github.appreciated.vortex_crud.jpa.service.ui.field_validation;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -17,21 +23,27 @@ public class FieldValidationEntity {
 
     @NotBlank(message = "This field is required")
     @Column(name = "required_field", nullable = false)
+    @Field(TextFieldFactory.class)
     private String requiredField;
 
     @Email(message = "Please enter a valid email address")
     @Column(name = "email_field")
+    @Field(TextFieldFactory.class)
     private String emailField;
 
     @Min(value = 1, message = "Value must be greater than 0")
     @Column(name = "numeric_field")
+    @Field(NumberFieldFactory.class)
     private Integer numericField;
 
     @Column(name = "date_field")
+    @Field(DateFieldFactory.class)
     private LocalDate dateField;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "enum_field")
+    @Field(SelectFieldFactory.class)
+    @SelectValues("task-status")
     private TestEnum enumField;
 
     public enum TestEnum {

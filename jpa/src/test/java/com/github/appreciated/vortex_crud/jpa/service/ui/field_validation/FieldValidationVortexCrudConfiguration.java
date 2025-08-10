@@ -55,10 +55,8 @@ public class FieldValidationVortexCrudConfiguration implements VortexCrudConfigu
                         .withInlineEdit(true)
                         .withFilterField("name")
                         .withChildren(
-                                new JpaFieldElement("name", "route.projects.labels.name"),
-                                new JpaFieldElement("description", "route.projects.labels.description"),
-                                new JpaFieldElement("startDate", "route.projects.labels.start_date"),
-                                new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                new JpaFieldElement("requiredField", "route.projects.labels.name"),
+                                new JpaFieldElement("emailField", "route.projects.labels.description")
                         )
                         .build())
                 .withChild(validationForm)
