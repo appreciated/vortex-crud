@@ -1,5 +1,7 @@
 -- Field validation test for JPA
-CREATE TABLE IF NOT EXISTS jpa_validation_test (
+DROP TABLE IF EXISTS jpa_validation_test;
+
+CREATE TABLE jpa_validation_test (
                                                    id INTEGER PRIMARY KEY,
                                                    required_field VARCHAR(255) NOT NULL,
                                                    email_field VARCHAR(255) CHECK (email_field LIKE '%@%.%'),

@@ -13,7 +13,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-    "com.github.appreciated.vortex_crud.jpa.service"
+    "com.github.appreciated.vortex_crud.jpa.service",
+    "com.github.appreciated.vortex_crud.core"
 })
 @Theme(variant = Lumo.DARK)
 @Push
