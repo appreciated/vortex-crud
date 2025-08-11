@@ -13,6 +13,7 @@ import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.validator.BeanValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -56,11 +57,26 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
                 }
                 VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
-                binder.bind(
-                        (HasValue) component,
+
+
+                if (field.isRequired() && component instanceof HasValue) {
+                    ((HasValue<?, ?>) component).setRequiredIndicatorVisible(true);
+                }
+
+                // Apply validation if present
+                if (field.getValidation() != null) {
+                    field.getValidation().applyToComponent(component);
+                }
+
+                Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
+                if (fieldName instanceof String propertyName) {
+                    builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
+                }
+                builder.bind(
                         entity1 -> reflectionService.getValue(entity1, fieldName),
                         (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
                 );
+
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
                 }

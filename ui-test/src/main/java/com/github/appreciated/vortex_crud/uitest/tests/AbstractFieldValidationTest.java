@@ -40,7 +40,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-text-field", "test@example.com");
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
-        waitForElementWithTagAndValue("vaadin-select-item", "OPTION1");
+        waitForElementWithTagAndInputValue("vaadin-select", "OPTION1");
     }
 
     @Test
@@ -51,23 +51,27 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         // Try to save without filling required fields
         waitForAnyElementContainingText("Speichern").click();
         
-        // Check for validation error message
-        WebElement errorMessage = waitForAnyElementContainingText("required");
+        // Check for validation error message - look for the specific constraint violation message
+        WebElement errorMessage = waitForAnyElementContainingText("This field is required");
         assertTrue(errorMessage.isDisplayed());
         
-        // Fill required field
-        WebElement requiredField = driver.findElement(By.cssSelector("vaadin-text-field[required]"));
+        // Find the required field by label text instead of required attribute
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
         requiredField.sendKeys("New Test Value");
         
-        // Fill other fields with valid values
-        WebElement emailField = driver.findElement(By.cssSelector("vaadin-email-field"));
+        // Fill email field (second text field based on HTML)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+                .findElement(By.tagName("input"));
         emailField.sendKeys("new@example.com");
         
-        WebElement numericField = driver.findElement(By.cssSelector("vaadin-number-field"));
-        numericField.sendKeys("50");
+        // Fill numeric field with Double value to avoid ClassCastException
+        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
+                .findElement(By.tagName("input"));
+        numericField.sendKeys("50.0");
         
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -78,20 +82,23 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Erstellen").click();
         
-        // Fill required field
-        WebElement requiredField = driver.findElement(By.cssSelector("vaadin-text-field[required]"));
+        // Fill required field by finding the field with "Required" label
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
         requiredField.sendKeys("Email Test");
         
-        // Fill email field with invalid value
-        WebElement emailField = driver.findElement(By.cssSelector("vaadin-email-field"));
+        // Fill email field with invalid value (second text field based on HTML)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+                .findElement(By.tagName("input"));
         emailField.sendKeys("invalid-email");
         
-        // Fill other fields with valid values
-        WebElement numericField = driver.findElement(By.cssSelector("vaadin-number-field"));
-        numericField.sendKeys("50");
+        // Fill numeric field with valid Double value
+        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
+                .findElement(By.tagName("input"));
+        numericField.sendKeys("50.0");
         
         // Try to save
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Check for validation error message
         WebElement errorMessage = waitForAnyElementContainingText("valid email");
@@ -102,7 +109,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         emailField.sendKeys("valid@example.com");
         
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -114,19 +121,22 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Erstellen").click();
         
         // Fill required field
-        WebElement requiredField = driver.findElement(By.cssSelector("vaadin-text-field[required]"));
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
         requiredField.sendKeys("Numeric Test");
         
-        // Fill email field
-        WebElement emailField = driver.findElement(By.cssSelector("vaadin-email-field"));
+        // Fill email field (second text field)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+                .findElement(By.tagName("input"));
         emailField.sendKeys("numeric@example.com");
         
-        // Fill numeric field with invalid value
-        WebElement numericField = driver.findElement(By.cssSelector("vaadin-number-field"));
-        numericField.sendKeys("-5");
+        // Fill numeric field with invalid value (negative number)
+        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
+                .findElement(By.tagName("input"));
+        numericField.sendKeys("-5.0");
         
         // Try to save
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Check for validation error message
         WebElement errorMessage = waitForAnyElementContainingText("greater than 0");
@@ -134,10 +144,10 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         
         // Correct the numeric value
         numericField.clear();
-        numericField.sendKeys("25");
+        numericField.sendKeys("25.0");
         
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForAnyElementContainingText("Speichern").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());

@@ -47,8 +47,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .withFields(Map.of(
                                 PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
-                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, Validation.of().withMaxLength(255).build()),
-                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.of().withMaxLength(500).build()),
+                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
+                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
                                 PROJECTS.START_DATE, new JooqField(DateFieldFactory.class),
                                 PROJECTS.END_DATE, new JooqField(DateFieldFactory.class),
                                 PROJECTS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
@@ -57,8 +57,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 TASKS, JooqDataStoreConfig.of(TASKS)
                         .withFields(Map.of(
                                 TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, Validation.of().withMaxLength(255).build()),
-                                TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, Validation.of().withMaxLength(1000).build()),
+                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
+                                TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(1000).build()),
                                 TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new JooqField(SelectFieldFactory.class, "task-status"),
                                 TASKS.DUE_DATE, JooqField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
@@ -73,7 +73,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, Validation.of().withMaxLength(1000).build()),
+                                TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new JooqField(NumberFieldFactory.class),
                                 TASK_COMMENTS.CREATED_AT, JooqField.of(DateTimePickerFactory.class).build()))
                         .build(),
@@ -82,7 +82,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 IMAGES.ID, new JooqField(IdFieldFactory.class, true),
                                 IMAGES.TITLE, JooqField.of(TextFieldFactory.class)
                                         .withRequired(true)
-                                        .withValidation(Validation.of().withMaxLength(255).build())
+                                        .withValidation(TextFieldValidation.of().withMaxLength(255).build())
                                         .build(),
                                 IMAGES.URL, JooqField.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))

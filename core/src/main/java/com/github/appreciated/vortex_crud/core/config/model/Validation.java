@@ -1,39 +1,26 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+import com.vaadin.flow.component.Component;
 
-@GenerateBuilder
-public class Validation {
+/**
+ * Base interface for field validation configurations.
+ * Allows for applying validation rules to Vaadin components.
+ */
+public interface Validation {
 
-    private int maxLength;
+    /**
+     * Apply the validation to a Vaadin component.
+     *
+     * @param component the component to apply validation to
+     */
+    void applyToComponent(Component component);
 
-    public int getMaxLength() {
-        return maxLength;
-    }
-
-    public void setMaxLength(int maxLength) {
-        this.maxLength = maxLength;
-    }
-
-    public static class Builder {
-
-        private final Validation product;
-
-        private Builder(Validation product) {
-            this.product = product;
-        }
-
-        public Builder withMaxLength(int maxLength) {
-            product.maxLength = maxLength;
-            return this;
-        }
-
-        public Validation build() {
-            return product;
-        }
-    }
-
-    public static Builder of() {
-        return new Builder(new Validation());
-    }
+    /**
+     * Check if this validation is applicable to the given component type.
+     *
+     * @param componentClass the class of the component
+     * @return true if the validation can be applied to this component type
+     */
+    boolean isApplicableToComponent(Class<? extends Component> componentClass);
 }
+
