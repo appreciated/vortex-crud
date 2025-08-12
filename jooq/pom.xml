@@ -48,7 +48,14 @@
             <groupId>com.github.appreciated.vortex-crud</groupId>
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>copilot</artifactId>
+                    <groupId>com.vaadin</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>com.github.appreciated.vortex-crud</groupId>
             <artifactId>ui-test</artifactId>
@@ -87,7 +94,7 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.29.0</version>
                 <configuration>
-                    <changeLogFile>src/test/resources/db/changelog/changelog.xml</changeLogFile>
+                    <changeLogFile>src/test/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
                     <driver>org.sqlite.JDBC</driver>
                     <url>jdbc:sqlite:${project.basedir}/test-jooq-database.db</url>
                 </configuration>

@@ -1,10 +1,12 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.one_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -16,6 +18,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.tables.OneToManyChild.ONE_TO_MANY_CHILD;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.OneToManyParent.ONE_TO_MANY_PARENT;
@@ -26,6 +29,17 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
+                ONE_TO_MANY_PARENT, JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
+                        .withFields(Map.of(
+                                ONE_TO_MANY_PARENT.ID, new JooqField(IdFieldFactory.class, true))
+                        ).build(),
+                ONE_TO_MANY_CHILD, JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
+                        .withFields(Map.of(
+                                ONE_TO_MANY_CHILD.ID, new JooqField(IdFieldFactory.class, true))
+                        ).build()
+        );
+
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(ONE_TO_MANY_CHILD)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -46,16 +60,16 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(JooqCollection.of(FormDialogFactory.class)
                                                 .withData(JooqCollectionConfiguration.of(ONE_TO_MANY_CHILD)
-                                                        .withOneToMany(new JooqOneToMany(ONE_TO_MANY_PARENT)
-                                                                .withChildren(ONE_TO_MANY_PARENT.NAME)
-                                                                .build())
-                                                        .withEmptyMessage("relations.children.empty")
-                                                        .withChild(childForm)
+                                                        .withOneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
+                                                        .withChildren(ONE_TO_MANY_CHILD.NAME)
                                                         .build())
+                                                .withEmptyMessage("relations.children.empty")
+                                                .withChild(childForm)
                                                 .build()
                                         )
                                         .build())
-                        .build();
+                        .build())
+                .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("one-to-many-test", JooqRouteRenderer.of(ListRouteFactory.class)
@@ -72,6 +86,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .build());
 
         return JooqApplication.of()
+                .withDataStores(dataStores)
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)

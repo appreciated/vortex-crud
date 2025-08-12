@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.uitest.tests;
 
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -24,6 +25,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         return "field-validation-test";
     }
 
+    @Transactional
     @Test
     void testValidationListingVisible() {
         navigateTo(getValidationPath());
@@ -31,6 +33,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
     }
 
+
+    @Transactional
     @Test
     void testValidationEntityLoading() {
         navigateTo(getValidationPath());
@@ -43,6 +47,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-select-item", "Option1");
     }
 
+
+    @Transactional
     @Test
     void testRequiredFieldValidation() {
         navigateTo(getValidationPath());
@@ -77,6 +83,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForUrlToBe(getValidationPath());
     }
 
+    @Transactional
     @Test
     void testEmailValidation() {
         navigateTo(getValidationPath());
@@ -115,6 +122,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForUrlToBe(getValidationPath());
     }
 
+
+    @Transactional
     @Test
     void testNumericValidation() {
         navigateTo(getValidationPath());

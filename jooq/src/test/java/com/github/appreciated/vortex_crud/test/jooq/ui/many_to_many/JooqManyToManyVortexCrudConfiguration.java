@@ -1,10 +1,12 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.many_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -17,16 +19,23 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItem.MANY_TO_MANY_ITEM;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Service
 public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-    
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
+                MANY_TO_MANY_ITEM, JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
+                        .withFields(Map.of(
+                                MANY_TO_MANY_ITEM.ID, new JooqField(IdFieldFactory.class, true))
+                        ).build()
+        );
+
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(MANY_TO_MANY_ITEM)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -37,11 +46,15 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(JooqCollection.of(ConnectDialogFactory.class)
                                                 .withData(JooqCollectionConfiguration.of(MANY_TO_MANY_ITEM)
-                                                        .withManyToMany(new JooqManyToMany(MANY_TO_MANY_ITEM, ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
-                                                        .withChildren("name")
+                                                        .withManyToMany(new JooqManyToMany(
+                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
+                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
+                                                                MANY_TO_MANY_ITEM.ID,
+                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
+                                                        .withChildren(MANY_TO_MANY_ITEM.NAME)
                                                         .build())
                                                 .withEmptyMessage("relations.related.empty")
-                                                .withConfiguration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
+                                                .withConfiguration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig<org.jooq.TableField<?, ?>>(MANY_TO_MANY_ITEM.NAME))
                                                 .build())
                                         .build()
                         )
@@ -63,6 +76,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .build());
 
         return JooqApplication.of()
+                .withDataStores(dataStores)
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)

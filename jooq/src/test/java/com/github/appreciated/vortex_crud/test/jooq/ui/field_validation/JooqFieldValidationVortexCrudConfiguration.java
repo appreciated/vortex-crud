@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -21,10 +20,23 @@ import static com.github.appreciated.vortex_crud.test.jooq.ui.field_validation.J
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Service
-public class JooqFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-    
+public class JooqFieldValidationVortexCrudConfiguration
+        implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
+                VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
+                        .withFields(Map.of(
+                                VALIDATION_TEST.ID, new JooqField(IdFieldFactory.class, true),
+                                VALIDATION_TEST.REQUIRED_FIELD, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
+                                VALIDATION_TEST.EMAIL_FIELD, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
+                                VALIDATION_TEST.NUMERIC_FIELD, new JooqField(DateFieldFactory.class),
+                                VALIDATION_TEST.DATE_FIELD, new JooqField(DateFieldFactory.class),
+                                VALIDATION_TEST.ENUM_FIELD, new JooqField(DateTimePickerFactory.class))
+                        ).build()
+        );
+
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(VALIDATION_TEST)
                 .withTitle("route.projects.title-cards")
@@ -64,6 +76,7 @@ public class JooqFieldValidationVortexCrudConfiguration implements VortexCrudCon
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)
+                .withDataStores(dataStores)
                 .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
