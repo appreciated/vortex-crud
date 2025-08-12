@@ -86,3 +86,15 @@ webpack.generated.js
 /jpa/vite.config.ts
 /jpa/src/main/bundles/dev.bundle
 /jpa/src/main/bundles/
+/src/main/frontend/generated/flow/Flow.tsx
+/src/main/frontend/generated/flow/ReactAdapter.tsx
+/src/main/frontend/generated/jsx-dev-transform/index.ts
+/src/main/frontend/generated/jsx-dev-transform/jsx-dev-runtime.ts
+/src/main/frontend/generated/jsx-dev-transform/jsx-runtime.ts
+/src/main/frontend/generated/index.tsx
+/src/main/frontend/generated/layouts.json
+/src/main/frontend/generated/routes.tsx
+/src/main/frontend/generated/vaadin-featureflags.js
+/src/main/frontend/generated/vaadin-react.tsx
+/src/main/frontend/generated/vite-devmode.ts
+/src/main/frontend/index.html
