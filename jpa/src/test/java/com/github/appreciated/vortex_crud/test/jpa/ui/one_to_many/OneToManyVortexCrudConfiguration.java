@@ -76,7 +76,7 @@ public class OneToManyVortexCrudConfiguration implements VortexCrudConfiguration
                 .build());
 
         return JpaApplication.of()
-                .withName("relations.tests.app")
+                .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)
                 .build();

@@ -21,7 +21,7 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      *                        configuration to retrieve the necessary data
      * @return A list of records matching the criteria
      */
-    List<DataStoreId> resolveManyToMany(
+    java.util.Collection<DataStoreId> resolveManyToMany(
             VortexCrudDataStore<FieldId, ?> targetDataStore,
             ManyToMany<DataStoreId, FieldId, KeyType> manyToMany,
             Object sourceId

@@ -19,20 +19,36 @@ public class ManyToManyEntity {
     @Field(TextFieldFactory.class)
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "many_to_many_item_relation",
             joinColumns = @JoinColumn(name = "item_id"),
             inverseJoinColumns = @JoinColumn(name = "related_item_id"))
     private Set<ManyToManyEntity> relatedItems = new HashSet<>();
 
-    public ManyToManyEntity() {}
+    public ManyToManyEntity() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Set<ManyToManyEntity> getRelatedItems() { return relatedItems; }
-    public void setRelatedItems(Set<ManyToManyEntity> relatedItems) { this.relatedItems = relatedItems; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<ManyToManyEntity> getRelatedItems() {
+        return relatedItems;
+    }
+
+    public void setRelatedItems(Set<ManyToManyEntity> relatedItems) {
+        this.relatedItems = relatedItems;
+    }
 }

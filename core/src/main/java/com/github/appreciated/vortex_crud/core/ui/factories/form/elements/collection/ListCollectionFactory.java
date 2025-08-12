@@ -80,9 +80,9 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
 
         VortexCrudDataStore<FieldId, DataStoreId> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
 
-        List<Object> records = (data.getManyToMany() != null) ?
-                (List<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.getManyToMany(), foreignKeyValue) :
-                (List<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
+        java.util.Collection<Object> records = (data.getManyToMany() != null) ?
+                (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.getManyToMany(), foreignKeyValue) :
+                (java.util.Collection<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
 
         if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
@@ -102,7 +102,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                     FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                                     VerticalLayout list,
                                     HorizontalLayout header,
-                                    List<Object> records,
+                                    java.util.Collection<Object> records,
                                     VortexCrudDataStore<FieldId, ?> dataStore) {
          for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
@@ -125,7 +125,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                    FormCreator<DataStoreId, FieldId, KeyType> formCreator,
                                    VerticalLayout list,
                                    HorizontalLayout header,
-                                   List<Object> records,
+                                   java.util.Collection<Object> records,
                                    VortexCrudDataStore<FieldId, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();

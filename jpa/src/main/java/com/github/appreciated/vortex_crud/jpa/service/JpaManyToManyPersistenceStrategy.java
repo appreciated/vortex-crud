@@ -28,7 +28,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
     }
 
     @Override
-    public List<DataStoreId> resolveManyToMany(VortexCrudDataStore<String, ?> targetDataStore, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany, Object sourceId) {
+    public java.util.Collection<DataStoreId> resolveManyToMany(VortexCrudDataStore<String, ?> targetDataStore, ManyToMany<DataStoreId, String, JpaRepository<?, ?>> manyToMany, Object sourceId) {
         if (sourceId == null) {
             return List.of();
         }
@@ -38,7 +38,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
         if (entity == null) {
             return List.of();
         }
-        return (List<DataStoreId>) reflectionService.getValue(entity, manyToMany.getReferenceField(null));
+        return ((java.util.Collection<DataStoreId>) reflectionService.getValue(entity, manyToMany.getReferenceField(null))).stream().toList();
     }
 
     @Override
