@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.ui.field_validation;
+package com.github.appreciated.vortex_crud.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.datastore;
+package com.github.appreciated.vortex_crud.jpa.unit;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

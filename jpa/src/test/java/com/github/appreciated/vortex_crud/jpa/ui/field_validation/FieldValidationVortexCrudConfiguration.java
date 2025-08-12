@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.ui.field_validation;
+package com.github.appreciated.vortex_crud.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;

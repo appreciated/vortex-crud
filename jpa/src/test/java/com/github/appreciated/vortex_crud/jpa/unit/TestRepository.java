@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.datastore;
+package com.github.appreciated.vortex_crud.jpa.unit;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

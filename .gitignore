@@ -85,3 +85,4 @@ webpack.generated.js
 /jpa/types.d.ts
 /jpa/vite.config.ts
 /jpa/src/main/bundles/dev.bundle
+/jpa/src/main/bundles/

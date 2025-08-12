@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.ui;
+package com.github.appreciated.vortex_crud.jpa.ui;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractNestedFormsTest;
 
