@@ -11,7 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * JUnit 5 extension that captures a screenshot whenever a test fails.
+ * JUnit 5 extension that captures a screenshot whenever a test fails and
+ * ensures the WebDriver is closed after each test.
  */
 public class ScreenshotExtension implements TestWatcher {
 
@@ -31,6 +32,20 @@ public class ScreenshotExtension implements TestWatcher {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+            if (driver != null) {
+                driver.quit();
+            }
+        }
+    }
+
+    @Override
+    public void testSuccessful(ExtensionContext context) {
+        Object instance = context.getRequiredTestInstance();
+        if (instance instanceof BaseUITest base) {
+            WebDriver driver = base.getDriver();
+            if (driver != null) {
+                driver.quit();
             }
         }
     }
