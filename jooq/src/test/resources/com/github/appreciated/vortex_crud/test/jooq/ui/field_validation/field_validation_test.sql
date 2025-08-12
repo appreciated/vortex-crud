@@ -1,3 +1,5 @@
+DELETE FROM validation_test;
+
 -- Seed data for jOOQ field validation tests
 INSERT INTO validation_test (id, required_field, email_field, numeric_field, date_field, enum_field)
 VALUES

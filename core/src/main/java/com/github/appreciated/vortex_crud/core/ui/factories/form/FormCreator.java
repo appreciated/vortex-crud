@@ -59,10 +59,6 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
 
-                if (field.isRequired() && component instanceof HasValue) {
-                    ((HasValue<?, ?>) component).setRequiredIndicatorVisible(true);
-                }
-
                 // Apply validation if present
                 if (field.getValidation() != null) {
                     field.getValidation().applyToComponent(component);
@@ -72,6 +68,10 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
                 if (fieldName instanceof String propertyName) {
                     builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
                 }
+                if (field.isRequired() && component instanceof HasValue) {
+                    builder = builder.asRequired();
+                }
+
                 builder.bind(
                         entity1 -> reflectionService.getValue(entity1, fieldName),
                         (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)

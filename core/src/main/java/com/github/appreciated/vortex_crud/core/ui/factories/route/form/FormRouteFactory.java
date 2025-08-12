@@ -86,11 +86,9 @@ public class FormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
         if (!creationMode) {
-            binder.bind(
+            binder.bindReadOnly(
                     titleComponent,
-                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.getTitleField()),
-                    (entity1, string) -> {
-                    }
+                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.getTitleField())
             );
         } else {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
@@ -99,7 +97,7 @@ public class FormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
         KeyType table = routeRenderer.getDataStoreKey();
         DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
-        VortexCrudDataStore<FieldId, DataStoreId> dataStore = (VortexCrudDataStore<FieldId, DataStoreId>) dataStoreFactoryRegistry.getDataStore(table);
+        VortexCrudDataStore<FieldId, DataStoreId> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         DataStoreId entity = creationMode ? dataStore.newInstance() : dataStore.getRecordById(lastSegment);
         formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration, entity, factoryRegistry, tables, binder, form, formCreator);
         binder.setBean(entity);

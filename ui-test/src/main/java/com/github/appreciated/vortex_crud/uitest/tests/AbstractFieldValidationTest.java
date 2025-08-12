@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.uitest.tests;
 
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -25,8 +24,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         return "field-validation-test";
     }
 
-    @Transactional
-    @Test
+   @Test
     void testValidationListingVisible() {
         navigateTo(getValidationPath());
         WebElement webElement = waitForAnyElementContainingText("Test Value");
@@ -34,7 +32,6 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     }
 
 
-    @Transactional
     @Test
     void testValidationEntityLoading() {
         navigateTo(getValidationPath());
@@ -48,8 +45,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     }
 
 
-    @Transactional
-    @Test
+   @Test
     void testRequiredFieldValidation() {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Erstellen").click();
@@ -83,8 +79,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForUrlToBe(getValidationPath());
     }
 
-    @Transactional
-    @Test
+     @Test
     void testEmailValidation() {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Erstellen").click();
@@ -123,8 +118,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     }
 
 
-    @Transactional
-    @Test
+     @Test
     void testNumericValidation() {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Erstellen").click();

@@ -15,7 +15,7 @@ CREATE TABLE validation_test
     required_field VARCHAR(255) NOT NULL,
     email_field    VARCHAR(255),
     numeric_field  NUMBER,
-    date_field     TIMESTAMP,
+    date_field     DATE,
     enum_field     VARCHAR(20),
     PRIMARY KEY (id)
 );
