@@ -20,7 +20,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
      *
      * @return the path for validation tests
      */
-    private String getValidationPath() {
+    public String getValidationPath() {
         return "field-validation-test";
     }
 
@@ -32,7 +32,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     }
 
     @Test
-    void testValidationNavigationPossible() {
+    void testValidationEntityLoading() {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Test Value").click();
         waitForUrlToBe(getValidationPath() + "/1");
@@ -40,7 +40,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-text-field", "test@example.com");
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
-        waitForElementWithTagAndInputValue("vaadin-select", "Option1");
+        waitForElementWithTagAndValue("vaadin-select-item", "Option1");
     }
 
     @Test
@@ -61,7 +61,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         requiredField.sendKeys("New Test Value");
         
         // Fill email field (second text field based on HTML)
-        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(2)
                 .findElement(By.tagName("input"));
         emailField.sendKeys("new@example.com");
         
@@ -88,7 +88,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         requiredField.sendKeys("Email Test");
         
         // Fill email field with invalid value (second text field based on HTML)
-        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(2)
                 .findElement(By.tagName("input"));
         emailField.sendKeys("invalid-email");
         
@@ -126,7 +126,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         requiredField.sendKeys("Numeric Test");
         
         // Fill email field (second text field)
-        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(1)
+        WebElement emailField = driver.findElements(By.tagName("vaadin-text-field")).get(2)
                 .findElement(By.tagName("input"));
         emailField.sendKeys("numeric@example.com");
         

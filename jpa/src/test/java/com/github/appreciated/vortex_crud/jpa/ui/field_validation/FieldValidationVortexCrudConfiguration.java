@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.jpa.ui.field_validation.TestEnum.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Service
@@ -35,7 +36,7 @@ public class FieldValidationVortexCrudConfiguration implements VortexCrudConfigu
                 .withDataStore(validationEntityRepository)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("name")
+                        .withTitleField("requiredField")
                         .withChildren(
                                 new JpaFieldElement("requiredField", "validation.fields.required"),
                                 new JpaFieldElement("emailField", "validation.fields.email"),
@@ -52,8 +53,7 @@ public class FieldValidationVortexCrudConfiguration implements VortexCrudConfigu
                 .withIconFactory(FACTORY::create)
                 .withTitle("route.projects.title-list")
                 .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withInlineEdit(true)
-                        .withFilterField("name")
+                        .withFilterField("requiredField")
                         .withChildren(
                                 new JpaFieldElement("requiredField", "route.projects.labels.name"),
                                 new JpaFieldElement("emailField", "route.projects.labels.description")
@@ -62,10 +62,10 @@ public class FieldValidationVortexCrudConfiguration implements VortexCrudConfigu
                 .withChild(validationForm)
                 .build());
 
-        LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();
-        enumOptions.put("OPTION1", "enums.option1");
-        enumOptions.put("OPTION2", "enums.option2");
-        enumOptions.put("OPTION3", "enums.option3");
+        LinkedHashMap<TestEnum, String> enumOptions = new LinkedHashMap<>();
+        enumOptions.put(OPTION1, "enums.option1");
+        enumOptions.put(OPTION2, "enums.option2");
+        enumOptions.put(OPTION3, "enums.option3");
 
         return JpaApplication.of()
                 .withName("application.name")

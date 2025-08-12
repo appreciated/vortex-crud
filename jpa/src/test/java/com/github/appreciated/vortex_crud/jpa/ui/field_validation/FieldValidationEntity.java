@@ -46,9 +46,7 @@ public class FieldValidationEntity {
     @SelectValues("enum-options")
     private TestEnum enumField;
 
-    public enum TestEnum {
-        OPTION1, OPTION2, OPTION3
-    }
+
 
     // Default constructor
     public FieldValidationEntity() {}

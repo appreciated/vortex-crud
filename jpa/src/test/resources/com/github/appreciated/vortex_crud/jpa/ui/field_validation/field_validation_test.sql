@@ -5,7 +5,7 @@ CREATE TABLE jpa_validation_test (
                                                    id INTEGER PRIMARY KEY,
                                                    required_field VARCHAR(255) NOT NULL,
                                                    email_field VARCHAR(255) CHECK (email_field LIKE '%@%.%'),
-                                                   numeric_field INTEGER CHECK (numeric_field > 0),
+                                                   numeric_field REAL CHECK (numeric_field > 0),
                                                    date_field DATE,
                                                    enum_field VARCHAR(20) CHECK (enum_field IN ('OPTION1', 'OPTION2', 'OPTION3'))
 );
