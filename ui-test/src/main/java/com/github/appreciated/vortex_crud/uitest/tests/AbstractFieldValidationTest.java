@@ -54,7 +54,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Speichern").click();
         
         // Check for validation error message - look for the specific constraint violation message
-        WebElement errorMessage = waitForAnyElementContainingText("This field is required");
+        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
         assertTrue(errorMessage.isDisplayed());
         
         // Find the required field by label text instead of required attribute
