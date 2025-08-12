@@ -47,8 +47,6 @@ public class JpaFieldValidationEntity {
     @SelectValues("enum-options")
     private JpaFieldValidationEnum enumField;
 
-
-
     // Default constructor
     public JpaFieldValidationEntity() {}
 
