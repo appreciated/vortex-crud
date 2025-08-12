@@ -101,7 +101,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Speichern").click();
         
         // Check for validation error message
-        WebElement errorMessage = waitForAnyElementContainingText("valid email");
+        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
         assertTrue(errorMessage.isDisplayed());
         
         // Correct the email

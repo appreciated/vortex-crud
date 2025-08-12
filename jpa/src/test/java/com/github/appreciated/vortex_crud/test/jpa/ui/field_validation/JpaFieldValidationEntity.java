@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.BigDecimalNumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -34,8 +35,8 @@ public class JpaFieldValidationEntity {
 
     @Min(value = 1, message = "Value must be greater than 0")
     @Column(name = "numeric_field")
-    @Field(DoubleNumberFieldFactory.class)
-    private Double numericField;
+    @Field(BigDecimalNumberFieldFactory.class)
+    private BigDecimal numericField;
 
     @Column(name = "date_field")
     @Field(DateFieldFactory.class)
@@ -75,11 +76,11 @@ public class JpaFieldValidationEntity {
         this.emailField = emailField;
     }
 
-    public Double getNumericField() {
+    public BigDecimal getNumericField() {
         return numericField;
     }
 
-    public void setNumericField(Double numericField) {
+    public void setNumericField(BigDecimal numericField) {
         this.numericField = numericField;
     }
 
