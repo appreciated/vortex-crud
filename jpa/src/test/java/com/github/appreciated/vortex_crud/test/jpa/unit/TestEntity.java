@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
@@ -20,7 +20,7 @@ public class TestEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Field(NumberFieldFactory.class)
+    @Field(DoubleNumberFieldFactory.class)
     @Column(name = "age", nullable = false)
     private Integer age;
 

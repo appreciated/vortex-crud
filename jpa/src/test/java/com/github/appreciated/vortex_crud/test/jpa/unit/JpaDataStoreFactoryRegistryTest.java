@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.NumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
@@ -49,6 +49,6 @@ class JpaDataStoreFactoryRegistryTest {
         assertFalse(fields.get("age").isRequired());
 
         assertEquals(TextFieldFactory.class, fields.get("name").getFactory());
-        assertEquals(NumberFieldFactory.class, fields.get("age").getFactory());
+        assertEquals(DoubleNumberFieldFactory.class, fields.get("age").getFactory());
     }
 }

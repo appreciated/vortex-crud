@@ -3,20 +3,20 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.IntegerField;
 
 import java.util.Collection;
 import java.util.List;
 
-public class NumberFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class IntegerNumberFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
 
     @Override
     public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
-        return new NumberField();
+        return new IntegerField();
     }
 
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
-        return List.of("INTEGER", "INT", "BIGINT", "SMALLINT", "DECIMAL", "NUMERIC");
+        return List.of("INTEGER", "INT", "BIGINT", "SMALLINT");
     }
 }

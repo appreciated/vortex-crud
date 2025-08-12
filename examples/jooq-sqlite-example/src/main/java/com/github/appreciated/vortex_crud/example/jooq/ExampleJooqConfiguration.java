@@ -74,7 +74,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new JooqField(IdFieldFactory.class, true),
                                 TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(1000).build()),
-                                TASK_COMMENTS.USER_ID, new JooqField(NumberFieldFactory.class),
+                                TASK_COMMENTS.USER_ID, new JooqField(DoubleNumberFieldFactory.class),
                                 TASK_COMMENTS.CREATED_AT, JooqField.of(DateTimePickerFactory.class).build()))
                         .build(),
                 IMAGES, JooqDataStoreConfig.of(IMAGES)

@@ -18,7 +18,6 @@ public class H2WithHasValue extends H2 implements HasValue<HasValue.ValueChangeE
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        throw new UnsupportedOperationException("Not supported");
     }
 
     @Override
