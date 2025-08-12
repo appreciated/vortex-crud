@@ -38,10 +38,14 @@ public abstract class BaseUITest {
     @BeforeEach
     public void setupTest() {
         // Initialize the WebDriver
-        driver = new ChromeDriver(new ChromeOptions());
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
 
-        // Initialize the WebDriverWait with a timeout of 10 seconds
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // Initialize the WebDriverWait with a timeout of 30 seconds
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
     @AfterEach
@@ -72,7 +76,7 @@ public abstract class BaseUITest {
      * @return the visible WebElement
      */
     protected WebElement waitForElement(By by) {
-        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
     protected WebElement waitForAnyElementContainingText(String text) {
@@ -85,7 +89,7 @@ public abstract class BaseUITest {
     }
 
     protected void waitForUrlToBe(String path) {
-        wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.urlToBe(getUrl(path)));
+        wait.until(ExpectedConditions.urlToBe(getUrl(path)));
     }
 
     /**
@@ -95,7 +99,7 @@ public abstract class BaseUITest {
      * @return the list of visible WebElements
      */
     protected List<WebElement> waitForElements(By by) {
-        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        return wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {

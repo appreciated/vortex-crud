@@ -16,9 +16,9 @@
 
     <modules>
         <module>core</module>
+        <module>ui-test</module>
         <module>jpa</module>
         <module>jooq</module>
         <module>examples</module>
-        <module>ui-test</module>
     </modules>
 </project>
