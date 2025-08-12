@@ -4,6 +4,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,6 +22,7 @@ import java.util.List;
  * Base class for UI tests that provides common setup, teardown, and utility methods.
  */
 
+@ExtendWith(ScreenshotExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseUITest {
 
@@ -29,6 +31,10 @@ public abstract class BaseUITest {
 
     protected WebDriver driver;
     protected WebDriverWait wait;
+
+    public WebDriver getDriver() {
+        return driver;
+    }
 
     @BeforeAll
     public static void setupClass() {
