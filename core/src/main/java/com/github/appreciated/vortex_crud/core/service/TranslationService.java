@@ -75,7 +75,13 @@ public class TranslationService implements I18NProvider {
     private List<Locale> parseAvailableLocales(Resource resource) {
         List<Locale> detectedLocales = new ArrayList<>();
 
-        Pattern pattern = Pattern.compile(i18nBundlePrefix + "_([a-z]{2})(_[A-Z]{2})?\\.properties");
+        String prefix = i18nBundlePrefix;
+        int index = prefix.lastIndexOf('/');
+        if (index >= 0) {
+            prefix = prefix.substring(index + 1);
+        }
+
+        Pattern pattern = Pattern.compile(prefix + "_([a-z]{2})(_[A-Z]{2})?\\.properties");
 
         String filename = resource.getFilename();
         if (filename != null) {

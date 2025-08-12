@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Locale;
 
@@ -86,5 +87,18 @@ class TranslationServiceTest {
 
         String translation = customService.getTranslation("test.key", Locale.ENGLISH, "World", "Monday");
         assertEquals("Hello, World! Today is Monday.", translation, "Parameters should be substituted correctly");
+    }
+
+    @Test
+    void testParseAvailableLocalesWithPathPrefix() throws Exception {
+        when(resource.getFilename()).thenReturn("messages_en.properties");
+
+        Method method = TranslationService.class.getDeclaredMethod("parseAvailableLocales", Resource.class);
+        method.setAccessible(true);
+
+        @SuppressWarnings("unchecked")
+        List<Locale> locales = (List<Locale>) method.invoke(translationService, resource);
+
+        assertEquals(List.of(Locale.ENGLISH), locales, "Should detect English locale from filename");
     }
 }
