@@ -34,7 +34,7 @@ public class FieldValidationEntity {
     @Min(value = 1, message = "Value must be greater than 0")
     @Column(name = "numeric_field")
     @Field(NumberFieldFactory.class)
-    private Integer numericField;
+    private Double numericField;
 
     @Column(name = "date_field")
     @Field(DateFieldFactory.class)
@@ -78,11 +78,11 @@ public class FieldValidationEntity {
         this.emailField = emailField;
     }
 
-    public Integer getNumericField() {
+    public Double getNumericField() {
         return numericField;
     }
 
-    public void setNumericField(Integer numericField) {
+    public void setNumericField(Double numericField) {
         this.numericField = numericField;
     }
 

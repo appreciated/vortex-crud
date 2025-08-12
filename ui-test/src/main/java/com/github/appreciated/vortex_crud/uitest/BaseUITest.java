@@ -59,11 +59,6 @@ public abstract class BaseUITest {
      */
     protected void navigateTo(String path) {
         driver.get(getUrl(path));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private String getUrl(String path) {
@@ -77,28 +72,11 @@ public abstract class BaseUITest {
      * @return the visible WebElement
      */
     protected WebElement waitForElement(By by) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        WebElement until = wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        return until;
+        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
     protected WebElement waitForAnyElementContainingText(String text) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        WebElement webElement = waitForElement(By.xpath("//*[contains(text(), '%s')]".formatted(text)));
-        return webElement;
+        return waitForElement(By.xpath("//*[contains(text(), '%s')]".formatted(text)));
     }
 
     protected WebElement waitForElementContainingText(String tagName, String text) {

@@ -40,7 +40,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-text-field", "test@example.com");
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
-        waitForElementWithTagAndInputValue("vaadin-select", "OPTION1");
+        waitForElementWithTagAndInputValue("vaadin-select", "Option1");
     }
 
     @Test
