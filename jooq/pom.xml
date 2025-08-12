@@ -89,7 +89,7 @@
                 <configuration>
                     <changeLogFile>src/test/resources/db/changelog/changelog.xml</changeLogFile>
                     <driver>org.sqlite.JDBC</driver>
-                    <url>jdbc:sqlite:${project.basedir}/jooq-database.db</url>
+                    <url>jdbc:sqlite:${project.basedir}/test-jooq-database.db</url>
                 </configuration>
                 <executions>
                     <execution>
@@ -119,7 +119,7 @@
                 <configuration>
                     <jdbc>
                         <driver>org.sqlite.JDBC</driver>
-                        <url>jdbc:sqlite:${project.basedir}/jooq-database.db</url>
+                        <url>jdbc:sqlite:${project.basedir}/test-jooq-database.db</url>
                     </jdbc>
                     <generator>
                         <database>

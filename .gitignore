@@ -98,3 +98,4 @@ webpack.generated.js
 /src/main/frontend/generated/vaadin-react.tsx
 /src/main/frontend/generated/vite-devmode.ts
 /src/main/frontend/index.html
+/jooq/test-jooq-database.db
