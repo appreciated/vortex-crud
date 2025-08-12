@@ -40,5 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ui-test-screenshots
-          path: ui-test/target/screenshots/*.png
+          path: |
+            jpa/target/screenshots/*.png
+            jooq/target/screenshots/*.png
           if-no-files-found: ignore
