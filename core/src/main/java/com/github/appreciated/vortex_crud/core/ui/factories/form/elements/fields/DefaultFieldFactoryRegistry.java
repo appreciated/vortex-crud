@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
                                        ReflectionService<FieldId> reflectionService) {
         Application<DataStoreId, FieldId, KeyType> configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
+        factories.put(EmailFieldFactory.class, new EmailFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
         factories.put(DateFieldFactory.class, new DateFieldFactory<>());
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());

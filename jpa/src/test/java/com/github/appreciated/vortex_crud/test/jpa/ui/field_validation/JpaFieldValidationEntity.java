@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class JpaFieldValidationEntity {
 
     @Email(message = "Please enter a valid email address")
     @Column(name = "email_field")
-    @Field(TextFieldFactory.class)
+    @Field(EmailFieldFactory.class)
     private String emailField;
 
     @Min(value = 1, message = "Value must be greater than 0")
