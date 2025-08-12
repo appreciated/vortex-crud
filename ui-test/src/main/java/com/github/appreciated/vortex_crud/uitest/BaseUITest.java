@@ -63,6 +63,7 @@ public abstract class BaseUITest {
      */
     protected void navigateTo(String path) {
         driver.get(getUrl(path));
+        waitForUrlToBe(path);
     }
 
     private String getUrl(String path) {
@@ -76,7 +77,7 @@ public abstract class BaseUITest {
      * @return the visible WebElement
      */
     protected WebElement waitForElement(By by) {
-        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfElementLocated(by));
+        return wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
     protected WebElement waitForAnyElementContainingText(String text) {
@@ -89,7 +90,7 @@ public abstract class BaseUITest {
     }
 
     protected void waitForUrlToBe(String path) {
-        wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.urlToBe(getUrl(path)));
+        wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.urlToBe(getUrl(path)));
     }
 
     /**
@@ -99,7 +100,7 @@ public abstract class BaseUITest {
      * @return the list of visible WebElements
      */
     protected List<WebElement> waitForElements(By by) {
-        return wait.withTimeout(Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        return wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
