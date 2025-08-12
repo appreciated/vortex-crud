@@ -5,7 +5,6 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-
 public class JooqFieldElement extends InternalFormElement<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     public JooqFieldElement(TableField<?, ?> field, String label) {
@@ -16,5 +15,4 @@ public class JooqFieldElement extends InternalFormElement<TableRecord<?>, TableF
         return new Builder<>(new JooqFieldElement(field, label));
     }
 }
-
 

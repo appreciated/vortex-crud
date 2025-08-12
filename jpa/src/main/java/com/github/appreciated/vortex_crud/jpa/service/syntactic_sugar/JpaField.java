@@ -9,7 +9,6 @@ import java.util.List;
 
 public class JpaField extends Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-
     public JpaField(Class<? extends VortexCrudFieldFactory> factory) {
         super((Class<? extends VortexCrudFieldFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) factory);
     }

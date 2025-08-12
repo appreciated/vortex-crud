@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.example.jpa;
 
-
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;

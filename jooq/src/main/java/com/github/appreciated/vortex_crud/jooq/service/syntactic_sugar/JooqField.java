@@ -11,7 +11,6 @@ import java.util.List;
 
 public class JooqField extends Field<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
-
     public JooqField(Class<? extends VortexCrudFieldFactory> factory) {
         super((Class<? extends VortexCrudFieldFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) factory);
     }

@@ -58,7 +58,6 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
                 VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
-
                 // Apply validation if present
                 if (field.getValidation() != null) {
                     field.getValidation().applyToComponent(component);

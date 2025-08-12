@@ -78,7 +78,6 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         }
     }
 
-
     @Transactional
     public Object insertRecord(ModelClass entity) {
         // Check if entity has an ID (for update case)

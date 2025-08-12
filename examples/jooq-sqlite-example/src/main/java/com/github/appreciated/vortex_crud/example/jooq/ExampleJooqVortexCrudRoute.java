@@ -59,4 +59,3 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
     }
 }
 
-

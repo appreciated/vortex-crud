@@ -15,7 +15,6 @@ public class JpaOneToMany<ModelClass> implements OneToMany<ModelClass, String, J
         this.referenceField = referenceField;
     }
 
-
     @Override
     public List<ModelClass> getData(String foreignKeyValue, VortexCrudDataStore<String, ?> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
         return foreignKeyValue == null ? List.of() :

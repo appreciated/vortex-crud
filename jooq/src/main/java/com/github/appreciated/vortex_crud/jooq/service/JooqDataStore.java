@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
-
 /**
  * Service for managing dynamic entities using an EntityManager.
  * Provides methods for CRUD operations and lazy loading data from the database.

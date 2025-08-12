@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-
 public class JpaFieldElement extends InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     public JpaFieldElement(String field, String label) {
@@ -14,5 +13,4 @@ public class JpaFieldElement extends InternalFormElement<JpaRepository<?, ?>, St
         return new Builder<>(new JpaFieldElement(field, label));
     }
 }
-
 

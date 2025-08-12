@@ -31,7 +31,6 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
     }
 
-
     @Test
     void testValidationEntityLoading() {
         navigateTo(getValidationPath());
@@ -43,7 +42,6 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
         waitForElementWithTagAndValue("vaadin-select-item", "Option1");
     }
-
 
    @Test
     void testRequiredFieldValidation() {
@@ -116,7 +114,6 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
     }
-
 
      @Test
     void testNumericValidation() {
