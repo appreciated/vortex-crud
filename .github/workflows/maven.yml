@@ -32,7 +32,7 @@ jobs:
         with:
           chrome-version: stable
       - name: Install xvfb
-        run: sudo apt-get update && sudo apt-get install -y xvfb language-pack-de
+        run: sudo apt-get update && sudo apt-get install -y xvfb
       - name: Build with Maven
         run: xvfb-run mvn --no-transfer-progress -B package --file pom.xml
       - name: Upload UI screenshots
