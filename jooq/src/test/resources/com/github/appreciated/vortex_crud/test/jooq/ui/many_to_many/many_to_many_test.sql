@@ -1,3 +1,6 @@
+DELETE FROM many_to_many_item_relation;
+DELETE FROM many_to_many_item;
+
 -- Seed data for jOOQ many-to-many tests
 INSERT INTO many_to_many_item (id, name) VALUES
   (1, 'Item 1'),
@@ -8,3 +11,4 @@ INSERT INTO many_to_many_item (id, name) VALUES
 INSERT INTO many_to_many_item_relation (item_id, related_item_id) VALUES
   (1, 2),
   (1, 3);
+
