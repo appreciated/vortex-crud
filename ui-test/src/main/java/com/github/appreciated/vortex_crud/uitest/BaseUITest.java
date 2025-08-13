@@ -45,7 +45,7 @@ public abstract class BaseUITest {
     public void setupTest() {
         // Initialize the WebDriver
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("--headless=new");
+        options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
