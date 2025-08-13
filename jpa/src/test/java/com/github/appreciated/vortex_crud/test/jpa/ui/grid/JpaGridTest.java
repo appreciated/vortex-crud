@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.grid;
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractGridTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "classpath:com/github/appreciated/vortex_crud/test/jpa/ui/projects/projects_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "projects_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JpaGridTest extends AbstractGridTest {
     @Override
     protected String getPath() {
