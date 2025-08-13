@@ -58,9 +58,12 @@ public class JooqGridTestVortexCrudConfiguration
                 .withDataStore(IMAGES)
                 .withTitle("route.images-list")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withInlineEdit(true)
                         .withFilterField(IMAGES.TITLE)
-                        .withImageField(IMAGES.URL)
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withChildren(
+                                new JooqFieldElement(IMAGES.URL, "route.projects.labels.description"),
+                                new JooqFieldElement(IMAGES.TITLE, "route.projects.labels.name")
+                        )
                         .build())
                 .withChild(imageForm)
                 .build());
