@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "jpa_validation_test")
@@ -40,6 +41,10 @@ public class JpaFieldValidationEntity {
     @Field(DateFieldFactory.class)
     private LocalDate dateField;
 
+    @Column(name = "datetime_field")
+    @Field(DateTimePickerFactory.class)
+    private LocalDateTime dateTimeField;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "enum_field")
     @Field(SelectFieldFactory.class)
@@ -50,6 +55,10 @@ public class JpaFieldValidationEntity {
     @Field(ImageFieldFactory.class)
     @ImageFieldConfiguration(ImageResourceProvider.class)
     private String imageField;
+
+    @Column(name = "checkbox_field")
+    @Field(CheckboxFieldFactory.class)
+    private Boolean checkboxField;
 
     // Default constructor
     public JpaFieldValidationEntity() {
@@ -96,6 +105,14 @@ public class JpaFieldValidationEntity {
         this.dateField = dateField;
     }
 
+    public LocalDateTime getDateTimeField() {
+        return dateTimeField;
+    }
+
+    public void setDateTimeField(LocalDateTime dateTimeField) {
+        this.dateTimeField = dateTimeField;
+    }
+
     public JpaFieldValidationEnum getEnumField() {
         return enumField;
     }
@@ -110,5 +127,13 @@ public class JpaFieldValidationEntity {
 
     public void setImageField(String imageField) {
         this.imageField = imageField;
+    }
+
+    public Boolean getCheckboxField() {
+        return checkboxField;
+    }
+
+    public void setCheckboxField(Boolean checkboxField) {
+        this.checkboxField = checkboxField;
     }
 }

@@ -35,7 +35,9 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.EMAIL_FIELD, new JooqField(EmailFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
                                 VALIDATION_TEST.NUMERIC_FIELD, new JooqField(DoubleNumberFieldFactory.class, false, false, NumberFieldValidation.of().withMin(0.0).build()),
                                 VALIDATION_TEST.DATE_FIELD, new JooqField(DateFieldFactory.class),
+                                VALIDATION_TEST.DATETIME_FIELD, new JooqField(DateTimePickerFactory.class),
                                 VALIDATION_TEST.ENUM_FIELD, new JooqField(SelectFieldFactory.class, "enum-options"),
+                                VALIDATION_TEST.CHECKBOX_FIELD, new JooqField(CheckboxFieldFactory.class),
                                 VALIDATION_TEST.IMAGE_FIELD, JooqField.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                                         .build())
@@ -52,6 +54,8 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 new JooqFieldElement(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email"),
                                 new JooqFieldElement(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric"),
                                 new JooqFieldElement(VALIDATION_TEST.DATE_FIELD, "validation.fields.date"),
+                                new JooqFieldElement(VALIDATION_TEST.DATETIME_FIELD, "validation.fields.datetime"),
+                                new JooqFieldElement(VALIDATION_TEST.CHECKBOX_FIELD, "validation.fields.checkbox"),
                                 new JooqFieldElement(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum"),
                                 new JooqFieldElement(VALIDATION_TEST.IMAGE_FIELD, "validation.fields.image")
                         )

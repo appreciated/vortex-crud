@@ -40,7 +40,9 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-email-field", "test@example.com");
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
+        waitForElementWithTagAndValue("vaadin-date-time-picker", "2023-01-01T10:15");
         waitForElementWithTagAndValue("vaadin-select-item", "Option1");
+        waitForElementWithTagAndValue("vaadin-checkbox", "true");
         WebElement image = waitForElement(By.tagName("img"));
         assertTrue(image.getAttribute("src").contains("red.png"));
     }
@@ -152,6 +154,34 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Save").click();
 
         // Should navigate back to list view if validation passes
+        waitForUrlToBe(getValidationPath());
+    }
+
+    @Test
+    void testDateTimeAndCheckboxInput() {
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Create").click();
+
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
+        requiredField.sendKeys("DateTime Test");
+
+        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
+                .findElement(By.tagName("input"));
+        emailField.sendKeys("datetime@example.com");
+
+        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
+                .findElement(By.tagName("input"));
+        numericField.sendKeys("10.0");
+
+        WebElement dateTimeField = driver.findElement(By.tagName("vaadin-date-time-picker"))
+                .findElement(By.tagName("input"));
+        dateTimeField.sendKeys("2024-01-01T12:00");
+
+        driver.findElement(By.tagName("vaadin-checkbox")).click();
+
+        waitForAnyElementContainingText("Save").click();
+
         waitForUrlToBe(getValidationPath());
     }
 }
