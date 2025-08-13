@@ -95,12 +95,13 @@ public class Submenu<DataStoreId, FieldId, KeyType> extends SplitLayout {
             Card routeButton = new Card();
             routeButton.addClassNames("master");
 
-            Component icon = value.getIconFactory().get();
-            icon.getStyle()
-                    .set("color", "var(--lumo-primary-text-color)")
-                    .set("opacity", "0.5");
-            routeButton.setHeaderPrefix(icon);
-
+            if (value.getIconFactory() != null) {
+                Component icon = value.getIconFactory().get();
+                icon.getStyle()
+                        .set("color", "var(--lumo-primary-text-color)")
+                        .set("opacity", "0.5");
+                routeButton.setHeaderPrefix(icon);
+            }
             routeButton.setTitle(new H4(routeButton.getTranslation(value.getTitle())));
             routeButton.setWidthFull();
 
@@ -109,19 +110,17 @@ public class Submenu<DataStoreId, FieldId, KeyType> extends SplitLayout {
                 active = routeButton;
             }
 
-            routeButton.getElement().addEventListener("click", event -> {
-                getUI().ifPresent(ui -> {
-                    String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
-                    pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers(), dataStoreUtil);
-                    ui.getPage().getHistory().pushState(null, pathForEntity);
-                    if (active != null) {
-                        active.removeClassName("active");
-                    }
-                    showRouteDetail(routeRenderer.getChildrenMap().get(key), pathVariables);
-                    routeButton.addClassName("active");
-                    active = routeButton;
-                });
-            });
+            routeButton.getElement().addEventListener("click", event -> getUI().ifPresent(ui -> {
+                String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
+                pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.getConfiguration().getRouteRenderers(), dataStoreUtil);
+                ui.getPage().getHistory().pushState(null, pathForEntity);
+                if (active != null) {
+                    active.removeClassName("active");
+                }
+                showRouteDetail(routeRenderer.getChildrenMap().get(key), pathVariables);
+                routeButton.addClassName("active");
+                active = routeButton;
+            }));
             routeListLayout.add(routeButton);
         });
     }
