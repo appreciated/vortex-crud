@@ -49,7 +49,7 @@ public class TranslationService implements I18NProvider {
                 availableLocales.addAll(parseAvailableLocales(mappingLocation));
             }
         } catch (IOException e) {
-            LoggerFactory.getLogger(TranslationService.class.getName())
+            LoggerFactory.getLogger(TranslationService.class)
                     .warn("Error while discovering resource bundles: ", e);
         }
 
@@ -93,7 +93,7 @@ public class TranslationService implements I18NProvider {
                 detectedLocales.add(locale);
             }
         } else {
-            LoggerFactory.getLogger(TranslationService.class.getName())
+            LoggerFactory.getLogger(TranslationService.class)
                     .warn("Resource filename is null for resource: " + resource);
         }
 
@@ -113,7 +113,7 @@ public class TranslationService implements I18NProvider {
     @Override
     public String getTranslation(String key, Locale locale, Object... params) {
         if (key == null) {
-            LoggerFactory.getLogger(TranslationService.class.getName())
+            LoggerFactory.getLogger(TranslationService.class)
                     .warn("Got lang request for key with null value!");
             return "";
         }
@@ -123,8 +123,8 @@ public class TranslationService implements I18NProvider {
             final ResourceBundle bundle = ResourceBundle.getBundle(i18nBundlePrefix, locale);
             value = bundle.getString(key);
         } catch (final MissingResourceException e) {
-            LoggerFactory.getLogger(TranslationService.class.getName())
-                    .warn("Missing i18n key '!{%s}!'".formatted(key), e);
+            LoggerFactory.getLogger(TranslationService.class)
+                    .warn("Missing i18n key '!{%s}!'".formatted(key));
             return "!{%s}!".formatted(key);
         }
 

@@ -101,7 +101,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <nodeAutoUpdate>true</nodeAutoUpdate>
+                    <optimizeBundle>false</optimizeBundle>
                 </configuration>
             </plugin>
             <plugin>

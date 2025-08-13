@@ -22,7 +22,7 @@ import java.util.List;
  */
 
 @ExtendWith(ScreenshotExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
     @Value(value = "${local.server.port}")

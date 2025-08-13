@@ -104,3 +104,4 @@ webpack.generated.js
 /jooq/src/main/bundles/dev.bundle
 /jooq/src/main/bundles/README.md
 /jooq/vite.config.ts
+/jooq/src/main/bundles/prod.bundle
