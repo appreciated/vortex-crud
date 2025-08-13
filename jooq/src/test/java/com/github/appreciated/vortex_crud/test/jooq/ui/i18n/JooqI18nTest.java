@@ -5,13 +5,4 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "i18n_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JooqI18nTest extends AbstractI18nSmokeTest {
-    @Override
-    protected String getPath() {
-        return "projects-list";
-    }
-
-    @Override
-    protected String getSampleDataText() {
-        return "Project Alpha";
-    }
 }

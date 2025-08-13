@@ -8,7 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Sql(scripts = "classpath:com/github/appreciated/vortex_crud/test/jooq/ui/images/images_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "images_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JooqCardTest extends AbstractCardTest {
     @Override
     protected String getPath() {

@@ -8,16 +8,14 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class AbstractI18nSmokeTest extends BaseUITest {
 
-    /**
-     * Returns the navigation path to open for the test.
-     */
-    protected abstract String getPath();
+    protected String getPath() {
+        return "images-list";
+    }
 
-    /**
-     * Returns a piece of sample user provided text that should remain
-     * untranslated across language switches.
-     */
-    protected abstract String getSampleDataText();
+
+    protected String getSampleDataText() {
+        return "Images as list";
+    }
 
     @Test
     void testLanguageSwitch() {
