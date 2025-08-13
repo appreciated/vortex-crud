@@ -46,10 +46,10 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
    @Test
     void testRequiredFieldValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Erstellen").click();
+        waitForAnyElementContainingText("Create").click();
         
         // Try to save without filling required fields
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Check for validation error message - look for the specific constraint violation message
         WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
@@ -71,7 +71,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.sendKeys("50.0");
         
         // Try to save again
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -80,7 +80,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
      @Test
     void testEmailValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Erstellen").click();
+        waitForAnyElementContainingText("Create").click();
         
         // Fill required field by finding the field with "Required" label
         WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
@@ -98,7 +98,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.sendKeys("50.0");
         
         // Try to save
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Check for validation error message
         WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
@@ -109,7 +109,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         emailField.sendKeys("valid@example.com");
         
         // Try to save again
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -118,7 +118,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
      @Test
     void testNumericValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Erstellen").click();
+        waitForAnyElementContainingText("Create").click();
         
         // Fill required field
         WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
@@ -136,7 +136,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.sendKeys("-5.0");
         
         // Try to save
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Check for validation error message
         WebElement errorMessage = waitForAnyElementContainingText("greater than 0");
@@ -147,7 +147,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.sendKeys("25.0");
         
         // Try to save again
-        waitForAnyElementContainingText("Speichern").click();
+        waitForAnyElementContainingText("Save").click();
         
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
