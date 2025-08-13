@@ -10,9 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Base test for list views containing images.
+ * Base test for card based project listings.
  */
-public abstract class AbstractImagesListTest extends BaseUITest {
+public abstract class AbstractCardTest extends BaseUITest {
 
     protected abstract String getPath();
 
@@ -26,12 +26,22 @@ public abstract class AbstractImagesListTest extends BaseUITest {
         return null;
     }
 
+    protected String getDetailId() {
+        return "1";
+    }
+
     @Test
-    void testImageListVisible() {
+    void testCardListingVisible() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getExpectedVisibleValue());
-        WebElement img = waitForElement(By.tagName("img"));
-        assertTrue(img.isDisplayed());
+        WebElement element = waitForAnyElementContainingText(getExpectedVisibleValue());
+        assertTrue(element.isDisplayed());
+    }
+
+    @Test
+    void testNavigateToDetail() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue()).click();
+        waitForUrlToBe(getPath() + "/" + getDetailId());
     }
 
     @Test

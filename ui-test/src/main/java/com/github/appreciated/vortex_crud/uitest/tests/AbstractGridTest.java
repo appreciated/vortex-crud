@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Base test for grid based project listings. Concrete implementations
  * must provide the route path and expected values.
  */
-public abstract class AbstractProjectsGridTest extends BaseUITest {
+public abstract class AbstractGridTest extends BaseUITest {
 
     /**
      * @return route path to the projects grid
