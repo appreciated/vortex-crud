@@ -104,7 +104,7 @@ public abstract class BaseUITest {
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
-        return waitForElements(By.tagName(tagName)).stream()
+        return waitForElements(By.xpath("//"+tagName)).stream()
                 .filter(webElement -> webElement.getAttribute("value").startsWith(value))
                 .findFirst()
                 .orElseThrow();

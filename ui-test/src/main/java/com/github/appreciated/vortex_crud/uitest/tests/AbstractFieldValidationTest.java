@@ -40,9 +40,10 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-email-field", "test@example.com");
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
-        waitForElementWithTagAndValue("vaadin-date-time-picker", "2023-01-01T10:15");
+        waitForElementWithTagAndValue("vaadin-date-time-picker//vaadin-date-picker", "2023-01-01");
+        waitForElementWithTagAndValue("vaadin-date-time-picker//vaadin-time-picker", "10:15");
         waitForElementWithTagAndValue("vaadin-select-item", "Option1");
-        waitForElementWithTagAndValue("vaadin-checkbox", "true");
+        waitForElementWithTagAndValue("vaadin-checkbox", "on");
         WebElement image = waitForElement(By.tagName("img"));
         assertTrue(image.getAttribute("src").contains("red.png"));
     }
