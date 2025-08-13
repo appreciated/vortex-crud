@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.uitest.tests;
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -178,8 +179,9 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         WebElement dateTimeField = driver.findElement(By.tagName("vaadin-date-time-picker"))
                 .findElement(By.tagName("input"));
         dateTimeField.sendKeys("2024-01-01T12:00");
+        dateTimeField.sendKeys(Keys.ESCAPE); // manual closing needed as the date time picker popup hides other elements
 
-        driver.findElement(By.tagName("vaadin-checkbox")).click();
+        waitForElement(By.tagName("vaadin-checkbox")).click();
 
         waitForAnyElementContainingText("Save").click();
 
