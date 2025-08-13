@@ -55,9 +55,11 @@ public class DefaultRouterLayout<DataStoreId, FieldId, KeyType> extends AppLayou
                 if (value.getIconFactory() != null) {
                     icon = value.getIconFactory().get();
                 }
-                icon.getStyle()
-                        .set("color", "var(--lumo-primary-text-color)")
-                        .set("opacity", "0.5");
+                if (icon != null) {
+                    icon.getStyle()
+                            .set("color", "var(--lumo-primary-text-color)")
+                            .set("opacity", "0.5");
+                }
                 SideNavItem sideNavItem = new SideNavItem(translation, path, icon);
                 sideNavItem.setMatchNested(true);
                 nav.addItem(sideNavItem);
