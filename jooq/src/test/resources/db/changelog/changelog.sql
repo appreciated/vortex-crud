@@ -16,7 +16,9 @@ CREATE TABLE validation_test
     email_field    VARCHAR(255),
     numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
     date_field     DATE,
+    datetime_field TIMESTAMP,
     enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
     image_field    VARCHAR(255),
     PRIMARY KEY (id)
 );

@@ -42,6 +42,8 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                                 new JpaFieldElement("emailField", "validation.fields.email"),
                                 new JpaFieldElement("numericField", "validation.fields.numeric"),
                                 new JpaFieldElement("dateField", "validation.fields.date"),
+                                new JpaFieldElement("dateTimeField", "validation.fields.datetime"),
+                                new JpaFieldElement("checkboxField", "validation.fields.checkbox"),
                                 new JpaFieldElement("enumField", "validation.fields.enum"),
                                 new JpaFieldElement("imageField", "validation.fields.image")
                         )
