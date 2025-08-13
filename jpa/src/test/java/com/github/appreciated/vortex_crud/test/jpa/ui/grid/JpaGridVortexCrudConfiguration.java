@@ -9,7 +9,6 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.test.jpa.shared.JpaProjectRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 

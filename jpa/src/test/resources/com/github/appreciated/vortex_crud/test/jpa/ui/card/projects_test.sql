@@ -1,11 +1,5 @@
 -- Seed data for JPA projects tests
 DELETE
-FROM task_has_task;
-DELETE
-FROM task_comments;
-DELETE
-FROM tasks;
-DELETE
 FROM projects;
 DELETE
 FROM users;

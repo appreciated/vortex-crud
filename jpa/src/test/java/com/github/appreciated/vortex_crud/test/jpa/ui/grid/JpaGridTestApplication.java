@@ -7,7 +7,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.github.appreciated.vortex_crud.test.jpa")
+@SpringBootApplication
 @Theme(variant = Lumo.DARK)
 @Push
 public class JpaGridTestApplication implements AppShellConfigurator {
