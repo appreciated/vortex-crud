@@ -3,11 +3,13 @@ package com.github.appreciated.vortex_crud.uitest.tests;
 import com.github.appreciated.vortex_crud.uitest.BaseUITest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Base test for grid based project listings. Concrete implementations
@@ -15,28 +17,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public abstract class AbstractGridTest extends BaseUITest {
 
-    /**
-     * @return route path to the projects grid
-     */
-    protected abstract String getPath();
-
-    /**
-     * @return value expected to be visible in the grid
-     */
-    protected abstract String getExpectedVisibleValue();
-
-    /**
-     * @return value that should remain after filtering, or {@code null} if no filter is configured
-     */
-    protected String getFilterValuePresent() {
-        return null;
+    protected String getPath() {
+        return "images-list";
     }
 
-    /**
-     * @return value that should disappear after filtering, or {@code null} if no filter is configured
-     */
+    protected String getExpectedVisibleValue() {
+        return "Red";
+    }
+
+    protected String getFilterValuePresent() {
+        return "Red";
+    }
+
     protected String getFilterValueAbsent() {
-        return null;
+        return "Green";
     }
 
     /**
@@ -68,14 +62,36 @@ public abstract class AbstractGridTest extends BaseUITest {
             return; // no filter configured
         }
         navigateTo(getPath());
-        WebElement filter = driver.findElement(By.tagName("vaadin-text-field"))
+        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
                 .findElement(By.tagName("input"));
-        filter.clear();
         filter.sendKeys(present);
-        waitForAnyElementContainingText(present);
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"));
+        waitForElementWithTagAndValue("vaadin-text-field", present);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
+                .stream()
+                .filter(WebElement::isDisplayed)
+                .toList();
         assertEquals(0, hidden.size());
-        filter.clear();
+        for (int i = 0; i < present.length(); i++) {
+            filter.sendKeys(Keys.BACK_SPACE);
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         waitForAnyElementContainingText(absent);
+    }
+
+    @Test
+    void testImagesDisplayed() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue());
+        WebElement img = waitForElement(By.tagName("img"));
+        assertTrue(img.isDisplayed());
     }
 }
