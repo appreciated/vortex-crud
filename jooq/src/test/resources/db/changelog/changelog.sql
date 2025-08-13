@@ -17,6 +17,7 @@ CREATE TABLE validation_test
     numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
     date_field     DATE,
     enum_field     VARCHAR(20),
+    image_field    VARCHAR(255),
     PRIMARY KEY (id)
 );
 

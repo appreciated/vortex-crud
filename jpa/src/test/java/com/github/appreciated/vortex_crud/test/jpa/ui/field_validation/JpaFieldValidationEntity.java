@@ -1,11 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -46,6 +45,11 @@ public class JpaFieldValidationEntity {
     @Field(SelectFieldFactory.class)
     @SelectValues("enum-options")
     private JpaFieldValidationEnum enumField;
+
+    @Column(name = "image_field")
+    @Field(ImageFieldFactory.class)
+    @ImageFieldConfiguration(ImageResourceProvider.class)
+    private String imageField;
 
     // Default constructor
     public JpaFieldValidationEntity() {
@@ -98,5 +102,13 @@ public class JpaFieldValidationEntity {
 
     public void setEnumField(JpaFieldValidationEnum enumField) {
         this.enumField = enumField;
+    }
+
+    public String getImageField() {
+        return imageField;
+    }
+
+    public void setImageField(String imageField) {
+        this.imageField = imageField;
     }
 }

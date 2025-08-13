@@ -1,27 +1,40 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.grid;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractGridTest;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "projects_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Sql(scripts = "classpath:com/github/appreciated/vortex_crud/test/jooq/ui/images/images_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JooqGridTest extends AbstractGridTest {
     @Override
     protected String getPath() {
-        return "projects-list";
+        return "images-list";
     }
 
     @Override
     protected String getExpectedVisibleValue() {
-        return "Project Alpha";
+        return "Red";
     }
 
     @Override
     protected String getFilterValuePresent() {
-        return "Project Alpha";
+        return "Red";
     }
 
     @Override
     protected String getFilterValueAbsent() {
-        return "Project Beta";
+        return "Blue";
+    }
+
+    @Test
+    void testImagesDisplayed() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue());
+        WebElement img = waitForElement(By.tagName("img"));
+        assertTrue(img.isDisplayed());
     }
 }

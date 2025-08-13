@@ -41,6 +41,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-number-field", "42");
         waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
         waitForElementWithTagAndValue("vaadin-select-item", "Option1");
+        WebElement image = waitForElement(By.tagName("img"));
+        assertTrue(image.getAttribute("src").contains("red.png"));
     }
 
     @Test

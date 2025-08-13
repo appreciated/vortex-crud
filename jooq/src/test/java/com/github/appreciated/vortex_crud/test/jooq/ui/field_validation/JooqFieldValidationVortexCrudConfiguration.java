@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
@@ -34,7 +35,10 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.EMAIL_FIELD, new JooqField(EmailFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
                                 VALIDATION_TEST.NUMERIC_FIELD, new JooqField(DoubleNumberFieldFactory.class, false, false, NumberFieldValidation.of().withMin(0.0).build()),
                                 VALIDATION_TEST.DATE_FIELD, new JooqField(DateFieldFactory.class),
-                                VALIDATION_TEST.ENUM_FIELD, new JooqField(SelectFieldFactory.class, "enum-options"))
+                                VALIDATION_TEST.ENUM_FIELD, new JooqField(SelectFieldFactory.class, "enum-options"),
+                                VALIDATION_TEST.IMAGE_FIELD, JooqField.of(ImageFieldFactory.class)
+                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
+                                        .build())
                         ).build()
         );
 
@@ -48,7 +52,8 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 new JooqFieldElement(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email"),
                                 new JooqFieldElement(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric"),
                                 new JooqFieldElement(VALIDATION_TEST.DATE_FIELD, "validation.fields.date"),
-                                new JooqFieldElement(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum")
+                                new JooqFieldElement(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum"),
+                                new JooqFieldElement(VALIDATION_TEST.IMAGE_FIELD, "validation.fields.image")
                         )
                         .build())
                 .build();
