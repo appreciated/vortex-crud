@@ -8,16 +8,15 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class AbstractKanbanTest extends BaseUITest {
 
-    /**
-     * @return the path to the Kanban view
-     */
-    protected abstract String getPath();
+    protected String getPath() {
+        return "tasks";
+    }
 
     /**
      * @return the column titles that should be present
      */
     protected String[] getExpectedColumnTitles() {
-        return new String[]{"ToDo", "In progress"};
+        return new String[]{"Option1", "Option2", "Option3"};
     }
 
     @Test
