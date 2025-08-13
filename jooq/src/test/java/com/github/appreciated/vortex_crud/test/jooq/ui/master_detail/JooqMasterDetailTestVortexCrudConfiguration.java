@@ -40,7 +40,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .withDataStore(TASKS)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(TASKS.TITLE, "relations.labels.name"))
+                        .withChildren(new JooqFieldElement(TASKS.TITLE, "route.tasks.labels.title"))
                         .build())
                 .build();
 
