@@ -1,9 +1,9 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.tasks;
+package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractSubrouteTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "classpath:com/github/appreciated/vortex_crud/test/jooq/ui/tasks/tasks_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "classpath:com/github/appreciated/vortex_crud/test/jooq/ui/kanban/tasks_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JooqSubrouteTest extends AbstractSubrouteTest {
     @Override
     protected String getParentPath() {

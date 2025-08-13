@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.tasks;
+package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tasks")
-public class JpaTaskEntity {
+public class JpaKanbanTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

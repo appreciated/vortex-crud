@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.tasks;
+package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
@@ -18,11 +18,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
-public class JpaTasksVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final JpaTaskRepository taskRepository;
+    private final JpaKanbanTestRepository taskRepository;
 
-    public JpaTasksVortexCrudConfiguration(JpaTaskRepository taskRepository) {
+    public JpaKanbanTestVortexCrudConfiguration(JpaKanbanTestRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 

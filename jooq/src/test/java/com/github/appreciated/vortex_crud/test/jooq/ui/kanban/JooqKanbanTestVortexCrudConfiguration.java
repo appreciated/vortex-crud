@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.tasks;
+package com.github.appreciated.vortex_crud.test.jooq.ui.kanban;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
@@ -22,7 +22,7 @@ import java.util.Map;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
 
 @Service
-public class JooqTasksVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
