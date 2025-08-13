@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.projects;
+package com.github.appreciated.vortex_crud.test.jooq.ui.grid;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractGridTest;
 import org.springframework.test.context.jdbc.Sql;
