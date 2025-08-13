@@ -20,14 +20,30 @@ public class JpaOneToManyChildEntity {
     @JoinColumn(name = "parent_id")
     private JpaOneToManyParentEntity parent;
 
-    public JpaOneToManyChildEntity() {}
+    public JpaOneToManyChildEntity() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public JpaOneToManyParentEntity getParent() { return parent; }
-    public void setParent(JpaOneToManyParentEntity parent) { this.parent = parent; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public JpaOneToManyParentEntity getParent() {
+        return parent;
+    }
+
+    public void setParent(JpaOneToManyParentEntity parent) {
+        this.parent = parent;
+    }
 }

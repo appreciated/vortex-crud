@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JpaOneToManyParentRepository extends JpaRepository<JpaOneToManyParentEntity, Long> {}
+public interface JpaOneToManyParentRepository extends JpaRepository<JpaOneToManyParentEntity, Long> {
+}

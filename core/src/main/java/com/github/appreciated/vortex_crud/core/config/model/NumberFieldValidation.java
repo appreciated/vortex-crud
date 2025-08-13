@@ -9,19 +9,19 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
  */
 @GenerateBuilder
 public class NumberFieldValidation implements Validation {
-    
+
     private Double min;
     private Double max;
     private Double step;
-    
+
     public NumberFieldValidation() {
     }
-    
+
     public NumberFieldValidation(Double min, Double max) {
         this.min = min;
         this.max = max;
     }
-    
+
     @Override
     public void applyToComponent(Component component) {
         if (component instanceof NumberField numberField) {
@@ -36,12 +36,12 @@ public class NumberFieldValidation implements Validation {
             }
         }
     }
-    
+
     @Override
     public boolean isApplicableToComponent(Class<? extends Component> componentClass) {
         return NumberField.class.isAssignableFrom(componentClass);
     }
-    
+
     public Double getMin() {
         return min;
     }
@@ -49,7 +49,7 @@ public class NumberFieldValidation implements Validation {
     public void setMin(Double min) {
         this.min = min;
     }
-    
+
     public Double getMax() {
         return max;
     }
@@ -57,7 +57,7 @@ public class NumberFieldValidation implements Validation {
     public void setMax(Double max) {
         this.max = max;
     }
-    
+
     public Double getStep() {
         return step;
     }
@@ -65,7 +65,7 @@ public class NumberFieldValidation implements Validation {
     public void setStep(Double step) {
         this.step = step;
     }
-    
+
     public static class Builder {
         private final NumberFieldValidation product;
 
@@ -77,12 +77,12 @@ public class NumberFieldValidation implements Validation {
             product.min = min;
             return this;
         }
-        
+
         public Builder withMax(Double max) {
             product.max = max;
             return this;
         }
-        
+
         public Builder withStep(Double step) {
             product.step = step;
             return this;

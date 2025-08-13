@@ -164,78 +164,78 @@ public class ReflectionService<FieldId> {
         Object id = getValueInternal(entity, "id");
         return id != null ? id.toString() : null;
     }
-    
+
     /**
      * Adds all elements from the source collection to the target collection.
-     * 
-     * @param entity The entity containing the collection field
-     * @param fieldName The name of the collection field
+     *
+     * @param entity        The entity containing the collection field
+     * @param fieldName     The name of the collection field
      * @param elementsToAdd The elements to add to the collection
-     * @param <T> The entity type
+     * @param <T>           The entity type
      * @return true if the collection was modified, false otherwise
      */
     public <T> boolean addAll(T entity, FieldId fieldName, Collection<?> elementsToAdd) {
         if (entity == null || elementsToAdd == null || elementsToAdd.isEmpty()) {
             return false;
         }
-        
+
         Object collectionObj = getValue(entity, fieldName);
         if (!(collectionObj instanceof Collection)) {
             return false;
         }
-        
+
         @SuppressWarnings("unchecked")
         Collection<Object> collection = (Collection<Object>) collectionObj;
         return collection.addAll(elementsToAdd);
     }
-    
+
     /**
      * Removes all elements in the specified collection from the target collection.
-     * 
-     * @param entity The entity containing the collection field
-     * @param fieldName The name of the collection field
+     *
+     * @param entity           The entity containing the collection field
+     * @param fieldName        The name of the collection field
      * @param elementsToRemove The elements to remove from the collection
-     * @param <T> The entity type
+     * @param <T>              The entity type
      * @return true if the collection was modified, false otherwise
      */
     public <T> boolean removeAll(T entity, FieldId fieldName, Collection<?> elementsToRemove) {
         if (entity == null || elementsToRemove == null || elementsToRemove.isEmpty()) {
             return false;
         }
-        
+
         Object collectionObj = getValue(entity, fieldName);
         if (!(collectionObj instanceof Collection)) {
             return false;
         }
-        
+
         @SuppressWarnings("unchecked")
         Collection<Object> collection = (Collection<Object>) collectionObj;
         return collection.removeAll(elementsToRemove);
     }
-    
+
     /**
      * Gets the collection type for a field.
-     * 
-     * @param entity The entity containing the collection field
+     *
+     * @param entity    The entity containing the collection field
      * @param fieldName The name of the collection field
-     * @param <T> The entity type
+     * @param <T>       The entity type
      * @return The class of the collection elements, or null if not a collection or type cannot be determined
      */
     public <T> Class<?> getCollectionType(T entity, FieldId fieldName) {
         if (entity == null) {
             return null;
         }
-        
+
         String propertyName = fieldNameResolver.getKeyForFieldId(fieldName);
-        
+
         try {
             Field field = entity.getClass().getDeclaredField(propertyName);
             Type genericType = field.getGenericType();
-            
+
             if (genericType instanceof ParameterizedType) {
                 ParameterizedType paramType = (ParameterizedType) genericType;
                 Type[] typeArgs = paramType.getActualTypeArguments();
-                
+
                 if (typeArgs.length > 0 && typeArgs[0] instanceof Class) {
                     return (Class<?>) typeArgs[0];
                 }
@@ -243,7 +243,7 @@ public class ReflectionService<FieldId> {
         } catch (Exception e) {
             // Ignore and return null
         }
-        
+
         return null;
     }
 }

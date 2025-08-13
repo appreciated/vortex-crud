@@ -48,7 +48,8 @@ public class JpaFieldValidationEntity {
     private JpaFieldValidationEnum enumField;
 
     // Default constructor
-    public JpaFieldValidationEntity() {}
+    public JpaFieldValidationEntity() {
+    }
 
     // Getters and setters
     public Long getId() {

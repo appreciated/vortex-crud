@@ -18,9 +18,13 @@ public abstract class AbstractImagesListTest extends BaseUITest {
 
     protected abstract String getExpectedVisibleValue();
 
-    protected String getFilterValuePresent() { return null; }
+    protected String getFilterValuePresent() {
+        return null;
+    }
 
-    protected String getFilterValueAbsent() { return null; }
+    protected String getFilterValueAbsent() {
+        return null;
+    }
 
     @Test
     void testImageListVisible() {
@@ -43,7 +47,7 @@ public abstract class AbstractImagesListTest extends BaseUITest {
         filter.clear();
         filter.sendKeys(present);
         waitForAnyElementContainingText(present);
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]") );
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"));
         assertTrue(hidden.isEmpty());
         filter.clear();
         waitForAnyElementContainingText(absent);

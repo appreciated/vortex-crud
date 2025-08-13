@@ -5,12 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -311,171 +306,171 @@ class ReflectionServiceTest {
         assertEquals("100", reflectionService.getString(entity, "user_count"));
         assertEquals("true", reflectionService.getString(entity, "is_completed"));
     }
-    
+
     // Test class with collection fields
     static class CollectionEntity {
         private List<String> stringList;
         private Set<Integer> integerSet;
         private Collection<Double> doubleCollection;
-        
+
         public CollectionEntity() {
             this.stringList = new ArrayList<>();
             this.integerSet = new HashSet<>();
             this.doubleCollection = new ArrayList<>();
         }
-        
+
         public List<String> getStringList() {
             return stringList;
         }
-        
+
         public void setStringList(List<String> stringList) {
             this.stringList = stringList;
         }
-        
+
         public Set<Integer> getIntegerSet() {
             return integerSet;
         }
-        
+
         public void setIntegerSet(Set<Integer> integerSet) {
             this.integerSet = integerSet;
         }
-        
+
         public Collection<Double> getDoubleCollection() {
             return doubleCollection;
         }
-        
+
         public void setDoubleCollection(Collection<Double> doubleCollection) {
             this.doubleCollection = doubleCollection;
         }
     }
-    
+
     @Test
     void testAddAll() {
         CollectionEntity entity = new CollectionEntity();
-        
+
         when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
         when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
         when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
-        
+
         // Test adding to List
         List<String> stringsToAdd = Arrays.asList("one", "two", "three");
         boolean listResult = reflectionService.addAll(entity, "stringList", stringsToAdd);
-        
+
         assertTrue(listResult);
         assertEquals(3, entity.getStringList().size());
         assertTrue(entity.getStringList().contains("one"));
         assertTrue(entity.getStringList().contains("two"));
         assertTrue(entity.getStringList().contains("three"));
-        
+
         // Test adding to Set
         Set<Integer> integersToAdd = new HashSet<>(Arrays.asList(1, 2, 3));
         boolean setResult = reflectionService.addAll(entity, "integerSet", integersToAdd);
-        
+
         assertTrue(setResult);
         assertEquals(3, entity.getIntegerSet().size());
         assertTrue(entity.getIntegerSet().contains(1));
         assertTrue(entity.getIntegerSet().contains(2));
         assertTrue(entity.getIntegerSet().contains(3));
-        
+
         // Test adding to Collection
         List<Double> doublesToAdd = Arrays.asList(1.1, 2.2, 3.3);
         boolean collectionResult = reflectionService.addAll(entity, "doubleCollection", doublesToAdd);
-        
+
         assertTrue(collectionResult);
         assertEquals(3, entity.getDoubleCollection().size());
         assertTrue(entity.getDoubleCollection().contains(1.1));
         assertTrue(entity.getDoubleCollection().contains(2.2));
         assertTrue(entity.getDoubleCollection().contains(3.3));
-        
+
         // Test adding empty collection
         boolean emptyResult = reflectionService.addAll(entity, "stringList", new ArrayList<>());
         assertFalse(emptyResult);
-        
+
         // Test adding to null entity
         boolean nullEntityResult = reflectionService.addAll(null, "stringList", stringsToAdd);
         assertFalse(nullEntityResult);
-        
+
         // Test adding null collection
         boolean nullCollectionResult = reflectionService.addAll(entity, "stringList", null);
         assertFalse(nullCollectionResult);
     }
-    
+
     @Test
     void testRemoveAll() {
         CollectionEntity entity = new CollectionEntity();
-        
+
         when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
         when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
         when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
-        
+
         // Setup initial collections
         entity.getStringList().addAll(Arrays.asList("one", "two", "three", "four"));
         entity.getIntegerSet().addAll(Arrays.asList(1, 2, 3, 4));
         entity.getDoubleCollection().addAll(Arrays.asList(1.1, 2.2, 3.3, 4.4));
-        
+
         // Test removing from List
         List<String> stringsToRemove = Arrays.asList("one", "three");
         boolean listResult = reflectionService.removeAll(entity, "stringList", stringsToRemove);
-        
+
         assertTrue(listResult);
         assertEquals(2, entity.getStringList().size());
         assertFalse(entity.getStringList().contains("one"));
         assertTrue(entity.getStringList().contains("two"));
         assertFalse(entity.getStringList().contains("three"));
         assertTrue(entity.getStringList().contains("four"));
-        
+
         // Test removing from Set
         Set<Integer> integersToRemove = new HashSet<>(Arrays.asList(1, 3));
         boolean setResult = reflectionService.removeAll(entity, "integerSet", integersToRemove);
-        
+
         assertTrue(setResult);
         assertEquals(2, entity.getIntegerSet().size());
         assertFalse(entity.getIntegerSet().contains(1));
         assertTrue(entity.getIntegerSet().contains(2));
         assertFalse(entity.getIntegerSet().contains(3));
         assertTrue(entity.getIntegerSet().contains(4));
-        
+
         // Test removing from Collection
         List<Double> doublesToRemove = Arrays.asList(1.1, 3.3);
         boolean collectionResult = reflectionService.removeAll(entity, "doubleCollection", doublesToRemove);
-        
+
         assertTrue(collectionResult);
         assertEquals(2, entity.getDoubleCollection().size());
         assertFalse(entity.getDoubleCollection().contains(1.1));
         assertTrue(entity.getDoubleCollection().contains(2.2));
         assertFalse(entity.getDoubleCollection().contains(3.3));
         assertTrue(entity.getDoubleCollection().contains(4.4));
-        
+
         // Test removing empty collection
         boolean emptyResult = reflectionService.removeAll(entity, "stringList", new ArrayList<>());
         assertFalse(emptyResult);
-        
+
         // Test removing from null entity
         boolean nullEntityResult = reflectionService.removeAll(null, "stringList", stringsToRemove);
         assertFalse(nullEntityResult);
-        
+
         // Test removing null collection
         boolean nullCollectionResult = reflectionService.removeAll(entity, "stringList", null);
         assertFalse(nullCollectionResult);
     }
-    
+
     @Test
     void testGetCollectionType() {
         CollectionEntity entity = new CollectionEntity();
-        
+
         when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
         when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
         when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
-        
+
         // Test getting collection types
         Class<?> stringListType = reflectionService.getCollectionType(entity, "stringList");
         Class<?> integerSetType = reflectionService.getCollectionType(entity, "integerSet");
         Class<?> doubleCollectionType = reflectionService.getCollectionType(entity, "doubleCollection");
-        
+
         assertEquals(String.class, stringListType);
         assertEquals(Integer.class, integerSetType);
         assertEquals(Double.class, doubleCollectionType);
-        
+
         // Test with null entity
         Class<?> nullEntityType = reflectionService.getCollectionType(null, "stringList");
         assertNull(nullEntityType);

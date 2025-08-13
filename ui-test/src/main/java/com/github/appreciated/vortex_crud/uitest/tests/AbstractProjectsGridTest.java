@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Base test for grid based project listings. Concrete implementations
@@ -29,17 +28,23 @@ public abstract class AbstractProjectsGridTest extends BaseUITest {
     /**
      * @return value that should remain after filtering, or {@code null} if no filter is configured
      */
-    protected String getFilterValuePresent() { return null; }
+    protected String getFilterValuePresent() {
+        return null;
+    }
 
     /**
      * @return value that should disappear after filtering, or {@code null} if no filter is configured
      */
-    protected String getFilterValueAbsent() { return null; }
+    protected String getFilterValueAbsent() {
+        return null;
+    }
 
     /**
      * @return id of the entity expected when opening details; defaults to "1"
      */
-    protected String getDetailId() { return "1"; }
+    protected String getDetailId() {
+        return "1";
+    }
 
     @Test
     void testGridListingVisible() {
@@ -68,7 +73,7 @@ public abstract class AbstractProjectsGridTest extends BaseUITest {
         filter.clear();
         filter.sendKeys(present);
         waitForAnyElementContainingText(present);
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]") );
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"));
         assertEquals(0, hidden.size());
         filter.clear();
         waitForAnyElementContainingText(absent);

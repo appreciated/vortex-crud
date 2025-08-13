@@ -34,22 +34,22 @@ public class ConfigurationTest extends BaseUITest {
         navigateTo("configurations");
         waitForAnyElementContainingText("timeout_seconds").click();
         waitForUrlToBe("configurations/2");
-        
+
         // Find the value field and clear it
         WebElement valueField = waitForElementWithTagAndValue("vaadin-text-field", "30");
         valueField.clear();
         valueField.sendKeys("45");
-        
+
         // Click save button
         waitForAnyElementContainingText("Save").click();
-        
+
         // Verify we're back at the list view
         waitForUrlToBe("configurations");
-        
+
         // Navigate back to the edited item
         waitForAnyElementContainingText("timeout_seconds").click();
         waitForUrlToBe("configurations/2");
-        
+
         // Verify the value was updated
         waitForElementWithTagAndValue("vaadin-text-field", "45");
     }

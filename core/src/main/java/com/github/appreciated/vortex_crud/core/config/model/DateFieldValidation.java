@@ -11,18 +11,18 @@ import java.time.LocalDate;
  */
 @GenerateBuilder
 public class DateFieldValidation implements Validation {
-    
+
     private LocalDate min;
     private LocalDate max;
-    
+
     public DateFieldValidation() {
     }
-    
+
     public DateFieldValidation(LocalDate min, LocalDate max) {
         this.min = min;
         this.max = max;
     }
-    
+
     @Override
     public void applyToComponent(Component component) {
         if (component instanceof DatePicker datePicker) {
@@ -34,12 +34,12 @@ public class DateFieldValidation implements Validation {
             }
         }
     }
-    
+
     @Override
     public boolean isApplicableToComponent(Class<? extends Component> componentClass) {
         return DatePicker.class.isAssignableFrom(componentClass);
     }
-    
+
     public LocalDate getMin() {
         return min;
     }
@@ -47,7 +47,7 @@ public class DateFieldValidation implements Validation {
     public void setMin(LocalDate min) {
         this.min = min;
     }
-    
+
     public LocalDate getMax() {
         return max;
     }
@@ -55,7 +55,7 @@ public class DateFieldValidation implements Validation {
     public void setMax(LocalDate max) {
         this.max = max;
     }
-    
+
     public static class Builder {
         private final DateFieldValidation product;
 
@@ -67,7 +67,7 @@ public class DateFieldValidation implements Validation {
             product.min = min;
             return this;
         }
-        
+
         public Builder withMax(LocalDate max) {
             product.max = max;
             return this;

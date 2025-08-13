@@ -20,7 +20,6 @@ import jakarta.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -119,12 +118,12 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         });
         Button connectButton = new Button(dialog.getTranslation("button.link.title"), event -> {
             Set<Object> newSelectedConnections = connectionList.getSelectedItems();
-            
+
             // Find objects to insert (new connections)
             List<Object> toBeInserted = newSelectedConnections.stream()
                     .filter(selection -> !previousAssociativeEntries.contains(selection))
                     .toList();
-            
+
             // Insert new connections
             if (!toBeInserted.isEmpty()) {
                 manyToManyPersistenceStrategy.insert(foreignKeyValue, toBeInserted, manyToMany);
@@ -134,7 +133,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
             List<Object> toBeDeleted = previousAssociativeEntries.stream()
                     .filter(connection -> !newSelectedConnections.contains(connection))
                     .toList();
-            
+
             // Delete removed connections
             if (!toBeDeleted.isEmpty()) {
                 manyToManyPersistenceStrategy.deleteAll(foreignKeyValue, toBeDeleted, manyToMany);

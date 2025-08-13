@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractOneToManyTest extends BaseUITest {
 
-    public String getPath() { return "one-to-many-test"; }
+    public String getPath() {
+        return "one-to-many-test";
+    }
 
     @Test
     void testListingVisible() {

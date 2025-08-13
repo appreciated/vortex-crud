@@ -23,14 +23,30 @@ public class JpaOneToManyParentEntity {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaOneToManyChildEntity> children = new ArrayList<>();
 
-    public JpaOneToManyParentEntity() {}
+    public JpaOneToManyParentEntity() {
+    }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public List<JpaOneToManyChildEntity> getChildren() { return children; }
-    public void setChildren(List<JpaOneToManyChildEntity> children) { this.children = children; }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<JpaOneToManyChildEntity> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<JpaOneToManyChildEntity> children) {
+        this.children = children;
+    }
 }

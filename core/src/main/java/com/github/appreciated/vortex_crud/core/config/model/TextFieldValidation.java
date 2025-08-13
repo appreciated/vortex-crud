@@ -10,16 +10,16 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
  */
 @GenerateBuilder
 public class TextFieldValidation implements Validation {
-    
+
     private int maxLength;
-    
+
     public TextFieldValidation() {
     }
-    
+
     public TextFieldValidation(int maxLength) {
         this.maxLength = maxLength;
     }
-    
+
     @Override
     public void applyToComponent(Component component) {
         if (component instanceof TextField textField && maxLength > 0) {
@@ -28,13 +28,13 @@ public class TextFieldValidation implements Validation {
             textArea.setMaxLength(maxLength);
         }
     }
-    
+
     @Override
     public boolean isApplicableToComponent(Class<? extends Component> componentClass) {
-        return TextField.class.isAssignableFrom(componentClass) || 
+        return TextField.class.isAssignableFrom(componentClass) ||
                TextArea.class.isAssignableFrom(componentClass);
     }
-    
+
     public int getMaxLength() {
         return maxLength;
     }
@@ -42,7 +42,7 @@ public class TextFieldValidation implements Validation {
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
-    
+
     public static class Builder {
         private final TextFieldValidation product;
 

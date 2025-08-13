@@ -101,7 +101,7 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
 
         batch.execute();
     }
-    
+
     @Override
     public String getObjectId(Object object) {
         return dataStoreUtil.getId(object);
