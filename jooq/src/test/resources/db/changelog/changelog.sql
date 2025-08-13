@@ -14,7 +14,7 @@ CREATE TABLE validation_test
     id             INTEGER      NOT NULL,
     required_field VARCHAR(255) NOT NULL,
     email_field    VARCHAR(255),
-    numeric_field  decimal(3,2) CHECK (numeric_field > 0),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
     date_field     DATE,
     enum_field     VARCHAR(20),
     PRIMARY KEY (id)

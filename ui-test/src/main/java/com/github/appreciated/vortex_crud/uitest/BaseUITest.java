@@ -25,6 +25,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
+    public static final int SECONDS = 2;
     @Value(value = "${local.server.port}")
     private int port;
 
@@ -51,8 +52,8 @@ public abstract class BaseUITest {
         options.addArguments("--accept-lang=en");
         driver = new ChromeDriver(options);
 
-        // Initialize the WebDriverWait with a timeout of 10 seconds
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // Initialize the WebDriverWait with a timeout
+        wait = new WebDriverWait(driver, Duration.ofSeconds(SECONDS));
     }
 
     /**
@@ -76,7 +77,7 @@ public abstract class BaseUITest {
      * @return the visible WebElement
      */
     protected WebElement waitForElement(By by) {
-        return wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(by));
+        return wait.withTimeout(Duration.ofSeconds(SECONDS)).until(ExpectedConditions.visibilityOfElementLocated(by));
     }
 
     protected WebElement waitForAnyElementContainingText(String text) {
@@ -89,7 +90,7 @@ public abstract class BaseUITest {
     }
 
     protected void waitForUrlToBe(String path) {
-        wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.urlToBe(getUrl(path)));
+        wait.withTimeout(Duration.ofSeconds(SECONDS)).until(ExpectedConditions.urlToBe(getUrl(path)));
     }
 
     /**
@@ -99,7 +100,7 @@ public abstract class BaseUITest {
      * @return the list of visible WebElements
      */
     protected List<WebElement> waitForElements(By by) {
-        return wait.withTimeout(Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
+        return wait.withTimeout(Duration.ofSeconds(SECONDS)).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
