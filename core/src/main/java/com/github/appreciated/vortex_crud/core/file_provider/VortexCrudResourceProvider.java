@@ -1,11 +1,11 @@
 package com.github.appreciated.vortex_crud.core.file_provider;
 
-import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.streams.DownloadHandler;
 
 import java.nio.file.Path;
 
 public interface VortexCrudResourceProvider {
-    StreamResource getResource(String src);
+    DownloadHandler getResource(String src);
 
     Path getPathForFile(String fileName);
 }
