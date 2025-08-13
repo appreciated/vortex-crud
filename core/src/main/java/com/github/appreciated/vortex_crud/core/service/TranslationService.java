@@ -43,10 +43,14 @@ public class TranslationService implements I18NProvider {
         List<Locale> availableLocales = new ArrayList<>();
         try {
             ResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
-            Resource[] mappingLocations = patternResolver.getResources("classpath:%s*.properties".formatted(i18nBundlePrefix));
+            Resource[] mappingLocations = patternResolver.getResources("classpath*:%s*.properties".formatted(i18nBundlePrefix));
 
             for (Resource mappingLocation : mappingLocations) {
                 availableLocales.addAll(parseAvailableLocales(mappingLocation));
+            }
+            if (availableLocales.isEmpty()) {
+                LoggerFactory.getLogger(TranslationService.class)
+                        .warn("No resource bundles found for prefix '%s'".formatted(i18nBundlePrefix));
             }
         } catch (IOException e) {
             LoggerFactory.getLogger(TranslationService.class)
