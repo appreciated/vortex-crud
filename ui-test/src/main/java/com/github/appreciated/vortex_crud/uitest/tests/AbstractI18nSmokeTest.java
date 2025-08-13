@@ -8,17 +8,32 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class AbstractI18nSmokeTest extends BaseUITest {
 
+    /**
+     * Returns the navigation path to open for the test.
+     */
     protected abstract String getPath();
 
-    protected abstract String getEnglishText();
-
-    protected abstract String getGermanText();
+    /**
+     * Returns a piece of sample user provided text that should remain
+     * untranslated across language switches.
+     */
+    protected abstract String getSampleDataText();
 
     @Test
     void testLanguageSwitch() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getEnglishText());
+        // Verify that user provided data is visible and in the original language
+        waitForAnyElementContainingText(getSampleDataText());
+        // Create dialog should show a "Create" button which opens a dialog
+        waitForAnyElementContainingText("Create").click();
+        // The dialog should contain a "Save" button in English
+        waitForAnyElementContainingText("Save");
+
         navigateTo(getPath() + "?lang=de");
-        waitForAnyElementContainingText(getGermanText());
+        // User provided data should still not be translated
+        waitForAnyElementContainingText(getSampleDataText());
+        // Verify translated buttons
+        waitForAnyElementContainingText("Erstellen").click();
+        waitForAnyElementContainingText("Speichern");
     }
 }

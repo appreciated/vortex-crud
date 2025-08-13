@@ -11,12 +11,7 @@ public class JooqI18nTest extends AbstractI18nSmokeTest {
     }
 
     @Override
-    protected String getEnglishText() {
-        return "Projects as List";
-    }
-
-    @Override
-    protected String getGermanText() {
-        return "Projekte als Liste";
+    protected String getSampleDataText() {
+        return "Project Alpha";
     }
 }
