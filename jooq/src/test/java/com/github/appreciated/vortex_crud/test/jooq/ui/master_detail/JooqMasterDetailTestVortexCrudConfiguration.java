@@ -7,8 +7,8 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
+import static com.vaadin.flow.component.icon.VaadinIcon.CHECK_CIRCLE;
 
 @Service
 public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -35,19 +36,24 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                         .build()
         );
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
-                .withTitle("route.tasks.title")
-                .withChildrenMap(Map.of(
-                        "done", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withDataStore(TASKS)
-                                .withTitle("route.done-tasks.title")
-                                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField(TASKS.TITLE)
-                                        .build())
-                                .build()
-                ))
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(TASKS.TITLE)
+                        .withChildren(new JooqFieldElement(TASKS.TITLE, "relations.labels.name"))
+                        .build())
+                .build();
+
+        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        routes.put("tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+                .withIconFactory(CHECK_CIRCLE::create)
+                .withDataStore(TASKS)
+                .withTitle("route.done-tasks.title")
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(TASKS.TITLE)
+                        .withDescriptionField(TASKS.DESCRIPTION)
+                        .build())
+                .withChild(taskForm)
                 .build());
 
         return JooqApplication.of()
