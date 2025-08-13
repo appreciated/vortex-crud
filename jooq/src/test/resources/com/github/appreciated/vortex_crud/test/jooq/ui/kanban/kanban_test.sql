@@ -1,4 +1,4 @@
--- Seed data for JOOQ tasks tests
+-- Seed data for JOOQ kanban tests
 DELETE FROM task_has_task;
 DELETE FROM task_comments;
 DELETE FROM tasks;

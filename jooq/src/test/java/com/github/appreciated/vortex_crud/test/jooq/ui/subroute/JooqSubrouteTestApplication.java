@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
+package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
@@ -10,9 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @Theme(variant = Lumo.DARK)
 @Push
-public class JpaKanbanTestApplication implements AppShellConfigurator {
+public class JooqSubrouteTestApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {
-        SpringApplication.run(JpaKanbanTestApplication.class, args);
+        SpringApplication.run(JooqSubrouteTestApplication.class, args);
     }
 }
