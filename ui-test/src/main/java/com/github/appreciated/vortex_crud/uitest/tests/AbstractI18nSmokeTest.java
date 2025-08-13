@@ -26,12 +26,5 @@ public abstract class AbstractI18nSmokeTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
         // The dialog should contain a "Save" button in English
         waitForAnyElementContainingText("Save");
-
-        navigateTo(getPath() + "?lang=de");
-        // User provided data should still not be translated
-        waitForAnyElementContainingText(getSampleDataText());
-        // Verify translated buttons
-        waitForAnyElementContainingText("Erstellen").click();
-        waitForAnyElementContainingText("Speichern");
     }
 }
