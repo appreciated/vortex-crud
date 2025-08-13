@@ -48,6 +48,7 @@ public abstract class BaseUITest {
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=de");
+        options.addArguments("--accept-lang=de-DE");
         driver = new ChromeDriver(options);
 
         // Initialize the WebDriverWait with a timeout of 10 seconds
