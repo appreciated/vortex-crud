@@ -7,7 +7,7 @@ import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.component.upload.receivers.FileBuffer;
+import com.vaadin.flow.server.streams.UploadHandler;
 
 import static com.vaadin.flow.component.button.ButtonVariant.*;
 
@@ -16,7 +16,6 @@ public class ImageHasValue extends CustomField<String> {
     private final ImageDisplayComponent image;
     private final Button deleteButton;
     private final Upload upload;
-    private final FileBuffer buffer;
     private final Div imageWrapper;
 
     private String value;
@@ -42,12 +41,14 @@ public class ImageHasValue extends CustomField<String> {
                 .set("height", "100%")
                 .set("overflow", "hidden");
 
-        buffer = new FileBuffer(fileName -> resourceProvider.getPathForFile(fileName).toFile());
-        upload = new Upload(buffer);
+        UploadHandler handler = UploadHandler.toFile(
+                (metadata, file) -> setImageFromStream(file.getPath()),
+                metadata -> resourceProvider.getPathForFile(metadata.fileName()).toFile()
+        );
+        upload = new Upload(handler);
         upload.setSizeFull();
         upload.setMaxFiles(1);
         upload.setMaxFileSize(10000000);
-        upload.addSucceededListener(event -> setImageFromStream(resourceProvider.getPathForFile(event.getFileName()).toString()));
 
         Div container = new Div(imageWrapper, upload);
         container.getStyle().set("overflow", "hidden")
