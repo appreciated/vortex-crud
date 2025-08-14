@@ -94,4 +94,41 @@ public abstract class AbstractGridTest extends BaseUITest {
         WebElement img = waitForElement(By.tagName("img"));
         assertTrue(img.isDisplayed());
     }
+
+    @Test
+    void testCreateEntry() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText("Create").click();
+        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
+                .findElement(By.tagName("input"));
+        field.sendKeys("Created Entry");
+        waitForAnyElementContainingText("Save").click();
+        waitForUrlToBe(getPath());
+        waitForAnyElementContainingText("Created Entry");
+    }
+
+    @Test
+    void testUpdateEntry() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue()).click();
+        waitForUrlToBe(getPath() + "/" + getDetailId());
+        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
+                .findElement(By.tagName("input"));
+        field.clear();
+        field.sendKeys("Updated Entry");
+        waitForAnyElementContainingText("Save").click();
+        waitForUrlToBe(getPath());
+        waitForAnyElementContainingText("Updated Entry");
+    }
+
+    @Test
+    void testDeleteEntry() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue()).click();
+        waitForUrlToBe(getPath() + "/" + getDetailId());
+        waitForAnyElementContainingText("Delete").click();
+        waitForUrlToBe(getPath());
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
+        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+    }
 }

@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.uitest;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 /**
@@ -42,7 +45,7 @@ public abstract class BaseUITest {
     }
 
     @BeforeEach
-    public void setupTest() {
+    public void setupTest() throws IOException {
         // Initialize the WebDriver
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
@@ -50,10 +53,18 @@ public abstract class BaseUITest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
         options.addArguments("--accept-lang=en");
+        options.addArguments("--user-data-dir=" + Files.createTempDirectory("chrome-user-data"));
         driver = new ChromeDriver(options);
 
         // Initialize the WebDriverWait with a timeout
         wait = new WebDriverWait(driver, Duration.ofSeconds(SECONDS));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     /**
