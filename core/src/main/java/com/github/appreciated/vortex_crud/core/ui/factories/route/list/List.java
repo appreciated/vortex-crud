@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -67,9 +68,7 @@ public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 null,
                 dataStore,
                 routeFactory,
-                () -> {
-                    System.out.println();
-                },
+                () -> UI.getCurrent().getPage().reload(),
                 () -> {
 
                 },
