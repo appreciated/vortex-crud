@@ -1,17 +1,30 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractCardTest;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "projects_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@Sql(scripts = "images_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JpaCardTest extends AbstractCardTest {
     @Override
     protected String getPath() {
-        return "projects-cards";
+        return "images-grid";
     }
 
     @Override
     protected String getExpectedVisibleValue() {
-        return "Project Alpha";
+        return "Red";
+    }
+
+    @Test
+    void testImagesDisplayed() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue());
+        WebElement img = waitForElement(By.tagName("img"));
+        assertTrue(img.isDisplayed());
     }
 }

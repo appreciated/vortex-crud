@@ -1,13 +1,14 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.grid;
+package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "projects")
-public class JpaProjectEntity {
+@Table(name = "images")
+public class JpaImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,10 +16,10 @@ public class JpaProjectEntity {
     private Integer id;
 
     @Field(TextFieldFactory.class)
-    private String name;
+    private String title;
 
-    @Field(TextFieldFactory.class)
-    private String description;
+    @Field(ImageFieldFactory.class)
+    private String url;
 
     public Integer getId() {
         return id;
@@ -28,19 +29,19 @@ public class JpaProjectEntity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getUrl() {
+        return url;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

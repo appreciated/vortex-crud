@@ -1,4 +1,4 @@
--- Seed data for JPA i18n smoke tests
+-- Seed data for JPA image tests
 DELETE
 FROM images;
 
