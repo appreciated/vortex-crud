@@ -1,4 +1,13 @@
--- Seed data for JPA i18n smoke tests
+-- Seed data for JPA i18n smoke
+DROP TABLE IF EXISTS images;
+
+CREATE TABLE images
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR(255),
+    url   VARCHAR(255)
+);
+
 DELETE
 FROM images;
 
