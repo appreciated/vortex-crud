@@ -27,4 +27,5 @@
     xvfb-run mvn --no-transfer-progress -B package --file pom.xml
    ```
 
-   This command builds all modules and executes their tests.
+   This command builds all modules and executes their tests. Be very patient with this command. It takes at least two
+   minutes to complete for all modules.
