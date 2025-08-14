@@ -39,9 +39,26 @@ the database.
 
 Contains runnable demo applications illustrating how to configure `vortex-crud` with jOOQ or JPA.
 
-### ui-test Module
+### UI Tests
 
-Holds Vaadin UI tests and their configuration.
+UI tests are split across dedicated modules:
+
+- `ui-test-base` – shared Page Objects, test scaffolding, and i18n tuples. Page
+  objects live in `ui-test-base/src/main/java/com/github/appreciated/vortex_crud/ui_test_base/pages`,
+  abstract test classes in `ui-test-base/src/main/java/com/github/appreciated/vortex_crud/ui_test_base/tests`,
+  and common configuration in `ui-test-base/src/main/java/com/github/appreciated/vortex_crud/ui_test_base/config`.
+- `jpa` and `jooq` – implementation‑specific tests that extend the base
+  classes. Test classes are located under
+  `jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui` and
+  `jooq/src/test/java/com/github/appreciated/vortex_crud/test/jooq/ui`.
+- **Data seeding** – each test suite loads its dataset from SQL files placed
+  next to the tests in
+  `jpa/src/test/resources/com/github/appreciated/vortex_crud/test/jpa/ui/*_test.sql`
+  and
+  `jooq/src/test/resources/com/github/appreciated/vortex_crud/test/jooq/ui/*_test.sql`.
+
+This layout centralizes shared UI test infrastructure while allowing each
+persistence module to define its own test cases and seed data.
 
 ## Key Concepts for Beginners
 
