@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public abstract class AbstractCardTest extends BaseUITest {
     }
 
     protected String getFilterValueAbsent() {
-        return "Blue";
+        return "Green";
     }
 
     protected String getDetailId() {
@@ -56,14 +57,15 @@ public abstract class AbstractCardTest extends BaseUITest {
             return;
         }
         navigateTo(getPath());
-        WebElement filter = driver.findElement(By.tagName("vaadin-text-field"))
+        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
                 .findElement(By.tagName("input"));
-        filter.clear();
         filter.sendKeys(present);
         waitForAnyElementContainingText(present);
         List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"));
         assertTrue(hidden.isEmpty());
-        filter.clear();
+        filter.sendKeys(Keys.BACK_SPACE);
+        filter.sendKeys(Keys.BACK_SPACE);
+        filter.sendKeys(Keys.BACK_SPACE);
         waitForAnyElementContainingText(absent);
     }
 
