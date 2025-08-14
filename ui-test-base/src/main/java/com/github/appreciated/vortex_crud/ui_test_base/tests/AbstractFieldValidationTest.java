@@ -1,6 +1,6 @@
-package com.github.appreciated.vortex_crud.uitest.tests;
+package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
-import com.github.appreciated.vortex_crud.uitest.BaseUITest;
+import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;

@@ -19,6 +19,6 @@
         <module>jpa</module>
         <module>jooq</module>
         <module>examples</module>
-        <module>ui-test</module>
+        <module>ui-test-base</module>
     </modules>
 </project>

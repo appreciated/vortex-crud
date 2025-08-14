@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.uitest;
+package com.github.appreciated.vortex_crud.ui_test_base;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;

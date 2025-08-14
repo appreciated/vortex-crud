@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
-import com.github.appreciated.vortex_crud.uitest.tests.AbstractCardTest;
+import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractCardTest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

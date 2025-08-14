@@ -1,6 +1,6 @@
-package com.github.appreciated.vortex_crud.uitest.pages;
+package com.github.appreciated.vortex_crud.ui_test_base.pages;
 
-import com.github.appreciated.vortex_crud.uitest.BaseUITest;
+import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 

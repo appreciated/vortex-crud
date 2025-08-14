@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.uitest.config;
+package com.github.appreciated.vortex_crud.ui_test_base.config;
 
 /**
  * Interface for implementation-specific test configurations.

@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>com.github.appreciated.vortex-crud</groupId>
-    <artifactId>ui-test</artifactId>
+    <artifactId>ui-test-base</artifactId>
     <name>vortex-crud-ui-test</name>
     <version>1.0.0-SNAPSHOT</version>
     <description>ui tests for vortex-crud</description>

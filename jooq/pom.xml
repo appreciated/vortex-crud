@@ -51,7 +51,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.appreciated.vortex-crud</groupId>
-            <artifactId>ui-test</artifactId>
+            <artifactId>ui-test-base</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
