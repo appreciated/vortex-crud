@@ -124,3 +124,17 @@ webpack.generated.js
 /ui-test-base/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 /ui-test-base/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 /ui-test-base/target/ui-test-1.0.0-SNAPSHOT.jar
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/config/VortexCrudTestConfiguration.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/pages/ConfigurationTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractCardTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractFieldValidationTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractGridTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractI18nSmokeTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractKanbanTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractManyToManyTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractMasterDetailTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractOneToManyTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/tests/AbstractSubrouteTest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/BaseUITest.class
+/ui-test-base/target/classes/com/github/appreciated/vortex_crud/ui_test_base/ScreenshotExtension.class
+/ui-test-base/target/ui-test-base-1.0.0-SNAPSHOT.jar
