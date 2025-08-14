@@ -12,7 +12,9 @@
     <artifactId>ui-test-base</artifactId>
     <name>vortex-crud-ui-test</name>
     <version>1.0.0-SNAPSHOT</version>
-    <description>ui tests for vortex-crud</description>
+    <description>The module contains the ui test base for vortex-crud. This only contains the interaction using the
+        chrome driver and the shared i18n tuples for the translation.
+    </description>
     <properties>
         <java.version>21</java.version>
         <vaadin.version>24.8.0</vaadin.version>
