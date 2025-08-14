@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -186,5 +188,50 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Save").click();
 
         waitForUrlToBe(getValidationPath());
+    }
+
+    @Test
+    void testCreateEntry() {
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Create").click();
+
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
+        requiredField.sendKeys("Created Value");
+
+        waitForAnyElementContainingText("Save").click();
+
+        waitForUrlToBe(getValidationPath());
+        waitForAnyElementContainingText("Created Value");
+    }
+
+    @Test
+    void testUpdateEntry() {
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Test Value").click();
+        waitForUrlToBe(getValidationPath() + "/1");
+
+        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
+                .findElement(By.tagName("input"));
+        requiredField.clear();
+        requiredField.sendKeys("Updated Value");
+
+        waitForAnyElementContainingText("Save").click();
+
+        waitForUrlToBe(getValidationPath());
+        waitForAnyElementContainingText("Updated Value");
+    }
+
+    @Test
+    void testDeleteEntry() {
+        navigateTo(getValidationPath());
+        waitForAnyElementContainingText("Test Value").click();
+        waitForUrlToBe(getValidationPath() + "/1");
+
+        waitForAnyElementContainingText("Delete").click();
+
+        waitForUrlToBe(getValidationPath());
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Test Value')]"));
+        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
     }
 }
