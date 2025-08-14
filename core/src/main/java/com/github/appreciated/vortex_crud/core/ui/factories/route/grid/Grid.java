@@ -16,6 +16,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.EntityItemList;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.VirtualItemGrid;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -83,9 +84,7 @@ public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 null,
                 dataStore,
                 routeFactory,
-                () -> {
-
-                },
+                () -> UI.getCurrent().getPage().reload(),
                 () -> {
 
                 },

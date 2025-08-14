@@ -20,6 +20,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     private final DSLContext dslContext;
     private final Class<ModelClass> record;
+    private final JooqVortexCrudDataStoreUtilStrategy utilStrategy;
 
     public JooqDataStore(Class<ModelClass> record, DSLContext dslContext) {
         this.dslContext = dslContext;
@@ -27,6 +28,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
             throw new IllegalArgumentException("Table name cannot be null");
         }
         this.record = record;
+        utilStrategy = new JooqVortexCrudDataStoreUtilStrategy();
     }
 
     public Class<ModelClass> getModelClass() {
@@ -35,12 +37,12 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public void updateRecord(ModelClass entity) {
-
+        updateRecordById(entity);
     }
 
     @Override
     public void deleteRecord(ModelClass entity) {
-
+        deleteRecordById(utilStrategy.getId(entity));
     }
 
     @Override

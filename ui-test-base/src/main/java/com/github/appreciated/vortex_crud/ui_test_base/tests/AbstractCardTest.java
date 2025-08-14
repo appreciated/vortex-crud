@@ -71,7 +71,7 @@ public abstract class AbstractCardTest extends BaseUITest {
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
+        WebElement field = waitForElement(By.xpath("//vaadin-dialog-overlay//vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Entry");
         waitForAnyElementContainingText("Save").click();
