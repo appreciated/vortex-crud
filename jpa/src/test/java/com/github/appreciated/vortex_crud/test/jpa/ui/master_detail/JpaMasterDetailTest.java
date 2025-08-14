@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.master_details;
+package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.uitest.tests.AbstractMasterDetailTest;
 import org.springframework.test.context.jdbc.Sql;

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.master_details;
+package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;

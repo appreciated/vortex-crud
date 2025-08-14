@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.master_details;
+package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
