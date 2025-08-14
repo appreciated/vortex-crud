@@ -1,9 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
+import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,6 +21,7 @@ public class JpaImageEntity {
     private String title;
 
     @Field(ImageFieldFactory.class)
+    @ImageFieldConfiguration(ImageResourceProvider.class)
     private String url;
 
     public Integer getId() {

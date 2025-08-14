@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 
@@ -48,12 +47,11 @@ public abstract class BaseUITest {
     public void setupTest() throws IOException {
         // Initialize the WebDriver
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
+        //options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
         options.addArguments("--accept-lang=en");
-        options.addArguments("--user-data-dir=" + Files.createTempDirectory("chrome-user-data"));
         driver = new ChromeDriver(options);
 
         // Initialize the WebDriverWait with a timeout

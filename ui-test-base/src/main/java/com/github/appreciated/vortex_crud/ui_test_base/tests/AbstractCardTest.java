@@ -14,16 +14,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public abstract class AbstractCardTest extends BaseUITest {
 
-    protected abstract String getPath();
+    protected String getPath() {
+        return "images-grid";
+    }
 
-    protected abstract String getExpectedVisibleValue();
+    protected String getExpectedVisibleValue() {
+        return "Red";
+    }
 
     protected String getFilterValuePresent() {
-        return null;
+        return "Red";
     }
 
     protected String getFilterValueAbsent() {
-        return null;
+        return "Blue";
     }
 
     protected String getDetailId() {
@@ -98,5 +102,13 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
         assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+    }
+
+    @Test
+    void testImagesDisplayed() {
+        navigateTo(getPath());
+        waitForAnyElementContainingText(getExpectedVisibleValue());
+        WebElement img = waitForElement(By.tagName("img"));
+        assertTrue(img.isDisplayed());
     }
 }
