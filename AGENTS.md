@@ -21,10 +21,10 @@
    EOF
    ```
 
-2. Run Maven from the repository root:
+2. To run the build and test, make sure to run maven from the repository root the following way:
 
    ```bash
-   mvn clean install
+    xvfb-run mvn --no-transfer-progress -B package --file pom.xml
    ```
 
    This command builds all modules and executes their tests.
