@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.ui_test_base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,13 +55,6 @@ public abstract class BaseUITest {
 
         // Initialize the WebDriverWait with a timeout
         wait = new WebDriverWait(driver, Duration.ofSeconds(SECONDS));
-    }
-
-    @AfterEach
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 
     /**

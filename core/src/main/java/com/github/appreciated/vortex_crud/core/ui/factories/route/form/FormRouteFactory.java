@@ -115,6 +115,7 @@ public class FormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
                 }
                 Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                UI.getCurrent().getPage().getHistory().back();
             } catch (ValidationException e) {
                 Notification notification = Notification.show(layout.getTranslation("form.notification.failed-to-save", e.getMessage()));
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -124,6 +125,7 @@ public class FormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
         ComponentEventListener<ClickEvent<Button>> onDelete = event -> {
             dataStore.deleteRecord(entity);
             Notification.show(layout.getTranslation("form.notification.successfully-deleted"));
+            UI.getCurrent().getPage().getHistory().back();
         };
 
         ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
