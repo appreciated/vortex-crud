@@ -60,8 +60,16 @@ public abstract class AbstractCardTest extends BaseUITest {
         WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
                 .findElement(By.tagName("input"));
         filter.sendKeys(present);
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         waitForAnyElementContainingText(present);
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"));
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
+                .stream()
+                .filter(WebElement::isDisplayed)
+                .toList();
         assertTrue(hidden.isEmpty());
         filter.sendKeys(Keys.BACK_SPACE);
         filter.sendKeys(Keys.BACK_SPACE);
