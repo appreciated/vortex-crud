@@ -44,8 +44,8 @@ class JpaDataStoreFactoryRegistryTest {
         assertFalse(fields.get("name").isPrimary());
         assertFalse(fields.get("age").isPrimary());
 
-        assertFalse(fields.get("name").isRequired());
-        assertFalse(fields.get("age").isRequired());
+        assertTrue(fields.get("name").isRequired());
+        assertTrue(fields.get("age").isRequired());
 
         assertEquals(TextFieldFactory.class, fields.get("name").getFactory());
         assertEquals(DoubleNumberFieldFactory.class, fields.get("age").getFactory());
