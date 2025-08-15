@@ -53,7 +53,7 @@ public class JpaFieldService {
                     }
                     if (entityField.isAnnotationPresent(ImageFieldConfiguration.class)) {
                         Class<? extends VortexCrudResourceProvider> imageFieldConfiguration = entityField.getAnnotation(ImageFieldConfiguration.class).value();
-                        return JpaField.of(annotation.value(), isPrimary, isNullable)
+                        return JpaField.of(annotation.value(), isPrimary, !isNullable)
                                 .withConfiguration(new ImageFieldRendererConfiguration<>(imageFieldConfiguration))
                                 .build();
                     } else if (entityField.isAnnotationPresent(SelectValues.class)) {
@@ -62,7 +62,7 @@ public class JpaFieldService {
                         return JpaField.of(annotation.value(), jpaSelectValue).build();
                     } else {
                         // Otherwise it is a field that can use the basic field initialization
-                        return JpaField.of(annotation.value(), isPrimary, isNullable).build();
+                        return JpaField.of(annotation.value(), isPrimary, !isNullable).build();
                     }
                 }));
     }
