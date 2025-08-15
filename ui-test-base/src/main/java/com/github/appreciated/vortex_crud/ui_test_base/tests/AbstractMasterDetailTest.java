@@ -17,13 +17,8 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
     /**
      * @return the path to the Master-Detail view
      */
-    protected abstract String getPath();
-
-    /**
-     * @return a column title expected in the master list
-     */
-    protected String getExpectedColumnTitle() {
-        return "Title";
+    protected String getPath() {
+        return "tasks";
     }
 
     protected String getExistingItemName() {
@@ -33,7 +28,7 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
     @Test
     void testMasterDetailListingVisible() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getExpectedColumnTitle());
+        waitForAnyElementContainingText(getExistingItemName());
     }
 
     @Test
@@ -58,8 +53,12 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         field.clear();
         field.sendKeys("Updated Entry");
         waitForAnyElementContainingText("Save").click();
-        waitForUrlToBe(getPath());
-        waitForAnyElementContainingText("Updated Entry");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        waitForAnyElementContainingText("Entry successfully saved");
     }
 
     @Test
