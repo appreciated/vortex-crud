@@ -8,20 +8,17 @@ import org.junit.jupiter.api.Test;
  */
 public abstract class AbstractSubrouteTest extends BaseUITest {
 
-    /**
-     * @return the parent path containing the subroutes
-     */
-    protected abstract String getParentPath();
+    protected String getParentPath() {
+        return "tasks";
+    }
 
-    /**
-     * @return the visible label of the subroute to click
-     */
-    protected abstract String getChildLabel();
+    protected String getChildLabel() {
+        return "Open";
+    }
 
-    /**
-     * @return the expected path after navigation
-     */
-    protected abstract String getChildPath();
+    protected String getChildPath() {
+        return "tasks/open";
+    }
 
     @Test
     void testSubrouteNavigation() {
