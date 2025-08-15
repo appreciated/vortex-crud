@@ -11,69 +11,75 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class AbstractManyToManyTest extends BaseUITest {
+public abstract class AbstractOneToManyFieldTest extends BaseUITest {
 
     public String getPath() {
-        return "many-to-many-test";
+        return "one-to-many-test";
     }
 
-    protected String getExistingItemName() {
-        return "Item 1";
+    protected String getExistingParentName() {
+        return "Parent A";
     }
 
     @Test
     void testListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText(getExistingItemName());
+        try {
+            Thread.sleep(40000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        WebElement element = waitForAnyElementContainingText(getExistingParentName());
+        // it should be inside a grid cell (like in validation test)
         assertEquals("vaadin-grid-cell-content", element.getTagName());
     }
 
     @Test
-    void testOpenItemAndSeeRelated() {
+    void testOpenParentAndSeeChildren() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getExistingItemName()).click();
+        waitForAnyElementContainingText(getExistingParentName()).click();
         waitForUrlToBe(getPath() + "/1");
-        // Related entries seeded: Item 2, Item 3
-        waitForAnyElementContainingText("Item 2");
-        waitForAnyElementContainingText("Item 3");
+        // Check that the child's names are visible on the page
+        waitForAnyElementContainingText("Child A1");
+        waitForAnyElementContainingText("Child A2");
     }
 
     @Disabled
-    @Test
     //TODO this should not test the addition of a new entry, but instead of adding a new entry to the child collection
+    @Test
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();
         WebElement field = waitForElement(By.tagName("vaadin-text-field"))
                 .findElement(By.tagName("input"));
-        field.sendKeys("Created Item");
+        field.sendKeys("Created Parent");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
-        waitForAnyElementContainingText("Created Item");
+        waitForAnyElementContainingText("Created Parent");
     }
 
     @Test
     void testUpdateEntry() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getExistingItemName()).click();
+        waitForAnyElementContainingText(getExistingParentName()).click();
         waitForUrlToBe(getPath() + "/1");
         WebElement field = waitForElement(By.tagName("vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.clear();
-        field.sendKeys("Updated Item");
+        field.sendKeys("Updated Parent");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
-        waitForAnyElementContainingText("Updated Item");
+        waitForAnyElementContainingText("Updated Parent");
     }
 
     @Test
     void testDeleteEntry() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getExistingItemName()).click();
+        waitForAnyElementContainingText(getExistingParentName()).click();
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingItemName() + "')]"));
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingParentName() + "')]"));
         assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
     }
 }
