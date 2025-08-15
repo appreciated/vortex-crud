@@ -5,7 +5,7 @@ CREATE TABLE jpa_validation_test
 (
     id             INTEGER PRIMARY KEY,
     required_field VARCHAR(255) NOT NULL,
-    email_field    VARCHAR(255) CHECK (email_field LIKE '%@%.%'),
+    email_field    VARCHAR(255),
     numeric_field  REAL CHECK (numeric_field > 0),
     date_field     DATE,
     datetime_field TIMESTAMP,

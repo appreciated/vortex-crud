@@ -12,7 +12,6 @@ public abstract class AbstractI18nSmokeTest extends BaseUITest {
         return "images-list";
     }
 
-
     protected String getSampleDataText() {
         return "Images as list";
     }
