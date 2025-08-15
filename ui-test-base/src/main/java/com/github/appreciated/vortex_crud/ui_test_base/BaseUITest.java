@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -124,6 +125,14 @@ public abstract class BaseUITest {
                 })
                 .findFirst()
                 .orElseThrow();
+    }
+
+    protected boolean isDisplayedSafe(WebElement element) {
+        try {
+            return element.isDisplayed();
+        } catch (StaleElementReferenceException e) {
+            return false;
+        }
     }
 
 }

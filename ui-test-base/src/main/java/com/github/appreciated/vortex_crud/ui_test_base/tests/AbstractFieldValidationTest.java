@@ -232,6 +232,6 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
         waitForUrlToBe(getValidationPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Test Value')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }
