@@ -54,11 +54,6 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         field.clear();
         field.sendKeys("Updated Entry");
         waitForAnyElementContainingText("Save").click();
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         waitForAnyElementContainingText("Entry successfully saved");
     }
 

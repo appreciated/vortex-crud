@@ -24,11 +24,6 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getPath());
-        try {
-            Thread.sleep(40000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         WebElement element = waitForAnyElementContainingText(getExistingParentName());
         // it should be inside a grid cell (like in validation test)
         assertEquals("vaadin-grid-cell-content", element.getTagName());
