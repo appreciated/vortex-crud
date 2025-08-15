@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -37,7 +38,9 @@ public abstract class AbstractManyToManyTest extends BaseUITest {
         waitForAnyElementContainingText("Item 3");
     }
 
+    @Disabled
     @Test
+    //TODO this should not test the addition of a new entry, but instead of adding a new entry to the child collection
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();

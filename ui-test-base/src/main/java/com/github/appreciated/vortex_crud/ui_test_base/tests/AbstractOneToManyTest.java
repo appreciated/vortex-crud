@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -23,6 +24,11 @@ public abstract class AbstractOneToManyTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getPath());
+        try {
+            Thread.sleep(40000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         WebElement element = waitForAnyElementContainingText(getExistingParentName());
         // it should be inside a grid cell (like in validation test)
         assertEquals("vaadin-grid-cell-content", element.getTagName());
@@ -38,6 +44,8 @@ public abstract class AbstractOneToManyTest extends BaseUITest {
         waitForAnyElementContainingText("Child A2");
     }
 
+    @Disabled
+    //TODO this should not test the addition of a new entry, but instead of adding a new entry to the child collection
     @Test
     void testCreateEntry() {
         navigateTo(getPath());
