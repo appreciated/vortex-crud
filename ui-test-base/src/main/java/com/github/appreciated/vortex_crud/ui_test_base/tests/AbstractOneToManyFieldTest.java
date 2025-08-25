@@ -52,7 +52,7 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         WebElement field = waitForElement(By.cssSelector("vaadin-dialog-overlay vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Child");
-        waitForAnyElementContainingText("Save").click();
+        waitForElementContainingText("vaadin-dialog-overlay//vaadin-button","Save").click();
         waitForAnyElementContainingText("Created Child");
     }
 
@@ -78,6 +78,6 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingParentName() + "')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }
