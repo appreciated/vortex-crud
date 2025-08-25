@@ -80,7 +80,7 @@ public class ReflectionService<FieldId> {
         String camelCaseField = toCamelCase(fieldName);
 
         if (prefix.equals("is") && camelCaseField.startsWith("is") &&
-            camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
+                camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
             return camelCaseField;
         }
 
@@ -128,7 +128,11 @@ public class ReflectionService<FieldId> {
         }
 
         // Then try direct field access
-        setValueByField(entity, propertyName, value);
+        if (setValueByField(entity, propertyName, value)) {
+            return;
+        }
+
+        throw new IllegalArgumentException("Could not set value for field " + propertyName);
     }
 
     private <T> boolean setValueBySetter(T entity, String fieldName, Object value) {
@@ -142,27 +146,28 @@ public class ReflectionService<FieldId> {
                 }
             }
         } catch (Exception e) {
-            // Ignore and try field access
+            throw new RuntimeException(e);
         }
         return false;
     }
 
-    private <T> void setValueByField(T entity, String fieldName, Object value) {
+    private <T> boolean setValueByField(T entity, String fieldName, Object value) {
         try {
             Field field = entity.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(entity, value);
         } catch (Exception e) {
             // Ignore if we can't set the value
+            return false;
         }
+        return true;
     }
 
-    public <T> String getId(T entity) {
+    public <T> Object getId(T entity) {
         if (entity == null) {
             return null;
         }
-        Object id = getValueInternal(entity, "id");
-        return id != null ? id.toString() : null;
+        return getValueInternal(entity, "id");
     }
 
     /**

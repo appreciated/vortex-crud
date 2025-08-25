@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
+import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,7 +51,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                                         .withFactory(ListCollectionFactory.class)
                                         .withConfiguration(JpaCollection.of(FormDialogFactory.class)
                                                 .withData(JpaCollectionConfiguration.of(childRepository)
-                                                        .withOneToMany(new com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany("parent"))
+                                                        .withOneToMany(new JpaOneToMany("parent"))
                                                         .withChildren("name")
                                                         .build())
                                                 .withEmptyMessage("relations.children.empty")

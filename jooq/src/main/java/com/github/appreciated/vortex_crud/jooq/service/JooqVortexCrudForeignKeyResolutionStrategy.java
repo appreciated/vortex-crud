@@ -21,7 +21,7 @@ public class JooqVortexCrudForeignKeyResolutionStrategy implements VortexCrudFor
     }
 
     @Override
-    public void resolveForeignKey(Object entity, TableField<?, ?> foreignKeyField, String foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver) {
+    public void resolveForeignKey(Object entity, TableField<?, ?> foreignKeyField, Object foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver) {
         if (foreignKeyField != null && foreignKeyValue != null) {
             reflectionService.setValue(entity, foreignKeyField, foreignKeyValue);
         }

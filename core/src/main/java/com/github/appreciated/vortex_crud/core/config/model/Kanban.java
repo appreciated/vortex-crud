@@ -9,8 +9,18 @@ import java.util.List;
 @GenerateBuilder
 public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> implements ItemFactory<FieldId> {
 
+    private FieldId columnField;
+
     public Kanban(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
         super(factory);
+    }
+
+    public FieldId getColumnField() {
+        return columnField;
+    }
+
+    public void setColumnField(FieldId columnField) {
+        this.columnField = columnField;
     }
 
     public static abstract class Builder<DataStoreId, FieldId, KeyType> {

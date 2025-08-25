@@ -56,8 +56,8 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
      * @return A Dialog component allowing users to manage entity connections.
      */
     @Override
-    public Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
+    public Dialog create(@Nullable Object entityId,
+                         @Nullable Object foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration,
