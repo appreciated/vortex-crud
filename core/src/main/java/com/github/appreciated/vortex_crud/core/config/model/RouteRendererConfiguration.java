@@ -15,7 +15,6 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
 
     private FieldId descriptionField;
 
-    private FieldId columnField;
 
     private FieldId imageField;
 
@@ -55,13 +54,6 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
         this.descriptionField = descriptionField;
     }
 
-    public FieldId getColumnField() {
-        return columnField;
-    }
-
-    public void setColumnField(FieldId columnField) {
-        this.columnField = columnField;
-    }
 
     public FieldId getImageField() {
         return imageField;
@@ -118,11 +110,6 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
 
         public Builder<DataStoreId, FieldId, KeyType> withDescriptionField(FieldId descriptionField) {
             product.descriptionField = descriptionField;
-            return this;
-        }
-
-        public Builder<DataStoreId, FieldId, KeyType> withColumnField(FieldId columnField) {
-            product.columnField = columnField;
             return this;
         }
 

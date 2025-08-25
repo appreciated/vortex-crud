@@ -27,6 +27,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +49,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
+    private final Map<Object, VerticalLayout> columns = new HashMap<>();
 
     public KanbanView(KeyType dataStoreIdentifier,
                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
@@ -117,8 +119,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 .set("overflow", "auto");
 
         for (Object string : strings) {
-            VerticalLayout column = createColumn(getTranslation(selectConfig.get(string)), string);
-            kanbanBoard.add(column);
+            VerticalLayout columnWrapper = createColumn(getTranslation(selectConfig.get(string)), string);
+            kanbanBoard.add(columnWrapper);
         }
         kanbanBoard.setSizeFull();
 
@@ -151,15 +153,26 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 dataStoreIdentifier,
                 routeFactory,
                 () -> {
-                    //TODO handle if the column was edited, requiring the element to move
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    cardWrapper.removeAll();
-                    cardWrapper.add(itemFactory.renderItem(kanbanConfig,
-                            recordById,
-                            null,
-                            fileProviderRegistry,
-                            fieldNameResolver,
-                            reflectionService));
+                    if (cardWrapper != null) {
+                        cardWrapper.removeAll();
+                        cardWrapper.add(itemFactory.renderItem(kanbanConfig,
+                                recordById,
+                                null,
+                                fileProviderRegistry,
+                                fieldNameResolver,
+                                reflectionService));
+                        Object columnValue = reflectionService.getValue(recordById, kanbanConfig.getColumnField());
+                        VerticalLayout targetColumn = columns.get(columnValue);
+                        Component parent = cardWrapper.getParent().orElse(null);
+                        if (targetColumn != null && parent != targetColumn) {
+                            if (parent instanceof VerticalLayout) {
+                                ((VerticalLayout) parent).remove(cardWrapper);
+                            }
+                            targetColumn.add(cardWrapper);
+                        }
+                    }
+                    this.dataStore.updateRecordById(recordById);
                     String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
@@ -202,6 +215,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         VerticalLayout column = new VerticalLayout();
+        columns.put(columnDatabaseValue, column);
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
         wrapper.setWidth("300px");
