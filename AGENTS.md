@@ -20,11 +20,15 @@
    </settings>
    EOF
    ```
+2. To make sure the generated code compiles without running the tests, run the following command:
+   ```bash
+    mvn --no-transfer-progress -B install -DskipTests --file pom.xml
+   ```
 
-2. To run the build and test, make sure to run maven from the repository root the following way:
+3. To run the test and ui-test, run the following maven command:
 
    ```bash
-    xvfb-run mvn --no-transfer-progress -B package --file pom.xml
+    xvfb-run mvn --no-transfer-progress -B verify --file pom.xml
    ```
 
    This command builds all modules and executes their tests. Be very patient with this command. It takes at least two
