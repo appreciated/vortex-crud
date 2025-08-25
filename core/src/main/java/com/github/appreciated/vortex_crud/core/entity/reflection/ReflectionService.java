@@ -80,7 +80,7 @@ public class ReflectionService<FieldId> {
         String camelCaseField = toCamelCase(fieldName);
 
         if (prefix.equals("is") && camelCaseField.startsWith("is") &&
-            camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
+                camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
             return camelCaseField;
         }
 
@@ -128,7 +128,7 @@ public class ReflectionService<FieldId> {
         }
 
         // Then try direct field access
-        if ( setValueByField(entity, propertyName, value)){
+        if (setValueByField(entity, propertyName, value)) {
             return;
         }
 
@@ -146,7 +146,7 @@ public class ReflectionService<FieldId> {
                 }
             }
         } catch (Exception e) {
-            // Ignore and try field access
+            throw new RuntimeException(e);
         }
         return false;
     }
@@ -163,12 +163,11 @@ public class ReflectionService<FieldId> {
         return true;
     }
 
-    public <T> String getId(T entity) {
+    public <T> Object getId(T entity) {
         if (entity == null) {
             return null;
         }
-        Object id = getValueInternal(entity, "id");
-        return id != null ? id.toString() : null;
+        return getValueInternal(entity, "id");
     }
 
     /**

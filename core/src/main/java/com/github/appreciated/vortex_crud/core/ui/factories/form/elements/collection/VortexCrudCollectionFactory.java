@@ -7,7 +7,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 
 public interface VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> {
-    Component createCollection(String foreignKey,
+    Component createCollection(Object foreignKeyValue,
                                RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
                                InternalFormElement<DataStoreId, FieldId, KeyType> factoryConfig,
                                VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,

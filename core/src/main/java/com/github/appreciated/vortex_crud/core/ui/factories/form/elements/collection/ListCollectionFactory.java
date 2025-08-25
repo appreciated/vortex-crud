@@ -45,7 +45,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
     }
 
     @Override
-    public Component createCollection(String foreignKey,
+    public Component createCollection(Object foreignKey,
                                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
                                       InternalFormElement<DataStoreId, FieldId, KeyType> factoryConfig,
                                       VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
@@ -129,7 +129,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
                                    VortexCrudDataStore<FieldId, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(dataStoreUtil.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId, KeyType> child : form.getChildren()) {
                 String textValue = reflectionService.getString(record, child.getField());
@@ -147,7 +147,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
     }
 
     private void openDialog(Object entityId,
-                            Object foreignKey,
+                            Object foreignKeyValue,
                             InternalFormElement<DataStoreId, FieldId, KeyType> internalFormElement,
                             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                             FormCreator<DataStoreId, FieldId, KeyType> formCreator,
@@ -161,13 +161,13 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
 
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(
                 entityId,
-                foreignKey,
+                foreignKeyValue,
                 referenceField,
                 collectionData.getChild(),
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,
-                () -> loadCollection(foreignKey, internalFormElement, routeFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 () -> {
                 },
                 formCreator);

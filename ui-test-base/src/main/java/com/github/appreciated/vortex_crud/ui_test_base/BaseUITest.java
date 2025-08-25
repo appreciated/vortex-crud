@@ -86,8 +86,8 @@ public abstract class BaseUITest {
         return waitForElement(By.xpath("//*[contains(text(), '%s')]".formatted(text)));
     }
 
-    protected WebElement waitForElementContainingText(String tagName, String text) {
-        String pattern = "//%s[contains(., '%s')]".formatted(tagName, text);
+    protected WebElement waitForElementContainingText(String xPath, String text) {
+        String pattern = "//%s[contains(., '%s')]".formatted(xPath, text);
         return waitForElement(By.xpath(pattern));
     }
 
