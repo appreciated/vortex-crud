@@ -90,7 +90,7 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
             } else {
                 if (element.getType().equals("collection")) {
                     Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
-                            dataStoreUtil.getId(entity),
+                            reflectionService.getId(entity),
                             routeRenderer,
                             element,
                             routeFactory,

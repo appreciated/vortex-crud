@@ -68,7 +68,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         return list;
     }
 
-    private void loadCollection(String foreignKeyValue,
+    private void loadCollection(Object foreignKeyValue,
                                 InternalFormElement<DataStoreId, FieldId, KeyType> internalFormElement,
                                 VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                                 FormCreator<DataStoreId, FieldId, KeyType> formCreator,
@@ -96,7 +96,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         }
     }
 
-    private void addManyToManyItems(String foreignKeyValue,
+    private void addManyToManyItems(Object foreignKeyValue,
                                     InternalFormElement<DataStoreId, FieldId, KeyType> internalFormElement,
                                     VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                                     FormCreator<DataStoreId, FieldId, KeyType> formCreator,
@@ -119,7 +119,7 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         }
     }
 
-    private void addOneToManyItems(String foreignKeyValue,
+    private void addOneToManyItems(Object foreignKeyValue,
                                    InternalFormElement<DataStoreId, FieldId, KeyType> internalFormElement,
                                    VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                                    FormCreator<DataStoreId, FieldId, KeyType> formCreator,
@@ -146,8 +146,8 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         }
     }
 
-    private void openDialog(String entityId,
-                            String foreignKey,
+    private void openDialog(Object entityId,
+                            Object foreignKey,
                             InternalFormElement<DataStoreId, FieldId, KeyType> internalFormElement,
                             VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
                             FormCreator<DataStoreId, FieldId, KeyType> formCreator,

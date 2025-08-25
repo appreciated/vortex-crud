@@ -6,7 +6,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 @GenerateBuilder
 public interface OneToMany<DataStoreId, FieldId, KeyType> {
 
-    java.util.Collection<DataStoreId> getData(String foreignKeyValue, VortexCrudDataStore<FieldId, ?> dataStore, CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
+    java.util.Collection<DataStoreId> getData(Object foreignKeyValue, VortexCrudDataStore<FieldId, ?> dataStore, CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
 
     FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
 }

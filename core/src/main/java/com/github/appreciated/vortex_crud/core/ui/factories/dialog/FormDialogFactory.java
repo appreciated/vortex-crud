@@ -45,7 +45,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
     }
 
     @Override
-    public Dialog create(@Nullable String entityId,
+    public Dialog create(@Nullable Object entityId,
                          @Nullable Object foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
