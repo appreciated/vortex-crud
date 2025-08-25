@@ -32,7 +32,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
 
     private WebElement getGridForColumn(String title) {
         WebElement header = waitForElement(By.xpath("//h4[contains(text(), '" + title + "')]"));
-        WebElement wrapper = header.findElement(By.xpath("./ancestor::div[contains(@class,'no-hover')]"));
+        WebElement wrapper = header.findElement(By.xpath("../.."));
         return wrapper.findElement(By.tagName("vaadin-grid"));
     }
 
