@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.ui_test_base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +16,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -45,6 +50,9 @@ public abstract class BaseUITest {
 
     @BeforeEach
     public void setupTest() throws IOException {
+        // Create an isolated temporary user data directory for Chrome
+        Path userDataDir = Files.createTempDirectory("ui-test-chrome-user-data-");
+
         // Initialize the WebDriver
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
@@ -52,6 +60,9 @@ public abstract class BaseUITest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
         options.addArguments("--accept-lang=en");
+        // Use the temporary user data directory
+        options.addArguments("--user-data-dir=" + userDataDir.toAbsolutePath());
+
         driver = new ChromeDriver(options);
 
         // Initialize the WebDriverWait with a timeout
