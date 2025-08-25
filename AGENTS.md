@@ -33,3 +33,10 @@
 
    This command builds all modules and executes their tests. Be very patient with this command. It takes at least two
    minutes to complete for all modules.
+
+## Implementing new features
+
+- Always add new, fitting use-cases to ui-test-base when implementing new features.
+    - Cover the feature’s expected behavior and edge cases.
+
+- Provide respective implementations for both stacks: jOOQ and JPA as to be seen in the other tests
