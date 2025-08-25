@@ -20,6 +20,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -29,11 +30,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import javax.swing.*;
+import java.util.*;
 
 public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
@@ -53,7 +51,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
     private final Map<Object, ListDataProvider<Object>> dataProviders = new HashMap<>();
-    private final java.util.List<Object> draggedItems = new java.util.ArrayList<>();
+
+    private Object draggedItem;
     private Grid<Object> dragSource;
 
     public KanbanView(KeyType dataStoreIdentifier,
@@ -210,70 +209,88 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         Grid<Object> grid = new Grid<>();
-        grid.setSelectionMode(Grid.SelectionMode.NONE);
-        grid.addComponentColumn(itemRenderer::createComponent).setAutoWidth(true).setFlexGrow(1);
+        grid.getStyle().set("--vaadin-grid-cell-padding", "0");
+        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+        grid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS);
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.addComponentColumn(itemRenderer::createComponent).setWidth("100%").setFlexGrow(1);
         grid.setAllRowsVisible(true);
+
+        // Enable dragging rows
         grid.setRowsDraggable(true);
-        grid.setDropMode(GridDropMode.BETWEEN);
+        // Drop mode is enabled on drag start across all grids
+        grid.setDropMode(null);
+
         grid.addDragStartListener(e -> {
-            draggedItems.clear();
-            draggedItems.addAll(e.getDraggedItems());
-            dragSource = grid;
-        });
-        grid.addDropListener(event -> {
-            if (draggedItems.isEmpty() || dragSource == null) {
+            if (e.getDraggedItems() == null || e.getDraggedItems().isEmpty()) {
                 return;
             }
-            Object dragged = draggedItems.get(0);
-            ListDataProvider<Object> sourceProvider = (ListDataProvider<Object>) dragSource.getDataProvider();
-            sourceProvider.getItems().remove(dragged);
-            sourceProvider.refreshAll();
-
-            ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
-            java.util.List<Object> items = new java.util.ArrayList<>(targetProvider.getItems());
-            int index = items.size();
-            java.util.Optional<Object> targetItem = event.getDropTargetItem();
-            if (targetItem.isPresent()) {
-                index = items.indexOf(targetItem.get());
-                if (event.getDropLocation() == GridDropLocation.BELOW) {
-                    index++;
-                }
-            }
-            items.add(index, dragged);
-            targetProvider.getItems().clear();
-            targetProvider.getItems().addAll(items);
-            targetProvider.refreshAll();
-
-            reflectionService.setValue(dragged, kanbanConfig.getColumnField(), columnDatabaseValue);
-            dataStore.updateRecordById(dragged);
-
-            draggedItems.clear();
-            dragSource = null;
+            draggedItem = e.getDraggedItems().get(0);
+            dragSource = grid;
+            // Allow dropping anywhere on the grid, including empty areas
+            columns.values().forEach(g -> g.setDropMode(GridDropMode.BETWEEN));
         });
 
-        List<Object> recordsFromTableWhereColumnEquals = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
-        ListDataProvider<Object> provider = new ListDataProvider<>(recordsFromTableWhereColumnEquals);
+        grid.addDropListener(event -> {
+            if (draggedItem == null || dragSource == null) {
+                return;
+            }
+
+            boolean sameGrid = dragSource == grid;
+
+            // Persist the new column value first
+            reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
+            dataStore.updateRecordById(draggedItem);
+
+            // Update in-memory providers for immediate feedback
+            if (!sameGrid) {
+                ListDataProvider<Object> sourceProvider = (ListDataProvider<Object>) dragSource.getDataProvider();
+                if (sourceProvider.getItems().remove(draggedItem)) {
+                    sourceProvider.refreshAll();
+                }
+                ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
+                if (!targetProvider.getItems().contains(draggedItem)) {
+                    targetProvider.getItems().add(draggedItem);
+                    targetProvider.refreshAll();
+                }
+            }
+
+            // Ensure UI reflects persisted state (also covers filtering by column)
+            refreshColumns();
+        });
+
+        grid.addDragEndListener(e -> {
+            draggedItem = null;
+            dragSource = null;
+            // Reset drop modes after drag ends
+            columns.values().forEach(g -> g.setDropMode(null));
+        });
+
+        List<Object> initial = dataStore.getRecordsFromTableWhereColumnEquals(
+                kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000
+        );
+        ListDataProvider<Object> provider = new ListDataProvider<>(initial);
         grid.setDataProvider(provider);
-        columns.put(columnDatabaseValue, grid);
         dataProviders.put(columnDatabaseValue, provider);
+        columns.put(columnDatabaseValue, grid);
 
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
         wrapper.setWidth("300px");
-        wrapper.getStyle().set("flex", "0 0 auto")
+        wrapper.getStyle()
+                .set("flex", "0 0 auto")
                 .set("background", "var(--lumo-contrast-5pct)")
                 .set("border-radius", "var(--lumo-border-radius-l)");
         wrapper.addClassNames("no-hover");
         wrapper.setSpacing(false);
-        wrapper.setPadding(false);
+        wrapper.setPadding(true);
 
         Div titleLabel = new Div(new H4(title));
-        titleLabel.getStyle().set("font-weight", "bold");
-        titleLabel.getStyle().set("margin-bottom", "10px");
+        titleLabel.getStyle().set("font-weight", "bold").set("margin-bottom", "10px");
         wrapper.add(titleLabel, grid);
-
         return wrapper;
     }
+
 
     private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
