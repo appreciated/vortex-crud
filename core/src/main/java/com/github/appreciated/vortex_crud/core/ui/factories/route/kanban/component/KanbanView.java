@@ -19,8 +19,10 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.dnd.DragSource;
-import com.vaadin.flow.component.dnd.DropTarget;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dnd.GridDropLocation;
+import com.vaadin.flow.component.grid.dnd.GridDropMode;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -49,7 +51,10 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
-    private final Map<Object, VerticalLayout> columns = new HashMap<>();
+    private final Map<Object, Grid<Object>> columns = new HashMap<>();
+    private final Map<Object, ListDataProvider<Object>> dataProviders = new HashMap<>();
+    private final java.util.List<Object> draggedItems = new java.util.ArrayList<>();
+    private Grid<Object> dragSource;
 
     public KanbanView(KeyType dataStoreIdentifier,
                       RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
@@ -86,16 +91,12 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         this.fileProviderRegistry = fileProviderRegistry;
 
         itemRenderer = new ComponentRenderer<>(entity -> {
-            // Create a component for the card via the VortexCrudItemFactory
             Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig,
                     entity,
                     null,
                     fileProviderRegistry,
                     fieldNameResolver,
                     reflectionService));
-            // Allow dragging the card
-            DragSource<Component> dragSource = DragSource.create(cardWrapper);
-            dragSource.setDragData(entity);
             cardWrapper.addClickListener(event -> {
                 String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, dataStoreUtil.getId(entity));
                 getUI().ifPresent(ui -> ui.navigate(nextRoute));
@@ -142,7 +143,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         setPadding(true);
     }
 
-    private void openDialog(KeyType dataStoreIdentifier, RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer, VortexCrudDataStore<FieldId, ?> dataStore, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory, Kanban<DataStoreId, FieldId, KeyType> kanbanConfig, VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver, FormCreator<DataStoreId, FieldId, KeyType> formCreator, ReflectionService<FieldId> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtil, VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver, Object entity, Div cardWrapper) {
+    private void openDialog(KeyType dataStoreIdentifier, RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer, VortexCrudDataStore<FieldId, ?> dataStore, VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory, Kanban<DataStoreId, FieldId, KeyType> kanbanConfig, VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry, VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver, FormCreator<DataStoreId, FieldId, KeyType> formCreator, ReflectionService<FieldId> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtil, VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver, Object entity) {
         // Navigate to the entity URL
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 dataStoreUtil.getId(entity),
@@ -154,25 +155,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 routeFactory,
                 () -> {
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    if (cardWrapper != null) {
-                        cardWrapper.removeAll();
-                        cardWrapper.add(itemFactory.renderItem(kanbanConfig,
-                                recordById,
-                                null,
-                                fileProviderRegistry,
-                                fieldNameResolver,
-                                reflectionService));
-                        Object columnValue = reflectionService.getValue(recordById, kanbanConfig.getColumnField());
-                        VerticalLayout targetColumn = columns.get(columnValue);
-                        Component parent = cardWrapper.getParent().orElse(null);
-                        if (targetColumn != null && parent != targetColumn) {
-                            if (parent instanceof VerticalLayout) {
-                                ((VerticalLayout) parent).remove(cardWrapper);
-                            }
-                            targetColumn.add(cardWrapper);
-                        }
-                    }
                     this.dataStore.updateRecordById(recordById);
+                    refreshColumns();
                     String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
@@ -184,6 +168,18 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 },
                 formCreator);
         dialog.open();
+    }
+
+    private void refreshColumns() {
+        columns.forEach((value, grid) -> {
+            ListDataProvider<Object> provider = dataProviders.get(value);
+            if (provider != null) {
+                List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
+                provider.getItems().clear();
+                provider.getItems().addAll(records);
+                provider.refreshAll();
+            }
+        });
     }
 
     @Override
@@ -207,15 +203,60 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                     reflectionService,
                     dataStoreUtil,
                     routeResolver,
-                    recordById,
-                    null
+                    recordById
             );
         }
     }
 
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
-        VerticalLayout column = new VerticalLayout();
-        columns.put(columnDatabaseValue, column);
+        Grid<Object> grid = new Grid<>();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        grid.addComponentColumn(itemRenderer::createComponent).setAutoWidth(true).setFlexGrow(1);
+        grid.setAllRowsVisible(true);
+        grid.setRowsDraggable(true);
+        grid.setDropMode(GridDropMode.BETWEEN);
+        grid.addDragStartListener(e -> {
+            draggedItems.clear();
+            draggedItems.addAll(e.getDraggedItems());
+            dragSource = grid;
+        });
+        grid.addDropListener(event -> {
+            if (draggedItems.isEmpty() || dragSource == null) {
+                return;
+            }
+            Object dragged = draggedItems.get(0);
+            ListDataProvider<Object> sourceProvider = (ListDataProvider<Object>) dragSource.getDataProvider();
+            sourceProvider.getItems().remove(dragged);
+            sourceProvider.refreshAll();
+
+            ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
+            java.util.List<Object> items = new java.util.ArrayList<>(targetProvider.getItems());
+            int index = items.size();
+            java.util.Optional<Object> targetItem = event.getDropTargetItem();
+            if (targetItem.isPresent()) {
+                index = items.indexOf(targetItem.get());
+                if (event.getDropLocation() == GridDropLocation.BELOW) {
+                    index++;
+                }
+            }
+            items.add(index, dragged);
+            targetProvider.getItems().clear();
+            targetProvider.getItems().addAll(items);
+            targetProvider.refreshAll();
+
+            reflectionService.setValue(dragged, kanbanConfig.getColumnField(), columnDatabaseValue);
+            dataStore.updateRecordById(dragged);
+
+            draggedItems.clear();
+            dragSource = null;
+        });
+
+        List<Object> recordsFromTableWhereColumnEquals = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
+        ListDataProvider<Object> provider = new ListDataProvider<>(recordsFromTableWhereColumnEquals);
+        grid.setDataProvider(provider);
+        columns.put(columnDatabaseValue, grid);
+        dataProviders.put(columnDatabaseValue, provider);
+
         VerticalLayout wrapper = new VerticalLayout();
         wrapper.setHeightFull();
         wrapper.setWidth("300px");
@@ -224,34 +265,12 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 .set("border-radius", "var(--lumo-border-radius-l)");
         wrapper.addClassNames("no-hover");
         wrapper.setSpacing(false);
-        column.setPadding(false);
+        wrapper.setPadding(false);
 
-        // Enable drag and drop and drop targets
-        DropTarget<VerticalLayout> dropTarget = DropTarget.create(column);
-        dropTarget.addDropListener(event -> {
-            Component draggedComponent = event.getDragSourceComponent().orElse(null);
-            if (draggedComponent != null) {
-                column.add(draggedComponent);
-            }
-            event.getDragData().ifPresent(o -> {
-                if (o instanceof Object) {
-                    reflectionService.setValue(o, kanbanConfig.getColumnField(), columnDatabaseValue);
-                    dataStore.updateRecordById(o);
-                }
-            });
-        });
-
-        // Add column title
         Div titleLabel = new Div(new H4(title));
         titleLabel.getStyle().set("font-weight", "bold");
         titleLabel.getStyle().set("margin-bottom", "10px");
-        wrapper.add(titleLabel);
-        wrapper.add(column);
-
-        List<?> recordsFromTableWhereColumnEquals = dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000);
-        for (Object record : recordsFromTableWhereColumnEquals) {
-            column.add(itemRenderer.createComponent(record));
-        }
+        wrapper.add(titleLabel, grid);
 
         return wrapper;
     }
@@ -272,7 +291,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 routeFactory,
                 () -> {
                     Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    itemFactory.renderItem(kanbanConfig, recordById, null, fileProviderRegistry, fieldNameResolver, reflectionService);
+                    this.dataStore.updateRecordById(recordById);
+                    refreshColumns();
                 },
                 () -> {
 

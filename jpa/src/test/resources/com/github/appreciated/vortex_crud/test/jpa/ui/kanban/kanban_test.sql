@@ -1,4 +1,5 @@
 -- Seed data for JPA tasks tests
+DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS images;
 
 CREATE TABLE tasks
@@ -15,5 +16,5 @@ CREATE TABLE tasks
 );
 
 INSERT INTO tasks (id, title, description, status) VALUES
-  (1, 'Task A', 'First task', 'ToDo'),
-  (2, 'Task B', 'Second task', 'In progress');
+  (1, 'Task A', 'First task', 'a'),
+  (2, 'Task B', 'Second task', 'b');
