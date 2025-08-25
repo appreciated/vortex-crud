@@ -57,7 +57,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
      */
     @Override
     public Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
+                         @Nullable Object foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration,

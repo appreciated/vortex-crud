@@ -128,7 +128,11 @@ public class ReflectionService<FieldId> {
         }
 
         // Then try direct field access
-        setValueByField(entity, propertyName, value);
+        if ( setValueByField(entity, propertyName, value)){
+            return;
+        }
+
+        throw new IllegalArgumentException("Could not set value for field " + propertyName);
     }
 
     private <T> boolean setValueBySetter(T entity, String fieldName, Object value) {
@@ -147,14 +151,16 @@ public class ReflectionService<FieldId> {
         return false;
     }
 
-    private <T> void setValueByField(T entity, String fieldName, Object value) {
+    private <T> boolean setValueByField(T entity, String fieldName, Object value) {
         try {
             Field field = entity.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(entity, value);
         } catch (Exception e) {
             // Ignore if we can't set the value
+            return false;
         }
+        return true;
     }
 
     public <T> String getId(T entity) {

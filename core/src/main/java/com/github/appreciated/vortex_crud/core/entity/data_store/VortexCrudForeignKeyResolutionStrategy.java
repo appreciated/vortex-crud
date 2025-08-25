@@ -19,7 +19,7 @@ public interface VortexCrudForeignKeyResolutionStrategy<FieldId> {
      */
     void resolveForeignKey(Object entity,
                            FieldId foreignKeyField,
-                           String foreignKeyValue,
+                           Object foreignKeyValue,
                            VortexCrudDataStore<FieldId, ?> dataStore,
                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver);
 }

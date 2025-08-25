@@ -46,7 +46,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
 
     @Override
     public Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
+                         @Nullable Object foreignKeyValue,
                          @Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
@@ -87,7 +87,7 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
         return dialog;
     }
 
-    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
+    private void createFooter(Object foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
             dialog.close();
@@ -99,6 +99,8 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
                 if (dataStoreUtil.isNew(entity)) {
                     if (dataStore.getModelClass().isInstance(entity)) {
                         dataStore.insertRecord(entity);
+                    } else {
+                        throw new IllegalArgumentException("The given entity class (%s) does not match the datastore class model class (%s)".formatted(entity.getClass().getSimpleName(), dataStore.getModelClass().getSimpleName()) );
                     }
                 } else {
                     dataStore.updateRecordById(entity);

@@ -9,7 +9,7 @@ import jakarta.annotation.Nullable;
 
 public interface VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
     Dialog create(@Nullable String entityId,
-                  @Nullable String foreignKeyValue,
+                  @Nullable Object foreignKeyValue,
                   @Nullable FieldId foreignKeyField,
                   RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
                   CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
