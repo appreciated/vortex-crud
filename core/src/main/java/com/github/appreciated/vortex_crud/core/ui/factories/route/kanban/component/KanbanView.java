@@ -50,7 +50,6 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
-    private final Map<Object, ListDataProvider<Object>> dataProviders = new HashMap<>();
 
     private Object draggedItem;
     private Grid<Object> dragSource;
@@ -122,6 +121,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             VerticalLayout columnWrapper = createColumn(getTranslation(selectConfig.get(string)), string);
             kanbanBoard.add(columnWrapper);
         }
+        refreshColumns();
         kanbanBoard.setSizeFull();
 
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
@@ -171,13 +171,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
     private void refreshColumns() {
         columns.forEach((value, grid) -> {
-            ListDataProvider<Object> provider = dataProviders.get(value);
-            if (provider != null) {
-                List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
-                provider.getItems().clear();
-                provider.getItems().addAll(records);
-                provider.refreshAll();
-            }
+              List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
+              grid.setDataProvider(new ListDataProvider<>(records));
         });
     }
 
@@ -266,12 +261,6 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             columns.values().forEach(g -> g.setDropMode(null));
         });
 
-        List<Object> initial = dataStore.getRecordsFromTableWhereColumnEquals(
-                kanbanConfig.getColumnField(), columnDatabaseValue, 0, 1000
-        );
-        ListDataProvider<Object> provider = new ListDataProvider<>(initial);
-        grid.setDataProvider(provider);
-        dataProviders.put(columnDatabaseValue, provider);
         columns.put(columnDatabaseValue, grid);
 
         VerticalLayout wrapper = new VerticalLayout();
