@@ -23,6 +23,9 @@ public class JpaKanbanTestEntity {
     @SelectValues("enum-options")
     private String status;
 
+    @Column(name = "row_index")
+    private Integer rowIndex;
+
     public Integer getId() {
         return id;
     }
@@ -45,5 +48,13 @@ public class JpaKanbanTestEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getRowIndex() {
+        return rowIndex;
+    }
+
+    public void setRowIndex(Integer rowIndex) {
+        this.rowIndex = rowIndex;
     }
 }

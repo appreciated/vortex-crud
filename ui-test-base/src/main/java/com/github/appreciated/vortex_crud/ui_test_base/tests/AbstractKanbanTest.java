@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -9,6 +12,7 @@ import org.openqa.selenium.interactions.Actions;
 /**
  * Base test for Kanban views.
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public abstract class AbstractKanbanTest extends BaseUITest {
 
     protected String getPath() {
@@ -23,6 +27,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     }
 
     @Test
+    @Order(1)
     void testKanbanColumnsVisible() {
         navigateTo(getPath());
         for (String column : getExpectedColumnTitles()) {
@@ -37,6 +42,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     }
 
     @Test
+    @Order(3)
     void testDragAndDropUpdatesStatus() {
         navigateTo(getPath());
         WebElement sourceGrid = getGridForColumn(getExpectedColumnTitles()[0]);
@@ -49,5 +55,20 @@ public abstract class AbstractKanbanTest extends BaseUITest {
                 .findElements(By.cssSelector("tbody tr"))
                 .stream()
                 .anyMatch(tr -> tr.getText().contains(taskText)));
+    }
+
+    @Test
+    @Order(2)
+    void testDragAndDropReordersWithinColumn() {
+        navigateTo(getPath());
+        WebElement grid = getGridForColumn(getExpectedColumnTitles()[0]);
+        WebElement firstRow = grid.getShadowRoot().findElement(By.cssSelector("tbody tr"));
+        String text = firstRow.getText();
+        WebElement body = grid.getShadowRoot().findElement(By.cssSelector("tbody"));
+        new Actions(driver).dragAndDrop(firstRow, body).perform();
+        wait.until(d -> {
+            var rows = grid.getShadowRoot().findElements(By.cssSelector("tbody tr"));
+            return !rows.isEmpty() && rows.get(rows.size() - 1).getText().contains(text);
+        });
     }
 }
