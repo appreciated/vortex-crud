@@ -10,6 +10,7 @@ import java.util.List;
 public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> implements ItemFactory<FieldId> {
 
     private FieldId columnField;
+    private FieldId rowIndexField;
 
     public Kanban(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
         super(factory);
@@ -23,6 +24,14 @@ public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfigur
         this.columnField = columnField;
     }
 
+    public FieldId getRowIndexField() {
+        return rowIndexField;
+    }
+
+    public void setRowIndexField(FieldId rowIndexField) {
+        this.rowIndexField = rowIndexField;
+    }
+
     public static abstract class Builder<DataStoreId, FieldId, KeyType> {
 
         private final Kanban<DataStoreId, FieldId, KeyType> product;
@@ -33,6 +42,11 @@ public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfigur
 
         public Builder<DataStoreId, FieldId, KeyType> withColumnField(FieldId columnField) {
             product.setColumnField(columnField);
+            return this;
+        }
+
+        public Builder<DataStoreId, FieldId, KeyType> withRowIndexField(FieldId rowIndexField) {
+            product.setRowIndexField(rowIndexField);
             return this;
         }
 

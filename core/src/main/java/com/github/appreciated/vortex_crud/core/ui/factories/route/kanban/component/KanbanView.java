@@ -171,8 +171,11 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
     private void refreshColumns() {
         columns.forEach((value, grid) -> {
-              List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
-              grid.setDataProvider(new ListDataProvider<>(records));
+            List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
+            if (kanbanConfig.getRowIndexField() != null) {
+                records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
+            }
+            grid.setDataProvider(new ListDataProvider<>(records));
         });
     }
 
@@ -235,19 +238,50 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
             // Persist the new column value first
             reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
-            dataStore.updateRecordById(draggedItem);
 
-            // Update in-memory providers for immediate feedback
-            if (!sameGrid) {
+            ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
+            List<Object> targetItems = new ArrayList<>(targetProvider.getItems());
+
+            int dropIndex = targetItems.size();
+            if (event.getDropTargetItem().isPresent()) {
+                Object targetItem = event.getDropTargetItem().get();
+                int targetIdx = targetItems.indexOf(targetItem);
+                dropIndex = event.getDropLocation() == GridDropLocation.BELOW ? targetIdx + 1 : targetIdx;
+            }
+
+            if (sameGrid) {
+                targetItems.remove(draggedItem);
+                targetItems.add(dropIndex, draggedItem);
+                targetProvider.getItems().clear();
+                targetProvider.getItems().addAll(targetItems);
+                targetProvider.refreshAll();
+            } else {
                 ListDataProvider<Object> sourceProvider = (ListDataProvider<Object>) dragSource.getDataProvider();
-                if (sourceProvider.getItems().remove(draggedItem)) {
-                    sourceProvider.refreshAll();
+                sourceProvider.getItems().remove(draggedItem);
+                sourceProvider.refreshAll();
+
+                targetItems.add(dropIndex, draggedItem);
+                targetProvider.getItems().clear();
+                targetProvider.getItems().addAll(targetItems);
+                targetProvider.refreshAll();
+
+                if (kanbanConfig.getRowIndexField() != null) {
+                    int idx = 0;
+                    for (Object item : sourceProvider.getItems()) {
+                        reflectionService.setValue(item, kanbanConfig.getRowIndexField(), idx++);
+                        dataStore.updateRecordById(item);
+                    }
                 }
-                ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
-                if (!targetProvider.getItems().contains(draggedItem)) {
-                    targetProvider.getItems().add(draggedItem);
-                    targetProvider.refreshAll();
+            }
+
+            if (kanbanConfig.getRowIndexField() != null) {
+                int idx = 0;
+                for (Object item : targetProvider.getItems()) {
+                    reflectionService.setValue(item, kanbanConfig.getRowIndexField(), idx++);
+                    dataStore.updateRecordById(item);
                 }
+            } else {
+                dataStore.updateRecordById(draggedItem);
             }
 
             // Ensure UI reflects persisted state (also covers filtering by column)

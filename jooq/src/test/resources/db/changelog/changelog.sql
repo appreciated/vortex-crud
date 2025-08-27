@@ -87,6 +87,7 @@ CREATE TABLE tasks
     description VARCHAR(1000),
     assigned_to INT,
     status      VARCHAR(50),
+    row_index   INTEGER,
     due_date    DATE,
     created_at  TIMESTAMP,
     updated_at  TIMESTAMP,
