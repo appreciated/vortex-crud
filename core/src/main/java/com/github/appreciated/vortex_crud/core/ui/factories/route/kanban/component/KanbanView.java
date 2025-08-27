@@ -23,15 +23,15 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
-import javax.swing.*;
 import java.util.*;
+
+import static com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.component.FractionalIndex.generateKeyBetween;
 
 public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
@@ -169,15 +169,26 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         dialog.open();
     }
 
-    private void refreshColumns() {
-        columns.forEach((value, grid) -> {
-            List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(kanbanConfig.getColumnField(), value, 0, 1000);
-            if (kanbanConfig.getRowIndexField() != null) {
-                records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
-            }
-            grid.setDataProvider(new ListDataProvider<>(records));
-        });
-    }
+// Update the refreshColumns method to use fresh data
+private void refreshColumns() {
+    columns.forEach((value, grid) -> {
+        // Fetch fresh data from the data store
+        List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(
+            kanbanConfig.getColumnField(), 
+            value, 
+            0, 
+            1000
+        );
+        
+        // Sort if row index field is configured
+        if (kanbanConfig.getRowIndexField() != null) {
+            records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
+        }
+        
+        // Create new data provider with fresh data
+        grid.setItems(records);
+    });
+}
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -229,64 +240,63 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             columns.values().forEach(g -> g.setDropMode(GridDropMode.BETWEEN));
         });
 
-        grid.addDropListener(event -> {
-            if (draggedItem == null || dragSource == null) {
-                return;
-            }
+// Replace the grid.addDropListener implementation with this updated version
+grid.addDropListener(event -> {
+    if (draggedItem == null || dragSource == null) {
+        return;
+    }
 
-            boolean sameGrid = dragSource == grid;
+    // Store original column value
+    Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfig.getColumnField());
+    
+    // Update column value
+    reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
 
-            // Persist the new column value first
-            reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
+    if (kanbanConfig.getRowIndexField() != null) {
+        // Get fresh items in target column
+        List<Object> targetColumnItems = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(
+            kanbanConfig.getColumnField(), 
+            columnDatabaseValue, 
+            0, 
+            1000
+        );
 
-            ListDataProvider<Object> targetProvider = (ListDataProvider<Object>) grid.getDataProvider();
-            List<Object> targetItems = new ArrayList<>(targetProvider.getItems());
-
-            int dropIndex = targetItems.size();
-            if (event.getDropTargetItem().isPresent()) {
-                Object targetItem = event.getDropTargetItem().get();
-                int targetIdx = targetItems.indexOf(targetItem);
-                dropIndex = event.getDropLocation() == GridDropLocation.BELOW ? targetIdx + 1 : targetIdx;
-            }
-
-            if (sameGrid) {
-                targetItems.remove(draggedItem);
-                targetItems.add(dropIndex, draggedItem);
-                targetProvider.getItems().clear();
-                targetProvider.getItems().addAll(targetItems);
-                targetProvider.refreshAll();
+        String newPosition;
+        
+        if (!event.getDropTargetItem().isPresent()) {
+            // Dropping at the end
+            String lastPosition = targetColumnItems.isEmpty() ? null :
+                reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1), 
+                    kanbanConfig.getRowIndexField()).toString();
+            newPosition = generateKeyBetween(lastPosition, null);
+        } else {
+            Object targetItem = event.getDropTargetItem().get();
+            String targetPosition = reflectionService.getValue(targetItem, 
+                kanbanConfig.getRowIndexField()).toString();
+            
+            if (event.getDropLocation() == GridDropLocation.BELOW) {
+                // Find next item's position
+                int targetIndex = targetColumnItems.indexOf(targetItem);
+                String nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
+                    reflectionService.getValue(targetColumnItems.get(targetIndex + 1), 
+                        kanbanConfig.getRowIndexField()).toString() : null;
+                newPosition = generateKeyBetween(targetPosition, nextPosition);
             } else {
-                ListDataProvider<Object> sourceProvider = (ListDataProvider<Object>) dragSource.getDataProvider();
-                sourceProvider.getItems().remove(draggedItem);
-                sourceProvider.refreshAll();
-
-                targetItems.add(dropIndex, draggedItem);
-                targetProvider.getItems().clear();
-                targetProvider.getItems().addAll(targetItems);
-                targetProvider.refreshAll();
-
-                if (kanbanConfig.getRowIndexField() != null) {
-                    int idx = 0;
-                    for (Object item : sourceProvider.getItems()) {
-                        reflectionService.setValue(item, kanbanConfig.getRowIndexField(), idx++);
-                        dataStore.updateRecordById(item);
-                    }
-                }
+                // Find previous item's position
+                int targetIndex = targetColumnItems.indexOf(targetItem);
+                String prevPosition = (targetIndex > 0) ?
+                    reflectionService.getValue(targetColumnItems.get(targetIndex - 1), 
+                        kanbanConfig.getRowIndexField()).toString() : null;
+                newPosition = generateKeyBetween(prevPosition, targetPosition);
             }
-
-            if (kanbanConfig.getRowIndexField() != null) {
-                int idx = 0;
-                for (Object item : targetProvider.getItems()) {
-                    reflectionService.setValue(item, kanbanConfig.getRowIndexField(), idx++);
-                    dataStore.updateRecordById(item);
-                }
-            } else {
-                dataStore.updateRecordById(draggedItem);
-            }
-
-            // Ensure UI reflects persisted state (also covers filtering by column)
-            refreshColumns();
-        });
+        }
+        
+        // Update the dragged item with new position
+        reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
+    }
+    dataStore.updateRecordById(draggedItem);
+    refreshColumns();
+});
 
         grid.addDragEndListener(e -> {
             draggedItem = null;
