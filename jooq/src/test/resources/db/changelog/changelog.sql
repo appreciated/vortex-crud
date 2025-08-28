@@ -59,7 +59,7 @@ CREATE TABLE one_to_many_child
     CONSTRAINT fk_otm_parent FOREIGN KEY (parent_id) REFERENCES one_to_many_parent (id)
 );
 
--- changeset Create users table for project tasks:8
+-- changeset Create users table for project tasks:7
 CREATE TABLE subroute_users
 (
     id            INTEGER PRIMARY KEY,
@@ -68,7 +68,7 @@ CREATE TABLE subroute_users
     created_at    TIMESTAMP
 );
 
--- changeset Create users table for project tasks:9
+-- changeset Create users table for project tasks:8
 CREATE TABLE master_detail_users
 (
     id            INTEGER PRIMARY KEY,
@@ -77,7 +77,7 @@ CREATE TABLE master_detail_users
     created_at    TIMESTAMP
 );
 
--- changeset Create users table for project tasks:10
+-- changeset Create users table for project tasks:9
 CREATE TABLE kanban_users
 (
     id            INTEGER PRIMARY KEY,
@@ -86,7 +86,7 @@ CREATE TABLE kanban_users
     created_at    TIMESTAMP
 );
 
--- changeset Create projects table for project and i18n tests:11
+-- changeset Create projects table for project and i18n tests:10
 CREATE TABLE projects
 (
     id          INTEGER PRIMARY KEY,
@@ -98,7 +98,7 @@ CREATE TABLE projects
     updated_at  TIMESTAMP
 );
 
--- changeset Create tasks table for completeness:12
+-- changeset Create tasks table for completeness:11
 CREATE TABLE subroute_tasks
 (
     id          INTEGER PRIMARY KEY,
@@ -112,7 +112,7 @@ CREATE TABLE subroute_tasks
     FOREIGN KEY (assigned_to) REFERENCES subroute_users (id)
 );
 
--- changeset Create tasks table for completeness:13
+-- changeset Create tasks table for completeness:12
 CREATE TABLE master_detail_tasks
 (
     id          INTEGER PRIMARY KEY,
@@ -126,7 +126,7 @@ CREATE TABLE master_detail_tasks
     FOREIGN KEY (assigned_to) REFERENCES master_detail_users (id)
 );
 
--- changeset Create tasks table for completeness:14
+-- changeset Create tasks table for completeness:13
 CREATE TABLE kanban_tasks
 (
     id          INTEGER PRIMARY KEY,
@@ -141,7 +141,7 @@ CREATE TABLE kanban_tasks
     FOREIGN KEY (assigned_to) REFERENCES kanban_users (id)
 );
 
--- changeset Create images table for image tests:15
+-- changeset Create images table for image tests:14
 CREATE TABLE card_images
 (
     id    INTEGER PRIMARY KEY,
@@ -149,7 +149,7 @@ CREATE TABLE card_images
     url   VARCHAR(255)
 );
 
--- changeset Create images table for image tests:16
+-- changeset Create images table for image tests:15
 CREATE TABLE grid_images
 (
     id    INTEGER PRIMARY KEY,
@@ -158,7 +158,7 @@ CREATE TABLE grid_images
 );
 
 
--- changeset Create images table for image tests:17
+-- changeset Create images table for image tests:16
 CREATE TABLE i18n_images
 (
     id    INTEGER PRIMARY KEY,
