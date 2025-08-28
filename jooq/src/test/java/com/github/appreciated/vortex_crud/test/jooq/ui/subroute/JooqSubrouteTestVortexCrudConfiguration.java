@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.SubrouteTasks.SUBROUTE_TASKS;
 
 @Service
 public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -27,32 +27,33 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                TASKS, JooqDataStoreConfig.of(TASKS)
+                SUBROUTE_TASKS, JooqDataStoreConfig.of(SUBROUTE_TASKS)
                         .withFields(Map.of(
-                                TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                TASKS.STATUS, new JooqField(TextFieldFactory.class, true)
+                                SUBROUTE_TASKS.ID, new JooqField(IdFieldFactory.class, true),
+                                SUBROUTE_TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
+                                SUBROUTE_TASKS.STATUS, new JooqField(TextFieldFactory.class, true)
                         ))
                         .build()
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(TASKS)
+                .withDataStore(SUBROUTE_TASKS)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(TASKS.TITLE)
+                        .withTitleField(SUBROUTE_TASKS.TITLE)
+                        .withChildren(new JooqFieldElement(SUBROUTE_TASKS.TITLE, "route.SUBROUTE_TASKS.labels.title"))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
-                .withDataStore(TASKS)
-                .withTitle("route.tasks.title")
+        routes.put("SUBROUTE_TASKS", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+                .withDataStore(SUBROUTE_TASKS)
+                .withTitle("route.SUBROUTE_TASKS.title")
                 .withChildrenMap(Map.of(
                         "open", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withDataStore(TASKS)
-                                .withTitle("route.open-tasks.title")
+                                .withDataStore(SUBROUTE_TASKS)
+                                .withTitle("route.open-SUBROUTE_TASKS.title")
                                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField(TASKS.TITLE)
+                                        .withTitleField(SUBROUTE_TASKS.TITLE)
                                         .build())
                                 .withChild(taskForm)
                                 .build()

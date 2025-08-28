@@ -58,8 +58,9 @@ CREATE TABLE one_to_many_child
     PRIMARY KEY (id),
     CONSTRAINT fk_otm_parent FOREIGN KEY (parent_id) REFERENCES one_to_many_parent (id)
 );
--- changeset Create users table for project tasks:7
-CREATE TABLE users
+
+-- changeset Create users table for project tasks:8
+CREATE TABLE subroute_users
 (
     id            INTEGER PRIMARY KEY,
     username      VARCHAR(255) NOT NULL,
@@ -67,7 +68,25 @@ CREATE TABLE users
     created_at    TIMESTAMP
 );
 
--- changeset Create projects table for project and i18n tests:8
+-- changeset Create users table for project tasks:9
+CREATE TABLE master_detail_users
+(
+    id            INTEGER PRIMARY KEY,
+    username      VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),
+    created_at    TIMESTAMP
+);
+
+-- changeset Create users table for project tasks:10
+CREATE TABLE kanban_users
+(
+    id            INTEGER PRIMARY KEY,
+    username      VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),
+    created_at    TIMESTAMP
+);
+
+-- changeset Create projects table for project and i18n tests:11
 CREATE TABLE projects
 (
     id          INTEGER PRIMARY KEY,
@@ -79,8 +98,8 @@ CREATE TABLE projects
     updated_at  TIMESTAMP
 );
 
--- changeset Create tasks table for completeness:9
-CREATE TABLE tasks
+-- changeset Create tasks table for completeness:12
+CREATE TABLE subroute_tasks
 (
     id          INTEGER PRIMARY KEY,
     title       VARCHAR(255) NOT NULL,
@@ -91,34 +110,40 @@ CREATE TABLE tasks
     due_date    DATE,
     created_at  TIMESTAMP,
     updated_at  TIMESTAMP,
-    FOREIGN KEY (assigned_to) REFERENCES users (id)
+    FOREIGN KEY (assigned_to) REFERENCES subroute_users (id)
 );
 
--- changeset Create task_comments table:10
-CREATE TABLE task_comments
+-- changeset Create tasks table for completeness:13
+CREATE TABLE master_detail_tasks
 (
-    id           INTEGER PRIMARY KEY,
-    comment_text VARCHAR(1000),
-    user_id      INT,
-    created_at   TIMESTAMP,
-    task_id      INT,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (task_id) REFERENCES tasks (id)
+    id          INTEGER PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    description VARCHAR(1000),
+    assigned_to INT,
+    status      VARCHAR(50),
+    row_index   INTEGER,
+    due_date    DATE,
+    created_at  TIMESTAMP,
+    updated_at  TIMESTAMP,
+    FOREIGN KEY (assigned_to) REFERENCES master_detail_users (id)
 );
 
--- changeset Create task_has_task relation table:11
-CREATE TABLE task_has_task
+-- changeset Create tasks table for completeness:14
+CREATE TABLE kanban_tasks
 (
-    id              INTEGER PRIMARY KEY,
-    task_id         INT NOT NULL,
-    related_task_id INT NOT NULL,
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (task_id, related_task_id),
-    FOREIGN KEY (task_id) REFERENCES tasks (id),
-    FOREIGN KEY (related_task_id) REFERENCES tasks (id)
+    id          INTEGER PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    description VARCHAR(1000),
+    assigned_to INT,
+    status      VARCHAR(50),
+    row_index   INTEGER,
+    due_date    DATE,
+    created_at  TIMESTAMP,
+    updated_at  TIMESTAMP,
+    FOREIGN KEY (assigned_to) REFERENCES kanban_users (id)
 );
 
--- changeset Create images table for image tests:12
+-- changeset Create images table for image tests:15
 CREATE TABLE images
 (
     id    INTEGER PRIMARY KEY,

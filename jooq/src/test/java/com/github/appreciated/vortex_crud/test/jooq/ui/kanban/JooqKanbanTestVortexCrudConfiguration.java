@@ -21,7 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.KanbanTasks.KANBAN_TASKS;
+
 
 @Service
 public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -29,20 +30,20 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                TASKS, JooqDataStoreConfig.of(TASKS)
+                KANBAN_TASKS, JooqDataStoreConfig.of(KANBAN_TASKS)
                         .withFields(Map.of(
-                                TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                TASKS.STATUS, new JooqField(SelectFieldFactory.class, "enum-options")
+                                KANBAN_TASKS.ID, new JooqField(IdFieldFactory.class, true),
+                                KANBAN_TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
+                                KANBAN_TASKS.STATUS, new JooqField(SelectFieldFactory.class, "enum-options")
                         ))
                         .build()
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(TASKS)
+                .withDataStore(KANBAN_TASKS)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(TASKS.TITLE, "route.tasks.labels.title"))
+                        .withTitleField(KANBAN_TASKS.TITLE)
+                        .withChildren(new JooqFieldElement(KANBAN_TASKS.TITLE, "route.KANBAN_TASKS.labels.title"))
                         .build())
                 .build();
 
@@ -52,15 +53,15 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         enumOptions.put("c", "enums.option3");
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
+        routes.put("KANBAN_TASKS", JooqRouteRenderer.of(KanbanDetailFactory.class)
                 .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(TASKS)
-                .withTitle("route.open-tasks.title")
+                .withDataStore(KANBAN_TASKS)
+                .withTitle("route.open-KANBAN_TASKS.title")
                 .withConfiguration(JooqKanban.of(CardFactory.class)
-                        .withTitleField(TASKS.TITLE)
-                        .withDescriptionField(TASKS.DESCRIPTION)
-                        .withColumnField(TASKS.STATUS)
-                        .withRowIndexField(TASKS.ROW_INDEX)
+                        .withTitleField(KANBAN_TASKS.TITLE)
+                        .withDescriptionField(KANBAN_TASKS.DESCRIPTION)
+                        .withColumnField(KANBAN_TASKS.STATUS)
+                        .withRowIndexField(KANBAN_TASKS.ROW_INDEX)
                         .build())
                 .withChild(taskForm)
                 .build()
