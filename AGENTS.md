@@ -25,15 +25,6 @@
     mvn --no-transfer-progress -B install -DskipTests --file pom.xml
    ```
 
-3. To run the test and ui-test, run the following maven command:
-
-   ```bash
-    xvfb-run mvn --no-transfer-progress -B verify --file pom.xml
-   ```
-
-   This command builds all modules and executes their tests. Be very patient with this command. It takes at least two
-   minutes to complete for all modules.
-
 ## Implementing new features
 
 - Always add new, fitting use-cases to ui-test-base when implementing new features.
