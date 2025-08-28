@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "jpa_validation_test")
+@Table(name = "validation_test")
 public class JpaFieldValidationEntity {
 
     @Id
