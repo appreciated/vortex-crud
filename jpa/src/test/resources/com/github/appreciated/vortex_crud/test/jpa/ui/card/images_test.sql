@@ -1,16 +1,7 @@
--- Seed data for JPA image tests
-DROP TABLE IF EXISTS images;
-
-CREATE TABLE images
-(
-    id    INTEGER PRIMARY KEY,
-    title VARCHAR(255),
-    url   VARCHAR(255)
-);
-
+-- Seed data for jOOQ projects tests
 DELETE
-FROM images;
+FROM card_images;
 
-INSERT INTO images (id, title, url)
+INSERT INTO card_images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),
        (2, 'Green', './images/green.png');

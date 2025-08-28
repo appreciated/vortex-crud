@@ -40,15 +40,15 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .withDataStore(MASTER_DETAIL_TASKS)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(MASTER_DETAIL_TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(MASTER_DETAIL_TASKS.TITLE, "route.MASTER_DETAIL_TASKS.labels.title"))
+                        .withChildren(new JooqFieldElement(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title"))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("MASTER_DETAIL_TASKS", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+        routes.put("tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
                 .withIconFactory(CHECK_CIRCLE::create)
                 .withDataStore(MASTER_DETAIL_TASKS)
-                .withTitle("route.done-MASTER_DETAIL_TASKS.title")
+                .withTitle("route.done-tasks.title")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(MASTER_DETAIL_TASKS.TITLE)
                         .withDescriptionField(MASTER_DETAIL_TASKS.DESCRIPTION)

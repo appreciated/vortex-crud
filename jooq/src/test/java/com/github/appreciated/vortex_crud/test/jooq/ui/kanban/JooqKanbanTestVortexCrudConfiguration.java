@@ -43,7 +43,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .withDataStore(KANBAN_TASKS)
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(KANBAN_TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(KANBAN_TASKS.TITLE, "route.KANBAN_TASKS.labels.title"))
+                        .withChildren(new JooqFieldElement(KANBAN_TASKS.TITLE, "route.tasks.labels.title"))
                         .build())
                 .build();
 
@@ -53,10 +53,10 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         enumOptions.put("c", "enums.option3");
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("KANBAN_TASKS", JooqRouteRenderer.of(KanbanDetailFactory.class)
+        routes.put("tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
                 .withIconFactory(VaadinIcon.TASKS::create)
                 .withDataStore(KANBAN_TASKS)
-                .withTitle("route.open-KANBAN_TASKS.title")
+                .withTitle("route.open-tasks.title")
                 .withConfiguration(JooqKanban.of(CardFactory.class)
                         .withTitleField(KANBAN_TASKS.TITLE)
                         .withDescriptionField(KANBAN_TASKS.DESCRIPTION)

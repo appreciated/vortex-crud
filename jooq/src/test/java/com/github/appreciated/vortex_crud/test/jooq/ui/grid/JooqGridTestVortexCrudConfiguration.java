@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.GRID_IMAGES;
 
 @Service
 public class JooqGridTestVortexCrudConfiguration
@@ -30,11 +30,11 @@ public class JooqGridTestVortexCrudConfiguration
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                IMAGES, JooqDataStoreConfig.of(IMAGES)
+                GRID_IMAGES, JooqDataStoreConfig.of(GRID_IMAGES)
                         .withFields(Map.of(
-                                IMAGES.ID, new JooqField(IdFieldFactory.class, true),
-                                IMAGES.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                IMAGES.URL, JooqField.of(ImageFieldFactory.class)
+                                GRID_IMAGES.ID, new JooqField(IdFieldFactory.class, true),
+                                GRID_IMAGES.TITLE, new JooqField(TextFieldFactory.class, true, true),
+                                GRID_IMAGES.URL, JooqField.of(ImageFieldFactory.class)
                                         .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                                         .build()
                         ))
@@ -42,27 +42,27 @@ public class JooqGridTestVortexCrudConfiguration
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(IMAGES)
+                .withDataStore(GRID_IMAGES)
                 .withTitle("route.projects.title-cards")
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(IMAGES.TITLE)
+                        .withTitleField(GRID_IMAGES.TITLE)
                         .withChildren(
-                                new JooqFieldElement(IMAGES.TITLE, "route.images.labels.title"),
-                                new JooqFieldElement(IMAGES.URL, "route.images.labels.image")
+                                new JooqFieldElement(GRID_IMAGES.TITLE, "route.images.labels.title"),
+                                new JooqFieldElement(GRID_IMAGES.URL, "route.images.labels.image")
                         )
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(IMAGES)
+                .withDataStore(GRID_IMAGES)
                 .withTitle("route.images-list")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withInlineEdit(true)
-                        .withFilterField(IMAGES.TITLE)
+                        .withFilterField(GRID_IMAGES.TITLE)
                         .withChildren(
-                                new JooqFieldElement(IMAGES.URL, "route.projects.labels.description"),
-                                new JooqFieldElement(IMAGES.TITLE, "route.projects.labels.name")
+                                new JooqFieldElement(GRID_IMAGES.URL, "route.projects.labels.description"),
+                                new JooqFieldElement(GRID_IMAGES.TITLE, "route.projects.labels.name")
                         )
                         .build())
                 .withChild(imageForm)

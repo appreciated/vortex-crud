@@ -1,7 +1,7 @@
 -- Seed data for jOOQ image tests
 DELETE
-FROM images;
+FROM grid_images;
 
-INSERT INTO images (id, title, url)
+INSERT INTO grid_images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),
        (2, 'Green', './images/green.png');

@@ -144,9 +144,27 @@ CREATE TABLE kanban_tasks
 );
 
 -- changeset Create images table for image tests:15
-CREATE TABLE images
+CREATE TABLE card_images
 (
     id    INTEGER PRIMARY KEY,
     title VARCHAR(255),
     url   VARCHAR(255)
 );
+
+-- changeset Create images table for image tests:16
+CREATE TABLE grid_images
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR(255),
+    url   VARCHAR(255)
+);
+
+
+-- changeset Create images table for image tests:17
+CREATE TABLE i18n_images
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR(255),
+    url   VARCHAR(255)
+);
+
