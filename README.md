@@ -117,47 +117,47 @@ Here is a brief example of how to use the jOOQ integration with `vortex-crud`. F
 
 ```java
 @Service
-public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<Table<?>, TableField<?, ?>> {
+public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     @Override
-    public Application<Table<?>, TableField<?, ?>> get() {
+    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Configure accessible data and its editable fields for vortex-crud
-        Map<Table<?>, DataStoreConfig<Table<?>, TableField<?, ?>>> dataStores = Map.of(
-                PROJECTS, JooqDataStoreConfig.of(JooqDataStore.class)
+        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
+                PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .withFields(Map.of(
-                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true), // Render projects.id as id field
-                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true), // Render projects.name as required text field
-                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false) // Render projects.description as optional text area
+                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
+                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true),
+                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false)
                         ))
                         .build()
                 // ...
         );
 
         // Define a reusable form for editing entities from the "PROJECTS" datastore
-        Route<Table<?>, TableField<?, ?>> projectForm = JooqRoute.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(PROJECTS)
-                .withTitle("route.projects.title-cards") // i18n key for the title
-                .withConfiguration(JooqRouteConfiguration.of(CardFactory.class)
-                        .withTitleField(PROJECTS.NAME) // Field to display as the card title
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(PROJECTS.NAME)
                         .withChildren(
-                                new JooqFormElement(PROJECTS.NAME, "field", "route.projects.labels.name") // Form element with i18n key
+                                new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name")
                                 // ...
                         )
                         .build())
                 .build();
 
         // Configure a grid route for displaying and navigating PROJECTS entries
-        Map<String, Route<Table<?>, TableField<?, ?>>> routes = Map.of(
-                "projects-cards", JooqRoute.of(GridRouteFactory.class) // will register a grid route under f.e. localhost:8080/projects-cards to make PROJECTS editable
+        Map<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = Map.of(
+                "projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
                         .withDataStore(PROJECTS)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<Table<?>, TableField<?, ?>>of(CardFactory.class)
-                                .withTitleField(PROJECTS.NAME) // Displayed as the grid title
-                                .withDescriptionField(PROJECTS.DESCRIPTION) // Displayed as the grid description
+                        .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                                .withTitleField(PROJECTS.NAME)
+                                .withDescriptionField(PROJECTS.DESCRIPTION)
                                 .build())
-                        .withRoles(List.of("manager", "admin")) // Restrict access to specific roles
-                        .withChild(projectForm) // register child form route to edit PROJECTS entities f.e. localhost:8080/projects-cards/1
+                        .withRoles(List.of("manager", "admin"))
+                        .withChild(projectForm)
                         .build()
                 // ...
         );
@@ -174,44 +174,50 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 ```
 
 ### <a name="configuration-jpa">vortex-crud with JPA</a>
-Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found under `examples/jpa-postgresql-example`.
+Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found under `examples/jpa-sqlite-example`.
 
 ```java
 @Service
-public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<Entity, Object> {
+public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+
+    private final ProjectRepository projectRepository;
+
+    public ExampleJpaConfiguration(ProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
+    }
+
     @Override
-    public Application<String, String> get() {
-        Route<String, String> projectForm = JpaRoute.of(FormRouteFactory.class)
-                .withDataStore("projects")
+    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(projectRepository)
                 .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteConfiguration.of(CardFactory.class)
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new JpaFormElement("name", "field", "route.projects.labels.name")
+                                new JpaFieldElement("name", "route.projects.labels.name")
                                 // ...
                         )
                         .build())
                 .build();
-    
-        Map<String, DataStoreConfig<String, String>> dataStores = Map.of(
-                "projects", JpaDataStoreConfig.of(JpaDataStore.class)
+
+        Map<String, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
+                "projects", JpaDataStoreConfig.of(projectRepository)
                         .withFields(Map.of(
                                 "id", new JpaField(IdFieldFactory.class, true),
                                 "name", new JpaField(TextFieldFactory.class, true, true),
                                 "description", new JpaField(TextAreaFieldFactory.class, false, false)
-                                // ...
                         ))
                         .build()
                 // ...
         );
-    
-        Map<String, Route<String, String>> routes = Map.of(
-                "projects-cards", JpaRoute.of(GridRouteFactory.class)
+
+        Map<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = Map.of(
+                "projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
                         .withDefaultRoute(true)
-                        .withDataStore("projects")
+                        .withDataStore(projectRepository)
                         .withIconFactory(FACTORY::create)
                         .withTitle("route.projects.title-cards")
-                        .withConfiguration(GridOrListConfiguration.Builder.<String, String>of(CardFactory.class)
+                        .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
                                 .withTitleField("name")
                                 .withDescriptionField("description")
                                 .build())
@@ -220,7 +226,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build()
                 // ...
         );
-  
+
         return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
