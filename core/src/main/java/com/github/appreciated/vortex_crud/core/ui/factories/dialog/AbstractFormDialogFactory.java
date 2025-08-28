@@ -19,13 +19,12 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
-import jakarta.annotation.Nullable;
 
 /**
  * Base implementation for dialog factories that render CRUD forms.
  */
 public abstract class AbstractFormDialogFactory<DataStoreId, FieldId, KeyType>
-        implements VortexCrudFormFactory<DataStoreId, FieldId, KeyType> {
+        implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
 
     protected final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
     protected final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
@@ -47,9 +46,9 @@ public abstract class AbstractFormDialogFactory<DataStoreId, FieldId, KeyType>
     }
 
     @Override
-    public Dialog create(@Nullable String entityId,
-                         @Nullable String foreignKeyValue,
-                         @Nullable FieldId foreignKeyField,
+    public Dialog create(@org.jetbrains.annotations.Nullable Object entityId,
+                         @org.jetbrains.annotations.Nullable Object foreignKeyValue,
+                         @org.jetbrains.annotations.Nullable FieldId foreignKeyField,
                          RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
                          CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
                          KeyType dataStoreKey,
@@ -88,7 +87,7 @@ public abstract class AbstractFormDialogFactory<DataStoreId, FieldId, KeyType>
 
     protected abstract Dialog instantiateDialog();
 
-    private void createFooter(String foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog,
+    private void createFooter(Object foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog,
                                OnStoreListener listener, OnCancelListener onCancelListener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
