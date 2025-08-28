@@ -33,7 +33,7 @@ public class JpaFormSlideFactoryConfiguration {
                         foreignKeyResolutionStrategy, dataStoreUtil);
         dialogFactoryRegistry.addFactory(FormSlideFactory.class, slideFactory);
         dialogFactoryRegistry.addFactory(FormSlideRouteFactory.class, slideFactory);
-        routeFactoryRegistry.addFactory(FormSlideRouteFactory.class,
+        routeFactoryRegistry.addFactory((Class) FormSlideRouteFactory.class,
                 new FormSlideRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator,
                         routeFactoryRegistry, fieldNameResolver, reflectionService));
     }
