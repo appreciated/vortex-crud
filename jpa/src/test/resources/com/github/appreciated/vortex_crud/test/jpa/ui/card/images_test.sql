@@ -1,4 +1,6 @@
 -- Seed data for jpa projects tests
+DROP TABLE IF EXISTS card_images;
+
 CREATE TABLE card_images
 (
     id    INTEGER PRIMARY KEY,

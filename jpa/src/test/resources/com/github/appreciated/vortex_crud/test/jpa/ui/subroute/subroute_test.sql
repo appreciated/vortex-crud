@@ -1,4 +1,6 @@
 -- Seed data for JOOQ subroute tests
+DROP TABLE IF EXISTS subroute_users;
+
 CREATE TABLE subroute_users
 (
     id            INTEGER PRIMARY KEY,
@@ -6,6 +8,8 @@ CREATE TABLE subroute_users
     password_hash VARCHAR(255),
     created_at    TIMESTAMP
 );
+
+DROP TABLE IF EXISTS subroute_tasks;
 
 CREATE TABLE subroute_tasks
 (

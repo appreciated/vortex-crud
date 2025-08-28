@@ -1,4 +1,6 @@
 -- Seed data for JOOQ kanban tests
+DROP TABLE IF EXISTS kanban_users;
+
 CREATE TABLE kanban_users
 (
     id            INTEGER PRIMARY KEY,
@@ -6,6 +8,8 @@ CREATE TABLE kanban_users
     password_hash VARCHAR(255),
     created_at    TIMESTAMP
 );
+
+DROP TABLE IF EXISTS kanban_tasks;
 
 CREATE TABLE kanban_tasks
 (

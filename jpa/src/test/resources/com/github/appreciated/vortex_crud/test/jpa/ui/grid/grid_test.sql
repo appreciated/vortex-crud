@@ -1,4 +1,6 @@
 -- Seed data for jpa image tests
+DROP TABLE IF EXISTS grid_images;
+
 CREATE TABLE grid_images
 (
     id    INTEGER PRIMARY KEY,

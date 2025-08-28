@@ -1,4 +1,6 @@
 -- Seed data for JOOQ master-detail tests
+DROP TABLE IF EXISTS master_detail_users;
+
 CREATE TABLE master_detail_users
 (
     id            INTEGER PRIMARY KEY,
