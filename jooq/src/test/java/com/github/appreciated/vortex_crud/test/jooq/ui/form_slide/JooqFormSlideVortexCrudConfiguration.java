@@ -47,16 +47,16 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(FROM_SLIDE_IMAGES.TITLE)
                         .withChildren(
-                                new JooqFieldElement(FROM_SLIDE_IMAGES.TITLE, "route.FROM_SLIDE_IMAGES.labels.title"),
-                                new JooqFieldElement(FROM_SLIDE_IMAGES.URL, "route.FROM_SLIDE_IMAGES.labels.image")
+                                new JooqFieldElement(FROM_SLIDE_IMAGES.TITLE, "route.image.labels.title"),
+                                new JooqFieldElement(FROM_SLIDE_IMAGES.URL, "route.image.labels.image")
                         )
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("FROM_SLIDE_IMAGES-slide", JooqRouteRenderer.of(GridRouteFactory.class)
+        routes.put("image-slide", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDataStore(FROM_SLIDE_IMAGES)
-                .withTitle("route.FROM_SLIDE_IMAGES-cards")
+                .withTitle("route.image-cards")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(FROM_SLIDE_IMAGES.TITLE)
                         .withImageField(FROM_SLIDE_IMAGES.URL)
