@@ -13,15 +13,13 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
+import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -31,7 +29,6 @@ import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
-import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.BETWEEN;
 
 public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
 
@@ -84,17 +81,14 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
         detailContainer.setHeightFull();
         detailContainer.setWidth("unset");
 
-        HorizontalLayout header = new RouteHeader(routeRenderer);
-
-        Button addButton = new Button(VaadinIcon.PLUS.create());
-        addButton.addClickListener(event -> onAdd());
-        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        HorizontalLayout headerContainer = new HorizontalLayout(header, addButton);
-        headerContainer.setPadding(false);
-        headerContainer.setAlignItems(CENTER);
-        headerContainer.setWidthFull();
-        headerContainer.setJustifyContentMode(BETWEEN);
+        RouteHeader routeHeader = new RouteHeader(routeRenderer);
+        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
+                false,
+                null,
+                event -> onAdd(),
+                null,
+                null,
+                routeHeader);
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         textField.getStyle().set("--lumo-border-radius-m", "var(--vaadin-card-border-radius)");
@@ -106,7 +100,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
 
         virtualList.setHeightFull();
 
-        VerticalLayout masterContainer = new VerticalLayout(headerContainer, searchContainer, virtualList);
+        VerticalLayout masterContainer = new VerticalLayout(headerBar, searchContainer, virtualList);
         masterContainer.getStyle().set("overflow", "hidden");
         masterContainer.setPadding(true);
         masterContainer.setSpacing(true);
