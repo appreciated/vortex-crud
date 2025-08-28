@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.ui_test_base;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -36,6 +36,9 @@ public abstract class BaseUITest {
     @Value(value = "${local.server.port}")
     private int port;
 
+    @Value(value = "${ui-test.disable-headless:false}")
+    private boolean disableHeadless;
+
     protected WebDriver driver;
     protected WebDriverWait wait;
     private Path userDataDir;
@@ -54,7 +57,9 @@ public abstract class BaseUITest {
         userDataDir = Files.createTempDirectory("ui-test-chrome-user-data-");
 
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
+        if (!disableHeadless) {
+            options.addArguments("--headless=new");
+        }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
@@ -126,7 +131,7 @@ public abstract class BaseUITest {
     }
 
     protected WebElement waitForElementWithTagAndValue(String tagName, String value) {
-        return waitForElements(By.xpath("//"+tagName)).stream()
+        return waitForElements(By.xpath("//" + tagName)).stream()
                 .filter(webElement -> webElement.getAttribute("value").startsWith(value))
                 .findFirst()
                 .orElseThrow();
