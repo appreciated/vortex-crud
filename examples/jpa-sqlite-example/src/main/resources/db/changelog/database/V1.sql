@@ -137,7 +137,7 @@ VALUES ('Project Alpha', 'A high-priority project aimed at improving the interna
        ('Project Zeta 2.0', 'Phase two of the CRM system implementation', '2025-05-01 00:00:00.000',
         '2025-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
--- changeset jooq-sqlite-example-test-project:9
+-- changeset jpa-sqlite-example-test-project:9
 INSERT INTO tasks (title, description, assigned_to, status, due_date, created_at, updated_at, row_index)
 VALUES ('Design Homepage', 'Create the design for the homepage of the web app', 1, 'WORK_IN_PROGRESS',
         '2023-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1000),
