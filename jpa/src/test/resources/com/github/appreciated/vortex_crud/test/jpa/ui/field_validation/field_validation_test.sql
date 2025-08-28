@@ -1,7 +1,7 @@
 -- Seed data for jpa field validation tests
-DROP TABLE IF EXISTS jpa_validation_test;
+DROP TABLE IF EXISTS validation_test;
 
-CREATE TABLE jpa_validation_test
+CREATE TABLE validation_test
 (
     id             INTEGER PRIMARY KEY,
     required_field VARCHAR(255) NOT NULL,
