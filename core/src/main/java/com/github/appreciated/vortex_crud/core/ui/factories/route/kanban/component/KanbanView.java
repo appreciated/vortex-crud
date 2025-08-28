@@ -173,12 +173,12 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 private void refreshColumns() {
     columns.forEach((value, grid) -> {
         // Fetch fresh data from the data store
-        List<Object> records = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(
+        List<Object> records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
             kanbanConfig.getColumnField(), 
             value, 
             0, 
             1000
-        );
+        ));
         
         // Sort if row index field is configured
         if (kanbanConfig.getRowIndexField() != null) {
