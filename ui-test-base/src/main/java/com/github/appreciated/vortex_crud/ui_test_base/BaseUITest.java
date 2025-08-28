@@ -72,9 +72,7 @@ public abstract class BaseUITest {
 
     @AfterEach
     public void tearDownTest() throws IOException {
-        if (driver != null) {
-            driver.quit();
-        }
+        // do not quit the driver here, this will be handled by the ScreenshotExtension to allow taking screenshots
         if (userDataDir != null) {
             Files.walk(userDataDir)
                     .sorted(Comparator.reverseOrder())
