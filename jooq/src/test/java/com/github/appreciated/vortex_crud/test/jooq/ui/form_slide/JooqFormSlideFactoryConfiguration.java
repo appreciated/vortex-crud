@@ -11,24 +11,26 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDia
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
-import org.jooq.DSLContext;
+import org.jooq.TableField;
+import org.jooq.TableRecord;
+import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JooqFormSlideFactoryConfiguration {
 
     public JooqFormSlideFactoryConfiguration(
-            VortexCrudDialogFactoryRegistry<DSLContext, String, DSLContext> dialogFactoryRegistry,
-            VortexCrudRouteFactoryRegistry<DSLContext, String, DSLContext> routeFactoryRegistry,
-            VortexCrudConfigService<DSLContext, String, DSLContext> configService,
-            VortexCrudDataStoreFactoryRegistry<DSLContext, String, DSLContext> dataStoreFactoryRegistry,
-            VortexCrudDataStoreFieldNameResolver<String> fieldNameResolver,
-            VortexCrudForeignKeyResolutionStrategy<String> foreignKeyResolutionStrategy,
+            VortexCrudDialogFactoryRegistry<TableRecord<?>, TableField<?, ?>, TableImpl<?>> dialogFactoryRegistry,
+            VortexCrudRouteFactoryRegistry<TableRecord<?>, TableField<?, ?>, TableImpl<?>> routeFactoryRegistry,
+            VortexCrudConfigService<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configService,
+            VortexCrudDataStoreFactoryRegistry<TableRecord<?>, TableField<?, ?>, TableImpl<?>> dataStoreFactoryRegistry,
+            VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> fieldNameResolver,
+            VortexCrudForeignKeyResolutionStrategy<TableField<?, ?>> foreignKeyResolutionStrategy,
             VortexCrudDataStoreUtilStrategy dataStoreUtil,
-            FormCreator<DSLContext, String, DSLContext> formCreator,
-            ReflectionService<String> reflectionService
+            FormCreator<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formCreator,
+            ReflectionService<TableField<?, ?>> reflectionService
     ) {
-        FormSlideFactory<DSLContext, String, DSLContext> slideFactory =
+        FormSlideFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>> slideFactory =
                 new FormSlideFactory<>(configService, dataStoreFactoryRegistry, fieldNameResolver,
                         foreignKeyResolutionStrategy, dataStoreUtil);
         dialogFactoryRegistry.addFactory(FormSlideFactory.class, slideFactory);
