@@ -65,6 +65,6 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingItemName() + "')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

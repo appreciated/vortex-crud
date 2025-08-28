@@ -43,7 +43,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Item 2").click();
         waitForUrlToBe(getPath() + "/2");
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Item 3')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
         waitForElement(By.xpath("//vaadin-icon[@icon='vaadin:plus']/.."))
                 .click();
         waitForAnyElementContainingText("Item 3").click();
@@ -73,6 +73,6 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingItemName() + "')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

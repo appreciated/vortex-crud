@@ -69,7 +69,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForAnyElementContainingText(present);
         List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
                 .stream()
-                .filter(WebElement::isDisplayed)
+                .filter(this::isDisplayedSafe)
                 .toList();
         assertTrue(hidden.isEmpty());
         filter.sendKeys(Keys.BACK_SPACE);
@@ -112,7 +112,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 
     @Test

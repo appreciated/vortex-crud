@@ -73,7 +73,7 @@ public abstract class AbstractGridTest extends BaseUITest {
         }
         List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
                 .stream()
-                .filter(WebElement::isDisplayed)
+                .filter(this::isDisplayedSafe)
                 .toList();
         assertEquals(0, hidden.size());
         for (int i = 0; i < present.length(); i++) {
@@ -129,6 +129,6 @@ public abstract class AbstractGridTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
-        assertTrue(elements.stream().noneMatch(WebElement::isDisplayed));
+        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }
