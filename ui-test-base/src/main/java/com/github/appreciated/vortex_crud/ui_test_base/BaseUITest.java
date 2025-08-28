@@ -64,6 +64,7 @@ public abstract class BaseUITest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--lang=en");
         options.addArguments("--accept-lang=en");
+        options.addArguments("--window-size=1920,1080");
         options.addArguments("--user-data-dir=" + userDataDir.toAbsolutePath());
 
         driver = new ChromeDriver(options);
