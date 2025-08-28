@@ -20,7 +20,7 @@
    </settings>
    EOF
    ```
-2. To make sure the generated code compiles without running the tests, run the following command:
+2. To make sure the generated code compiles without running the tests, run the following command; it will take about a minute, so please be patient:
    ```bash
     mvn --no-transfer-progress -B install -DskipTests --file pom.xml
    ```
