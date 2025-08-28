@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "master_detail_tasks")
 public class JpaMasterDetailTestEntity {
 
     @Id

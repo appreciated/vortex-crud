@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.jpa.service.Field;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "subroute_tasks")
 public class JpaSubrouteTestEntity {
 
     @Id

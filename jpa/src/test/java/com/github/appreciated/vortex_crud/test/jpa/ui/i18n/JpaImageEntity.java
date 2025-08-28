@@ -9,7 +9,7 @@ import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "images")
+@Table(name = "i18n_images")
 public class JpaImageEntity {
 
     @Id

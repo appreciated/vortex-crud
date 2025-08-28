@@ -8,7 +8,7 @@ import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "kanban_tasks")
 public class JpaKanbanTestEntity {
 
     @Id
