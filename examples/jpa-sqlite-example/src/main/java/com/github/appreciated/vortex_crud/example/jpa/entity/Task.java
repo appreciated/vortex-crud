@@ -64,6 +64,8 @@ public class Task {
     )
     private List<Task> relatedTasks = new ArrayList<>();
 
+    private Integer rowIndex;
+
     // Getters and Setters
     public Integer getId() {
         return id;
@@ -143,6 +145,14 @@ public class Task {
 
     public void setRelatedTasks(List<Task> relatedTasks) {
         this.relatedTasks = relatedTasks;
+    }
+
+    public Integer getRowIndex() {
+        return rowIndex;
+    }
+
+    public void setRowIndex(Integer rowIndex) {
+        this.rowIndex = rowIndex;
     }
 
     @Override

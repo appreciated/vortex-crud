@@ -166,6 +166,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         .withTitleField("title")
                                         .withDescriptionField("description")
                                         .withColumnField("status")
+                                        .withRowIndexField("rowIndex")
                                         .build())
                                 .withChild(taskForm)
                                 .build(),

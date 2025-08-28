@@ -22,7 +22,8 @@ CREATE TABLE tasks
     status      VARCHAR(50),
     due_date    DATE,
     created_at  TIMESTAMP,
-    updated_at  TIMESTAMP
+    updated_at  TIMESTAMP,
+    row_index   INTEGER
 );
 
 -- changeset jooq-sqlite-example-test-project:3
@@ -138,53 +139,53 @@ VALUES ('Project Alpha', 'A high-priority project aimed at improving the interna
 
 
 -- changeset jooq-sqlite-example-test-project:9
-INSERT INTO tasks (title, description, assigned_to, status, due_date, created_at, updated_at)
+INSERT INTO tasks (title, description, assigned_to, status, due_date, created_at, updated_at, row_index)
 VALUES ('Design Homepage', 'Create the design for the homepage of the web app', 1, 'WORK_IN_PROGRESS',
-        '2023-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1000),
        ('Database Setup', 'Set up the database structure for Project Beta', 2, 'CLOSED', '2023-10-01 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1000),
        ('AI Model Training', 'Start training the AI model for Project Gamma', 3, 'OPEN', '2024-03-15 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 1000),
        ('User Authentication', 'Implement the user authentication module', 4, 'WORK_IN_PROGRESS',
-        '2023-11-20 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-11-20 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2000),
        ('Frontend Integration', 'Integrate the frontend with the backend API', 5, 'WORK_IN_PROGRESS',
-        '2023-12-10 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-12-10 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3000),
        ('Bug Fixes', 'Fix critical bugs reported by the QA team', 6, 'WORK_IN_PROGRESS', '2023-10-15 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4000),
        ('API Documentation', 'Write documentation for the REST API endpoints', 7, 'OPEN', '2023-11-05 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2000),
        ('Performance Optimization', 'Optimize the database queries for faster performance', 2, 'WORK_IN_PROGRESS',
-        '2023-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-12-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5000),
        ('Code Review', 'Review the codebase for Project Alpha', 4, 'CLOSED', '2023-09-25 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 2000),
        ('UI Testing', 'Perform user interface testing for the mobile app', 5, 'WORK_IN_PROGRESS',
-        '2023-11-30 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-11-30 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 6000),
        ('Security Audit', 'Conduct a security audit for Project Delta', 3, 'WORK_IN_PROGRESS',
-        '2024-01-15 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2024-01-15 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7000),
        ('Marketing Campaign', 'Plan the marketing campaign for product launch', 8, 'OPEN', '2024-02-01 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3000),
        ('Data Migration', 'Migrate old data to the new database schema', 2, 'CLOSED', '2023-10-05 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 3000),
        ('Client Meeting', 'Schedule a meeting with the client to discuss requirements', 1, 'OPEN',
-        '2023-10-18 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-10-18 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4000),
        ('Testing Framework Setup', 'Set up a testing framework for the new microservices', 6, 'OPEN',
-        '2023-12-15 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-12-15 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5000),
        ('Content Update', 'Update the content on the landing page', 7, 'CLOSED', '2023-09-28 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 4000),
        ('Payment Gateway Integration', 'Integrate the payment gateway for online transactions', 4, 'WORK_IN_PROGRESS',
-        '2023-11-25 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-11-25 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 8000),
        ('Server Maintenance', 'Perform maintenance on the main server', 5, 'OPEN', '2023-10-22 00:00:00.000',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 6000),
        ('UI Enhancements', 'Implement new UI enhancements based on user feedback', 3, 'WORK_IN_PROGRESS',
-        '2024-01-05 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2024-01-05 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 9000),
        ('SEO Optimization', 'Optimize the website for better search engine rankings', 8, 'OPEN',
-        '2024-03-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2024-03-01 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 7000),
        ('Mobile App Deployment', 'Deploy the mobile app to the App Store and Play Store', 7, 'CLOSED',
-        '2023-10-10 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-10-10 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 5000),
        ('Email Notifications', 'Set up automated email notifications for user actions', 2, 'WORK_IN_PROGRESS',
-        '2023-12-20 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+        '2023-12-20 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 10000),
        ('Accessibility Review', 'Review the app for accessibility compliance', 4, 'WORK_IN_PROGRESS',
-        '2023-11-17 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+        '2023-11-17 00:00:00.000', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 11000);
 
 -- changeset jooq-sqlite-example-test-project:10
 INSERT INTO task_comments (comment_text, user_id, created_at, task_id)

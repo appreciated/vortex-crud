@@ -220,7 +220,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         Grid<Object> grid = new Grid<>();
         grid.getStyle().set("--vaadin-grid-cell-padding", "0");
         grid.getStyle().set("--lumo-base-color", "transparent");
-        grid.setHeightFull();
+        grid.setHeight("90%");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);

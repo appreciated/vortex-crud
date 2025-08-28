@@ -204,6 +204,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withTitleField(TASKS.TITLE)
                                         .withDescriptionField(TASKS.DESCRIPTION)
                                         .withColumnField(TASKS.STATUS)
+                                        .withRowIndexField(TASKS.ROW_INDEX)
                                         .build())
                                 .withChild(taskForm)
                                 .build(),
