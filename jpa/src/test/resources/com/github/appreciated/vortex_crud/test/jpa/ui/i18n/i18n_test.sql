@@ -8,7 +8,6 @@ CREATE TABLE i18n_images
     url   VARCHAR(255)
 );
 
-
 INSERT INTO i18n_images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),
        (2, 'Green', './images/green.png');
