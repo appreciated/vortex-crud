@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,11 +31,11 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         waitForAnyElementContainingText(getExistingItemName());
     }
 
-    @Disabled //TODO Allow to create new entries in master-detail views
     @Test
     void testCreateEntry() {
         navigateTo(getPath());
-        WebElement field = waitForElement(By.xpath("//vaadin-dialog-overlay//vaadin-text-field"))
+        waitForAnyElementContainingText("Create").click();
+        WebElement field = waitForElement(By.xpath("(//vaadin-text-field)[2]"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Entry");
         waitForAnyElementContainingText("Save").click();
