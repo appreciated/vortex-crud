@@ -219,6 +219,7 @@ private void refreshColumns() {
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         Grid<Object> grid = new Grid<>();
         grid.getStyle().set("--vaadin-grid-cell-padding", "0");
+        grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -261,38 +262,42 @@ grid.addDropListener(event -> {
             1000
         );
 
-        String newPosition;
+        Integer newPosition;
         
         if (!event.getDropTargetItem().isPresent()) {
             // Dropping at the end
-            String lastPosition = targetColumnItems.isEmpty() ? null :
-                reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1), 
-                    kanbanConfig.getRowIndexField()).toString();
+            Integer lastPosition = targetColumnItems.isEmpty() ? null :
+                    (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
+                        kanbanConfig.getRowIndexField());
             newPosition = generateKeyBetween(lastPosition, null);
         } else {
             Object targetItem = event.getDropTargetItem().get();
-            String targetPosition = reflectionService.getValue(targetItem, 
-                kanbanConfig.getRowIndexField()).toString();
+            Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
+                kanbanConfig.getRowIndexField());
             
             if (event.getDropLocation() == GridDropLocation.BELOW) {
                 // Find next item's position
                 int targetIndex = targetColumnItems.indexOf(targetItem);
-                String nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
-                    reflectionService.getValue(targetColumnItems.get(targetIndex + 1), 
-                        kanbanConfig.getRowIndexField()).toString() : null;
+                Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
+                        (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
+                            kanbanConfig.getRowIndexField()) : null;
                 newPosition = generateKeyBetween(targetPosition, nextPosition);
             } else {
                 // Find previous item's position
                 int targetIndex = targetColumnItems.indexOf(targetItem);
-                String prevPosition = (targetIndex > 0) ?
-                    reflectionService.getValue(targetColumnItems.get(targetIndex - 1), 
-                        kanbanConfig.getRowIndexField()).toString() : null;
+                Integer prevPosition = (targetIndex > 0) ?
+                        (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
+                            kanbanConfig.getRowIndexField()) : null;
                 newPosition = generateKeyBetween(prevPosition, targetPosition);
             }
         }
         
         // Update the dragged item with new position
-        reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
+        try {
+            reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
+        }catch (Exception e) {
+            System.out.println();
+        }
     }
     dataStore.updateRecordById(draggedItem);
     refreshColumns();

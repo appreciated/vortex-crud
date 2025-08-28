@@ -1,10 +1,9 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.MethodOrderer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -27,7 +26,6 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     }
 
     @Test
-    @Order(1)
     void testKanbanColumnsVisible() {
         navigateTo(getPath());
         for (String column : getExpectedColumnTitles()) {
@@ -42,7 +40,6 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     }
 
     @Test
-    @Order(3)
     void testDragAndDropUpdatesStatus() {
         navigateTo(getPath());
         WebElement sourceGrid = getGridForColumn(getExpectedColumnTitles()[0]);
@@ -51,6 +48,11 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         String taskText = sourceRow.getText();
         WebElement targetBody = targetGrid.getShadowRoot().findElement(By.cssSelector("tbody"));
         new Actions(driver).dragAndDrop(sourceRow, targetBody).perform();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         wait.until(d -> targetGrid.getShadowRoot()
                 .findElements(By.cssSelector("tbody tr"))
                 .stream()
@@ -58,7 +60,6 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     }
 
     @Test
-    @Order(2)
     void testDragAndDropReordersWithinColumn() {
         navigateTo(getPath());
         WebElement grid = getGridForColumn(getExpectedColumnTitles()[0]);
