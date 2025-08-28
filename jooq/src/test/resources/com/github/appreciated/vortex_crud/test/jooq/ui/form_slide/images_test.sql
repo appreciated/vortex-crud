@@ -1,7 +1,7 @@
 -- Seed data for jOOQ projects tests
 DELETE
-FROM images;
+FROM from_slide_images;
 
-INSERT INTO images (id, title, url)
+INSERT INTO from_slide_images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),
        (2, 'Green', './images/green.png');

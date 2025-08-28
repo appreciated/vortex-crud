@@ -166,3 +166,11 @@ CREATE TABLE i18n_images
     url   VARCHAR(255)
 );
 
+-- changeset Create images table for image tests:17
+CREATE TABLE from_slide_images
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR(255),
+    url   VARCHAR(255)
+);
+
