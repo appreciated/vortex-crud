@@ -169,26 +169,26 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         dialog.open();
     }
 
-// Update the refreshColumns method to use fresh data
-private void refreshColumns() {
-    columns.forEach((value, grid) -> {
-        // Fetch fresh data from the data store
-        List<Object> records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
-            kanbanConfig.getColumnField(), 
-            value, 
-            0, 
-            1000
-        ));
-        
-        // Sort if row index field is configured
-        if (kanbanConfig.getRowIndexField() != null) {
-            records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
-        }
-        
-        // Create new data provider with fresh data
-        grid.setItems(records);
-    });
-}
+    // Update the refreshColumns method to use fresh data
+    private void refreshColumns() {
+        columns.forEach((value, grid) -> {
+            // Fetch fresh data from the data store
+            List<Object> records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
+                    kanbanConfig.getColumnField(),
+                    value,
+                    0,
+                    1000
+            ));
+
+            // Sort if row index field is configured
+            if (kanbanConfig.getRowIndexField() != null) {
+                records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
+            }
+
+            // Create new data provider with fresh data
+            grid.setItems(records);
+        });
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
@@ -219,6 +219,7 @@ private void refreshColumns() {
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         Grid<Object> grid = new Grid<>();
         grid.getStyle().set("--vaadin-grid-cell-padding", "0");
+        grid.getStyle().set("--lumo-base-color", "transparent");
         grid.setHeightFull();
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addThemeVariants(GridVariant.LUMO_NO_ROW_BORDERS);
@@ -242,66 +243,66 @@ private void refreshColumns() {
         });
 
 // Replace the grid.addDropListener implementation with this updated version
-grid.addDropListener(event -> {
-    if (draggedItem == null || dragSource == null) {
-        return;
-    }
-
-    // Store original column value
-    Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfig.getColumnField());
-    
-    // Update column value
-    reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
-
-    if (kanbanConfig.getRowIndexField() != null) {
-        // Get fresh items in target column
-        List<Object> targetColumnItems = (List<Object>) dataStore.getRecordsFromTableWhereColumnEquals(
-            kanbanConfig.getColumnField(), 
-            columnDatabaseValue, 
-            0, 
-            1000
-        );
-
-        Integer newPosition;
-        
-        if (!event.getDropTargetItem().isPresent()) {
-            // Dropping at the end
-            Integer lastPosition = targetColumnItems.isEmpty() ? null :
-                    (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
-                        kanbanConfig.getRowIndexField());
-            newPosition = generateKeyBetween(lastPosition, null);
-        } else {
-            Object targetItem = event.getDropTargetItem().get();
-            Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
-                kanbanConfig.getRowIndexField());
-            
-            if (event.getDropLocation() == GridDropLocation.BELOW) {
-                // Find next item's position
-                int targetIndex = targetColumnItems.indexOf(targetItem);
-                Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
-                        (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
-                            kanbanConfig.getRowIndexField()) : null;
-                newPosition = generateKeyBetween(targetPosition, nextPosition);
-            } else {
-                // Find previous item's position
-                int targetIndex = targetColumnItems.indexOf(targetItem);
-                Integer prevPosition = (targetIndex > 0) ?
-                        (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
-                            kanbanConfig.getRowIndexField()) : null;
-                newPosition = generateKeyBetween(prevPosition, targetPosition);
+        grid.addDropListener(event -> {
+            if (draggedItem == null || dragSource == null) {
+                return;
             }
-        }
-        
-        // Update the dragged item with new position
-        try {
-            reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
-        }catch (Exception e) {
-            System.out.println();
-        }
-    }
-    dataStore.updateRecordById(draggedItem);
-    refreshColumns();
-});
+
+            // Store original column value
+            Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfig.getColumnField());
+
+            // Update column value
+            reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
+
+            if (kanbanConfig.getRowIndexField() != null) {
+                // Get fresh items in target column
+                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEquals(
+                        kanbanConfig.getColumnField(),
+                        columnDatabaseValue,
+                        0,
+                        1000
+                );
+
+                Integer newPosition;
+
+                if (!event.getDropTargetItem().isPresent()) {
+                    // Dropping at the end
+                    Integer lastPosition = targetColumnItems.isEmpty() ? null :
+                            (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
+                                    kanbanConfig.getRowIndexField());
+                    newPosition = generateKeyBetween(lastPosition, null);
+                } else {
+                    Object targetItem = event.getDropTargetItem().get();
+                    Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
+                            kanbanConfig.getRowIndexField());
+
+                    if (event.getDropLocation() == GridDropLocation.BELOW) {
+                        // Find next item's position
+                        int targetIndex = targetColumnItems.indexOf(targetItem);
+                        Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
+                                (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
+                                        kanbanConfig.getRowIndexField()) : null;
+                        newPosition = generateKeyBetween(targetPosition, nextPosition);
+                    } else {
+                        // Find previous item's position
+                        int targetIndex = targetColumnItems.indexOf(targetItem);
+                        Integer prevPosition = (targetIndex > 0) ?
+                                (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
+                                        kanbanConfig.getRowIndexField()) : null;
+                        newPosition = generateKeyBetween(prevPosition, targetPosition);
+                    }
+                }
+
+                // Update the dragged item with new position
+                try {
+                    reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
+                } catch (Exception e) {
+                    System.out.println();
+                }
+            }
+            dataStore.updateRecordById(draggedItem);
+            refreshColumns();
+        });
 
         grid.addDragEndListener(e -> {
             draggedItem = null;

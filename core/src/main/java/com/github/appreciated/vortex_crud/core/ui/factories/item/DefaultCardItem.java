@@ -39,11 +39,17 @@ public class DefaultCardItem<FieldId> extends Card {
         }
 
         H4 title = new H4(reflectionService.getString(entity, config.getTitleField()));
+        title.getStyle().set("width", "100%")
+                .set("overflow", "hidden")
+                .set("text-overflow", "ellipsis");
         setTitle(title);
 
         if (config.getDescriptionField() != null) {
             Text description = new Text(reflectionService.getString(entity, config.getDescriptionField()));
             Div descriptionDiv = new Div(description);
+            descriptionDiv.getStyle().set("width", "100%")
+                    .set("overflow", "hidden")
+                    .set("text-overflow", "ellipsis");
             setSubtitle(descriptionDiv);
         }
 
