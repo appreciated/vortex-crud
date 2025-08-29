@@ -280,9 +280,10 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
 
             if (kanbanConfig.getRowIndexField() != null) {
                 // Get fresh items in target column
-                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEquals(
+                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
                         kanbanConfig.getColumnField(),
                         columnDatabaseValue,
+                        kanbanConfig.getRowIndexField(),
                         0,
                         1000
                 );

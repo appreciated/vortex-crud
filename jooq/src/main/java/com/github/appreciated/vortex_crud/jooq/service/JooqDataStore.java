@@ -86,6 +86,26 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(TableField<?, ?> filterField,
+                                                                        Object filterValue,
+                                                                        TableField<?, ?> orderField,
+                                                                        int offset,
+                                                                        int limit) {
+        if (filterValue == null) {
+            return Collections.emptyList();
+        }
+        return dslContext.select()
+                .from(getTable())
+                .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
+                .orderBy(orderField.asc())
+                .limit(limit)
+                .offset(offset)
+                .fetchInto(record)
+                .stream()
+                .toList();
+    }
+
+    @Override
     public List<ModelClass> getRecordsFromTableWhereColumnIn(TableField<?, ?> filterField, List<String> filterValues, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
