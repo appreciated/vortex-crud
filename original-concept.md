@@ -1,3 +1,5 @@
+⚠️ **Disclaimer:** This document is stale and has drifted significantly from the current state of the project.
+
 **Detailed Concept for a vortex-crud**
 
 1. **Overview**
