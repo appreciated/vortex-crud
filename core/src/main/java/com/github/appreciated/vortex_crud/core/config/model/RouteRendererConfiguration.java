@@ -15,7 +15,6 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
 
     private FieldId descriptionField;
 
-
     private FieldId imageField;
 
     private Class<? extends VortexCrudResourceProvider> imageFactory;
@@ -53,7 +52,6 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
     public void setDescriptionField(FieldId descriptionField) {
         this.descriptionField = descriptionField;
     }
-
 
     public FieldId getImageField() {
         return imageField;

@@ -7,5 +7,3 @@ import org.springframework.test.context.jdbc.Sql;
 public class JooqGridTest extends AbstractGridTest {
 }
 
-
-

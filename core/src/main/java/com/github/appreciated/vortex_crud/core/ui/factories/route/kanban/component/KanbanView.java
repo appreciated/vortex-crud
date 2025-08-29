@@ -357,7 +357,6 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         return wrapper;
     }
 
-
     private void onAdd(VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
                        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
                        KeyType dataStore,

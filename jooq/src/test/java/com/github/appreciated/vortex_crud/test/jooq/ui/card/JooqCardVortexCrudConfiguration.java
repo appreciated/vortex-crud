@@ -23,7 +23,6 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.Tables.CARD_IMAGES;
 
-
 @Service
 public class JooqCardVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
