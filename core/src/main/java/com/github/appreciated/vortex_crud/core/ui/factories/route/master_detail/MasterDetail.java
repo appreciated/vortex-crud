@@ -12,8 +12,8 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
-import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
+import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
@@ -125,10 +125,10 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
 
     private void setDetail(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver, boolean creation) {
         detailContainer.removeAll();
-        if (!routeResolver.isLastIndex(currentPathIndex)) {
+        if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
             RouteRenderer<DataStoreId, FieldId, KeyType> child = routeRenderer.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
-                    currentPathIndex + 1,
+                    creation ? currentPathIndex : currentPathIndex  + 1,
                     routeResolver,
                     new DetailRouteSetting(true, false, creation)
             );
