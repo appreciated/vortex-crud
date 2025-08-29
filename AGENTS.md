@@ -32,4 +32,4 @@
 
 - Provide respective implementations for both stacks: jOOQ and JPA as to be seen in the other tests
 
-- Add a standalone route to the configurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature.
+- Add a standalone route to the configurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature. If you modified an existing feature, please update the existing example.
