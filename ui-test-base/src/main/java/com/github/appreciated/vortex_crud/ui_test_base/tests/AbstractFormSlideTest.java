@@ -23,7 +23,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
      * @return the URL path used for the test
      */
     protected String getPath() {
-        return "images-slide";
+        return "images";
     }
 
     @Test

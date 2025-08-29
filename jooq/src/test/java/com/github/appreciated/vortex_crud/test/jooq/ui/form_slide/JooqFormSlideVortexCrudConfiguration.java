@@ -23,7 +23,6 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.Tables.FROM_SLIDE_IMAGES;
 
-
 @Service
 public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
@@ -54,7 +53,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("image-slide", JooqRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDataStore(FROM_SLIDE_IMAGES)
                 .withTitle("route.image-cards")
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
