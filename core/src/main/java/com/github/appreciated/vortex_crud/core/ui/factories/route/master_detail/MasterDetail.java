@@ -19,6 +19,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -137,6 +138,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
     }
 
     private void onAdd() {
+        UI.getCurrent().getPage().getHistory().pushState(null, "");
         setDetail(pathVariables, true);
     }
 
