@@ -9,6 +9,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFac
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -123,6 +124,18 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaRouteRenderer.of(FormSlideRouteFactory.class)
+                .withDataStore(imageRepository)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField("title")
+                        .withChildren(
+                                new JpaFieldElement("title", "route.images.labels.title"),
+                                new JpaFieldElement("url", "route.images.labels.image")
+                        )
+                        .build())
+                .build();
+
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
@@ -208,6 +221,19 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageForm)
+                .build());
+
+        routes.put("images-slide", JpaRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore(imageRepository)
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-cards")
+                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField("title")
+                        .withImageField("url")
+                        .withImageFactory(ImageResourceProvider.class)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageSlideForm)
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();

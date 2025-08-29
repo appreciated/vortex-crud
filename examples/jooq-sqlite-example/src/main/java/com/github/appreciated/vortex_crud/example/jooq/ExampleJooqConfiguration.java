@@ -10,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -161,6 +162,18 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageSlideForm = JooqRouteRenderer.of(FormSlideRouteFactory.class)
+                .withDataStore(IMAGES)
+                .withTitle("route.projects.title-cards")
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(IMAGES.TITLE)
+                        .withChildren(
+                                new JooqFieldElement(IMAGES.TITLE, "route.images.labels.title"),
+                                new JooqFieldElement(IMAGES.URL, "route.images.labels.image")
+                        )
+                        .build())
+                .build();
+
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
@@ -246,6 +259,19 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageForm)
+                .build());
+
+        routes.put("images-slide", JooqRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore(IMAGES)
+                .withIconFactory(CAMERA::create)
+                .withTitle("route.images-cards")
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(IMAGES.TITLE)
+                        .withImageField(IMAGES.URL)
+                        .withImageFactory(ImageResourceProvider.class)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(imageSlideForm)
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
