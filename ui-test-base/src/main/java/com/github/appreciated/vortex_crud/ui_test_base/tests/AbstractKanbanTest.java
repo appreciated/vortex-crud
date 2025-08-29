@@ -7,6 +7,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.Keys;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Base test for Kanban views.
@@ -16,6 +21,14 @@ public abstract class AbstractKanbanTest extends BaseUITest {
 
     protected String getPath() {
         return "tasks";
+    }
+
+    protected String getFilterValuePresent() {
+        return "Task A";
+    }
+
+    protected String getFilterValueAbsent() {
+        return "Task B";
     }
 
     /**
@@ -37,6 +50,39 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         WebElement header = waitForElement(By.xpath("//h4[contains(text(), '" + title + "')]"));
         WebElement wrapper = header.findElement(By.xpath("../.."));
         return wrapper.findElement(By.tagName("vaadin-grid"));
+    }
+
+    @Test
+    void testFilterIfAvailable() {
+        String present = getFilterValuePresent();
+        String absent = getFilterValueAbsent();
+        if (present == null || absent == null) {
+            return;
+        }
+        navigateTo(getPath());
+        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
+                .findElement(By.tagName("input"));
+        filter.sendKeys(present);
+        waitForElementWithTagAndValue("vaadin-text-field", present);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]") )
+                .stream()
+                .filter(this::isDisplayedSafe)
+                .toList();
+        assertEquals(0, hidden.size());
+        for (int i = 0; i < present.length(); i++) {
+            filter.sendKeys(Keys.BACK_SPACE);
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        waitForAnyElementContainingText(absent);
     }
 
     @Test
