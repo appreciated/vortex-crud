@@ -31,3 +31,5 @@
     - Cover the feature’s expected behavior and edge cases.
 
 - Provide respective implementations for both stacks: jOOQ and JPA as to be seen in the other tests
+
+- Add a standalone route to the configurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature.
