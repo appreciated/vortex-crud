@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.compon
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -28,10 +29,12 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.component.FractionalIndex.generateKeyBetween;
 
@@ -52,8 +55,9 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
+    private final Map<Object, ConfigurableFilterDataProvider<Object, Void, String>> columnProviders = new HashMap<>();
 
-    private String filterText = "";
+    private final GenericFilterableDataProvider<FieldId> dataProvider;
 
     private Object draggedItem;
     private Grid<Object> dragSource;
@@ -91,6 +95,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         this.kanbanConfig = kanbanConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
         this.fileProviderRegistry = fileProviderRegistry;
+
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfig.getFilterField());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
             Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig,
@@ -178,42 +184,11 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     }
 
     private void refreshColumns() {
-        final List<Object> filtered =
-                (filterText != null && !filterText.isEmpty() && kanbanConfig.getFilterField() != null)
-                        ? new ArrayList<>(dataStore.getRecordsFromTableWhereColumnLike(
-                        kanbanConfig.getFilterField(),
-                        filterText,
-                        0,
-                        1000
-                ))
-                        : null;
-
-        columns.forEach((value, grid) -> {
-            List<Object> records;
-            if (filtered != null) {
-                Object finalValue = value;
-                records = filtered.stream()
-                        .filter(record -> Objects.equals(reflectionService.getValue(record, kanbanConfig.getColumnField()), finalValue))
-                        .collect(Collectors.toList());
-            } else {
-                records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
-                        kanbanConfig.getColumnField(),
-                        value,
-                        0,
-                        1000
-                ));
-            }
-
-            if (kanbanConfig.getRowIndexField() != null) {
-                records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
-            }
-
-            grid.setItems(records);
-        });
+        columnProviders.values().forEach(ConfigurableFilterDataProvider::refreshAll);
     }
 
     private void applyFilter(String filterText) {
-        this.filterText = filterText;
+        columnProviders.values().forEach(provider -> provider.setFilter(filterText));
         refreshColumns();
     }
 
@@ -253,6 +228,28 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.addComponentColumn(itemRenderer::createComponent).setWidth("100%").setFlexGrow(1);
         grid.setAllRowsVisible(true);
+
+        ConfigurableFilterDataProvider<Object, Void, String> provider =
+                DataProvider.<Object, String>fromFilteringCallbacks(query -> {
+                            Query<Object, String> baseQuery = new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null));
+                            java.util.stream.Stream<Object> stream = dataProvider.fetch(baseQuery)
+                                    .filter(item -> Objects.equals(
+                                            reflectionService.getValue(item, kanbanConfig.getColumnField()),
+                                            columnDatabaseValue));
+                            if (kanbanConfig.getRowIndexField() != null) {
+                                stream = stream.sorted(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
+                            }
+                            return stream.skip(query.getOffset()).limit(query.getLimit());
+                        },
+                        query -> (int) dataProvider.fetch(new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null)))
+                                .filter(item -> Objects.equals(
+                                        reflectionService.getValue(item, kanbanConfig.getColumnField()),
+                                        columnDatabaseValue))
+                                .count()
+                ).withConfigurableFilter();
+
+        grid.setDataProvider(provider);
+        columnProviders.put(columnDatabaseValue, provider);
 
         // Enable dragging rows
         grid.setRowsDraggable(true);
