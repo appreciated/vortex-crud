@@ -62,6 +62,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                         .withDescriptionField(KANBAN_TASKS.DESCRIPTION)
                         .withColumnField(KANBAN_TASKS.STATUS)
                         .withRowIndexField(KANBAN_TASKS.ROW_INDEX)
+                        .withFilterField(KANBAN_TASKS.TITLE)
                         .build())
                 .withChild(taskForm)
                 .build()

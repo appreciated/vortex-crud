@@ -9,6 +9,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
+import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
@@ -30,6 +31,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.component.FractionalIndex.generateKeyBetween;
 
@@ -50,6 +52,8 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
+
+    private String filterText = "";
 
     private Object draggedItem;
     private Grid<Object> dragSource;
@@ -133,8 +137,12 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 null,
                 routeHeader);
 
+        SearchField search = new SearchField(event -> applyFilter(event.getValue()));
+
         if (!detailRouteSetting.isHeaderHidden()) {
-            add(headerBar);
+            add(headerBar, search);
+        } else {
+            add(search);
         }
 
         add(kanbanBoard);
@@ -169,25 +177,44 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         dialog.open();
     }
 
-    // Update the refreshColumns method to use fresh data
     private void refreshColumns() {
-        columns.forEach((value, grid) -> {
-            // Fetch fresh data from the data store
-            List<Object> records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
-                    kanbanConfig.getColumnField(),
-                    value,
-                    0,
-                    1000
-            ));
+        final List<Object> filtered =
+                (filterText != null && !filterText.isEmpty() && kanbanConfig.getFilterField() != null)
+                        ? new ArrayList<>(dataStore.getRecordsFromTableWhereColumnLike(
+                        kanbanConfig.getFilterField(),
+                        filterText,
+                        0,
+                        1000
+                ))
+                        : null;
 
-            // Sort if row index field is configured
+        columns.forEach((value, grid) -> {
+            List<Object> records;
+            if (filtered != null) {
+                Object finalValue = value;
+                records = filtered.stream()
+                        .filter(record -> Objects.equals(reflectionService.getValue(record, kanbanConfig.getColumnField()), finalValue))
+                        .collect(Collectors.toList());
+            } else {
+                records = new ArrayList<>(dataStore.getRecordsFromTableWhereColumnEquals(
+                        kanbanConfig.getColumnField(),
+                        value,
+                        0,
+                        1000
+                ));
+            }
+
             if (kanbanConfig.getRowIndexField() != null) {
                 records.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
             }
 
-            // Create new data provider with fresh data
             grid.setItems(records);
         });
+    }
+
+    private void applyFilter(String filterText) {
+        this.filterText = filterText;
+        refreshColumns();
     }
 
     @Override

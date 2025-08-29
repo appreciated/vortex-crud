@@ -65,6 +65,11 @@ public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfigur
             return this;
         }
 
+        public Builder<DataStoreId, FieldId, KeyType> withFilterField(FieldId filterField) {
+            product.setFilterField(filterField);
+            return this;
+        }
+
         public Builder<DataStoreId, FieldId, KeyType> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.setImageFactory(imageFactory);
             return this;

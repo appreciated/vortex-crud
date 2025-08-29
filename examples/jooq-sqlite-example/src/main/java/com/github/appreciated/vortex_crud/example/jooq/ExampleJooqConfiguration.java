@@ -206,11 +206,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .withColumnField(TASKS.STATUS)
                                         .withRowIndexField(TASKS.ROW_INDEX)
                                         .build())
-                                .withChild(taskForm)
-                                .build(),
-                        "done",
-                        JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withIconFactory(CHECK_CIRCLE::create)
+                .withChild(taskForm)
+                .build(),
+        "done",
+        JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+                .withIconFactory(CHECK_CIRCLE::create)
                                 .withDataStore(TASKS)
                                 .withTitle("route.done-tasks.title")
                                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
@@ -219,6 +219,19 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         .build())
                                 .withChild(taskForm)
                                 .build()))
+                .build());
+        routes.put("tasks-kanban", JooqRouteRenderer.of(KanbanDetailFactory.class)
+                .withIconFactory(VaadinIcon.TASKS::create)
+                .withDataStore(TASKS)
+                .withTitle("route.tasks.title")
+                .withConfiguration(JooqKanban.of(CardFactory.class)
+                        .withTitleField(TASKS.TITLE)
+                        .withDescriptionField(TASKS.DESCRIPTION)
+                        .withColumnField(TASKS.STATUS)
+                        .withRowIndexField(TASKS.ROW_INDEX)
+                        .withFilterField(TASKS.TITLE)
+                        .build())
+                .withChild(taskForm)
                 .build());
         routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDataStore(IMAGES)
