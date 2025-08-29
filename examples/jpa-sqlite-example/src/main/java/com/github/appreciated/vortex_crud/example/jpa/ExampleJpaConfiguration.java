@@ -166,45 +166,26 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withRoles(List.of("manager", "admin"))
                 .withChild(projectForm)
                 .build());
-        routes.put("tasks", JpaRouteRenderer.of(SubmenuRouteFactory.class)
+        routes.put("open-tasks", JpaRouteRenderer.of(KanbanDetailFactory.class)
                 .withIconFactory(TASKS::create)
                 .withDataStore(taskRepository)
-                .withTitle("route.tasks.title")
-                .withChildrenMap(Map.of("open",
-                        JpaRouteRenderer.of(KanbanDetailFactory.class)
-                                .withIconFactory(TASKS::create)
-                                .withDataStore(taskRepository)
-                                .withTitle("route.open-tasks.title")
-                                .withConfiguration(JpaKanban.of(CardFactory.class)
-                                        .withTitleField("title")
-                                        .withDescriptionField("description")
-                                        .withColumnField("status")
-                                        .withRowIndexField("rowIndex")
-                                        .build())
-                                .withChild(taskForm)
-                                .build(),
-                        "done",
-                        JpaRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withIconFactory(CHECK_CIRCLE::create)
-                                .withDataStore(taskRepository)
-                                .withTitle("route.done-tasks.title")
-                                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField("title")
-                                        .withDescriptionField("description")
-                                        .build())
-                                .withChild(taskForm)
-                                .build()))
-                .build());
-        routes.put("tasks-kanban", JpaRouteRenderer.of(KanbanDetailFactory.class)
-                .withIconFactory(TASKS::create)
-                .withDataStore(taskRepository)
-                .withTitle("route.tasks.title")
+                .withTitle("route.open-tasks.title")
                 .withConfiguration(JpaKanban.of(CardFactory.class)
                         .withTitleField("title")
                         .withDescriptionField("description")
                         .withColumnField("status")
                         .withRowIndexField("rowIndex")
                         .withFilterField("title")
+                        .build())
+                .withChild(taskForm)
+                .build());
+        routes.put("done-tasks", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
+                .withIconFactory(CHECK_CIRCLE::create)
+                .withDataStore(taskRepository)
+                .withTitle("route.done-tasks.title")
+                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField("title")
+                        .withDescriptionField("description")
                         .build())
                 .withChild(taskForm)
                 .build());
@@ -247,6 +228,15 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageSlideForm)
+                .build());
+
+        routes.put("submenu", JpaRouteRenderer.of(SubmenuRouteFactory.class)
+                .withIconFactory(MENU::create)
+                .withDataStore(projectRepository)
+                .withTitle("route.submenu.title")
+                .withChildrenMap(Map.of(
+                        "project-form", projectForm,
+                        "image-form", imageForm))
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
