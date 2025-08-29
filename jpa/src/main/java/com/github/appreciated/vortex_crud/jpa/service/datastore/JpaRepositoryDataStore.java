@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -141,6 +142,19 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
                 limit,
                 offset
         );
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(String filterField,
+                                                                        Object filterValue,
+                                                                        String orderField,
+                                                                        int offset,
+                                                                        int limit) {
+        Example<ModelClass> example = getExample(filterField, filterValue,
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT));
+        return repository.findAll(example,
+                        Pageable.ofSize(limit).withPage(offset / limit).withSort(org.springframework.data.domain.Sort.by(orderField)))
+                .getContent();
     }
 
     @Override

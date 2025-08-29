@@ -39,6 +39,18 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
     List<ModelClass> getRecordsFromTableWhereColumnEquals(FieldId filterField, Object filterValue, int offset, int limit);
 
     /**
+     * Gets records from the data store where a column equals a value and orders the result by another column.
+     *
+     * @param filterField The field to filter on
+     * @param filterValue The value to filter by
+     * @param orderField  The field to order the results by (ascending)
+     * @param offset      The offset for pagination
+     * @param limit       The limit for pagination
+     * @return A list of ordered records matching the criteria
+     */
+    List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(FieldId filterField, Object filterValue, FieldId orderField, int offset, int limit);
+
+    /**
      * Gets records from the data store where a column is in a list of values, with pagination.
      *
      * @param filterField The field to filter on

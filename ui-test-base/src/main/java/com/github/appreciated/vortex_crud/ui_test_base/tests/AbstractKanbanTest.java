@@ -117,5 +117,11 @@ public abstract class AbstractKanbanTest extends BaseUITest {
             var rows = grid.getShadowRoot().findElements(By.cssSelector("tbody tr"));
             return !rows.isEmpty() && rows.get(rows.size() - 1).getText().contains(text);
         });
+        driver.navigate().refresh();
+        WebElement refreshedGrid = getGridForColumn(getExpectedColumnTitles()[0]);
+        wait.until(d -> {
+            var rows = refreshedGrid.getShadowRoot().findElements(By.cssSelector("tbody tr"));
+            return !rows.isEmpty() && rows.get(rows.size() - 1).getText().contains(text);
+        });
     }
 }
