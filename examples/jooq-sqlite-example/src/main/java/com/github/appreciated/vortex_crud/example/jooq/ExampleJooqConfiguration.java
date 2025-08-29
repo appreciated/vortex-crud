@@ -204,45 +204,26 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withRoles(List.of("manager", "admin"))
                 .withChild(projectForm)
                 .build());
-        routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+        routes.put("open-tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
                 .withIconFactory(VaadinIcon.TASKS::create)
                 .withDataStore(TASKS)
-                .withTitle("route.tasks.title")
-                .withChildrenMap(Map.of("open",
-                        JooqRouteRenderer.of(KanbanDetailFactory.class)
-                                .withIconFactory(VaadinIcon.TASKS::create)
-                                .withDataStore(TASKS)
-                                .withTitle("route.open-tasks.title")
-                                .withConfiguration(JooqKanban.of(CardFactory.class)
-                                        .withTitleField(TASKS.TITLE)
-                                        .withDescriptionField(TASKS.DESCRIPTION)
-                                        .withColumnField(TASKS.STATUS)
-                                        .withRowIndexField(TASKS.ROW_INDEX)
-                                        .build())
-                .withChild(taskForm)
-                .build(),
-        "done",
-        JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                .withIconFactory(CHECK_CIRCLE::create)
-                                .withDataStore(TASKS)
-                                .withTitle("route.done-tasks.title")
-                                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField(TASKS.TITLE)
-                                        .withDescriptionField(TASKS.DESCRIPTION)
-                                        .build())
-                                .withChild(taskForm)
-                                .build()))
-                .build());
-        routes.put("tasks-kanban", JooqRouteRenderer.of(KanbanDetailFactory.class)
-                .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(TASKS)
-                .withTitle("route.tasks.title")
+                .withTitle("route.open-tasks.title")
                 .withConfiguration(JooqKanban.of(CardFactory.class)
                         .withTitleField(TASKS.TITLE)
                         .withDescriptionField(TASKS.DESCRIPTION)
                         .withColumnField(TASKS.STATUS)
                         .withRowIndexField(TASKS.ROW_INDEX)
                         .withFilterField(TASKS.TITLE)
+                        .build())
+                .withChild(taskForm)
+                .build());
+        routes.put("done-tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+                .withIconFactory(CHECK_CIRCLE::create)
+                .withDataStore(TASKS)
+                .withTitle("route.done-tasks.title")
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(TASKS.TITLE)
+                        .withDescriptionField(TASKS.DESCRIPTION)
                         .build())
                 .withChild(taskForm)
                 .build());
@@ -285,6 +266,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageSlideForm)
+                .build());
+
+        routes.put("submenu", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+                .withIconFactory(MENU::create)
+                .withDataStore(PROJECTS)
+                .withTitle("route.submenu.title")
+                .withChildrenMap(Map.of(
+                        "project-form", projectForm,
+                        "image-form", imageForm))
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
