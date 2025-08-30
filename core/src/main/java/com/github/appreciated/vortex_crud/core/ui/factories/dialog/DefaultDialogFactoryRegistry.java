@@ -10,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,6 +37,7 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId, KeyType> impleme
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
         factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
+        factories.put(FormSlideRouteFactory.class, new FormSlideFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, manyToManyPersistenceStrategy, reflectionService, dataStoreUtil));
     }
 

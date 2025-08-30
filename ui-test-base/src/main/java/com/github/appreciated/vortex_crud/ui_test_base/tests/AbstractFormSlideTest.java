@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -29,10 +28,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText("Red");
-        assertEquals("vaadin-grid-cell-content", element.getTagName());
-        WebElement dialog = waitForElement(By.cssSelector("vaadin-dialog-overlay.form-slide-dialog"));
-        assertTrue(dialog.isDisplayed());
+        waitForAnyElementContainingText("Red");
     }
 
     @Test

@@ -33,7 +33,7 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
         // Add the form and buttons to the layout
         add(titleComponent);
         if (onAdd != null) {
-            Button add = new Button(VaadinIcon.PLUS.create(), onAdd);
+            Button add = new Button(getTranslation("button.create.title"), onAdd);
             add.addThemeVariants(LUMO_PRIMARY);
             add(add);
         }
