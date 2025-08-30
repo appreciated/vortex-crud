@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "images")
@@ -18,10 +19,13 @@ public class JpaImageEntity {
     private Integer id;
 
     @Field(TextFieldFactory.class)
+    @NotNull
+    @Column(nullable = false)
     private String title;
 
     @Field(ImageFieldFactory.class)
     @ImageFieldConfiguration(ImageResourceProvider.class)
+    @Column
     private String url;
 
     public Integer getId() {
