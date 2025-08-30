@@ -130,7 +130,9 @@ public class ListCollectionFactory<DataStoreId, FieldId, KeyType> implements Vor
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = internalFormElement.getConfiguration().getChild().getConfiguration();
+            @SuppressWarnings("unchecked")
+            RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form =
+                    (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) internalFormElement.getConfiguration().getChild().getConfiguration();
             for (InternalFormElement<DataStoreId, FieldId, KeyType> child : form.getChildren()) {
                 String textValue = reflectionService.getString(record, child.getField());
                 item.addContent(new Text(textValue));

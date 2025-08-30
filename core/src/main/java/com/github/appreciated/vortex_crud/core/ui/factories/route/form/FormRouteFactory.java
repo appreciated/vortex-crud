@@ -65,7 +65,10 @@ public class FormRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCr
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
-        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = detailRouteSetting.isCreationMode() ? routeRenderer.getChild().getConfiguration() : routeRenderer.getConfiguration();
+        @SuppressWarnings("unchecked")
+        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> form = detailRouteSetting.isCreationMode()
+                ? (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getChild().getConfiguration()
+                : (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer, form);
     }

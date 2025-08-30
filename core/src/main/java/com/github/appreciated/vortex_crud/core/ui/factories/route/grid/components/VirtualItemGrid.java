@@ -45,11 +45,12 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
+    @SuppressWarnings("unchecked")
     public VirtualItemGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
-                           RouteRenderer<DataStoreId, FieldId, KeyType> config,
-                           VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                           VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                           VortexCrudFileProviderRegistry fileProviderRegistry,
+                            RouteRenderer<DataStoreId, FieldId, KeyType> config,
+                            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
+                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
                            ReflectionService<FieldId> reflectionService,
                            VortexCrudDataStoreUtilStrategy dataStoreUtil

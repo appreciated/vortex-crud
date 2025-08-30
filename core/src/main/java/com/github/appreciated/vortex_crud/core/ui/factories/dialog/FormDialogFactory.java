@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -78,7 +79,10 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
 
         DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
 
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, formRouteRenderer.getConfiguration(), recordById, routeFactory, tables, binder, layout, formCreator);
+        @SuppressWarnings("unchecked")
+        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration =
+                (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) formRouteRenderer.getConfiguration();
+        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration, recordById, routeFactory, tables, binder, layout, formCreator);
 
         dialog.add(layout);
         dialog.setModal(false);

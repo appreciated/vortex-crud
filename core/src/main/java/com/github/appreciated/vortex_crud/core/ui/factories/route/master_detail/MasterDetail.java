@@ -50,6 +50,7 @@ public class MasterDetail<DataStoreId, FieldId, KeyType> extends SplitLayout {
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
 
+    @SuppressWarnings("unchecked")
     public MasterDetail(Integer currentPathIndex,
                         VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                         VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,

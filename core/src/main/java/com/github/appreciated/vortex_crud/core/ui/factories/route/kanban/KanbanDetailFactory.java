@@ -56,6 +56,7 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Component renderRoute(Integer currentPathIndex,
                                  VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
