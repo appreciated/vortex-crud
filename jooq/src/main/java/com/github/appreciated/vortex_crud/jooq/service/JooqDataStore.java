@@ -56,7 +56,8 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public Object insertRecord(ModelClass entity) {
-        return dslContext.executeInsert(entity);
+        entity.store();
+        return utilStrategy.getId(entity);
     }
 
     @Override

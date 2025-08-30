@@ -26,6 +26,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
     private final Class<ModelClass> repositoryModelClass;
     private final JpaFieldTypeResolverService resolverService;
     private final Map<String, java.lang.reflect.Field> fields;
+    private final java.lang.reflect.Field idField;
 
     public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
                                   JpaFieldTypeResolverService resolverService) {
@@ -33,6 +34,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         this.repositoryModelClass = getEntityClass(repository);
         this.resolverService = resolverService;
         this.fields = getModelFields();
+        this.idField = findIdField(repositoryModelClass);
     }
 
     /**
@@ -110,12 +112,21 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
                         }
                     }
                 }
-                return repository.save(entity);
+                return getId(repository.save(entity));
             }
         }
 
         // For new entities or if existing entity not found
-        return repository.save(entity);
+        return getId(repository.save(entity));
+    }
+
+    private Object getId(ModelClass save) {
+        try {
+            idField.setAccessible(true);
+            return idField.get(save);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
