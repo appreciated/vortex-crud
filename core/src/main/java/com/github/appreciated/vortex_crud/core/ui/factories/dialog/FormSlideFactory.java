@@ -24,14 +24,14 @@ public class FormSlideFactory<DataStoreId, FieldId, KeyType>
     @Override
     protected Dialog instantiateDialog() {
         Dialog dialog = new Dialog();
+        dialog.setCloseOnOutsideClick(true);
         dialog.setModal(false);
         dialog.setDraggable(false);
         dialog.addClassName("form-slide-dialog");
-        dialog.getElement().getStyle().set("--vaadin-dialog-overlay-width", "400px");
-        dialog.getElement().getStyle().set("--vaadin-dialog-overlay-right", "0");
-        dialog.getElement().getStyle().set("--vaadin-dialog-overlay-top", "0");
-        dialog.getElement().getStyle().set("--vaadin-dialog-overlay-bottom", "0");
-        dialog.getElement().getStyle().set("--vaadin-dialog-overlay-left", "auto");
+        dialog.setWidth("400px");
+        dialog.setTop("0");
+        dialog.setHeightFull();
+        dialog.setLeft("calc(100% - 400px)");
         return dialog;
     }
 }
