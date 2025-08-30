@@ -38,7 +38,9 @@ public class GenericEntityGrid<DataStoreId, FieldId, KeyType> extends Grid<Objec
         // Set up the data provider with lazy loading and filtering
 
         DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStoreKey());
-        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration = routeRenderer.getConfiguration();
+        @SuppressWarnings("unchecked")
+        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration =
+                (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration();
 
         assert gridOrListConfiguration.getFilterField() != null;
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();

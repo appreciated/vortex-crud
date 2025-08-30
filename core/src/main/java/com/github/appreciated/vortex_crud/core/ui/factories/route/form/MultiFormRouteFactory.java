@@ -38,7 +38,9 @@ public class MultiFormRouteFactory<DataStoreId, FieldId, KeyType> implements Vor
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> formConfiguration = (MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration();
+        @SuppressWarnings("unchecked")
+        MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> formConfiguration =
+                (MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration();
         Div div = new Div();
         for (RouteRendererConfiguration<DataStoreId, FieldId, KeyType> child : formConfiguration.getForms()) {
             assert detailRouteSetting != null;

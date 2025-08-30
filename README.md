@@ -7,6 +7,8 @@ Beyond basic CRUD, the framework makes it easy to interconnect and navigate rela
 
 Thanks to its **modular** design, `vortex-crud` allows developers to fully customize the user interface using Vaadin components. This provides high flexibility in designing the frontend while still benefiting from the default implementations of `vortex-crud`, which can be extended or replaced as needed.
 
+To keep route configuration lean and type-safe, renderer-specific models now implement a minimal `RouteConfig` interface instead of inheriting from a monolithic base class.
+
 ## Table of Contents
 
 1. **[Introduction](#introduction)**

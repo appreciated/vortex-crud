@@ -7,7 +7,8 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
+public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType>
+        implements RouteConfig<DataStoreId, FieldId, KeyType> {
 
     private Class<? extends VortexCrudItemFactory<FieldId>> factory;
 
@@ -29,6 +30,7 @@ public class RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
         this.factory = factory;
     }
 
+    @Override
     public Class<? extends VortexCrudItemFactory<FieldId>> getFactory() {
         return factory;
     }

@@ -22,7 +22,7 @@ public class RouteRenderer<DataStoreId, FieldId, KeyType> {
 
     private boolean hideInMenu;
 
-    private RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration;
+    private RouteConfig<DataStoreId, FieldId, KeyType> configuration;
 
     private Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> childrenMap = new HashMap<>();
 
@@ -82,11 +82,11 @@ public class RouteRenderer<DataStoreId, FieldId, KeyType> {
         this.hideInMenu = hideInMenu;
     }
 
-    public RouteRendererConfiguration<DataStoreId, FieldId, KeyType> getConfiguration() {
+    public RouteConfig<DataStoreId, FieldId, KeyType> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration) {
+    public void setConfiguration(RouteConfig<DataStoreId, FieldId, KeyType> configuration) {
         this.configuration = configuration;
     }
 
@@ -150,7 +150,7 @@ public class RouteRenderer<DataStoreId, FieldId, KeyType> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withConfiguration(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration) {
+        public Builder<DataStoreId, FieldId, KeyType> withConfiguration(RouteConfig<DataStoreId, FieldId, KeyType> configuration) {
             product.configuration = configuration;
             return this;
         }
