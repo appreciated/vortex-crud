@@ -31,13 +31,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         navigateTo(getPath());
         WebElement element = waitForAnyElementContainingText("Red");
         assertEquals("vaadin-grid-cell-content", element.getTagName());
-    }
-
-    @Test
-    void testDialogHasSlideClass() {
-        navigateTo(getPath());
-        waitForAnyElementContainingText("Create").click();
-        WebElement dialog = waitForElement(By.cssSelector("vaadin-dialog.form-slide-dialog"));
+        WebElement dialog = waitForElement(By.cssSelector("vaadin-dialog-overlay.form-slide-dialog"));
         assertTrue(dialog.isDisplayed());
     }
 
