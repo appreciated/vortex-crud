@@ -12,7 +12,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 
-@CssImport("vortex-crud-default-card-item-styles.css")
+@CssImport("./vortex-crud-default-card-item-styles.css")
 public class DefaultCardItem<FieldId> extends Card {
 
     public DefaultCardItem(ItemFactory<FieldId> config,

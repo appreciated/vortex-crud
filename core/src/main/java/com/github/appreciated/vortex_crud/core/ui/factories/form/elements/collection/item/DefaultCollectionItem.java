@@ -6,7 +6,7 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-@CssImport("vortex-crud-default-card-item-styles.css")
+@CssImport("./vortex-crud-default-card-item-styles.css")
 public class DefaultCollectionItem extends Card {
 
     private final VerticalLayout contentLayout;
