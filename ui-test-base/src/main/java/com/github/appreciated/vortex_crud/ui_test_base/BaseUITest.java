@@ -32,7 +32,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
-    public static final int SECONDS = 6;
+    public static final int SECONDS = 2;
     @Value(value = "${local.server.port}")
     private int port;
 

@@ -10,7 +10,7 @@
 
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>25.0.0-alpha11</vaadin.version>
+        <vaadin.version>25.0.0-alpha12</vaadin.version>
     </properties>
 
     <parent>
@@ -94,6 +94,7 @@
             <groupId>io.github.mletkin</groupId>
             <artifactId>builder-generator-maven-plugin</artifactId>
             <version>2.2.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

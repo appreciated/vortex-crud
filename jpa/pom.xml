@@ -15,7 +15,7 @@
     <description>Spring Boot Data JPA starter for vortex-crud</description>
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>25.0.0-alpha11</vaadin.version>
+        <vaadin.version>25.0.0-alpha12</vaadin.version>
     </properties>
 
     <repositories>
@@ -95,6 +95,20 @@
                     <optimizeBundle>false</optimizeBundle>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>analyze-duplicate</id>
+                        <goals>
+                            <goal>analyze-duplicate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
