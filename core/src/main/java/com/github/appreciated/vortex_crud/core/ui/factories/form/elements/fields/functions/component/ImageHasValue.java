@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.Upload;
@@ -37,8 +36,8 @@ public class ImageHasValue extends CustomField<String> {
 
         btnPreview = new Button(VaadinIcon.EYE.create(), e -> openPreview(image));
         btnDelete = new Button(VaadinIcon.TRASH.create(), e -> clearImage());
-        btnPreview.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY);
-        btnDelete.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+        btnPreview.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
+        btnDelete.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
 
         overlay = new Div(btnPreview, btnDelete);
         overlay.getStyle()
@@ -83,17 +82,7 @@ public class ImageHasValue extends CustomField<String> {
                 .set("width", "120px")
                 .set("height", "120px");
 
-        Div plus = new Div(VaadinIcon.PLUS.create(), new Span("Upload"));
-        plus.getStyle()
-                .set("display", "flex")
-                .set("flex-direction", "column")
-                .set("align-items", "center")
-                .set("justify-content", "center")
-                .set("gap", "6px")
-                .set("color", "var(--lumo-secondary-text-color)")
-                .set("font-size", "12px");
-
-        Div uploadCard = new Div(plus, upload);
+        Div uploadCard = new Div( upload);
         uploadCard.getStyle()
                 .set("position", "relative")
                 .set("width", "120px")
@@ -109,7 +98,6 @@ public class ImageHasValue extends CustomField<String> {
         upload.getStyle()
                 .set("position", "absolute")
                 .set("inset", "0")
-                .set("opacity", "0")
                 .set("cursor", "pointer");
 
         card = new Div(uploadCard, thumbWrapper);
