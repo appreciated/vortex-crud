@@ -7,6 +7,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -42,7 +44,10 @@ public class DefaultRouterLayout<DataStoreId, FieldId, KeyType> extends AppLayou
         scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
 
         addToDrawer(scroller);
-        addToNavbar(toggle, title);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title);
+        horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout.setPadding(true);
+        addToNavbar(horizontalLayout);
     }
 
     private SideNav getSideNav() {
