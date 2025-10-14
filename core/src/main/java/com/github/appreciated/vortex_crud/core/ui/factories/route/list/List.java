@@ -47,7 +47,7 @@ public class List<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         add(headerBar, textField, entityGrid);
         setSizeFull();
         setPadding(true);
-        setSpacing(false);
+        setSpacing(true);
     }
 
     private void applyFilter(String filterText) {

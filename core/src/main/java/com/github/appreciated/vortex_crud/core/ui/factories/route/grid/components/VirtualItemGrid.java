@@ -105,7 +105,6 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
                 div.addClickListener(event -> onItemClick(entity));
                 wrapper.add(div);
             }
-            wrapper.getStyle().set("padding", "10px 0px 0px 0px");
             int roundedWith = Math.round((float) list.size() / currentNumberOfColumns * 100);
             wrapper.setWidth(roundedWith, Unit.PERCENTAGE);
             return wrapper;

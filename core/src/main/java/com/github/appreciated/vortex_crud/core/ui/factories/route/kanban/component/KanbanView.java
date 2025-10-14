@@ -348,7 +348,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
                 .set("border-radius", "var(--lumo-border-radius-l)");
         wrapper.addClassNames("no-hover");
         wrapper.setSpacing(false);
-        wrapper.setPadding(true);
+        wrapper.setPadding(false);
 
         Div titleLabel = new Div(new H4(title));
         titleLabel.getStyle().set("font-weight", "bold").set("margin-bottom", "10px");

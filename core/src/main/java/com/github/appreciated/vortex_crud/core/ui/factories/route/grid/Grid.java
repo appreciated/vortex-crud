@@ -59,7 +59,7 @@ public class Grid<DataStoreId, FieldId, KeyType> extends VerticalLayout {
         add(headerBar, search, virtualGrid);
         setSizeFull();
         setPadding(true);
-        setSpacing(false);
+        setSpacing(true);
     }
 
     private void applyFilter(String filterText) {
