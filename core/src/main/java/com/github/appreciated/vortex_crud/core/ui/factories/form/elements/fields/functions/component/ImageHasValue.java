@@ -21,11 +21,9 @@ public class ImageHasValue extends CustomField<String> {
     private final Div card;
     private final Div thumbWrapper;
 
-    private final VortexCrudResourceProvider resourceProvider;
     private String value;
 
     public ImageHasValue(VortexCrudResourceProvider resourceProvider) {
-        this.resourceProvider = resourceProvider;
 
         // === Picture card ===
         image = new ImageDisplayComponent(resourceProvider);
