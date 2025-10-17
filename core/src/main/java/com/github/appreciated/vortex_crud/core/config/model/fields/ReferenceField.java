@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 
 import java.util.List;
 
@@ -10,11 +11,15 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
     private final KeyType dataStore;
     private final FieldId filterField;
     private final List<FieldId> children;
+    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Validation validation;
+    private boolean required;
 
     public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children) {
         this.dataStore = dataStore;
         this.filterField = filterField;
         this.children = children;
+        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) ReferenceFieldFactory.class;
     }
 
     public KeyType getDataStore() {
@@ -31,21 +36,21 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
 
     @Override
     public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return null;
+        return factory;
     }
 
     @Override
     public void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory) {
-
+        this.factory = factory;
     }
 
     @Override
     public Validation getValidation() {
-        return null;
+        return validation;
     }
 
     @Override
     public boolean isRequired() {
-        return false;
+        return required;
     }
 }
