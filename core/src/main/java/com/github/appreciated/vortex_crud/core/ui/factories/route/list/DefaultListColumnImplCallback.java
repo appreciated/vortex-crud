@@ -2,11 +2,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
+import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
@@ -23,14 +22,14 @@ public class DefaultListColumnImplCallback<DataStoreId, FieldId, KeyType> implem
 
     @Override
     public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId, KeyType> field, Object table, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
-        // TODO Check if cast can be removed, removal causes compile issues
-        if (((Class<? extends VortexCrudFieldFactory>) dataStoreField.getFactory()) == ImageFieldFactory.class) {
-            if (dataStoreField.getConfiguration() == null) {
-                throw new IllegalArgumentException("The image field '" + dataStoreField.getField() + "' does not provide a imageFieldConfiguration");
+        if (dataStoreField instanceof ImageField<?, ?, ?>) {
+            ImageField<DataStoreId, FieldId, KeyType> imageField = (ImageField<DataStoreId, FieldId, KeyType>) dataStoreField;
+            if (imageField.getConfiguration() == null) {
+                throw new IllegalArgumentException("The image field '" + field.getField() + "' does not provide a imageFieldConfiguration");
             }
             grid.addComponentColumn(entity -> {
                         String string = reflectionService.getString(entity, field.getField());
-                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(dataStoreField.getConfiguration().getImageFactory()));
+                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(imageField.getConfiguration().getImageFactory()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);

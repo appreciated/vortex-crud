@@ -3,11 +3,9 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
 import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaField;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 

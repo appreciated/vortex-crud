@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
+import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -24,16 +25,17 @@ public class EntityComboBoxWrapper<DataStoreId, FieldId, KeyType> extends Horizo
                                  Field<DataStoreId, FieldId, KeyType> dataStoreField,
                                  ReflectionService<FieldId> reflectionService
     ) {
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreField.getDataStore());
+        ReferenceField<DataStoreId, FieldId, KeyType> refField = (ReferenceField<DataStoreId, FieldId, KeyType>) dataStoreField;
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(refField.getDataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(dataStoreField.getFilterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(dataStoreField.getFilterField(), filterValue)
+                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.getFilterField(), filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(refField.getFilterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> dataStoreField.getChildren().stream()
+        comboBox.setItemLabelGenerator(item -> refField.getChildren().stream()
                 .map(fieldId -> reflectionService.getString(item, fieldId))
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

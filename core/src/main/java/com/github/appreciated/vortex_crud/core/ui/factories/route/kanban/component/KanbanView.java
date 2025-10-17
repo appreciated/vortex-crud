@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.compon
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -112,7 +113,7 @@ public class KanbanView<DataStoreId, FieldId, KeyType> extends VerticalLayout {
             return cardWrapper;
         });
 
-        Object selectName = dataStoreField.getValues();
+        Object selectName = ((SelectField<DataStoreId, FieldId, KeyType>) dataStoreField).getValues();
         Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {

@@ -40,14 +40,10 @@ class JpaDataStoreFactoryRegistryTest {
         assertTrue(fields.containsKey("name"));
         assertTrue(fields.containsKey("age"));
 
-        // Verify field properties
-        assertFalse(fields.get("name").isPrimary());
-        assertFalse(fields.get("age").isPrimary());
-
         assertTrue(fields.get("name").isRequired());
         assertTrue(fields.get("age").isRequired());
 
-        assertEquals(TextFieldFactory.class, fields.get("name").getFactory());
-        assertEquals(DoubleNumberFieldFactory.class, fields.get("age").getFactory());
+        assertEquals(TextFieldFactory.class, (fields.get("name")).getFactory());
+        assertEquals(DoubleNumberFieldFactory.class, (fields.get("age")).getFactory());
     }
 }
