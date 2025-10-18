@@ -8,13 +8,19 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 
 public class ImageField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
     private final RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration;
-    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
-    private boolean required;
+    private boolean required = false;
 
     public ImageField(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration) {
         this.configuration = configuration;
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) ImageFieldFactory.class;
+        this.factory = ImageFieldFactory.class;
+    }
+
+    public ImageField(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration, boolean required, Validation validation) {
+        this(configuration);
+        this.validation = validation;
+        this.required = required;
     }
 
     public RouteRendererConfiguration<DataStoreId, FieldId, KeyType> getConfiguration() {
@@ -23,7 +29,7 @@ public class ImageField<DataStoreId, FieldId, KeyType> implements Field<DataStor
 
     @Override
     public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return factory;
+        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
     }
 
     @Override

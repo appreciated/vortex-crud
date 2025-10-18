@@ -7,13 +7,19 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 
 public class SelectField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
     private final String values;
-    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
-    private boolean required;
+    private boolean required = false;
 
     public SelectField(String values) {
         this.values = values;
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) SelectFieldFactory.class;
+        this.factory = SelectFieldFactory.class;
+    }
+
+    public SelectField(String values, boolean required, Validation validation) {
+        this(values);
+        this.validation = validation;
+        this.required = required;
     }
 
     public String getValues() {
@@ -22,7 +28,7 @@ public class SelectField<DataStoreId, FieldId, KeyType> implements Field<DataSto
 
     @Override
     public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return factory;
+        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
     }
 
     @Override
