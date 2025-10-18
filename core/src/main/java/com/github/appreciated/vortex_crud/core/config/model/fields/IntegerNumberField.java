@@ -10,25 +10,23 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
  */
 public class IntegerNumberField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
 
-    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
-    private boolean required;
+    private boolean required = false;
 
     public IntegerNumberField() {
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) IntegerNumberFieldFactory.class;
-        this.validation = new Validation(false);
-        this.required = false;
+        this.factory = IntegerNumberFieldFactory.class;
     }
 
-    public IntegerNumberField(boolean required) {
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) IntegerNumberFieldFactory.class;
-        this.validation = new Validation(required);
+    public IntegerNumberField(boolean required, Validation validation) {
+        this();
+        this.validation = validation;
         this.required = required;
     }
 
     @Override
     public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return factory;
+        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
     }
 
     @Override

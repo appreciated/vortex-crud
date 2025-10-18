@@ -10,25 +10,23 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
  */
 public class DateField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
 
-    private Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
-    private boolean required;
+    private boolean required = false;
 
     public DateField() {
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) DateFieldFactory.class;
-        this.validation = new Validation(false);
-        this.required = false;
+        this.factory = DateFieldFactory.class;
     }
 
-    public DateField(boolean required) {
-        this.factory = (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) DateFieldFactory.class;
-        this.validation = new Validation(required);
+    public DateField(boolean required, Validation validation) {
+        this();
+        this.validation = validation;
         this.required = required;
     }
 
     @Override
     public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return factory;
+        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
     }
 
     @Override
