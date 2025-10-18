@@ -35,8 +35,10 @@ import static com.github.appreciated.vortex_crud.core.config.model.AuditingActio
 import static com.github.appreciated.vortex_crud.example.jpa.entity.Status.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
+import com.github.appreciated.vortex_crud.example.jpa.entity.User;
+
 @Service
-public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>, User> {
 
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
@@ -56,7 +58,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     }
 
     @Override
-    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>, User> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(taskRepository)
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -245,11 +247,13 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
-        return JpaApplication.of()
+        return JpaApplication.<User>of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withUserManagement(UserManagement.of()
+                .withUserManagement(UserManagement.<User>of()
                         .withEnabled(true)
+                        .withUserClass(User.class)
+                        .withUserSupplier(User::new)
                         .withAccessControl(AccessControl.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
                         .withAdditionalFields(List.of(AdditionalField.of()

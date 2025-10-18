@@ -1,18 +1,20 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.User;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @GenerateBuilder
-public abstract class Application<DataStoreId, FieldId, KeyType> {
+public abstract class Application<DataStoreId, FieldId, KeyType, U extends User> {
 
     private String name;
 
     private String i18nBundlePrefix;
 
-    private UserManagement userManagement;
+    private UserManagement<U> userManagement;
 
     private Selects selects;
 
@@ -40,11 +42,11 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.i18nBundlePrefix = i18nBundlePrefix;
     }
 
-    public UserManagement getUserManagement() {
+    public UserManagement<U> getUserManagement() {
         return userManagement;
     }
 
-    public void setUserManagement(UserManagement userManagement) {
+    public void setUserManagement(UserManagement<U> userManagement) {
         this.userManagement = userManagement;
     }
 
@@ -88,54 +90,54 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.routes = routeRenderers;
     }
 
-    public static class Builder<DataStoreId, FieldId, KeyType> {
+    public static class Builder<DataStoreId, FieldId, KeyType, U extends User> {
 
-        private final Application<DataStoreId, FieldId, KeyType> product;
+        private final Application<DataStoreId, FieldId, KeyType, U> product;
 
-        public Builder(Application<DataStoreId, FieldId, KeyType> product) {
+        public Builder(Application<DataStoreId, FieldId, KeyType, U> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withName(String name) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withName(String name) {
             product.name = name;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withI18nBundlePrefix(String i18nBundlePrefix) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withI18nBundlePrefix(String i18nBundlePrefix) {
             product.i18nBundlePrefix = i18nBundlePrefix;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withUserManagement(UserManagement userManagement) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withUserManagement(UserManagement<U> userManagement) {
             product.userManagement = userManagement;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withSelects(Selects selects) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withSelects(Selects selects) {
             product.selects = selects;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withVersioning(Versioning versioning) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withVersioning(Versioning versioning) {
             product.versioning = versioning;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withAuditing(Auditing auditing) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withAuditing(Auditing auditing) {
             product.auditing = auditing;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withDataStores(Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> dataStores) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withDataStores(Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
-        public Application<DataStoreId, FieldId, KeyType> build() {
+        public Application<DataStoreId, FieldId, KeyType, U> build() {
             return product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routes) {
+        public Builder<DataStoreId, FieldId, KeyType, U> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routes) {
             product.routes = routes;
             return this;
         }

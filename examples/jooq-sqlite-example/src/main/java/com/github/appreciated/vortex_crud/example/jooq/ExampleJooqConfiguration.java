@@ -39,10 +39,12 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskHasTask.
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
+import com.github.appreciated.vortex_crud.example.jooq.entity.User;
+
 @Service
-public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>, User> {
     @Override
-    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>, User> get() {
 
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(PROJECTS)
@@ -283,11 +285,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
-        return JooqApplication.of()
+        return JooqApplication.<User>of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withUserManagement(UserManagement.of()
+                .withUserManagement(UserManagement.<User>of()
                         .withEnabled(true)
+                        .withUserClass(User.class)
+                        .withUserSupplier(User::new)
                         .withAccessControl(AccessControl.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
                         .withAdditionalFields(List.of(AdditionalField.of()

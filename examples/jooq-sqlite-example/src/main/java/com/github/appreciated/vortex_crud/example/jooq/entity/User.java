@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.example.jpa.entity;
+package com.github.appreciated.vortex_crud.example.jooq.entity;
 
 import com.github.appreciated.vortex_crud.core.service.MutableUser;
 
