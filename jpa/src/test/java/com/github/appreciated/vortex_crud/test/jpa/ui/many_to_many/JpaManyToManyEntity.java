@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.many_to_many;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -16,7 +15,7 @@ public class JpaManyToManyEntity {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @Field(TextFieldFactory.class)
+    @TextField
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)

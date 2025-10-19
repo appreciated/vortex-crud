@@ -3,22 +3,22 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IntegerNumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
 
 /**
- * Thin Field type for IntegerNumberFieldFactory.
+ * Thin Field type for DoubleNumberFieldFactory.
  */
-public class IntegerNumberField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
+public class DoubleField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
 
     private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
     private boolean required = false;
 
-    public IntegerNumberField() {
-        this.factory = IntegerNumberFieldFactory.class;
+    public DoubleField() {
+        this.factory = DoubleNumberFieldFactory.class;
     }
 
-    public IntegerNumberField(boolean required, Validation validation) {
+    public DoubleField(boolean required, Validation validation) {
         this();
         this.validation = validation;
         this.required = required;

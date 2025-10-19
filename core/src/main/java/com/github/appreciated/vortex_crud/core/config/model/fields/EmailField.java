@@ -3,22 +3,22 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.BigDecimalNumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 
 /**
- * Thin Field type for BigDecimalNumberFieldFactory.
+ * Thin Field type for TextFieldFactory.
  */
-public class BigDecimalNumberField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
+public class EmailField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
 
     private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
     private boolean required = false;
 
-    public BigDecimalNumberField() {
-        this.factory = BigDecimalNumberFieldFactory.class;
+    public EmailField() {
+        this.factory = EmailFieldFactory.class;
     }
 
-    public BigDecimalNumberField(boolean required, Validation validation) {
+    public EmailField(boolean required, Validation validation) {
         this();
         this.validation = validation;
         this.required = required;

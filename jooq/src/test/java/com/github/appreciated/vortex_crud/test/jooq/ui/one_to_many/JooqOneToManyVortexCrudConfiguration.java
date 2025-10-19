@@ -3,11 +3,11 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.one_to_many;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -33,13 +33,13 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 ONE_TO_MANY_PARENT, JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
                         .withFields(Map.of(
-                                ONE_TO_MANY_PARENT.ID, new JooqField(IdFieldFactory.class, true),
-                                ONE_TO_MANY_PARENT.NAME, new JooqField(TextFieldFactory.class, false)
+                                ONE_TO_MANY_PARENT.ID, new IdField<>(),
+                                ONE_TO_MANY_PARENT.NAME, new TextField<>()
                         )).build(),
                 ONE_TO_MANY_CHILD, JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
                         .withFields(Map.of(
-                                ONE_TO_MANY_CHILD.ID, new JooqField(IdFieldFactory.class, true),
-                                ONE_TO_MANY_CHILD.NAME, new JooqField(TextFieldFactory.class, false)
+                                ONE_TO_MANY_CHILD.ID, new IdField<>(),
+                                ONE_TO_MANY_CHILD.NAME, new TextField<>()
                         )).build()
         );
 

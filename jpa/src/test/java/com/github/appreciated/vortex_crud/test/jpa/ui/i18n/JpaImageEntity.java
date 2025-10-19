@@ -1,11 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageFieldConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,13 +13,13 @@ public class JpaImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Field(IdFieldFactory.class)
+    @IdField
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     private String title;
 
-    @Field(ImageFieldFactory.class)
+    @ImageField
     @ImageFieldConfiguration(ImageResourceProvider.class)
     private String url;
 

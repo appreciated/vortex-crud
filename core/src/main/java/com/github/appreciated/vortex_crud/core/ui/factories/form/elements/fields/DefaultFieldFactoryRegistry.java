@@ -84,13 +84,13 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
         if (field instanceof DateTimePickerField) {
             return getFactory(DateTimePickerFactory.class);
         }
-        if (field instanceof DoubleNumberField) {
+        if (field instanceof DoubleField) {
             return getFactory(DoubleNumberFieldFactory.class);
         }
-        if (field instanceof BigDecimalNumberField) {
+        if (field instanceof BigDecimalField) {
             return getFactory(BigDecimalNumberFieldFactory.class);
         }
-        if (field instanceof IntegerNumberField) {
+        if (field instanceof IntegerField) {
             return getFactory(IntegerNumberFieldFactory.class);
         }
         if (field instanceof CheckboxField) {

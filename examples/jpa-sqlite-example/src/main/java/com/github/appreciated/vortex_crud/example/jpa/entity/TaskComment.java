@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateTimePickerFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.ReferenceFieldConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.ReferenceField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -18,22 +16,21 @@ public class TaskComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     @Length(max = 1000)
     private String commentText;
 
-    @Field(ReferenceFieldFactory.class)
-    @ReferenceFieldConfiguration(value = "username")
+    @ReferenceField("username")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Field(ReferenceFieldFactory.class)
+    @ReferenceField
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
 
-    @Field(DateTimePickerFactory.class)
+    @DateTimePickerField
     private LocalDateTime createdAt;
 
     // Getters and Setters

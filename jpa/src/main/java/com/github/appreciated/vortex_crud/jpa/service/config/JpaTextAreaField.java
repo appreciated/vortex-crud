@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service.datastore;
+package com.github.appreciated.vortex_crud.jpa.service.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import org.springframework.data.jpa.repository.JpaRepository;

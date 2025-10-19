@@ -1,8 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.ReferenceField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
@@ -17,15 +16,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     @Nonnull
     private String username;
 
-    @Field(ReferenceFieldFactory.class)
+    @ReferenceField
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
-    @Field(ReferenceFieldFactory.class)
+    @ReferenceField
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskComment> comments = new ArrayList<>();
 

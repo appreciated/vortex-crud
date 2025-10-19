@@ -4,11 +4,11 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
@@ -31,11 +31,9 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 FROM_SLIDE_IMAGES, JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
                         .withFields(Map.of(
-                                FROM_SLIDE_IMAGES.ID, new JooqField(IdFieldFactory.class, true),
-                                FROM_SLIDE_IMAGES.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                FROM_SLIDE_IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
-                                        .build()
+                                FROM_SLIDE_IMAGES.ID, new IdField<>(),
+                                FROM_SLIDE_IMAGES.TITLE, new TextField<>(),
+                                FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                         ))
                         .build()
         );

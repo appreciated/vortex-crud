@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.master_detail;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
@@ -29,9 +29,9 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MASTER_DETAIL_TASKS, JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
                         .withFields(Map.of(
-                                MASTER_DETAIL_TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                MASTER_DETAIL_TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                MASTER_DETAIL_TASKS.STATUS, new JooqField(TextFieldFactory.class, true)
+                                MASTER_DETAIL_TASKS.ID, new IdField<>(),
+                                MASTER_DETAIL_TASKS.TITLE, new TextField<>(),
+                                MASTER_DETAIL_TASKS.STATUS, new TextField<>()
                         ))
                         .build()
         );

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.one_to_many;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class JpaOneToManyParentEntity {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @Field(TextFieldFactory.class)
+    @TextField
     private String name;
 
     // Bidirectional for convenience (not required by tests)

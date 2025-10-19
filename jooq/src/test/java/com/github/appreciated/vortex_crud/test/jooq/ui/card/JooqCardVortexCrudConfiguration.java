@@ -4,11 +4,11 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ImageFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
@@ -32,11 +32,9 @@ public class JooqCardVortexCrudConfiguration
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 CARD_IMAGES, JooqDataStoreConfig.of(CARD_IMAGES)
                         .withFields(Map.of(
-                                CARD_IMAGES.ID, new JooqField(IdFieldFactory.class, true),
-                                CARD_IMAGES.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                CARD_IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
-                                        .build()
+                                CARD_IMAGES.ID, new IdField<>(),
+                                CARD_IMAGES.TITLE, new TextField<>(),
+                                CARD_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                         ))
                         .build()
         );

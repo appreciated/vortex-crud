@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
@@ -29,9 +29,9 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 SUBROUTE_TASKS, JooqDataStoreConfig.of(SUBROUTE_TASKS)
                         .withFields(Map.of(
-                                SUBROUTE_TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                SUBROUTE_TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                SUBROUTE_TASKS.STATUS, new JooqField(TextFieldFactory.class, true)
+                                SUBROUTE_TASKS.ID, new IdField<>(),
+                                SUBROUTE_TASKS.TITLE, new TextField<>(),
+                                SUBROUTE_TASKS.STATUS, new TextField<>()
                         ))
                         .build()
         );

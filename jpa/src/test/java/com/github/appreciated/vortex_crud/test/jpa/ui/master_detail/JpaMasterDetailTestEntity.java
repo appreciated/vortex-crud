@@ -1,8 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,13 +10,13 @@ public class JpaMasterDetailTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Field(IdFieldFactory.class)
+    @IdField
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     private String title;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     private String status;
 
     public Integer getId() {

@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.ReferenceFieldConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
@@ -22,40 +19,38 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     @Column(name = "title", nullable = false)
     @Nonnull
     private String title;
 
-    @Field(TextAreaFieldFactory.class)
+    @TextAreaField
     @Length(max = 1000)
     private String description;
 
-    @Field(ReferenceFieldFactory.class)
-    @ReferenceFieldConfiguration(value = "username")
+    @ReferenceField("username")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @Field(SelectFieldFactory.class)
-    @SelectValues("task-status")
+    @SelectField("task-status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Field(DateFieldFactory.class)
+    @DateField
     private LocalDate dueDate;
 
-    @Field(DateTimePickerFactory.class)
+    @DateTimePickerField
     private LocalDateTime createdAt;
 
-    @Field(DateTimePickerFactory.class)
+    @DateTimePickerField
     private LocalDateTime updatedAt;
 
-    @Field(ReferenceFieldFactory.class)
+    @ReferenceField
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<TaskComment> comments = new ArrayList<>();
 
-    @Field(ReferenceFieldFactory.class)
+    @ReferenceField
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "task_has_task",

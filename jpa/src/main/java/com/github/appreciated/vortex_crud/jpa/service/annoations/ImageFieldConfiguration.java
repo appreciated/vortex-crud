@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.jpa.service;
+package com.github.appreciated.vortex_crud.jpa.service.annoations;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 

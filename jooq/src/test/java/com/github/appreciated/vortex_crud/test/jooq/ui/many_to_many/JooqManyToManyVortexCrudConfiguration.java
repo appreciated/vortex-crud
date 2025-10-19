@@ -3,11 +3,11 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.many_to_many;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -33,8 +33,8 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MANY_TO_MANY_ITEM, JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
                         .withFields(Map.of(
-                                MANY_TO_MANY_ITEM.ID, new JooqField(IdFieldFactory.class, true),
-                                MANY_TO_MANY_ITEM.NAME, new JooqField(TextFieldFactory.class, true))
+                                MANY_TO_MANY_ITEM.ID, new IdField<>(),
+                                MANY_TO_MANY_ITEM.NAME, new TextField<>())
                         ).build()
         );
 

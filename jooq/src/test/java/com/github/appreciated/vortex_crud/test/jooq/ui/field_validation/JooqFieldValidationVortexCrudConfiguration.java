@@ -1,10 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.fields.*;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -30,17 +29,15 @@ public class JooqFieldValidationVortexCrudConfiguration
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
                         .withFields(Map.of(
-                                VALIDATION_TEST.ID, new JooqField(IdFieldFactory.class, true),
-                                VALIDATION_TEST.REQUIRED_FIELD, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
-                                VALIDATION_TEST.EMAIL_FIELD, new JooqField(EmailFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
-                                VALIDATION_TEST.NUMERIC_FIELD, new JooqField(DoubleNumberFieldFactory.class, false, false, NumberFieldValidation.of().withMin(0.0).build()),
-                                VALIDATION_TEST.DATE_FIELD, new JooqField(DateFieldFactory.class),
-                                VALIDATION_TEST.DATETIME_FIELD, new JooqField(DateTimePickerFactory.class),
-                                VALIDATION_TEST.ENUM_FIELD, new JooqField(SelectFieldFactory.class, "enum-options"),
-                                VALIDATION_TEST.CHECKBOX_FIELD, new JooqField(CheckboxFieldFactory.class),
-                                VALIDATION_TEST.IMAGE_FIELD, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
-                                        .build())
+                                VALIDATION_TEST.ID, new IdField<>(),
+                                VALIDATION_TEST.REQUIRED_FIELD, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
+                                VALIDATION_TEST.EMAIL_FIELD, new EmailField<>(false, TextFieldValidation.of().withMaxLength(500).build()),
+                                VALIDATION_TEST.NUMERIC_FIELD, new DoubleField<>(false, NumberFieldValidation.of().withMin(0.0).build()),
+                                VALIDATION_TEST.DATE_FIELD, new DateField<>(),
+                                VALIDATION_TEST.DATETIME_FIELD, new DateTimePickerField<>(),
+                                VALIDATION_TEST.ENUM_FIELD, new SelectField<>("enum-options"),
+                                VALIDATION_TEST.CHECKBOX_FIELD, new CheckboxField<>(),
+                                VALIDATION_TEST.IMAGE_FIELD, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class)))
                         ).build()
         );
 

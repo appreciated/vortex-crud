@@ -1,8 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.DoubleNumberField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 /**
@@ -16,11 +15,11 @@ public class TestEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Field(DoubleNumberFieldFactory.class)
+    @DoubleNumberField
     @Column(name = "age", nullable = false)
     private Integer age;
 

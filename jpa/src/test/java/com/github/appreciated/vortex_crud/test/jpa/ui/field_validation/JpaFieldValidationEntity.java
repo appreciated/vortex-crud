@@ -1,11 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.ImageFieldConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -24,40 +20,39 @@ public class JpaFieldValidationEntity {
 
     @NotBlank(message = "This field is required")
     @Column(name = "required_field", nullable = false)
-    @Field(TextFieldFactory.class)
+    @TextField
     private String requiredField;
 
     @Email(message = "Please enter a valid email address")
     @Column(name = "email_field")
-    @Field(EmailFieldFactory.class)
+    @TextField
     private String emailField;
 
     @Min(value = 1, message = "Value must be greater than 0")
     @Column(name = "numeric_field")
-    @Field(DoubleNumberFieldFactory.class)
+    @DoubleNumberField
     private Double numericField;
 
     @Column(name = "date_field")
-    @Field(DateFieldFactory.class)
+    @DateField
     private LocalDate dateField;
 
     @Column(name = "datetime_field")
-    @Field(DateTimePickerFactory.class)
+    @DateTimePickerField
     private LocalDateTime dateTimeField;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "enum_field")
-    @Field(SelectFieldFactory.class)
-    @SelectValues("enum-options")
+    @SelectField(value = "enum-options")
     private JpaFieldValidationEnum enumField;
 
     @Column(name = "image_field")
-    @Field(ImageFieldFactory.class)
+    @ImageField
     @ImageFieldConfiguration(ImageResourceProvider.class)
     private String imageField;
 
     @Column(name = "checkbox_field")
-    @Field(CheckboxFieldFactory.class)
+    @CheckboxField
     private Boolean checkboxField;
 
     // Default constructor

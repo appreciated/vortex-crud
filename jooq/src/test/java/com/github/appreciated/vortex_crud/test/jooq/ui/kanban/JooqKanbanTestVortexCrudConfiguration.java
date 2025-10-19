@@ -4,10 +4,10 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
@@ -31,9 +31,9 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 KANBAN_TASKS, JooqDataStoreConfig.of(KANBAN_TASKS)
                         .withFields(Map.of(
-                                KANBAN_TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                KANBAN_TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true),
-                                KANBAN_TASKS.STATUS, new JooqField(SelectFieldFactory.class, "enum-options")
+                                KANBAN_TASKS.ID, new IdField<>(),
+                                KANBAN_TASKS.TITLE, new TextField<>(),
+                                KANBAN_TASKS.STATUS, new SelectField<>("enum-options")
                         ))
                         .build()
         );

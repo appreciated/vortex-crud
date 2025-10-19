@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaRepositoryDataStore;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

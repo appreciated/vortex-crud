@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.*;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class JpaFieldTypeResolverService {
         this.entityManager = entityManager;
     }
 
-    Class<?> resolveTargetClass(JpaRepositoryDataStore<?> dataStore, java.lang.reflect.Field entityField) {
+    public Class<?> resolveTargetClass(JpaRepositoryDataStore<?> dataStore, java.lang.reflect.Field entityField) {
         Metamodel metamodel = entityManager.getMetamodel();
         Class<?> model = dataStore.getModelClass();
         EntityType<?> entityType = metamodel.entity(model);

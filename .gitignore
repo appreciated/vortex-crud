@@ -87,3 +87,4 @@ webpack.generated.js
 /jooq/vite.config.ts
 /jooq/src/main/bundles/prod.bundle
 /ui-test-base/target
+/.junie/

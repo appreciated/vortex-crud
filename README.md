@@ -128,9 +128,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .withFields(Map.of(
-                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
-                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true),
-                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false)
+                                PROJECTS.ID, new IdField<>( ),
+                                PROJECTS.NAME, new TextField<>(),
+                                PROJECTS.DESCRIPTION, new TextAreaField()
                         ))
                         .build()
                 // ...

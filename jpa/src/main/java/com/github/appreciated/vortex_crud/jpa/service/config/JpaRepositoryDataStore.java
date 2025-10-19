@@ -1,8 +1,9 @@
-package com.github.appreciated.vortex_crud.jpa.service.datastore;
+package com.github.appreciated.vortex_crud.jpa.service.config;
 
+import com.github.appreciated.vortex_crud.core.config.model.annotations.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import org.springframework.data.domain.*;

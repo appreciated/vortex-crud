@@ -2,12 +2,12 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.fields.*;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
@@ -47,47 +47,43 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .withFields(Map.of(
-                                PROJECTS.ID, new JooqField(IdFieldFactory.class, true),
-                                PROJECTS.NAME, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
-                                PROJECTS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(500).build()),
-                                PROJECTS.START_DATE, new JooqField(DateFieldFactory.class),
-                                PROJECTS.END_DATE, new JooqField(DateFieldFactory.class),
-                                PROJECTS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
-                                PROJECTS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
+                                PROJECTS.ID, new IdField<>(),
+                                PROJECTS.NAME, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
+                                PROJECTS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(500).build()),
+                                PROJECTS.START_DATE, new DateField<>(),
+                                PROJECTS.END_DATE, new DateField<>(),
+                                PROJECTS.CREATED_AT, new DateTimePickerField<>(),
+                                PROJECTS.UPDATED_AT, new DateTimePickerField<>()))
                         .build(),
                 TASKS, JooqDataStoreConfig.of(TASKS)
                         .withFields(Map.of(
-                                TASKS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASKS.TITLE, new JooqField(TextFieldFactory.class, true, true, TextFieldValidation.of().withMaxLength(255).build()),
-                                TASKS.DESCRIPTION, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new JooqField(ReferenceFieldFactory.class, TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
-                                TASKS.STATUS, new JooqField(SelectFieldFactory.class, "task-status"),
-                                TASKS.DUE_DATE, JooqField.of(DateFieldFactory.class).withReadOnlyForRoles("developer").build(),
-                                TASKS.CREATED_AT, new JooqField(DateTimePickerFactory.class),
-                                TASKS.UPDATED_AT, new JooqField(DateTimePickerFactory.class)))
+                                TASKS.ID, new IdField<>(),
+                                TASKS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
+                                TASKS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(1000).build()),
+                                TASKS.ASSIGNED_TO, new ReferenceField<>(TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
+                                TASKS.STATUS, new SelectField<>("task-status"),
+                                TASKS.DUE_DATE, new DateField<>(), //.withReadOnlyForRoles("developer").build(),
+                                TASKS.CREATED_AT, new DateTimePickerField<>(),
+                                TASKS.UPDATED_AT, new DateTimePickerField<>()))
                         .build(),
                 TASK_HAS_TASK, JooqDataStoreConfig.of(TASK_HAS_TASK)
                         .withFields(Map.of(
-                                TASK_HAS_TASK.TASK_ID, new JooqField(IdFieldFactory.class),
-                                TASK_HAS_TASK.RELATED_TASK_ID, new JooqField(IdFieldFactory.class)))
+                                TASK_HAS_TASK.TASK_ID, new IdField<>(),
+                                TASK_HAS_TASK.RELATED_TASK_ID, new IdField<>()))
                         .build(),
                 TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
                         .withFields(Map.of(
-                                TASK_COMMENTS.ID, new JooqField(IdFieldFactory.class, true),
-                                TASK_COMMENTS.COMMENT_TEXT, new JooqField(TextAreaFieldFactory.class, false, false, TextFieldValidation.of().withMaxLength(1000).build()),
-                                TASK_COMMENTS.USER_ID, new JooqField(DoubleNumberFieldFactory.class),
-                                TASK_COMMENTS.CREATED_AT, JooqField.of(DateTimePickerFactory.class).build()))
+                                TASK_COMMENTS.ID, new IdField<>(),
+                                TASK_COMMENTS.COMMENT_TEXT, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(1000).build()),
+                                TASK_COMMENTS.USER_ID, new DoubleField<>(),
+                                TASK_COMMENTS.CREATED_AT, new DateTimePickerField<>()))
                         .build(),
                 IMAGES, JooqDataStoreConfig.of(IMAGES)
                         .withFields(Map.of(
-                                IMAGES.ID, new JooqField(IdFieldFactory.class, true),
-                                IMAGES.TITLE, JooqField.of(TextFieldFactory.class)
-                                        .withRequired(true)
-                                        .withValidation(TextFieldValidation.of().withMaxLength(255).build())
-                                        .build(),
-                                IMAGES.URL, JooqField.of(ImageFieldFactory.class)
-                                        .withConfiguration(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
-                                        .build()))
+                                IMAGES.ID, new IdField<>(),
+                                IMAGES.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
+                                IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
+                        ))
                         .build());
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)

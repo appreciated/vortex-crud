@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
-import com.github.appreciated.vortex_crud.jpa.service.Field;
-import com.github.appreciated.vortex_crud.jpa.service.SelectValues;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.SelectField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,14 +11,13 @@ public class JpaKanbanTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Field(IdFieldFactory.class)
+    @IdField
     private Integer id;
 
-    @Field(TextFieldFactory.class)
+    @TextField
     private String title;
 
-    @Field(SelectFieldFactory.class)
-    @SelectValues("enum-options")
+    @SelectField("enum-options")
     private String status;
 
     @Column(name = "row_index")
