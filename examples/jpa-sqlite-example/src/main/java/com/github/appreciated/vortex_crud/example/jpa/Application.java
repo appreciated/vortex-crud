@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @StyleSheet("@vaadin/aura/aura.css")
+@StyleSheet("/aura-dark.css")
 @Push
 public class Application implements AppShellConfigurator {
 
