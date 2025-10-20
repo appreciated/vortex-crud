@@ -25,7 +25,7 @@ public class JpaFieldValidationEntity {
 
     @Email(message = "Please enter a valid email address")
     @Column(name = "email_field")
-    @TextField
+    @EmailField
     private String emailField;
 
     @Min(value = 1, message = "Value must be greater than 0")
