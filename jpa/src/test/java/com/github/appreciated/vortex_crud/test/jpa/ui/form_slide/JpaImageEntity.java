@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.form_slide;
 import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageFieldConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +21,7 @@ public class JpaImageEntity {
     @Column(nullable = false)
     private String title;
 
-    @ImageField
-    @ImageFieldConfiguration(ImageResourceProvider.class)
+    @ImageField(ImageResourceProvider.class)
     @Column
     private String url;
 

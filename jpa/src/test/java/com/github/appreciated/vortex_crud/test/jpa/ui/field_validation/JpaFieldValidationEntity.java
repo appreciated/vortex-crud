@@ -47,8 +47,7 @@ public class JpaFieldValidationEntity {
     private JpaFieldValidationEnum enumField;
 
     @Column(name = "image_field")
-    @ImageField
-    @ImageFieldConfiguration(ImageResourceProvider.class)
+    @ImageField(ImageResourceProvider.class)
     private String imageField;
 
     @Column(name = "checkbox_field")
