@@ -60,7 +60,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 TASKS.ID, new IdField<>(),
                                 TASKS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
                                 TASKS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new ReferenceField<>(TASKS.ID, Users.USERS.USERNAME, Users.USERS, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
+                                TASKS.ASSIGNED_TO, new ReferenceField<>(Users.USERS, TASKS.ID, Users.USERS.USERNAME, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new SelectField<>("task-status"),
                                 TASKS.DUE_DATE, new DateField<>(), //.withReadOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new DateTimePickerField<>(),

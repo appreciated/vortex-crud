@@ -9,23 +9,19 @@ import java.util.List;
 
 public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
     private final KeyType dataStore;
+    private final FieldId field;
     private final FieldId filterField;
     private final List<FieldId> children;
     private Class<? extends VortexCrudFieldFactory> factory;
-    private Validation validation;
-    private boolean required = false;
 
-    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children) {
+    //of(TableField<?, ?> field, TableField<?, ?> filterField, TableImpl<?> dataStore, List<TableField<?, ?>> children) {
+
+   public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children) {
         this.dataStore = dataStore;
-        this.filterField = filterField;
+       this.field = field;
+       this.filterField = filterField;
         this.children = children;
         this.factory = ReferenceFieldFactory.class;
-    }
-
-    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children, boolean required, Validation validation) {
-        this(dataStore, filterField, children);
-        this.validation = validation;
-        this.required = required;
     }
 
     public KeyType getDataStore() {
@@ -52,11 +48,15 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
 
     @Override
     public Validation getValidation() {
-        return validation;
+        return null;
     }
 
     @Override
     public boolean isRequired() {
-        return required;
+        return false;
+    }
+
+    public FieldId getField() {
+        return field;
     }
 }
