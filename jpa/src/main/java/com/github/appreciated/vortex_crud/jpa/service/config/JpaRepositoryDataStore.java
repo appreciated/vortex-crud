@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.jpa.service.config;
 import com.github.appreciated.vortex_crud.core.config.model.annotations.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -26,14 +27,17 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
     private final JpaRepository<ModelClass, Object> repository;
     private final Class<ModelClass> repositoryModelClass;
     private final JpaFieldTypeResolverService resolverService;
+    private JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService;
     private final Map<String, java.lang.reflect.Field> fields;
     private final java.lang.reflect.Field idField;
 
     public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
-                                  JpaFieldTypeResolverService resolverService) {
+                                  JpaFieldTypeResolverService resolverService,
+                                  JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
         this.repository = (JpaRepository<ModelClass, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.resolverService = resolverService;
+        this.jpaFieldAnnotationRegistryService = jpaFieldAnnotationRegistryService;
         this.fields = getModelFields();
         this.idField = findIdField(repositoryModelClass);
     }
@@ -44,13 +48,13 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
      */
     public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
                                   Object mapper,
-                                  JpaFieldTypeResolverService resolverService) {
-        this(repository, resolverService);
+                                  JpaFieldTypeResolverService resolverService, JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
+        this(repository, resolverService, jpaFieldAnnotationRegistryService);
     }
 
     private Map<String, java.lang.reflect.Field> getModelFields() {
         return Arrays.stream(repositoryModelClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Field.class) || field.isAnnotationPresent(Id.class))
+                .filter(field -> jpaFieldAnnotationRegistryService.hasFieldAnnotation(field) || field.isAnnotationPresent(Id.class))
                 .collect(Collectors.toMap(java.lang.reflect.Field::getName, field -> field));
     }
 

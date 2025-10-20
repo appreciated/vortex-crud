@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
 import jakarta.persistence.EntityManager;
@@ -33,10 +34,13 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @Autowired
     private JpaFieldTypeResolverService fieldTypeResolver;
 
+    @Autowired
+    private JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService;
+
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, fieldTypeResolver);
+        dataStore = new JpaRepositoryDataStore<>(testRepository, fieldTypeResolver, jpaFieldAnnotationRegistryService);
     }
 
     @AfterEach
