@@ -38,6 +38,7 @@ public class JpaFieldAnnotationRegistryService {
         register(SelectField.class);
         register(TextAreaField.class);
         register(TextField.class);
+        register(EmailField.class);
         register(VideoField.class);
     }
 
