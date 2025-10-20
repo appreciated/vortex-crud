@@ -56,7 +56,7 @@ public class JpaFieldService {
                         JpaRepository<?, ?> repository = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
                         java.util.List<String> children = java.util.Arrays.asList(referenceField.fields());
                         String filterField = referenceField.value();
-                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(repository, filterField, children, required, null);
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(repository, filterField, children, required);
                     }).or(() -> getAnnotation(entityField, com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField.class).map(imageField -> {
                         Class<? extends VortexCrudResourceProvider> provider = java.util.Optional.ofNullable(entityField.getAnnotation(com.github.appreciated.vortex_crud.jpa.service.annoations.ImageFieldConfiguration.class))
                                 .map(com.github.appreciated.vortex_crud.jpa.service.annoations.ImageFieldConfiguration::value)

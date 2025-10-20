@@ -12,16 +12,30 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
     private final FieldId field;
     private final FieldId filterField;
     private final List<FieldId> children;
+    private boolean required;
     private Class<? extends VortexCrudFieldFactory> factory;
 
     //of(TableField<?, ?> field, TableField<?, ?> filterField, TableImpl<?> dataStore, List<TableField<?, ?>> children) {
 
-   public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children) {
+    public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children) {
+        this(dataStore, field, filterField, children, false);
+    }
+
+    public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children, boolean required) {
         this.dataStore = dataStore;
-       this.field = field;
-       this.filterField = filterField;
+        this.field = field;
+        this.filterField = filterField;
         this.children = children;
+        this.required = required;
         this.factory = ReferenceFieldFactory.class;
+    }
+
+    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children) {
+        this(dataStore, null, filterField, children, false);
+    }
+
+    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children, boolean required) {
+        this(dataStore, null, filterField, children, required);
     }
 
     public KeyType getDataStore() {
@@ -53,7 +67,7 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
 
     @Override
     public boolean isRequired() {
-        return false;
+        return required;
     }
 
     public FieldId getField() {
