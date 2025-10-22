@@ -15,11 +15,15 @@ public class TextField<DataStoreId, FieldId, KeyType> implements Field<DataStore
     private boolean required = false;
 
     public TextField() {
-        this.factory = TextFieldFactory.class;
+        this(false);
+    }
+
+    public TextField(boolean required) {
+        this(required, null);
     }
 
     public TextField(boolean required, Validation validation) {
-        this();
+        this.factory = TextFieldFactory.class;
         this.validation = validation;
         this.required = required;
     }

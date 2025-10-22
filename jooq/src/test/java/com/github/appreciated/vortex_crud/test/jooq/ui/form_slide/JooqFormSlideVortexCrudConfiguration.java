@@ -32,7 +32,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 FROM_SLIDE_IMAGES, JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
                         .withFields(Map.of(
                                 FROM_SLIDE_IMAGES.ID, new IdField<>(),
-                                FROM_SLIDE_IMAGES.TITLE, new TextField<>(),
+                                FROM_SLIDE_IMAGES.TITLE, new TextField<>(true),
                                 FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                         ))
                         .build()
