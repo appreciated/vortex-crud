@@ -49,10 +49,10 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
                 .findFirst()
                 .orElseThrow();
         plusButton.click();
-        WebElement field = waitForElement(By.cssSelector("vaadin-dialog-overlay vaadin-text-field"))
+        WebElement field = waitForElement(By.cssSelector("vaadin-dialog vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Child");
-        waitForElementContainingText("vaadin-dialog-overlay//vaadin-button","Save").click();
+        waitForElementContainingText("vaadin-dialog//vaadin-button","Save").click();
         waitForAnyElementContainingText("Created Child");
     }
 

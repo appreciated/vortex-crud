@@ -43,7 +43,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         assertTrue(errorMessage.isDisplayed());
 
         // Fill required title field and save
-        WebElement titleField = waitForElement(By.xpath("//vaadin-dialog-overlay//vaadin-text-field"))
+        WebElement titleField = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"))
                 .findElement(By.tagName("input"));
         titleField.sendKeys("New Image");
 
