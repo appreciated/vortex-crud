@@ -88,3 +88,10 @@ webpack.generated.js
 /jooq/src/main/bundles/prod.bundle
 /ui-test-base/target
 /.junie/
+/user-management-jpa/target/classes/com/github/appreciated/vortex_crud/jpa/repository/JpaUserRepository.class
+/user-management-jpa/target/maven-archiver/pom.properties
+/user-management-jpa/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/user-management-jpa/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+/user-management-jpa/target/user-management-jpa-1.0.0-SNAPSHOT.jar
+/user-management-spring-auth/target/maven-archiver/pom.properties
+/user-management-spring-auth/target/user-management-spring-auth-1.0.0-SNAPSHOT.jar
