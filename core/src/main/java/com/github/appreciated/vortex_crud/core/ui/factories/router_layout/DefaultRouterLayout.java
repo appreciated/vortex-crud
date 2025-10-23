@@ -1,11 +1,15 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.security.SecurityService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.ui.factories.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -15,39 +19,39 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 
 import java.util.Map;
 
-/**
- * Default implementation of an application layout using Vaadin's AppLayout.
- * It configures the navigation drawer and the application title based on the {@link VortexCrudConfigService} configuration.
- */
-
 public class DefaultRouterLayout<DataStoreId, FieldId, KeyType> extends AppLayout {
 
     private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final SecurityService securityService;
 
-    public DefaultRouterLayout(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService) {
+    public DefaultRouterLayout(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService, SecurityService securityService) {
         this.configService = configService;
+        this.securityService = securityService;
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        if (securityService.getAuthenticatedUser() == null) {
+            UI.getCurrent().navigate(LoginView.class);
+        } else {
+            DrawerToggle toggle = new DrawerToggle();
 
-        DrawerToggle toggle = new DrawerToggle();
+            H1 title = new H1(getTranslation(configService.getApplicationName()));
+            title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
-        H1 title = new H1(getTranslation(configService.getApplicationName()));
-        title.getStyle().set("font-size", "var(--lumo-font-size-l)")
-                .set("margin", "0");
+            SideNav nav = getSideNav();
 
-        SideNav nav = getSideNav();
+            Scroller scroller = new Scroller(nav);
+            scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
 
-        Scroller scroller = new Scroller(nav);
-        scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
-
-        addToDrawer(scroller);
-        HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title);
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        horizontalLayout.setPadding(true);
-        addToNavbar(horizontalLayout);
+            addToDrawer(scroller);
+            Button logoutButton = new Button("Logout", click -> securityService.logout());
+            HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
+            horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+            horizontalLayout.setPadding(true);
+            addToNavbar(horizontalLayout);
+        }
     }
 
     private SideNav getSideNav() {

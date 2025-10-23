@@ -1,63 +1,58 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.ReferenceField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
-import jakarta.annotation.Nonnull;
-import jakarta.persistence.*;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+public class User implements VortexCrudUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @TextField
-    @Nonnull
     private String username;
+    private String password;
 
-    @ReferenceField
-    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles;
 
-    @ReferenceField
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskComment> comments = new ArrayList<>();
-
-    // Getters and Setters
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
 
+    @Override
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    @Override
+    public String getPassword() {
+        return password;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public List<TaskComment> getComments() {
-        return comments;
+    @Override
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setComments(List<TaskComment> comments) {
-        this.comments = comments;
+    @Override
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }

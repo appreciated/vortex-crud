@@ -16,15 +16,20 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
+import com.github.appreciated.vortex_crud.example.jpa.entity.User;
 import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
 import com.github.appreciated.vortex_crud.example.jpa.repository.TaskRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.UserRepository;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -42,17 +47,32 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final ProjectRepository projectRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
             TaskCommentRepository taskCommentRepository,
-            TaskRepository taskRepository
+            TaskRepository taskRepository,
+            UserRepository userRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.taskCommentRepository = taskCommentRepository;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.findByUsername(username)
+                .map(user -> new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> (org.springframework.security.core.GrantedAuthority) () -> "ROLE_" + role).collect(java.util.stream.Collectors.toList())))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Bean
+    public Class<User> userClass() {
+        return User.class;
     }
 
     @Override
