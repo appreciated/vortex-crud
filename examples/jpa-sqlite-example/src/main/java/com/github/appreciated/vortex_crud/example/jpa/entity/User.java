@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 import java.util.Set;
 
 @Entity
