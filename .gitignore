@@ -95,3 +95,12 @@ webpack.generated.js
 /user-management-jpa/target/user-management-jpa-1.0.0-SNAPSHOT.jar
 /user-management-spring-auth/target/maven-archiver/pom.properties
 /user-management-spring-auth/target/user-management-spring-auth-1.0.0-SNAPSHOT.jar
+/user-management-jooq/target/classes/com/github/appreciated/vortex_crud/jooq/repository/JooqUserRepository.class
+/user-management-jooq/target/classes/com/github/appreciated/vortex_crud/jooq/repository/Tables.class
+/user-management-jooq/target/maven-archiver/pom.properties
+/user-management-jooq/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/user-management-jooq/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+/user-management-jooq/target/user-management-jooq-1.0.0-SNAPSHOT.jar
+/user-management-spring-auth/target/classes/com/github/appreciated/vortex_crud/auth/UserManagementServiceImpl.class
+/user-management-spring-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/user-management-spring-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
