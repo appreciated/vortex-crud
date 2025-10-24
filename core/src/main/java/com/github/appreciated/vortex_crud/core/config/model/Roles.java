@@ -5,7 +5,7 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class AccessControl {
+public class Roles {
 
     private List<String> roles;
 
@@ -19,9 +19,9 @@ public class AccessControl {
 
     public static class Builder {
 
-        private final AccessControl product;
+        private final Roles product;
 
-        private Builder(AccessControl product) {
+        private Builder(Roles product) {
             this.product = product;
         }
 
@@ -35,12 +35,12 @@ public class AccessControl {
             return this;
         }
 
-        public AccessControl build() {
+        public Roles build() {
             return product;
         }
     }
 
     public static Builder of() {
-        return new Builder(new AccessControl());
+        return new Builder(new Roles());
     }
 }

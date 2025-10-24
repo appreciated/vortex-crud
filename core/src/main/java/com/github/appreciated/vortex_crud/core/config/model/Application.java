@@ -12,7 +12,7 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
 
     private String i18nBundlePrefix;
 
-    private UserManagement userManagement;
+    private IdentityAndAccessManagement identityAndAccessManagement;
 
     private Selects selects;
 
@@ -40,12 +40,12 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.i18nBundlePrefix = i18nBundlePrefix;
     }
 
-    public UserManagement getUserManagement() {
-        return userManagement;
+    public IdentityAndAccessManagement getUserManagement() {
+        return identityAndAccessManagement;
     }
 
-    public void setUserManagement(UserManagement userManagement) {
-        this.userManagement = userManagement;
+    public void setUserManagement(IdentityAndAccessManagement identityAndAccessManagement) {
+        this.identityAndAccessManagement = identityAndAccessManagement;
     }
 
     public Selects getSelects() {
@@ -106,8 +106,8 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withUserManagement(UserManagement userManagement) {
-            product.userManagement = userManagement;
+        public Builder<DataStoreId, FieldId, KeyType> withIdentityAndAccessManagement(IdentityAndAccessManagement identityAndAccessManagement) {
+            product.identityAndAccessManagement = identityAndAccessManagement;
             return this;
         }
 

@@ -17,11 +17,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.entity.User;
-import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.TaskRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.UserRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
@@ -268,14 +264,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withUserManagement(UserManagement.of()
-                        .withEnabled(true)
-                        .withAccessControl(AccessControl.of().withRoles(List.of("manager", "admin")).build())
+                .withIdentityAndAccessManagement(IdentityAndAccessManagement.of(userRepository)
+                        .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
-                        .withAdditionalFields(List.of(AdditionalField.of()
-                                .withName("startDate")
-                                .withType("date")
-                                .build()))
                         .build())
                 .withRoutes(routes)
                 .withVersioning(JpaVersioning.of().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())

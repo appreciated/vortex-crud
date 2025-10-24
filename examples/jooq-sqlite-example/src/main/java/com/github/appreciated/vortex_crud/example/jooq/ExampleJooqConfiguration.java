@@ -16,9 +16,6 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanD
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
-import com.github.appreciated.vortex_crud.example.jooq.entity.User;
-import com.github.appreciated.vortex_crud.example.jooq.repository.UserRepository;
-import com.github.appreciated.vortex_crud.jooq.models.tables.Users;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -26,9 +23,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -37,6 +31,7 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.USERS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PROJECTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
@@ -46,24 +41,6 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-
-    private final UserRepository userRepository;
-
-    public ExampleJooqConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> (org.springframework.security.core.GrantedAuthority) () -> "ROLE_" + role).collect(java.util.stream.Collectors.toList())))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    @Bean
-    public Class<User> userClass() {
-        return User.class;
-    }
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
@@ -83,7 +60,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 TASKS.ID, new IdField<>(),
                                 TASKS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
                                 TASKS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(1000).build()),
-                                TASKS.ASSIGNED_TO, new ReferenceField<>(Users.USERS, TASKS.ID, Users.USERS.USERNAME, List.of(Users.USERS.USERNAME)) /* 1:1 Relation */,
+                                TASKS.ASSIGNED_TO, new ReferenceField<>(USERS, TASKS.ID, USERS.USERNAME, List.of(USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new SelectField<>("task-status"),
                                 TASKS.DUE_DATE, new DateField<>(), //.withReadOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new DateTimePickerField<>(),
@@ -305,14 +282,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         return JooqApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withUserManagement(UserManagement.of()
-                        .withEnabled(true)
-                        .withAccessControl(AccessControl.of().withRoles(List.of("manager", "admin")).build())
+                .withIdentityAndAccessManagement(IdentityAndAccessManagement.of(USERS)
+                        .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
-                        .withAdditionalFields(List.of(AdditionalField.of()
-                                .withName("start_date")
-                                .withType("date")
-                                .build()))
                         .build())
                 .withRoutes(routes)
                 .withVersioning(JooqVersioning.of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
