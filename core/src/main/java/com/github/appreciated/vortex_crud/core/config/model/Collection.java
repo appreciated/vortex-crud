@@ -4,23 +4,23 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDia
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class Collection<DataStoreId, FieldId, KeyType> {
+public class Collection<ModelClass, FieldType, RepositoryType> {
 
     private CollectionConfig config;
 
-    public Collection(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public Collection(Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory) {
         this.factory = factory;
     }
 
     private String label;
 
-    private Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> factory;
+    private Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory;
 
-    private CollectionConfiguration<DataStoreId, FieldId, KeyType> data;
+    private CollectionConfiguration<ModelClass, FieldType, RepositoryType> data;
 
     private String emptyMessage;
 
-    private RouteRenderer<DataStoreId, FieldId, KeyType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
     public String getLabel() {
         return label;
@@ -30,19 +30,19 @@ public class Collection<DataStoreId, FieldId, KeyType> {
         this.label = label;
     }
 
-    public Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> getFactory() {
+    public Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
         return factory;
     }
 
-    public void setFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public void setFactory(Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory) {
         this.factory = factory;
     }
 
-    public CollectionConfiguration<DataStoreId, FieldId, KeyType> getData() {
+    public CollectionConfiguration<ModelClass, FieldType, RepositoryType> getData() {
         return data;
     }
 
-    public void setData(CollectionConfiguration<DataStoreId, FieldId, KeyType> data) {
+    public void setData(CollectionConfiguration<ModelClass, FieldType, RepositoryType> data) {
         this.data = data;
     }
 
@@ -54,7 +54,7 @@ public class Collection<DataStoreId, FieldId, KeyType> {
         this.emptyMessage = emptyMessage;
     }
 
-    public RouteRenderer<DataStoreId, FieldId, KeyType> getChild() {
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
         return child;
     }
 
@@ -62,48 +62,48 @@ public class Collection<DataStoreId, FieldId, KeyType> {
         return config;
     }
 
-    public void setChild(RouteRenderer<DataStoreId, FieldId, KeyType> child) {
+    public void setChild(RouteRenderer<ModelClass, FieldType, RepositoryType> child) {
         this.child = child;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId, KeyType> {
+    public abstract static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final Collection<DataStoreId, FieldId, KeyType> product;
+        private final Collection<ModelClass, FieldType, RepositoryType> product;
 
-        protected Builder(Collection<DataStoreId, FieldId, KeyType> product) {
+        protected Builder(Collection<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withLabel(String label) {
+        public Builder<ModelClass, FieldType, RepositoryType> withLabel(String label) {
             product.label = label;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withData(CollectionConfiguration<DataStoreId, FieldId, KeyType> data) {
+        public Builder<ModelClass, FieldType, RepositoryType> withData(CollectionConfiguration<ModelClass, FieldType, RepositoryType> data) {
             product.data = data;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withEmptyMessage(String emptyMessage) {
+        public Builder<ModelClass, FieldType, RepositoryType> withEmptyMessage(String emptyMessage) {
             product.emptyMessage = emptyMessage;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withChild(RouteRenderer<DataStoreId, FieldId, KeyType> child) {
+        public Builder<ModelClass, FieldType, RepositoryType> withChild(RouteRenderer<ModelClass, FieldType, RepositoryType> child) {
             product.child = child;
             return this;
         }
 
-        public Collection<DataStoreId, FieldId, KeyType> build() {
+        public Collection<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withFactory(Class<? extends VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> connect) {
+        public Builder<ModelClass, FieldType, RepositoryType> withFactory(Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> connect) {
             product.factory = connect;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withConfiguration(CollectionConfig title) {
+        public Builder<ModelClass, FieldType, RepositoryType> withConfiguration(CollectionConfig title) {
             product.config = title;
             return this;
         }

@@ -16,16 +16,12 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
-import com.github.appreciated.vortex_crud.example.jpa.entity.User;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -57,18 +53,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         this.taskCommentRepository = taskCommentRepository;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(role -> (org.springframework.security.core.GrantedAuthority) () -> "ROLE_" + role).collect(java.util.stream.Collectors.toList())))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    @Bean
-    public Class<User> userClass() {
-        return User.class;
     }
 
     @Override
@@ -264,10 +248,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withIdentityAndAccessManagement(IdentityAndAccessManagement.of(userRepository)
-                        .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
-                        .withSignUp(true)
-                        .build())
+                .withIdentityAndAccessManagement(
+                        IdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>of(userRepository)
+                                .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
+                                .withSignUp(true)
+                                .withUsername(new JpaFieldElement("username", "route.projects.labels.name"))
+                                .withPassword(new JpaFieldElement("password", "route.projects.labels.password"))
+                                .withSignUpFields(
+                                        new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                )
+                                .build()
+                )
                 .withRoutes(routes)
                 .withVersioning(JpaVersioning.of().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())
                 .withAuditing(Auditing.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())

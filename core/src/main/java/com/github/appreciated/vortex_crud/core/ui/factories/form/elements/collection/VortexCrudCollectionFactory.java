@@ -6,10 +6,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 
-public interface VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> {
+public interface VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> {
     Component createCollection(Object foreignKeyValue,
-                               RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
-                               InternalFormElement<DataStoreId, FieldId, KeyType> factoryConfig,
-                               VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                               FormCreator<DataStoreId, FieldId, KeyType> formCreator);
+                               RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                               InternalFormElement<ModelClass, FieldType, RepositoryType> factoryConfig,
+                               VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                               FormCreator<ModelClass, FieldType, RepositoryType> formCreator);
 }

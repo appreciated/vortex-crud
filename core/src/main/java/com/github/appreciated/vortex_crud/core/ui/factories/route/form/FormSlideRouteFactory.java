@@ -12,15 +12,15 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
  * Functionality is identical to {@link FormRouteFactory}; the class acts as a marker to
  * select {@code FormSlideFactory} as dialog provider.
  */
-public class FormSlideRouteFactory<DataStoreId, FieldId, KeyType>
-        extends FormRouteFactory<DataStoreId, FieldId, KeyType> {
+public class FormSlideRouteFactory<ModelClass, FieldType, RepositoryType>
+        extends FormRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    public FormSlideRouteFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                                 VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                                 FormCreator<DataStoreId, FieldId, KeyType> formCreator,
-                                 VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> factoryRegistry,
-                                 VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                                 ReflectionService<FieldId> reflectionService) {
+    public FormSlideRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                 VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
+                                 VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
+                                 VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                                 ReflectionService<FieldType> reflectionService) {
         super(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, fieldNameResolver, reflectionService);
     }
 }

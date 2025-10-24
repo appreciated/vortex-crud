@@ -1,7 +1,6 @@
-package com.github.appreciated.vortex_crud.auth;
+package com.github.appreciated.vortex_crud.core.auth;
 
-import com.github.appreciated.vortex_crud.auth.UserManagementService;
-import com.github.appreciated.vortex_crud.auth.repository.VortexCrudUserRepository;
+import com.github.appreciated.vortex_crud.core.auth.repository.VortexCrudUserRepository;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.auth;
+package com.github.appreciated.vortex_crud.core.auth;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
 

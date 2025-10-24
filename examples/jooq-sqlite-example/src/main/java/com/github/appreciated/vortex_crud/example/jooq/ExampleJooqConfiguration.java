@@ -84,7 +84,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 IMAGES.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
                                 IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                         ))
-                        .build());
+                        .build(),
+                USERS,
+                JooqDataStoreConfig.of(USERS)
+                        .withFields(Map.of(
+                                USERS.USERNAME, new EmailField<>(),
+                                USERS.PASSWORD_HASH, new PasswordField<>(true, TextFieldValidation.of().withMaxLength(255).build())
+                        ))
+                        .build()
+        );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
                 .withDataStore(TASKS)
@@ -282,9 +290,12 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         return JooqApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withIdentityAndAccessManagement(IdentityAndAccessManagement.of(USERS)
+                .withIdentityAndAccessManagement(IdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>of(USERS)
                         .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
+                        .withUsername(new JooqFieldElement(USERS.USERNAME, "route.projects.labels.name"))
+                        .withPassword(new JooqFieldElement(USERS.PASSWORD_HASH, "route.projects.labels.name"))
+                        .withSignUpFields(new JooqFieldElement(USERS.CREATED_AT, "route.projects.labels.description"))
                         .build())
                 .withRoutes(routes)
                 .withVersioning(JooqVersioning.of().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())

@@ -7,9 +7,9 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
  * Reads configuration from a resource file and offers methods to retrieve route and application settings.
  */
 
-public interface VortexCrudConfigService<DataStoreId, FieldId, KeyType> {
+public interface VortexCrudConfigService<ModelClass, FieldType, RepositoryType> {
 
-    Application<DataStoreId, FieldId, KeyType> getConfiguration();
+    Application<ModelClass, FieldType, RepositoryType> getConfiguration();
 
     String getApplicationName();
 

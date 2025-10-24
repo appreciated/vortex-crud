@@ -3,14 +3,14 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 
 import java.util.List;
 
 /**
- * Thin Field type for DoubleNumberFieldFactory.
+ * Thin Field type for TextFieldFactory.
  */
-public class DoubleField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+public class PasswordField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
 
     private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
@@ -18,12 +18,16 @@ public class DoubleField<ModelClass, FieldType, RepositoryType> implements Field
     private List<String> writeRoles;
     private List<String> readOnlyRoles;
 
-    public DoubleField() {
-        this.factory = DoubleNumberFieldFactory.class;
+    public PasswordField() {
+        this(false);
     }
 
-    public DoubleField(boolean required, Validation validation) {
-        this();
+    public PasswordField(boolean required) {
+        this(required, null);
+    }
+
+    public PasswordField(boolean required, Validation validation) {
+        this.factory = TextFieldFactory.class;
         this.validation = validation;
         this.required = required;
     }

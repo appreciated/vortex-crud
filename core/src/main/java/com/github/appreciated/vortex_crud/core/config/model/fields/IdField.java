@@ -5,14 +5,18 @@ import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
 
+import java.util.List;
+
 /**
  * Thin Field type for IdFieldFactory.
  */
-public class IdField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
+public class IdField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
 
     private Class<? extends VortexCrudFieldFactory> factory;
     private Validation validation;
     private boolean required = false;
+    private List<String> writeRoles;
+    private List<String> readOnlyRoles;
 
     public IdField() {
         this(IdFieldFactory.class, false, null);
@@ -31,12 +35,12 @@ public class IdField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId
     }
 
     @Override
-    public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
+    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
+        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) factory;
     }
 
     @Override
-    public void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory) {
         this.factory = factory;
     }
 
@@ -48,5 +52,25 @@ public class IdField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId
     @Override
     public boolean isRequired() {
         return required;
+    }
+
+    @Override
+    public void setWriteRoles(List<String> writeRoles) {
+        this.writeRoles = writeRoles;
+    }
+
+    @Override
+    public List<String> getWriteRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public void setReadOnlyRoles(List<String> readOnlyRoles) {
+        this.readOnlyRoles = readOnlyRoles;
+    }
+
+    @Override
+    public List<String> getReadOnlyRoles() {
+        return readOnlyRoles;
     }
 }

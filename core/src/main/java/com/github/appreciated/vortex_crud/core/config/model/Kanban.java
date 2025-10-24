@@ -7,85 +7,85 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class Kanban<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> implements ItemFactory<FieldId> {
+public class Kanban<ModelClass, FieldType, RepositoryType> extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> implements ItemFactory<FieldType> {
 
-    private FieldId columnField;
-    private FieldId rowIndexField;
+    private FieldType columnField;
+    private FieldType rowIndexField;
 
-    public Kanban(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
+    public Kanban(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
         super(factory);
     }
 
-    public FieldId getColumnField() {
+    public FieldType getColumnField() {
         return columnField;
     }
 
-    public void setColumnField(FieldId columnField) {
+    public void setColumnField(FieldType columnField) {
         this.columnField = columnField;
     }
 
-    public FieldId getRowIndexField() {
+    public FieldType getRowIndexField() {
         return rowIndexField;
     }
 
-    public void setRowIndexField(FieldId rowIndexField) {
+    public void setRowIndexField(FieldType rowIndexField) {
         this.rowIndexField = rowIndexField;
     }
 
-    public static abstract class Builder<DataStoreId, FieldId, KeyType> {
+    public static abstract class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final Kanban<DataStoreId, FieldId, KeyType> product;
+        private final Kanban<ModelClass, FieldType, RepositoryType> product;
 
-        protected Builder(Kanban<DataStoreId, FieldId, KeyType> product) {
+        protected Builder(Kanban<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withColumnField(FieldId columnField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withColumnField(FieldType columnField) {
             product.setColumnField(columnField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withRowIndexField(FieldId rowIndexField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withRowIndexField(FieldType rowIndexField) {
             product.setRowIndexField(rowIndexField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withTitleField(FieldId titleField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withTitleField(FieldType titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withDescriptionField(FieldId descriptionField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withDescriptionField(FieldType descriptionField) {
             product.setDescriptionField(descriptionField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withImageField(FieldId imageField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withImageField(FieldType imageField) {
             product.setImageField(imageField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withFilterField(FieldId filterField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withFilterField(FieldType filterField) {
             product.setFilterField(filterField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
+        public Builder<ModelClass, FieldType, RepositoryType> withImageFactory(Class<? extends VortexCrudResourceProvider> imageFactory) {
             product.setImageFactory(imageFactory);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withChildren(List<InternalFormElement<DataStoreId, FieldId, KeyType>> children) {
+        public Builder<ModelClass, FieldType, RepositoryType> withChildren(List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> addChildren(InternalFormElement<DataStoreId, FieldId, KeyType> item) {
+        public Builder<ModelClass, FieldType, RepositoryType> addChildren(InternalFormElement<ModelClass, FieldType, RepositoryType> item) {
             product.getChildren().add(item);
             return this;
         }
 
-        public Kanban<DataStoreId, FieldId, KeyType> build() {
+        public Kanban<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }

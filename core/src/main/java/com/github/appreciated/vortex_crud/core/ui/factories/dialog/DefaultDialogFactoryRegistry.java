@@ -23,16 +23,16 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultDialogFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public class DefaultDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    private final Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
+    private final Map<Class<?>, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
-    public DefaultDialogFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                                        VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                                        VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                        VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
-                                        ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy,
-                                        ReflectionService<FieldId> reflectionService,
+    public DefaultDialogFactoryRegistry(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                                        VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                        VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                        VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
+                                        ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
+                                        ReflectionService<FieldType> reflectionService,
                                         VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
@@ -41,17 +41,17 @@ public class DefaultDialogFactoryRegistry<DataStoreId, FieldId, KeyType> impleme
         factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, manyToManyPersistenceStrategy, reflectionService, dataStoreUtil));
     }
 
-    public Map<Class<?>, VortexCrudDialogFactory<DataStoreId, FieldId, KeyType>> getFactories() {
+    public Map<Class<?>, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> getFactory(Class<?> type) {
+    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<?> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
     @Override
-    public void addFactory(Class<?> key, VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> factory) {
+    public void addFactory(Class<?> key, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory) {
         factories.put(key, factory);
     }
 }

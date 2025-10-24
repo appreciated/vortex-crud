@@ -5,8 +5,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.item;
  * This factory provides the appropriate renderer based on the configuration specified in the ItemRendererConfig.
  */
 
-public interface VortexCrudItemFactoryRegistry<FieldId> {
-    VortexCrudItemFactory<FieldId> getFactory(Class<? extends VortexCrudItemFactory<FieldId>> factory);
+public interface VortexCrudItemFactoryRegistry<FieldType> {
+    VortexCrudItemFactory<FieldType> getFactory(Class<? extends VortexCrudItemFactory<FieldType>> factory);
 
-    void addFactory(Class<? extends VortexCrudItemFactory<FieldId>> key, VortexCrudItemFactory<FieldId> factory);
+    void addFactory(Class<? extends VortexCrudItemFactory<FieldType>> key, VortexCrudItemFactory<FieldType> factory);
 }

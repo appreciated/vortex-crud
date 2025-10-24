@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -19,43 +18,39 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class FormCreator<DataStoreId, FieldId, KeyType> {
+public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
-    private final DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory;
-    private final VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry;
-    private final ReflectionService<FieldId> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory;
+    private final VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry;
+    private final ReflectionService<FieldType> reflectionService;
 
-    public FormCreator(DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> componentFactory,
-                       VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> collectionFactoryRegistry,
-                       ReflectionService<FieldId> reflectionService,
-                       VortexCrudDataStoreUtilStrategy dataStoreUtil) {
+    public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
+                       VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
+                       ReflectionService<FieldType> reflectionService) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
         this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
     }
 
-    public void bindAndAddToLayout(KeyType dataStoreKey,
-                                   RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer,
-                                   RouteRendererConfiguration<DataStoreId, FieldId, KeyType> formConfig,
+    public void bindAndAddToLayout(RepositoryType dataStoreKey,
+                                   RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                                   RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfig,
                                    Object entity,
-                                   VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                                   DataStoreConfig<DataStoreId, FieldId, KeyType> tables,
+                                   VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                                   DataStoreConfig<ModelClass, FieldType, RepositoryType> tables,
                                    Binder<Object> binder,
-                                   FormLayout form,
-                                   FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
-        Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fieldsConfig = tables.getFields();
+                                   FormLayout form) {
+        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<DataStoreId, FieldId, KeyType> element : formConfig.getChildren()) {
-            FieldId fieldName = element.getField();
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : formConfig.getChildren()) {
+            FieldType fieldName = element.getField();
             if (!element.getType().equals("collection")) {
-                Field<DataStoreId, FieldId, KeyType> field = fieldsConfig.get(fieldName);
+                Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
-                VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory = componentFactory.getFactory(field.getFactory());
+                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
                 // Apply validation if present
@@ -94,7 +89,7 @@ public class FormCreator<DataStoreId, FieldId, KeyType> {
                             routeRenderer,
                             element,
                             routeFactory,
-                            formCreator
+                            this
                     );
                     form.add(collection);
                     form.setColspan(collection, (element.getSpan() == null ? 2 : element.getSpan()));

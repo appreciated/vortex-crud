@@ -9,21 +9,21 @@ import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayCompone
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 
-public class DefaultListColumnImplCallback<DataStoreId, FieldId, KeyType> implements VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> {
+public class DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType> implements VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudFileProviderRegistry registry;
-    private final ReflectionService<FieldId> reflectionService;
+    private final ReflectionService<FieldType> reflectionService;
 
     public DefaultListColumnImplCallback(VortexCrudFileProviderRegistry registry,
-                                         ReflectionService<FieldId> reflectionService) {
+                                         ReflectionService<FieldType> reflectionService) {
         this.registry = registry;
         this.reflectionService = reflectionService;
     }
 
     @Override
-    public void addColumn(Grid<Object> grid, InternalFormElement<DataStoreId, FieldId, KeyType> field, Object table, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
+    public void addColumn(Grid<Object> grid, InternalFormElement<ModelClass, FieldType, RepositoryType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         if (dataStoreField instanceof ImageField<?, ?, ?>) {
-            ImageField<DataStoreId, FieldId, KeyType> imageField = (ImageField<DataStoreId, FieldId, KeyType>) dataStoreField;
+            ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
             if (imageField.getConfiguration() == null) {
                 throw new IllegalArgumentException("The image field '" + field.getField() + "' does not provide a imageFieldConfiguration");
             }

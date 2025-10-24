@@ -2,10 +2,10 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 
-public interface Field<DataStoreId, FieldId, KeyType> {
-    Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory();
+public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled {
+    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory();
 
-    void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory);
+    void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory);
 
     Validation getValidation();
 
@@ -14,19 +14,19 @@ public interface Field<DataStoreId, FieldId, KeyType> {
     /**
      * Minimal legacy-compatible builder to support existing code paths.
      */
-    class Builder<DataStoreId, FieldId, KeyType> {
-        private final Field<DataStoreId, FieldId, KeyType> field;
+    class Builder<ModelClass, FieldType, RepositoryType> {
+        private final Field<ModelClass, FieldType, RepositoryType> field;
 
-        public Builder(Field<DataStoreId, FieldId, KeyType> field) {
+        public Builder(Field<ModelClass, FieldType, RepositoryType> field) {
             this.field = field;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withConfiguration(Object configuration) {
+        public Builder<ModelClass, FieldType, RepositoryType> withConfiguration(Object configuration) {
             // No-op configuration passthrough for compatibility
             return this;
         }
 
-        public Field<DataStoreId, FieldId, KeyType> build() {
+        public Field<ModelClass, FieldType, RepositoryType> build() {
             return field;
         }
     }

@@ -12,22 +12,22 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> {
+public class DefaultListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> implements VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> {
 
-    private final HashMap<String, VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType>> callbacks = new HashMap<>();
+    private final HashMap<String, VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType>> callbacks = new HashMap<>();
 
     public DefaultListColumnCallbackRegistry(VortexCrudFileProviderRegistry fileProviderRegistry,
-                                             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldId> reflectionService) {
-        callbacks.put("default", new DefaultListColumnImplCallback<DataStoreId, FieldId, KeyType>(fileProviderRegistry, reflectionService));
+                                             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService) {
+        callbacks.put("default", new DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType>(fileProviderRegistry, reflectionService));
     }
 
     @Override
-    public VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> getCallback(RouteRenderer<DataStoreId, FieldId, KeyType> config) {
+    public VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> getCallback(RouteRenderer<ModelClass, FieldType, RepositoryType> config) {
         return callbacks.get("default");
     }
 
     @Override
-    public void addCallback(String key, VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> factory) {
+    public void addCallback(String key, VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> factory) {
         callbacks.put(key, factory);
     }
 }

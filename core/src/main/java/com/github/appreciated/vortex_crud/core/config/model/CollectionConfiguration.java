@@ -5,85 +5,85 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class CollectionConfiguration<DataStoreId, FieldId, KeyType> {
+public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private KeyType dataStore;
+    private RepositoryType dataStore;
 
-    private OneToMany<DataStoreId, FieldId, KeyType> oneToMany;
+    private OneToMany<ModelClass, FieldType, RepositoryType> oneToMany;
 
-    private ManyToMany<DataStoreId, FieldId, KeyType> manyToMany;
+    private ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany;
 
-    private List<FieldId> children;
+    private List<FieldType> children;
 
-    public CollectionConfiguration(KeyType dataStore) {
+    public CollectionConfiguration(RepositoryType dataStore) {
         this.dataStore = dataStore;
     }
 
-    public KeyType getDataStore() {
+    public RepositoryType getDataStore() {
         return dataStore;
     }
 
-    public void setDataStore(KeyType dataStore) {
+    public void setDataStore(RepositoryType dataStore) {
         this.dataStore = dataStore;
     }
 
-    public OneToMany<DataStoreId, FieldId, KeyType> getOneToMany() {
+    public OneToMany<ModelClass, FieldType, RepositoryType> getOneToMany() {
         return oneToMany;
     }
 
-    public void setOneToMany(OneToMany<DataStoreId, FieldId, KeyType> oneToMany) {
+    public void setOneToMany(OneToMany<ModelClass, FieldType, RepositoryType> oneToMany) {
         this.oneToMany = oneToMany;
     }
 
-    public ManyToMany<DataStoreId, FieldId, KeyType> getManyToMany() {
+    public ManyToMany<ModelClass, FieldType, RepositoryType> getManyToMany() {
         return manyToMany;
     }
 
-    public void setManyToMany(ManyToMany<DataStoreId, FieldId, KeyType> manyToMany) {
+    public void setManyToMany(ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany) {
         this.manyToMany = manyToMany;
     }
 
-    public List<FieldId> getChildren() {
+    public List<FieldType> getChildren() {
         return children;
     }
 
-    public void setChildren(List<FieldId> children) {
+    public void setChildren(List<FieldType> children) {
         this.children = children;
     }
 
-    public abstract static class Builder<DataStoreId, FieldId, KeyType> {
+    public abstract static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final CollectionConfiguration<DataStoreId, FieldId, KeyType> product;
+        private final CollectionConfiguration<ModelClass, FieldType, RepositoryType> product;
 
-        protected Builder(CollectionConfiguration<DataStoreId, FieldId, KeyType> product) {
+        protected Builder(CollectionConfiguration<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withOneToMany(OneToMany<DataStoreId, FieldId, KeyType> oneToMany) {
+        public Builder<ModelClass, FieldType, RepositoryType> withOneToMany(OneToMany<ModelClass, FieldType, RepositoryType> oneToMany) {
             product.oneToMany = oneToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withManyToMany(ManyToMany<DataStoreId, FieldId, KeyType> manyToMany) {
+        public Builder<ModelClass, FieldType, RepositoryType> withManyToMany(ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany) {
             product.manyToMany = manyToMany;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withChildren(List<FieldId> children) {
+        public Builder<ModelClass, FieldType, RepositoryType> withChildren(List<FieldType> children) {
             product.children = children;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withChildren(FieldId... children) {
+        public Builder<ModelClass, FieldType, RepositoryType> withChildren(FieldType... children) {
             return withChildren(List.of(children));
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> addChildren(FieldId item) {
+        public Builder<ModelClass, FieldType, RepositoryType> addChildren(FieldType item) {
             product.children.add(item);
             return this;
         }
 
-        public CollectionConfiguration<DataStoreId, FieldId, KeyType> build() {
+        public CollectionConfiguration<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }

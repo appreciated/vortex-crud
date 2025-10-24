@@ -5,9 +5,9 @@ package com.github.appreciated.vortex_crud.core.entity.data_store;
  * This interface is used to extract the logic for resolving foreign key values
  * into a separate strategy pattern.
  *
- * @param <FieldId> The type of the field identifier
+ * @param <FieldType> The type of the field identifier
  */
-public interface VortexCrudForeignKeyResolutionStrategy<FieldId> {
+public interface VortexCrudForeignKeyResolutionStrategy<FieldType> {
 
     /**
      * Resolves a foreign key value and applies it to the entity.
@@ -18,8 +18,8 @@ public interface VortexCrudForeignKeyResolutionStrategy<FieldId> {
      * @param fieldNameResolver The resolver to get the field name from the field identifier
      */
     void resolveForeignKey(Object entity,
-                           FieldId foreignKeyField,
+                           FieldType foreignKeyField,
                            Object foreignKeyValue,
-                           VortexCrudDataStore<FieldId, ?> dataStore,
-                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver);
+                           VortexCrudDataStore<FieldType, ?> dataStore,
+                           VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver);
 }

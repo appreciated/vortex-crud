@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.auth.repository;
+package com.github.appreciated.vortex_crud.core.auth.repository;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
 import org.springframework.security.core.userdetails.UserDetailsService;

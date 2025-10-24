@@ -6,12 +6,12 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultRouterLayoutFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouterLayoutFactory {
+public class DefaultRouterLayoutFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouterLayoutFactory {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final SecurityService securityService;
 
-    public DefaultRouterLayoutFactory(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService, SecurityService securityService) {
+    public DefaultRouterLayoutFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService, SecurityService securityService) {
         this.configService = configService;
         this.securityService = securityService;
     }

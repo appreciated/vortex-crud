@@ -6,10 +6,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
  * the specified FieldConfig.
  */
 
-public interface VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public interface VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> getFactory(Class<?> type);
+    VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<?> type);
 
-    void addFactory(Class<?> key, VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> factory);
+    void addFactory(Class<?> key, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory);
 
 }

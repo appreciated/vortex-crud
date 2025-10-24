@@ -23,19 +23,21 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
+import static com.vaadin.flow.component.ModalityMode.VISUAL;
 
-    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy;
+public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
+
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
+    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private VortexCrudDataStore<FieldId, Object> dataStore;
+    private VortexCrudDataStore<FieldType, Object> dataStore;
 
-    public FormDialogFactory(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                             VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                             VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                             VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
+    public FormDialogFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                             VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                             VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                              VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.configService = configService;
@@ -48,16 +50,16 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
     @Override
     public Dialog create(@Nullable Object entityId,
                          @Nullable Object foreignKeyValue,
-                         @Nullable FieldId foreignKeyField,
-                         RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
-                         CollectionConfiguration<DataStoreId, FieldId, KeyType> config,
-                         KeyType dataStoreKey,
-                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
+                         @Nullable FieldType foreignKeyField,
+                         RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
+                         CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
+                         RepositoryType dataStoreKey,
+                         VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener,
-                         FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
+                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
-        this.dataStore = (VortexCrudDataStore<FieldId, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -77,21 +79,21 @@ public class FormDialogFactory<DataStoreId, FieldId, KeyType> implements VortexC
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<DataStoreId, FieldId, KeyType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
 
         @SuppressWarnings("unchecked")
-        RouteRendererConfiguration<DataStoreId, FieldId, KeyType> configuration =
-                (RouteRendererConfiguration<DataStoreId, FieldId, KeyType>) formRouteRenderer.getConfiguration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration, recordById, routeFactory, tables, binder, layout, formCreator);
+        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration =
+                (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) formRouteRenderer.getConfiguration();
+        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration, recordById, routeFactory, tables, binder, layout);
 
         dialog.add(layout);
-        dialog.setModal(false);
+        dialog.setModality(VISUAL);
         dialog.setDraggable(false);
         dialog.setMinWidth(500, Unit.PIXELS);
         return dialog;
     }
 
-    private void createFooter(Object foreignKeyValue, FieldId foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
+    private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
             dialog.close();

@@ -3,10 +3,10 @@ package com.github.appreciated.vortex_crud.core.config.model;
 /**
  * Interface representing a many-to-many relationship between entities.
  *
- * @param <DataStoreId> The type used to identify data stores
- * @param <FieldId>     The type used to identify fields in the data store
+ * @param <ModelClass> The type used to identify data stores
+ * @param <FieldType>     The type used to identify fields in the data store
  */
-public interface ManyToMany<DataStoreId, FieldId, KeyType> {
+public interface ManyToMany<ModelClass, FieldType, RepositoryKey> {
 
     /**
      * Gets the reference field for the many-to-many relationship.
@@ -14,28 +14,28 @@ public interface ManyToMany<DataStoreId, FieldId, KeyType> {
      * @param collectionConfiguration The collection configuration
      * @return The reference field ID
      */
-    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
+    FieldType getReferenceField(CollectionConfiguration<ModelClass, FieldType, RepositoryKey> collectionConfiguration);
 
     /**
      * Gets the associative data store for the many-to-many relationship.
      *
      * @return The associative data store ID
      */
-    DataStoreId getAssociativeDataStoreKey();
+    ModelClass getAssociativeDataStoreKey();
 
     /**
      * Gets the associative target ID field for the many-to-many relationship.
      *
      * @return The associative target ID field
      */
-    FieldId getAssociativeTargetIdField();
+    FieldType getAssociativeTargetIdField();
 
     /**
      * Gets the associative source ID field for the many-to-many relationship.
      *
      * @return The associative source ID field
      */
-    FieldId getAssociativeSourceIdField();
+    FieldType getAssociativeSourceIdField();
 
-    KeyType getDatastore();
+    RepositoryKey getDatastore();
 }

@@ -4,9 +4,9 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public interface OneToMany<DataStoreId, FieldId, KeyType> {
+public interface OneToMany<ModelClass, FieldType, RepositoryType> {
 
-    java.util.Collection<DataStoreId> getData(Object foreignKeyValue, VortexCrudDataStore<FieldId, ?> dataStore, CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
+    java.util.Collection<ModelClass> getData(Object foreignKeyValue, VortexCrudDataStore<FieldType, ?> dataStore, CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration);
 
-    FieldId getReferenceField(CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration);
+    FieldType getReferenceField(CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration);
 }

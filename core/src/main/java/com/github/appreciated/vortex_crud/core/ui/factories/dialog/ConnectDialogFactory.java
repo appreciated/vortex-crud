@@ -23,17 +23,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements VortexCrudDialogFactory<DataStoreId, FieldId, KeyType> {
+public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
-    private final ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy;
-    private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
+    private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
+    private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy;
 
     public ConnectDialogFactory(
-            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-            ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy,
-            ReflectionService<FieldId> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+            ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
+            ReflectionService<FieldType> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.reflectionService = reflectionService;
@@ -58,17 +58,17 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
     @Override
     public Dialog create(@Nullable Object entityId,
                          @Nullable Object foreignKeyValue,
-                         @Nullable FieldId foreignKeyField,
-                         RouteRenderer<DataStoreId, FieldId, KeyType> formRouteRenderer,
-                         CollectionConfiguration<DataStoreId, FieldId, KeyType> collectionConfiguration,
-                         KeyType dataStoreKey,
-                         VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
+                         @Nullable FieldType foreignKeyField,
+                         RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
+                         CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
+                         RepositoryType dataStoreKey,
+                         VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          OnStoreListener storeListener,
                          OnCancelListener cancelListener,
-                         FormCreator<DataStoreId, FieldId, KeyType> formCreator) {
+                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
-        VortexCrudDataStore<FieldId, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
-        ManyToMany<DataStoreId, FieldId, KeyType> manyToMany = collectionConfiguration.getManyToMany();
+        VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
+        ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.getManyToMany();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -83,7 +83,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
                 .map(o -> (Object) o)
                 .collect(Collectors.toMap(dataStoreUtilStrategy::getId, o -> o)));
 
-        List<DataStoreId> list = manyToManyPersistenceStrategy.resolveManyToMany(
+        List<ModelClass> list = manyToManyPersistenceStrategy.resolveManyToMany(
                 dataStore,
                 manyToMany,
                 entityId
@@ -95,7 +95,7 @@ public class ConnectDialogFactory<DataStoreId, FieldId, KeyType> implements Vort
         // Create a list of selectable items
         MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections.values());
-        List<FieldId> children = collectionConfiguration.getChildren();
+        List<FieldType> children = collectionConfiguration.getChildren();
         connectionList.setItemLabelGenerator(obj -> children.stream()
                 .map(fieldId -> {
                     try {

@@ -19,12 +19,12 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 
 import java.util.Map;
 
-public class DefaultRouterLayout<DataStoreId, FieldId, KeyType> extends AppLayout {
+public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends AppLayout {
 
-    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final SecurityService securityService;
 
-    public DefaultRouterLayout(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService, SecurityService securityService) {
+    public DefaultRouterLayout(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService, SecurityService securityService) {
         this.configService = configService;
         this.securityService = securityService;
     }
@@ -56,7 +56,7 @@ public class DefaultRouterLayout<DataStoreId, FieldId, KeyType> extends AppLayou
 
     private SideNav getSideNav() {
         SideNav nav = new SideNav();
-        Map<String, ? extends RouteRenderer<DataStoreId, FieldId, KeyType>> routes = configService.getConfiguration().getRouteRenderers();
+        Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = configService.getConfiguration().getRouteRenderers();
         routes.forEach((path, value) -> {
             if (!value.isHideInMenu()) {
                 String translation = getTranslation(value.getTitle());

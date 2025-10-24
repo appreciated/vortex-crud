@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class LoginFactory<DataStoreId, FieldId, KeyType> implements VortexCrudLoginFactory<DataStoreId, FieldId, KeyType> {
+public class LoginFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudLoginFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component getLoginView(Integer currentPathIndex, VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver) {
+    public Component getLoginView(Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
         return new LoginView();
     }
 }

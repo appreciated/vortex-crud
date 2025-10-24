@@ -6,50 +6,50 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
+public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private List<RouteRendererConfiguration<DataStoreId, FieldId, KeyType>> forms;
+    private List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms;
 
-    public MultiFormRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
+    public MultiFormRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
         super(factory);
     }
 
-    public List<RouteRendererConfiguration<DataStoreId, FieldId, KeyType>> getForms() {
+    public List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> getForms() {
         return forms;
     }
 
-    public void setForms(List<RouteRendererConfiguration<DataStoreId, FieldId, KeyType>> children) {
+    public void setForms(List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> children) {
         this.forms = children;
     }
 
-    public static class Builder<DataStoreId, FieldId, KeyType> {
+    public static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> product;
+        private final MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> product;
 
-        private Builder(MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> product) {
+        private Builder(MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public static <DataStoreId, FieldId, KeyType> Builder<DataStoreId, FieldId, KeyType> of(Class<? extends VortexCrudItemFactory> factory) {
-            return new Builder<>(new MultiFormRendererConfiguration<>((Class<? extends VortexCrudItemFactory<FieldId>>) factory));
+        public static <ModelClass, FieldType, RepositoryType> Builder<ModelClass, FieldType, RepositoryType> of(Class<? extends VortexCrudItemFactory> factory) {
+            return new Builder<>(new MultiFormRendererConfiguration<>((Class<? extends VortexCrudItemFactory<FieldType>>) factory));
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withTitleField(FieldId titleField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withTitleField(FieldType titleField) {
             product.setTitleField(titleField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withForms(List<RouteRendererConfiguration<DataStoreId, FieldId, KeyType>> forms) {
+        public Builder<ModelClass, FieldType, RepositoryType> withForms(List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms) {
             product.forms = forms;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> addForm(RouteRendererConfiguration<DataStoreId, FieldId, KeyType> item) {
+        public Builder<ModelClass, FieldType, RepositoryType> addForm(RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> item) {
             product.forms.add(item);
             return this;
         }
 
-        public MultiFormRendererConfiguration<DataStoreId, FieldId, KeyType> build() {
+        public MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }

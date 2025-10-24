@@ -3,8 +3,8 @@ package com.github.appreciated.vortex_crud.core.data_provider;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.data.provider.CallbackDataProvider;
 
-public class GenericFilterableDataProvider<FieldId> extends CallbackDataProvider<Object, String> {
-    public GenericFilterableDataProvider(VortexCrudDataStore<FieldId, ?> dataStore, FieldId filterField) {
+public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvider<Object, String> {
+    public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField) {
         super(query -> {
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {

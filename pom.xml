@@ -37,9 +37,6 @@
     </dependencyManagement>
 
     <modules>
-        <module>user-management-spring-auth</module>
-        <module>user-management-jpa</module>
-        <module>user-management-jooq</module>
         <module>core</module>
         <module>jpa</module>
         <module>jooq</module>

@@ -6,9 +6,9 @@ import java.util.List;
  * Interface for data store operations.
  * Uses reflection to work with model classes directly instead of Object.
  *
- * @param <FieldId> The type used to identify fields in the data store
+ * @param <FieldType> The type used to identify fields in the data store
  */
-public interface VortexCrudDataStore<FieldId, ModelClass> {
+public interface VortexCrudDataStore<FieldType, ModelClass> {
 
     /**
      * Inserts a record into the data store.
@@ -36,7 +36,7 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      * @param limit       The limit for pagination
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnEquals(FieldId filterField, Object filterValue, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereColumnEquals(FieldType filterField, Object filterValue, int offset, int limit);
 
     /**
      * Gets records from the data store where a column equals a value and orders the result by another column.
@@ -48,7 +48,7 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      * @param limit       The limit for pagination
      * @return A list of ordered records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(FieldId filterField, Object filterValue, FieldId orderField, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(FieldType filterField, Object filterValue, FieldType orderField, int offset, int limit);
 
     /**
      * Gets records from the data store where a column is in a list of values, with pagination.
@@ -59,7 +59,7 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      * @param limit       The limit for pagination
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnIn(FieldId filterField, List<String> filterValue, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereColumnIn(FieldType filterField, List<String> filterValue, int offset, int limit);
 
     /**
      * Gets records from the data store where a column is like a value, with pagination.
@@ -70,7 +70,7 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      * @param limit       The limit for pagination
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnLike(FieldId filterField, Object filterValue, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereColumnLike(FieldType filterField, Object filterValue, int offset, int limit);
 
     /**
      * Gets a record by ID.
@@ -113,7 +113,7 @@ public interface VortexCrudDataStore<FieldId, ModelClass> {
      * @param filterValue The value to filter by
      * @return The number of records matching the criteria
      */
-    int countWhereColumnLike(FieldId filterField, String filterValue);
+    int countWhereColumnLike(FieldType filterField, String filterValue);
 
     /**
      * Gets a field by name.

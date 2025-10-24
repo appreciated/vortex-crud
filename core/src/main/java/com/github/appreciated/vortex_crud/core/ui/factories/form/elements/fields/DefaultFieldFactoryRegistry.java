@@ -23,16 +23,16 @@ import java.util.Optional;
  */
 
 @Service
-public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
-    public DefaultFieldFactoryRegistry(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
+    public DefaultFieldFactoryRegistry(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                                       VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                                       VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                       ReflectionService<FieldId> reflectionService) {
-        Application<DataStoreId, FieldId, KeyType> configuration = configService.getConfiguration();
+                                       VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                       ReflectionService<FieldType> reflectionService) {
+        Application<ModelClass, FieldType, RepositoryType> configuration = configService.getConfiguration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
         factories.put(EmailFieldFactory.class, new EmailFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
@@ -49,16 +49,16 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
     }
 
-    public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactories() {
+    public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudFieldFactory> type) {
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<? extends VortexCrudFieldFactory> type) {
         return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
     }
 
-    public VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> getFactoryForField(Field<?, ?, ?> field) {
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> getFactoryForField(Field<?, ?, ?> field) {
         // Resolve by concrete Field implementation class (raw checks to avoid generic incompatibilities)
         if (field instanceof SelectField) {
             return getFactory(SelectFieldFactory.class);
@@ -104,7 +104,7 @@ public class DefaultFieldFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> factory) {
+    public void addFactory(Class<? extends VortexCrudFieldFactory> key, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory) {
         factories.put(key, factory);
     }
 }

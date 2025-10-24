@@ -1,15 +1,21 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.login.LoginFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.List;
 
 @GenerateBuilder
-public class IdentityAndAccessManagement<KeyType> {
+public class IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> extends RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
-    private final KeyType repositoryKey;
+    private final RepositoryType repositoryKey;
+    private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
+    private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
 
-    public IdentityAndAccessManagement(KeyType repositoryKey) {
+    public IdentityAndAccessManagement(RepositoryType repositoryKey) {
+        super((Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) LoginFactory.class);
         this.repositoryKey = repositoryKey;
     }
 
@@ -17,14 +23,36 @@ public class IdentityAndAccessManagement<KeyType> {
 
     private boolean signUp;
 
-    private List<AdditionalField> additionalFields;
-
     public Roles getRoles() {
         return roles;
     }
 
     public void setRoles(Roles roles) {
         this.roles = roles;
+    }
+
+    public InternalFormElement<ModelClass, FieldType, RepositoryType> getUsername() {
+        return username;
+    }
+
+    public void setUsername(InternalFormElement<ModelClass, FieldType, RepositoryType> username) {
+        this.username = username;
+    }
+
+    public InternalFormElement<ModelClass, FieldType, RepositoryType> getPassword() {
+        return password;
+    }
+
+    public void setPassword(InternalFormElement<ModelClass, FieldType, RepositoryType> password) {
+        this.password = password;
+    }
+
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> getSignUpFields() {
+        return signUpFields;
+    }
+
+    public void setSignUpFields(List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields) {
+        this.signUpFields = signUpFields;
     }
 
     public boolean isSignUp() {
@@ -35,52 +63,51 @@ public class IdentityAndAccessManagement<KeyType> {
         this.signUp = signUp;
     }
 
-    public List<AdditionalField> getAdditionalFields() {
-        return additionalFields;
-    }
-
-    public void setAdditionalFields(List<AdditionalField> additionalFields) {
-        this.additionalFields = additionalFields;
-    }
-
-    public KeyType getRepositoryKey() {
+    public RepositoryType getRepositoryKey() {
         return repositoryKey;
     }
 
-    public static class Builder<KeyType> {
+    public static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final IdentityAndAccessManagement<KeyType> product;
+        private final IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> product;
 
-        private Builder(IdentityAndAccessManagement<KeyType> product) {
+        private Builder(IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<KeyType> withRoles(Roles roles) {
+        public Builder<ModelClass, FieldType, RepositoryType> withRoles(Roles roles) {
             product.roles = roles;
             return this;
         }
 
-        public Builder<KeyType> withSignUp(boolean signUp) {
+        @SafeVarargs
+        public final <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>>  Builder<ModelClass, FieldType, RepositoryType> withSignUpFields(
+                 T ... signUpFields) {
+            product.signUpFields = List.of(signUpFields);
+            return this;
+        }
+
+        public Builder<ModelClass, FieldType, RepositoryType> withSignUp(boolean signUp) {
             product.signUp = signUp;
             return this;
         }
 
-        public Builder<KeyType> withAdditionalFields(List<AdditionalField> additionalFields) {
-            product.additionalFields = additionalFields;
+        public <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>> Builder<ModelClass, FieldType, RepositoryType> withUsername(T username) {
+            product.username = username;
             return this;
         }
 
-        public Builder<KeyType> addAdditionalField(AdditionalField item) {
-            product.additionalFields.add(item);
+        public <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>> Builder<ModelClass, FieldType, RepositoryType> withPassword(T password) {
+            product.password = password;
             return this;
         }
 
-        public IdentityAndAccessManagement<KeyType> build() {
+        public IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }
 
-    public static <KeyType> Builder<KeyType> of(KeyType keyType) {
+    public static <ModelClass, FieldType, RepositoryType> Builder<ModelClass, FieldType, RepositoryType> of(RepositoryType keyType) {
         return new Builder<>(new IdentityAndAccessManagement<>(keyType));
     }
 }

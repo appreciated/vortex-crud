@@ -11,15 +11,15 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class ReferenceFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class ReferenceFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> resolver;
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> managerFactoryRegistry;
-    private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreFieldNameResolver<FieldType> resolver;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> managerFactoryRegistry;
+    private final ReflectionService<FieldType> reflectionService;
 
-    public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> managerFactoryRegistry,
-                                 ReflectionService<FieldId> reflectionService
+    public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                 VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> managerFactoryRegistry,
+                                 ReflectionService<FieldType> reflectionService
     ) {
         this.resolver = resolver;
         this.managerFactoryRegistry = managerFactoryRegistry;
@@ -27,7 +27,7 @@ public class ReferenceFieldFactory<DataStoreId, FieldId, KeyType> implements Vor
     }
 
     @Override
-    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         return new EntityComboBoxWrapper<>(resolver, managerFactoryRegistry, dataStoreField, reflectionService);
     }
 

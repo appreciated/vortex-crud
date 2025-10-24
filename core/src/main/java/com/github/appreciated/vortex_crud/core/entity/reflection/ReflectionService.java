@@ -13,21 +13,21 @@ import java.util.Collection;
  * Service that provides property access to entity properties using Spring's BeanWrapper.
  */
 @Service
-public class ReflectionService<FieldId> {
+public class ReflectionService<FieldType> {
 
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
+    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
 
-    public ReflectionService(VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver) {
+    public ReflectionService(VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver) {
         this.fieldNameResolver = fieldNameResolver;
     }
 
-    public <T> String getString(T entity, FieldId fieldName) {
+    public <T> String getString(T entity, FieldType fieldName) {
         Object value = getValue(entity, fieldName);
         return value != null ? value.toString() : null;
     }
 
-    public <T> Object getValue(T entity, FieldId field) {
-        return getValueInternal(entity, fieldNameResolver.getKeyForFieldId(field));
+    public <T> Object getValue(T entity, FieldType field) {
+        return getValueInternal(entity, fieldNameResolver.getKeyForFieldType(field));
     }
 
     protected <T> Object getValueInternal(T entity, String fieldName) {
@@ -116,11 +116,11 @@ public class ReflectionService<FieldId> {
         }
     }
 
-    public <T> void setValue(T entity, FieldId fieldName, Object value) {
+    public <T> void setValue(T entity, FieldType fieldName, Object value) {
         if (entity == null) {
             return;
         }
-        String propertyName = fieldNameResolver.getKeyForFieldId(fieldName);
+        String propertyName = fieldNameResolver.getKeyForFieldType(fieldName);
 
         // First try setter method
         if (setValueBySetter(entity, propertyName, value)) {
@@ -179,7 +179,7 @@ public class ReflectionService<FieldId> {
      * @param <T>           The entity type
      * @return true if the collection was modified, false otherwise
      */
-    public <T> boolean addAll(T entity, FieldId fieldName, Collection<?> elementsToAdd) {
+    public <T> boolean addAll(T entity, FieldType fieldName, Collection<?> elementsToAdd) {
         if (entity == null || elementsToAdd == null || elementsToAdd.isEmpty()) {
             return false;
         }
@@ -203,7 +203,7 @@ public class ReflectionService<FieldId> {
      * @param <T>              The entity type
      * @return true if the collection was modified, false otherwise
      */
-    public <T> boolean removeAll(T entity, FieldId fieldName, Collection<?> elementsToRemove) {
+    public <T> boolean removeAll(T entity, FieldType fieldName, Collection<?> elementsToRemove) {
         if (entity == null || elementsToRemove == null || elementsToRemove.isEmpty()) {
             return false;
         }
@@ -226,12 +226,12 @@ public class ReflectionService<FieldId> {
      * @param <T>       The entity type
      * @return The class of the collection elements, or null if not a collection or type cannot be determined
      */
-    public <T> Class<?> getCollectionType(T entity, FieldId fieldName) {
+    public <T> Class<?> getCollectionType(T entity, FieldType fieldName) {
         if (entity == null) {
             return null;
         }
 
-        String propertyName = fieldNameResolver.getKeyForFieldId(fieldName);
+        String propertyName = fieldNameResolver.getKeyForFieldType(fieldName);
 
         try {
             Field field = entity.getClass().getDeclaredField(propertyName);

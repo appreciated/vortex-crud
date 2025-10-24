@@ -10,13 +10,13 @@ import com.vaadin.flow.component.dialog.Dialog;
 /**
  * Dialog factory that renders the form as a slide-in panel from the right.
  */
-public class FormSlideFactory<DataStoreId, FieldId, KeyType>
-        extends AbstractFormDialogFactory<DataStoreId, FieldId, KeyType> {
+public class FormSlideFactory<ModelClass, FieldType, RepositoryType>
+        extends AbstractFormDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    public FormSlideFactory(VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                            VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                            VortexCrudForeignKeyResolutionStrategy<FieldId> foreignKeyResolutionStrategy,
+    public FormSlideFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                            VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                             VortexCrudDataStoreUtilStrategy dataStoreUtil) {
         super(configService, dataStoreFactoryRegistry, fieldNameResolver, foreignKeyResolutionStrategy, dataStoreUtil);
     }
