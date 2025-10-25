@@ -78,10 +78,10 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 if (component instanceof HasLabel) {
                     ((HasLabel) component).setLabel(component.getTranslation(element.getLabel()));
                     form.add(component);
-                    form.setColspan(component, (element.getSpan() == null ? 1 : element.getSpan()));
+                    form.setColspan(component, element.getSpan());
                 } else {
                     FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(element.getLabel()));
-                    form.setColspan(formItem, (element.getSpan() == null ? 1 : element.getSpan()));
+                    form.setColspan(formItem, element.getSpan());
                 }
             } else {
                 Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
@@ -92,7 +92,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                         this
                 );
                 form.add(collection);
-                form.setColspan(collection, (element.getSpan() == null ? 2 : element.getSpan()));
+                form.setColspan(collection, element.getSpan());
             }
         }
     }

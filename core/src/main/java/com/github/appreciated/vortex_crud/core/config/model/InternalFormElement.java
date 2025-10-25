@@ -20,7 +20,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     private ViewFieldType type;
 
-    private Integer span = null;
+    private int span = 1;
 
     Collection<ModelClass, FieldType, RepositoryType> configuration;
 
@@ -81,11 +81,11 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
         this.type = type;
     }
 
-    public Integer getSpan() {
+    public int getSpan() {
         return span;
     }
 
-    public void setSpan(Integer span) {
+    public void setSpan(int span) {
         this.span = span;
     }
 
