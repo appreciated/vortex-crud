@@ -30,6 +30,9 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
     public InternalFormElement(FieldType field, ViewFieldType type, String label) {
         this.field = field;
         this.type = type;
+        if (type == ViewFieldType.COLLECTION) {
+            span = 2;
+        }
         this.label = label;
     }
 
