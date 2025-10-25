@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.PasswordFieldFactory;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class PasswordField<ModelClass, FieldType, RepositoryType> implements Fie
     }
 
     public PasswordField(boolean required, Validation validation) {
-        this.factory = TextFieldFactory.class;
+        this.factory = PasswordFieldFactory.class;
         this.validation = validation;
         this.required = required;
     }
