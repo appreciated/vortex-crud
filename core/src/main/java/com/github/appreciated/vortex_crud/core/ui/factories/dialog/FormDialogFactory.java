@@ -84,7 +84,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration =
                 (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) formRouteRenderer.getConfiguration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration, recordById, routeFactory, tables, binder, layout);
+        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.getChildren(), recordById, routeFactory, tables, binder, layout);
 
         dialog.add(layout);
         dialog.setModality(VISUAL);

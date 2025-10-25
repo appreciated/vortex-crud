@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.vortex_crud.core.config.model.Field;
+import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -15,6 +18,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.BeanValidator;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -34,16 +38,16 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
                                    RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                                   RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfig,
+                                   List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fieldsViewConfig,
                                    Object entity,
                                    VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                                   DataStoreConfig<ModelClass, FieldType, RepositoryType> tables,
+                                   DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
                                    FormLayout form) {
-        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.getFields();
+        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : formConfig.getChildren()) {
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
             FieldType fieldName = element.getField();
             if (!element.getType().equals("collection")) {
                 Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);

@@ -102,7 +102,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         ModelClass entity = creationMode ? dataStore.newInstance() : dataStore.getRecordById(lastSegment);
-        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration, entity, factoryRegistry, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.getChildren(), entity, factoryRegistry, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

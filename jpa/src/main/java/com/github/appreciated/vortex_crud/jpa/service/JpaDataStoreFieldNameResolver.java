@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class JpaDataStoreFieldNameResolver implements VortexCrudDataStoreFieldNameResolver<String> {
 
     @Override
-    public String getKeyForFieldId(String tableField) {
+    public String getKeyForFieldType(String tableField) {
         return tableField;
     }
 }

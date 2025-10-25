@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudUser;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.EmailField;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -12,6 +13,7 @@ public class User implements VortexCrudUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @EmailField()
     private String username;
     private String password;
 

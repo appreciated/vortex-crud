@@ -1,13 +1,11 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.login.LoginFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.List;
 
 @GenerateBuilder
-public class IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> extends RouteRenderer<ModelClass, FieldType, RepositoryType> {
+public class IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> {
 
     private final RepositoryType repositoryKey;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
@@ -15,7 +13,6 @@ public class IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
 
     public IdentityAndAccessManagement(RepositoryType repositoryKey) {
-        super((Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) LoginFactory.class);
         this.repositoryKey = repositoryKey;
     }
 
