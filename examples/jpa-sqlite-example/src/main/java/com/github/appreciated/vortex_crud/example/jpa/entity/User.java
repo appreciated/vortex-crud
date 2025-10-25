@@ -11,7 +11,7 @@ public class User implements VortexCrudUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @EmailField()
     private String username;
@@ -20,11 +20,11 @@ public class User implements VortexCrudUser {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
