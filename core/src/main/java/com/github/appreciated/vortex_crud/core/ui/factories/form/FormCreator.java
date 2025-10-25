@@ -45,8 +45,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
-            FieldType fieldName = element.getField();
             if (element.getType() != ViewFieldType.COLLECTION) {
+                FieldType fieldName = element.getField();
                 Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
