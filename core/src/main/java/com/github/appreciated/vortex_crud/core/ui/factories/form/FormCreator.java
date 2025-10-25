@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -49,7 +46,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
             FieldType fieldName = element.getField();
-            if (!element.getType().equals("collection")) {
+            if (element.getType() != ViewFieldType.COLLECTION) {
                 Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
@@ -87,19 +84,15 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     form.setColspan(formItem, (element.getSpan() == null ? 1 : element.getSpan()));
                 }
             } else {
-                if (element.getType().equals("collection")) {
-                    Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
-                            reflectionService.getId(entity),
-                            routeRenderer,
-                            element,
-                            routeFactory,
-                            this
-                    );
-                    form.add(collection);
-                    form.setColspan(collection, (element.getSpan() == null ? 2 : element.getSpan()));
-                } else {
-                    throw new IllegalStateException("Cannot initialize element with name '%s'".formatted(fieldName));
-                }
+                Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
+                        reflectionService.getId(entity),
+                        routeRenderer,
+                        element,
+                        routeFactory,
+                        this
+                );
+                form.add(collection);
+                form.setColspan(collection, (element.getSpan() == null ? 2 : element.getSpan()));
             }
         }
     }
