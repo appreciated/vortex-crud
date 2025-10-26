@@ -1,12 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.security.SecurityService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.login.LoginView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -22,36 +19,32 @@ import java.util.Map;
 public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends AppLayout {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final SecurityService securityService;
 
-    public DefaultRouterLayout(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService, SecurityService securityService) {
+    public DefaultRouterLayout(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
         this.configService = configService;
-        this.securityService = securityService;
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        if (securityService.getAuthenticatedUser() == null) {
-            UI.getCurrent().navigate(LoginView.class);
-        } else {
-            DrawerToggle toggle = new DrawerToggle();
 
-            H1 title = new H1(getTranslation(configService.getApplicationName()));
-            title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
+        DrawerToggle toggle = new DrawerToggle();
 
-            SideNav nav = getSideNav();
+        H1 title = new H1(getTranslation(configService.getApplicationName()));
+        title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
-            Scroller scroller = new Scroller(nav);
-            scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
+        SideNav nav = getSideNav();
 
-            addToDrawer(scroller);
-            Button logoutButton = new Button("Logout", click -> securityService.logout());
-            HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
-            horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-            horizontalLayout.setPadding(true);
-            addToNavbar(horizontalLayout);
-        }
+        Scroller scroller = new Scroller(nav);
+        scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
+
+        addToDrawer(scroller);
+        Button logoutButton = new Button("Logout", click -> {});
+        HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
+        horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        horizontalLayout.setPadding(true);
+        addToNavbar(horizontalLayout);
+
     }
 
     private SideNav getSideNav() {

@@ -1,6 +1,6 @@
-package com.github.appreciated.vortex_crud.core.config;
+package com.github.appreciated.vortex_crud.security.core.config;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.login.LoginView;
+import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.vaadin.flow.spring.security.VaadinAwareSecurityContextHolderStrategyConfiguration;
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 import org.springframework.context.annotation.Bean;

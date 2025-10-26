@@ -42,6 +42,7 @@
         <module>jooq</module>
         <module>examples</module>
         <module>ui-test-base</module>
+        <module>security</module>
     </modules>
     <build>
         <plugins>

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.core.ui.factories.login;
+package com.github.appreciated.vortex_crud.security.core.view;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;

@@ -104,3 +104,5 @@ webpack.generated.js
 /user-management-spring-auth/target/classes/com/github/appreciated/vortex_crud/auth/UserManagementServiceImpl.class
 /user-management-spring-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 /user-management-spring-auth/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+/security/userstore-local/target/
+/security/core/target/

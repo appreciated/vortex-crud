@@ -1,12 +1,9 @@
 package com.github.appreciated.vortex_crud.jpa.service.config;
 
-import com.github.appreciated.vortex_crud.core.config.model.annotations.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -363,47 +360,6 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
                 ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
         );
         return (int) repository.count(example);
-    }
-
-    private void updatePropertiesForField(ModelClass entity, String targetField, Object targetValue) {
-        java.lang.reflect.Field field = fields.get(targetField);
-        if (field == null) {
-            return;
-        }
-
-        field.setAccessible(true);
-
-        if (field.isAnnotationPresent(Field.class) && field.getAnnotation(Field.class).value() == ReferenceFieldFactory.class) {
-            Class<?> targetFieldType = resolverService.resolveTargetClass(this, field);
-            try {
-                Object value = targetFieldType.getDeclaredConstructor().newInstance();
-                // Find the ID field in the target entity and set it
-                java.lang.reflect.Field idField = findIdField(targetFieldType);
-                if (idField != null) {
-                    idField.setAccessible(true);
-                    // Convert the targetValue to the appropriate type for the ID field
-                    Object convertedValue = convertToFieldType(targetValue, idField.getType());
-                    idField.set(value, convertedValue);
-                    if (field.isAnnotationPresent(OneToMany.class)) {
-                        field.set(entity, List.of(value));
-                    } else {
-                        field.set(entity, value);
-                    }
-                } else {
-                    throw new RuntimeException("Could not find ID field in " + targetFieldType.getName());
-                }
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
-                     InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            try {
-                Object convertedValue = convertToFieldType(targetValue, field.getType());
-                field.set(entity, convertedValue);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Error setting field value: " + field.getName(), e);
-            }
-        }
     }
 
     public Collection<java.lang.reflect.Field> getFields() {
