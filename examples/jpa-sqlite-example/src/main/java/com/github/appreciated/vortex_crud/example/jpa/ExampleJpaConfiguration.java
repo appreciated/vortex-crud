@@ -22,6 +22,8 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -253,6 +255,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>of(userRepository)
                                 .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
                                 .withSignUp(true)
+                                .withLoginView(LoginView.class)
+                                .withSignUpView(SignUpView.class)
                                 .withUsername(new JpaFieldElement("username", "route.projects.labels.name"))
                                 .withPassword(new JpaFieldElement("password", "route.projects.labels.password"))
                                 .withSignUpFields(

@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.Roles;
+import com.vaadin.flow.component.Component;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
+    private Class<? extends Component> loginView;
+    private Class<? extends Component> signUpView;
 
     public LocalIdentityAndAccessManagement(RepositoryType repositoryKey) {
         this.repositoryKey = repositoryKey;
@@ -67,6 +70,14 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         return repositoryKey;
     }
 
+    public Class<? extends Component> getLoginView() {
+        return loginView;
+    }
+
+    public Class<? extends Component> getSignUpView() {
+        return signUpView;
+    }
+
     public static class Builder<ModelClass, FieldType, RepositoryType> {
 
         private final LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> product;
@@ -81,7 +92,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         }
 
         @SafeVarargs
-        public final <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>>  Builder<ModelClass, FieldType, RepositoryType> withSignUpFields(
+        public final Builder<ModelClass, FieldType, RepositoryType> withSignUpFields(
                 InternalFormElement<ModelClass, FieldType, RepositoryType>... signUpFields) {
             product.signUpFields = List.of(signUpFields);
             return this;
@@ -89,6 +100,16 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
 
         public Builder<ModelClass, FieldType, RepositoryType> withSignUp(boolean signUp) {
             product.signUp = signUp;
+            return this;
+        }
+
+        public Builder<ModelClass, FieldType, RepositoryType> withSignUpView(Class<? extends Component> signUpView) {
+            product.signUpView = signUpView;
+            return this;
+        }
+
+        public Builder<ModelClass, FieldType, RepositoryType> withLoginView(Class<? extends Component> loginView) {
+            product.loginView = loginView;
             return this;
         }
 

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan({"com.github.appreciated.vortex_crud.security.core.config"})
+@ComponentScan({"com.github.appreciated.vortex_crud.security.core"})
 public class VortexCrudSecurityAutoConfiguration {
 
 }

@@ -20,6 +20,8 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -292,6 +294,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withIdentityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>of(USERS)
+                        .withLoginView(LoginView.class)
+                        .withSignUpView(SignUpView.class)
                         .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
                         .withSignUp(true)
                         .withUsername(new JooqFieldElement(USERS.USERNAME, "route.projects.labels.name"))

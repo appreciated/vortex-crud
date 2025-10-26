@@ -8,7 +8,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.Route;
 
+@Route("sign-up")
 public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     public SignUpView(
