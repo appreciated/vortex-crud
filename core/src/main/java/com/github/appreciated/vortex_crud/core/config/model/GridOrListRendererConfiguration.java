@@ -6,52 +6,52 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.List;
 
 @GenerateBuilder
-public class GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> implements ItemFactory<FieldId> {
+public class GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> implements ItemFactory<FieldType> {
 
-    private List<InternalFormElement<DataStoreId, FieldId, KeyType>> children;
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    public GridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldId>> factory) {
+    public GridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
         super(factory);
     }
 
-    public List<InternalFormElement<DataStoreId, FieldId, KeyType>> getChildren() {
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> getChildren() {
         return children;
     }
 
-    public void setChildren(List<InternalFormElement<DataStoreId, FieldId, KeyType>> children) {
+    public void setChildren(List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children) {
         this.children = children;
     }
 
-    public static abstract class Builder<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration.Builder<DataStoreId, FieldId, KeyType> {
+    public static abstract class Builder<ModelClass, FieldType, RepositoryType> extends RouteRendererConfiguration.Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> product;
+        private final GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> product;
 
-        protected Builder(GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> product) {
+        protected Builder(GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> product) {
             super(product);
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withFilterField(FieldId filterField) {
+        public Builder<ModelClass, FieldType, RepositoryType> withFilterField(FieldType filterField) {
             product.setFilterField(filterField);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withInlineEdit(boolean inlineEdit) {
+        public Builder<ModelClass, FieldType, RepositoryType> withInlineEdit(boolean inlineEdit) {
             product.setInlineEdit(inlineEdit);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withChildren(List<InternalFormElement<DataStoreId, FieldId, KeyType>> children) {
+        public Builder<ModelClass, FieldType, RepositoryType> withChildren(List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children) {
             product.setChildren(children);
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> addChildren(InternalFormElement<DataStoreId, FieldId, KeyType> item) {
+        public Builder<ModelClass, FieldType, RepositoryType> addChildren(InternalFormElement<ModelClass, FieldType, RepositoryType> item) {
             product.children.add(item);
             return this;
         }
 
-        public RouteRendererConfiguration<DataStoreId, FieldId, KeyType> build() {
+        public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }

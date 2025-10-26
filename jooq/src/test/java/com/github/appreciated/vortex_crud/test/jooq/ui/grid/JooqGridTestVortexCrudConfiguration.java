@@ -32,7 +32,7 @@ public class JooqGridTestVortexCrudConfiguration
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 GRID_IMAGES, JooqDataStoreConfig.of(GRID_IMAGES)
                         .withFields(Map.of(
-                                GRID_IMAGES.ID, new IdField<>( ),
+                                GRID_IMAGES.ID, new IdField<>(),
                                 GRID_IMAGES.TITLE, new TextField<>(),
                                 GRID_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
                         ))

@@ -1,12 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.ReferenceField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
-import jakarta.annotation.Nonnull;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.EmailField;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -16,19 +13,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @TextField
-    @Nonnull
+    @EmailField()
     private String username;
 
-    @ReferenceField
-    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks = new ArrayList<>();
+    private String passwordHash;
 
-    @ReferenceField
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TaskComment> comments = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -45,19 +42,19 @@ public class User {
         this.username = username;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setPasswordHash(String password) {
+        this.passwordHash = password;
     }
 
-    public List<TaskComment> getComments() {
-        return comments;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setComments(List<TaskComment> comments) {
-        this.comments = comments;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

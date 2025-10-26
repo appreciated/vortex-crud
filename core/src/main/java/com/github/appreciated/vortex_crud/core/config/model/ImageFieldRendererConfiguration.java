@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceP
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 
 @GenerateBuilder
-public class ImageFieldRendererConfiguration<DataStoreId, FieldId, KeyType> extends RouteRendererConfiguration<DataStoreId, FieldId, KeyType> {
+public class ImageFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
     public ImageFieldRendererConfiguration(Class<? extends VortexCrudResourceProvider> fileFactory) {
         super(null);

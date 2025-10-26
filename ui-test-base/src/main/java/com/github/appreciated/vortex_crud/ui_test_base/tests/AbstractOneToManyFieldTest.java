@@ -52,7 +52,7 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         WebElement field = waitForElement(By.cssSelector("vaadin-dialog vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Child");
-        waitForElementContainingText("vaadin-dialog//vaadin-button","Save").click();
+        waitForElementContainingText("vaadin-dialog//vaadin-button", "Save").click();
         waitForAnyElementContainingText("Created Child");
     }
 

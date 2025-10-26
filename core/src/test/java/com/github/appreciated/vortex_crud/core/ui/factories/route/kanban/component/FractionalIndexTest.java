@@ -2,7 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.compon
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FractionalIndexTest {
 

@@ -9,14 +9,14 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class SubmenuRouteFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> {
+public class SubmenuRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory;
-    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
+    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public SubmenuRouteFactory(VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                               VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
+    public SubmenuRouteFactory(VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                               VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.routeFactory = routeFactory;
@@ -26,7 +26,7 @@ public class SubmenuRouteFactory<DataStoreId, FieldId, KeyType> implements Vorte
 
     @Override
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                                 VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         return new Submenu<>(currentPathIndex, routeResolver, routeFactory, configService, dataStoreUtil);
     }

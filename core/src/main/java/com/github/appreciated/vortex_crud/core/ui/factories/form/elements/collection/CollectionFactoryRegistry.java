@@ -20,15 +20,15 @@ import java.util.Optional;
  */
 
 @Service
-public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public class CollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> implements VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
+    private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
-    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                                     VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
-                                     ReflectionService<FieldId> reflectionService,
+    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                     VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
+                                     ReflectionService<FieldType> reflectionService,
                                      VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                                     ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> manyToManyPersistenceStrategy
+                                     ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy
     ) {
         factories.put(
                 ListCollectionFactory.class,
@@ -42,17 +42,17 @@ public class CollectionFactoryRegistry<DataStoreId, FieldId, KeyType> implements
         );
     }
 
-    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> getFactories() {
+    public Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> getFactories() {
         return factories;
     }
 
     @Override
-    public VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory) {
         return Optional.ofNullable(factories.get(factory)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), factory)));
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> key, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> factory) {
+    public void addFactory(Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> key, VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory) {
         factories.put(key, factory);
     }
 }

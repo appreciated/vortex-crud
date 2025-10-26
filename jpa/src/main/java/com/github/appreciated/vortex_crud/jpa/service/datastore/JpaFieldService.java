@@ -84,6 +84,8 @@ public class JpaFieldService {
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, TextField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.TextField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
+                    )).or(() -> getAnnotation(entityField, PasswordField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.PasswordField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, EmailField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.EmailField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, VideoField.class).map(ann -> {

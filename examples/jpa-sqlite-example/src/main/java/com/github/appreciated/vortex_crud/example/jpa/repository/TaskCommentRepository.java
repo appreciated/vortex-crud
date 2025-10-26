@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TaskCommentRepository extends JpaRepository<TaskComment, Long> {
-    List<TaskComment> findByTaskId(Long taskId);
+public interface TaskCommentRepository extends JpaRepository<TaskComment, Integer> {
+    List<TaskComment> findByTaskId(Integer taskId);
 
-    List<TaskComment> findByUserId(Long userId);
+    List<TaskComment> findByUserId(Integer userId);
 }

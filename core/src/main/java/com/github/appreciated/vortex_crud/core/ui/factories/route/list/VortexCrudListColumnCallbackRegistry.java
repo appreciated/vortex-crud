@@ -7,8 +7,8 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
  * Implementations should provide methods for generating components based on RouteConfig.
  */
 
-public interface VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> {
-    VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> getCallback(RouteRenderer<DataStoreId, FieldId, KeyType> config);
+public interface VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> {
+    VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> getCallback(RouteRenderer<ModelClass, FieldType, RepositoryType> config);
 
-    void addCallback(String key, VortexCrudListColumnCallback<DataStoreId, FieldId, KeyType> factory);
+    void addCallback(String key, VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> factory);
 }

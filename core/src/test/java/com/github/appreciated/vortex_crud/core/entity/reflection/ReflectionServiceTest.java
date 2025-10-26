@@ -28,7 +28,7 @@ class ReflectionServiceTest {
         reflectionService = new TestReflectionService(mockResolver);
 
         // Setup mock resolver to return the field name as is
-        when(mockResolver.getKeyForFieldId(Mockito.anyString())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(mockResolver.getKeyForFieldType(Mockito.anyString())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     // Test class with camel case fields
@@ -160,10 +160,10 @@ class ReflectionServiceTest {
     void testGetStringWithCamelCase() {
         CamelCaseEntity entity = new CamelCaseEntity("John", "Doe", 30, true);
 
-        when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
-        when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
-        when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
-        when(mockResolver.getKeyForFieldId("isActive")).thenReturn("active");
+        when(mockResolver.getKeyForFieldType("firstName")).thenReturn("firstName");
+        when(mockResolver.getKeyForFieldType("lastName")).thenReturn("lastName");
+        when(mockResolver.getKeyForFieldType("userAge")).thenReturn("userAge");
+        when(mockResolver.getKeyForFieldType("isActive")).thenReturn("active");
 
         assertEquals("John", reflectionService.getString(entity, "firstName"));
         assertEquals("Doe", reflectionService.getString(entity, "lastName"));
@@ -232,10 +232,10 @@ class ReflectionServiceTest {
     void testSetValueInternalWithGetterSetterOnly() {
         GetterSetterOnlyEntity entity = new GetterSetterOnlyEntity();
 
-        when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
-        when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
-        when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
-        when(mockResolver.getKeyForFieldId("active")).thenReturn("active");
+        when(mockResolver.getKeyForFieldType("firstName")).thenReturn("firstName");
+        when(mockResolver.getKeyForFieldType("lastName")).thenReturn("lastName");
+        when(mockResolver.getKeyForFieldType("userAge")).thenReturn("userAge");
+        when(mockResolver.getKeyForFieldType("active")).thenReturn("active");
 
         reflectionService.setValue(entity, "firstName", "Jane");
         reflectionService.setValue(entity, "lastName", "Smith");
@@ -256,10 +256,10 @@ class ReflectionServiceTest {
         entity.setUserAge(30);
         entity.setActive(true);
 
-        when(mockResolver.getKeyForFieldId("firstName")).thenReturn("firstName");
-        when(mockResolver.getKeyForFieldId("lastName")).thenReturn("lastName");
-        when(mockResolver.getKeyForFieldId("userAge")).thenReturn("userAge");
-        when(mockResolver.getKeyForFieldId("active")).thenReturn("active");
+        when(mockResolver.getKeyForFieldType("firstName")).thenReturn("firstName");
+        when(mockResolver.getKeyForFieldType("lastName")).thenReturn("lastName");
+        when(mockResolver.getKeyForFieldType("userAge")).thenReturn("userAge");
+        when(mockResolver.getKeyForFieldType("active")).thenReturn("active");
 
         assertEquals("John", reflectionService.getString(entity, "firstName"));
         assertEquals("Doe", reflectionService.getString(entity, "lastName"));
@@ -296,10 +296,10 @@ class ReflectionServiceTest {
     void testGetStringWithSnakeCaseToCamelCase() {
         SnakeCaseToCamelCaseEntity entity = new SnakeCaseToCamelCaseEntity("2023-01-01", "2023-12-31", 100, true);
 
-        when(mockResolver.getKeyForFieldId("start_date")).thenReturn("start_date");
-        when(mockResolver.getKeyForFieldId("end_date")).thenReturn("end_date");
-        when(mockResolver.getKeyForFieldId("user_count")).thenReturn("user_count");
-        when(mockResolver.getKeyForFieldId("is_completed")).thenReturn("is_completed");
+        when(mockResolver.getKeyForFieldType("start_date")).thenReturn("start_date");
+        when(mockResolver.getKeyForFieldType("end_date")).thenReturn("end_date");
+        when(mockResolver.getKeyForFieldType("user_count")).thenReturn("user_count");
+        when(mockResolver.getKeyForFieldType("is_completed")).thenReturn("is_completed");
 
         assertEquals("2023-01-01", reflectionService.getString(entity, "start_date"));
         assertEquals("2023-12-31", reflectionService.getString(entity, "end_date"));
@@ -348,9 +348,9 @@ class ReflectionServiceTest {
     void testAddAll() {
         CollectionEntity entity = new CollectionEntity();
 
-        when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
-        when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
-        when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
+        when(mockResolver.getKeyForFieldType("stringList")).thenReturn("stringList");
+        when(mockResolver.getKeyForFieldType("integerSet")).thenReturn("integerSet");
+        when(mockResolver.getKeyForFieldType("doubleCollection")).thenReturn("doubleCollection");
 
         // Test adding to List
         List<String> stringsToAdd = Arrays.asList("one", "two", "three");
@@ -399,9 +399,9 @@ class ReflectionServiceTest {
     void testRemoveAll() {
         CollectionEntity entity = new CollectionEntity();
 
-        when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
-        when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
-        when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
+        when(mockResolver.getKeyForFieldType("stringList")).thenReturn("stringList");
+        when(mockResolver.getKeyForFieldType("integerSet")).thenReturn("integerSet");
+        when(mockResolver.getKeyForFieldType("doubleCollection")).thenReturn("doubleCollection");
 
         // Setup initial collections
         entity.getStringList().addAll(Arrays.asList("one", "two", "three", "four"));
@@ -458,9 +458,9 @@ class ReflectionServiceTest {
     void testGetCollectionType() {
         CollectionEntity entity = new CollectionEntity();
 
-        when(mockResolver.getKeyForFieldId("stringList")).thenReturn("stringList");
-        when(mockResolver.getKeyForFieldId("integerSet")).thenReturn("integerSet");
-        when(mockResolver.getKeyForFieldId("doubleCollection")).thenReturn("doubleCollection");
+        when(mockResolver.getKeyForFieldType("stringList")).thenReturn("stringList");
+        when(mockResolver.getKeyForFieldType("integerSet")).thenReturn("integerSet");
+        when(mockResolver.getKeyForFieldType("doubleCollection")).thenReturn("doubleCollection");
 
         // Test getting collection types
         Class<?> stringListType = reflectionService.getCollectionType(entity, "stringList");

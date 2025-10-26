@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 public class JooqDataStoreFieldNameResolver implements VortexCrudDataStoreFieldNameResolver<TableField<?, ?>> {
 
     @Override
-    public String getKeyForFieldId(TableField<?, ?> tableField) {
+    public String getKeyForFieldType(TableField<?, ?> tableField) {
         return tableField.getName();
     }
+
 }

@@ -19,27 +19,27 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.compone
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
-public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> {
-    private final VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry;
-    private final VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService;
-    private final VortexCrudItemFactoryRegistry<FieldId> itemFactory;
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory;
-    private final FormCreator<DataStoreId, FieldId, KeyType> formCreator;
-    private final VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry;
+public class KanbanDetailFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudItemFactoryRegistry<FieldType> itemFactory;
+    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
+    private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
+    private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                               VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                               VortexCrudItemFactoryRegistry<FieldId> itemFactory,
-                               VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactory,
-                               FormCreator<DataStoreId, FieldId, KeyType> formCreator,
-                               VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+    public KanbanDetailFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                               VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                               VortexCrudItemFactoryRegistry<FieldType> itemFactory,
+                               VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                               FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
+                               VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                                VortexCrudFileProviderRegistry fileProviderRegistry,
-                               VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                               ReflectionService<FieldId> reflectionService,
+                               VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                               ReflectionService<FieldType> reflectionService,
                                VortexCrudDataStoreUtilStrategy dataStoreUtil
 
     ) {
@@ -58,16 +58,16 @@ public class KanbanDetailFactory<DataStoreId, FieldId, KeyType> implements Vorte
     @Override
     @SuppressWarnings("unchecked")
     public Component renderRoute(Integer currentPathIndex,
-                                 VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
+                                 VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                                  @Nullable DetailRouteSetting detailRouteSetting) {
-        RouteRenderer<DataStoreId, FieldId, KeyType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
         return new KanbanView<>(routeRenderer.getDataStoreKey(),
                 routeRenderer,
                 dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey()),
                 routeFactory,
                 itemFactory,
-                (Kanban<DataStoreId, FieldId, KeyType>) routeRenderer.getConfiguration(),
+                (Kanban<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

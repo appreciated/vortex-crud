@@ -10,7 +10,7 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 import java.util.List;
 
-public class VideoFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class VideoFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
 
@@ -19,8 +19,8 @@ public class VideoFieldFactory<DataStoreId, FieldId, KeyType> implements VortexC
     }
 
     @Override
-    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
-        VideoField<DataStoreId, FieldId, KeyType> videoField = (VideoField<DataStoreId, FieldId, KeyType>) dataStoreField;
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
+        VideoField<ModelClass, FieldType, RepositoryType> videoField = (VideoField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         return new VideoHasValue(fileProviderRegistry.getFactory(videoField.getConfiguration().getImageFactory()));
     }
 

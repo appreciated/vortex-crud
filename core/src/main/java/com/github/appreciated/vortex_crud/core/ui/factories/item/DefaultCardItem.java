@@ -13,13 +13,13 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
 
 @CssImport("./vortex-crud-default-card-item-styles.css")
-public class DefaultCardItem<FieldId> extends Card {
+public class DefaultCardItem<FieldType> extends Card {
 
-    public DefaultCardItem(ItemFactory<FieldId> config,
+    public DefaultCardItem(ItemFactory<FieldType> config,
                            Object entity,
                            Integer maxWidth,
                            VortexCrudFileProviderRegistry provider,
-                           ReflectionService<FieldId> reflectionService
+                           ReflectionService<FieldType> reflectionService
     ) {
         setClassName("hoverable");
         if (maxWidth != null) {
@@ -28,12 +28,12 @@ public class DefaultCardItem<FieldId> extends Card {
 
         // Optional image
         ImageDisplayComponent image = null;
-        FieldId imageFieldId = config.getImageField();
-        if (imageFieldId != null) {
+        FieldType imageFieldType = config.getImageField();
+        if (imageFieldType != null) {
             if (config.getImageFactory() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
-            String imagePath = reflectionService.getString(entity, imageFieldId);
+            String imagePath = reflectionService.getString(entity, imageFieldType);
             image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
             image.setImageSource(imagePath);
         }

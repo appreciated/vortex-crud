@@ -8,10 +8,10 @@ import com.vaadin.flow.component.textfield.NumberField;
 import java.util.Collection;
 import java.util.List;
 
-public class DoubleNumberFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class DoubleNumberFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         return new NumberField();
     }
 

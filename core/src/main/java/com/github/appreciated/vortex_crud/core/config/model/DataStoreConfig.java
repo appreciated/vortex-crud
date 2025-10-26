@@ -5,46 +5,46 @@ import io.github.mletkin.numerobis.annotation.GenerateBuilder;
 import java.util.Map;
 
 @GenerateBuilder
-public class DataStoreConfig<DataStoreId, FieldId, KeyType> {
+public class DataStoreConfig<ModelClass, FieldType, RepositoryType> {
 
-    private KeyType factory;
+    private RepositoryType factory;
 
-    private Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields;
+    private Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields;
 
-    public DataStoreConfig(KeyType factory) {
+    public DataStoreConfig(RepositoryType factory) {
         this.factory = factory;
     }
 
-    public KeyType getFactory() {
+    public RepositoryType getFactory() {
         return factory;
     }
 
-    public void setFactory(KeyType factory) {
+    public void setFactory(RepositoryType factory) {
         this.factory = factory;
     }
 
-    public Map<FieldId, Field<DataStoreId, FieldId, KeyType>> getFields() {
+    public Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> getFields() {
         return fields;
     }
 
-    public void setFields(Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields) {
+    public void setFields(Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields) {
         this.fields = fields;
     }
 
-    public static class Builder<DataStoreId, FieldId, KeyType> {
+    public static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final DataStoreConfig<DataStoreId, FieldId, KeyType> product;
+        private final DataStoreConfig<ModelClass, FieldType, RepositoryType> product;
 
-        public Builder(DataStoreConfig<DataStoreId, FieldId, KeyType> product) {
+        public Builder(DataStoreConfig<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withFields(Map<FieldId, Field<DataStoreId, FieldId, KeyType>> fields) {
+        public Builder<ModelClass, FieldType, RepositoryType> withFields(Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields) {
             product.fields = fields;
             return this;
         }
 
-        public DataStoreConfig<DataStoreId, FieldId, KeyType> build() {
+        public DataStoreConfig<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }

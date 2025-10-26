@@ -31,28 +31,28 @@ import java.util.List;
  * It also provides functionality for item click events and loading data from the database using a lazy loading approach.
  */
 
-public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<EntityItemList<DataStoreId>> {
+public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends VirtualList<EntityItemList<ModelClass>> {
 
-    private final VortexCrudItemFactory<FieldId> itemFactory;
-    private final VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathVariables;
+    private final VortexCrudItemFactory<FieldType> itemFactory;
+    private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver;
-    private final ReflectionService<FieldId> reflectionService;
+    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudDataStore<FieldId, ?> dataStore;
-    private final GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType> gridOrListConfiguration;
+    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
 
     @SuppressWarnings("unchecked")
-    public VirtualItemGrid(VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> routeResolver,
-                            RouteRenderer<DataStoreId, FieldId, KeyType> config,
-                            VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                            VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                            VortexCrudFileProviderRegistry fileProviderRegistry,
-                           VortexCrudDataStoreFieldNameResolver<FieldId> fieldNameResolver,
-                           ReflectionService<FieldId> reflectionService,
+    public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                           RouteRenderer<ModelClass, FieldType, RepositoryType> config,
+                           VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                           VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
+                           VortexCrudFileProviderRegistry fileProviderRegistry,
+                           VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                           ReflectionService<FieldType> reflectionService,
                            VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.pathVariables = routeResolver;
@@ -60,10 +60,10 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
-        KeyType table = config.getDataStoreKey();
+        RepositoryType table = config.getDataStoreKey();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
-        gridOrListConfiguration = (GridOrListRendererConfiguration<DataStoreId, FieldId, KeyType>) config.getConfiguration();
+        gridOrListConfiguration = (GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.getConfiguration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
         setSizeFull();
@@ -86,8 +86,8 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
             HorizontalLayout wrapper = new HorizontalLayout();
             wrapper.setSpacing(true);
             wrapper.setWidthFull();
-            List<DataStoreId> list = item.getList();
-            for (DataStoreId entity : list) {
+            List<ModelClass> list = item.getList();
+            for (ModelClass entity : list) {
                 Component component = itemFactory.renderItem(gridOrListConfiguration,
                         entity,
                         maxWidth,
@@ -117,23 +117,23 @@ public class VirtualItemGrid<DataStoreId, FieldId, KeyType> extends VirtualList<
     }
 
     private void initLazyLoadingDataProvider() {
-        CallbackDataProvider<EntityItemList<DataStoreId>, String> dataProvider = DataProvider.fromFilteringCallbacks(
+        CallbackDataProvider<EntityItemList<ModelClass>, String> dataProvider = DataProvider.fromFilteringCallbacks(
                 // Fetching the data from the database for a given offset and limit
                 query -> {
                     int offset = query.getOffset() * currentNumberOfColumns;
                     int limit = query.getLimit() * currentNumberOfColumns;
-                    List<DataStoreId> items;
+                    List<ModelClass> items;
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        items = (List<DataStoreId>) dataStore.getRecordsFromTable(offset, limit);
+                        items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                     } else {
-                        items = (List<DataStoreId>) dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
+                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
-                    List<EntityItemList<DataStoreId>> wrappers = new ArrayList<>();
+                    List<EntityItemList<ModelClass>> wrappers = new ArrayList<>();
                     for (int i = 0; i < items.size(); i += currentNumberOfColumns) {
-                        List<DataStoreId> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
+                        List<ModelClass> group = items.subList(i, Math.min(i + currentNumberOfColumns, items.size()));
                         wrappers.add(new EntityItemList<>(group));
                     }
 

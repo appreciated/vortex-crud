@@ -16,14 +16,14 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
-import com.github.appreciated.vortex_crud.example.jpa.repository.ImageRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.ProjectRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.TaskCommentRepository;
-import com.github.appreciated.vortex_crud.example.jpa.repository.TaskRepository;
+import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,17 +42,20 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final ProjectRepository projectRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
             TaskCommentRepository taskCommentRepository,
-            TaskRepository taskRepository
+            TaskRepository taskRepository,
+            UserRepository userRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.taskCommentRepository = taskCommentRepository;
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -248,15 +251,19 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         return JpaApplication.of()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
-                .withUserManagement(UserManagement.of()
-                        .withEnabled(true)
-                        .withAccessControl(AccessControl.of().withRoles(List.of("manager", "admin")).build())
-                        .withSignUp(true)
-                        .withAdditionalFields(List.of(AdditionalField.of()
-                                .withName("startDate")
-                                .withType("date")
-                                .build()))
-                        .build())
+                .withIdentityAndAccessManagement(
+                        LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>of(userRepository)
+                                .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
+                                .withSignUp(true)
+                                .withLoginView(LoginView.class)
+                                .withSignUpView(SignUpView.class)
+                                .withUsername(new JpaFieldElement("username", "route.projects.labels.name"))
+                                .withPassword(new JpaFieldElement("password", "route.projects.labels.password"))
+                                .withSignUpFields(
+                                        new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                )
+                                .build()
+                )
                 .withRoutes(routes)
                 .withVersioning(JpaVersioning.of().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())
                 .withAuditing(Auditing.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())

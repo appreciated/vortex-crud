@@ -8,10 +8,10 @@ import java.util.List;
  * Strategy interface for retrieving records from a data store.
  * Different implementations can be provided for different data store types (e.g., JPA, jOOQ).
  *
- * @param <DataStoreId> The type used to identify data stores
- * @param <FieldId>     The type used to identify fields in the data store
+ * @param <ModelClass> The type used to identify data stores
+ * @param <FieldType>  The type used to identify fields in the data store
  */
-public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
+public interface ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> {
 
     /**
      * Retrieves records from a data store based on many-to-many relationship.
@@ -21,9 +21,9 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      *                        configuration to retrieve the necessary data
      * @return A list of records matching the criteria
      */
-    java.util.Collection<DataStoreId> resolveManyToMany(
-            VortexCrudDataStore<FieldId, ?> targetDataStore,
-            ManyToMany<DataStoreId, FieldId, KeyType> manyToMany,
+    java.util.Collection<ModelClass> resolveManyToMany(
+            VortexCrudDataStore<FieldType, ?> targetDataStore,
+            ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany,
             Object sourceId
     );
 
@@ -34,7 +34,7 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      * @param targetObjects The target objects to connect to the source entity
      * @param manyToMany    The many-to-many relationship configuration
      */
-    void insert(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
+    void insert(Object sourceId, List<Object> targetObjects, ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany);
 
     /**
      * Removes a list of entities from a relation for a datapoint.
@@ -43,7 +43,7 @@ public interface ManyToManyPersistenceStrategy<DataStoreId, FieldId, KeyType> {
      * @param targetObjects The target objects to disconnect from the source entity
      * @param manyToMany    The many-to-many relationship configuration
      */
-    void deleteAll(Object sourceId, List<Object> targetObjects, ManyToMany<DataStoreId, FieldId, KeyType> manyToMany);
+    void deleteAll(Object sourceId, List<Object> targetObjects, ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany);
 
     /**
      * Retrieves the ID of an object.

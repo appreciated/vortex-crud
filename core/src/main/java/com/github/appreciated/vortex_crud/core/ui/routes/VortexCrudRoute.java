@@ -20,13 +20,13 @@ import java.util.Map;
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
-public abstract class VortexCrudRoute<DataStoreId, FieldId, KeyType> extends Div implements BeforeEnterObserver {
+public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry;
+    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public VortexCrudRoute(
-            VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> routeFactoryRegistry,
+            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
             VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.routeFactoryRegistry = routeFactoryRegistry;
@@ -39,7 +39,7 @@ public abstract class VortexCrudRoute<DataStoreId, FieldId, KeyType> extends Div
      *
      * @return a map of route configurations.
      */
-    protected abstract RouteRenderer<DataStoreId, FieldId, KeyType> getConfiguration();
+    protected abstract RouteRenderer<ModelClass, FieldType, RepositoryType> getConfiguration();
 
     protected String getUrl() {
         return RouteConfiguration.forSessionScope().getUrl(getClass());
@@ -57,14 +57,14 @@ public abstract class VortexCrudRoute<DataStoreId, FieldId, KeyType> extends Div
         if (routePattern.contains("/")) {
             throw new IllegalArgumentException("The routePattern must not contain a '/'");
         }
-        VortexCrudPathToRouteResolver<DataStoreId, FieldId, KeyType> pathRoutes = new VortexCrudPathToRouteResolver<>(
+        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
                 Map.of(routePattern, getConfiguration()),
                 dataStoreUtil
         );
 
-        RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer = pathRoutes.getCurrentRoute();
+        RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
 
         Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())

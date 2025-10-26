@@ -11,15 +11,15 @@ import com.vaadin.flow.component.Component;
  * This renderer supports displaying images, titles, and descriptions in a card layout with customizable styling.
  */
 
-public class CardFactory<FieldId> implements VortexCrudItemFactory<FieldId> {
+public class CardFactory<FieldType> implements VortexCrudItemFactory<FieldType> {
 
     @Override
-    public Component renderItem(ItemFactory<FieldId> itemFactory,
+    public Component renderItem(ItemFactory<FieldType> itemFactory,
                                 Object entity,
                                 Integer maxWidth,
                                 VortexCrudFileProviderRegistry fileProvider,
-                                VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                ReflectionService<FieldId> reflectionService) {
+                                VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                ReflectionService<FieldType> reflectionService) {
         return new DefaultCardItem<>(itemFactory, entity, maxWidth, fileProvider, reflectionService);
     }
 }

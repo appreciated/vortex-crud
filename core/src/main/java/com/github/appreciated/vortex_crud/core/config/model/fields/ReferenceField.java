@@ -7,21 +7,23 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 
 import java.util.List;
 
-public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<DataStoreId, FieldId, KeyType> {
-    private final KeyType dataStore;
-    private final FieldId field;
-    private final FieldId filterField;
-    private final List<FieldId> children;
+public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    private final RepositoryType dataStore;
+    private final FieldType field;
+    private final FieldType filterField;
+    private final List<FieldType> children;
     private boolean required;
     private Class<? extends VortexCrudFieldFactory> factory;
+    private List<String> writeRoles;
+    private List<String> readOnlyRoles;
 
     //of(TableField<?, ?> field, TableField<?, ?> filterField, TableImpl<?> dataStore, List<TableField<?, ?>> children) {
 
-    public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children) {
+    public ReferenceField(RepositoryType dataStore, FieldType field, FieldType filterField, List<FieldType> children) {
         this(dataStore, field, filterField, children, false);
     }
 
-    public ReferenceField(KeyType dataStore, FieldId field, FieldId filterField, List<FieldId> children, boolean required) {
+    public ReferenceField(RepositoryType dataStore, FieldType field, FieldType filterField, List<FieldType> children, boolean required) {
         this.dataStore = dataStore;
         this.field = field;
         this.filterField = filterField;
@@ -30,33 +32,33 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
         this.factory = ReferenceFieldFactory.class;
     }
 
-    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children) {
+    public ReferenceField(RepositoryType dataStore, FieldType filterField, List<FieldType> children) {
         this(dataStore, null, filterField, children, false);
     }
 
-    public ReferenceField(KeyType dataStore, FieldId filterField, List<FieldId> children, boolean required) {
+    public ReferenceField(RepositoryType dataStore, FieldType filterField, List<FieldType> children, boolean required) {
         this(dataStore, null, filterField, children, required);
     }
 
-    public KeyType getDataStore() {
+    public RepositoryType getDataStore() {
         return dataStore;
     }
 
-    public FieldId getFilterField() {
+    public FieldType getFilterField() {
         return filterField;
     }
 
-    public List<FieldId> getChildren() {
+    public List<FieldType> getChildren() {
         return children;
     }
 
     @Override
-    public Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> getFactory() {
-        return (Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>>) factory;
+    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
+        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) factory;
     }
 
     @Override
-    public void setFactory(Class<? extends VortexCrudFieldFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory) {
         this.factory = factory;
     }
 
@@ -70,7 +72,27 @@ public class ReferenceField<DataStoreId, FieldId, KeyType> implements Field<Data
         return required;
     }
 
-    public FieldId getField() {
+    public FieldType getField() {
         return field;
+    }
+
+    @Override
+    public void setWriteRoles(List<String> writeRoles) {
+        this.writeRoles = writeRoles;
+    }
+
+    @Override
+    public List<String> getWriteRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public void setReadOnlyRoles(List<String> readOnlyRoles) {
+        this.readOnlyRoles = readOnlyRoles;
+    }
+
+    @Override
+    public List<String> getReadOnlyRoles() {
+        return readOnlyRoles;
     }
 }

@@ -6,10 +6,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
  * the specified FieldConfig.
  */
 
-public interface VortexCrudCollectionFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public interface VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> factory);
+    VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory);
 
-    void addFactory(Class<? extends VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType>> key, VortexCrudCollectionFactory<DataStoreId, FieldId, KeyType> factory);
+    void addFactory(Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> key, VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory);
 
 }

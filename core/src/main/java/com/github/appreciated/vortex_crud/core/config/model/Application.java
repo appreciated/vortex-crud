@@ -6,23 +6,23 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @GenerateBuilder
-public abstract class Application<DataStoreId, FieldId, KeyType> {
+public abstract class Application<ModelClass, FieldType, RepositoryType> {
 
     private String name;
 
     private String i18nBundlePrefix;
 
-    private UserManagement userManagement;
+    private IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement;
 
     private Selects selects;
 
-    private Versioning versioning;
+    private Versioning<RepositoryType> versioning;
 
     private Auditing auditing;
 
-    private Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> dataStores;
+    private Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> dataStores;
 
-    private LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routes;
+    private LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     public String getName() {
         return name;
@@ -40,12 +40,12 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.i18nBundlePrefix = i18nBundlePrefix;
     }
 
-    public UserManagement getUserManagement() {
-        return userManagement;
+    public IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> getUserManagement() {
+        return identityAndAccessManagement;
     }
 
-    public void setUserManagement(UserManagement userManagement) {
-        this.userManagement = userManagement;
+    public void setUserManagement(IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement) {
+        this.identityAndAccessManagement = identityAndAccessManagement;
     }
 
     public Selects getSelects() {
@@ -56,11 +56,11 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.selects = selects;
     }
 
-    public Versioning getVersioning() {
+    public Versioning<RepositoryType> getVersioning() {
         return versioning;
     }
 
-    public void setVersioning(Versioning versioning) {
+    public void setVersioning(Versioning<RepositoryType> versioning) {
         this.versioning = versioning;
     }
 
@@ -72,70 +72,70 @@ public abstract class Application<DataStoreId, FieldId, KeyType> {
         this.auditing = auditing;
     }
 
-    public Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> getDataStores() {
+    public Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> getDataStores() {
         return dataStores;
     }
 
-    public void setDataStores(Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> dataStores) {
+    public void setDataStores(Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> dataStores) {
         this.dataStores = dataStores;
     }
 
-    public Map<String, RouteRenderer<DataStoreId, FieldId, KeyType>> getRouteRenderers() {
+    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getRouteRenderers() {
         return routes;
     }
 
-    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routeRenderers) {
+    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routeRenderers) {
         this.routes = routeRenderers;
     }
 
-    public static class Builder<DataStoreId, FieldId, KeyType> {
+    public static class Builder<ModelClass, FieldType, RepositoryType> {
 
-        private final Application<DataStoreId, FieldId, KeyType> product;
+        private final Application<ModelClass, FieldType, RepositoryType> product;
 
-        public Builder(Application<DataStoreId, FieldId, KeyType> product) {
+        public Builder(Application<ModelClass, FieldType, RepositoryType> product) {
             this.product = product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withName(String name) {
+        public Builder<ModelClass, FieldType, RepositoryType> withName(String name) {
             product.name = name;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withI18nBundlePrefix(String i18nBundlePrefix) {
+        public Builder<ModelClass, FieldType, RepositoryType> withI18nBundlePrefix(String i18nBundlePrefix) {
             product.i18nBundlePrefix = i18nBundlePrefix;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withUserManagement(UserManagement userManagement) {
-            product.userManagement = userManagement;
+        public Builder<ModelClass, FieldType, RepositoryType> withIdentityAndAccessManagement(IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement) {
+            product.identityAndAccessManagement = identityAndAccessManagement;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withSelects(Selects selects) {
+        public Builder<ModelClass, FieldType, RepositoryType> withSelects(Selects selects) {
             product.selects = selects;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withVersioning(Versioning versioning) {
+        public Builder<ModelClass, FieldType, RepositoryType> withVersioning(Versioning<RepositoryType> versioning) {
             product.versioning = versioning;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withAuditing(Auditing auditing) {
+        public Builder<ModelClass, FieldType, RepositoryType> withAuditing(Auditing auditing) {
             product.auditing = auditing;
             return this;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withDataStores(Map<KeyType, DataStoreConfig<DataStoreId, FieldId, KeyType>> dataStores) {
+        public Builder<ModelClass, FieldType, RepositoryType> withDataStores(Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> dataStores) {
             product.dataStores = dataStores;
             return this;
         }
 
-        public Application<DataStoreId, FieldId, KeyType> build() {
+        public Application<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
 
-        public Builder<DataStoreId, FieldId, KeyType> withRoutes(LinkedHashMap<String, RouteRenderer<DataStoreId, FieldId, KeyType>> routes) {
+        public Builder<ModelClass, FieldType, RepositoryType> withRoutes(LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes) {
             product.routes = routes;
             return this;
         }

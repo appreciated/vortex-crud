@@ -8,10 +8,10 @@ import com.vaadin.flow.component.textfield.BigDecimalField;
 import java.util.Collection;
 import java.util.List;
 
-public class BigDecimalNumberFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class BigDecimalNumberFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         return new BigDecimalField();
     }
 

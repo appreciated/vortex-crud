@@ -14,18 +14,18 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-public class EntityComboBoxWrapper<DataStoreId, FieldId, KeyType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
+public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<Object> comboBox;
-    private final VortexCrudDataStore<FieldId, ?> dataStore;
+    private final VortexCrudDataStore<FieldType, ?> dataStore;
     private Object currentValue;
 
-    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                                 Field<DataStoreId, FieldId, KeyType> dataStoreField,
-                                 ReflectionService<FieldId> reflectionService
+    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                 VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                 Field<ModelClass, FieldType, RepositoryType> dataStoreField,
+                                 ReflectionService<FieldType> reflectionService
     ) {
-        ReferenceField<DataStoreId, FieldId, KeyType> refField = (ReferenceField<DataStoreId, FieldId, KeyType>) dataStoreField;
+        ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(refField.getDataStore());
         this.comboBox = new ComboBox<>();
 

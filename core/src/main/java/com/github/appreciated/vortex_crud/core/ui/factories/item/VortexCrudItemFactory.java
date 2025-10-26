@@ -11,12 +11,12 @@ import com.vaadin.flow.component.Component;
  * Classes implementing this interface should provide a method for rendering items based on a given configuration and entity data.
  */
 
-public interface VortexCrudItemFactory<FieldId> {
-    Component renderItem(ItemFactory<FieldId> itemFactory,
+public interface VortexCrudItemFactory<FieldType> {
+    Component renderItem(ItemFactory<FieldType> itemFactory,
                          Object entity,
                          Integer maxWidth,
                          VortexCrudFileProviderRegistry fileProvider,
-                         VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                         ReflectionService<FieldId> reflectionService
+                         VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                         ReflectionService<FieldType> reflectionService
     );
 }

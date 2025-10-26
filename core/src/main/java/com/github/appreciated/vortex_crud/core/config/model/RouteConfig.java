@@ -5,11 +5,11 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 /**
  * Minimal interface representing shared route configuration properties.
  */
-public interface RouteConfig<DataStoreId, FieldId, KeyType> {
+public interface RouteConfig<FieldType> extends AccessControlled {
 
     /**
      * @return the item factory responsible for creating route items
      */
-    Class<? extends VortexCrudItemFactory<FieldId>> getFactory();
+    Class<? extends VortexCrudItemFactory<FieldType>> getFactory();
 }
 

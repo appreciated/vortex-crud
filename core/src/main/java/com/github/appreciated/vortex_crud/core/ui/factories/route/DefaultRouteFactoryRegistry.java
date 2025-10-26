@@ -29,19 +29,19 @@ import java.util.HashMap;
  */
 
 @Service
-public class DefaultRouteFactoryRegistry<DataStoreId, FieldId, KeyType> implements VortexCrudRouteFactoryRegistry<DataStoreId, FieldId, KeyType> {
+public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> {
 
-    final HashMap<Class<? extends VortexCrudRouteFactory>, VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factories = new HashMap<>();
+    final HashMap<Class<? extends VortexCrudRouteFactory>, VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
-    public DefaultRouteFactoryRegistry(VortexCrudItemFactoryRegistry<FieldId> itemFactoryRegistry,
-                                       VortexCrudConfigService<DataStoreId, FieldId, KeyType> configService,
-                                       VortexCrudListColumnCallbackRegistry<DataStoreId, FieldId, KeyType> listColumnCallbackRegistry,
-                                       VortexCrudDataStoreFactoryRegistry<DataStoreId, FieldId, KeyType> dataStoreFactoryRegistry,
-                                       VortexCrudDialogFactoryRegistry<DataStoreId, FieldId, KeyType> dialogFactoryRegistry,
+    public DefaultRouteFactoryRegistry(VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
+                                       VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+                                       VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> listColumnCallbackRegistry,
+                                       VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                       VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                                       VortexCrudDataStoreFieldNameResolver<FieldId> resolver,
-                                       FormCreator<DataStoreId, FieldId, KeyType> formCreatorService,
-                                       ReflectionService<FieldId> reflectionService,
+                                       VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+                                       FormCreator<ModelClass, FieldType, RepositoryType> formCreatorService,
+                                       ReflectionService<FieldType> reflectionService,
                                        VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
@@ -53,17 +53,17 @@ public class DefaultRouteFactoryRegistry<DataStoreId, FieldId, KeyType> implemen
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
     }
 
-    public VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> getFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> factory) {
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory) {
         return factories.get(factory);
     }
 
     @Override
-    public void addFactory(Class<? extends VortexCrudRouteFactory<DataStoreId, FieldId, KeyType>> key, VortexCrudRouteFactory<DataStoreId, FieldId, KeyType> factory) {
+    public void addFactory(Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> key, VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory) {
         factories.put(key, factory);
     }
 
     @Override
-    public boolean isContainerRoute(RouteRenderer<DataStoreId, FieldId, KeyType> currentRouteRenderer) {
+    public boolean isContainerRoute(RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer) {
         return factories.get(currentRouteRenderer.getFactory()).isContainerRoute();
     }
 }

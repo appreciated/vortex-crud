@@ -9,19 +9,19 @@ import com.vaadin.flow.component.select.Select;
 
 import java.util.*;
 
-public class SelectFieldFactory<DataStoreId, FieldId, KeyType> implements VortexCrudFieldFactory<DataStoreId, FieldId, KeyType> {
+public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     private final Selects selects;
 
-    public SelectFieldFactory(Selects selects, Map<KeyType, ?> tablesConfig) {
+    public SelectFieldFactory(Selects selects, Map<RepositoryType, ?> tablesConfig) {
         this.selects = selects;
     }
 
     @Override
-    public Component createComponent(KeyType table, FieldId field, Field<DataStoreId, FieldId, KeyType> dataStoreField) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         Select<?> select = new Select<>();
 
-        SelectField<DataStoreId, FieldId, KeyType> sf = (SelectField<DataStoreId, FieldId, KeyType>) dataStoreField;
+        SelectField<ModelClass, FieldType, RepositoryType> sf = (SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         String selectName = sf.getValues();
         Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
