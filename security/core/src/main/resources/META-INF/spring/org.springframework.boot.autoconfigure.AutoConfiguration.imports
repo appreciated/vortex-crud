@@ -1,1 +1,1 @@
-com.github.appreciated.vortex_crud.core.config.VortexCrudAutoConfiguration
+com.github.appreciated.vortex_crud.security.core.config.VortexCrudSecurityAutoConfiguration
