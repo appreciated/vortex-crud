@@ -82,7 +82,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
 
         @SafeVarargs
         public final <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>>  Builder<ModelClass, FieldType, RepositoryType> withSignUpFields(
-                 T ... signUpFields) {
+                InternalFormElement<ModelClass, FieldType, RepositoryType>... signUpFields) {
             product.signUpFields = List.of(signUpFields);
             return this;
         }
@@ -102,7 +102,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
             return this;
         }
 
-        public LocalIdentityAndAccessManagement build() {
+        public LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> build() {
             return product;
         }
     }
