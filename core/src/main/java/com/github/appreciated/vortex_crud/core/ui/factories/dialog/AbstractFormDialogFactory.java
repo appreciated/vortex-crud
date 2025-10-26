@@ -92,7 +92,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
     protected abstract Dialog instantiateDialog();
 
     private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog,
-                               OnStoreListener listener, OnCancelListener onCancelListener) {
+                              OnStoreListener listener, OnCancelListener onCancelListener) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
             dialog.close();

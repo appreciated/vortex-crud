@@ -106,7 +106,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                     if (dataStore.getModelClass().isInstance(entity)) {
                         dataStore.insertRecord(entity);
                     } else {
-                        throw new IllegalArgumentException("The given entity class (%s) does not match the datastore class model class (%s)".formatted(entity.getClass().getSimpleName(), dataStore.getModelClass().getSimpleName()) );
+                        throw new IllegalArgumentException("The given entity class (%s) does not match the datastore class model class (%s)".formatted(entity.getClass().getSimpleName(), dataStore.getModelClass().getSimpleName()));
                     }
                 } else {
                     dataStore.updateRecordById(entity);

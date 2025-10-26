@@ -47,10 +47,10 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
     @SuppressWarnings("unchecked")
     public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                            RouteRenderer<ModelClass, FieldType, RepositoryType> config,
-                            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
-                            VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
-                            VortexCrudFileProviderRegistry fileProviderRegistry,
+                           RouteRenderer<ModelClass, FieldType, RepositoryType> config,
+                           VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                           VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
+                           VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                            ReflectionService<FieldType> reflectionService,
                            VortexCrudDataStoreUtilStrategy dataStoreUtil

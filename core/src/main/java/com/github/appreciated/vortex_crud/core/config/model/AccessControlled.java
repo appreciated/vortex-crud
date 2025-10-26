@@ -4,7 +4,10 @@ import java.util.List;
 
 public interface AccessControlled {
     void setWriteRoles(List<String> writeRoles);
+
     List<String> getWriteRoles();
+
     void setReadOnlyRoles(List<String> readOnlyRoles);
+
     List<String> getReadOnlyRoles();
 }

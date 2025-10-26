@@ -5,9 +5,9 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.Keys;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]") )
+        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
                 .stream()
                 .filter(this::isDisplayedSafe)
                 .toList();

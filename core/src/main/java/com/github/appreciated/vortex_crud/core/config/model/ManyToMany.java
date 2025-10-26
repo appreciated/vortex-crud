@@ -4,7 +4,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
  * Interface representing a many-to-many relationship between entities.
  *
  * @param <ModelClass> The type used to identify data stores
- * @param <FieldType>     The type used to identify fields in the data store
+ * @param <FieldType>  The type used to identify fields in the data store
  */
 public interface ManyToMany<ModelClass, FieldType, RepositoryKey> {
 

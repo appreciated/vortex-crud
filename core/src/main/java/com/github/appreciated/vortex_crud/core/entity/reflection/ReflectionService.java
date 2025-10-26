@@ -80,7 +80,7 @@ public class ReflectionService<FieldType> {
         String camelCaseField = toCamelCase(fieldName);
 
         if (prefix.equals("is") && camelCaseField.startsWith("is") &&
-                camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
+            camelCaseField.length() > 2 && Character.isUpperCase(camelCaseField.charAt(2))) {
             return camelCaseField;
         }
 

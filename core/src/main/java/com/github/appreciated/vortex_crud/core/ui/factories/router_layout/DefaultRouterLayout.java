@@ -39,7 +39,8 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
 
         addToDrawer(scroller);
-        Button logoutButton = new Button("Logout", click -> {});
+        Button logoutButton = new Button("Logout", click -> {
+        });
         HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
         horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         horizontalLayout.setPadding(true);

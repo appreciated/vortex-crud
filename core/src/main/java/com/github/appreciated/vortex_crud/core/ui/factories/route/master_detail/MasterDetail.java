@@ -130,7 +130,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
             RouteRenderer<ModelClass, FieldType, RepositoryType> child = routeRenderer.getChild();
             Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
-                    creation ? currentPathIndex : currentPathIndex  + 1,
+                    creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,
                     new DetailRouteSetting(true, false, creation)
             );

@@ -80,7 +80,7 @@ public class ImageHasValue extends CustomField<String> {
                 .set("width", "120px")
                 .set("height", "120px");
 
-        Div uploadCard = new Div( upload);
+        Div uploadCard = new Div(upload);
         uploadCard.getStyle()
                 .set("position", "relative")
                 .set("width", "120px")

@@ -9,7 +9,7 @@ import java.util.List;
  * Different implementations can be provided for different data store types (e.g., JPA, jOOQ).
  *
  * @param <ModelClass> The type used to identify data stores
- * @param <FieldType>     The type used to identify fields in the data store
+ * @param <FieldType>  The type used to identify fields in the data store
  */
 public interface ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> {
 

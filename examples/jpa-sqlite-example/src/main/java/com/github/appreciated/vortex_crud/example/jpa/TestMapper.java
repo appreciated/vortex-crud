@@ -8,7 +8,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class TestMapper {
 
     @Bean
-    public Jackson2ObjectMapperBuilder build(){
+    public Jackson2ObjectMapperBuilder build() {
         return new Jackson2ObjectMapperBuilder();
     }
 
