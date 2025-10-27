@@ -4,16 +4,17 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
-import com.github.appreciated.vortex_crud.security.core.service.UserRegistrationService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -21,27 +22,34 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Route("sign-up")
 public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
-    private final Binder<Object> binder = new Binder<>();
-    private final UserRegistrationService<ModelClass, FieldType, RepositoryType> registrationService;
+    private final Binder<ModelClass> binder = new Binder<>();
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
+    private final ReflectionService<FieldType> reflectionService;
+    private final PasswordEncoder passwordEncoder;
 
     public SignUpView(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-            UserRegistrationService<ModelClass, FieldType, RepositoryType> registrationService
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+            ReflectionService<FieldType> reflectionService,
+            PasswordEncoder passwordEncoder
     ) {
         this.configService = configService;
-        this.registrationService = registrationService;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
+        this.reflectionService = reflectionService;
+        this.passwordEncoder = passwordEncoder;
 
         IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config =
                 configService.getConfiguration().getUserManagement();
@@ -60,29 +68,26 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 new FormLayout.ResponsiveStep("0", 1)
         );
 
-        // Create user instance for binding
+        // Get data store for users
+        RepositoryType repositoryKey = config.getRepositoryKey();
+        VortexCrudDataStore<FieldType, ModelClass> userDataStore = dataStoreFactoryRegistry.getDataStore(repositoryKey);
         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig =
-                configService.getConfiguration().getDataStores().get(config.getRepositoryKey());
+                configService.getConfiguration().getDataStores().get(repositoryKey);
 
-        Object userInstance;
-        try {
-            userInstance = dataStoreConfig.getModelClass().getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create user instance", e);
-        }
-
+        // Create new user instance using data store
+        ModelClass userInstance = userDataStore.newInstance();
         binder.setBean(userInstance);
 
         // Add username field
         TextField usernameField = new TextField("Username");
         usernameField.setRequired(true);
         usernameField.setWidthFull();
-        String usernameFieldName = config.getUsername().getFieldName();
+        FieldType usernameFieldType = config.getUsername().getField();
         binder.forField(usernameField)
                 .asRequired("Username is required")
                 .bind(
-                        user -> getFieldValue(user, usernameFieldName),
-                        (user, value) -> setFieldValue(user, usernameFieldName, value)
+                        user -> reflectionService.getString(user, usernameFieldType),
+                        (user, value) -> reflectionService.setString(user, usernameFieldType, value)
                 );
         formLayout.add(usernameField);
 
@@ -90,12 +95,12 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         PasswordField passwordField = new PasswordField("Password");
         passwordField.setRequired(true);
         passwordField.setWidthFull();
-        String passwordFieldName = config.getPassword().getFieldName();
+        FieldType passwordFieldType = config.getPassword().getField();
         binder.forField(passwordField)
                 .asRequired("Password is required")
                 .bind(
-                        user -> getFieldValue(user, passwordFieldName),
-                        (user, value) -> setFieldValue(user, passwordFieldName, value)
+                        user -> reflectionService.getString(user, passwordFieldType),
+                        (user, value) -> reflectionService.setString(user, passwordFieldType, value)
                 );
         formLayout.add(passwordField);
 
@@ -109,10 +114,10 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields = config.getSignUpFields();
         if (signUpFields != null && !signUpFields.isEmpty()) {
             formCreator.bindAndAddToLayout(
-                    config.getRepositoryKey(),
+                    repositoryKey,
                     formRouteRenderer,
                     signUpFields,
-                    null,
+                    userInstance,
                     routeFactory,
                     dataStoreConfig,
                     binder,
@@ -124,7 +129,12 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         Button signUpButton = new Button("Sign Up");
         signUpButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         signUpButton.setWidthFull();
-        signUpButton.addClickListener(event -> handleSignUp(passwordField, confirmPasswordField));
+        signUpButton.addClickListener(event -> handleSignUp(
+                userDataStore,
+                config,
+                passwordField,
+                confirmPasswordField
+        ));
 
         Button backToLoginButton = new Button("Back to Login");
         backToLoginButton.setWidthFull();
@@ -143,7 +153,12 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         add(formContainer);
     }
 
-    private void handleSignUp(PasswordField passwordField, PasswordField confirmPasswordField) {
+    private void handleSignUp(
+            VortexCrudDataStore<FieldType, ModelClass> userDataStore,
+            IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config,
+            PasswordField passwordField,
+            PasswordField confirmPasswordField
+    ) {
         // Validate passwords match
         if (!passwordField.getValue().equals(confirmPasswordField.getValue())) {
             Notification notification = Notification.show("Passwords do not match");
@@ -161,23 +176,42 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         }
 
         try {
-            Object user = binder.getBean();
+            ModelClass user = binder.getBean();
 
-            // Check if username already exists
-            IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config =
-                    configService.getConfiguration().getUserManagement();
-            String usernameFieldName = config.getUsername().getFieldName();
-            String username = getFieldValue(user, usernameFieldName);
+            // Check if username already exists using VortexCrudDataStore
+            FieldType usernameFieldType = config.getUsername().getField();
+            String username = reflectionService.getString(user, usernameFieldType);
 
-            if (registrationService.usernameExists(username)) {
+            List<ModelClass> existingUsers = userDataStore.getRecordsFromTableWhereColumnEquals(
+                    usernameFieldType,
+                    username,
+                    0,
+                    1
+            );
+
+            if (!existingUsers.isEmpty()) {
                 Notification notification = Notification.show("Username already exists");
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 notification.setPosition(Notification.Position.MIDDLE);
                 return;
             }
 
-            // Register the user
-            registrationService.registerUser(user);
+            // Encode password and set it to passwordHash field
+            FieldType passwordFieldType = config.getPassword().getField();
+            String rawPassword = reflectionService.getString(user, passwordFieldType);
+            String encodedPassword = passwordEncoder.encode(rawPassword);
+
+            // Set the encoded password to passwordHash field (assuming it exists)
+            reflectionService.setString(user, "passwordHash", encodedPassword);
+
+            // Clear the password field
+            reflectionService.setString(user, passwordFieldType, null);
+
+            // Write bean to ensure all fields are set
+            binder.writeBean(user);
+
+            // Insert user using VortexCrudDataStore (like FormRouteFactory does)
+            userDataStore.insertRecord(user);
 
             Notification notification = Notification.show("Registration successful! Please login.");
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -189,36 +223,14 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     UI.getCurrent().navigate(LoginView.class)
             );
 
+        } catch (ValidationException e) {
+            Notification notification = Notification.show("Validation failed: " + e.getMessage());
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.setPosition(Notification.Position.MIDDLE);
         } catch (Exception e) {
             Notification notification = Notification.show("Registration failed: " + e.getMessage());
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             notification.setPosition(Notification.Position.MIDDLE);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private String getFieldValue(Object obj, String fieldName) {
-        try {
-            String methodName = "get" + capitalizeFirstLetter(fieldName);
-            return (String) obj.getClass().getMethod(methodName).invoke(obj);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private void setFieldValue(Object obj, String fieldName, String value) {
-        try {
-            String methodName = "set" + capitalizeFirstLetter(fieldName);
-            obj.getClass().getMethod(methodName, String.class).invoke(obj, value);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set field value", e);
-        }
-    }
-
-    private String capitalizeFirstLetter(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

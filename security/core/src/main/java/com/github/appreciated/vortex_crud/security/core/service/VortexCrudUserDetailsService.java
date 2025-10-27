@@ -1,8 +1,10 @@
 package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,16 +15,28 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+/**
+ * Generic UserDetailsService implementation for vortex-crud framework.
+ * Uses VortexCrudDataStore to load users from the configured repository.
+ */
 @Service
 public class VortexCrudUserDetailsService<ModelClass, FieldType, RepositoryType> implements UserDetailsService {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
+    private final ReflectionService<FieldType> reflectionService;
 
-    public VortexCrudUserDetailsService(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
+    public VortexCrudUserDetailsService(
+            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+            ReflectionService<FieldType> reflectionService
+    ) {
         this.configService = configService;
+        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
+        this.reflectionService = reflectionService;
     }
 
     @Override
@@ -36,54 +50,33 @@ public class VortexCrudUserDetailsService<ModelClass, FieldType, RepositoryType>
                 throw new UsernameNotFoundException("User management not configured");
             }
 
+            // Get data store for users
             RepositoryType repositoryKey = userManagement.getRepositoryKey();
-            if (!(repositoryKey instanceof CrudRepository)) {
-                throw new IllegalStateException("Repository must be a CrudRepository");
-            }
+            VortexCrudDataStore<FieldType, ModelClass> userDataStore = dataStoreFactoryRegistry.getDataStore(repositoryKey);
 
-            CrudRepository<Object, ?> repository = (CrudRepository<Object, ?>) repositoryKey;
+            // Find user by username using VortexCrudDataStore
+            FieldType usernameFieldType = userManagement.getUsername().getField();
+            List<ModelClass> users = userDataStore.getRecordsFromTableWhereColumnEquals(
+                    usernameFieldType,
+                    username,
+                    0,
+                    1
+            );
 
-            // Find user by username using reflection to call findByUsername method
-            Method findByUsernameMethod = repository.getClass().getMethod("findByUsername", String.class);
-            Object userOptional = findByUsernameMethod.invoke(repository, username);
-
-            // Check if user exists (handling Optional)
-            Method isPresentMethod = userOptional.getClass().getMethod("isPresent");
-            boolean isPresent = (boolean) isPresentMethod.invoke(userOptional);
-
-            if (!isPresent) {
+            if (users.isEmpty()) {
                 throw new UsernameNotFoundException("User not found: " + username);
             }
 
-            // Get the user from Optional
-            Method getMethod = userOptional.getClass().getMethod("get");
-            Object user = getMethod.invoke(userOptional);
+            ModelClass user = users.get(0);
 
-            // Get username field
-            String usernameFieldName = userManagement.getUsername().getFieldName();
-            Method getUsernameMethod = user.getClass().getMethod("get" + capitalizeFirstLetter(usernameFieldName));
-            String actualUsername = (String) getUsernameMethod.invoke(user);
+            // Get username
+            String actualUsername = reflectionService.getString(user, usernameFieldType);
 
-            // Get password hash
-            Method getPasswordHashMethod = user.getClass().getMethod("getPasswordHash");
-            String passwordHash = (String) getPasswordHashMethod.invoke(user);
+            // Get password hash using reflection
+            String passwordHash = getPasswordHash(user);
 
             // Get roles
-            Set<GrantedAuthority> authorities = new HashSet<>();
-            try {
-                Method getRolesMethod = user.getClass().getMethod("getRoles");
-                Collection<?> roles = (Collection<?>) getRolesMethod.invoke(user);
-
-                if (roles != null) {
-                    for (Object role : roles) {
-                        Method getRoleNameMethod = role.getClass().getMethod("getName");
-                        String roleName = (String) getRoleNameMethod.invoke(role);
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase()));
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-                // No roles method, user has no roles
-            }
+            Set<GrantedAuthority> authorities = getRoles(user);
 
             // If no roles found, assign a default role
             if (authorities.isEmpty()) {
@@ -103,10 +96,33 @@ public class VortexCrudUserDetailsService<ModelClass, FieldType, RepositoryType>
         }
     }
 
-    private String capitalizeFirstLetter(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
+    private String getPasswordHash(ModelClass user) throws Exception {
+        try {
+            Method getPasswordHashMethod = user.getClass().getMethod("getPasswordHash");
+            return (String) getPasswordHashMethod.invoke(user);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException("User entity must have a getPasswordHash() method");
         }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    private Set<GrantedAuthority> getRoles(ModelClass user) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        try {
+            Method getRolesMethod = user.getClass().getMethod("getRoles");
+            Collection<?> roles = (Collection<?>) getRolesMethod.invoke(user);
+
+            if (roles != null) {
+                for (Object role : roles) {
+                    Method getRoleNameMethod = role.getClass().getMethod("getName");
+                    String roleName = (String) getRoleNameMethod.invoke(role);
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + roleName.toUpperCase()));
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            // No roles method, user has no roles
+        } catch (Exception e) {
+            // Log error but don't fail authentication
+        }
+        return authorities;
     }
 }
