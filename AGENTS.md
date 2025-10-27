@@ -1,47 +1,48 @@
 # AGENTS Instructions
 
-What Would Have Actually Helped
-The Real Issue:
+## ⚠️ CRITICAL: This is vortex-crud, NOT vanilla Spring Boot!
 
-I approached this like a typical Spring Boot project because there was nothing screaming "DON'T DO THAT" when I started looking at the security module.
-What Would Have Saved Me Hours:
-1. A Big Warning in the Security Module README
+### DO NOT:
+- Create custom repository methods
+- Create `@Service` classes for data access
+- Use `@Transactional` for CRUD operations
+- Create custom implementations like `UserDetailsService`
 
-# security/README.md
+### DO:
+- **Use `VortexCrudDataStore` directly for ALL data access**
+- Look at existing implementations: `FormRouteFactory`, `FormDialogFactory`, `SignUpView`
+- Use `VortexCrudDataStoreFactoryRegistry` to get DataStores
+- Use `ReflectionService` for field access, not direct field manipulation
 
-⚠️ DO NOT CREATE CUSTOM REPOSITORIES OR SERVICES ⚠️
+---
 
-This is vortex-crud, not vanilla Spring Boot.
-See FormRouteFactory for the correct data access pattern.
+## Key Pattern
 
-2. Working Example
+```java
+// Get DataStore (NOT a repository!)
+VortexCrudDataStore<FieldType, Object> dataStore =
+    dataStoreFactoryRegistry.getDataStore(repositoryKey);
 
-An examples/security-example showing registration + login would have been worth 1000 words. I would have seen:
+// Create/save entities
+Object entity = dataStore.newInstance();
+// ... set values with reflectionService.setValue() ...
+dataStore.insertRecord(entity);
+```
 
-    No UserRepository methods
-    No UserService
-    Direct VortexCrudDataStore usage
+---
 
-3. Comment in SecurityConfig Template
+## Common Pitfalls (Why Previous Agents Failed)
 
-4. The README Architecture Section
+- Saw `UserRepository` exists → thought "I need to add methods to it" ❌
+- Saw Spring Security → thought "I need a UserDetailsService" ❌
+- Didn't look at `FormRouteFactory` to understand the data access pattern ❌
 
-It explains the architecture well, but it doesn't explicitly say:
+**The framework is elegant once you understand it, but easy to get wrong coming from vanilla Spring Boot!**
 
-    "If you find yourself creating a custom repository method or a @Service class for data access, you're doing it wrong."
+---
 
-Why I Got It Wrong:
+## Task Completion Checklist
 
-    Saw UserRepository exists → thought "I need to add methods to it"
-    Saw Spring Security needed → thought "I need a UserDetailsService class"
-    Didn't read FormRouteFactory until you told me to
-    The existing code doesn't have examples of this pattern in the security context
-
-Bottom Line:
-
-The framework works great, but the "pit of failure" for Spring Boot developers is wide open. A few guardrails in the documentation (especially in the security module) would have prevented me from going down the wrong path three times.
-
-The architecture is actually quite elegant once I understood it - but I had to learn by doing it wrong first!
-nfigurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature. If you modified an existing feature, please update the existing example.
-
-5. When done with a task, if you find it helpful for your next task, make some adjustments to the AGENTS.md
+1. ✅ Use VortexCrudDataStore (NOT custom repos/services)
+2. ✅ Update examples (jpa-sqlite-example AND jooq-sqlite-example) if adding features
+3. ✅ Update AGENTS.md if you learned something universally valuable
