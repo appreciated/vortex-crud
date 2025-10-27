@@ -83,19 +83,27 @@ public class UserRegistrationService<ModelClass, FieldType, RepositoryType> {
             if (repositoryKey instanceof CrudRepository) {
                 CrudRepository<Object, ?> repository = (CrudRepository<Object, ?>) repositoryKey;
 
-                // Get all users and check if username exists
-                Iterable<?> allUsers = repository.findAll();
-                String usernameFieldName = userManagement.getUsername().getFieldName();
+                // Try to use findByUsername method if available
+                try {
+                    Method findByUsernameMethod = repository.getClass().getMethod("findByUsername", String.class);
+                    Object userOptional = findByUsernameMethod.invoke(repository, username);
+                    Method isPresentMethod = userOptional.getClass().getMethod("isPresent");
+                    return (boolean) isPresentMethod.invoke(userOptional);
+                } catch (NoSuchMethodException e) {
+                    // Fallback to iterating all users
+                    Iterable<?> allUsers = repository.findAll();
+                    String usernameFieldName = userManagement.getUsername().getFieldName();
 
-                for (Object user : allUsers) {
-                    Method getUsernameMethod = user.getClass().getMethod("get" +
-                            capitalizeFirstLetter(usernameFieldName));
-                    String existingUsername = (String) getUsernameMethod.invoke(user);
-                    if (username.equals(existingUsername)) {
-                        return true;
+                    for (Object user : allUsers) {
+                        Method getUsernameMethod = user.getClass().getMethod("get" +
+                                capitalizeFirstLetter(usernameFieldName));
+                        String existingUsername = (String) getUsernameMethod.invoke(user);
+                        if (username.equals(existingUsername)) {
+                            return true;
+                        }
                     }
+                    return false;
                 }
-                return false;
             }
             return false;
         } catch (Exception e) {
