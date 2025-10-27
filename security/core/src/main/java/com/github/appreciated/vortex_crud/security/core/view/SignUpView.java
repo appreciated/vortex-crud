@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -33,7 +32,6 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
     public SignUpView(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-            RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
             VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             ReflectionService<FieldType> reflectionService,
@@ -80,7 +78,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
         formCreator.bindAndAddToLayout(
                 config.getRepositoryKey(),
-                formRouteRenderer,
+                null,
                 allFields,
                 entity,
                 routeFactory,
