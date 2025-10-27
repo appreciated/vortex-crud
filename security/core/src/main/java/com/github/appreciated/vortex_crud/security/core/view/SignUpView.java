@@ -21,8 +21,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
+@AnonymousAllowed
 @Route("sign-up")
 public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
@@ -59,16 +63,14 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         formLayout.setMaxWidth("500px");
 
         // Add all sign-up fields
-        java.util.List<InternalFormElement<ModelClass, FieldType, RepositoryType>> allFields = new java.util.ArrayList<>();
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> allFields = new java.util.ArrayList<>();
 
         // Add username and password fields from config
-        if (config instanceof com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> localConfig) {
-            if (localConfig.getUsername() != null) {
-                allFields.add(localConfig.getUsername());
-            }
-            if (localConfig.getPassword() != null) {
-                allFields.add(localConfig.getPassword());
-            }
+        if (config.getUsername() != null) {
+            allFields.add(config.getUsername());
+        }
+        if (config.getPassword() != null) {
+            allFields.add(config.getPassword());
         }
 
         // Add additional sign-up fields
@@ -92,13 +94,11 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 binder.writeBean(entity);
 
                 // Hash the password before saving
-                if (config instanceof com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> localConfig) {
-                    FieldType passwordField = localConfig.getPassword().getField();
-                    Object passwordValue = reflectionService.getValue(entity, passwordField);
-                    if (passwordValue != null) {
-                        String hashedPassword = passwordEncoder.encode(passwordValue.toString());
-                        reflectionService.setValue(entity, passwordField, hashedPassword);
-                    }
+                FieldType passwordField = config.getPassword().getField();
+                Object passwordValue = reflectionService.getValue(entity, passwordField);
+                if (passwordValue != null) {
+                    String hashedPassword = passwordEncoder.encode(passwordValue.toString());
+                    reflectionService.setValue(entity, passwordField, hashedPassword);
                 }
 
                 dataStore.insertRecord(entity);

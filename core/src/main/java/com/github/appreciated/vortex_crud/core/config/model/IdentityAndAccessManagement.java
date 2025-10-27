@@ -13,4 +13,8 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
     Class<? extends Component> getLoginView();
 
     Class<? extends Component> getSignUpView();
+
+    InternalFormElement<ModelClass,FieldType,RepositoryType> getUsername();
+
+    InternalFormElement<ModelClass,FieldType,RepositoryType> getPassword();
 }
