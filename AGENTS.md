@@ -21,20 +21,8 @@ An examples/security-example showing registration + login would have been worth 
     No UserRepository methods
     No UserService
     Direct VortexCrudDataStore usage
-    UserDetailsService as a bean in SecurityConfig
 
 3. Comment in SecurityConfig Template
-
-@Configuration
-public class SecurityConfig {
-// IMPORTANT: Use VortexCrudDataStore, not custom repositories
-// See FormRouteFactory.java for the pattern
-
-    @Bean
-    public UserDetailsService userDetailsService(...) {
-        // Example implementation here
-    }
-}
 
 4. The README Architecture Section
 
@@ -55,3 +43,5 @@ The framework works great, but the "pit of failure" for Spring Boot developers i
 
 The architecture is actually quite elegant once I understood it - but I had to learn by doing it wrong first!
 nfigurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature. If you modified an existing feature, please update the existing example.
+
+5. When done with a task, if you find it helpful for your next task, make some adjustments to the AGENTS.md
