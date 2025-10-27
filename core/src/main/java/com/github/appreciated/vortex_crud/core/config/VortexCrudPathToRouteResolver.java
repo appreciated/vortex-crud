@@ -111,8 +111,8 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
             RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.get(currentKey);
             RouteRenderer<ModelClass, FieldType, RepositoryType> nextRouteRenderer = pathRoutes.get(nextKey);
 
-            VortexCrudRouteFactory currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory());
-            VortexCrudRouteFactory nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.getFactory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.getFactory());
 
             if (currentFactory == null) {
                 throw new IllegalStateException("The route does not have a factory set");
