@@ -1,35 +1,57 @@
 # AGENTS Instructions
 
-## Build and Test
+What Would Have Actually Helped
+The Real Issue:
 
-1. Configure Maven with the proxy. Create
-   `~/.m2/settings.xml` with the following content:
+I approached this like a typical Spring Boot project because there was nothing screaming "DON'T DO THAT" when I started looking at the security module.
+What Would Have Saved Me Hours:
+1. A Big Warning in the Security Module README
 
-   ```bash
-   cat > ~/.m2/settings.xml <<'EOF'
-   <settings>
-     <proxies>
-       <proxy>
-         <id>codexProxy</id>
-         <active>true</active>
-         <protocol>http</protocol>
-         <host>proxy</host>
-         <port>8080</port>
-       </proxy>
-     </proxies>
-   </settings>
-   EOF
-   ```
-2. To make sure the generated code compiles without running the tests, run the following command; it will take about a minute, so please be patient:
-   ```bash
-    mvn --no-transfer-progress -B install -DskipTests --file pom.xml
-   ```
+# security/README.md
 
-## Implementing new features
+⚠️ DO NOT CREATE CUSTOM REPOSITORIES OR SERVICES ⚠️
 
-- Always add new, fitting use-cases to ui-test-base when implementing new features.
-    - Cover the feature’s expected behavior and edge cases.
+This is vortex-crud, not vanilla Spring Boot.
+See FormRouteFactory for the correct data access pattern.
 
-- Provide respective implementations for both stacks: jOOQ and JPA as to be seen in the other tests
+2. Working Example
 
-- Add a standalone route to the configurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature. If you modified an existing feature, please update the existing example.
+An examples/security-example showing registration + login would have been worth 1000 words. I would have seen:
+
+    No UserRepository methods
+    No UserService
+    Direct VortexCrudDataStore usage
+    UserDetailsService as a bean in SecurityConfig
+
+3. Comment in SecurityConfig Template
+
+@Configuration
+public class SecurityConfig {
+// IMPORTANT: Use VortexCrudDataStore, not custom repositories
+// See FormRouteFactory.java for the pattern
+
+    @Bean
+    public UserDetailsService userDetailsService(...) {
+        // Example implementation here
+    }
+}
+
+4. The README Architecture Section
+
+It explains the architecture well, but it doesn't explicitly say:
+
+    "If you find yourself creating a custom repository method or a @Service class for data access, you're doing it wrong."
+
+Why I Got It Wrong:
+
+    Saw UserRepository exists → thought "I need to add methods to it"
+    Saw Spring Security needed → thought "I need a UserDetailsService class"
+    Didn't read FormRouteFactory until you told me to
+    The existing code doesn't have examples of this pattern in the security context
+
+Bottom Line:
+
+The framework works great, but the "pit of failure" for Spring Boot developers is wide open. A few guardrails in the documentation (especially in the security module) would have prevented me from going down the wrong path three times.
+
+The architecture is actually quite elegant once I understood it - but I had to learn by doing it wrong first!
+nfigurations in examples/jpa-sqlite-example and examples/jooq-sqlite-example for the new feature. If you modified an existing feature, please update the existing example.
