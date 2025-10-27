@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.EmailField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.PasswordField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -13,10 +15,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @EmailField()
+    @EmailField
     private String username;
 
+    @PasswordField
     private String passwordHash;
+
+    @TextField
+    private String firstName;
+
+    @TextField
+    private String lastName;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -56,5 +65,21 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

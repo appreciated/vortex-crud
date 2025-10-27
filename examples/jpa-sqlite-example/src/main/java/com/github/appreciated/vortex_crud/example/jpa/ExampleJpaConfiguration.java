@@ -258,9 +258,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .withLoginView(LoginView.class)
                                 .withSignUpView(SignUpView.class)
                                 .withUsername(new JpaFieldElement("username", "route.projects.labels.name"))
-                                .withPassword(new JpaFieldElement("password", "route.projects.labels.password"))
+                                .withPassword(new JpaFieldElement("passwordHash", "route.projects.labels.password"))
                                 .withSignUpFields(
-                                        new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                        new JpaFieldElement("firstName", "route.projects.labels.end_date"),
+                                        new JpaFieldElement("lastName", "route.projects.labels.end_date")
                                 )
                                 .build()
                 )

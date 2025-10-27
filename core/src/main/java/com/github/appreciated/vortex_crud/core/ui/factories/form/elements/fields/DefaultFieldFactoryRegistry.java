@@ -10,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.PasswordFieldFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(VideoFieldFactory.class, new VideoFieldFactory<>(fileProviderRegistry));
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
+        factories.put(PasswordFieldFactory.class, new PasswordFieldFactory<>());
     }
 
     public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactories() {

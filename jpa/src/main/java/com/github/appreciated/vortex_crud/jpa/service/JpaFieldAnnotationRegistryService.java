@@ -40,6 +40,8 @@ public class JpaFieldAnnotationRegistryService {
         register(TextField.class);
         register(EmailField.class);
         register(VideoField.class);
+        register(PasswordField.class);
+        register(VideoField.class);
     }
 
     private void register(Class<? extends Annotation> annotation) {
