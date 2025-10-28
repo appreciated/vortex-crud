@@ -85,3 +85,4 @@ webpack.generated.js
 /.junie/
 /security/userstore-local/target/
 /security/core/target/
+/.claude/
