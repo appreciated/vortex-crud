@@ -473,14 +473,14 @@ The following diagram provides a simplified view of the architecture, illustrati
 
 ## <a name="relationship-routes-forms">Relationship Between Route Renderers and Forms</a>
 
-**Note:** This diagram shows conceptual relationships. Actual implementation classes use "Factory" suffix (e.g., `GridRouteFactory`, `FormRouteFactory`, `KanbanDetailFactory`).
+**Note:** All route factories implement the `VortexCrudRouteFactory` interface. Routes are defined using the `RouteRenderer` configuration model.
 
 ```mermaid
 classDiagram
     class Dialog
     class DataStore
     class Field
-    class RouteRenderer
+    class VortexCrudRouteFactory
     class KanbanDetailFactory
     class AppLayout
     class MenuItem
@@ -493,16 +493,16 @@ classDiagram
     class Element
     class Collection
 
-    RouteRenderer <|-- GridRouteFactory: implements
-    RouteRenderer <|-- KanbanDetailFactory: implements
-    RouteRenderer <|-- ListRouteFactory: implements
-    RouteRenderer <|-- MasterDetailRouteFactory: implements
-    RouteRenderer <|-- SubmenuRouteFactory: implements
-    RouteRenderer <|-- MultiFormRouteFactory: implements
-    RouteRenderer <|-- FormRouteFactory: implements
-    RouteRenderer --> AppLayout: contains
-    SubmenuRouteFactory --> RouteRenderer: contains
-    MasterDetailRouteFactory --> RouteRenderer: contains
+    VortexCrudRouteFactory <|-- GridRouteFactory: implements
+    VortexCrudRouteFactory <|-- KanbanDetailFactory: implements
+    VortexCrudRouteFactory <|-- ListRouteFactory: implements
+    VortexCrudRouteFactory <|-- MasterDetailRouteFactory: implements
+    VortexCrudRouteFactory <|-- SubmenuRouteFactory: implements
+    VortexCrudRouteFactory <|-- MultiFormRouteFactory: implements
+    VortexCrudRouteFactory <|-- FormRouteFactory: implements
+    VortexCrudRouteFactory --> AppLayout: contains
+    SubmenuRouteFactory --> VortexCrudRouteFactory: contains
+    MasterDetailRouteFactory --> VortexCrudRouteFactory: contains
     AppLayout --> MenuItem: contains
     ListRouteFactory --> FormRouteFactory: forwards to
     GridRouteFactory --> FormRouteFactory: forwards to
@@ -510,7 +510,7 @@ classDiagram
     MultiFormRouteFactory --> FormRouteFactory: contains
     Form --> Element: contains
     Form --> Collection: contains
-    RouteRenderer --> DataStore: references
+    VortexCrudRouteFactory --> DataStore: references
     DataStore --> Field: contains
     Element --> Field: references
     Collection --> Field: references
@@ -523,11 +523,11 @@ classDiagram
 
 The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
 
-**Note:** Actual implementation classes use "Factory" suffix (e.g., `GridRouteFactory`, `FormRouteFactory`, `KanbanDetailFactory`).
+**Note:** All route factories implement `VortexCrudRouteFactory` and use `VortexCrudDataStore` for data access.
 
 ```mermaid
 classDiagram
-    class RouteRenderer
+    class VortexCrudRouteFactory
     class FormRouteFactory
     class GridRouteFactory
     class KanbanDetailFactory
@@ -537,15 +537,15 @@ classDiagram
     class MultiFormRouteFactory
     class DataStore
 
-    RouteRenderer <|-- GridRouteFactory: implements
-    RouteRenderer <|-- KanbanDetailFactory: implements
-    RouteRenderer <|-- ListRouteFactory: implements
-    RouteRenderer <|-- MasterDetailRouteFactory: implements
-    RouteRenderer <|-- SubmenuRouteFactory: implements
-    RouteRenderer <|-- MultiFormRouteFactory: implements
-    RouteRenderer <|-- FormRouteFactory: implements
-    SubmenuRouteFactory --> RouteRenderer: contains
-    MasterDetailRouteFactory --> RouteRenderer: contains
+    VortexCrudRouteFactory <|-- GridRouteFactory: implements
+    VortexCrudRouteFactory <|-- KanbanDetailFactory: implements
+    VortexCrudRouteFactory <|-- ListRouteFactory: implements
+    VortexCrudRouteFactory <|-- MasterDetailRouteFactory: implements
+    VortexCrudRouteFactory <|-- SubmenuRouteFactory: implements
+    VortexCrudRouteFactory <|-- MultiFormRouteFactory: implements
+    VortexCrudRouteFactory <|-- FormRouteFactory: implements
+    SubmenuRouteFactory --> VortexCrudRouteFactory: contains
+    MasterDetailRouteFactory --> VortexCrudRouteFactory: contains
     ListRouteFactory --> DataStore: uses
     GridRouteFactory --> DataStore: uses
     FormRouteFactory --> DataStore: uses
