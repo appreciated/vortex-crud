@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.vaadin.flow.spring.security.NavigationAccessControlConfigurer;
 import com.vaadin.flow.spring.security.VaadinAwareSecurityContextHolderStrategyConfiguration;
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -30,4 +31,11 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    static NavigationAccessControlConfigurer navigationAccessControlConfigurer(CustomAccessChecker customAccessChecker) {
+        return new NavigationAccessControlConfigurer()
+                .withNavigationAccessChecker(customAccessChecker);
+    }
+
 }
