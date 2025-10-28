@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.jpa.service.annoations.PasswordField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -27,13 +27,13 @@ public class User {
     @TextField
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 
     public Integer getId() {
         return id;
@@ -59,11 +59,11 @@ public class User {
         this.passwordHash = password;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

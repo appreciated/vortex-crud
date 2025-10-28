@@ -263,6 +263,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         new JpaFieldElement("firstName", "route.projects.labels.end_date"),
                                         new JpaFieldElement("lastName", "route.projects.labels.end_date")
                                 )
+                                .withRolesField("roles")
                                 .build()
                 )
                 .withRoutes(routes)

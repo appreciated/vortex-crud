@@ -14,6 +14,8 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,12 +23,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Route("login")
 public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
+    private static final Logger log = LoggerFactory.getLogger(LoginView.class);
     private final LoginForm login = new LoginForm();
 
     public LoginView(
@@ -79,12 +81,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 }
 
                 // Authentication successful - create Spring Security session
-                List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                if (config.getRoles() != null && config.getRoles().getRoles() != null) {
-                    for (String role : config.getRoles().getRoles()) {
-                        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
-                    }
-                }
+                List<SimpleGrantedAuthority> authorities = config.resolveRolesForEntity(reflectionService, userEntity);
 
                 UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(username, password, authorities);
@@ -103,6 +100,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 UI.getCurrent().navigate("/");
 
             } catch (Exception e) {
+                log.error("Login failed", e);
                 login.setError(true);
                 Notification.show("Login failed: " + e.getMessage()).addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
@@ -110,7 +108,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
         add(new H1("Vortex CRUD"), login);
 
-        if (config.isSignUp()) {
+        if (config.isSignUpEnabled()) {
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));
             add(signUpButton);
         }

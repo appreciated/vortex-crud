@@ -3,8 +3,10 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.Roles;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
 import io.github.mletkin.numerobis.annotation.GenerateBuilder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private final RepositoryType repositoryKey;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
+    private FieldType rolesField;
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
     private Class<? extends Component> loginView;
     private Class<? extends Component> signUpView;
@@ -24,10 +27,16 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
 
     private Roles roles;
 
-    private boolean signUp;
+    private boolean isSignUpEnabled;
 
     public Roles getRoles() {
         return roles;
+    }
+
+    @Override
+    public List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity) {
+        List<VortexCrudRoleProvider> value = (List<VortexCrudRoleProvider>) reflectionService.getValue(userEntity, rolesField);
+        return value.stream().map(VortexCrudRoleProvider::getRole).map(SimpleGrantedAuthority::new).toList();
     }
 
     public void setRoles(Roles roles) {
@@ -46,6 +55,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         return password;
     }
 
+
     public void setPassword(InternalFormElement<ModelClass, FieldType, RepositoryType> password) {
         this.password = password;
     }
@@ -58,12 +68,13 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         this.signUpFields = signUpFields;
     }
 
-    public boolean isSignUp() {
-        return signUp;
+    @Override
+    public boolean isSignUpEnabled() {
+        return isSignUpEnabled;
     }
 
-    public void setSignUp(boolean signUp) {
-        this.signUp = signUp;
+    public void setSignUpEnabled(boolean signUpEnabled) {
+        this.isSignUpEnabled = signUpEnabled;
     }
 
     public RepositoryType getRepositoryKey() {
@@ -76,6 +87,15 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
 
     public Class<? extends Component> getSignUpView() {
         return signUpView;
+    }
+
+    @Override
+    public FieldType getRolesField() {
+        return rolesField;
+    }
+
+    public void setRolesField(FieldType rolesField) {
+        this.rolesField = rolesField;
     }
 
     public static class Builder<ModelClass, FieldType, RepositoryType> {
@@ -91,6 +111,11 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
             return this;
         }
 
+        public <T extends InternalFormElement<ModelClass, FieldType, RepositoryType>> Builder<ModelClass, FieldType, RepositoryType> withRolesField(FieldType rolesField) {
+            product.rolesField = rolesField;
+            return this;
+        }
+
         @SafeVarargs
         public final Builder<ModelClass, FieldType, RepositoryType> withSignUpFields(
                 InternalFormElement<ModelClass, FieldType, RepositoryType>... signUpFields) {
@@ -99,7 +124,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         }
 
         public Builder<ModelClass, FieldType, RepositoryType> withSignUp(boolean signUp) {
-            product.signUp = signUp;
+            product.isSignUpEnabled = signUp;
             return this;
         }
 
