@@ -400,28 +400,89 @@ CREATE TABLE task_comments (...);
 ## In Progress
 - **Authentication Flow**: User registration (SignUpView) is fully functional with password hashing. Login UI exists but authentication backend is in development.
 
-## Planned Features
-- **Role-Based Access Control (RBAC)**: Configuration models are in place, functional implementation in progress.
-- **Entity Versioning**: Configuration structure defined, functional implementation pending.
-- **Entity Auditing**: Configuration structure defined, functional implementation pending.
-- **Enhanced Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
-- **Field Validation**: Support for basic and advanced field validation hooks.
-- **Hook Points**: Add custom hook points for enhanced flexibility.
-- **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
-- **Prefiltered Routes**: Display only specific items in routes as needed.
+### Security & Authentication
+- **Role-Based Access Control (RBAC)**: Complete functional implementation (configuration models are in place)
+  - Field-level permissions
+  - Dynamic role assignment
+  - Permission inheritance and role hierarchies
+
+### Developer Experience
+- **Simplified Configuration DSL**: Reduce verbosity and nesting in configuration
+  - Add shorthand methods for common patterns (e.g., `.quickForm("entity", "field1", "field2")`)
+  - Provide sensible defaults to minimize required configuration
+  - Create configuration templates for common use cases (user management, blog, e-commerce)
+- **Enhanced Documentation**:
+  - Interactive tutorial with step-by-step examples
+  - Video tutorials for common scenarios
+  - Architecture decision records (ADRs) explaining design choices
+  - Keep code examples synchronized with actual implementation (automated tests for README examples)
+- **Improved Error Messages**: Context-aware error messages with suggestions for fixes
+- **Configuration Validation**: Validate configuration at startup with clear error reporting
+  - Detect missing required fields
+  - Warn about performance anti-patterns
+  - Suggest optimizations
+
+### Framework Flexibility
+- **Hook Points & Extension API**: Comprehensive hook system for customization
+  - Lifecycle hooks (before/after save, load, delete)
+  - Validation hooks
+  - Action hooks (if button pressed to this)
+  - Data transformation hooks
+
+### API & Integration
+- **REST API Generation**: Auto-generate REST endpoints for data stores
+  - OpenAPI/Swagger documentation
+  - Configurable endpoint exposure (select which entities to expose)
+  - JWT authentication for API access
+  - Rate limiting and security controls
+- **GraphQL API Support**: Optional GraphQL endpoint generation
+- **Webhook Support**: Trigger external systems on entity changes
+- **Export/Import**: Bulk data export and import (CSV, JSON, Excel)
+
+### Enhanced Validation
+- **Field Validation Framework**: Comprehensive validation system
+  - Built-in validators (email, URL, regex, range, length)
+  - Custom validation logic
+  - Cross-field validation
+  - Async validation (e.g., uniqueness checks)
+- **Entity-Level Validation**: Business rule validation across multiple fields
+
+### Additional UI Components
+- **Additional Form Controls**: Radio Button Groups, Select Groups, Links, Color Pickers, File Upload, Image collections
 - **Additional Routes**:
-  - **Calendar Route**: Example from [Directus](https://directus.pizza/admin/content/posts?bookmark=45)
-  - **Map Route**: Display entities on a map based on latitude and longitude columns.
-  - **Generic Block Route**: Support for generic blocks with a flexible factory system.
-- **Additional Fields**:
-  - **Date range Field**
-- **Custom Menu Routes**: Add custom routes to the menu.
-- **Alternative Collection Editing**: Offer different ways to edit collections.
-- **Configuration Pre-Checks**: Validate the application configuration fully at startup.
-- **Styling**: Improve styling options.
-- **Database Index Check**: Verify that suitable indices are available, given that the UI and database are defined in a machine-parsable format.
-- **Route Filters**: Add filtering options for "kanban" routes.
-- **API Endpoints**: Allow providing API endpoints to access data stores programmatically.
+  - **Calendar Route**: Timeline and calendar views for date-based entities
+  - **Map Route**: Geographic data visualization
+  - **Chart/Dashboard Route**: Analytics and reporting dashboards
+  - **Generic Block Route**: Flexible block-based layouts
+- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor
+- **Alternative Collection Editing**: Spreadsheet-style editing, Bulk editing, Drag-and-drop reordering
+
+### Advanced Features
+- **Entity Versioning**: Track entity history (configuration structure defined, implementation pending)
+- **Entity Auditing**: Comprehensive audit logging (configuration structure defined, implementation pending)
+- **Enhanced Authentication Options**: Integration with [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak) / OAuth2
+- **Prefiltered Routes**: Define routes that show filtered subsets of data
+- **Custom Menu Routes**: Programmatically add routes outside the main menu
+- **Route Filters**: Advanced filtering for all route types (especially kanban)
+- **Full-Text Search**: Integrate search engines (Elasticsearch, PostgreSQL full-text)
+- **Soft Delete**: Configurable soft delete with trash/restore functionality
+
+### Performance & Optimization
+- **Database Index Recommendations**: Analyze queries and suggest indexes
+- **Query Optimization**: Automatic N+1 query detection and optimization
+- **Caching Layer**: Configurable caching for read-heavy applications
+- **Lazy Loading**: Optimize large forms with lazy-loaded sections
+
+### UI/UX Improvements
+- **Theme System**: Comprehensive theming and white-labeling support
+- **Responsive Design**: Improved mobile and tablet experiences
+- **Keyboard Navigation**: Enhanced keyboard shortcuts and navigation
+
+### Starter Templates
+  - Blog/CMS
+  - E-commerce admin
+  - User management system
+  - Project management tool
 
 # <a name="architecture">Architecture</a>
 The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
