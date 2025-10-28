@@ -67,7 +67,7 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 - **Appbar**: With app name and icon
 - **Nested Hierarchies**
 - **Data Filtering**: Filter entity lists in "grid," "list," and "master-detail" routes.
-- **[WIP] Media Support**: Easily manage and view media.
+- **Media Support**: Image and video field types available (functionality in development)
 - **Custom Routes**: Add routes not visible in the menu.
 
 # <a name="supported-routes-inputs">Features in Detail</a>
@@ -75,20 +75,34 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 The main point of this project is, that it decouples rendering from data. 
 
 ## <a name="listing-data">Listing Data</a>
-### Grid  
-<img width="600px" src="./img/screenshot-grid-view.png">  
 
-### Cards 
+`vortex-crud` provides multiple route renderer types for displaying and interacting with your data:
+
+### Grid
+Displays data in a card-based grid layout with filtering and navigation.
+<img width="600px" src="./img/screenshot-grid-view.png">
+
+### Cards
+List view with scrollable card display for browsing entities.
 <img width="600px" src="./img/screenshot-card-view.png">
 
-### Kanban 
+### Kanban
+Kanban board with drag-and-drop support for workflow management.
 <img width="600px" src="./img/screenshot-kanban-view.png">
 
 ### Master-Detail
+Split view with a master list on the left and detail panel on the right.
 <img width="600px" src="./img/screenshot-master-detail-view.png">
 
 ### **Edit Data with a Form Route**
+Standard form view for creating and editing entities.
 <img width="600px" src="./img/screenshot-form-view.png">
+
+### Additional Route Types
+
+- **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
+- **Multi-Form**: Handles multiple forms in a single route (configured via `MultiFormRouteFactory`)
+- **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
 <img width="600px" src="./img/screenshot-subroute-view.png">
@@ -180,6 +194,63 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 ### <a name="configuration-jpa">vortex-crud with JPA</a>
 Below is another brief example of how to use the JPA integration with `vortex-crud`. A more detailed example can be found under `examples/jpa-sqlite-example`.
 
+#### Key Difference: JPA uses Annotation-Based Field Configuration
+
+Unlike jOOQ (which uses manual field configuration), **JPA field types are defined using annotations directly on entity fields**. This provides a cleaner, more declarative approach that keeps field metadata close to the entity definition.
+
+#### Available JPA Field Annotations
+
+**Basic Text Fields:**
+- `@TextField` - Single-line text input
+- `@EmailField` - Email validation + text input
+- `@PasswordField` - Password input with masking
+- `@TextAreaField` - Multi-line text input
+
+**Numeric Fields:**
+- `@IntegerNumberField` - Integer numbers
+- `@DoubleNumberField` - Decimal numbers
+- `@BigDecimalNumberField` - High-precision decimal numbers
+
+**Date/Time Fields:**
+- `@DateField` - Date picker
+- `@DateTimePickerField` - Date and time picker
+
+**Selection Fields:**
+- `@CheckboxField` - Boolean input
+- `@SelectField` - Dropdown selection (for enums)
+- `@ReferenceField` - Foreign key reference to another entity
+
+**Media Fields:**
+- `@ImageField` - Image upload and display
+- `@VideoField` - Video handling
+
+#### JPA Entity Example with Annotations
+
+```java
+@Entity
+public class Project {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @IntegerNumberField
+    private Integer id;
+
+    @TextField
+    private String name;
+
+    @TextAreaField
+    private String description;
+
+    @DateField
+    private LocalDate endDate;
+
+    @ReferenceField
+    @ManyToOne
+    private User owner;
+}
+```
+
+#### JPA Configuration Example
+
 ```java
 @Service
 public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
@@ -198,22 +269,13 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new JpaFieldElement("name", "route.projects.labels.name")
-                                // ...
+                                new JpaFieldElement("name", "route.projects.labels.name"),
+                                new JpaFieldElement("description", "route.projects.labels.description"),
+                                new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                // Fields are automatically detected from entity annotations
                         )
                         .build())
                 .build();
-
-        Map<String, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
-                "projects", JpaDataStoreConfig.of(projectRepository)
-                        .withFields(Map.of(
-                                "id", new JpaField(IdFieldFactory.class, true),
-                                "name", new JpaField(TextFieldFactory.class, true, true),
-                                "description", new JpaField(TextAreaFieldFactory.class, false, false)
-                        ))
-                        .build()
-                // ...
-        );
 
         Map<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = Map.of(
                 "projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
@@ -235,11 +297,82 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withRoutes(routes)
-                .withDataStores(dataStores)
                 .build();
     }
 }
 ```
+
+**Note:** Field types are automatically detected from the annotations on your JPA entities - no need to manually configure them in the DataStoreConfig.
+
+## Security & Authentication
+
+`vortex-crud` includes a security module for user management and authentication. The implementation uses `vortex-crud`'s own data access patterns rather than traditional Spring Security approaches.
+
+### Current Implementation Status
+
+**✅ Implemented:**
+- User registration with `SignUpView` (fully functional)
+- Password hashing using BCrypt
+- User entity structure with role relationships
+- Configuration via `IdentityAndAccessManagement`
+
+**⏳ In Development:**
+- Authentication flow (LoginView UI exists, backend integration in progress)
+- Role-Based Access Control (configuration models in place)
+- Session management
+
+### Configuration Example
+
+Configure authentication and user management in your application configuration:
+
+```java
+.withIdentityAndAccessManagement(
+    LocalIdentityAndAccessManagement.of(userRepository)
+        .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
+        .withSignUp(true)
+        .withLoginView(LoginView.class)
+        .withSignUpView(SignUpView.class)
+        .withUsername(new JpaFieldElement("username", "labels.username"))
+        .withPassword(new JpaFieldElement("passwordHash", "labels.password"))
+        .withSignUpFields(
+            new JpaFieldElement("firstName", "labels.firstName"),
+            new JpaFieldElement("lastName", "labels.lastName")
+        )
+        .build()
+)
+```
+
+### User Entity Example
+
+```java
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @EmailField
+    private String username;
+
+    @PasswordField
+    private String passwordHash;
+
+    @TextField
+    private String firstName;
+
+    @TextField
+    private String lastName;
+
+    @ManyToMany
+    private Set<Role> roles;
+
+    // getters and setters...
+}
+```
+
+### Key Architectural Note
+
+`vortex-crud` uses its own `VortexCrudDataStore` abstraction for user management. **Do not** create traditional Spring Security components like `UserDetailsService` or custom repository methods. The framework handles data access through its own patterns - see `SignUpView.java` in the security module for a reference implementation.
 
 # <a name="core-concept">Database Modeling</a>
 `vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
@@ -262,11 +395,16 @@ CREATE TABLE task_comments (...);
 ```
 
 # <a name="roadmap">Roadmap</a>
-- **User and Role Management & Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
-- **Role-Based Access Control (RBAC)**
-- **Entity Versioning**
+
+## In Progress
+- **Authentication Flow**: User registration (SignUpView) is fully functional with password hashing. Login UI exists but authentication backend is in development.
+
+## Planned Features
+- **Role-Based Access Control (RBAC)**: Configuration models are in place, functional implementation in progress.
+- **Entity Versioning**: Configuration structure defined, functional implementation pending.
+- **Entity Auditing**: Configuration structure defined, functional implementation pending.
+- **Enhanced Authentication**: (Optionally using [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak))
 - **Field Validation**: Support for basic and advanced field validation hooks.
-- **Entity Auditing**
 - **Hook Points**: Add custom hook points for enhanced flexibility.
 - **Additional Form Controls**: Include controls like Radio Button Groups, Select Groups, Links, etc.
 - **Prefiltered Routes**: Display only specific items in routes as needed.
@@ -275,7 +413,7 @@ CREATE TABLE task_comments (...);
   - **Map Route**: Display entities on a map based on latitude and longitude columns.
   - **Generic Block Route**: Support for generic blocks with a flexible factory system.
 - **Additional Fields**:
-  - **Date range Field**  
+  - **Date range Field**
 - **Custom Menu Routes**: Add custom routes to the menu.
 - **Alternative Collection Editing**: Offer different ways to edit collections.
 - **Configuration Pre-Checks**: Validate the application configuration fully at startup.
@@ -308,7 +446,27 @@ classDiagram
 ```
 
 ## <a name="data-handling">Data Handling and Management</a>
+
 `vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, and the validation of the data model is data store-specific to ensure that the schema matches the configuration. Custom `DataStore` implementations are also supported, requiring only the implementation of the relevant interface.
+
+### The VortexCrudDataStore Pattern
+
+**Important:** `vortex-crud` uses its own data access abstraction instead of traditional Spring patterns. This is a core architectural decision that differentiates it from vanilla Spring Boot applications.
+
+#### Reference Implementations
+
+To understand how to work with `VortexCrudDataStore`, examine these existing implementations:
+- **`SignUpView.java`** - Shows how to create and save user entities with password hashing
+- **`FormRouteFactory`** - Demonstrates form-based entity editing
+- **`FormDialogFactory`** - Shows dialog-based entity creation/editing
+
+#### Why This Pattern?
+
+This abstraction allows `vortex-crud` to:
+- Support both JPA and jOOQ with the same configuration API
+- Automatically validate schema against configuration
+- Generate UI components dynamically from metadata
+- Maintain a clean separation between UI and data access
 
 The following diagram provides a simplified view of the architecture, illustrating the relationships between different components. It's important to note that classes are not instantiated directly; instead, they are created based on the types specified in the configuration. The `FactoryRegistry` retrieves the appropriate component factory from the configuration and returns the corresponding instance.
 
