@@ -102,6 +102,7 @@ Standard form view for creating and editing entities.
 
 - **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
 - **Multi-Form**: Handles multiple forms in a single route (configured via `MultiFormRouteFactory`)
+- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanDetailFactory`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
@@ -472,40 +473,41 @@ The following diagram provides a simplified view of the architecture, illustrati
 
 ## <a name="relationship-routes-forms">Relationship Between Route Renderers and Forms</a>
 
+**Note:** This diagram shows conceptual relationships. Actual implementation classes use "Factory" suffix (e.g., `GridRouteFactory`, `FormRouteFactory`, `KanbanDetailFactory`).
+
 ```mermaid
 classDiagram
     class Dialog
     class DataStore
     class Field
-    class RouteRenderer 
-    class KanbanRouteRenderer
-    class AppLayout 
+    class RouteRenderer
+    class KanbanDetailFactory
+    class AppLayout
     class MenuItem
-    class FormRouteRenderer
-    class GridRouteRenderer
-    class ListRouteRenderer
-    class MasterDetailRouteRenderer
-    class SubmenuRouteRenderer
-    class MultiFormRouteRenderer
-    class FormRouteRenderer
+    class FormRouteFactory
+    class GridRouteFactory
+    class ListRouteFactory
+    class MasterDetailRouteFactory
+    class SubmenuRouteFactory
+    class MultiFormRouteFactory
     class Element
     class Collection
-    
-    RouteRenderer <|-- GridRouteRenderer: extends
-    RouteRenderer <|-- KanbanRouteRenderer: extends
-    RouteRenderer <|-- ListRouteRenderer: extends
-    RouteRenderer <|-- MasterDetailRouteRenderer: extends
-    RouteRenderer <|-- SubmenuRouteRenderer: extends
-    RouteRenderer <|-- MultiFormRouteRenderer: extends
-    RouteRenderer <|-- FormRouteRenderer: extends
+
+    RouteRenderer <|-- GridRouteFactory: implements
+    RouteRenderer <|-- KanbanDetailFactory: implements
+    RouteRenderer <|-- ListRouteFactory: implements
+    RouteRenderer <|-- MasterDetailRouteFactory: implements
+    RouteRenderer <|-- SubmenuRouteFactory: implements
+    RouteRenderer <|-- MultiFormRouteFactory: implements
+    RouteRenderer <|-- FormRouteFactory: implements
     RouteRenderer --> AppLayout: contains
-    SubmenuRouteRenderer --> RouteRenderer: contains
-    MasterDetailRouteRenderer --> RouteRenderer: contains
+    SubmenuRouteFactory --> RouteRenderer: contains
+    MasterDetailRouteFactory --> RouteRenderer: contains
     AppLayout --> MenuItem: contains
-    ListRouteRenderer --> FormRouteRenderer: forwards to
-    GridRouteRenderer --> FormRouteRenderer: forwards to
-    FormRouteRenderer --> Form: contains
-    MultiFormRouteRenderer --> FormRouteRenderer: contains
+    ListRouteFactory --> FormRouteFactory: forwards to
+    GridRouteFactory --> FormRouteFactory: forwards to
+    FormRouteFactory --> Form: contains
+    MultiFormRouteFactory --> FormRouteFactory: contains
     Form --> Element: contains
     Form --> Collection: contains
     RouteRenderer --> DataStore: references
@@ -513,7 +515,7 @@ classDiagram
     Element --> Field: references
     Collection --> Field: references
     Collection --> Dialog: creates
-    KanbanRouteRenderer --> Dialog: creates
+    KanbanDetailFactory --> Dialog: creates
     Dialog --> Form: creates
 ```
 
@@ -521,34 +523,35 @@ classDiagram
 
 The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
 
+**Note:** Actual implementation classes use "Factory" suffix (e.g., `GridRouteFactory`, `FormRouteFactory`, `KanbanDetailFactory`).
+
 ```mermaid
 classDiagram
     class RouteRenderer
-    class FormRouteRenderer
-    class GridRouteRenderer 
-    class KanbanRouteRenderer 
-    class ListRouteRenderer 
-    class MasterDetailRouteRenderer 
-    class SubmenuRouteRenderer 
-    class MultiFormRouteRenderer 
-    class FormRouteRenderer 
+    class FormRouteFactory
+    class GridRouteFactory
+    class KanbanDetailFactory
+    class ListRouteFactory
+    class MasterDetailRouteFactory
+    class SubmenuRouteFactory
+    class MultiFormRouteFactory
     class DataStore
 
-    RouteRenderer <|-- GridRouteRenderer: extends
-    RouteRenderer <|-- KanbanRouteRenderer: extends
-    RouteRenderer <|-- ListRouteRenderer: extends
-    RouteRenderer <|-- MasterDetailRouteRenderer: extends
-    RouteRenderer <|-- SubmenuRouteRenderer: extends
-    RouteRenderer <|-- MultiFormRouteRenderer: extends
-    RouteRenderer <|-- FormRouteRenderer: extends
-    SubmenuRouteRenderer --> RouteRenderer: contains
-    MasterDetailRouteRenderer --> RouteRenderer: contains
-    ListRouteRenderer --> DataStore: uses
-    GridRouteRenderer --> DataStore: uses
-    FormRouteRenderer --> DataStore: uses
-    KanbanRouteRenderer --> DataStore: uses
-    MasterDetailRouteRenderer --> DataStore: uses
-    MultiFormRouteRenderer --> FormRouteRenderer: contains
+    RouteRenderer <|-- GridRouteFactory: implements
+    RouteRenderer <|-- KanbanDetailFactory: implements
+    RouteRenderer <|-- ListRouteFactory: implements
+    RouteRenderer <|-- MasterDetailRouteFactory: implements
+    RouteRenderer <|-- SubmenuRouteFactory: implements
+    RouteRenderer <|-- MultiFormRouteFactory: implements
+    RouteRenderer <|-- FormRouteFactory: implements
+    SubmenuRouteFactory --> RouteRenderer: contains
+    MasterDetailRouteFactory --> RouteRenderer: contains
+    ListRouteFactory --> DataStore: uses
+    GridRouteFactory --> DataStore: uses
+    FormRouteFactory --> DataStore: uses
+    KanbanDetailFactory --> DataStore: uses
+    MasterDetailRouteFactory --> DataStore: uses
+    MultiFormRouteFactory --> FormRouteFactory: contains
 ```
 
 # <a name="contributing">Contributing</a>
