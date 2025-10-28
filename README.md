@@ -314,13 +314,14 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 **✅ Implemented:**
 - User registration with `SignUpView` (fully functional)
 - Password hashing using BCrypt
+- User authentication with `LoginView` (fully functional)
+- Session management with Spring Security integration
 - User entity structure with role relationships
 - Configuration via `IdentityAndAccessManagement`
 
 **⏳ In Development:**
-- Authentication flow (LoginView UI exists, backend integration in progress)
-- Role-Based Access Control (configuration models in place)
-- Session management
+- Role-Based Access Control (configuration models in place, functional implementation in progress)
+- Dynamic role loading from user-role relationships
 
 ### Configuration Example
 
@@ -396,9 +397,6 @@ CREATE TABLE task_comments (...);
 ```
 
 # <a name="roadmap">Roadmap</a>
-
-## In Progress
-- **Authentication Flow**: User registration (SignUpView) is fully functional with password hashing. Login UI exists but authentication backend is in development.
 
 ### Security & Authentication
 - **Role-Based Access Control (RBAC)**: Complete functional implementation (configuration models are in place)

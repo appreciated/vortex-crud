@@ -20,7 +20,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/sign-up", "/sign-up/**").permitAll())
+                        .requestMatchers("/public/**", "/login", "/login/**", "/sign-up", "/sign-up/**").permitAll()
+                        .anyRequest().authenticated())
                 .with(VaadinSecurityConfigurer.vaadin(), configurer -> configurer.loginView(LoginView.class))
                 .build();
     }

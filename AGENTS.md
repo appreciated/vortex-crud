@@ -36,8 +36,12 @@ dataStore.insertRecord(entity);
 - Saw `UserRepository` exists → thought "I need to add methods to it" ❌
 - Saw Spring Security → thought "I need a UserDetailsService" ❌
 - Didn't look at `FormRouteFactory` to understand the data access pattern ❌
+- Tried to create separate service classes instead of handling logic directly in Views ❌
 
 **The framework is elegant once you understand it, but easy to get wrong coming from vanilla Spring Boot!**
+
+### Golden Rule for New Features:
+**When adding functionality (like authentication), implement it directly in the View using the same pattern as existing Views (SignUpView, FormRouteFactory).** Do NOT create separate `@Service` classes or traditional Spring components.
 
 ---
 
