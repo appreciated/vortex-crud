@@ -309,20 +309,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
 `vortex-crud` includes a security module for user management and authentication. The implementation uses `vortex-crud`'s own data access patterns rather than traditional Spring Security approaches.
 
-### Current Implementation Status
-
-**✅ Implemented:**
-- User registration with `SignUpView` (fully functional)
-- Password hashing using BCrypt
-- User authentication with `LoginView` (fully functional)
-- Session management with Spring Security integration
-- User entity structure with role relationships
-- Configuration via `IdentityAndAccessManagement`
-
-**⏳ In Development:**
-- Role-Based Access Control (configuration models in place, functional implementation in progress)
-- Dynamic role loading from user-role relationships
-
 ### Configuration Example
 
 Configure authentication and user management in your application configuration:
@@ -399,10 +385,8 @@ CREATE TABLE task_comments (...);
 # <a name="roadmap">Roadmap</a>
 
 ### Security & Authentication
-- **Role-Based Access Control (RBAC)**: Complete functional implementation (configuration models are in place)
-  - Field-level permissions
-  - Dynamic role assignment
-  - Permission inheritance and role hierarchies
+- **Enhanced Authentication Options**: Integration with [Keycloak](https://github.com/keycloak/keycloak) / OAuth2
+- **Permission inheritance and role hierarchies**
 
 ### Developer Experience
 - **Simplified Configuration DSL**: Reduce verbosity and nesting in configuration
@@ -458,7 +442,6 @@ CREATE TABLE task_comments (...);
 ### Advanced Features
 - **Entity Versioning**: Track entity history (configuration structure defined, implementation pending)
 - **Entity Auditing**: Comprehensive audit logging (configuration structure defined, implementation pending)
-- **Enhanced Authentication Options**: Integration with [Authentik](https://github.com/goauthentik/authentik) / [Keycloak](https://github.com/keycloak/keycloak) / OAuth2
 - **Prefiltered Routes**: Define routes that show filtered subsets of data
 - **Custom Menu Routes**: Programmatically add routes outside the main menu
 - **Route Filters**: Advanced filtering for all route types (especially kanban)
