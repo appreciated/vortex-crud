@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDia
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
@@ -51,6 +52,7 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver, dataStoreUtil));
         factories.put(GridRouteFactory.class, new GridRouteFactory<>(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(FormRouteFactory.class, new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
+        factories.put(FormSlideRouteFactory.class, new FormSlideRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
         factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
         factories.put(KanbanDetailFactory.class, new KanbanDetailFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
