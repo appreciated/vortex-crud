@@ -27,7 +27,7 @@ class CustomAccessChecker implements NavigationAccessChecker {
         String path = context.getLocation().getPath();
 
         // Allow public routes
-        if (path.startsWith("login") || path.startsWith("sign-up")) {
+        if (path.startsWith("login") || path.startsWith("sign-up") || path.startsWith("access-denied")) {
             return context.allow();
         }
 
@@ -47,6 +47,7 @@ class CustomAccessChecker implements NavigationAccessChecker {
             return context.allow();
         }
 
+        // Redirect to custom access denied view by throwing exception
         return context.deny("Insufficient permissions");
     }
 

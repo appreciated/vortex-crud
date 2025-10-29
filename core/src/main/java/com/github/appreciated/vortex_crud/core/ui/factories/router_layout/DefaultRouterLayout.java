@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -13,6 +14,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.server.VaadinServletRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
 
@@ -40,6 +43,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
 
         addToDrawer(scroller);
         Button logoutButton = new Button("Logout", click -> {
+            handleLogout();
         });
         HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
         horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
@@ -69,6 +73,20 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
             }
         });
         return nav;
+    }
+
+    private void handleLogout() {
+        // Clear the Spring Security context
+        SecurityContextHolder.clearContext();
+
+        // Invalidate the HTTP session
+        VaadinServletRequest request = VaadinServletRequest.getCurrent();
+        if (request != null && request.getHttpServletRequest().getSession(false) != null) {
+            request.getHttpServletRequest().getSession().invalidate();
+        }
+
+        // Navigate to login page
+        UI.getCurrent().getPage().setLocation("/login");
     }
 
 }

@@ -149,7 +149,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withTitleField("name")
                         .withDescriptionField("description")
                         .build())
-                .withRoles(List.of("manager", "admin"))
+                .withRoles(List.of("admin", "manager"))
                 .withChild(projectForm)
                 .build());
         routes.put("projects-list", JpaRouteRenderer.of(ListRouteFactory.class)
@@ -166,7 +166,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 new JpaFieldElement("endDate", "route.projects.labels.end_date")
                         )
                         .build())
-                .withRoles(List.of("manager", "admin"))
+                .withRoles(List.of("admin", "manager", "editor"))
                 .withChild(projectForm)
                 .build());
         routes.put("open-tasks", JpaRouteRenderer.of(KanbanDetailFactory.class)
@@ -180,6 +180,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withRowIndexField("rowIndex")
                         .withFilterField("title")
                         .build())
+                .withRoles(List.of("admin", "manager", "editor", "viewer"))
                 .withChild(taskForm)
                 .build());
         routes.put("done-tasks", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
@@ -190,6 +191,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withTitleField("title")
                         .withDescriptionField("description")
                         .build())
+                .withRoles(List.of("admin", "manager"))
                 .withChild(taskForm)
                 .build());
         routes.put("images-grid", JpaRouteRenderer.of(GridRouteFactory.class)
@@ -201,7 +203,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withImageField("url")
                         .withImageFactory(ImageResourceProvider.class)
                         .build())
-                .withRoles(List.of("manager", "admin"))
+                .withRoles(List.of("admin"))
                 .withChild(imageForm)
                 .build());
         routes.put("images-list", JpaRouteRenderer.of(ListRouteFactory.class)
@@ -216,7 +218,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 new JpaFieldElement("title", "route.projects.labels.name")
                         )
                         .build())
-                .withRoles(List.of("manager", "admin"))
+                .withRoles(List.of("admin"))
                 .withChild(imageForm)
                 .build());
 
@@ -229,7 +231,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .withImageField("url")
                         .withImageFactory(ImageResourceProvider.class)
                         .build())
-                .withRoles(List.of("manager", "admin"))
+                .withRoles(List.of("admin"))
                 .withChild(imageSlideForm)
                 .build());
 
@@ -253,7 +255,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withI18nBundlePrefix("some_i18n")
                 .withIdentityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>of(userRepository)
-                                .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
+                                .withRoles(Roles.of().withRoles(List.of("admin", "manager", "editor", "viewer", "guest")).build())
                                 .withSignUp(true)
                                 .withLoginView(LoginView.class)
                                 .withSignUpView(SignUpView.class)

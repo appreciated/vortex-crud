@@ -58,21 +58,11 @@ CREATE TABLE images
     url   VARCHAR
 );
 
-
--- changeset jpa-sqlite-example-vortex-crud:6
-INSERT INTO users (id, username)
-VALUES (1, 'max@mustermann.de'),
-       (2, 'erika@musterfrau.de'),
-       (3, 'john@doe.com'),
-       (4, 'jane@doe.com');
-
-
 -- changeset jpa-sqlite-example-vortex-crud:7
 INSERT INTO images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),
        (2, 'Green', './images/green.png'),
        (3, 'Blue', './images/blue.png');
-
 
 -- changeset jpa-sqlite-example-vortex-crud:8
 INSERT INTO projects (name, description, start_date, end_date, created_at, updated_at)

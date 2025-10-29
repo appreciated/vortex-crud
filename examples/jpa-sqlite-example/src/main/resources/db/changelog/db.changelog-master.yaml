@@ -3,5 +3,10 @@ databaseChangeLog:
       file: vortex-crud/V1.sql
       relativeToChangelogFile: true
   - include:
+      file: vortex-crud/V2.sql
+      relativeToChangelogFile: true
+  - include:
       file: database/V1.sql
       relativeToChangelogFile: true
+
+
