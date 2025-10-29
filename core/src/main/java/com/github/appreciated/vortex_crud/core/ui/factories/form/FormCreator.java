@@ -6,13 +6,11 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasLabel;
-import com.vaadin.flow.component.HasSize;
-import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.BeanValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +22,9 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
     private final DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry;
     private final ReflectionService<FieldType> reflectionService;
+
+    @Autowired(required = false)
+    private com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker permissionChecker;
 
     public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
                        VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
@@ -51,8 +52,20 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
+
+                // Check field-level permissions
+                FieldAccessLevel accessLevel = getFieldAccessLevel(field);
+                if (accessLevel == FieldAccessLevel.NONE) {
+                    continue; // Skip this field entirely
+                }
+
                 VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.getFactory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
+
+                // Apply read-only if user only has read access
+                if (accessLevel == FieldAccessLevel.READ_ONLY && component instanceof HasEnabled) {
+                    ((HasEnabled) component).setEnabled(false);
+                }
 
                 // Apply validation if present
                 if (field.getValidation() != null) {
@@ -95,5 +108,33 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 form.setColspan(collection, element.getSpan());
             }
         }
+    }
+
+    /**
+     * Access level for field permissions.
+     */
+    private enum FieldAccessLevel {
+        NONE,       // Field is hidden
+        READ_ONLY,  // Field is visible but disabled
+        WRITE       // Field is fully editable
+    }
+
+    /**
+     * Determines the access level for a field based on user roles.
+     */
+    private FieldAccessLevel getFieldAccessLevel(AccessControlled field) {
+        // If permission checker is not available (security module not included), grant full access
+        if (permissionChecker == null) {
+            return FieldAccessLevel.WRITE;
+        }
+
+        com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker.AccessLevel level =
+                permissionChecker.getAccessLevel(field);
+
+        return switch (level) {
+            case NONE -> FieldAccessLevel.NONE;
+            case READ_ONLY -> FieldAccessLevel.READ_ONLY;
+            case WRITE -> FieldAccessLevel.WRITE;
+        };
     }
 }

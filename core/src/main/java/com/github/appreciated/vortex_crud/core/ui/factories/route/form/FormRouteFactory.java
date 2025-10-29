@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -42,13 +43,16 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
+    private final RbacPermissionChecker permissionChecker;
+
 
     public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                            ReflectionService<FieldType> reflectionService
+                            ReflectionService<FieldType> reflectionService,
+                            RbacPermissionChecker permissionChecker
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
@@ -56,6 +60,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         this.factoryRegistry = factoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -133,7 +138,18 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
 
-        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(isWrapped, creationMode, onSave, null, onDelete, onBack, titleComponent);
+        // Check write permissions for save/delete buttons
+        boolean hasWriteAccess = permissionChecker == null || permissionChecker.canWrite(routeRenderer);
+
+        RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(
+                isWrapped,
+                creationMode && hasWriteAccess,
+                hasWriteAccess ? onSave : null,
+                null,
+                hasWriteAccess ? onDelete : null,
+                onBack,
+                titleComponent
+        );
         if (!isHeaderHidden) {
             layout.add(headerBar);
         }
