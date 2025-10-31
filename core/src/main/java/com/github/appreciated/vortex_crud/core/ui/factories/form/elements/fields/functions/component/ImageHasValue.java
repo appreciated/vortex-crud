@@ -11,6 +11,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.server.streams.UploadHandler;
 
+import java.nio.file.Path;
+
 public class ImageHasValue extends CustomField<String> {
 
     private final ImageDisplayComponent image;
@@ -128,7 +130,9 @@ public class ImageHasValue extends CustomField<String> {
                 """, image.getElement().getAttribute("src"));
     }
 
-    private void setImageFromPath(String fileName) {
+    private void setImageFromPath(String fullPath) {
+        Path path = Path.of(fullPath);
+        String fileName = path.getFileName().toString();
         setValue(fileName);
     }
 

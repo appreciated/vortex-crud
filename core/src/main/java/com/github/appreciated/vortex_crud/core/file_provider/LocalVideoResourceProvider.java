@@ -54,13 +54,12 @@ public class LocalVideoResourceProvider implements VortexCrudResourceProvider {
     public DownloadHandler getResource(String src) {
         // src is just the filename, not the full path
         Path fullPath = getPathForFile(src);
-        log.debug("Getting video resource for: {} (full path: {})", src, fullPath);
         return DownloadHandler.forFile(fullPath.toFile());
     }
 
     @Override
     public Path getPathForFile(String fileName) {
-        return Path.of(basePath, sanitizeFileName(fileName));
+        return Path.of(basePath, fileName);
     }
 
     /**
@@ -116,55 +115,5 @@ public class LocalVideoResourceProvider implements VortexCrudResourceProvider {
             return videoFileName.substring(0, lastDotIndex) + THUMBNAIL_SUFFIX;
         }
         return videoFileName + THUMBNAIL_SUFFIX;
-    }
-
-    /**
-     * Sanitizes the filename to prevent directory traversal and other security issues.
-     *
-     * @param fileName The filename to sanitize
-     * @return The sanitized filename
-     */
-    private String sanitizeFileName(String fileName) {
-        if (fileName == null) {
-            return "";
-        }
-        // Remove path separators and parent directory references
-        return fileName.replaceAll("[/\\\\]", "_")
-                .replaceAll("\\.\\.", "_");
-    }
-
-    /**
-     * Deletes both the video file and its thumbnail.
-     *
-     * @param videoFileName The video filename to delete
-     * @return true if both files were deleted successfully (or didn't exist), false otherwise
-     */
-    public boolean deleteVideoAndThumbnail(String videoFileName) {
-        boolean videoDeleted = true;
-        boolean thumbnailDeleted = true;
-
-        Path videoPath = getPathForFile(videoFileName);
-        if (Files.exists(videoPath)) {
-            try {
-                Files.delete(videoPath);
-                log.info("Deleted video file: {}", videoPath);
-            } catch (IOException e) {
-                log.error("Failed to delete video file: {}", videoPath, e);
-                videoDeleted = false;
-            }
-        }
-
-        Path thumbnailPath = getThumbnailPath(videoFileName);
-        if (Files.exists(thumbnailPath)) {
-            try {
-                Files.delete(thumbnailPath);
-                log.info("Deleted thumbnail file: {}", thumbnailPath);
-            } catch (IOException e) {
-                log.error("Failed to delete thumbnail file: {}", thumbnailPath, e);
-                thumbnailDeleted = false;
-            }
-        }
-
-        return videoDeleted && thumbnailDeleted;
     }
 }
