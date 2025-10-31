@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -18,12 +19,14 @@ import com.vaadin.flow.server.VaadinServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Route("login")
@@ -84,23 +87,8 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
                 // Authentication successful - create Spring Security session
                 List<SimpleGrantedAuthority> authorities = userManagement.resolveRolesForEntity(reflectionService, userEntity);
-
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(username, password, authorities);
-
-                SecurityContext securityContext = SecurityContextHolder.getContext();
-                securityContext.setAuthentication(authToken);
-
-                // Save security context to session
-                VaadinServletRequest request = VaadinServletRequest.getCurrent();
-                if (request != null) {
-                    request.getHttpServletRequest().getSession()
-                            .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-                }
-
-                Notification.show("Login successful!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                UI.getCurrent().navigate("/");
-
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, authorities);
+                setSecurityContextFor(authToken);
             } catch (Exception e) {
                 log.error("Login failed", e);
                 login.setError(true);
@@ -114,5 +102,33 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));
             add(signUpButton);
         }
+    }
+
+    private void setSecurityContextFor(Authentication userEntity) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(userEntity);
+
+        // Save security context to session
+        VaadinServletRequest request = VaadinServletRequest.getCurrent();
+        if (request != null) {
+            request.getHttpServletRequest().getSession()
+                    .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+        }
+
+        Notification.show("Login successful!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        UI.getCurrent().navigate("/");
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+
+        //TODO Remove before release
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                "admin@example.com",
+                "password",
+                Collections.singletonList(new SimpleGrantedAuthority("admin"))
+        );
+        setSecurityContextFor(authToken);
     }
 }
