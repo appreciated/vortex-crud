@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.*;
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
@@ -37,7 +37,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.DATETIME_FIELD, new DateTimePickerField<>(),
                                 VALIDATION_TEST.ENUM_FIELD, new SelectField<>("enum-options"),
                                 VALIDATION_TEST.CHECKBOX_FIELD, new CheckboxField<>(),
-                                VALIDATION_TEST.IMAGE_FIELD, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class)))
+                                VALIDATION_TEST.IMAGE_FIELD, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class)))
                         ).build()
         );
 

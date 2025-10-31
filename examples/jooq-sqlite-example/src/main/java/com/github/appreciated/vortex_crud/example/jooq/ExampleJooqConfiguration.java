@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.example.jooq;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.*;
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -40,6 +40,7 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PRO
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskHasTask.TASK_HAS_TASK;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.Videos.VIDEOS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
@@ -47,8 +48,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                PROJECTS, JooqDataStoreConfig.of(PROJECTS)
+        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.ofEntries(
+                Map.entry(PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .withFields(Map.of(
                                 PROJECTS.ID, new IdField<>(),
                                 PROJECTS.NAME, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
@@ -57,8 +58,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 PROJECTS.END_DATE, new DateField<>(),
                                 PROJECTS.CREATED_AT, new DateTimePickerField<>(),
                                 PROJECTS.UPDATED_AT, new DateTimePickerField<>()))
-                        .build(),
-                TASKS, JooqDataStoreConfig.of(TASKS)
+                        .build()),
+                Map.entry(TASKS, JooqDataStoreConfig.of(TASKS)
                         .withFields(Map.of(
                                 TASKS.ID, new IdField<>(),
                                 TASKS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
@@ -68,33 +69,40 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 TASKS.DUE_DATE, new DateField<>(), //.withReadOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new DateTimePickerField<>(),
                                 TASKS.UPDATED_AT, new DateTimePickerField<>()))
-                        .build(),
-                TASK_HAS_TASK, JooqDataStoreConfig.of(TASK_HAS_TASK)
+                        .build()),
+                Map.entry(TASK_HAS_TASK, JooqDataStoreConfig.of(TASK_HAS_TASK)
                         .withFields(Map.of(
                                 TASK_HAS_TASK.TASK_ID, new IdField<>(),
                                 TASK_HAS_TASK.RELATED_TASK_ID, new IdField<>()))
-                        .build(),
-                TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
+                        .build()),
+                Map.entry(TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
                         .withFields(Map.of(
                                 TASK_COMMENTS.ID, new IdField<>(),
                                 TASK_COMMENTS.COMMENT_TEXT, new TextAreaField<>(false, TextFieldValidation.of().withMaxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new DoubleField<>(),
                                 TASK_COMMENTS.CREATED_AT, new DateTimePickerField<>()))
-                        .build(),
-                IMAGES, JooqDataStoreConfig.of(IMAGES)
+                        .build()),
+                Map.entry(IMAGES, JooqDataStoreConfig.of(IMAGES)
                         .withFields(Map.of(
                                 IMAGES.ID, new IdField<>(),
                                 IMAGES.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
-                                IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
+                                IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
                         ))
-                        .build(),
-                USERS,
-                JooqDataStoreConfig.of(USERS)
+                        .build()),
+                Map.entry(VIDEOS, JooqDataStoreConfig.of(VIDEOS)
                         .withFields(Map.of(
-                                USERS.USERNAME, new EmailField<>(),
-                                USERS.PASSWORD_HASH, new PasswordField<>(true, TextFieldValidation.of().withMaxLength(255).build())
+                                VIDEOS.ID, new IdField<>(),
+                                VIDEOS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
+                                VIDEOS.URL, new VideoField<>(new VideoFieldRendererConfiguration<>(LocalImageResourceProvider.class))
                         ))
-                        .build()
+                        .build()),
+                Map.entry(USERS,
+                        JooqDataStoreConfig.of(USERS)
+                                .withFields(Map.of(
+                                        USERS.USERNAME, new EmailField<>(),
+                                        USERS.PASSWORD_HASH, new PasswordField<>(true, TextFieldValidation.of().withMaxLength(255).build())
+                                ))
+                                .build())
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
@@ -181,6 +189,18 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> videoForm = JooqRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(VIDEOS)
+                .withTitle("route.videos.title-cards")
+                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(VIDEOS.TITLE)
+                        .withChildren(
+                                new JooqFieldElement(VIDEOS.TITLE, "route.videos.labels.title"),
+                                new JooqFieldElement(VIDEOS.URL, "route.videos.labels.video")
+                        )
+                        .build())
+                .build();
+
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
@@ -241,7 +261,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withImageField(IMAGES.URL)
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageForm)
@@ -269,10 +289,37 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(IMAGES.TITLE)
                         .withImageField(IMAGES.URL)
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withRoles(List.of("manager", "admin"))
                 .withChild(imageSlideForm)
+                .build());
+
+        routes.put("videos-grid", JooqRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore(VIDEOS)
+                .withIconFactory(MOVIE::create)
+                .withTitle("route.videos.title-cards")
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField(VIDEOS.TITLE)
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(videoForm)
+                .build());
+
+        routes.put("videos-list", JooqRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore(VIDEOS)
+                .withIconFactory(MOVIE::create)
+                .withTitle("route.videos.title-list")
+                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField(VIDEOS.TITLE)
+                        .withChildren(
+                                new JooqFieldElement(VIDEOS.TITLE, "route.videos.labels.title"),
+                                new JooqFieldElement(VIDEOS.URL, "route.videos.labels.video")
+                        )
+                        .build())
+                .withRoles(List.of("manager", "admin"))
+                .withChild(videoForm)
                 .build());
 
         routes.put("submenu", JooqRouteRenderer.of(SubmenuRouteFactory.class)

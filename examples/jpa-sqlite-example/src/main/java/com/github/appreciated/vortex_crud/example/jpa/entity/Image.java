@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ public class Image {
     @TextField
     private String title;
 
-    @ImageField(ImageResourceProvider.class)
+    @ImageField(LocalImageResourceProvider.class)
     private String url;
 
     // Getters and Setters

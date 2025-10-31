@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -43,19 +43,22 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskCommentRepository taskCommentRepository;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final VideoRepository videoRepository;
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
             TaskCommentRepository taskCommentRepository,
             TaskRepository taskRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            VideoRepository videoRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
         this.taskCommentRepository = taskCommentRepository;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.videoRepository = videoRepository;
     }
 
     @Override
@@ -139,6 +142,18 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaRouteRenderer.of(FormRouteFactory.class)
+                .withDataStore(videoRepository)
+                .withTitle("route.videos.title-cards")
+                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .withTitleField("title")
+                        .withChildren(
+                                new JpaFieldElement("title", "route.videos.labels.title"),
+                                new JpaFieldElement("url", "route.videos.labels.video")
+                        )
+                        .build())
+                .build();
+
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
                 .withDefaultRoute(true)
@@ -201,7 +216,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withImageField("url")
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withRoles(List.of("admin"))
                 .withChild(imageForm)
@@ -229,10 +244,37 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withImageField("url")
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withRoles(List.of("admin"))
                 .withChild(imageSlideForm)
+                .build());
+
+        routes.put("videos-grid", JpaRouteRenderer.of(GridRouteFactory.class)
+                .withDataStore(videoRepository)
+                .withIconFactory(MOVIE::create)
+                .withTitle("route.videos.title-cards")
+                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withTitleField("title")
+                        .build())
+                .withRoles(List.of("admin"))
+                .withChild(videoForm)
+                .build());
+
+        routes.put("videos-list", JpaRouteRenderer.of(ListRouteFactory.class)
+                .withDataStore(videoRepository)
+                .withIconFactory(MOVIE::create)
+                .withTitle("route.videos.title-list")
+                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .withInlineEdit(true)
+                        .withFilterField("title")
+                        .withChildren(
+                                new JpaFieldElement("title", "route.videos.labels.title"),
+                                new JpaFieldElement("url", "route.videos.labels.video")
+                        )
+                        .build())
+                .withRoles(List.of("admin"))
+                .withChild(videoForm)
                 .build());
 
         routes.put("submenu", JpaRouteRenderer.of(SubmenuRouteFactory.class)

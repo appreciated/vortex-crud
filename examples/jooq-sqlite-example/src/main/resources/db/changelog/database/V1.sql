@@ -58,6 +58,13 @@ CREATE TABLE images
     url   VARCHAR
 );
 
+-- changeset jooq-sqlite-example-test-project:5.1
+CREATE TABLE videos
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR,
+    url   VARCHAR
+);
 
 -- changeset jooq-sqlite-example-test-project:6
 INSERT INTO users (id, username)

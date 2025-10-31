@@ -7,7 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
@@ -33,7 +33,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                         .withFields(Map.of(
                                 FROM_SLIDE_IMAGES.ID, new IdField<>(),
                                 FROM_SLIDE_IMAGES.TITLE, new TextField<>(true),
-                                FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
+                                FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
                         ))
                         .build()
         );
@@ -57,7 +57,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField(FROM_SLIDE_IMAGES.TITLE)
                         .withImageField(FROM_SLIDE_IMAGES.URL)
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withChild(formSlideDialog)
                 .build());

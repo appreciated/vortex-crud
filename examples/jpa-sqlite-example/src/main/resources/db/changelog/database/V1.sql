@@ -58,6 +58,14 @@ CREATE TABLE images
     url   VARCHAR
 );
 
+-- changeset jpa-sqlite-example-test-project:5.1
+CREATE TABLE videos
+(
+    id    INTEGER PRIMARY KEY,
+    title VARCHAR,
+    url   VARCHAR
+);
+
 -- changeset jpa-sqlite-example-vortex-crud:7
 INSERT INTO images (id, title, url)
 VALUES (1, 'Red', './images/red.png'),

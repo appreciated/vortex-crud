@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.i18n;
 
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
@@ -18,7 +18,7 @@ public class JpaImageEntity {
     @TextField
     private String title;
 
-    @ImageField(ImageResourceProvider.class)
+    @ImageField(LocalImageResourceProvider.class)
     private String url;
 
     public Integer getId() {

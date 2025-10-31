@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -47,7 +47,7 @@ public class JpaFieldValidationEntity {
     private JpaFieldValidationEnum enumField;
 
     @Column(name = "image_field")
-    @ImageField(ImageResourceProvider.class)
+    @ImageField(LocalImageResourceProvider.class)
     private String imageField;
 
     @Column(name = "checkbox_field")

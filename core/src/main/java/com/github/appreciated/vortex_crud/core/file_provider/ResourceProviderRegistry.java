@@ -19,7 +19,7 @@ public class ResourceProviderRegistry implements VortexCrudFileProviderRegistry 
     private final Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> factories = new HashMap<>();
 
     public ResourceProviderRegistry() {
-        factories.put(ImageResourceProvider.class, new ImageResourceProvider());
+        factories.put(LocalImageResourceProvider.class, new LocalImageResourceProvider());
     }
 
     public Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> getFactories() {

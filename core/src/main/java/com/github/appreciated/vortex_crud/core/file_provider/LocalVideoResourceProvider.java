@@ -8,16 +8,16 @@ import java.nio.file.Path;
 /**
  * This is the default image provider
  */
-public class ImageResourceProvider implements VortexCrudResourceProvider {
+public class LocalVideoResourceProvider implements VortexCrudResourceProvider {
 
     private final String basePath;
 
-    public ImageResourceProvider(String basePath) {
+    public LocalVideoResourceProvider(String basePath) {
         this.basePath = basePath;
     }
 
-    public ImageResourceProvider() {
-        this("images");
+    public LocalVideoResourceProvider() {
+        this("videos");
     }
 
     @Override

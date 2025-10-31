@@ -7,7 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.file_provider.ImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
@@ -35,7 +35,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         .withFields(Map.of(
                                 "id", new IdField<>(),
                                 "title", new TextField<>(),
-                                "url", new ImageField<>(new ImageFieldRendererConfiguration<>(ImageResourceProvider.class))
+                                "url", new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
                         ))
                         .build()
         );
@@ -59,7 +59,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                 .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
                         .withTitleField("title")
                         .withImageField("url")
-                        .withImageFactory(ImageResourceProvider.class)
+                        .withImageFactory(LocalImageResourceProvider.class)
                         .build())
                 .withChild(imageForm)
                 .build());
