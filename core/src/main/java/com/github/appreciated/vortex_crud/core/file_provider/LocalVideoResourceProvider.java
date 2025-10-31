@@ -4,7 +4,6 @@ import com.vaadin.flow.server.streams.DownloadHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,7 +52,10 @@ public class LocalVideoResourceProvider implements VortexCrudResourceProvider {
 
     @Override
     public DownloadHandler getResource(String src) {
-        return DownloadHandler.forFile(new File(src));
+        // src is just the filename, not the full path
+        Path fullPath = getPathForFile(src);
+        log.debug("Getting video resource for: {} (full path: {})", src, fullPath);
+        return DownloadHandler.forFile(fullPath.toFile());
     }
 
     @Override

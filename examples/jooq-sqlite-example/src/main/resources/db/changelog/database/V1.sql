@@ -205,3 +205,7 @@ INSERT INTO task_has_task (task_id, related_task_id)
 VALUES (1, 2), -- "Database Setup"
        (1, 4), -- "User Authentication"
        (1, 5); -- "Frontend Integration"
+
+-- changeset jooq-sqlite-example-test-project:12
+INSERT INTO videos (id, title, url)
+VALUES (1, 'Big Buck Bunny', 'videos\Big_Buck_Bunny_1080_10s_1MB.mp4');

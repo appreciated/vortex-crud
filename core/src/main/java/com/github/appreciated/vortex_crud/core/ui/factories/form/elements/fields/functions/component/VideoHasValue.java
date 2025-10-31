@@ -153,12 +153,34 @@ public class VideoHasValue extends CustomField<String> {
                 """, videoSrc);
     }
 
-    private void setVideoFromPath(String fileName) {
+    private void setVideoFromPath(String fullPath) {
+        // Extract just the filename from the absolute path
+        Path path = Path.of(fullPath);
+        String fileName = path.getFileName().toString();
+
+        log.info("=== VIDEO UPLOAD DEBUG ===");
+        log.info("Full path received: {}", fullPath);
+        log.info("Extracted filename: {}", fileName);
+        log.info("========================");
+
         // Generate thumbnail if using LocalVideoResourceProvider
         if (resourceProvider instanceof LocalVideoResourceProvider) {
             LocalVideoResourceProvider videoProvider = (LocalVideoResourceProvider) resourceProvider;
-            videoProvider.generateThumbnailForVideo(fileName);
+
+            // Check if the file actually exists
+            Path videoPath = videoProvider.getPathForFile(fileName);
+            log.info("Expected video location: {}", videoPath.toAbsolutePath());
+            log.info("File exists: {}", Files.exists(videoPath));
+
+            boolean thumbnailGenerated = videoProvider.generateThumbnailForVideo(fileName);
+            if (thumbnailGenerated) {
+                log.info("Thumbnail generated successfully for: {}", fileName);
+            } else {
+                log.warn("Failed to generate thumbnail for: {}. Check if FFmpeg is installed.", fileName);
+            }
         }
+
+        log.info("Setting value to database: {}", fileName);
         setValue(fileName);
     }
 
@@ -211,6 +233,7 @@ public class VideoHasValue extends CustomField<String> {
 
     @Override
     public void setValue(String value) {
+        log.info("setValue called with: {}", value);
         this.value = value;
         loadThumbnail(value);
         updateVisibility();
