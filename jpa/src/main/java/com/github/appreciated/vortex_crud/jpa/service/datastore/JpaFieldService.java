@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.fields.BigDecimalField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DoubleField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IntegerField;
@@ -64,6 +64,9 @@ public class JpaFieldService {
                     }).or(() -> getAnnotation(entityField, ImageField.class).map(imageField -> {
                         ImageFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = new ImageFieldRendererConfiguration<>(imageField.value());
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.ImageField<>(cfg, required, null);
+                    })).or(() -> getAnnotation(entityField, VideoField.class).map(videoField -> {
+                        VideoFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = new VideoFieldRendererConfiguration<>(videoField.value());
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.VideoField<>(cfg, required, null);
                     })).or(() -> getAnnotation(entityField, SelectField.class).map(selectField ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.SelectField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(selectField.value(), required, null)
                     )).or(() -> getAnnotation(entityField, BigDecimalNumberField.class).map(ann ->
@@ -88,10 +91,7 @@ public class JpaFieldService {
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.PasswordField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, EmailField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.EmailField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
-                    )).or(() -> getAnnotation(entityField, VideoField.class).map(ann -> {
-                        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = new RouteRendererConfiguration<>(null);
-                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.VideoField<>(cfg, required, null);
-                    })).orElseThrow();
+                    )).orElseThrow();
                 }));
         return collect;
     }
