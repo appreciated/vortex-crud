@@ -40,9 +40,17 @@ public class VideoHasValue extends CustomField<String> {
     public VideoHasValue(VortexCrudResourceProvider resourceProvider) {
         this.resourceProvider = resourceProvider;
 
-        // Video element (hidden by default, shown in fullscreen preview)
+        // Video element (hidden in DOM but attached to register resources)
+        // We keep it in the DOM with CSS hiding instead of setVisible(false)
+        // so that StreamResource URLs get properly registered
         video = new VideoDisplayComponent(resourceProvider);
-        video.setVisible(false);
+        video.getStyle()
+                .set("position", "absolute")
+                .set("width", "0")
+                .set("height", "0")
+                .set("opacity", "0")
+                .set("pointer-events", "none")
+                .set("visibility", "hidden");
 
         // Thumbnail image for display
         thumbnail = new Image();
@@ -120,7 +128,9 @@ public class VideoHasValue extends CustomField<String> {
         card = new Div(uploadCard, thumbWrapper);
         card.getStyle().set("display", "inline-block");
 
-        add(card);
+        // Add both card and hidden video to component tree
+        // Video must be in DOM for StreamResource registration to work
+        add(card, video);
         updateVisibility();
     }
 
@@ -236,6 +246,10 @@ public class VideoHasValue extends CustomField<String> {
         log.info("setValue called with: {}", value);
         this.value = value;
         loadThumbnail(value);
+        // Preload video resource so it's registered for preview
+        if (value != null && !value.isBlank()) {
+            video.setVideoSource(value);
+        }
         updateVisibility();
         super.setModelValue(value, true);
     }
@@ -264,6 +278,10 @@ public class VideoHasValue extends CustomField<String> {
     protected void setPresentationValue(String s) {
         this.value = s;
         loadThumbnail(s);
+        // Preload video resource so it's registered for preview
+        if (s != null && !s.isBlank()) {
+            video.setVideoSource(s);
+        }
         updateVisibility();
     }
 }

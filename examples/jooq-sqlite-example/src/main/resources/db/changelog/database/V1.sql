@@ -76,9 +76,9 @@ VALUES (1, 'max@mustermann.de'),
 
 -- changeset jooq-sqlite-example-test-project:7
 INSERT INTO images (id, title, url)
-VALUES (1, 'Red', './images/red.png'),
-       (2, 'Green', './images/green.png'),
-       (3, 'Blue', './images/blue.png');
+VALUES (1, 'Red', './red.png'),
+       (2, 'Green', './green.png'),
+       (3, 'Blue', './blue.png');
 
 
 -- changeset jooq-sqlite-example-test-project:8
@@ -208,4 +208,4 @@ VALUES (1, 2), -- "Database Setup"
 
 -- changeset jooq-sqlite-example-test-project:12
 INSERT INTO videos (id, title, url)
-VALUES (1, 'Big Buck Bunny', 'videos\Big_Buck_Bunny_1080_10s_1MB.mp4');
+VALUES (1, 'Big Buck Bunny', 'Big_Buck_Bunny_1080_10s_1MB.mp4');
