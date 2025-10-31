@@ -1,19 +1,33 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component;
 
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.components.VideoDisplayComponent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.streams.UploadHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class VideoHasValue extends CustomField<String> {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoHasValue.class);
+
+    private final VortexCrudResourceProvider resourceProvider;
     private final VideoDisplayComponent video;
+    private final Image thumbnail;
     private final Button btnPreview;
     private final Button btnDelete;
     private final Div overlay;
@@ -24,16 +38,21 @@ public class VideoHasValue extends CustomField<String> {
     private String value;
 
     public VideoHasValue(VortexCrudResourceProvider resourceProvider) {
+        this.resourceProvider = resourceProvider;
 
+        // Video element (hidden by default, shown in fullscreen preview)
         video = new VideoDisplayComponent(resourceProvider);
-        video.setSizeFull();
-        video.setControls(true);
-        video.getStyle()
+        video.setVisible(false);
+
+        // Thumbnail image for display
+        thumbnail = new Image();
+        thumbnail.setSizeFull();
+        thumbnail.getStyle()
                 .set("object-fit", "cover")
                 .set("border-radius", "6px")
-                .set("background", "black");
+                .set("background", "var(--lumo-contrast-5pct)");
 
-        btnPreview = new Button(VaadinIcon.PLAY.create(), e -> openPreview(video));
+        btnPreview = new Button(VaadinIcon.PLAY.create(), e -> openPreview());
         btnDelete = new Button(VaadinIcon.TRASH.create(), e -> clearVideo());
         btnPreview.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
         btnDelete.addThemeVariants(ButtonVariant.LUMO_ICON, ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_PRIMARY);
@@ -50,7 +69,7 @@ public class VideoHasValue extends CustomField<String> {
                 .set("opacity", "0")
                 .set("transition", "opacity 120ms ease");
 
-        thumbWrapper = new Div(video, overlay);
+        thumbWrapper = new Div(thumbnail, overlay);
         thumbWrapper.getStyle()
                 .set("position", "relative")
                 .set("width", "160px")
@@ -105,8 +124,12 @@ public class VideoHasValue extends CustomField<String> {
         updateVisibility();
     }
 
-    private void openPreview(VideoDisplayComponent video) {
+    private void openPreview() {
         if (value == null || value.isBlank()) return;
+
+        // Create video URL from file path
+        video.setVideoSource(value);
+        String videoSrc = video.getElement().getAttribute("src");
 
         getElement().executeJs("""
                     const video = document.createElement('video');
@@ -127,15 +150,50 @@ public class VideoHasValue extends CustomField<String> {
                     overlay.appendChild(video);
                     overlay.addEventListener('click',()=>overlay.remove());
                     document.body.appendChild(overlay);
-                """, video.getElement().getAttribute("src"));
+                """, videoSrc);
     }
 
     private void setVideoFromPath(String fileName) {
+        // Generate thumbnail if using LocalVideoResourceProvider
+        if (resourceProvider instanceof LocalVideoResourceProvider) {
+            LocalVideoResourceProvider videoProvider = (LocalVideoResourceProvider) resourceProvider;
+            videoProvider.generateThumbnailForVideo(fileName);
+        }
         setValue(fileName);
     }
 
     private void clearVideo() {
         setValue(null);
+    }
+
+    private void loadThumbnail(String videoFileName) {
+        if (videoFileName == null || videoFileName.isBlank()) {
+            thumbnail.setSrc("");
+            return;
+        }
+
+        if (resourceProvider instanceof LocalVideoResourceProvider) {
+            LocalVideoResourceProvider videoProvider = (LocalVideoResourceProvider) resourceProvider;
+            Path thumbnailPath = videoProvider.getThumbnailPath(videoFileName);
+
+            if (Files.exists(thumbnailPath)) {
+                // Load thumbnail as StreamResource
+                String thumbnailFileName = videoProvider.getThumbnailFileName(videoFileName);
+                StreamResource resource = new StreamResource(thumbnailFileName, () -> {
+                    try {
+                        return new FileInputStream(thumbnailPath.toFile());
+                    } catch (FileNotFoundException e) {
+                        log.error("Thumbnail file not found: {}", thumbnailPath, e);
+                        return null;
+                    }
+                });
+                thumbnail.setSrc(resource);
+            } else {
+                log.debug("Thumbnail not found for video: {}, will display placeholder", videoFileName);
+                // TODO: Set placeholder image or icon
+                thumbnail.setSrc("");
+            }
+        }
     }
 
     private void updateVisibility() {
@@ -154,7 +212,7 @@ public class VideoHasValue extends CustomField<String> {
     @Override
     public void setValue(String value) {
         this.value = value;
-        video.setVideoSource(value);
+        loadThumbnail(value);
         updateVisibility();
         super.setModelValue(value, true);
     }
@@ -182,7 +240,7 @@ public class VideoHasValue extends CustomField<String> {
     @Override
     protected void setPresentationValue(String s) {
         this.value = s;
-        video.setVideoSource(s);
+        loadThumbnail(s);
         updateVisibility();
     }
 }

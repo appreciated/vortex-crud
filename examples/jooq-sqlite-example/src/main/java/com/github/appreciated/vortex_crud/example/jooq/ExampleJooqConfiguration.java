@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.*;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -93,7 +94,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .withFields(Map.of(
                                 VIDEOS.ID, new IdField<>(),
                                 VIDEOS.TITLE, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
-                                VIDEOS.URL, new VideoField<>(new VideoFieldRendererConfiguration<>(LocalImageResourceProvider.class))
+                                VIDEOS.URL, new VideoField<>(new VideoFieldRendererConfiguration<>(LocalVideoResourceProvider.class))
                         ))
                         .build()),
                 Map.entry(USERS,

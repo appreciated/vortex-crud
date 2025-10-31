@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.VideoField;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ public class Video {
     @TextField
     private String title;
 
-    @VideoField(LocalImageResourceProvider.class)
+    @VideoField(LocalVideoResourceProvider.class)
     private String url;
 
     // Getters and Setters
