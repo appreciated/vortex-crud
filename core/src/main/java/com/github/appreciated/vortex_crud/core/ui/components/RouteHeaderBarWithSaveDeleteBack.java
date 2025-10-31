@@ -24,7 +24,6 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
         if (!isWrapped && onBack != null) {
             Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), onBack);
             back.getStyle().set("font-size", "1.6em")
-                    .set("padding", "calc(var(--lumo-button-size) / 8)")
                     .set("border-radius", "100%")
                     .set("box-sizing", "content-box");
             add(back);

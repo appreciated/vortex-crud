@@ -24,7 +24,7 @@ public abstract class Application<ModelClass, FieldType, RepositoryType> {
 
     private LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
-    public String getName() {
+    public String getApplicationName() {
         return name;
     }
 

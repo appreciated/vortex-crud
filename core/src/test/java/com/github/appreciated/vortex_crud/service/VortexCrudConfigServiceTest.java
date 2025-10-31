@@ -28,7 +28,7 @@ class VortexCrudConfigServiceTest {
 
         // Mock the configuration provider
         when(configProvider.get()).thenReturn(application);
-        when(application.getName()).thenReturn("Test Application");
+        when(application.getApplicationName()).thenReturn("Test Application");
 
         configService = new TestVortexCrudConfigService(configProvider);
     }
@@ -64,7 +64,7 @@ class VortexCrudConfigServiceTest {
 
         @Override
         public String getApplicationName() {
-            return getConfiguration().getName();
+            return getConfiguration().getApplicationName();
         }
     }
 }

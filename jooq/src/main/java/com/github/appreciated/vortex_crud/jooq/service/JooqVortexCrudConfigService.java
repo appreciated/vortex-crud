@@ -24,6 +24,6 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
     }
 
     public String getApplicationName() {
-        return configuration.getName();
+        return configuration.getApplicationName();
     }
 }

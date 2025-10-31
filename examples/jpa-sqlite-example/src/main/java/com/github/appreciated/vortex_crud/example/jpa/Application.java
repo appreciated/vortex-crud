@@ -3,12 +3,13 @@ package com.github.appreciated.vortex_crud.example.jpa;
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.theme.aura.Aura;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@StyleSheet("@vaadin/aura/aura.css")
-@StyleSheet("/aura-dark.css")
+@StyleSheet(Aura.STYLESHEET)
+@StyleSheet("aura-dark.css")
 @Push
 public class Application implements AppShellConfigurator {
 
@@ -17,3 +18,4 @@ public class Application implements AppShellConfigurator {
     }
 
 }
+

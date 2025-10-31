@@ -26,6 +26,6 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
     }
 
     public String getApplicationName() {
-        return configuration.getName();
+        return configuration.getApplicationName();
     }
 }

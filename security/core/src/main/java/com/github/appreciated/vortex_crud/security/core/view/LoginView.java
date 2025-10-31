@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.security.core.view;
 
+import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -42,10 +43,11 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config =
-            configService.getConfiguration().getUserManagement();
+        Application<ModelClass, FieldType, RepositoryType> configuration = configService.getConfiguration();
+        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement =
+                configuration.getUserManagement();
 
-        if (config == null) {
+        if (userManagement == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;
         }
@@ -58,10 +60,10 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             try {
                 // Get user DataStore (vortex-crud pattern)
                 VortexCrudDataStore<FieldType, Object> dataStore =
-                    (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(config.getRepositoryKey());
+                        (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(userManagement.getRepositoryKey());
 
                 // Query for user by username field
-                FieldType usernameField = config.getUsername().getField();
+                FieldType usernameField = userManagement.getUsername().getField();
                 List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
 
                 if (users.isEmpty()) {
@@ -72,7 +74,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 Object userEntity = users.get(0);
 
                 // Get password hash using ReflectionService
-                FieldType passwordField = config.getPassword().getField();
+                FieldType passwordField = userManagement.getPassword().getField();
                 Object passwordValue = reflectionService.getValue(userEntity, passwordField);
 
                 if (passwordValue == null || !passwordEncoder.matches(password, passwordValue.toString())) {
@@ -81,10 +83,10 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 }
 
                 // Authentication successful - create Spring Security session
-                List<SimpleGrantedAuthority> authorities = config.resolveRolesForEntity(reflectionService, userEntity);
+                List<SimpleGrantedAuthority> authorities = userManagement.resolveRolesForEntity(reflectionService, userEntity);
 
                 UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(username, password, authorities);
+                        new UsernamePasswordAuthenticationToken(username, password, authorities);
 
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authToken);
@@ -93,7 +95,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 VaadinServletRequest request = VaadinServletRequest.getCurrent();
                 if (request != null) {
                     request.getHttpServletRequest().getSession()
-                        .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+                            .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
                 }
 
                 Notification.show("Login successful!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
@@ -106,9 +108,9 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             }
         });
 
-        add(new H1("Vortex CRUD"), login);
+        add(new H1(getTranslation(configuration.getApplicationName())), login);
 
-        if (config.isSignUpEnabled()) {
+        if (userManagement.isSignUpEnabled()) {
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));
             add(signUpButton);
         }
