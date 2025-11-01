@@ -1,24 +1,18 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component;
 
-import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.components.VideoDisplayComponent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.upload.Upload;
-import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.streams.UploadHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class VideoHasValue extends CustomField<String> {
@@ -27,7 +21,7 @@ public class VideoHasValue extends CustomField<String> {
 
     private final VortexCrudResourceProvider resourceProvider;
     private final VideoDisplayComponent video;
-    private final Image thumbnail;
+    private final VideoDisplayComponent thumbnailVideo;
     private final Button btnPreview;
     private final Button btnDelete;
     private final Div overlay;
@@ -52,13 +46,16 @@ public class VideoHasValue extends CustomField<String> {
                 .set("pointer-events", "none")
                 .set("visibility", "hidden");
 
-        // Thumbnail image for display
-        thumbnail = new Image();
-        thumbnail.setSizeFull();
-        thumbnail.getStyle()
+        // Thumbnail video for display - uses preload="metadata" to show first frame
+        thumbnailVideo = new VideoDisplayComponent(resourceProvider);
+        thumbnailVideo.setPreload("metadata");
+        thumbnailVideo.setMuted(true);
+        thumbnailVideo.setSizeFull();
+        thumbnailVideo.getStyle()
                 .set("object-fit", "cover")
                 .set("border-radius", "6px")
-                .set("background", "var(--lumo-contrast-5pct)");
+                .set("background", "var(--lumo-contrast-5pct)")
+                .set("pointer-events", "none");  // Disable interaction with thumbnail video
 
         btnPreview = new Button(VaadinIcon.PLAY.create(), e -> openPreview());
         btnDelete = new Button(VaadinIcon.TRASH.create(), e -> clearVideo());
@@ -77,7 +74,7 @@ public class VideoHasValue extends CustomField<String> {
                 .set("opacity", "0")
                 .set("transition", "opacity 120ms ease");
 
-        thumbWrapper = new Div(thumbnail, overlay);
+        thumbWrapper = new Div(thumbnailVideo, overlay);
         thumbWrapper.getStyle()
                 .set("position", "relative")
                 .set("width", "160px")
@@ -168,29 +165,7 @@ public class VideoHasValue extends CustomField<String> {
         Path path = Path.of(fullPath);
         String fileName = path.getFileName().toString();
 
-        log.info("=== VIDEO UPLOAD DEBUG ===");
-        log.info("Full path received: {}", fullPath);
-        log.info("Extracted filename: {}", fileName);
-        log.info("========================");
-
-        // Generate thumbnail if using LocalVideoResourceProvider
-        if (resourceProvider instanceof LocalVideoResourceProvider) {
-            LocalVideoResourceProvider videoProvider = (LocalVideoResourceProvider) resourceProvider;
-
-            // Check if the file actually exists
-            Path videoPath = videoProvider.getPathForFile(fileName);
-            log.info("Expected video location: {}", videoPath.toAbsolutePath());
-            log.info("File exists: {}", Files.exists(videoPath));
-
-            boolean thumbnailGenerated = videoProvider.generateThumbnailForVideo(fileName);
-            if (thumbnailGenerated) {
-                log.info("Thumbnail generated successfully for: {}", fileName);
-            } else {
-                log.warn("Failed to generate thumbnail for: {}. Check if FFmpeg is installed.", fileName);
-            }
-        }
-
-        log.info("Setting value to database: {}", fileName);
+        log.info("Video uploaded: {}", fileName);
         setValue(fileName);
     }
 
@@ -200,32 +175,14 @@ public class VideoHasValue extends CustomField<String> {
 
     private void loadThumbnail(String videoFileName) {
         if (videoFileName == null || videoFileName.isBlank()) {
-            thumbnail.setSrc("");
+            thumbnailVideo.setVisible(false);
             return;
         }
 
-        if (resourceProvider instanceof LocalVideoResourceProvider) {
-            LocalVideoResourceProvider videoProvider = (LocalVideoResourceProvider) resourceProvider;
-            Path thumbnailPath = videoProvider.getThumbnailPath(videoFileName);
-
-            if (Files.exists(thumbnailPath)) {
-                // Load thumbnail as StreamResource
-                String thumbnailFileName = videoProvider.getThumbnailFileName(videoFileName);
-                StreamResource resource = new StreamResource(thumbnailFileName, () -> {
-                    try {
-                        return new FileInputStream(thumbnailPath.toFile());
-                    } catch (FileNotFoundException e) {
-                        log.error("Thumbnail file not found: {}", thumbnailPath, e);
-                        return null;
-                    }
-                });
-                thumbnail.setSrc(resource);
-            } else {
-                log.debug("Thumbnail not found for video: {}, will display placeholder", videoFileName);
-                // TODO: Set placeholder image or icon
-                thumbnail.setSrc("");
-            }
-        }
+        // Set the video source for the thumbnail - browser will automatically
+        // display the first frame with preload="metadata"
+        thumbnailVideo.setVideoSource(videoFileName);
+        thumbnailVideo.setVisible(true);
     }
 
     private void updateVisibility() {

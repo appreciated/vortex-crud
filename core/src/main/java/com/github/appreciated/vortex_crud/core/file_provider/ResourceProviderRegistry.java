@@ -17,13 +17,10 @@ import java.util.Optional;
 public class ResourceProviderRegistry implements VortexCrudFileProviderRegistry {
 
     private final Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> factories = new HashMap<>();
-    private final VideoThumbnailGenerator thumbnailGenerator;
 
-    public ResourceProviderRegistry(VideoThumbnailGenerator thumbnailGenerator) {
-        this.thumbnailGenerator = thumbnailGenerator;
+    public ResourceProviderRegistry() {
         LocalImageResourceProvider imageProvider = new LocalImageResourceProvider();
         LocalVideoResourceProvider videoProvider = new LocalVideoResourceProvider();
-        videoProvider.setThumbnailGenerator(thumbnailGenerator);
 
         factories.put(LocalImageResourceProvider.class, imageProvider);
         factories.put(LocalVideoResourceProvider.class, videoProvider);

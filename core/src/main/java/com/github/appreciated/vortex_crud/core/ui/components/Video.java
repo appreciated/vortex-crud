@@ -70,4 +70,12 @@ public class Video extends HtmlContainer implements ClickNotifier<Video>, HasAri
             getElement().removeAttribute("muted");
         }
     }
+
+    public void setPreload(String preload) {
+        if (preload != null && !preload.isBlank()) {
+            getElement().setAttribute("preload", preload);
+        } else {
+            getElement().removeAttribute("preload");
+        }
+    }
 }
