@@ -77,8 +77,8 @@ public class VideoHasValue extends CustomField<String> {
         thumbWrapper = new Div(thumbnailVideo, overlay);
         thumbWrapper.getStyle()
                 .set("position", "relative")
-                .set("width", "160px")
-                .set("height", "90px")
+                .set("width", "320px")
+                .set("height", "180px")
                 .set("overflow", "hidden")
                 .set("border-radius", "6px")
                 .set("box-shadow", "0 0 0 1px var(--lumo-contrast-10pct) inset");
