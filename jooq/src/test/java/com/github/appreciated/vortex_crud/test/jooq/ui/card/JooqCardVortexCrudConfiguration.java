@@ -63,7 +63,7 @@ public class JooqCardVortexCrudConfiguration
                 .withChild(imageForm)
                 .build());
 
-        return JooqApplication.of()
+        return JooqApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)

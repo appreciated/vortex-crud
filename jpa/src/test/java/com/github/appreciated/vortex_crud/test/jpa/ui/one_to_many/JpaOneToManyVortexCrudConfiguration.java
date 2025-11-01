@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
@@ -32,54 +33,52 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> childForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(childRepository)
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("name")
-                        .withChildren(
-                                new JpaFieldElement("name", "relations.labels.name")
+                .dataStoreKey(childRepository)
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("name")
+                        .children(List.of(JpaFieldElement.of("name", "relations.labels.name").build())
                         )
                         .build())
                 .build();
 
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> parentForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(parentRepository)
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("name")
-                        .withChildren(
-                                new JpaFieldElement("name", "relations.labels.name"),
+                .dataStoreKey(parentRepository)
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("name")
+                        .children(List.of(
+                                JpaFieldElement.of("name", "relations.labels.name").build(),
                                 JpaCollectionElement.of("relations.labels.children")
-                                        .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(JpaCollection.of(FormDialogFactory.class)
-                                                .withData(JpaCollectionConfiguration.of(childRepository)
-                                                        .withOneToMany(new JpaOneToMany("parent"))
-                                                        .withChildren("name")
+                                        .factory((Class) ListCollectionFactory.class)
+                                        .configuration(JpaCollection.of(FormDialogFactory.class)
+                                                .data(JpaCollectionConfiguration.of(childRepository)
+                                                        .oneToMany(new JpaOneToMany("parent"))
+                                                        .children(List.of("name"))
                                                         .build())
-                                                .withEmptyMessage("relations.children.empty")
-                                                .withChild(childForm)
+                                                .emptyMessage("relations.children.empty")
+                                                .child(childForm)
                                                 .build())
                                         .build()
-                        )
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("one-to-many-test", JpaRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(parentRepository)
-                .withIconFactory(FACTORY::create)
-                .withTitle("relations.tests.one-to-many.title")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withFilterField("name")
-                        .withChildren(
-                                new JpaFieldElement("name", "relations.labels.name")
-                        )
+                .dataStoreKey(parentRepository)
+                .iconFactory(FACTORY::create)
+                .title("relations.tests.one-to-many.title")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .filterField("name")
+                        .children(List.of(
+                                JpaFieldElement.of("name", "relations.labels.name").build()
+                        ))
                         .build())
-                .withChild(parentForm)
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
                 .build();
     }
 }

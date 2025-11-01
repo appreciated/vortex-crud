@@ -88,7 +88,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .withChild(parentForm)
                 .build());
 
-        return JooqApplication.of()
+        return JooqApplication.builder()
                 .withDataStores(dataStores)
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")

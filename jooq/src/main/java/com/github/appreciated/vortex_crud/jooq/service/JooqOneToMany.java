@@ -19,7 +19,7 @@ public class JooqOneToMany implements OneToMany<TableRecord<?>, TableField<?, ?>
 
     @Override
     public List<TableRecord<?>> getData(Object foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, CollectionConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> collectionConfiguration) {
-        return foreignKeyValue == null ? List.of() :
+        return foreignKeyValue == null ? List.builder() :
                 (List<TableRecord<?>>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 

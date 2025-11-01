@@ -56,7 +56,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         SideNav nav = new SideNav();
         Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = configService.getConfiguration().getRouteRenderers();
         routes.forEach((path, value) -> {
-            if (!value.isHideInMenu()) {
+            if (!value.isHiddenInMenu()) {
                 String translation = getTranslation(value.getTitle());
                 Component icon = null;
                 if (value.getIconFactory() != null) {

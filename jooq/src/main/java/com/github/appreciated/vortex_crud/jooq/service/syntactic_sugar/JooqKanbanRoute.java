@@ -7,7 +7,7 @@ import org.jooq.impl.TableImpl;
 
 /**
  * JOOQ-specific kanban route builder.
- * Usage: JooqKanbanRoute.of()
+ * Usage: JooqKanbanRoute.builder()
  *     .withDataStore(TABLE)
  *     .withColumnField(TABLE.STATUS)  // Required
  *     .withTitleField(TABLE.TITLE)
@@ -20,6 +20,6 @@ public class JooqKanbanRoute {
      * Create a new JOOQ kanban route builder
      */
     public static KanbanRoute.KanbanBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
-        return KanbanRoute.of();
+        return KanbanRoute.builder();
     }
 }

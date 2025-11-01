@@ -182,7 +182,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         );
 
         // Build the vortex-crud application using defined routes and datastores
-        return JooqApplication.of()
+        return JooqApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withRoutes(routes)
@@ -294,7 +294,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 // ...
         );
 
-        return JpaApplication.of()
+        return JpaApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withRoutes(routes)
@@ -316,7 +316,7 @@ Configure authentication and user management in your application configuration:
 ```java
 .withIdentityAndAccessManagement(
     LocalIdentityAndAccessManagement.of(userRepository)
-        .withRoles(Roles.of().withRoles(List.of("manager", "admin")).build())
+        .withRoles(Roles.builder().withRoles(List.of("manager", "admin")).build())
         .withSignUp(true)
         .withLoginView(LoginView.class)
         .withSignUpView(SignUpView.class)

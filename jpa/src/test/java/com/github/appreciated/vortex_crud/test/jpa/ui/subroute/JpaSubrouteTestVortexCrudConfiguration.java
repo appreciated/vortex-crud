@@ -35,7 +35,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
                 taskRepository, JpaDataStoreConfig.of(taskRepository)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 "id", new IdField<>(),
                                 "title", new TextField<>(),
                                 "url", new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
@@ -45,24 +45,24 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaRouteRenderer.of(SubmenuRouteFactory.class)
-                .withDataStore(taskRepository)
-                .withTitle("route.tasks.title")
-                .withChildrenMap(Map.of(
+                .dataStoreKey(taskRepository)
+                .title("route.tasks.title")
+                .childrenMap(Map.of(
                         "open", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withDataStore(taskRepository)
-                                .withTitle("route.open-tasks.title")
-                                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField("title")
+                                .dataStoreKey(taskRepository)
+                                .title("route.open-tasks.title")
+                                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                                        .titleField("title")
                                         .build())
                                 .build()
                 ))
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

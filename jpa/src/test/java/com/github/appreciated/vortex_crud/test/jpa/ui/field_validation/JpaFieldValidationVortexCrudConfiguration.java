@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.*;
@@ -33,36 +34,35 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(validationEntityRepository)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("requiredField")
-                        .withChildren(
-                                new JpaFieldElement("requiredField", "validation.fields.required"),
-                                new JpaFieldElement("emailField", "validation.fields.email"),
-                                new JpaFieldElement("numericField", "validation.fields.numeric"),
-                                new JpaFieldElement("dateField", "validation.fields.date"),
-                                new JpaFieldElement("dateTimeField", "validation.fields.datetime"),
-                                new JpaFieldElement("checkboxField", "validation.fields.checkbox"),
-                                new JpaFieldElement("enumField", "validation.fields.enum"),
-                                new JpaFieldElement("imageField", "validation.fields.image")
-                        )
+                .dataStoreKey(validationEntityRepository)
+                .title("route.projects.title-cards")
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("requiredField")
+                        .children(List.of(
+                                JpaFieldElement.of("requiredField", "validation.fields.required").build(),
+                                JpaFieldElement.of("emailField", "validation.fields.email").build(),
+                                JpaFieldElement.of("numericField", "validation.fields.numeric").build(),
+                                JpaFieldElement.of("dateField", "validation.fields.date").build(),
+                                JpaFieldElement.of("dateTimeField", "validation.fields.datetime").build(),
+                                JpaFieldElement.of("checkboxField", "validation.fields.checkbox").build(),
+                                JpaFieldElement.of("enumField", "validation.fields.enum").build(),
+                                JpaFieldElement.of("imageField", "validation.fields.image").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("field-validation-test", JpaRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(validationEntityRepository)
-                .withIconFactory(FACTORY::create)
-                .withTitle("route.projects.title-list")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withFilterField("requiredField")
-                        .withChildren(
-                                new JpaFieldElement("requiredField", "route.projects.labels.name"),
-                                new JpaFieldElement("emailField", "route.projects.labels.description")
-                        )
+                .dataStoreKey(validationEntityRepository)
+                .iconFactory(FACTORY::create)
+                .title("route.projects.title-list")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .filterField("requiredField")
+                        .children(List.of(
+                                JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
+                                JpaFieldElement.of("emailField", "route.projects.labels.description").build()
+                        ))
                         .build())
-                .withChild(validationForm)
                 .build());
 
         LinkedHashMap<JpaFieldValidationEnum, String> enumOptions = new LinkedHashMap<>();
@@ -70,11 +70,11 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
         enumOptions.put(OPTION2, "enums.option2");
         enumOptions.put(OPTION3, "enums.option3");
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
 

@@ -5,12 +5,9 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqDataStoreConfig extends DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-    public JooqDataStoreConfig(TableImpl<?> factory) {
-        super(factory);
-    }
-
-    public static DataStoreConfig.Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableImpl<?> factory) {
-        return new DataStoreConfig.Builder<>(new DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>(factory));
+public class JooqDataStoreConfig {
+    public static DataStoreConfig.DataStoreConfigBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableImpl<?> factory) {
+        return DataStoreConfig.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .factory(factory);
     }
 }

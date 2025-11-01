@@ -30,9 +30,9 @@ public class JooqFieldValidationVortexCrudConfiguration
                 VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
                         .withFields(Map.of(
                                 VALIDATION_TEST.ID, new IdField<>(),
-                                VALIDATION_TEST.REQUIRED_FIELD, new TextField<>(true, TextFieldValidation.of().withMaxLength(255).build()),
-                                VALIDATION_TEST.EMAIL_FIELD, new EmailField<>(false, TextFieldValidation.of().withMaxLength(500).build()),
-                                VALIDATION_TEST.NUMERIC_FIELD, new DoubleField<>(false, NumberFieldValidation.of().withMin(0.0).build()),
+                                VALIDATION_TEST.REQUIRED_FIELD, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
+                                VALIDATION_TEST.EMAIL_FIELD, new EmailField<>(false, TextFieldValidation.builder().maxLength(500).build()),
+                                VALIDATION_TEST.NUMERIC_FIELD, new DoubleField<>(false, NumberFieldValidation.builder().withMin(0.0).build()),
                                 VALIDATION_TEST.DATE_FIELD, new DateField<>(),
                                 VALIDATION_TEST.DATETIME_FIELD, new DateTimePickerField<>(),
                                 VALIDATION_TEST.ENUM_FIELD, new SelectField<>("enum-options"),
@@ -79,12 +79,12 @@ public class JooqFieldValidationVortexCrudConfiguration
         enumOptions.put(OPTION2, "enums.option2");
         enumOptions.put(OPTION3, "enums.option3");
 
-        return JooqApplication.of()
+        return JooqApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)
                 .withDataStores(dataStores)
-                .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
+                .withSelects(Selects.builder().withConfigs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
 

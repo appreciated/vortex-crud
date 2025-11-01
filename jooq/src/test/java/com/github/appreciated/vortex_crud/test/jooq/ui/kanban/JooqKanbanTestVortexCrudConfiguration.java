@@ -67,12 +67,12 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .build()
         );
 
-        return JooqApplication.of()
+        return JooqApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("ui_test_i18n")
                 .withRoutes(routes)
                 .withDataStores(dataStores)
-                .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
+                .withSelects(Selects.builder().withConfigs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
 }

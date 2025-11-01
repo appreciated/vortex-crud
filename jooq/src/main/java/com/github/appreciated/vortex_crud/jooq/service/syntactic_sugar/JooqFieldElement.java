@@ -6,14 +6,12 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqFieldElement extends InternalFormElement<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-
-    public JooqFieldElement(TableField<?, ?> field, String label) {
-        super(field, ViewFieldType.FIELD, label);
-    }
-
-    public static Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableField<?, ?> field, String label) {
-        return new Builder<>(new JooqFieldElement(field, label));
+public class JooqFieldElement {
+    public static InternalFormElement.InternalFormElementBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableField<?, ?> field, String label) {
+        return InternalFormElement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .field(field)
+                .label(label)
+                .type(ViewFieldType.FIELD);
     }
 }
 

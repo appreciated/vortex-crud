@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -28,10 +29,10 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
 
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(taskRepository)
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withChildren(new JpaFieldElement("title", "route.tasks.labels.title"))
+                .dataStoreKey(taskRepository)
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .children(List.of(JpaFieldElement.of("title", "route.tasks.labels.title").build()))
                         .build())
                 .build();
 
@@ -42,25 +43,24 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaRouteRenderer.of(KanbanDetailFactory.class)
-                .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(taskRepository)
-                .withTitle("route.open-tasks.title")
-                .withConfiguration(JpaKanban.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withDescriptionField("description")
-                        .withColumnField("status")
-                        .withRowIndexField("rowIndex")
-                        .withFilterField("title")
+                .iconFactory(VaadinIcon.TASKS::create)
+                .dataStoreKey(taskRepository)
+                .title("route.open-tasks.title")
+                .configuration(JpaKanban.of(CardFactory.class)
+                        .titleField("title")
+                        .descriptionField("description")
+                        .columnField("status")
+                        .rowIndexField("rowIndex")
+                        .filterField("title")
                         .build())
-                .withChild(taskForm)
                 .build()
         );
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withSelects(Selects.of().withConfigs(Map.of("enum-options", enumOptions)).build())
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 @Service
 public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
@@ -24,36 +25,35 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(imageRepository)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withChildren(
-                                new JpaFieldElement("title", "route.images.labels.title"),
-                                new JpaFieldElement("url", "route.images.labels.image")
-                        )
+                .dataStoreKey(imageRepository)
+                .title("route.projects.title-cards")
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .children(List.of(
+                                JpaFieldElement.of("title", "route.images.labels.title").build(),
+                                JpaFieldElement.of("url", "route.images.labels.image").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JpaRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(imageRepository)
-                .withTitle("route.images-list")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withInlineEdit(true)
-                        .withFilterField("title")
-                        .withChildren(
-                                new JpaFieldElement("url", "route.projects.labels.description"),
-                                new JpaFieldElement("title", "route.projects.labels.name")
-                        )
+                .dataStoreKey(imageRepository)
+                .title("route.images-list")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .inlineEdit(true)
+                        .filterField("title")
+                        .children(List.of(
+                                JpaFieldElement.of("url", "route.projects.labels.description").build(),
+                                JpaFieldElement.of("title", "route.projects.labels.name").build()
+                        ))
                         .build())
-                .withChild(imageForm)
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
                 .build();
     }
 }

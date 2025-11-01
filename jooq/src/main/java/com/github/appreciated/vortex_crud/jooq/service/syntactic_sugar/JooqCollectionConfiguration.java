@@ -5,19 +5,9 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqCollectionConfiguration extends CollectionConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-
-    public JooqCollectionConfiguration(TableImpl<?> factory) {
-        super(factory);
-    }
-
-    public static class Builder extends CollectionConfiguration.Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-        public Builder(CollectionConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> product) {
-            super(product);
-        }
-    }
-
-    public static JooqCollectionConfiguration.Builder of(TableImpl<?> factory) {
-        return new JooqCollectionConfiguration.Builder(new CollectionConfiguration<>(factory));
+public class JooqCollectionConfiguration {
+    public static CollectionConfiguration.CollectionConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableImpl<?> factory) {
+        return CollectionConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .dataStore(factory);
     }
 }

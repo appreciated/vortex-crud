@@ -12,9 +12,9 @@ public class TestVortexCrudConfiguration implements VortexCrudConfigurationProvi
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
                 .build();
     }
 }

@@ -292,12 +292,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
-        return JpaApplication.of()
+        return JpaApplication.builder()
                 .withName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withIdentityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>of(userRepository)
-                                .withRoles(Roles.of().withRoles(List.of("admin", "manager", "editor", "viewer", "guest")).build())
+                                .withRoles(Roles.builder().withRoles(List.of("admin", "manager", "editor", "viewer", "guest")).build())
                                 .withSignUp(true)
                                 .withLoginView(LoginView.class)
                                 .withSignUpView(SignUpView.class)
@@ -311,9 +311,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .build()
                 )
                 .withRoutes(routes)
-                .withVersioning(JpaVersioning.of().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())
-                .withAuditing(Auditing.of().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
-                .withSelects(Selects.of().withConfigs(
+                .withVersioning(JpaVersioning.builder().withDataStores(projectRepository, taskRepository, taskCommentRepository).build())
+                .withAuditing(Auditing.builder().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
+                .withSelects(Selects.builder().withConfigs(
                         Map.of("task-status", taskStatuses)).build())
                 .build();
     }

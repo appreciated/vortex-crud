@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -45,13 +46,23 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Testpfad mit wrappable Routen
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
-        routeRendererWithContainer.setTitle("routeWithContainer");
-        routesConfig.put("routeWithContainer", routeRendererWithContainer);
+        // Build child first
+        ListRoute<String, String, String> childRouteRenderer = ListRoute.<String, String, String>builder()
+                .factory(TestContainerRouteFactory.class)
+                .title("childRouteWithContainer")
+                .build();
 
-        RouteRenderer<String, String, String> childRouteRenderer = new RouteRenderer<>(TestContainerRouteFactory.class);
-        childRouteRenderer.setTitle("childRouteWithContainer");
-        routeRendererWithContainer.setChild(childRouteRenderer);
+        // Build parent with child in childrenMap
+        Map<String, RouteRenderer<String, String, String>> childrenMap = new HashMap<>();
+        childrenMap.put("routeWithContainer", childRouteRenderer);
+
+        ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
+                .factory(TestContainerRouteFactory.class)
+                .title("routeWithContainer")
+                .childrenMap(childrenMap)
+                .build();
+
+        routesConfig.put("routeWithContainer", routeRendererWithContainer);
 
         String path = "routeWithContainer/routeWithContainer";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
@@ -73,13 +84,23 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Testpfad mit zwei aufeinanderfolgenden non-wrappable Routen
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
-        routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
+        // Build child first
+        ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer2")
+                .build();
 
-        RouteRenderer<String, String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        routeRendererWithoutContainer2.setTitle("routeWithoutContainer2");
-        routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
+        // Build parent with child
+        Map<String, RouteRenderer<String, String, String>> childrenMap = new HashMap<>();
+        childrenMap.put("routeWithoutContainer2", routeRendererWithoutContainer2);
+
+        ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer1")
+                .childrenMap(childrenMap)
+                .build();
+
+        routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
@@ -101,22 +122,37 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Testpfad mit gemischten wrappable und non-wrappable Routen
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
-        routeRendererWithContainer.setTitle("routeWithContainer");
+        // Build from innermost to outermost
+        ListRoute<String, String, String> secondChild = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer2")
+                .build();
+
+        Map<String, RouteRenderer<String, String, String>> firstChildMap = new HashMap<>();
+        firstChildMap.put("routeWithoutContainer2", secondChild);
+
+        ListRoute<String, String, String> firstChild = ListRoute.<String, String, String>builder()
+                .factory(TestContainerRouteFactory.class)
+                .title("routeWithoutContainer1")
+                .childrenMap(firstChildMap)
+                .build();
+
+        Map<String, RouteRenderer<String, String, String>> parentChildrenMap = new HashMap<>();
+        parentChildrenMap.put("routeWithoutContainer1", firstChild);
+
+        ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
+                .factory(TestContainerRouteFactory.class)
+                .title("routeWithContainer")
+                .childrenMap(parentChildrenMap)
+                .build();
+
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
 
-        RouteRenderer<String, String, String> firstChild = new RouteRenderer<>(TestContainerRouteFactory.class);
-        firstChild.setTitle("routeWithoutContainer1");
-        routeRendererWithContainer.setChild(firstChild);
-
-        RouteRenderer<String, String, String> secondChild = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        secondChild.setTitle("routeWithoutContainer2");
-        firstChild.setChild(secondChild);
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
                 registry,
                 path,
-                routesConfig,
+                 routesConfig,
                 dataStoreUtil
         );
 
@@ -132,8 +168,11 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Testpfad mit einer non-wrappable Route
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
+        ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer1")
+                .build();
+
         routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
         String path = "routeWithoutContainer1";
@@ -156,17 +195,31 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Testpfad mit gültigen Abschnitten
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
-        RouteRenderer<String, String, String> routeRendererWithContainer = new RouteRenderer<>(TestContainerRouteFactory.class);
-        routeRendererWithContainer.setTitle("routeWithContainer");
+        // Build from innermost to outermost
+        ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer2")
+                .build();
+
+        Map<String, RouteRenderer<String, String, String>> child1Map = new HashMap<>();
+        child1Map.put("routeWithoutContainer2", routeRendererWithoutContainer2);
+
+        ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
+                .factory(TestNonContainerRouteFactory.class)
+                .title("routeWithoutContainer1")
+                .childrenMap(child1Map)
+                .build();
+
+        Map<String, RouteRenderer<String, String, String>> parentChildrenMap = new HashMap<>();
+        parentChildrenMap.put("routeWithoutContainer1", routeRendererWithoutContainer1);
+
+        ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
+                .factory(TestContainerRouteFactory.class)
+                .title("routeWithContainer")
+                .childrenMap(parentChildrenMap)
+                .build();
+
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
-
-        RouteRenderer<String, String, String> routeRendererWithoutContainer1 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        routeRendererWithoutContainer1.setTitle("routeWithoutContainer1");
-        routeRendererWithContainer.setChild(routeRendererWithoutContainer1);
-
-        RouteRenderer<String, String, String> routeRendererWithoutContainer2 = new RouteRenderer<>(TestNonContainerRouteFactory.class);
-        routeRendererWithoutContainer2.setTitle("routeWithoutContainer2");
-        routeRendererWithoutContainer1.setChild(routeRendererWithoutContainer2);
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(

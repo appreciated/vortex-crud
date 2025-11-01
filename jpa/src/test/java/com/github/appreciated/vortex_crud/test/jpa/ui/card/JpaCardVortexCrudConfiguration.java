@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,7 +33,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
                 imageRepository, JpaDataStoreConfig.of(imageRepository)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 "id", new IdField<>(),
                                 "title", new TextField<>(),
                                 "url", new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
@@ -41,34 +42,33 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
         );
 
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(imageRepository)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withChildren(
-                                new JpaFieldElement("title", "route.images.labels.title"),
-                                new JpaFieldElement("url", "route.images.labels.image")
-                        )
+                .dataStoreKey(imageRepository)
+                .title("route.projects.title-cards")
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .children(List.of(
+                                JpaFieldElement.of("title", "route.images.labels.title").build(),
+                                JpaFieldElement.of("url", "route.images.labels.image").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("images-grid", JpaRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(imageRepository)
-                .withTitle("route.images-cards")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withImageField("url")
-                        .withImageFactory(LocalImageResourceProvider.class)
+                .dataStoreKey(imageRepository)
+                .title("route.images-cards")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .imageField("url")
+                        .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .withChild(imageForm)
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

@@ -7,7 +7,7 @@ import org.jooq.impl.TableImpl;
 
 /**
  * JOOQ-specific form route builder.
- * Usage: JooqFormRoute.of()
+ * Usage: JooqFormRoute.builder()
  *     .withDataStore(TABLE)
  *     .withTitleField(TABLE.FIELD)
  *     .withChildren(...)
@@ -18,7 +18,7 @@ public class JooqFormRoute {
     /**
      * Create a new JOOQ form route builder
      */
-    public static FormRoute.FormBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
-        return FormRoute.of();
+    public static FormRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
+        return FormRoute.builder();
     }
 }

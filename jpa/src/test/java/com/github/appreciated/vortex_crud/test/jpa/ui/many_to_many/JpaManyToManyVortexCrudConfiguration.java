@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
@@ -29,44 +30,43 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(itemRepository)
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("name")
-                        .withChildren(
-                                new JpaFieldElement("name", "relations.labels.name"),
+                .dataStoreKey(itemRepository)
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("name")
+                        .children(List.of(
+                                JpaFieldElement.of("name", "relations.labels.name").build(),
                                 JpaCollectionElement.of("relations.labels.related")
-                                        .withFactory(ListCollectionFactory.class)
-                                        .withConfiguration(JpaCollection.of(ConnectDialogFactory.class)
-                                                .withData(JpaCollectionConfiguration.of(itemRepository)
-                                                        .withManyToMany(new com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany(itemRepository, "relatedItems"))
-                                                        .withChildren("name")
+                                        .factory((Class) ListCollectionFactory.class)
+                                        .configuration(JpaCollection.of(ConnectDialogFactory.class)
+                                                .data(JpaCollectionConfiguration.of(itemRepository)
+                                                        .manyToMany(new com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany(itemRepository, "relatedItems"))
+                                                        .children(List.of("name"))
                                                         .build())
-                                                .withEmptyMessage("relations.related.empty")
-                                                .withConfiguration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
+                                                .emptyMessage("relations.related.empty")
+                                                .config(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
                                                 .build())
                                         .build()
-                        )
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("many-to-many-test", JpaRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(itemRepository)
-                .withIconFactory(FACTORY::create)
-                .withTitle("relations.tests.many-to-many.title")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withFilterField("name")
-                        .withChildren(
-                                new JpaFieldElement("name", "relations.labels.name")
-                        )
+                .dataStoreKey(itemRepository)
+                .iconFactory(FACTORY::create)
+                .title("relations.tests.many-to-many.title")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .filterField("name")
+                        .children(List.of(
+                                JpaFieldElement.of("name", "relations.labels.name").build()
+                        ))
                         .build())
-                .withChild(itemForm)
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
                 .build();
     }
 }

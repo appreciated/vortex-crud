@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.vaadin.flow.component.icon.VaadinIcon.CHECK_CIRCLE;
 
@@ -26,32 +27,31 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(taskRepository)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withChildren(
-                                new JpaFieldElement("title", "route.images.labels.title")
-                        )
+                .dataStoreKey(taskRepository)
+                .title("route.projects.title-cards")
+                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .children(List.of(
+                                JpaFieldElement.of("title", "route.images.labels.title").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
-                .withIconFactory(CHECK_CIRCLE::create)
-                .withDataStore(taskRepository)
-                .withTitle("route.done-tasks.title")
-                .withConfiguration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField("title")
-                        .withDescriptionField("description")
+                .iconFactory(CHECK_CIRCLE::create)
+                .dataStoreKey(taskRepository)
+                .title("route.done-tasks.title")
+                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField("title")
+                        .descriptionField("description")
                         .build())
-                .withChild(taskForm)
                 .build());
 
-        return JpaApplication.of()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
+        return JpaApplication.builder()
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
                 .build();
     }
 }

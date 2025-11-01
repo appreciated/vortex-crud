@@ -7,7 +7,7 @@ import org.jooq.impl.TableImpl;
 
 /**
  * JOOQ-specific grid route builder.
- * Usage: JooqGridRoute.of()
+ * Usage: JooqGridRoute.builder()
  *     .withDataStore(TABLE)
  *     .withTitleField(TABLE.FIELD)
  *     .withFilterField(TABLE.FIELD)
@@ -20,6 +20,6 @@ public class JooqGridRoute {
      * Create a new JOOQ grid route builder
      */
     public static GridRoute.GridBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
-        return GridRoute.of();
+        return GridRoute.builder();
     }
 }
