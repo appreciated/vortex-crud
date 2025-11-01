@@ -84,6 +84,11 @@ public class Collection<ModelClass, FieldType, RepositoryType> {
             return this;
         }
 
+        public Builder<ModelClass, FieldType, RepositoryType> withData(CollectionConfiguration.Builder<ModelClass, FieldType, RepositoryType> dataBuilder) {
+            product.data = dataBuilder.build();
+            return this;
+        }
+
         public Builder<ModelClass, FieldType, RepositoryType> withEmptyMessage(String emptyMessage) {
             product.emptyMessage = emptyMessage;
             return this;
@@ -91,6 +96,11 @@ public class Collection<ModelClass, FieldType, RepositoryType> {
 
         public Builder<ModelClass, FieldType, RepositoryType> withChild(RouteRenderer<ModelClass, FieldType, RepositoryType> child) {
             product.child = child;
+            return this;
+        }
+
+        public Builder<ModelClass, FieldType, RepositoryType> withChild(RouteRenderer.Builder<ModelClass, FieldType, RepositoryType> childBuilder) {
+            product.child = childBuilder.build();
             return this;
         }
 

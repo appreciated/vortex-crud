@@ -179,6 +179,11 @@ public class RouteRenderer<ModelClass, FieldType, RepositoryType> implements Acc
             return this;
         }
 
+        public Builder<ModelClass, FieldType, RepositoryType> withChild(Builder<ModelClass, FieldType, RepositoryType> childBuilder) {
+            product.setChild(childBuilder.build());
+            return this;
+        }
+
         public Builder<ModelClass, FieldType, RepositoryType> withRoles(List<String> roles) {
             product.writeRoles = roles;
             return this;

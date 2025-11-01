@@ -152,6 +152,11 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
             return this;
         }
 
+        public Builder<ModelClass, FieldType, RepositoryType> withConfiguration(Collection.Builder<ModelClass, FieldType, RepositoryType> configurationBuilder) {
+            product.configuration = configurationBuilder.build();
+            return this;
+        }
+
         public Builder<ModelClass, FieldType, RepositoryType> addReadOnlyForRole(String item) {
             product.readOnlyForRoles.add(item);
             return this;
