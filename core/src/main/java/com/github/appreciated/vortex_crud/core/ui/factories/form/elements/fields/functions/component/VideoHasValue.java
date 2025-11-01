@@ -19,7 +19,6 @@ public class VideoHasValue extends CustomField<String> {
 
     private static final Logger log = LoggerFactory.getLogger(VideoHasValue.class);
 
-    private final VortexCrudResourceProvider resourceProvider;
     private final VideoDisplayComponent video;
     private final VideoDisplayComponent thumbnailVideo;
     private final Button btnPreview;
@@ -32,7 +31,6 @@ public class VideoHasValue extends CustomField<String> {
     private String value;
 
     public VideoHasValue(VortexCrudResourceProvider resourceProvider) {
-        this.resourceProvider = resourceProvider;
 
         // Video element (hidden in DOM but attached to register resources)
         // We keep it in the DOM with CSS hiding instead of setVisible(false)
