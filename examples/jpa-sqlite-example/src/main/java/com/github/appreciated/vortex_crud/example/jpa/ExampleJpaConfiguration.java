@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
@@ -56,7 +57,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaFo.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.tasks.labels.title").build(),
@@ -72,7 +73,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                                         .build())
                                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                                 .child(JpaFormRoute.builder()
-                                                        .configuration(JpaRouteRendererConfiguration.builder()
+                                                        .configuration(JpaFormRendererConfiguration.builder()
                                                                 .titleField("name")
                                                                 .children(List.of(
                                                                         JpaFieldElement.of("commentText", "route.tasks.labels.comment").build()
@@ -97,7 +98,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
                 .dataStoreKey(projectRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.of("name", "route.projects.labels.name").build(),
@@ -110,7 +111,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),
@@ -122,7 +123,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormSlideRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),
@@ -134,7 +135,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
                 .dataStoreKey(videoRepository)
                 .title("route.videos.title-cards")
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.videos.labels.title").build(),
@@ -177,7 +178,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(TASKS::create)
                 .dataStoreKey(taskRepository)
                 .title("route.open-tasks.title")
-                .configuration(JpaKanbanConfiguration.of(CardFactory.class)
+                .configuration(JpaKanbanConfiguration.builder().factory((Class<? extends VortexCrudItemFactory<String>>) CardFactory.class)
                         .titleField("title")
                         .descriptionField("description")
                         .columnField("status")
@@ -205,7 +206,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
-                        .imageFactory(LocalImageResourceProvider.class)
+                        .resourceProvider(LocalImageResourceProvider.class)
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageForm)
@@ -233,7 +234,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
-                        .imageFactory(LocalImageResourceProvider.class)
+                        .resourceProvider(LocalImageResourceProvider.class)
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageSlideForm)
