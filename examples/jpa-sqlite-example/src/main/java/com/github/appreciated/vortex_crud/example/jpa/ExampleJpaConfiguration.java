@@ -6,8 +6,6 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
@@ -178,7 +176,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(TASKS::create)
                 .dataStoreKey(taskRepository)
                 .title("route.open-tasks.title")
-                .configuration(JpaKanbanConfiguration.builder().factory((Class<? extends VortexCrudItemFactory<String>>) CardFactory.class)
+                .configuration(JpaKanbanConfiguration.builder()//TODO .factory((Class<? extends VortexCrudItemFactory<String>>) CardFactory.class)
                         .titleField("title")
                         .descriptionField("description")
                         .columnField("status")
