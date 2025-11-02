@@ -26,8 +26,8 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
             return AccessLevel.WRITE;
         }
 
-        List<String> writeRoles = resource.getWriteRoles();
-        List<String> readOnlyRoles = resource.getReadOnlyRoles();
+        List<String> writeRoles = resource.writeRoles();
+        List<String> readOnlyRoles = resource.readOnlyRoles();
 
         // If no roles specified, grant full access
         if ((writeRoles == null || writeRoles.isEmpty()) &&

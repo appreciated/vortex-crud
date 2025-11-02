@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface AccessControlled {
 
-    List<String> getWriteRoles();
+    List<String> writeRoles();
 
-    List<String> getReadOnlyRoles();
+    List<String> readOnlyRoles();
 }

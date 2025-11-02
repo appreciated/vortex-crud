@@ -25,16 +25,6 @@ public record TextField<ModelClass, FieldType, RepositoryType>(
         return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
-    @Override
-    public Validation getValidation() {
-        return validation;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return required;
-    }
-
     public List<String> getWriteRoles() {
         return writeRoles;
     }

@@ -1,13 +1,13 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.*;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -30,16 +30,16 @@ public class JooqFieldValidationVortexCrudConfiguration
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
                         .fields(Map.of(
-                                VALIDATION_TEST.ID, new IdField<>(),
-                                VALIDATION_TEST.REQUIRED_FIELD, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
-                                VALIDATION_TEST.EMAIL_FIELD, new EmailField<>(false, TextFieldValidation.builder().maxLength(500).build()),
-                                VALIDATION_TEST.NUMERIC_FIELD, new DoubleField<>(false, NumberFieldValidation.builder().min(0.0).build()),
-                                VALIDATION_TEST.DATE_FIELD, new DateField<>(),
-                                VALIDATION_TEST.DATETIME_FIELD, new DateTimePickerField<>(),
-                                VALIDATION_TEST.ENUM_FIELD, new SelectField<>("enum-options"),
-                                VALIDATION_TEST.CHECKBOX_FIELD, new CheckboxField<>(),
-                                VALIDATION_TEST.IMAGE_FIELD, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class)))
-                        ).build()
+                                VALIDATION_TEST.ID, JooqIdField.builder().build(),
+                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().validation(TextFieldValidation.builder().maxLength(255).build()).build(),
+                                VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validation(TextFieldValidation.builder().maxLength(500).build()).build(),
+                                VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validation(NumberFieldValidation.builder().min(0.0).build()).build(),
+                                VALIDATION_TEST.DATE_FIELD, JooqDateField.builder().build(),
+                                VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
+                                VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
+                                VALIDATION_TEST.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
+                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class)).build()
+                        )).build()
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqRouteRenderer.of(FormRouteFactory.class)

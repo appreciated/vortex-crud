@@ -300,20 +300,12 @@ class RbacPermissionCheckerTest {
     private AccessControlled createResource(List<String> writeRoles, List<String> readOnlyRoles) {
         return new AccessControlled() {
             @Override
-            public void setWriteRoles(List<String> writeRoles) {
-            }
-
-            @Override
-            public List<String> getWriteRoles() {
+            public List<String> writeRoles() {
                 return writeRoles;
             }
 
             @Override
-            public void setReadOnlyRoles(List<String> readOnlyRoles) {
-            }
-
-            @Override
-            public List<String> getReadOnlyRoles() {
+            public List<String> readOnlyRoles() {
                 return readOnlyRoles;
             }
         };

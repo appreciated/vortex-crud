@@ -4,8 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfigu
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaRouteRendererConfiguration {
-    public static RouteRendererConfiguration.RouteRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>, ?, ?> builder() {
-        return RouteRendererConfiguration.builder();
+    public static RouteRendererConfiguration.RouteRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
+        return RouteRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }
 

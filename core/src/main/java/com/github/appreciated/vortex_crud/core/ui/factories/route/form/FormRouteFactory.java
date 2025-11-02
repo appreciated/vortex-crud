@@ -46,7 +46,6 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final ReflectionService<FieldType> reflectionService;
     private final RbacPermissionChecker permissionChecker;
 
-
     public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,

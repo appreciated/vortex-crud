@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListItemRendererConfiguration;
@@ -28,10 +27,10 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = FormRoute.builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreKey(validationEntityRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("requiredField")
                         .children(List.of(
                                 JpaFieldElement.of("requiredField", "validation.fields.required").build(),
@@ -47,17 +46,18 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("field-validation-test", ListRoute.builder()
+        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaListItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .filterField("requiredField")
+                .children(List.of(
+                        JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
+                        JpaFieldElement.of("emailField", "route.projects.labels.description").build()
+                ))
+                .build();
+        routes.put("field-validation-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreKey(validationEntityRepository)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .configuration(JpaListItemRendererConfiguration.of(CardFactory.class)
-                        .filterField("requiredField")
-                        .children(List.of(
-                                JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
-                                JpaFieldElement.of("emailField", "route.projects.labels.description").build()
-                        ))
-                        .build())
+                .configuration(build)
                 .child(validationForm)
                 .build());
 

@@ -1,24 +1,21 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 import java.util.List;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true)
-@NoArgsConstructor
-public class ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType>
-        extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>
-        implements ItemFactory<FieldType> {
+@Builder
+public record ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType>(
+        Class<? extends VortexCrudItemFactory<FieldType>> factory,
+        FieldType titleField,
+        FieldType descriptionField,
+        FieldType imageField,
+        Class<? extends VortexCrudResourceProvider> imageFactory,
+        boolean inlineEdit,
+        FieldType filterField,
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
+) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    public ListItemRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
-        super(factory);
-    }
 }

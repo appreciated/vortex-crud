@@ -33,23 +33,4 @@ public record DateTimePickerField<ModelClass, FieldType, RepositoryType>(
                 return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
-    @Override
-    public Validation getValidation() {
-        return validation;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return required;
-    }
-
-    @Override
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    @Override
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
 }

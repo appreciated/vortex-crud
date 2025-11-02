@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields
 public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled {
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory();
 
-    Validation getValidation();
+    Validation validation();
 
-    boolean isRequired();
+    boolean required();
 }

@@ -19,7 +19,6 @@ public class Video extends HtmlContainer implements ClickNotifier<Video>, HasAri
         setSrc(src);
     }
 
-
     public Video(DownloadHandler downloadHandler) {
         setSrc(downloadHandler);
     }

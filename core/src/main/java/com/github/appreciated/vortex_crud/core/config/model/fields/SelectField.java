@@ -21,35 +21,10 @@ public record SelectField<ModelClass, FieldType, RepositoryType>(
         this(values, validation, required, null, null);
     }
 
-    public String getValues() {
-        return values;
-    }
-
     @Override
     public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
         Class<? extends VortexCrudFieldFactory> f = SelectFieldFactory.class;
         return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
-    @Override
-    public Validation getValidation() {
-        return validation;
-    }
-
-    @Override
-    public boolean isRequired() {
-        return required;
-    }
-
-
-    @Override
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-
-    @Override
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
 }

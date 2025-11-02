@@ -49,22 +49,8 @@ public record ReferenceField<ModelClass, FieldType, RepositoryType>(
         return null;
     }
 
-    @Override
-    public boolean isRequired() {
-        return required;
-    }
-
     public FieldType getField() {
         return field;
     }
 
-    @Override
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    @Override
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
 }
