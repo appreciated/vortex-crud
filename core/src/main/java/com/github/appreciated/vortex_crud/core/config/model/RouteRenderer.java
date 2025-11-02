@@ -4,6 +4,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 
+/**
+ * Base interface for all route renderers. Child navigation specifics are defined in specialized sub-interfaces.
+ */
 public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled {
 
     RepositoryType getDataStoreKey();
@@ -19,11 +22,4 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
     RouteConfig<FieldType> getConfiguration();
 
     SerializableSupplier<Component> getIconFactory();
-
-    default RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
-        return getChildrenMap().entrySet().stream().findFirst().orElseThrow().getValue();
-    }
-
-     java.util.Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getChildrenMap();
-
 }

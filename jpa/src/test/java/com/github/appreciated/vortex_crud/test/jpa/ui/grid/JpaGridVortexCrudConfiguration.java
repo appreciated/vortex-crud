@@ -1,12 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.grid;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = FormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -37,10 +36,10 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("images-list", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("images-list", ListRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.images-list")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(ListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(
@@ -48,6 +47,7 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                                 JpaFieldElement.of("title", "route.projects.labels.name").build()
                         ))
                         .build())
+                .child(imageForm)
                 .build());
 
         return JpaApplication.builder()

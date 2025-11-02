@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -26,7 +26,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     private final VirtualItemGrid<ModelClass, FieldType, RepositoryType> virtualGrid;
 
     public Grid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                 VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                 VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
@@ -72,7 +72,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     }
 
     private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                       RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                       RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        RepositoryType dataStore,
                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {

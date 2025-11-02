@@ -52,14 +52,11 @@ class VortexCrudPathToRouteRendererResolverTest {
                 .title("childRouteWithContainer")
                 .build();
 
-        // Build parent with child in childrenMap
-        Map<String, RouteRenderer<String, String, String>> childrenMap = new HashMap<>();
-        childrenMap.put("routeWithContainer", childRouteRenderer);
-
+        // Build parent with child
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
                 .title("routeWithContainer")
-                .childrenMap(childrenMap)
+                .child(childRouteRenderer)
                 .build();
 
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
@@ -80,7 +77,7 @@ class VortexCrudPathToRouteRendererResolverTest {
     }
 
     @Test
-    void testNonWrapableRouteReturnsLast() {
+    void testNonWrappableRouteReturnsLast() {
         // Testpfad mit zwei aufeinanderfolgenden non-wrappable Routen
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
@@ -91,13 +88,10 @@ class VortexCrudPathToRouteRendererResolverTest {
                 .build();
 
         // Build parent with child
-        Map<String, RouteRenderer<String, String, String>> childrenMap = new HashMap<>();
-        childrenMap.put("routeWithoutContainer2", routeRendererWithoutContainer2);
-
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
                 .title("routeWithoutContainer1")
-                .childrenMap(childrenMap)
+                .child(routeRendererWithoutContainer2)
                 .build();
 
         routesConfig.put("routeWithoutContainer1", routeRendererWithoutContainer1);
@@ -128,22 +122,16 @@ class VortexCrudPathToRouteRendererResolverTest {
                 .title("routeWithoutContainer2")
                 .build();
 
-        Map<String, RouteRenderer<String, String, String>> firstChildMap = new HashMap<>();
-        firstChildMap.put("routeWithoutContainer2", secondChild);
-
         ListRoute<String, String, String> firstChild = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
                 .title("routeWithoutContainer1")
-                .childrenMap(firstChildMap)
+                .child(secondChild)
                 .build();
-
-        Map<String, RouteRenderer<String, String, String>> parentChildrenMap = new HashMap<>();
-        parentChildrenMap.put("routeWithoutContainer1", firstChild);
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
                 .title("routeWithContainer")
-                .childrenMap(parentChildrenMap)
+                .child(firstChild)
                 .build();
 
         routesConfig.put("routeWithContainer", routeRendererWithContainer);
@@ -201,22 +189,16 @@ class VortexCrudPathToRouteRendererResolverTest {
                 .title("routeWithoutContainer2")
                 .build();
 
-        Map<String, RouteRenderer<String, String, String>> child1Map = new HashMap<>();
-        child1Map.put("routeWithoutContainer2", routeRendererWithoutContainer2);
-
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
                 .title("routeWithoutContainer1")
-                .childrenMap(child1Map)
+                .child(routeRendererWithoutContainer2)
                 .build();
-
-        Map<String, RouteRenderer<String, String, String>> parentChildrenMap = new HashMap<>();
-        parentChildrenMap.put("routeWithoutContainer1", routeRendererWithoutContainer1);
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
                 .title("routeWithContainer")
-                .childrenMap(parentChildrenMap)
+                .child(routeRendererWithoutContainer1)
                 .build();
 
         routesConfig.put("routeWithContainer", routeRendererWithContainer);

@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -66,8 +67,9 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         pathRoutes.put(sectionIndex, currentRouteRenderer);
 
         // If this route has children, recurse into them
-        if (currentRouteRenderer.getChildrenMap() != null && !currentRouteRenderer.getChildrenMap().isEmpty()) {
-            buildRouteMapForPathSection(sectionIndex + 1, currentRouteRenderer.getChildrenMap());
+        if (currentRouteRenderer instanceof RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> multi &&
+                multi.getChildrenMap() != null && !multi.getChildrenMap().isEmpty()) {
+            buildRouteMapForPathSection(sectionIndex + 1, multi.getChildrenMap());
         } else {
             // If no children, continue to the next segment
             buildRouteMapForPathSection(sectionIndex + 1, currentRoutes);

@@ -19,6 +19,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.Submen
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextAreaField;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -51,7 +52,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 PROJECTS.ID, new IdField<>(),
                                 PROJECTS.NAME, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
-                                PROJECTS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.builder().maxLength(500).build()),
+                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validation(TextFieldValidation.builder().maxLength(500).build()),
                                 PROJECTS.START_DATE, new DateField<>(),
                                 PROJECTS.END_DATE, new DateField<>(),
                                 PROJECTS.CREATED_AT, new DateTimePickerField<>(),

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -40,7 +40,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
-    private final GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration;
+    private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -63,9 +63,9 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         RepositoryType table = config.getDataStoreKey();
 
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
-        gridOrListConfiguration = (GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.getConfiguration();
+        itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.getConfiguration();
 
-        this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
+        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.getFactory());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -88,7 +88,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
             wrapper.setWidthFull();
             List<ModelClass> list = item.getList();
             for (ModelClass entity : list) {
-                Component component = itemFactory.renderItem(gridOrListConfiguration,
+                Component component = itemFactory.renderItem(itemRendererConfiguration,
                         entity,
                         maxWidth,
                         fileProviderRegistry,
@@ -128,7 +128,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     if (filterText.isEmpty()) {
                         items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                     } else {
-                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText, offset, limit);
+                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.getTitleField(), filterText, offset, limit);
                     }
 
                     List<EntityItemList<ModelClass>> wrappers = new ArrayList<>();
@@ -146,7 +146,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     if (filterText.isEmpty()) {
                         count = dataStore.count();
                     } else {
-                        count = dataStore.countWhereColumnLike(gridOrListConfiguration.getTitleField(), filterText);
+                        count = dataStore.countWhereColumnLike(itemRendererConfiguration.getTitleField(), filterText);
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }

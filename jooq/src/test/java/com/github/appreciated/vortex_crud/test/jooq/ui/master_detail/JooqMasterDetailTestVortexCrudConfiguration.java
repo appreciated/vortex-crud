@@ -54,7 +54,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                         .titleField(MASTER_DETAIL_TASKS.TITLE)
                         .descriptionField(MASTER_DETAIL_TASKS.DESCRIPTION)
                         .build())
-                .childrenMap(Map.of("form", taskForm))
+                .child(taskForm)
                 .build());
 
         return JooqApplication.builder()

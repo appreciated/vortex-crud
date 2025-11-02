@@ -56,12 +56,12 @@ public class JooqCardVortexCrudConfiguration
         routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
                 .dataStoreKey(CARD_IMAGES)
                 .title("route.images-cards")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
                         .titleField(CARD_IMAGES.TITLE)
                         .imageField(CARD_IMAGES.URL)
                         .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .childrenMap(Map.of("form", imageForm))
+                .child(imageForm)
                 .build());
 
         return JooqApplication.builder()

@@ -4,38 +4,25 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextAreaFieldFactory;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * Thin Field type for TextAreaFieldFactory.
  */
-public class TextAreaField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-
-    private Class<? extends VortexCrudFieldFactory> factory;
-    private Validation validation;
-    private boolean required = false;
-    private List<String> writeRoles;
-    private List<String> readOnlyRoles;
-
-    public TextAreaField() {
-        this.factory = TextAreaFieldFactory.class;
-    }
-
-    public TextAreaField(boolean required, Validation validation) {
-        this();
-        this.validation = validation;
-        this.required = required;
-    }
+@Builder
+public record TextAreaField<ModelClass, FieldType, RepositoryType>(
+        Validation validation,
+        boolean required,
+        List<String> writeRoles,
+        List<String> readOnlyRoles
+) implements Field<ModelClass, FieldType, RepositoryType> {
 
     @Override
     public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) factory;
-    }
-
-    @Override
-    public void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory) {
-        this.factory = factory;
+        Class<? extends VortexCrudFieldFactory> f = TextAreaFieldFactory.class;
+        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
     @Override
@@ -49,18 +36,8 @@ public class TextAreaField<ModelClass, FieldType, RepositoryType> implements Fie
     }
 
     @Override
-    public void setWriteRoles(List<String> writeRoles) {
-        this.writeRoles = writeRoles;
-    }
-
-    @Override
     public List<String> getWriteRoles() {
         return writeRoles;
-    }
-
-    @Override
-    public void setReadOnlyRoles(List<String> readOnlyRoles) {
-        this.readOnlyRoles = readOnlyRoles;
     }
 
     @Override

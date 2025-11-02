@@ -1,14 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.many_to_many;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
-import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -29,7 +25,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = FormRoute.builder()
                 .dataStoreKey(itemRepository)
                 .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .titleField("name")
@@ -51,16 +47,17 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("many-to-many-test", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("many-to-many-test", ListRoute.builder()
                 .dataStoreKey(itemRepository)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(ListItemRendererConfiguration.builder()
                         .filterField("name")
                         .children(List.of(
                                 JpaFieldElement.of("name", "relations.labels.name").build()
                         ))
                         .build())
+                .child(itemForm)
                 .build());
 
         return JpaApplication.builder()

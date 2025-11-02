@@ -1,18 +1,16 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +39,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                         .build()
         );
 
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = FormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -54,14 +52,15 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("images-grid", JpaRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images-grid", GridRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.images-cards")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(GridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
                         .imageFactory(LocalImageResourceProvider.class)
                         .build())
+                .child(imageForm)
                 .build());
 
         return JpaApplication.builder()

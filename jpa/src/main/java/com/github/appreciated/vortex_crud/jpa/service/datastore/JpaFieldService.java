@@ -70,7 +70,7 @@ public class JpaFieldService {
                     })).or(() -> getAnnotation(entityField, SelectField.class).map(selectField ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.SelectField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(selectField.value(), required, null)
                     )).or(() -> getAnnotation(entityField, BigDecimalNumberField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new BigDecimalField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new BigDecimalField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
                     )).or(() -> getAnnotation(entityField, CheckboxField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.CheckboxField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, DateField.class).map(ann ->
@@ -82,7 +82,7 @@ public class JpaFieldService {
                     )).or(() -> getAnnotation(entityField, IdField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.IdField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, IntegerNumberField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new IntegerField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new IntegerField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>().builder().required(required)
                     )).or(() -> getAnnotation(entityField, TextAreaField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required, null)
                     )).or(() -> getAnnotation(entityField, TextField.class).map(ann ->

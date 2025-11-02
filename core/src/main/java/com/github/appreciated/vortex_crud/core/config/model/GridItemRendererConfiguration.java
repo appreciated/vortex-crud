@@ -12,13 +12,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType>
+public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>
         extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>
         implements ItemFactory<FieldType> {
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    public GridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
+    public GridItemRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
         super(factory);
     }
 }

@@ -1,8 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -33,7 +34,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLayout {
 
-    private final GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration;
+    private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
     private VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final VortexCrudItemFactory<FieldType> itemFactory;
@@ -45,7 +46,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
+    private final RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
@@ -70,12 +71,12 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
 
-        routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey());
-        this.gridOrListConfiguration = (GridOrListRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
-        this.itemFactory = itemFactoryRegistry.getFactory(gridOrListConfiguration.getFactory());
+        this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.getFactory());
         assert routeRenderer.getChild() != null;
 
         detailContainer = new VerticalLayout();
@@ -157,7 +158,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(gridOrListConfiguration,
+            Component component = itemFactory.renderItem(itemRendererConfiguration,
                     item,
                     null,
                     fileProviderRegistry,
@@ -176,7 +177,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getTitleField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.getTitleField()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

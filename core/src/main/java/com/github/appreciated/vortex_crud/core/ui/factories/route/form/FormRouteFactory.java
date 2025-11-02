@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -69,7 +70,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form = detailRouteSetting.isCreationMode()
                 ? (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getChild().getConfiguration()

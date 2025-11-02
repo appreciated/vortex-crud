@@ -4,38 +4,29 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * Thin Field type for TextFieldFactory.
  */
-public class EmailField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+@Builder
+public record EmailField<ModelClass, FieldType, RepositoryType>(
+        Validation validation,
+        boolean required,
+        List<String> writeRoles,
+        List<String> readOnlyRoles
+) implements Field<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudFieldFactory> factory;
-    private Validation validation;
-    private boolean required = false;
-    private List<String> writeRoles;
-    private List<String> readOnlyRoles;
-
-    public EmailField() {
-        this.factory = EmailFieldFactory.class;
-    }
-
-    public EmailField(boolean required, Validation validation) {
-        this();
-        this.validation = validation;
-        this.required = required;
+    public EmailField(boolean required) {
+        this(null, required, null, null);
     }
 
     @Override
     public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) factory;
-    }
-
-    @Override
-    public void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory) {
-        this.factory = factory;
+        Class<? extends VortexCrudFieldFactory> f = EmailFieldFactory.class;
+        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
     @Override
@@ -49,18 +40,8 @@ public class EmailField<ModelClass, FieldType, RepositoryType> implements Field<
     }
 
     @Override
-    public void setWriteRoles(List<String> writeRoles) {
-        this.writeRoles = writeRoles;
-    }
-
-    @Override
     public List<String> getWriteRoles() {
         return writeRoles;
-    }
-
-    @Override
-    public void setReadOnlyRoles(List<String> readOnlyRoles) {
-        this.readOnlyRoles = readOnlyRoles;
     }
 
     @Override

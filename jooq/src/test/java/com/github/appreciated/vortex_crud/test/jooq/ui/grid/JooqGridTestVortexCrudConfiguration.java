@@ -64,7 +64,7 @@ public class JooqGridTestVortexCrudConfiguration
                                 JooqFieldElement.of(GRID_IMAGES.TITLE, "route.projects.labels.name").build()
                         ))
                         .build())
-                .childrenMap(Map.of("form", imageForm))
+                .child(imageForm)
                 .build());
 
         return JooqApplication.builder()

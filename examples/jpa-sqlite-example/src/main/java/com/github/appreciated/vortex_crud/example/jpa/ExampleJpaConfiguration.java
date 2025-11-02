@@ -7,18 +7,10 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
-import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
@@ -62,9 +54,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.tasks.labels.title").build(),
@@ -79,8 +71,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                                         .children(List.of("commentText"))
                                                         .build())
                                                 .emptyMessage("route.tasks.labels.comments-empty-message")
-                                                .child(JpaRouteRenderer.of(FormRouteFactory.class)
-                                                        .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                                                .child(JpaFormRoute.builder()
+                                                        .configuration(JpaRouteRendererConfiguration.builder()
                                                                 .titleField("name")
                                                                 .children(List.of(
                                                                         JpaFieldElement.of("commentText", "route.tasks.labels.comment").build()
@@ -102,10 +94,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .build();
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
                 .dataStoreKey(projectRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.of("name", "route.projects.labels.name").build(),
@@ -115,10 +107,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .build();
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),
@@ -127,10 +119,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaRouteRenderer.of(FormSlideRouteFactory.class)
+        FormSlideRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),
@@ -139,10 +131,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
                 .dataStoreKey(videoRepository)
                 .title("route.videos.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaRouteRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.videos.labels.title").build(),
@@ -152,23 +144,23 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("projects-cards", JpaRouteRenderer.of(GridRouteFactory.class)
+        routes.put("projects-cards", JpaGridRoute.builder()
                 .defaultRoute(true)
                 .dataStoreKey(projectRepository)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("name")
                         .descriptionField("description")
                         .build())
                 .writeRoles(List.of("admin", "manager"))
-                .childrenMap(Map.of("form", projectForm))
+                .child(projectForm)
                 .build());
-        routes.put("projects-list", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("projects-list", JpaListRoute.builder()
                 .dataStoreKey(projectRepository)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField("name")
                         .children(List.of(
@@ -179,9 +171,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
-                .childrenMap(Map.of("form", projectForm))
+                .child(projectForm)
                 .build());
-        routes.put("open-tasks", JpaRouteRenderer.of(KanbanDetailFactory.class)
+        routes.put("open-tasks", JpaKanbanRoute.builder()
                 .iconFactory(TASKS::create)
                 .dataStoreKey(taskRepository)
                 .title("route.open-tasks.title")
@@ -193,36 +185,36 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .filterField("title")
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                .childrenMap(Map.of("form", taskForm))
+                .child(taskForm)
                 .build());
-        routes.put("done-tasks", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
+        routes.put("done-tasks", JpaMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(taskRepository)
                 .title("route.done-tasks.title")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .descriptionField("description")
                         .build())
                 .writeRoles(List.of("admin", "manager"))
-                .childrenMap(Map.of("form", taskForm))
+                .child(taskForm)
                 .build());
-        routes.put("images-grid", JpaRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images-grid", JpaGridRoute.builder()
                 .dataStoreKey(imageRepository)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
                         .imageFactory(LocalImageResourceProvider.class)
                         .build())
                 .writeRoles(List.of("admin"))
-                .childrenMap(Map.of("form", imageForm))
+                .child(imageForm)
                 .build());
-        routes.put("images-list", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("images-list", JpaListRoute.builder()
                 .dataStoreKey(imageRepository)
                 .iconFactory(CAMERA::create)
                 .title("route.images-list")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(
@@ -231,38 +223,38 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .writeRoles(List.of("admin"))
-                .childrenMap(Map.of("form", imageForm))
+                .child(imageForm)
                 .build());
 
-        routes.put("images-slide", JpaRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images-slide", JpaGridRoute.builder()
                 .dataStoreKey(imageRepository)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
                         .imageFactory(LocalImageResourceProvider.class)
                         .build())
                 .writeRoles(List.of("admin"))
-                .childrenMap(Map.of("form", imageSlideForm))
+                .child(imageSlideForm)
                 .build());
 
-        routes.put("videos-grid", JpaRouteRenderer.of(GridRouteFactory.class)
+        routes.put("videos-grid", JpaGridRoute.builder()
                 .dataStoreKey(videoRepository)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-cards")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .build())
                 .writeRoles(List.of("admin"))
-                .childrenMap(Map.of("form", videoForm))
+                .child(videoForm)
                 .build());
 
-        routes.put("videos-list", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("videos-list", JpaListRoute.builder()
                 .dataStoreKey(videoRepository)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(
@@ -271,10 +263,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .writeRoles(List.of("admin"))
-                .childrenMap(Map.of("form", videoForm))
+                .child(videoForm)
                 .build());
 
-        routes.put("submenu", JpaRouteRenderer.of(SubmenuRouteFactory.class)
+        routes.put("submenu", JpaSubmenuRoute.builder()
                 .iconFactory(MENU::create)
                 .dataStoreKey(projectRepository)
                 .title("route.submenu.title")

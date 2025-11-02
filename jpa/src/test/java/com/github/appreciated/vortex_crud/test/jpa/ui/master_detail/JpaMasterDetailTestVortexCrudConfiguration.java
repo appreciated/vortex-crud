@@ -1,12 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = FormRoute.builder()
                 .dataStoreKey(taskRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -38,14 +37,15 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JpaRouteRenderer.of(MasterDetailRouteFactory.class)
+        routes.put("tasks", MasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(taskRepository)
                 .title("route.done-tasks.title")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(GridItemRendererConfiguration.builder()
                         .titleField("title")
                         .descriptionField("description")
                         .build())
+                .child(taskForm)
                 .build());
 
         return JpaApplication.builder()

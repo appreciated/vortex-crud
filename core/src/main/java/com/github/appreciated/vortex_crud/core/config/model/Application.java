@@ -34,15 +34,7 @@ public abstract class Application<ModelClass, FieldType, RepositoryType> {
         return identityAndAccessManagement;
     }
 
-    public void setUserManagement(IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement) {
-        this.identityAndAccessManagement = identityAndAccessManagement;
-    }
-
     public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getRouteRenderers() {
         return routes;
-    }
-
-    public void setRouteRenderers(LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routeRenderers) {
-        this.routes = routeRenderers;
     }
 }

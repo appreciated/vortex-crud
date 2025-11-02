@@ -1,17 +1,12 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
-import com.github.appreciated.vortex_crud.jpa.service.JpaRouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridOrListRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRenderer;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListItemRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +28,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaRouteRenderer.of(FormRouteFactory.class)
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = FormRoute.builder()
                 .dataStoreKey(validationEntityRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
@@ -52,17 +47,18 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("field-validation-test", JpaRouteRenderer.of(ListRouteFactory.class)
+        routes.put("field-validation-test", ListRoute.builder()
                 .dataStoreKey(validationEntityRepository)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .configuration(JpaGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaListItemRendererConfiguration.of(CardFactory.class)
                         .filterField("requiredField")
                         .children(List.of(
                                 JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
                                 JpaFieldElement.of("emailField", "route.projects.labels.description").build()
                         ))
                         .build())
+                .child(validationForm)
                 .build());
 
         LinkedHashMap<JpaFieldValidationEnum, String> enumOptions = new LinkedHashMap<>();

@@ -139,7 +139,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStoreIdentifier, formCreator, routeFactory),
+                event -> onAdd(dialogFactoryRegistry, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, dataStoreIdentifier, formCreator, routeFactory),
                 null,
                 null,
                 routeHeader);
@@ -157,7 +157,19 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         setPadding(true);
     }
 
-    private void openDialog(RepositoryType dataStoreIdentifier, RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer, VortexCrudDataStore<FieldType, ?> dataStore, VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory, Kanban<ModelClass, FieldType, RepositoryType> kanbanConfig, VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry, VortexCrudFileProviderRegistry fileProviderRegistry, VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver, FormCreator<ModelClass, FieldType, RepositoryType> formCreator, ReflectionService<FieldType> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtil, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver, Object entity) {
+    private void openDialog(RepositoryType dataStoreIdentifier,
+                            RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
+                            VortexCrudDataStore<FieldType, ?> dataStore,
+                            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                            Kanban<ModelClass, FieldType, RepositoryType> kanbanConfig,
+                            VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
+                            VortexCrudFileProviderRegistry fileProviderRegistry,
+                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+                            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
+                            ReflectionService<FieldType> reflectionService,
+                            VortexCrudDataStoreUtilStrategy dataStoreUtil,
+                            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                            Object entity) {
         // Navigate to the entity URL
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
                 dataStoreUtil.getId(entity),
@@ -203,7 +215,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             Object recordById = dataStore.getRecordById(pathForIndex);
             openDialog(
                     dataStoreIdentifier,
-                    routeRenderer,
+                    (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer,
                     dataStore,
                     routeFactory,
                     kanbanConfig,
@@ -358,7 +370,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     }
 
     private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                       RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                       RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        RepositoryType dataStore,
                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {

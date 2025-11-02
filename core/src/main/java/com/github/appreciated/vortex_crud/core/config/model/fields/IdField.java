@@ -4,44 +4,28 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
+import lombok.Builder;
 
 import java.util.List;
 
 /**
  * Thin Field type for IdFieldFactory.
  */
-public class IdField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+@Builder
+public record IdField<ModelClass, FieldType, RepositoryType>(
+        Validation validation,
+        boolean required,
+        List<String> writeRoles,
+        List<String> readOnlyRoles
+) implements Field<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudFieldFactory> factory;
-    private Validation validation;
-    private boolean required = false;
-    private List<String> writeRoles;
-    private List<String> readOnlyRoles;
-
-    public IdField() {
-        this(IdFieldFactory.class, false, null);
+    public IdField(boolean required) {
+        this(null, required, null, null);
     }
 
-    public IdField(boolean required, Validation validation) {
-        this(IdFieldFactory.class, required, validation);
-        this.validation = validation;
-        this.required = required;
-    }
-
-    public IdField(Class<? extends VortexCrudFieldFactory> factory, boolean required, Validation validation) {
-        this.factory = factory;
-        this.validation = validation;
-        this.required = required;
-    }
-
-    @Override
     public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) factory;
-    }
-
-    @Override
-    public void setFactory(Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory) {
-        this.factory = factory;
+        Class<? extends VortexCrudFieldFactory> f = IdFieldFactory.class;
+        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
     }
 
     @Override
@@ -55,18 +39,8 @@ public class IdField<ModelClass, FieldType, RepositoryType> implements Field<Mod
     }
 
     @Override
-    public void setWriteRoles(List<String> writeRoles) {
-        this.writeRoles = writeRoles;
-    }
-
-    @Override
     public List<String> getWriteRoles() {
         return writeRoles;
-    }
-
-    @Override
-    public void setReadOnlyRoles(List<String> readOnlyRoles) {
-        this.readOnlyRoles = readOnlyRoles;
     }
 
     @Override

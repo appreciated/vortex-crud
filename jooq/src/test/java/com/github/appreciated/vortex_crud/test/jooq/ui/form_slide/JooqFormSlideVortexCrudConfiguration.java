@@ -55,12 +55,12 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         routes.put("images", JooqRouteRenderer.of(GridRouteFactory.class)
                 .dataStoreKey(FROM_SLIDE_IMAGES)
                 .title("route.image-cards")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
                         .imageField(FROM_SLIDE_IMAGES.URL)
                         .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .childrenMap(Map.of("form", formSlideDialog))
+                .child(formSlideDialog)
                 .build());
 
         return JooqApplication.builder()
