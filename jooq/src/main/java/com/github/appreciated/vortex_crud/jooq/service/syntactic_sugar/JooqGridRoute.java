@@ -8,10 +8,10 @@ import org.jooq.impl.TableImpl;
 /**
  * JOOQ-specific grid route builder.
  * Usage: JooqGridRoute.builder()
- *     .withDataStore(TABLE)
- *     .withTitleField(TABLE.FIELD)
- *     .withFilterField(TABLE.FIELD)
- *     .withChildren(...)
+ *     .dataStore(TABLE)
+ *     .titleField(TABLE.FIELD)
+ *     .filterField(TABLE.FIELD)
+ *     .children(...)
  *     .build()
  */
 public class JooqGridRoute {
@@ -19,7 +19,7 @@ public class JooqGridRoute {
     /**
      * Create a new JOOQ grid route builder
      */
-    public static GridRoute.GridBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
+    public static GridRoute.GridRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return GridRoute.builder();
     }
 }

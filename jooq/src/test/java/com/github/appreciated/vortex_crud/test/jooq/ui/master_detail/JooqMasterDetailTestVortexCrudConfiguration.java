@@ -16,6 +16,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.Tables.MASTER_DETAIL_TASKS;
@@ -28,7 +29,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MASTER_DETAIL_TASKS, JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 MASTER_DETAIL_TASKS.ID, new IdField<>(),
                                 MASTER_DETAIL_TASKS.TITLE, new TextField<>(),
                                 MASTER_DETAIL_TASKS.STATUS, new TextField<>()
@@ -37,30 +38,30 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(MASTER_DETAIL_TASKS)
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(MASTER_DETAIL_TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title"))
+                .dataStoreKey(MASTER_DETAIL_TASKS)
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(MASTER_DETAIL_TASKS.TITLE)
+                        .children(List.of(JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                .withIconFactory(CHECK_CIRCLE::create)
-                .withDataStore(MASTER_DETAIL_TASKS)
-                .withTitle("route.done-tasks.title")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(MASTER_DETAIL_TASKS.TITLE)
-                        .withDescriptionField(MASTER_DETAIL_TASKS.DESCRIPTION)
+                .iconFactory(CHECK_CIRCLE::create)
+                .dataStoreKey(MASTER_DETAIL_TASKS)
+                .title("route.done-tasks.title")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(MASTER_DETAIL_TASKS.TITLE)
+                        .descriptionField(MASTER_DETAIL_TASKS.DESCRIPTION)
                         .build())
-                .withChild(taskForm)
+                .childrenMap(Map.of("form", taskForm))
                 .build());
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

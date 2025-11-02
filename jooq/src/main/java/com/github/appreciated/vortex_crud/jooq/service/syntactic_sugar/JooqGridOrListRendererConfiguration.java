@@ -2,23 +2,20 @@ package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.GridOrListRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
+@Data
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
 public class JooqGridOrListRendererConfiguration extends GridOrListRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
-    public JooqGridOrListRendererConfiguration(Class<? extends VortexCrudItemFactory<TableField<?, ?>>> factory) {
-        super(factory);
-    }
-
-    public static class Builder extends GridOrListRendererConfiguration.Builder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-        public Builder(JooqGridOrListRendererConfiguration product) {
-            super(product);
-        }
-    }
-
-    public static JooqGridOrListRendererConfiguration.Builder of(Class<? extends VortexCrudItemFactory> factory) {
-        return new JooqGridOrListRendererConfiguration.Builder(new JooqGridOrListRendererConfiguration((Class<? extends VortexCrudItemFactory<TableField<?, ?>>>) factory));
+    public static GridOrListRendererConfiguration.GridOrListRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>, ?, ?> of(Class<? extends VortexCrudItemFactory> factory) {
+        return GridOrListRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .factory((Class<? extends VortexCrudItemFactory<TableField<?, ?>>>) factory);
     }
 }

@@ -20,7 +20,9 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     SerializableSupplier<Component> getIconFactory();
 
-    RouteRenderer<ModelClass, FieldType, RepositoryType> getChild();
+    default RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
+        return getChildrenMap().entrySet().stream().findFirst().orElseThrow().getValue();
+    }
 
      java.util.Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getChildrenMap();
 

@@ -17,6 +17,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.tables.SubrouteTasks.SUBROUTE_TASKS;
@@ -28,7 +29,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 SUBROUTE_TASKS, JooqDataStoreConfig.of(SUBROUTE_TASKS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 SUBROUTE_TASKS.ID, new IdField<>(),
                                 SUBROUTE_TASKS.TITLE, new TextField<>(),
                                 SUBROUTE_TASKS.STATUS, new TextField<>()
@@ -37,34 +38,34 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(SUBROUTE_TASKS)
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(SUBROUTE_TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title"))
+                .dataStoreKey(SUBROUTE_TASKS)
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(SUBROUTE_TASKS.TITLE)
+                        .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
-                .withDataStore(SUBROUTE_TASKS)
-                .withTitle("route.tasks.title")
-                .withChildrenMap(Map.of(
+                .dataStoreKey(SUBROUTE_TASKS)
+                .title("route.tasks.title")
+                .childrenMap(Map.of(
                         "open", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                                .withDataStore(SUBROUTE_TASKS)
-                                .withTitle("route.open-tasks.title")
-                                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                                        .withTitleField(SUBROUTE_TASKS.TITLE)
+                                .dataStoreKey(SUBROUTE_TASKS)
+                                .title("route.open-tasks.title")
+                                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                                        .titleField(SUBROUTE_TASKS.TITLE)
                                         .build())
-                                .withChild(taskForm)
+                                .childrenMap(Map.of("form", taskForm))
                                 .build()
                 ))
                 .build());
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

@@ -19,6 +19,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.Tables.FROM_SLIDE_IMAGES;
@@ -30,7 +31,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 FROM_SLIDE_IMAGES, JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 FROM_SLIDE_IMAGES.ID, new IdField<>(),
                                 FROM_SLIDE_IMAGES.TITLE, new TextField<>(true),
                                 FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
@@ -39,34 +40,34 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqRouteRenderer.of(FormSlideRouteFactory.class)
-                .withDataStore(FROM_SLIDE_IMAGES)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(FROM_SLIDE_IMAGES.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(FROM_SLIDE_IMAGES.TITLE, "route.image.labels.title"),
-                                new JooqFieldElement(FROM_SLIDE_IMAGES.URL, "route.image.labels.image")
-                        )
+                .dataStoreKey(FROM_SLIDE_IMAGES)
+                .title("route.projects.title-cards")
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(FROM_SLIDE_IMAGES.TITLE)
+                        .children(List.of(
+                                JooqFieldElement.of(FROM_SLIDE_IMAGES.TITLE, "route.image.labels.title").build(),
+                                JooqFieldElement.of(FROM_SLIDE_IMAGES.URL, "route.image.labels.image").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images", JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(FROM_SLIDE_IMAGES)
-                .withTitle("route.image-cards")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(FROM_SLIDE_IMAGES.TITLE)
-                        .withImageField(FROM_SLIDE_IMAGES.URL)
-                        .withImageFactory(LocalImageResourceProvider.class)
+                .dataStoreKey(FROM_SLIDE_IMAGES)
+                .title("route.image-cards")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(FROM_SLIDE_IMAGES.TITLE)
+                        .imageField(FROM_SLIDE_IMAGES.URL)
+                        .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .withChild(formSlideDialog)
+                .childrenMap(Map.of("form", formSlideDialog))
                 .build());
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

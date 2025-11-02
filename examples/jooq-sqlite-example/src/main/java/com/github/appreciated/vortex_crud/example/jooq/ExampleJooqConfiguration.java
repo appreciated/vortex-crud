@@ -48,7 +48,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.ofEntries(
                 Map.entry(PROJECTS, JooqDataStoreConfig.of(PROJECTS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 PROJECTS.ID, new IdField<>(),
                                 PROJECTS.NAME, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
                                 PROJECTS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.builder().maxLength(500).build()),
@@ -58,37 +58,37 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 PROJECTS.UPDATED_AT, new DateTimePickerField<>()))
                         .build()),
                 Map.entry(TASKS, JooqDataStoreConfig.of(TASKS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 TASKS.ID, new IdField<>(),
                                 TASKS.TITLE, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
                                 TASKS.DESCRIPTION, new TextAreaField<>(false, TextFieldValidation.builder().maxLength(1000).build()),
                                 TASKS.ASSIGNED_TO, new ReferenceField<>(USERS, TASKS.ID, USERS.USERNAME, List.of(USERS.USERNAME)) /* 1:1 Relation */,
                                 TASKS.STATUS, new SelectField<>("task-status"),
-                                TASKS.DUE_DATE, new DateField<>(), //.withReadOnlyForRoles("developer").build(),
+                                TASKS.DUE_DATE, new DateField<>(), //.readOnlyForRoles("developer").build(),
                                 TASKS.CREATED_AT, new DateTimePickerField<>(),
                                 TASKS.UPDATED_AT, new DateTimePickerField<>()))
                         .build()),
                 Map.entry(TASK_HAS_TASK, JooqDataStoreConfig.of(TASK_HAS_TASK)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 TASK_HAS_TASK.TASK_ID, new IdField<>(),
                                 TASK_HAS_TASK.RELATED_TASK_ID, new IdField<>()))
                         .build()),
                 Map.entry(TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 TASK_COMMENTS.ID, new IdField<>(),
                                 TASK_COMMENTS.COMMENT_TEXT, new TextAreaField<>(false, TextFieldValidation.builder().maxLength(1000).build()),
                                 TASK_COMMENTS.USER_ID, new DoubleField<>(),
                                 TASK_COMMENTS.CREATED_AT, new DateTimePickerField<>()))
                         .build()),
                 Map.entry(IMAGES, JooqDataStoreConfig.of(IMAGES)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 IMAGES.ID, new IdField<>(),
                                 IMAGES.TITLE, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
                                 IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
                         ))
                         .build()),
                 Map.entry(VIDEOS, JooqDataStoreConfig.of(VIDEOS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 VIDEOS.ID, new IdField<>(),
                                 VIDEOS.TITLE, new TextField<>(true, TextFieldValidation.builder().maxLength(255).build()),
                                 VIDEOS.URL, new VideoField<>(new VideoFieldRendererConfiguration<>(LocalVideoResourceProvider.class))
@@ -96,7 +96,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build()),
                 Map.entry(USERS,
                         JooqDataStoreConfig.of(USERS)
-                                .withFields(Map.of(
+                                .fields(Map.of(
                                         USERS.USERNAME, new EmailField<>(),
                                         USERS.PASSWORD_HASH, new PasswordField<>(true, TextFieldValidation.builder().maxLength(255).build())
                                 ))
@@ -104,209 +104,209 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .withDataStore(TASKS)
-                .withTitleField(TASKS.TITLE)
-                .withChildren(
-                        new JooqFieldElement(TASKS.TITLE, "route.tasks.labels.title"),
-                        new JooqFieldElement(TASKS.DESCRIPTION, "route.tasks.labels.description"),
-                        new JooqFieldElement(TASKS.STATUS, "route.tasks.labels.status"),
-                        new JooqFieldElement(TASKS.DUE_DATE, "route.tasks.labels.due_date"),
-                        new JooqFieldElement(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to"),
+                .dataStore(TASKS)
+                .titleField(TASKS.TITLE)
+                .children(
+                        JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title"),
+                        JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description"),
+                        JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status"),
+                        JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date"),
+                        JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to"),
                         JooqCollectionElement.of("route.tasks.labels.comments")
-                                .withFactory(ListCollectionFactory.class)
-                                .withConfiguration(JooqCollection.of(FormDialogFactory.class)
-                                        .withData(JooqCollectionConfiguration.of(TASK_COMMENTS)
-                                                .withOneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
-                                                .withChildren(TASK_COMMENTS.COMMENT_TEXT))
-                                        .withEmptyMessage("route.tasks.labels.comments-empty-message")
-                                        .withChild(JooqFormRoute.builder()
-                                                .withChildren(
-                                                        new JooqFieldElement(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment")
+                                .factory(ListCollectionFactory.class)
+                                .configuration(JooqCollection.of(FormDialogFactory.class)
+                                        .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
+                                                .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
+                                                .children(TASK_COMMENTS.COMMENT_TEXT))
+                                        .emptyMessage("route.tasks.labels.comments-empty-message")
+                                        .child(JooqFormRoute.builder()
+                                                .children(
+                                                        JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment")
                                                 )))
                                 .build(),
                         JooqCollectionElement.of("route.tasks.labels.related-tasks")
-                                .withFactory(ListCollectionFactory.class)
-                                .withConfiguration(JooqCollection.of(ConnectDialogFactory.class)
-                                        .withData(JooqCollectionConfiguration.of(TASKS)
-                                                .withManyToMany(new JooqManyToMany(
+                                .factory(ListCollectionFactory.class)
+                                .configuration(JooqCollection.of(ConnectDialogFactory.class)
+                                        .data(JooqCollectionConfiguration.of(TASKS)
+                                                .manyToMany(new JooqManyToMany(
                                                         TASK_HAS_TASK.TASK_ID,
                                                         TASK_HAS_TASK.RELATED_TASK_ID,
                                                         TASKS.ID,
                                                         TASK_HAS_TASK))
-                                                .withChildren(TASKS.TITLE))
-                                        .withEmptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                        .withConfiguration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)))
+                                                .children(TASKS.TITLE))
+                                        .emptyMessage("route.tasks.labels.related-tasks-empty-message")
+                                        .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)))
                                 .build()
                 )
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
-                .withDataStore(PROJECTS)
-                .withTitle("route.projects.title-cards")
-                .withTitleField(PROJECTS.NAME)
-                .withChildren(
-                        new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
-                        new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
-                        new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
-                        new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
+                .dataStore(PROJECTS)
+                .title("route.projects.title-cards")
+                .titleField(PROJECTS.NAME)
+                .children(
+                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name"),
+                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date")
                 )
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
-                .withDataStore(IMAGES)
-                .withTitle("route.projects.title-cards")
-                .withTitleField(IMAGES.TITLE)
-                .withChildren(
-                        new JooqFieldElement(IMAGES.TITLE, "route.images.labels.title"),
-                        new JooqFieldElement(IMAGES.URL, "route.images.labels.image")
+                .dataStore(IMAGES)
+                .title("route.projects.title-cards")
+                .titleField(IMAGES.TITLE)
+                .children(
+                        JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title"),
+                        JooqFieldElement.of(IMAGES.URL, "route.images.labels.image")
                 )
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageSlideForm = JooqRouteRenderer.of(FormSlideRouteFactory.class)
-                .withDataStore(IMAGES)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(IMAGES.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(IMAGES.TITLE, "route.images.labels.title"),
-                                new JooqFieldElement(IMAGES.URL, "route.images.labels.image")
+                .dataStore(IMAGES)
+                .title("route.projects.title-cards")
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(IMAGES.TITLE)
+                        .children(
+                                JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title"),
+                                JooqFieldElement.of(IMAGES.URL, "route.images.labels.image")
                         )
                         .build())
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> videoForm = JooqFormRoute.builder()
-                .withDataStore(VIDEOS)
-                .withTitle("route.videos.title-cards")
-                .withTitleField(VIDEOS.TITLE)
-                .withChildren(
-                        new JooqFieldElement(VIDEOS.TITLE, "route.videos.labels.title"),
-                        new JooqFieldElement(VIDEOS.URL, "route.videos.labels.video")
+                .dataStore(VIDEOS)
+                .title("route.videos.title-cards")
+                .titleField(VIDEOS.TITLE)
+                .children(
+                        JooqFieldElement.of(VIDEOS.TITLE, "route.videos.labels.title"),
+                        JooqFieldElement.of(VIDEOS.URL, "route.videos.labels.video")
                 )
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqGridRoute.builder()
-                .withDefaultRoute(true)
-                .withDataStore(PROJECTS)
-                .withIconFactory(FACTORY::create)
-                .withTitle("route.projects.title-cards")
-                .withTitleField(PROJECTS.NAME)
-                .withDescriptionField(PROJECTS.DESCRIPTION)
-                .withRoles(List.of("manager", "admin"))
-                .withChild(projectForm)
+                .defaultRoute(true)
+                .dataStore(PROJECTS)
+                .iconFactory(FACTORY::create)
+                .title("route.projects.title-cards")
+                .titleField(PROJECTS.NAME)
+                .descriptionField(PROJECTS.DESCRIPTION)
+                .roles(List.of("manager", "admin"))
+                .child(projectForm)
                 .build());
         routes.put("projects-list", JooqListRoute.builder()
-                .withDataStore(PROJECTS)
-                .withIconFactory(FACTORY::create)
-                .withTitle("route.projects.title-list")
-                .withInlineEdit(true)
-                .withFilterField(PROJECTS.NAME)
-                .withChildren(
-                        new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
-                        new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
-                        new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
-                        new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
+                .dataStore(PROJECTS)
+                .iconFactory(FACTORY::create)
+                .title("route.projects.title-list")
+                .inlineEdit(true)
+                .filterField(PROJECTS.NAME)
+                .children(
+                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name"),
+                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date")
                         )
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(projectForm)
+                .roles(List.of("manager", "admin"))
+                .child(projectForm)
                 .build());
         routes.put("open-tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
-                .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(TASKS)
-                .withTitle("route.open-tasks.title")
-                .withConfiguration(JooqKanban.of(CardFactory.class)
-                        .withTitleField(TASKS.TITLE)
-                        .withDescriptionField(TASKS.DESCRIPTION)
-                        .withColumnField(TASKS.STATUS)
-                        .withRowIndexField(TASKS.ROW_INDEX)
-                        .withFilterField(TASKS.TITLE)
+                .iconFactory(VaadinIcon.TASKS::create)
+                .dataStore(TASKS)
+                .title("route.open-tasks.title")
+                .configuration(JooqKanban.of(CardFactory.class)
+                        .titleField(TASKS.TITLE)
+                        .descriptionField(TASKS.DESCRIPTION)
+                        .columnField(TASKS.STATUS)
+                        .rowIndexField(TASKS.ROW_INDEX)
+                        .filterField(TASKS.TITLE)
                         .build())
-                .withChild(taskForm)
+                .child(taskForm)
                 .build());
         routes.put("done-tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
-                .withIconFactory(CHECK_CIRCLE::create)
-                .withDataStore(TASKS)
-                .withTitle("route.done-tasks.title")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(TASKS.TITLE)
-                        .withDescriptionField(TASKS.DESCRIPTION)
+                .iconFactory(CHECK_CIRCLE::create)
+                .dataStore(TASKS)
+                .title("route.done-tasks.title")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(TASKS.TITLE)
+                        .descriptionField(TASKS.DESCRIPTION)
                         .build())
-                .withChild(taskForm)
+                .child(taskForm)
                 .build());
         routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(IMAGES)
-                .withIconFactory(CAMERA::create)
-                .withTitle("route.images-cards")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(IMAGES.TITLE)
-                        .withImageField(IMAGES.URL)
-                        .withImageFactory(LocalImageResourceProvider.class)
+                .dataStore(IMAGES)
+                .iconFactory(CAMERA::create)
+                .title("route.images-cards")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(imageForm)
+                .roles(List.of("manager", "admin"))
+                .child(imageForm)
                 .build());
         routes.put("images-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(IMAGES)
-                .withIconFactory(CAMERA::create)
-                .withTitle("route.images-list")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withInlineEdit(true)
-                        .withFilterField(IMAGES.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(IMAGES.URL, "route.projects.labels.description"),
-                                new JooqFieldElement(IMAGES.TITLE, "route.projects.labels.name")
+                .dataStore(IMAGES)
+                .iconFactory(CAMERA::create)
+                .title("route.images-list")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .inlineEdit(true)
+                        .filterField(IMAGES.TITLE)
+                        .children(
+                                JooqFieldElement.of(IMAGES.URL, "route.projects.labels.description"),
+                                JooqFieldElement.of(IMAGES.TITLE, "route.projects.labels.name")
                         )
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(imageForm)
+                .roles(List.of("manager", "admin"))
+                .child(imageForm)
                 .build());
 
         routes.put("images-slide", JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(IMAGES)
-                .withIconFactory(CAMERA::create)
-                .withTitle("route.images-cards")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(IMAGES.TITLE)
-                        .withImageField(IMAGES.URL)
-                        .withImageFactory(LocalImageResourceProvider.class)
+                .dataStore(IMAGES)
+                .iconFactory(CAMERA::create)
+                .title("route.images-cards")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .imageFactory(LocalImageResourceProvider.class)
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(imageSlideForm)
+                .roles(List.of("manager", "admin"))
+                .child(imageSlideForm)
                 .build());
 
         routes.put("videos-grid", JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(VIDEOS)
-                .withIconFactory(MOVIE::create)
-                .withTitle("route.videos.title-cards")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(VIDEOS.TITLE)
+                .dataStore(VIDEOS)
+                .iconFactory(MOVIE::create)
+                .title("route.videos.title-cards")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(VIDEOS.TITLE)
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(videoForm)
+                .roles(List.of("manager", "admin"))
+                .child(videoForm)
                 .build());
 
         routes.put("videos-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(VIDEOS)
-                .withIconFactory(MOVIE::create)
-                .withTitle("route.videos.title-list")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withInlineEdit(true)
-                        .withFilterField(VIDEOS.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(VIDEOS.TITLE, "route.videos.labels.title"),
-                                new JooqFieldElement(VIDEOS.URL, "route.videos.labels.video")
+                .dataStore(VIDEOS)
+                .iconFactory(MOVIE::create)
+                .title("route.videos.title-list")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .inlineEdit(true)
+                        .filterField(VIDEOS.TITLE)
+                        .children(
+                                JooqFieldElement.of(VIDEOS.TITLE, "route.videos.labels.title"),
+                                JooqFieldElement.of(VIDEOS.URL, "route.videos.labels.video")
                         )
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(videoForm)
+                .roles(List.of("manager", "admin"))
+                .child(videoForm)
                 .build());
 
         routes.put("submenu", JooqRouteRenderer.of(SubmenuRouteFactory.class)
-                .withIconFactory(MENU::create)
-                .withDataStore(PROJECTS)
-                .withTitle("route.submenu.title")
-                .withChildrenMap(Map.of(
+                .iconFactory(MENU::create)
+                .dataStore(PROJECTS)
+                .title("route.submenu.title")
+                .childrenMap(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
                 .build());
@@ -318,24 +318,24 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("some_i18n")
-                .withIdentityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>of(USERS)
-                        .withLoginView(LoginView.class)
-                        .withSignUpView(SignUpView.class)
-                        .withRoles(Roles.builder().withRoles(List.of("manager", "admin")).build())
-                        .withSignUp(true)
-                        .withUsername(new JooqFieldElement(USERS.USERNAME, "route.projects.labels.name"))
-                        .withPassword(new JooqFieldElement(USERS.PASSWORD_HASH, "route.projects.labels.name"))
-                        .withSignUpFields(new JooqFieldElement(USERS.CREATED_AT, "route.projects.labels.description"))
+                .name("application.name")
+                .i18nBundlePrefix("some_i18n")
+                .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>of(USERS)
+                        .loginView(LoginView.class)
+                        .signUpView(SignUpView.class)
+                        .roles(Roles.builder().roles(List.of("manager", "admin")).build())
+                        .signUp(true)
+                        .username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name"))
+                        .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.name"))
+                        .signUpFields(JooqFieldElement.of(USERS.CREATED_AT, "route.projects.labels.description"))
                         .build())
-                .withRoutes(routes)
-                .withVersioning(JooqVersioning.builder().withDataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
-                .withAuditing(Auditing.builder().withActions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
-                .withSelects(Selects.builder()
-                        .withConfigs(Map.of("task-status", taskStatuses))
+                .routes(routes)
+                .versioning(JooqVersioning.builder().dataStores(PROJECTS, TASKS, TASK_COMMENTS).build())
+                .auditing(Auditing.builder().actions(CREATE, UPDATE, DELETE, LOGIN, LOGOUT).build())
+                .selects(Selects.builder()
+                        .configs(Map.of("task-status", taskStatuses))
                         .build())
-                .withDataStores(dataStores)
+                .dataStores(dataStores)
                 .build();
     }
 }

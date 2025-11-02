@@ -8,10 +8,10 @@ import org.jooq.impl.TableImpl;
 /**
  * JOOQ-specific kanban route builder.
  * Usage: JooqKanbanRoute.builder()
- *     .withDataStore(TABLE)
- *     .withColumnField(TABLE.STATUS)  // Required
- *     .withTitleField(TABLE.TITLE)
- *     .withChildren(...)
+ *     .dataStore(TABLE)
+ *     .columnField(TABLE.STATUS)  // Required
+ *     .titleField(TABLE.TITLE)
+ *     .children(...)
  *     .build()
  */
 public class JooqKanbanRoute {
@@ -19,7 +19,7 @@ public class JooqKanbanRoute {
     /**
      * Create a new JOOQ kanban route builder
      */
-    public static KanbanRoute.KanbanBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
+    public static KanbanRoute.KanbanRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return KanbanRoute.builder();
     }
 }

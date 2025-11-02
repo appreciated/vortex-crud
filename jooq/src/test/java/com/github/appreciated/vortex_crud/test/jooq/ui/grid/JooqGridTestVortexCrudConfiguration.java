@@ -19,6 +19,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.Tables.GRID_IMAGES;
@@ -31,7 +32,7 @@ public class JooqGridTestVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 GRID_IMAGES, JooqDataStoreConfig.of(GRID_IMAGES)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 GRID_IMAGES.ID, new IdField<>(),
                                 GRID_IMAGES.TITLE, new TextField<>(),
                                 GRID_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
@@ -40,37 +41,37 @@ public class JooqGridTestVortexCrudConfiguration
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(GRID_IMAGES)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(GRID_IMAGES.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(GRID_IMAGES.TITLE, "route.images.labels.title"),
-                                new JooqFieldElement(GRID_IMAGES.URL, "route.images.labels.image")
-                        )
+                .dataStoreKey(GRID_IMAGES)
+                .title("route.projects.title-cards")
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(GRID_IMAGES.TITLE)
+                        .children(List.of(
+                                JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
+                                JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
+                        ))
                         .build())
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JooqRouteRenderer.of(ListRouteFactory.class)
-                .withDataStore(GRID_IMAGES)
-                .withTitle("route.images-list")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withInlineEdit(true)
-                        .withFilterField(GRID_IMAGES.TITLE)
-                        .withChildren(
-                                new JooqFieldElement(GRID_IMAGES.URL, "route.projects.labels.description"),
-                                new JooqFieldElement(GRID_IMAGES.TITLE, "route.projects.labels.name")
-                        )
+                .dataStoreKey(GRID_IMAGES)
+                .title("route.images-list")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .inlineEdit(true)
+                        .filterField(GRID_IMAGES.TITLE)
+                        .children(List.of(
+                                JooqFieldElement.of(GRID_IMAGES.URL, "route.projects.labels.description").build(),
+                                JooqFieldElement.of(GRID_IMAGES.TITLE, "route.projects.labels.name").build()
+                        ))
                         .build())
-                .withChild(imageForm)
+                .childrenMap(Map.of("form", imageForm))
                 .build());
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
                 .build();
     }
 }

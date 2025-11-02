@@ -158,7 +158,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField(PROJECTS.NAME)
                         .withChildren(
-                                new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name")
+                                JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name")
                                 // ...
                         )
                         .build())
@@ -270,9 +270,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .withConfiguration(JpaRouteRendererConfiguration.of(CardFactory.class)
                         .withTitleField("name")
                         .withChildren(
-                                new JpaFieldElement("name", "route.projects.labels.name"),
-                                new JpaFieldElement("description", "route.projects.labels.description"),
-                                new JpaFieldElement("endDate", "route.projects.labels.end_date")
+                                JpaFieldElement.of("name", "route.projects.labels.name"),
+                                JpaFieldElement.of("description", "route.projects.labels.description"),
+                                JpaFieldElement.of("endDate", "route.projects.labels.end_date")
                                 // Fields are automatically detected from entity annotations
                         )
                         .build())
@@ -320,11 +320,11 @@ Configure authentication and user management in your application configuration:
         .withSignUp(true)
         .withLoginView(LoginView.class)
         .withSignUpView(SignUpView.class)
-        .withUsername(new JpaFieldElement("username", "labels.username"))
-        .withPassword(new JpaFieldElement("passwordHash", "labels.password"))
+        .withUsername(JpaFieldElement.of("username", "labels.username"))
+        .withPassword(JpaFieldElement.of("passwordHash", "labels.password"))
         .withSignUpFields(
-            new JpaFieldElement("firstName", "labels.firstName"),
-            new JpaFieldElement("lastName", "labels.lastName")
+            JpaFieldElement.of("firstName", "labels.firstName"),
+            JpaFieldElement.of("lastName", "labels.lastName")
         )
         .build()
 )

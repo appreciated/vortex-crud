@@ -34,24 +34,24 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
     @Override
     protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> getConfiguration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
-                .withDataStore(PROJECTS)
-                .withIconFactory(FACTORY::create)
-                .withTitle("route.projects.title-cards")
-                .withConfiguration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(PROJECTS.NAME)
-                        .withDescriptionField(PROJECTS.DESCRIPTION)
+                .dataStore(PROJECTS)
+                .iconFactory(FACTORY::create)
+                .title("route.projects.title-cards")
+                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                        .titleField(PROJECTS.NAME)
+                        .descriptionField(PROJECTS.DESCRIPTION)
                         .build())
-                .withRoles(List.of("manager", "admin"))
-                .withChild(JooqRouteRenderer.of(FormRouteFactory.class)
-                        .withDataStore(PROJECTS)
-                        .withTitle("route.projects.title-cards")
-                        .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                                .withTitleField(PROJECTS.NAME)
-                                .withChildren(
-                                        new JooqFieldElement(PROJECTS.NAME, "route.projects.labels.name"),
-                                        new JooqFieldElement(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
-                                        new JooqFieldElement(PROJECTS.START_DATE, "route.projects.labels.start_date"),
-                                        new JooqFieldElement(PROJECTS.END_DATE, "route.projects.labels.end_date")
+                .roles(List.of("manager", "admin"))
+                .child(JooqRouteRenderer.of(FormRouteFactory.class)
+                        .dataStore(PROJECTS)
+                        .title("route.projects.title-cards")
+                        .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                                .titleField(PROJECTS.NAME)
+                                .children(
+                                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name"),
+                                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
+                                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date"),
+                                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date")
                                 )
                                 .build())
                         .build())

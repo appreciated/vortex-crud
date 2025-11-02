@@ -19,6 +19,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.jooq.models.tables.KanbanTasks.KANBAN_TASKS;
@@ -30,7 +31,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 KANBAN_TASKS, JooqDataStoreConfig.of(KANBAN_TASKS)
-                        .withFields(Map.of(
+                        .fields(Map.of(
                                 KANBAN_TASKS.ID, new IdField<>(),
                                 KANBAN_TASKS.TITLE, new TextField<>(),
                                 KANBAN_TASKS.STATUS, new SelectField<>("enum-options")
@@ -39,10 +40,10 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         );
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
-                .withDataStore(KANBAN_TASKS)
-                .withConfiguration(JooqRouteRendererConfiguration.of(CardFactory.class)
-                        .withTitleField(KANBAN_TASKS.TITLE)
-                        .withChildren(new JooqFieldElement(KANBAN_TASKS.TITLE, "route.tasks.labels.title"))
+                .dataStoreKey(KANBAN_TASKS)
+                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .titleField(KANBAN_TASKS.TITLE)
+                        .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())
                 .build();
 
@@ -53,26 +54,26 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
-                .withIconFactory(VaadinIcon.TASKS::create)
-                .withDataStore(KANBAN_TASKS)
-                .withTitle("route.open-tasks.title")
-                .withConfiguration(JooqKanban.of(CardFactory.class)
-                        .withTitleField(KANBAN_TASKS.TITLE)
-                        .withDescriptionField(KANBAN_TASKS.DESCRIPTION)
-                        .withColumnField(KANBAN_TASKS.STATUS)
-                        .withRowIndexField(KANBAN_TASKS.ROW_INDEX)
-                        .withFilterField(KANBAN_TASKS.TITLE)
+                .iconFactory(VaadinIcon.TASKS::create)
+                .dataStoreKey(KANBAN_TASKS)
+                .title("route.open-tasks.title")
+                .configuration(JooqKanban.of(CardFactory.class)
+                        .titleField(KANBAN_TASKS.TITLE)
+                        .descriptionField(KANBAN_TASKS.DESCRIPTION)
+                        .columnField(KANBAN_TASKS.STATUS)
+                        .rowIndexField(KANBAN_TASKS.ROW_INDEX)
+                        .filterField(KANBAN_TASKS.TITLE)
                         .build())
-                .withChild(taskForm)
+                .childrenMap(Map.of("form", taskForm))
                 .build()
         );
 
         return JooqApplication.builder()
-                .withName("application.name")
-                .withI18nBundlePrefix("ui_test_i18n")
-                .withRoutes(routes)
-                .withDataStores(dataStores)
-                .withSelects(Selects.builder().withConfigs(Map.of("enum-options", enumOptions)).build())
+                .name("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .dataStores(dataStores)
+                .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
 }
