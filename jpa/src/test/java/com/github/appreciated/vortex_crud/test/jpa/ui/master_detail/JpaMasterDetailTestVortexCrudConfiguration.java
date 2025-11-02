@@ -1,11 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +24,10 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = FormRoute.builder()
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build()
@@ -37,11 +36,11 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", MasterDetailRoute.builder()
+        routes.put("tasks", JpaMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(taskRepository)
                 .title("route.done-tasks.title")
-                .configuration(GridItemRendererConfiguration.builder()
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .descriptionField("description")
                         .build())

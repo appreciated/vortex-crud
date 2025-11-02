@@ -1,11 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.grid;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +22,10 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = FormRoute.builder()
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),
@@ -36,10 +35,10 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("images-list", ListRoute.builder()
+        routes.put("images-list", JpaListRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.images-list")
-                .configuration(ListItemRendererConfiguration.builder()
+                .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(

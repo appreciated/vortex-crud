@@ -1,12 +1,12 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaKanbanConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -27,9 +27,9 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
 
-        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = FormRoute.builder()
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(JpaFieldElement.of("title", "route.tasks.labels.title").build()))
                         .build())
@@ -41,7 +41,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
         enumOptions.put("c", "enums.option3");
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", KanbanConfiguration.builder()
+        routes.put("tasks", JpaKanbanConfiguration.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreKey(taskRepository)
                 .title("route.open-tasks.title")

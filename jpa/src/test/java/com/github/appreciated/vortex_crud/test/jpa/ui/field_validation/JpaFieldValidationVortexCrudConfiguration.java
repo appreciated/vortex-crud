@@ -2,10 +2,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListItemRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaRouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +24,10 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaFormRoute.builder()
                 .dataStoreKey(validationEntityRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("requiredField")
                         .children(List.of(
                                 JpaFieldElement.of("requiredField", "validation.fields.required").build(),
@@ -46,7 +43,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaListItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaListItemRendererConfiguration.builder()
                 .filterField("requiredField")
                 .children(List.of(
                         JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
