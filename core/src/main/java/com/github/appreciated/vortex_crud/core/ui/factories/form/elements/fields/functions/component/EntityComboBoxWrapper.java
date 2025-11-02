@@ -26,13 +26,13 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
                                  ReflectionService<FieldType> reflectionService
     ) {
         ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(refField.getDataStore());
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(refField.dataStore());
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.getFilterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(refField.getFilterField(), filterValue)
+                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> refField.children().stream()

@@ -19,9 +19,9 @@ public record PasswordField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
+    @SuppressWarnings("unchecked")
     public PasswordField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) PasswordFieldFactory.class);
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) PasswordFieldFactory.class);
     }
 
 

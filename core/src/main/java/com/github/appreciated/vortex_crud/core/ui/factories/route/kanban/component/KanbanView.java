@@ -94,7 +94,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.getFields().get(kanbanConfigurationConfig.columnField());
 
         this.kanbanConfigurationConfig = kanbanConfigurationConfig;
-        this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfigurationConfig.getFactory());
+        this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfigurationConfig.factory());
         this.fileProviderRegistry = fileProviderRegistry;
 
         dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField());

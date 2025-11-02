@@ -19,8 +19,8 @@ public record EmailField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
+    @SuppressWarnings("unchecked")
     public EmailField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) EmailFieldFactory.class);
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) EmailFieldFactory.class);
     }
 }

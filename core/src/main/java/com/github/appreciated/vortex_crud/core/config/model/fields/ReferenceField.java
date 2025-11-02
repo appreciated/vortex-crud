@@ -19,12 +19,12 @@ public record ReferenceField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
+    @SuppressWarnings("unchecked")
     public ReferenceField(RepositoryType dataStore,
                           FieldType field,
                           FieldType filterField,
                           boolean required) {
-        this(dataStore, field, filterField, null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) ReferenceFieldFactory.class);
+        this(dataStore, field, filterField, null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) ReferenceFieldFactory.class);
     }
 
     @Override

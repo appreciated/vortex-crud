@@ -20,8 +20,11 @@ public record IntegerField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
 
+    @SuppressWarnings("unchecked")
     public IntegerField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) IntegerNumberFieldFactory.class);
+        this(null, required, null, null,
+                (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)
+                        (Class<?>) IntegerNumberFieldFactory.class);
     }
 
 }

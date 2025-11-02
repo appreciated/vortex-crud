@@ -19,9 +19,9 @@ public record IdField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
+    @SuppressWarnings("unchecked")
     public IdField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) IdFieldFactory.class);
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>)  IdFieldFactory.class);
     }
 
 }

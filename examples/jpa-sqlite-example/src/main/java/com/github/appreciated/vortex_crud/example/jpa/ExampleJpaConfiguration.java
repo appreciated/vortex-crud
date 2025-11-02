@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
@@ -122,7 +124,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaFormRendererConfiguration.builder()
-                        .factory((Class<? extends com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory<String>>) com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory.class)
+                        .factory((Class<? extends VortexCrudItemFactory<String>>) (Class<?>) CardFactory.class)
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),

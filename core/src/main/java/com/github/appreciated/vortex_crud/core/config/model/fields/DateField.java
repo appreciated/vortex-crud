@@ -19,9 +19,9 @@ public record DateField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
+    @SuppressWarnings("unchecked")
     public DateField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) DateFieldFactory.class);
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) DateFieldFactory.class);
     }
 
 }
