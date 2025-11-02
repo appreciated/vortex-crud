@@ -26,7 +26,7 @@ public record CollectionConfiguration<ModelClass, FieldType, RepositoryType>(
         return manyToMany;
     }
 
-    public List<FieldType> getChildren() {
+    public List<FieldType> children() {
         return children;
     }
 }

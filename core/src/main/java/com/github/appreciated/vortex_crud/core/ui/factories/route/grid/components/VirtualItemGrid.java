@@ -128,7 +128,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     if (filterText.isEmpty()) {
                         items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                     } else {
-                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.getTitleField(), filterText, offset, limit);
+                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
                     }
 
                     List<EntityItemList<ModelClass>> wrappers = new ArrayList<>();
@@ -146,7 +146,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     if (filterText.isEmpty()) {
                         count = dataStore.count();
                     } else {
-                        count = dataStore.countWhereColumnLike(itemRendererConfiguration.getTitleField(), filterText);
+                        count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }

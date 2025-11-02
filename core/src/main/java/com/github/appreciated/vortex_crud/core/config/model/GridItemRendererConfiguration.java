@@ -12,10 +12,14 @@ public record GridItemRendererConfiguration<ModelClass, FieldType, RepositoryTyp
         FieldType titleField,
         FieldType descriptionField,
         FieldType imageField,
-        Class<? extends VortexCrudResourceProvider> imageFactory,
+        Class<? extends VortexCrudResourceProvider> resourceProvider,
         boolean inlineEdit,
         FieldType filterField,
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
 ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
+    @Override
+    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
+        return null;
+    }
 }

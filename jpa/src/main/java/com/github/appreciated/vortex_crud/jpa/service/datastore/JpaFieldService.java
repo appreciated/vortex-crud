@@ -8,6 +8,8 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IntegerField;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaVideoFieldRendererConfiguration;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -70,14 +72,14 @@ public class JpaFieldService {
                                 .required(required)
                                 .build();
                     }).or(() -> getAnnotation(entityField, ImageField.class).map(imageField -> {
-                        ImageFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = new ImageFieldRendererConfiguration<>(imageField.value());
+                        ImageFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaImageFieldRendererConfiguration.builder().resourceProvider(imageField.value()).build();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.ImageField
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .configuration(cfg)
                                 .required(required)
                                 .build();
                     })).or(() -> getAnnotation(entityField, VideoField.class).map(videoField -> {
-                        VideoFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = new VideoFieldRendererConfiguration<>(videoField.value());
+                        VideoFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaVideoFieldRendererConfiguration.builder().resourceProvider(videoField.value()).build();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.VideoField
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .configuration(cfg)

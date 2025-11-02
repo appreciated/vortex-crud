@@ -34,7 +34,7 @@ public record ReferenceField<ModelClass, FieldType, RepositoryType>(
         return filterField;
     }
 
-    public List<FieldType> getChildren() {
+    public List<FieldType> children() {
         return children;
     }
 
@@ -45,7 +45,7 @@ public record ReferenceField<ModelClass, FieldType, RepositoryType>(
     }
 
     @Override
-    public Validation getValidation() {
+    public Validation validation() {
         return null;
     }
 

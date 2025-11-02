@@ -1,21 +1,25 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
+import lombok.Builder;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true)
-@NoArgsConstructor
-public class VideoFieldRendererConfiguration<ModelClass, FieldType, RepositoryType>
-        extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
+import java.util.List;
 
-    public VideoFieldRendererConfiguration(Class<? extends VortexCrudResourceProvider> fileFactory) {
-        super();
-        this.setFactory(null);
-        this.setImageFactory(fileFactory);
+@Builder
+public record VideoFieldRendererConfiguration<ModelClass, FieldType, RepositoryType>(
+        Class<? extends VortexCrudItemFactory<FieldType>> factory,
+        FieldType titleField,
+        FieldType descriptionField,
+        FieldType imageField,
+        Class<? extends VortexCrudResourceProvider> resourceProvider,
+        boolean inlineEdit,
+        FieldType filterField,
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
+) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+
+    @Override
+    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
+        return null;
     }
 }

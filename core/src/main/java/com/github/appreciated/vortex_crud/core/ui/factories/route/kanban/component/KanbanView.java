@@ -42,7 +42,7 @@ import static com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.
 public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
-    private final Kanban<ModelClass, FieldType, RepositoryType> kanbanConfig;
+    private final KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig;
     private final ComponentRenderer<Component, Object> itemRenderer;
     private final RepositoryType dataStoreIdentifier;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
@@ -68,7 +68,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                       VortexCrudDataStore<FieldType, ?> dataStore,
                       VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                       VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
-                      Kanban<ModelClass, FieldType, RepositoryType> kanbanConfig,
+                      KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig,
                       Application<ModelClass, FieldType, RepositoryType> configService,
                       VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                       VortexCrudFileProviderRegistry fileProviderRegistry,
@@ -91,16 +91,16 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         this.routeResolver = routeResolver;
         Selects selects = configService.getSelects();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> config = configService.getDataStores().get(dataStoreIdentifier);
-        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.getFields().get(kanbanConfig.getColumnField());
+        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.getFields().get(kanbanConfigurationConfig.columnField());
 
-        this.kanbanConfig = kanbanConfig;
-        this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfig.getFactory());
+        this.kanbanConfigurationConfig = kanbanConfigurationConfig;
+        this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfigurationConfig.getFactory());
         this.fileProviderRegistry = fileProviderRegistry;
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfig.getFilterField());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
-            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfig,
+            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfigurationConfig,
                     entity,
                     null,
                     fileProviderRegistry,
@@ -113,7 +113,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             return cardWrapper;
         });
 
-        Object selectName = ((SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField).getValues();
+        Object selectName = ((SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField).values();
         Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
@@ -161,7 +161,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                             RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                             VortexCrudDataStore<FieldType, ?> dataStore,
                             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                            Kanban<ModelClass, FieldType, RepositoryType> kanbanConfig,
+                            KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig,
                             VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                             VortexCrudFileProviderRegistry fileProviderRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
@@ -218,7 +218,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer,
                     dataStore,
                     routeFactory,
-                    kanbanConfig,
+                    kanbanConfigurationConfig,
                     dialogFactoryRegistry,
                     fileProviderRegistry,
                     fieldNameResolver,
@@ -248,16 +248,16 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                             Query<Object, String> baseQuery = new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null));
                             java.util.stream.Stream<Object> stream = dataProvider.fetch(baseQuery)
                                     .filter(item -> Objects.equals(
-                                            reflectionService.getValue(item, kanbanConfig.getColumnField()),
+                                            reflectionService.getValue(item, kanbanConfigurationConfig.columnField()),
                                             columnDatabaseValue));
-                            if (kanbanConfig.getRowIndexField() != null) {
-                                stream = stream.sorted(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfig.getRowIndexField())));
+                            if (kanbanConfigurationConfig.rowIndexField() != null) {
+                                stream = stream.sorted(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfigurationConfig.rowIndexField())));
                             }
                             return stream.skip(query.getOffset()).limit(query.getLimit());
                         },
                         query -> (int) dataProvider.fetch(new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null)))
                                 .filter(item -> Objects.equals(
-                                        reflectionService.getValue(item, kanbanConfig.getColumnField()),
+                                        reflectionService.getValue(item, kanbanConfigurationConfig.columnField()),
                                         columnDatabaseValue))
                                 .count()
                 ).withConfigurableFilter();
@@ -287,17 +287,17 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             }
 
             // Store original column value
-            Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfig.getColumnField());
+            Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfigurationConfig.columnField());
 
             // Update column value
-            reflectionService.setValue(draggedItem, kanbanConfig.getColumnField(), columnDatabaseValue);
+            reflectionService.setValue(draggedItem, kanbanConfigurationConfig.columnField(), columnDatabaseValue);
 
-            if (kanbanConfig.getRowIndexField() != null) {
+            if (kanbanConfigurationConfig.rowIndexField() != null) {
                 // Get fresh items in target column
                 List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                        kanbanConfig.getColumnField(),
+                        kanbanConfigurationConfig.columnField(),
                         columnDatabaseValue,
-                        kanbanConfig.getRowIndexField(),
+                        kanbanConfigurationConfig.rowIndexField(),
                         0,
                         1000
                 );
@@ -308,33 +308,33 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     // Dropping at the end
                     Integer lastPosition = targetColumnItems.isEmpty() ? null :
                             (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
-                                    kanbanConfig.getRowIndexField());
+                                    kanbanConfigurationConfig.rowIndexField());
                     newPosition = generateKeyBetween(lastPosition, null);
                 } else {
                     Object targetItem = event.getDropTargetItem().get();
                     Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
-                            kanbanConfig.getRowIndexField());
+                            kanbanConfigurationConfig.rowIndexField());
 
                     if (event.getDropLocation() == GridDropLocation.BELOW) {
                         // Find next item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
                                 (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
-                                        kanbanConfig.getRowIndexField()) : null;
+                                        kanbanConfigurationConfig.rowIndexField()) : null;
                         newPosition = generateKeyBetween(targetPosition, nextPosition);
                     } else {
                         // Find previous item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer prevPosition = (targetIndex > 0) ?
                                 (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
-                                        kanbanConfig.getRowIndexField()) : null;
+                                        kanbanConfigurationConfig.rowIndexField()) : null;
                         newPosition = generateKeyBetween(prevPosition, targetPosition);
                     }
                 }
 
                 // Update the dragged item with new position
                 try {
-                    reflectionService.setValue(draggedItem, kanbanConfig.getRowIndexField(), newPosition);
+                    reflectionService.setValue(draggedItem, kanbanConfigurationConfig.rowIndexField(), newPosition);
                 } catch (Exception e) {
                     System.out.println();
                 }

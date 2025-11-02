@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.kanban;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.Kanban;
+import com.github.appreciated.vortex_crud.core.config.model.KanbanConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -67,7 +67,7 @@ public class KanbanDetailFactory<ModelClass, FieldType, RepositoryType> implemen
                 dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey()),
                 routeFactory,
                 itemFactory,
-                (Kanban<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration(),
+                (KanbanConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration(),
                 configService.getConfiguration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,

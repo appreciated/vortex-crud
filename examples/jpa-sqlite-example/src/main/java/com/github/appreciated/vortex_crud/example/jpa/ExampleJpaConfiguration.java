@@ -56,7 +56,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaRouteRendererConfiguration.builder()
+                .configuration(JpaFo.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.tasks.labels.title").build(),
@@ -177,7 +177,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(TASKS::create)
                 .dataStoreKey(taskRepository)
                 .title("route.open-tasks.title")
-                .configuration(JpaKanban.of(CardFactory.class)
+                .configuration(JpaKanbanConfiguration.of(CardFactory.class)
                         .titleField("title")
                         .descriptionField("description")
                         .columnField("status")

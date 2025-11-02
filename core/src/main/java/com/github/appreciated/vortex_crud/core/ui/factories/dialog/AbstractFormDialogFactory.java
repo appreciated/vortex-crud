@@ -82,7 +82,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration =
                 (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) formRouteRenderer.getConfiguration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.getChildren(), recordById,
+        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById,
                 routeFactory, tables, binder, layout);
 
         dialog.add(layout);

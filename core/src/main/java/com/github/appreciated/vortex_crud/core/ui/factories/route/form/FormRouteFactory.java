@@ -96,7 +96,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         if (!creationMode) {
             binder.bindReadOnly(
                     titleComponent,
-                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.getTitleField())
+                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.titleField())
             );
         } else {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
@@ -107,7 +107,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         ModelClass entity = creationMode ? dataStore.newInstance() : dataStore.getRecordById(lastSegment);
-        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.getChildren(), entity, factoryRegistry, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, factoryRegistry, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

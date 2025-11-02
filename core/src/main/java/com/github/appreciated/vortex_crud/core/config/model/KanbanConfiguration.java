@@ -7,7 +7,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType>(
+public record KanbanConfiguration<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudItemFactory<FieldType>> factory,
         FieldType titleField,
         FieldType descriptionField,
@@ -15,8 +15,10 @@ public record ListItemRendererConfiguration<ModelClass, FieldType, RepositoryTyp
         Class<? extends VortexCrudResourceProvider> resourceProvider,
         boolean inlineEdit,
         FieldType filterField,
-        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
-) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
+        FieldType columnField,
+        FieldType rowIndexField
+        ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Override
     public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {

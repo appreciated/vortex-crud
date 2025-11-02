@@ -95,7 +95,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
         // Create a list of selectable items
         MultiSelectListBox<Object> connectionList = new MultiSelectListBox<>();
         connectionList.setItems(availableConnections.values());
-        List<FieldType> children = collectionConfiguration.getChildren();
+        List<FieldType> children = collectionConfiguration.children();
         connectionList.setItemLabelGenerator(obj -> children.stream()
                 .map(fieldId -> {
                     try {

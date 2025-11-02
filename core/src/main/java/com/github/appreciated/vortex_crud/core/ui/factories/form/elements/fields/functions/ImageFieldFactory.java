@@ -21,7 +21,7 @@ public class ImageFieldFactory<ModelClass, FieldType, RepositoryType> implements
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new ImageHasValue(fileProviderRegistry.getFactory(imageField.getConfiguration().getImageFactory()));
+        return new ImageHasValue(fileProviderRegistry.getFactory(imageField.getConfiguration().resourceProvider()));
     }
 
     @Override

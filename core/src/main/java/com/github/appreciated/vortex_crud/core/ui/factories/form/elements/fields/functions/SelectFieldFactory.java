@@ -22,15 +22,15 @@ public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implement
         Select<?> select = new Select<>();
 
         SelectField<ModelClass, FieldType, RepositoryType> sf = (SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        String selectName = sf.getValues();
+        String selectName = sf.values();
         Map<?, String> selectConfig = selects.getConfigs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");
         }
 
-        Set<?> strings = selectConfig.keySet();
-        select.setItems(new ArrayList(strings));
+        Set<?> keySet = selectConfig.keySet();
+        select.setItems(new ArrayList(keySet));
         select.setItemLabelGenerator(item -> select.getTranslation(selectConfig.get(item)));
 
         return select;

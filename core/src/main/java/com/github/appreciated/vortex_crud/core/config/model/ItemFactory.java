@@ -7,11 +7,11 @@ public interface ItemFactory<FieldType> {
 
     Class<? extends VortexCrudItemFactory> getFactory();
 
-    FieldType getTitleField();
+    FieldType titleField();
 
-    FieldType getDescriptionField();
+    FieldType descriptionField();
 
-    FieldType getImageField();
+    FieldType imageField();
 
-    Class<? extends VortexCrudResourceProvider> getImageFactory();
+    Class<? extends VortexCrudResourceProvider> resourceProvider();
 }

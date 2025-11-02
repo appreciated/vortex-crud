@@ -7,7 +7,7 @@ public class CollectionConfig<FieldType> {
         this.titleField = titleField;
     }
 
-    public FieldType getTitleField() {
+    public FieldType titleField() {
         return titleField;
     }
 }

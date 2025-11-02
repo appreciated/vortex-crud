@@ -1,23 +1,26 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
 
 import java.util.List;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@SuperBuilder(toBuilder = true)
-@NoArgsConstructor
-public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>
-        extends RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
+@Builder
+public record MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>(
+        Class<? extends VortexCrudItemFactory<FieldType>> factory,
+        FieldType titleField,
+        FieldType descriptionField,
+        FieldType imageField,
+        Class<? extends VortexCrudResourceProvider> resourceProvider,
+        boolean inlineEdit,
+        FieldType filterField,
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
+        List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms
+) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
-    private List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms;
-
-    public MultiFormRendererConfiguration(Class<? extends VortexCrudItemFactory<FieldType>> factory) {
-        super(factory);
+    @Override
+    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
+        return null;
     }
 }

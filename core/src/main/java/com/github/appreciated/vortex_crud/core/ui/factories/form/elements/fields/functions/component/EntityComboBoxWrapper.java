@@ -35,7 +35,7 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
                 filterValue -> dataStore.countWhereColumnLike(refField.getFilterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> refField.getChildren().stream()
+        comboBox.setItemLabelGenerator(item -> refField.children().stream()
                 .map(fieldId -> reflectionService.getString(item, fieldId))
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")

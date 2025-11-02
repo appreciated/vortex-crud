@@ -42,13 +42,13 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
 
-        assert gridOrListConfiguration.getFilterField() != null;
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.getFilterField()).withConfigurableFilter();
+        assert gridOrListConfiguration.filterField() != null;
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.filterField()).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.getFields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.getChildren()) {
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.children()) {
             FieldType fieldName = field.getField();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
             listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);

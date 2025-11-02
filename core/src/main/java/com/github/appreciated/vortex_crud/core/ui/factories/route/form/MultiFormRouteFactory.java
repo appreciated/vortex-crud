@@ -44,7 +44,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
                 (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
         Div div = new Div();
-        for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.getForms()) {
+        for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.forms()) {
             assert detailRouteSetting != null;
             div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), routeRenderer, child));
         }

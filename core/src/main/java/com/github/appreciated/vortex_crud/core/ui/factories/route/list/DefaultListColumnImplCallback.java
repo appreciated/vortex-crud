@@ -29,7 +29,7 @@ public class DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType
             }
             grid.addComponentColumn(entity -> {
                         String string = reflectionService.getString(entity, field.getField());
-                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(imageField.getConfiguration().getImageFactory()));
+                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(imageField.getConfiguration().resourceProvider()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);

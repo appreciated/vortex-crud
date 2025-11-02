@@ -1,21 +1,12 @@
 package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.ListItemRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-@Data
-@SuperBuilder(toBuilder = true)
-@EqualsAndHashCode(callSuper = true)
-public class JooqListItemRendererConfiguration extends ListItemRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-
-    public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>, ?, ?> of(Class<? extends VortexCrudItemFactory> factory) {
-        return ListItemRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .factory((Class<? extends VortexCrudItemFactory<TableField<?, ?>>>) factory);
+public class JooqListItemRendererConfiguration {
+    public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
+        return ListItemRendererConfiguration.builder();
     }
 }

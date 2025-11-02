@@ -28,24 +28,24 @@ public class DefaultCardItem<FieldType> extends Card {
 
         // Optional image
         ImageDisplayComponent image = null;
-        FieldType imageFieldType = config.getImageField();
+        FieldType imageFieldType = config.imageField();
         if (imageFieldType != null) {
-            if (config.getImageFactory() == null) {
+            if (config.resourceProvider() == null) {
                 throw new IllegalArgumentException("The item config has a image-field defined but does not provide a image-factory");
             }
             String imagePath = reflectionService.getString(entity, imageFieldType);
-            image = new ImageDisplayComponent(provider.getFactory(config.getImageFactory()));
+            image = new ImageDisplayComponent(provider.getFactory(config.resourceProvider()));
             image.setImageSource(imagePath);
         }
 
-        H4 title = new H4(reflectionService.getString(entity, config.getTitleField()));
+        H4 title = new H4(reflectionService.getString(entity, config.titleField()));
         title.getStyle().set("width", "100%")
                 .set("overflow", "hidden")
                 .set("text-overflow", "ellipsis");
         setTitle(title);
 
-        if (config.getDescriptionField() != null) {
-            Text description = new Text(reflectionService.getString(entity, config.getDescriptionField()));
+        if (config.descriptionField() != null) {
+            Text description = new Text(reflectionService.getString(entity, config.descriptionField()));
             Div descriptionDiv = new Div(description);
             descriptionDiv.getStyle().set("width", "100%")
                     .set("overflow", "hidden")

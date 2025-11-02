@@ -216,7 +216,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStore(TASKS)
                 .title("route.open-tasks.title")
-                .configuration(JooqKanban.of(CardFactory.class)
+                .configuration(JooqKanbanConfiguration.of(CardFactory.class)
                         .titleField(TASKS.TITLE)
                         .descriptionField(TASKS.DESCRIPTION)
                         .columnField(TASKS.STATUS)

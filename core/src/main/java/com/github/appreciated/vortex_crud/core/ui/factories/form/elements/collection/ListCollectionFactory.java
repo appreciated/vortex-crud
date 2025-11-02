@@ -107,7 +107,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            List<FieldType> children = internalFormElement.getConfiguration().getData().getChildren();
+            List<FieldType> children = internalFormElement.getConfiguration().getData().children();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
@@ -133,7 +133,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
             @SuppressWarnings("unchecked")
             RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form =
                     (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.getConfiguration().getChild().getConfiguration();
-            for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.getChildren()) {
+            for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
                 String textValue = reflectionService.getString(record, child.getField());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());

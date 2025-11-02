@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.ListItemRendererConf
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaListItemRendererConfiguration {
-    public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>, ?, ?> builder() {
+    public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
         return ListItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }
