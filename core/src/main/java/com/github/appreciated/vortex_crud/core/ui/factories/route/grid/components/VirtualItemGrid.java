@@ -65,7 +65,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
         itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.getConfiguration();
 
-        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.getFactory());
+        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {

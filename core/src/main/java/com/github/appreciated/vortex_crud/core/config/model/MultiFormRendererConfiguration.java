@@ -18,9 +18,4 @@ public record MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryTy
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
         List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms
 ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
-
-    @Override
-    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
-        return null;
-    }
 }

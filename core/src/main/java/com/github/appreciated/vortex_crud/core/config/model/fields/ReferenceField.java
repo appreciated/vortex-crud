@@ -16,41 +16,19 @@ public record ReferenceField<ModelClass, FieldType, RepositoryType>(
         List<FieldType> children,
         boolean required,
         List<String> writeRoles,
-        List<String> readOnlyRoles
+        List<String> readOnlyRoles,
+        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
 
     public ReferenceField(RepositoryType dataStore,
                           FieldType field,
                           FieldType filterField,
                           boolean required) {
-        this(dataStore, field, filterField, null, required, null, null);
-    }
-
-    public RepositoryType getDataStore() {
-        return dataStore;
-    }
-
-    public FieldType getFilterField() {
-        return filterField;
-    }
-
-    public List<FieldType> children() {
-        return children;
-    }
-
-    @Override
-    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        Class<? extends VortexCrudFieldFactory> f = ReferenceFieldFactory.class;
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
+        this(dataStore, field, filterField, null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) ReferenceFieldFactory.class);
     }
 
     @Override
     public Validation validation() {
         return null;
     }
-
-    public FieldType getField() {
-        return field;
-    }
-
 }

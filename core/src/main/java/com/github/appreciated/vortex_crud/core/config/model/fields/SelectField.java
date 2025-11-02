@@ -14,17 +14,12 @@ public record SelectField<ModelClass, FieldType, RepositoryType>(
         Validation validation,
         boolean required,
         List<String> writeRoles,
-        List<String> readOnlyRoles
+        List<String> readOnlyRoles,
+        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
 
     public SelectField(String values, boolean required, Validation validation) {
-        this(values, validation, required, null, null);
-    }
-
-    @Override
-    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        Class<? extends VortexCrudFieldFactory> f = SelectFieldFactory.class;
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
+        this(values, validation, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) SelectFieldFactory.class);
     }
 
 }

@@ -59,7 +59,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     continue; // Skip this field entirely
                 }
 
-                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.getFactory());
+                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.factory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
                 // Apply read-only if user only has read access

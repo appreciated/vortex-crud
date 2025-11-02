@@ -16,17 +16,13 @@ public record PasswordField<ModelClass, FieldType, RepositoryType>(
         Validation validation,
         boolean required,
         List<String> writeRoles,
-        List<String> readOnlyRoles
+        List<String> readOnlyRoles,
+        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
 
     public PasswordField(boolean required) {
-        this(null, required, null, null);
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) PasswordFieldFactory.class);
     }
 
-    @Override
-    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        Class<? extends VortexCrudFieldFactory> f = PasswordFieldFactory.class;
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
-    }
 
 }

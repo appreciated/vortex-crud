@@ -122,6 +122,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaFormRendererConfiguration.builder()
+                        .factory((Class<? extends com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory<String>>) com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory.class)
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.of("title", "route.images.labels.title").build(),

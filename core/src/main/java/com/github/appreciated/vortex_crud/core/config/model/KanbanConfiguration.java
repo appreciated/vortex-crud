@@ -19,9 +19,4 @@ public record KanbanConfiguration<ModelClass, FieldType, RepositoryType>(
         FieldType columnField,
         FieldType rowIndexField
         ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
-
-    @Override
-    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
-        return null;
-    }
 }

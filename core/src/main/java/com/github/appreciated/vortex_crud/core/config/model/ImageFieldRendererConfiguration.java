@@ -17,9 +17,4 @@ public record ImageFieldRendererConfiguration<ModelClass, FieldType, RepositoryT
         FieldType filterField,
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
 ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
-
-    @Override
-    public Class<? extends VortexCrudItemFactory<FieldType>> getFactory() {
-        return null;
-    }
 }

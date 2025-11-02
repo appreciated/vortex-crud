@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
 import lombok.Builder;
 
 import java.util.List;
@@ -16,14 +15,9 @@ public record TextField<ModelClass, FieldType, RepositoryType>(
         Validation validation,
         boolean required,
         List<String> writeRoles,
-        List<String> readOnlyRoles
+        List<String> readOnlyRoles,
+        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
-    @Override
-    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        Class<? extends VortexCrudFieldFactory> f = TextFieldFactory.class;
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
-    }
 
     public List<String> getWriteRoles() {
         return writeRoles;

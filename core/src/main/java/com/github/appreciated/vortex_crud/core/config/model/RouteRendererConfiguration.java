@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 
 import java.util.List;
 
-public interface RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> extends RouteConfig<FieldType> {
+public interface RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
     Class<? extends VortexCrudItemFactory<FieldType>> factory();
     FieldType titleField();
     FieldType descriptionField();
@@ -14,5 +14,4 @@ public interface RouteRendererConfiguration<ModelClass, FieldType, RepositoryTyp
     boolean inlineEdit();
     FieldType filterField();
     List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children();
-    Class<? extends VortexCrudItemFactory<FieldType>> getFactory();
 }

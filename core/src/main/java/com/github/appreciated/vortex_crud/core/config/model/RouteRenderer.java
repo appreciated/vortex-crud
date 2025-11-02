@@ -19,7 +19,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     boolean isHiddenInMenu();
 
-    RouteConfig<FieldType> getConfiguration();
+    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration();
 
     SerializableSupplier<Component> getIconFactory();
 }

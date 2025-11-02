@@ -16,17 +16,12 @@ public record IntegerField<ModelClass, FieldType, RepositoryType>(
         Validation validation,
         boolean required,
         List<String> writeRoles,
-        List<String> readOnlyRoles
+        List<String> readOnlyRoles,
+        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
 
     public IntegerField(boolean required) {
-        this(null, required, null, null);
-    }
-
-    @Override
-    public Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        Class<? extends VortexCrudFieldFactory> f = IntegerNumberFieldFactory.class;
-        return (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) f;
+        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) IntegerNumberFieldFactory.class);
     }
 
 }

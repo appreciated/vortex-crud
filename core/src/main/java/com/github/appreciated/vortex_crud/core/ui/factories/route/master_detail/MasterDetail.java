@@ -76,7 +76,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         this.pathVariables = routeResolver;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey());
         this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
-        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.getFactory());
+        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
         assert routeRenderer.getChild() != null;
 
         detailContainer = new VerticalLayout();

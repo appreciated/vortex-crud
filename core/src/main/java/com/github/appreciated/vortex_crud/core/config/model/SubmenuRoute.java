@@ -18,7 +18,7 @@ public record SubmenuRoute<ModelClass, FieldType, RepositoryType>(
     boolean defaultRoute,
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
     boolean hideInMenu,
-    RouteConfig<FieldType> configuration,
+    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
     List<String> readOnlyRoles,
@@ -53,7 +53,7 @@ public record SubmenuRoute<ModelClass, FieldType, RepositoryType>(
     }
 
     @Override
-    public RouteConfig<FieldType> getConfiguration() {
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
         return configuration;
     }
 
