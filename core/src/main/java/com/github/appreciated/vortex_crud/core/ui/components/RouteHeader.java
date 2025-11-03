@@ -7,9 +7,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class RouteHeader extends HorizontalLayout {
     public RouteHeader(RouteRenderer<?, ?, ?> config) {
-        H2 h2 = new H2(getTranslation(config.getTitle()));
-        if (config.getIconFactory() != null) {
-            Component icon = config.getIconFactory().get();
+        H2 h2 = new H2(getTranslation(config.title()));
+        if (config.iconFactory() != null) {
+            Component icon = config.iconFactory().get();
             icon.getStyle()
                     .set("color", "var(--lumo-primary-text-color)")
                     .set("opacity", "0.5");

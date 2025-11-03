@@ -10,7 +10,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.TableField;
@@ -53,7 +53,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         enumOptions.put("c", "enums.option3");
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
+        routes.put("tasks", JooqRouteRenderer.of(KanbanFactory.class)
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreKey(KANBAN_TASKS)
                 .title("route.open-tasks.title")

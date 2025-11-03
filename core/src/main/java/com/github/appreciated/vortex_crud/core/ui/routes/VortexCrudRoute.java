@@ -67,7 +67,7 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
 
-        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory())
+        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.factory())
                 .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }

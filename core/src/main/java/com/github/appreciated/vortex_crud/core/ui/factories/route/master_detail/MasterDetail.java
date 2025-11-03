@@ -74,10 +74,10 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.getDataStoreKey());
-        this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+        this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey());
+        this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
-        assert routeRenderer.getChild() != null;
+        assert routeRenderer.child() != null;
 
         detailContainer = new VerticalLayout();
         detailContainer.setPadding(false);
@@ -129,8 +129,8 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private void setDetail(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver, boolean creation) {
         detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
-            RouteRenderer<ModelClass, FieldType, RepositoryType> child = routeRenderer.getChild();
-            Component component = routeFactory.getFactory(child.getFactory()).renderRoute(
+            RouteRenderer<ModelClass, FieldType, RepositoryType> child = routeRenderer.child();
+            Component component = routeFactory.getFactory(child.factory()).renderRoute(
                     creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,
                     new DetailRouteSetting(true, false, creation)

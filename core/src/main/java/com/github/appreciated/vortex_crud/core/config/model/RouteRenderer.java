@@ -9,17 +9,17 @@ import com.vaadin.flow.function.SerializableSupplier;
  */
 public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled {
 
-    RepositoryType getDataStoreKey();
+    RepositoryType dataStoreKey();
 
-    String getTitle();
+    String title();
 
     boolean isDefaultRoute();
 
-    Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory();
+    Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory();
 
     boolean isHiddenInMenu();
 
-    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration();
+    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration();
 
-    SerializableSupplier<Component> getIconFactory();
+    SerializableSupplier<Component> iconFactory();
 }

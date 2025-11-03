@@ -53,7 +53,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        InternalFormElement build = JpaCollectionElement.of("route.tasks.labels.comments")
+        InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.of("route.tasks.labels.comments")
                 .configuration(JpaCollection.of(FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.of(taskCommentRepository)
                                 .oneToMany(new JpaOneToMany("task"))
@@ -147,7 +147,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaGridRoute.builder()
-                .defaultRoute(true)
+                .isDefaultRoute(true)
                 .dataStoreKey(projectRepository)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")

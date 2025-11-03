@@ -14,9 +14,9 @@ import java.util.List;
 public record GridRoute<ModelClass, FieldType, RepositoryType>(
     RepositoryType dataStoreKey,
     String title,
-    boolean defaultRoute,
+    boolean isDefaultRoute,
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-    boolean hideInMenu,
+    boolean isHiddenInMenu,
     RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
@@ -25,45 +25,10 @@ public record GridRoute<ModelClass, FieldType, RepositoryType>(
 ) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
-    public GridRoute {
-        if (factory == null) factory = (Class) GridRouteFactory.class;
-    }
-
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public boolean isHiddenInMenu() {
-        return hideInMenu;
-    }
-
-    @Override
-    public boolean isDefaultRoute() {
-        return defaultRoute;
-    }
-
-    public boolean getDefaultRoute() {
-        return defaultRoute;
-    }
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return factory;
-    }
-
-    @Override
-    public SerializableSupplier<Component> getIconFactory() {
-        return iconFactory;
+    public static class GridRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        GridRouteBuilder() {
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) GridRouteFactory.class;
+        }
     }
 
     public List<String> getWriteRoles() {
@@ -75,7 +40,7 @@ public record GridRoute<ModelClass, FieldType, RepositoryType>(
     }
 
     @Override
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
         return child;
     }
 }

@@ -12,7 +12,7 @@ public record DataStoreConfig<ModelClass, FieldType, RepositoryType>(
     Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields
 ) {
     // Explicit getters for backwards compatibility
-    public RepositoryType getFactory() {
+    public RepositoryType factory() {
         return factory;
     }
 

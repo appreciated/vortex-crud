@@ -14,9 +14,9 @@ import java.util.List;
 public record FormRoute<ModelClass, FieldType, RepositoryType>(
     RepositoryType dataStoreKey,
     String title,
-    boolean defaultRoute,
+    boolean isDefaultRoute,
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-    boolean hideInMenu,
+    boolean isHiddenInMenu,
     RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
@@ -25,8 +25,10 @@ public record FormRoute<ModelClass, FieldType, RepositoryType>(
 ) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
-    public FormRoute {
-        if (factory == null) factory = (Class) FormRouteFactory.class;
+    public static class FormRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        FormRouteBuilder() {
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+        }
     }
 
     public RepositoryType getDataStoreKey() {
@@ -35,35 +37,6 @@ public record FormRoute<ModelClass, FieldType, RepositoryType>(
 
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public boolean isHiddenInMenu() {
-        return hideInMenu;
-    }
-
-    @Override
-    public boolean isDefaultRoute() {
-        return defaultRoute;
-    }
-
-    public boolean getDefaultRoute() {
-        return defaultRoute;
-    }
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return factory;
-    }
-
-    @Override
-    public SerializableSupplier<Component> getIconFactory() {
-        return iconFactory;
     }
 
     public List<String> getWriteRoles() {

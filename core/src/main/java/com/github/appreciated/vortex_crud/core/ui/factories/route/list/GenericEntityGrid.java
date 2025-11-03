@@ -33,14 +33,14 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         this.routeResolver = routeResolver;
         this.dataStoreUtil = dataStoreUtil;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        RepositoryType table = routeRenderer.getDataStoreKey();
+        RepositoryType table = routeRenderer.dataStoreKey();
         VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.getConfiguration().getDataStores().get(routeRenderer.getDataStoreKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.getConfiguration().getDataStores().get(routeRenderer.dataStoreKey());
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
-                (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+                (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
 
         assert gridOrListConfiguration.filterField() != null;
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.filterField()).withConfigurableFilter();

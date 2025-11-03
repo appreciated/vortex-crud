@@ -15,9 +15,9 @@ import java.util.Map;
 public record SubmenuRoute<ModelClass, FieldType, RepositoryType>(
     RepositoryType dataStoreKey,
     String title,
-    boolean defaultRoute,
+    boolean isDefaultRoute,
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-    boolean hideInMenu,
+    boolean isHiddenInMenu,
     RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
@@ -26,56 +26,9 @@ public record SubmenuRoute<ModelClass, FieldType, RepositoryType>(
 ) implements RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
-    public SubmenuRoute {
-        if (factory == null) factory = (Class) SubmenuRouteFactory.class;
-    }
-
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public boolean isHiddenInMenu() {
-        return hideInMenu;
-    }
-
-    @Override
-    public boolean isDefaultRoute() {
-        return defaultRoute;
-    }
-
-    public boolean getDefaultRoute() {
-        return defaultRoute;
-    }
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return factory;
-    }
-
-    @Override
-    public SerializableSupplier<Component> getIconFactory() {
-        return iconFactory;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
-
-    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getChildrenMap() {
-        return childrenMap;
+    public static class SubmenuRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        SubmenuRouteBuilder() {
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SubmenuRouteFactory.class;
+        }
     }
 }

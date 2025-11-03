@@ -97,7 +97,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     form.setColspan(formItem, element.getSpan());
                 }
             } else {
-                Component collection = collectionFactoryRegistry.getFactory(element.getFactory()).createCollection(
+                Component collection = collectionFactoryRegistry.getFactory(element.factory()).createCollection(
                         reflectionService.getId(entity),
                         routeRenderer,
                         element,

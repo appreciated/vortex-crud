@@ -15,7 +15,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.VortexCrudListColumnCallbackRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
@@ -54,7 +54,7 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(FormRouteFactory.class, new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
         factories.put(FormSlideRouteFactory.class, new FormSlideRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
         factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
-        factories.put(KanbanDetailFactory.class, new KanbanDetailFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(KanbanFactory.class, new KanbanFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
     }
 
@@ -72,7 +72,7 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         if (currentRouteRenderer == null) {
             return false;
         }
-        return factories.get(currentRouteRenderer.getFactory()).isContainerRoute();
+        return factories.get(currentRouteRenderer.factory()).isContainerRoute();
     }
 }
 

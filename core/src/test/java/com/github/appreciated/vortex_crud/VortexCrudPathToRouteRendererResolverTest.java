@@ -73,7 +73,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrapbare Route zurückgegeben wird
-        assertEquals("routeWithContainer", currentRouteRenderer.getTitle(), "Die erste wrapbare Route sollte zurückgegeben werden.");
+        assertEquals("routeWithContainer", currentRouteRenderer.title(), "Die erste wrapbare Route sollte zurückgegeben werden.");
     }
 
     @Test
@@ -108,7 +108,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die letzte non-wrappable Route zurückgegeben wird
-        assertEquals("routeWithoutContainer2", currentRouteRenderer.getTitle(), "Die letzte nicht-wrapbare Route sollte zurückgegeben werden.");
+        assertEquals("routeWithoutContainer2", currentRouteRenderer.title(), "Die letzte nicht-wrapbare Route sollte zurückgegeben werden.");
     }
 
     @Test
@@ -148,7 +148,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die erste wrappable Route zurückgegeben wird
-        assertEquals("routeWithContainer", currentRouteRenderer.getTitle(), "Die erste wrappable Route sollte zurückgegeben werden.");
+        assertEquals("routeWithContainer", currentRouteRenderer.title(), "Die erste wrappable Route sollte zurückgegeben werden.");
     }
 
     @Test
@@ -175,7 +175,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         RouteRenderer<String, String, String> currentRouteRenderer = vortexCrudPath.getCurrentRoute();
 
         // Prüfung, ob die Route selbst zurückgegeben wird
-        assertEquals("routeWithoutContainer1", currentRouteRenderer.getTitle(), "Die nicht-wrappable Route sollte zurückgegeben werden.");
+        assertEquals("routeWithoutContainer1", currentRouteRenderer.title(), "Die nicht-wrappable Route sollte zurückgegeben werden.");
     }
 
     @Test
@@ -216,8 +216,8 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         // Prüfung der Marker
         assertEquals(3, routes.size(), "Es sollten 3 Marker gesetzt sein.");
-        assertEquals("routeWithContainer", routes.get(0).getTitle(), "Erster Marker sollte 'routeWithContainer' sein.");
-        assertEquals("routeWithoutContainer1", routes.get(1).getTitle(), "Zweiter Marker sollte 'routeWithoutContainer1' sein.");
-        assertEquals("routeWithoutContainer2", routes.get(2).getTitle(), "Dritter Marker sollte 'routeWithoutContainer2' sein.");
+        assertEquals("routeWithContainer", routes.get(0).title(), "Erster Marker sollte 'routeWithContainer' sein.");
+        assertEquals("routeWithoutContainer1", routes.get(1).title(), "Zweiter Marker sollte 'routeWithoutContainer1' sein.");
+        assertEquals("routeWithoutContainer2", routes.get(2).title(), "Dritter Marker sollte 'routeWithoutContainer2' sein.");
     }
 }

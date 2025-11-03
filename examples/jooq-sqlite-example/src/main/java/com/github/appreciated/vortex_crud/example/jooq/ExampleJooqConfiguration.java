@@ -12,7 +12,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
@@ -212,7 +212,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .roles(List.of("manager", "admin"))
                 .child(projectForm)
                 .build());
-        routes.put("open-tasks", JooqRouteRenderer.of(KanbanDetailFactory.class)
+        routes.put("open-tasks", JooqRouteRenderer.of(KanbanFactory.class)
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStore(TASKS)
                 .title("route.open-tasks.title")

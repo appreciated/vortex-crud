@@ -34,7 +34,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     ) {
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
-        RepositoryType dataStore = routeRenderer.getDataStoreKey();
+        RepositoryType dataStore = routeRenderer.dataStoreKey();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
@@ -60,11 +60,11 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     }
 
     private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, RepositoryType dataStore, FormCreator<ModelClass, FieldType, RepositoryType> formCreator, VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
+        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.child().factory()).create(
                 null,
                 null,
                 null,
-                routeRenderer.getChild(),
+                routeRenderer.child(),
                 null,
                 dataStore,
                 routeFactory,

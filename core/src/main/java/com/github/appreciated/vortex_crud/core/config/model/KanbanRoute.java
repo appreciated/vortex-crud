@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanDetailFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.Builder;
@@ -14,9 +14,9 @@ import java.util.List;
 public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
     RepositoryType dataStoreKey,
     String title,
-    boolean defaultRoute,
+    boolean isDefaultRoute,
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-    boolean hideInMenu,
+    boolean isHiddenInMenu,
     RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
@@ -25,8 +25,10 @@ public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
 ) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
-    public KanbanRoute {
-        if (factory == null) factory = (Class) KanbanDetailFactory.class;
+    public static class KanbanRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        KanbanRouteBuilder() {
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) KanbanFactory.class;
+        }
     }
 
     public RepositoryType getDataStoreKey() {
@@ -37,35 +39,6 @@ public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
         return title;
     }
 
-    @Override
-    public boolean isHiddenInMenu() {
-        return hideInMenu;
-    }
-
-    @Override
-    public boolean isDefaultRoute() {
-        return defaultRoute;
-    }
-
-    public boolean getDefaultRoute() {
-        return defaultRoute;
-    }
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return factory;
-    }
-
-    @Override
-    public SerializableSupplier<Component> getIconFactory() {
-        return iconFactory;
-    }
-
     public List<String> getWriteRoles() {
         return writeRoles;
     }
@@ -74,7 +47,7 @@ public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
         return readOnlyRoles;
     }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
         return child;
     }
 }

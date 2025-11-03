@@ -19,11 +19,11 @@ public record Collection<ModelClass, FieldType, RepositoryType>(
         return data;
     }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
         return child;
     }
 
-    public Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
+    public Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory() {
         return factory;
     }
 

@@ -14,9 +14,9 @@ import java.util.List;
 public record ListRoute<ModelClass, FieldType, RepositoryType>(
         RepositoryType dataStoreKey,
         String title,
-        boolean defaultRoute,
+        boolean isDefaultRoute,
         Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-        boolean hideInMenu,
+        boolean isHiddenInMenu,
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
         SerializableSupplier<Component> iconFactory,
         List<String> writeRoles,
@@ -25,56 +25,9 @@ public record ListRoute<ModelClass, FieldType, RepositoryType>(
 ) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
-    public ListRoute {
-        if (factory == null) factory = (Class) ListRouteFactory.class;
-    }
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
-        return child;
-    }
-
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public boolean isDefaultRoute() {
-        return defaultRoute;
-    }
-
-    public boolean getDefaultRoute() {
-        return defaultRoute;
-    }
-
-    @Override
-    public boolean isHiddenInMenu() {
-        return hideInMenu;
-    }
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
-        return factory;
-    }
-
-    @Override
-    public SerializableSupplier<Component> getIconFactory() {
-        return iconFactory;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
+    public static class ListRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        ListRouteBuilder() {
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ListRouteFactory.class;
+        }
     }
 }

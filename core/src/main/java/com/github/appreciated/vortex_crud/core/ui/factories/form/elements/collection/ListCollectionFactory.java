@@ -132,7 +132,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             @SuppressWarnings("unchecked")
             RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form =
-                    (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.getConfiguration().getChild().getConfiguration();
+                    (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.getConfiguration().child().configuration();
             for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
                 String textValue = reflectionService.getString(record, child.getField());
                 item.addContent(new Text(textValue));
@@ -161,11 +161,11 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 data.getManyToMany().associativeSourceIdField() :
                 data.getOneToMany().getReferenceField(data);
 
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().factory()).create(
                 entityId,
                 foreignKeyValue,
                 referenceField,
-                collectionData.getChild(),
+                collectionData.child(),
                 collectionData.getData(),
                 collectionData.getData().getDataStore(),
                 routeFactoryRegistry,

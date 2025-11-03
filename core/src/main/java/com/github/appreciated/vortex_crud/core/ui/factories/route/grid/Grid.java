@@ -41,7 +41,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, routeRenderer, routeRenderer.getDataStoreKey(), formCreator, routeFactoryRegistry),
+                event -> onAdd(dialogFactoryRegistry, routeRenderer, routeRenderer.dataStoreKey(), formCreator, routeFactoryRegistry),
                 null,
                 null,
                 routeHeader);
@@ -76,11 +76,11 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                        RepositoryType dataStore,
                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.getChild().getFactory()).create(
+        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.child().factory()).create(
                 null,
                 null,
                 null,
-                routeRenderer.getChild(),
+                routeRenderer.child(),
                 null,
                 dataStore,
                 routeFactory,

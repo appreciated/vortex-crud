@@ -68,7 +68,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     ) {
         assert routeResolver.getRouteForIndex(currentPathIndex) instanceof FormRoute<ModelClass,FieldType,RepositoryType>;
         FormRoute<ModelClass, FieldType, RepositoryType> routeRenderer = (FormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
-        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer, form);
     }
@@ -84,7 +84,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
-        String prefix = !isWrapped ? layout.getTranslation(routeRenderer.getTitle()) + " / " : "";
+        String prefix = !isWrapped ? layout.getTranslation(routeRenderer.title()) + " / " : "";
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
@@ -97,7 +97,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        RepositoryType table = routeRenderer.getDataStoreKey();
+        RepositoryType table = routeRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.getConfiguration().getDataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);

@@ -42,7 +42,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         @SuppressWarnings("unchecked")
         MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
-                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         Div div = new Div();
         for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.forms()) {
             assert detailRouteSetting != null;

@@ -57,10 +57,10 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = configService.getConfiguration().getRouteRenderers();
         routes.forEach((path, value) -> {
             if (!value.isHiddenInMenu()) {
-                String translation = getTranslation(value.getTitle());
+                String translation = getTranslation(value.title());
                 Component icon = null;
-                if (value.getIconFactory() != null) {
-                    icon = value.getIconFactory().get();
+                if (value.iconFactory() != null) {
+                    icon = value.iconFactory().get();
                 }
                 if (icon != null) {
                     icon.getStyle()

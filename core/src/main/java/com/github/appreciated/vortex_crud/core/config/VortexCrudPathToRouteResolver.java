@@ -69,13 +69,13 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
 
         // If this route has children, recurse into them
         if (currentRouteRenderer instanceof RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> multi &&
-                multi.getChildrenMap() != null && !multi.getChildrenMap().isEmpty()) {
-            buildRouteMapForPathSection(sectionIndex + 1, multi.getChildrenMap());
+                multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
+            buildRouteMapForPathSection(sectionIndex + 1, multi.childrenMap());
         } else if (currentRouteRenderer instanceof RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> single &&
-                single.getChild() != null) {
+                single.child() != null) {
             // For single child routes, create a map with the child as a wildcard (null key)
             Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> singleChildMap = new HashMap<>();
-            singleChildMap.put(null, single.getChild());
+            singleChildMap.put(null, single.child());
             buildRouteMapForPathSection(sectionIndex + 1, singleChildMap);
         } else {
             // If no children, continue to the next segment
@@ -120,8 +120,8 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
             RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.get(currentKey);
             RouteRenderer<ModelClass, FieldType, RepositoryType> nextRouteRenderer = pathRoutes.get(nextKey);
 
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.getFactory());
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.getFactory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.factory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.factory());
 
             if (currentFactory == null) {
                 throw new IllegalStateException("The route does not have a factory set");

@@ -72,7 +72,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         addToSecondary(detailLayout);
 
         setSizeFull();
-        initializeRouteList(routeRenderer.getChildrenMap(), currentPathIndex, routeResolver);
+        initializeRouteList(routeRenderer.childrenMap(), currentPathIndex, routeResolver);
 
         if (hasActiveSubroute(currentPathIndex, routeResolver)) {
             showRouteDetail(getActiveSubroute(currentPathIndex, routeResolver), routeResolver);
@@ -88,7 +88,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     }
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> getActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
-        return routeRenderer.getChildrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
+        return routeRenderer.childrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
     private void initializeRouteList(Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> childRoutes, Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
@@ -96,14 +96,14 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
             Card routeButton = new Card();
             routeButton.addClassNames("master");
 
-            if (value.getIconFactory() != null) {
-                Component icon = value.getIconFactory().get();
+            if (value.iconFactory() != null) {
+                Component icon = value.iconFactory().get();
                 icon.getStyle()
                         .set("color", "var(--lumo-primary-text-color)")
                         .set("opacity", "0.5");
                 routeButton.setHeaderPrefix(icon);
             }
-            routeButton.setTitle(new H4(routeButton.getTranslation(value.getTitle())));
+            routeButton.setTitle(new H4(routeButton.getTranslation(value.title())));
             routeButton.setWidthFull();
 
             if (hasActiveSubroute(currentPathIndex, routeResolver) && value == getActiveSubroute(currentPathIndex, routeResolver)) {
@@ -118,7 +118,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
                 if (active != null) {
                     active.removeClassName("active");
                 }
-                showRouteDetail(routeRenderer.getChildrenMap().get(key), pathVariables);
+                showRouteDetail(routeRenderer.childrenMap().get(key), pathVariables);
                 routeButton.addClassName("active");
                 active = routeButton;
             }));
@@ -130,7 +130,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = routeFactory.getFactory(subRouteRenderer.getFactory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = routeFactory.getFactory(subRouteRenderer.factory());
             Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }

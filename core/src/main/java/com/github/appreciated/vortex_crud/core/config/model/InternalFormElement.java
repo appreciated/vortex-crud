@@ -32,7 +32,7 @@ public record InternalFormElement<ModelClass, FieldType, RepositoryType>(
         return field;
     }
 
-    public Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> getFactory() {
+    public Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory() {
         return factory;
     }
 
