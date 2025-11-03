@@ -158,7 +158,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.getConfiguration();
         CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.getData();
         FieldType referenceField = (data.getManyToMany() != null) ?
-                data.getManyToMany().getAssociativeSourceIdField() :
+                data.getManyToMany().associativeSourceIdField() :
                 data.getOneToMany().getReferenceField(data);
 
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().getFactory()).create(

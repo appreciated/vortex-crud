@@ -53,6 +53,34 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        InternalFormElement build = JpaCollectionElement.of("route.tasks.labels.comments")
+                .configuration(JpaCollection.of(FormDialogFactory.class)
+                        .data(JpaCollectionConfiguration.of(taskCommentRepository)
+                                .oneToMany(new JpaOneToMany("task"))
+                                .children(List.of("commentText"))
+                                .build())
+                        .emptyMessage("route.tasks.labels.comments-empty-message")
+                        .child(JpaFormRoute.builder()
+                                .configuration(JpaFormRendererConfiguration.builder()
+                                        .titleField("name")
+                                        .children(List.of(
+                                                JpaFieldElement.of("commentText", "route.tasks.labels.comment").build()
+                                        ))
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+        CollectionConfiguration build2 = JpaCollectionConfiguration.of(taskRepository)
+                .manyToMany(new JpaManyToMany(taskRepository, "relatedTasks"))
+                .children(List.of("title"))
+                .build();
+        InternalFormElement build1 = JpaCollectionElement.of("route.tasks.labels.related-tasks")
+                .configuration(JpaCollection.of(ConnectDialogFactory.class)
+                        .data(build2)
+                        .emptyMessage("route.tasks.labels.related-tasks-empty-message")
+                        .config(new CollectionConfig("title"))
+                        .build())
+                .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
                 .configuration(JpaFormRendererConfiguration.builder()
@@ -63,33 +91,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 JpaFieldElement.of("status", "route.tasks.labels.status").build(),
                                 JpaFieldElement.of("dueDate", "route.tasks.labels.due_date").build(),
                                 JpaFieldElement.of("assignedTo", "route.tasks.labels.assigned_to").build(),
-                                JpaCollectionElement.of("route.tasks.labels.comments")
-                                        .configuration(JpaCollection.of(FormDialogFactory.class)
-                                                .data(JpaCollectionConfiguration.of(taskCommentRepository)
-                                                        .oneToMany(new JpaOneToMany("task"))
-                                                        .children(List.of("commentText"))
-                                                        .build())
-                                                .emptyMessage("route.tasks.labels.comments-empty-message")
-                                                .child(JpaFormRoute.builder()
-                                                        .configuration(JpaFormRendererConfiguration.builder()
-                                                                .titleField("name")
-                                                                .children(List.of(
-                                                                        JpaFieldElement.of("commentText", "route.tasks.labels.comment").build()
-                                                                ))
-                                                                .build())
-                                                        .build())
-                                                .build())
-                                        .build(),
-                                JpaCollectionElement.of("route.tasks.labels.related-tasks")
-                                        .configuration(JpaCollection.of(ConnectDialogFactory.class)
-                                                .data(JpaCollectionConfiguration.of(taskRepository)
-                                                        .manyToMany(new JpaManyToMany(taskRepository, "relatedTasks"))
-                                                        .children(List.of("title"))
-                                                        .build())
-                                                .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                                .config(new CollectionConfig("title"))
-                                                .build())
-                                        .build()
+                                build,
+                                build1
                         ))
                         .build())
                 .build();

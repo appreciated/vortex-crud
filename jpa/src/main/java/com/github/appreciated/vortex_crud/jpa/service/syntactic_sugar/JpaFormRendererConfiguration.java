@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaFormRendererConfiguration {
     public static FormRendererConfiguration.FormRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return FormRendererConfiguration.builder();
+        return FormRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }

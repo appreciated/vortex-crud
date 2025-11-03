@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public class JpaCollectionConfiguration {
     public static CollectionConfiguration.CollectionConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> of(JpaRepository<?, ?> dataStore) {
         return CollectionConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .dataStore(dataStore);
+                .dataStore((JpaRepository<?, ?>)dataStore);
     }
 }

@@ -14,28 +14,28 @@ public interface ManyToMany<ModelClass, FieldType, RepositoryKey> {
      * @param collectionConfiguration The collection configuration
      * @return The reference field ID
      */
-    FieldType getReferenceField(CollectionConfiguration<ModelClass, FieldType, RepositoryKey> collectionConfiguration);
+    FieldType referenceField(CollectionConfiguration<ModelClass, FieldType, RepositoryKey> collectionConfiguration);
 
     /**
      * Gets the associative data store for the many-to-many relationship.
      *
      * @return The associative data store ID
      */
-    ModelClass getAssociativeDataStoreKey();
+    ModelClass associativeDataStoreKey();
 
     /**
      * Gets the associative target ID field for the many-to-many relationship.
      *
      * @return The associative target ID field
      */
-    FieldType getAssociativeTargetIdField();
+    FieldType associativeTargetIdField();
 
     /**
      * Gets the associative source ID field for the many-to-many relationship.
      *
      * @return The associative source ID field
      */
-    FieldType getAssociativeSourceIdField();
+    FieldType associativeSourceIdField();
 
-    RepositoryKey getDatastore();
+    RepositoryKey datastore();
 }

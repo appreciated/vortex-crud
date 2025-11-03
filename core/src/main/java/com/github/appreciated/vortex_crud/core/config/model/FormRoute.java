@@ -21,8 +21,8 @@ public record FormRoute<ModelClass, FieldType, RepositoryType>(
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
     List<String> readOnlyRoles,
-    RouteRenderer<ModelClass, FieldType, RepositoryType> child
-) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
+    List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children
+) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")
     public FormRoute {
@@ -72,9 +72,5 @@ public record FormRoute<ModelClass, FieldType, RepositoryType>(
 
     public List<String> getReadOnlyRoles() {
         return readOnlyRoles;
-    }
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getChild() {
-        return child;
     }
 }

@@ -38,7 +38,7 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
         if (entity == null) {
             return List.of();
         }
-        return ((java.util.Collection<DataStoreId>) reflectionService.getValue(entity, manyToMany.getReferenceField(null))).stream().toList();
+        return ((java.util.Collection<DataStoreId>) reflectionService.getValue(entity, manyToMany.referenceField(null))).stream().toList();
     }
 
     @Override
@@ -47,12 +47,12 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return;
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.datastore();
         Object sourceEntity = repository.findById(sourceId).orElse(null);
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");
         }
-        reflectionService.addAll(sourceEntity, manyToMany.getReferenceField(null), targetObjects);
+        reflectionService.addAll(sourceEntity, manyToMany.referenceField(null), targetObjects);
         repository.save(sourceEntity);
     }
 
@@ -62,12 +62,12 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
             return;
         }
 
-        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.getDatastore();
+        JpaRepository<Object, Object> repository = (JpaRepository<Object, Object>) manyToMany.datastore();
         Object sourceEntity = repository.findById(sourceId).orElse(null);
         if (sourceEntity == null) {
             throw new RuntimeException("Source entity not found");
         }
-        reflectionService.removeAll(sourceEntity, manyToMany.getReferenceField(null), targetObjects);
+        reflectionService.removeAll(sourceEntity, manyToMany.referenceField(null), targetObjects);
         repository.save(sourceEntity);
     }
 

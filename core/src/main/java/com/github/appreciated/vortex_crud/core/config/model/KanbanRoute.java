@@ -21,7 +21,7 @@ public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
     List<String> readOnlyRoles,
-    RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> child
+    RouteRenderer<ModelClass, FieldType, RepositoryType> child
 ) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @SuppressWarnings("unchecked")

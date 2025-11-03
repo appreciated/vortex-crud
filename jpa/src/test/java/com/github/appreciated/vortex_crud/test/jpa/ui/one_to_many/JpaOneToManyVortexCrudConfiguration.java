@@ -39,12 +39,12 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
 
         RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> parentForm = FormRoute.builder()
                 .dataStoreKey(parentRepository)
-                .configuration(JpaRouteRendererConfiguration.of(CardFactory.class)
-                        .titleField("name")
+                .configuration(JpaFormRoute.builder()
+                        .title("name")
                         .children(List.of(
                                 JpaFieldElement.of("name", "relations.labels.name").build(),
                                 JpaCollectionElement.of("relations.labels.children")
-                                        .factory((Class) ListCollectionFactory.class)
+                                        .factory(ListCollectionFactory.class)
                                         .configuration(JpaCollection.of(FormDialogFactory.class)
                                                 .data(JpaCollectionConfiguration.of(childRepository)
                                                         .oneToMany(new JpaOneToMany("parent"))
