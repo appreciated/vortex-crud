@@ -19,12 +19,11 @@ public record IntegerField<ModelClass, FieldType, RepositoryType>(
         List<String> readOnlyRoles,
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
-
     @SuppressWarnings("unchecked")
-    public IntegerField(boolean required) {
-        this(null, required, null, null,
-                (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)
-                        (Class<?>) IntegerNumberFieldFactory.class);
+    public static class IntegerFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        IntegerFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IntegerNumberFieldFactory.class;
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -54,8 +55,8 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = currentRoutes.get(section);
 
         if (currentRouteRenderer == null && currentRoutes.containsKey(null)) {
-            pathRoutes.put(sectionIndex, currentRouteRenderer);
             currentRouteRenderer = currentRoutes.get(null);
+            pathRoutes.put(sectionIndex, currentRouteRenderer);
         } else if (routeFactoryRegistry.isContainerRoute(currentRouteRenderer)) {
             pathRoutes.put(sectionIndex, currentRouteRenderer);
         }
@@ -70,6 +71,12 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         if (currentRouteRenderer instanceof RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> multi &&
                 multi.getChildrenMap() != null && !multi.getChildrenMap().isEmpty()) {
             buildRouteMapForPathSection(sectionIndex + 1, multi.getChildrenMap());
+        } else if (currentRouteRenderer instanceof RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> single &&
+                single.getChild() != null) {
+            // For single child routes, create a map with the child as a wildcard (null key)
+            Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> singleChildMap = new HashMap<>();
+            singleChildMap.put(null, single.getChild());
+            buildRouteMapForPathSection(sectionIndex + 1, singleChildMap);
         } else {
             // If no children, continue to the next segment
             buildRouteMapForPathSection(sectionIndex + 1, currentRoutes);

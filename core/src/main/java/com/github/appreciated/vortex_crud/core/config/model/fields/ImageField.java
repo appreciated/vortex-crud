@@ -19,8 +19,10 @@ public record ImageField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public ImageField(boolean required) {
-        this(null, null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>)  ImageFieldFactory.class);
+    public static class ImageFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        ImageFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ImageFieldFactory.class;
+        }
     }
 
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {

@@ -20,7 +20,9 @@ public record EmailField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public EmailField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) EmailFieldFactory.class);
+    public static class EmailFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        EmailFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) EmailFieldFactory.class;
+        }
     }
 }

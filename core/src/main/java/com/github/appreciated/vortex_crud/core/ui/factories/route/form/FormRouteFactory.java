@@ -1,10 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -69,11 +66,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
-        @SuppressWarnings("unchecked")
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form = detailRouteSetting.isCreationMode()
-                ? (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getChild().getConfiguration()
-                : (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
+        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof FormRoute<ModelClass,FieldType,RepositoryType>;
+        FormRoute<ModelClass, FieldType, RepositoryType> routeRenderer = (FormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.getConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer, form);
     }

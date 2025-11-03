@@ -20,9 +20,9 @@ public record BigDecimalField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public BigDecimalField(boolean required) {
-        this(null, required, null, null,
-                (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)
-                        (Class<?>)   BigDecimalNumberFieldFactory.class);
+    public static class BigDecimalFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        BigDecimalFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) BigDecimalNumberFieldFactory.class;
+        }
     }
 }

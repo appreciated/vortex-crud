@@ -18,8 +18,10 @@ public record SelectField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public SelectField(String values, boolean required, Validation validation) {
-        this(values, validation, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>)  SelectFieldFactory.class);
+    public static class SelectFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        SelectFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SelectFieldFactory.class;
+        }
     }
 
 }

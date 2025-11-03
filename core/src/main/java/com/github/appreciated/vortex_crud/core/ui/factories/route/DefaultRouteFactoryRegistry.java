@@ -69,6 +69,9 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
 
     @Override
     public boolean isContainerRoute(RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer) {
+        if (currentRouteRenderer == null) {
+            return false;
+        }
         return factories.get(currentRouteRenderer.getFactory()).isContainerRoute();
     }
 }

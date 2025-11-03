@@ -20,8 +20,10 @@ public record CheckboxField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public CheckboxField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) CheckboxFieldFactory.class);
+    public static class CheckboxFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        CheckboxFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) CheckboxFieldFactory.class;
+        }
     }
 
 }

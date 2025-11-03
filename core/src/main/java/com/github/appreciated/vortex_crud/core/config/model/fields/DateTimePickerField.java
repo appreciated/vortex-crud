@@ -20,8 +20,10 @@ public record DateTimePickerField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public DateTimePickerField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>)  DateTimePickerFactory.class);
+    public static class DateTimePickerFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        DateTimePickerFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) DateTimePickerFactory.class;
+        }
     }
 
 }

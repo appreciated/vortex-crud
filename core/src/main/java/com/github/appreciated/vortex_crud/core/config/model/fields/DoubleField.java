@@ -20,8 +20,10 @@ public record DoubleField<ModelClass, FieldType, RepositoryType>(
         Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
 ) implements Field<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
-    public DoubleField(boolean required) {
-        this(null, required, null, null, (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>)  (Class<?>) DoubleNumberFieldFactory.class);
+    public static class DoubleFieldBuilder<ModelClass, FieldType, RepositoryType> {
+        DoubleFieldBuilder() {
+            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) DoubleNumberFieldFactory.class;
+        }
     }
 
 }

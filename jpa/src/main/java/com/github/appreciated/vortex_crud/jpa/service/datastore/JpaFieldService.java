@@ -86,21 +86,46 @@ public class JpaFieldService {
                                 .required(required)
                                 .build();
                     })).or(() -> getAnnotation(entityField, SelectField.class).map(selectField ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.SelectField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(selectField.value(), required, null)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.SelectField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .values(selectField.value())
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, BigDecimalNumberField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new BigDecimalField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) BigDecimalField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, CheckboxField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.CheckboxField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.CheckboxField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, DateField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.DateField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.DateField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, DateTimePickerField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.DateTimePickerField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.DateTimePickerField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, DoubleNumberField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new DoubleField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) DoubleField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, IdField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.IdField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.IdField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, IntegerNumberField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new IntegerField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) IntegerField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, TextAreaField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
@@ -112,9 +137,15 @@ public class JpaFieldService {
                                     .required(required)
                                     .build()
                     )).or(() -> getAnnotation(entityField, PasswordField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.PasswordField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.PasswordField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, EmailField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) new com.github.appreciated.vortex_crud.core.config.model.fields.EmailField<JpaRepository<?, ?>, String, JpaRepository<?, ?>>(required)
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.EmailField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).orElseThrow();
                 }));
         return collect;
