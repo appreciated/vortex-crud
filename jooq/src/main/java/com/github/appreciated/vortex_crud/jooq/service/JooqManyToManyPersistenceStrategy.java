@@ -31,9 +31,9 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
     public List<TableRecord<?>> resolveManyToMany(VortexCrudDataStore<TableField<?, ?>, ?> targetDataStore,
                                                   ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany,
                                                   Object sourceId) {
-        TableField sourceIdField = manyToMany.getAssociativeSourceIdField();
-        TableField targetIdField = manyToMany.getAssociativeTargetIdField();
-        TableField dataStoreField = manyToMany.getReferenceField(null);
+        TableField sourceIdField = manyToMany.associativeSourceIdField();
+        TableField targetIdField = manyToMany.associativeTargetIdField();
+        TableField dataStoreField = manyToMany.referenceField(null);
 
         TableImpl junctionTable = (TableImpl<?>) sourceIdField.getTable();
         TableImpl targetTable = (TableImpl<?>) dataStoreField.getTable();
@@ -54,8 +54,8 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
         }
 
         // Extract necessary fields from the ManyToMany configuration
-        TableField<?, ?> sourceIdField = manyToMany.getAssociativeSourceIdField();
-        TableField<?, ?> targetIdField = manyToMany.getAssociativeTargetIdField();
+        TableField<?, ?> sourceIdField = manyToMany.associativeSourceIdField();
+        TableField<?, ?> targetIdField = manyToMany.associativeTargetIdField();
         TableImpl<?> junctionTable = (TableImpl<?>) sourceIdField.getTable();
 
         // Insert records one by one instead of using batch
@@ -79,8 +79,8 @@ public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceS
         }
 
         // Extract necessary fields from the ManyToMany configuration
-        TableField sourceIdField = manyToMany.getAssociativeSourceIdField();
-        TableField targetIdField = manyToMany.getAssociativeTargetIdField();
+        TableField sourceIdField = manyToMany.associativeSourceIdField();
+        TableField targetIdField = manyToMany.associativeTargetIdField();
         TableImpl<?> junctionTable = (TableImpl<?>) sourceIdField.getTable();
 
         // Create a batch delete statement

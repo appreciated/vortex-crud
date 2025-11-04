@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Versioning;
 import org.jooq.impl.TableImpl;
 
 public class JooqVersioning {
-    public static Versioning.VersioningBuilder<TableImpl<?>> of() {
+    public static Versioning.VersioningBuilder<TableImpl<?>> builder() {
         return Versioning.<TableImpl<?>>builder();
     }
 }

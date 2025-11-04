@@ -21,8 +21,9 @@ public record ListRoute<ModelClass, FieldType, RepositoryType>(
         SerializableSupplier<Component> iconFactory,
         List<String> writeRoles,
         List<String> readOnlyRoles,
-        RouteRenderer<ModelClass, FieldType, RepositoryType> child
-) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
+        RouteRenderer<ModelClass, FieldType, RepositoryType> child,
+        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns
+) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, AccessControlled {
 
     @SuppressWarnings("unchecked")
     public static class ListRouteBuilder<ModelClass, FieldType, RepositoryType> {

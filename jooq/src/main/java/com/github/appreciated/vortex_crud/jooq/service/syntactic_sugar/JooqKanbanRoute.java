@@ -19,6 +19,13 @@ public class JooqKanbanRoute {
     /**
      * Create a new JOOQ kanban route builder
      */
+    public static KanbanRoute.KanbanRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+        return KanbanRoute.builder();
+    }
+
+    /**
+     * Create a new JOOQ kanban route builder
+     */
     public static KanbanRoute.KanbanRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return KanbanRoute.builder();
     }

@@ -24,27 +24,27 @@ public class JooqManyToMany<RecordType extends TableRecord<?>, DataStoreId exten
     }
 
     @Override
-    public TableField<?, ?> getReferenceField(CollectionConfiguration<RecordType, TableField<?, ?>, DataStoreId> collectionConfiguration) {
+    public TableField<?, ?> referenceField(CollectionConfiguration<RecordType, TableField<?, ?>, DataStoreId> collectionConfiguration) {
         return dataStoreField;
     }
 
     @Override
-    public RecordType getAssociativeDataStoreKey() {
+    public RecordType associativeDataStoreKey() {
         return null;
     }
 
     @Override
-    public TableField<?, ?> getAssociativeTargetIdField() {
+    public TableField<?, ?> associativeTargetIdField() {
         return associativeTargetIdField;
     }
 
     @Override
-    public TableField<?, ?> getAssociativeSourceIdField() {
+    public TableField<?, ?> associativeSourceIdField() {
         return associativeSourceIdField;
     }
 
     @Override
-    public DataStoreId getDatastore() {
+    public DataStoreId datastore() {
         return dataStoreId;
     }
 

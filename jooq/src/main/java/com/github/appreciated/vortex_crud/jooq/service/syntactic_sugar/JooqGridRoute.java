@@ -19,6 +19,13 @@ public class JooqGridRoute {
     /**
      * Create a new JOOQ grid route builder
      */
+    public static GridRoute.GridRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+        return GridRoute.builder();
+    }
+
+    /**
+     * Create a new JOOQ grid route builder
+     */
     public static GridRoute.GridRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return GridRoute.builder();
     }

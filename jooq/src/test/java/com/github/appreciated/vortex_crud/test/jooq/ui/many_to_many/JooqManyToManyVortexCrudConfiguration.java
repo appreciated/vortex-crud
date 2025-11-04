@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.many_to_many;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -13,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRoute
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIdField;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -33,8 +33,8 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MANY_TO_MANY_ITEM, JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
                         .fields(Map.of(
-                                MANY_TO_MANY_ITEM.ID, new IdField<>(),
-                                MANY_TO_MANY_ITEM.NAME, new TextField<>())
+                                MANY_TO_MANY_ITEM.ID, JooqIdField.builder().build(),
+                                MANY_TO_MANY_ITEM.NAME, TextField.builder().build())
                         ).build()
         );
 
@@ -67,7 +67,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreKey(MANY_TO_MANY_ITEM)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqListItemRendererConfiguration.builder()
                         .filterField(MANY_TO_MANY_ITEM.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build()

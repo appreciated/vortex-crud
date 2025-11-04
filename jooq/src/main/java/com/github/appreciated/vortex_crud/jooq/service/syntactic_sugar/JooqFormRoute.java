@@ -18,6 +18,13 @@ public class JooqFormRoute {
     /**
      * Create a new JOOQ form route builder
      */
+    public static FormRoute.FormRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+        return FormRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
+    }
+
+    /**
+     * Create a new JOOQ form route builder
+     */
     public static FormRoute.FormRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return FormRoute.builder();
     }
