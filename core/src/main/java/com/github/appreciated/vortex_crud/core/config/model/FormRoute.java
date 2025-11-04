@@ -22,7 +22,12 @@ public record FormRoute<ModelClass, FieldType, RepositoryType>(
     List<String> writeRoles,
     List<String> readOnlyRoles,
     List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children
-) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+) implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+
+    @Override
+    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
+        return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
+    }
 
     @SuppressWarnings("unchecked")
     public static class FormRouteBuilder<ModelClass, FieldType, RepositoryType> {

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.Builder;
@@ -27,7 +27,7 @@ public record MasterDetailRoute<ModelClass, FieldType, RepositoryType>(
     @SuppressWarnings("unchecked")
     public static class MasterDetailRouteBuilder<ModelClass, FieldType, RepositoryType> {
         MasterDetailRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
         }
     }
 }

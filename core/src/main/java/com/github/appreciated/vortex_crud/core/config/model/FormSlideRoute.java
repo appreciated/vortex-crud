@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.Builder;
@@ -22,12 +22,17 @@ public record FormSlideRoute<ModelClass, FieldType, RepositoryType>(
     List<String> writeRoles,
     List<String> readOnlyRoles,
     RouteRenderer<ModelClass, FieldType, RepositoryType> child
-) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
+) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+
+    @Override
+    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
+        return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
+    }
 
     @SuppressWarnings("unchecked")
     public static class FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> {
         FormSlideRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormSlideRouteFactory.class;
         }
     }
 }
