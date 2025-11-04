@@ -17,5 +17,6 @@ public record MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryTy
         FieldType filterField,
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
         List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms
-) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
+
 }

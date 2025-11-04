@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import lombok.Builder;
 
@@ -17,5 +18,9 @@ public record GridItemRendererConfiguration<ModelClass, FieldType, RepositoryTyp
         FieldType filterField,
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
 ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
-
+    public static class GridItemRendererConfigurationBuilder<ModelClass, FieldType, RepositoryType> {
+        GridItemRendererConfigurationBuilder() {
+            factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+        }
+    }
 }

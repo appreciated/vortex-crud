@@ -16,6 +16,6 @@ public record VideoFieldRendererConfiguration<ModelClass, FieldType, RepositoryT
         boolean inlineEdit,
         FieldType filterField,
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
-) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
 }

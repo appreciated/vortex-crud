@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import lombok.Builder;
 
@@ -19,4 +20,9 @@ public record KanbanConfiguration<ModelClass, FieldType, RepositoryType>(
         FieldType columnField,
         FieldType rowIndexField
         ) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+    public static class KanbanConfigurationBuilder<ModelClass, FieldType, RepositoryType> {
+        KanbanConfigurationBuilder() {
+            factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+        }
+    }
 }
