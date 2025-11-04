@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
@@ -54,6 +56,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.of("route.tasks.labels.comments")
+                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>)ListCollectionFactory.class)
                 .configuration(JpaCollection.of(FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.of(taskCommentRepository)
                                 .oneToMany(new JpaOneToMany("task"))
@@ -75,6 +78,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of("title"))
                 .build();
         InternalFormElement build1 = JpaCollectionElement.of("route.tasks.labels.related-tasks")
+                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
                 .configuration(JpaCollection.of(ConnectDialogFactory.class)
                         .data(build2)
                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")
