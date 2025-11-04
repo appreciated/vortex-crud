@@ -27,7 +27,7 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
     private static Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>> defaultRoute;
 
     public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
-        this.routeConfigs = configService.getConfiguration().getRouteRenderers();
+        this.routeConfigs = configService.configuration().getRouteRenderers();
     }
 
     @Override

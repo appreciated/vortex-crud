@@ -33,7 +33,7 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                        ReflectionService<FieldType> reflectionService) {
-        Application<ModelClass, FieldType, RepositoryType> configuration = configService.getConfiguration();
+        Application<ModelClass, FieldType, RepositoryType> configuration = configService.configuration();
         factories.put(TextFieldFactory.class, new TextFieldFactory<>());
         factories.put(EmailFieldFactory.class, new EmailFieldFactory<>());
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());

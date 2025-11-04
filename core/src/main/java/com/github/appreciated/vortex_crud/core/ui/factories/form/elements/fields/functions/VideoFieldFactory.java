@@ -21,7 +21,7 @@ public class VideoFieldFactory<ModelClass, FieldType, RepositoryType> implements
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         VideoField<ModelClass, FieldType, RepositoryType> videoField = (VideoField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new VideoHasValue(fileProviderRegistry.getFactory(videoField.getConfiguration().resourceProvider()));
+        return new VideoHasValue(fileProviderRegistry.getFactory(videoField.configuration().resourceProvider()));
     }
 
     @Override

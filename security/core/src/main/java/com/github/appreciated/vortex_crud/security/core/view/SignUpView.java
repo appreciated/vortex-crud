@@ -37,7 +37,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
             ReflectionService<FieldType> reflectionService,
             PasswordEncoder passwordEncoder
     ) {
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config = configService.getConfiguration().getUserManagement();
+        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config = configService.configuration().getUserManagement();
 
         if (config == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -52,7 +52,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(config.getRepositoryKey());
         Object entity = dataStore.newInstance();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.getConfiguration().getDataStores().get(config.getRepositoryKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.configuration().getDataStores().get(config.getRepositoryKey());
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(entity);
@@ -92,7 +92,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 binder.writeBean(entity);
 
                 // Hash the password before saving
-                FieldType passwordField = config.getPassword().getField();
+                FieldType passwordField = config.getPassword().field();
                 Object passwordValue = reflectionService.getValue(entity, passwordField);
                 if (passwordValue != null) {
                     String hashedPassword = passwordEncoder.encode(passwordValue.toString());

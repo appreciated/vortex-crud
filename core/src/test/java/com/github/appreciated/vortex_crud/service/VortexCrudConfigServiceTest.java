@@ -34,8 +34,8 @@ class VortexCrudConfigServiceTest {
     }
 
     @Test
-    void testGetConfiguration() {
-        Application<String, String, String> config = configService.getConfiguration();
+    void testconfiguration() {
+        Application<String, String, String> config = configService.configuration();
         assertNotNull(config, "Configuration should not be null");
         assertEquals(application, config, "Configuration should match the mocked application");
     }
@@ -58,13 +58,13 @@ class VortexCrudConfigServiceTest {
         }
 
         @Override
-        public Application<String, String, String> getConfiguration() {
+        public Application<String, String, String> configuration() {
             return configProvider.get();
         }
 
         @Override
         public String getApplicationName() {
-            return getConfiguration().getApplicationName();
+            return configuration().getApplicationName();
         }
     }
 }

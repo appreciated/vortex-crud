@@ -46,7 +46,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        Application<ModelClass, FieldType, RepositoryType> configuration = configService.getConfiguration();
+        Application<ModelClass, FieldType, RepositoryType> configuration = configService.configuration();
         IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement =
                 configuration.getUserManagement();
 
@@ -66,7 +66,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                         (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(userManagement.getRepositoryKey());
 
                 // Query for user by username field
-                FieldType usernameField = userManagement.getUsername().getField();
+                FieldType usernameField = userManagement.getUsername().field();
                 List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
 
                 if (users.isEmpty()) {
@@ -74,10 +74,10 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                     return;
                 }
 
-                Object userEntity = users.get(0);
+                Object userEntity = users.getFirst();
 
                 // Get password hash using ReflectionService
-                FieldType passwordField = userManagement.getPassword().getField();
+                FieldType passwordField = userManagement.getPassword().field();
                 Object passwordValue = reflectionService.getValue(userEntity, passwordField);
 
                 if (passwordValue == null || !passwordEncoder.matches(password, passwordValue.toString())) {

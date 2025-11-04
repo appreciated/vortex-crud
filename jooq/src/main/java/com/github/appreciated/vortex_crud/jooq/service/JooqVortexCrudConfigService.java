@@ -19,7 +19,7 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
         configuration = configurationProvider.get();
     }
 
-    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> getConfiguration() {
+    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
         return configuration;
     }
 

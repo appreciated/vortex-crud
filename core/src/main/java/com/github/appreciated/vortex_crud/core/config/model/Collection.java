@@ -14,28 +14,5 @@ public record Collection<ModelClass, FieldType, RepositoryType>(
     String emptyMessage,
     RouteRenderer<ModelClass, FieldType, RepositoryType> child
 ) {
-    // Explicit getters for backwards compatibility
-    public CollectionConfiguration<ModelClass, FieldType, RepositoryType> getData() {
-        return data;
-    }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
-        return child;
-    }
-
-    public Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory() {
-        return factory;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public CollectionConfig<FieldType> getConfig() {
-        return config;
-    }
-
-    public String getEmptyMessage() {
-        return emptyMessage;
-    }
 }

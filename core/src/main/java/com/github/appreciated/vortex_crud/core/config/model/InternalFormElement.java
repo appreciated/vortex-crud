@@ -26,29 +26,4 @@ public record InternalFormElement<ModelClass, FieldType, RepositoryType>(
             span = 1;
         }
     }
-
-    // Explicit getters for backwards compatibility
-    public FieldType getField() {
-        return field;
-    }
-
-    public Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory() {
-        return factory;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public ViewFieldType getType() {
-        return type;
-    }
-
-    public int getSpan() {
-        return span;
-    }
-
-    public Collection<ModelClass, FieldType, RepositoryType> getConfiguration() {
-        return configuration;
-    }
 }

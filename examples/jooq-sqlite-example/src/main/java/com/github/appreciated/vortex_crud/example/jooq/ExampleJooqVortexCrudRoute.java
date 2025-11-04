@@ -32,7 +32,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
     }
 
     @Override
-    protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> getConfiguration() {
+    protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
                 .dataStore(PROJECTS)
                 .iconFactory(FACTORY::create)

@@ -24,22 +24,22 @@ public class DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType
     public void addColumn(Grid<Object> grid, InternalFormElement<ModelClass, FieldType, RepositoryType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         if (dataStoreField instanceof ImageField<?, ?, ?>) {
             ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-            if (imageField.getConfiguration() == null) {
-                throw new IllegalArgumentException("The image field '" + field.getField() + "' does not provide a imageFieldConfiguration");
+            if (imageField.configuration() == null) {
+                throw new IllegalArgumentException("The image field '" + field.field() + "' does not provide a imageFieldConfiguration");
             }
             grid.addComponentColumn(entity -> {
-                        String string = reflectionService.getString(entity, field.getField());
-                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(imageField.getConfiguration().resourceProvider()));
+                        String string = reflectionService.getString(entity, field.field());
+                        ImageDisplayComponent image = new ImageDisplayComponent(registry.getFactory(imageField.configuration().resourceProvider()));
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);
                         return image;
-                    }).setHeader(grid.getTranslation(field.getLabel()))
+                    }).setHeader(grid.getTranslation(field.label()))
                     .setResizable(true)
                     .setAutoWidth(true);
         } else {
-            grid.addColumn(entity -> reflectionService.getValue(entity, field.getField()))
-                    .setHeader(grid.getTranslation(field.getLabel()))
+            grid.addColumn(entity -> reflectionService.getValue(entity, field.field()))
+                    .setHeader(grid.getTranslation(field.label()))
                     .setResizable(true)
                     .setAutoWidth(true);
         }

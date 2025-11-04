@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * An abstract dynamic route component that renders different views based on the route path.
  * Instead of fetching the configuration from a service, subclasses define the route configuration
- * through an abstract method {@link #getConfiguration()}.
+ * through an abstract method {@link #configuration()}.
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  */
 
@@ -39,7 +39,7 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
      *
      * @return a map of route configurations.
      */
-    protected abstract RouteRenderer<ModelClass, FieldType, RepositoryType> getConfiguration();
+    protected abstract RouteRenderer<ModelClass, FieldType, RepositoryType> configuration();
 
     protected String getUrl() {
         return RouteConfiguration.forSessionScope().getUrl(getClass());
@@ -60,7 +60,7 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                Map.of(routePattern, getConfiguration()),
+                Map.of(routePattern, configuration()),
                 dataStoreUtil
         );
 

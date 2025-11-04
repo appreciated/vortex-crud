@@ -59,7 +59,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
         header.setWidthFull();
-        header.add(new H4(list.getTranslation(factoryConfig.getLabel())));
+        header.add(new H4(list.getTranslation(factoryConfig.label())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
         button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
@@ -76,7 +76,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                                 HorizontalLayout header) {
         list.removeAll();
         list.add(header);
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.getConfiguration().getData();
+        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration().data();
 
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
 
@@ -84,15 +84,15 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.getManyToMany(), foreignKeyValue) :
                 (java.util.Collection<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
 
-        if (internalFormElement.getConfiguration().getData().getOneToMany() != null) {
+        if (internalFormElement.configuration().data().getOneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
-        } else if (internalFormElement.getConfiguration().getData().getManyToMany() != null) {
+        } else if (internalFormElement.configuration().data().getManyToMany() != null) {
             addManyToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
         }
         if (records.isEmpty()) {
-            list.add(new Text(list.getTranslation(internalFormElement.getConfiguration().getEmptyMessage())));
+            list.add(new Text(list.getTranslation(internalFormElement.configuration().emptyMessage())));
         }
     }
 
@@ -107,7 +107,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            List<FieldType> children = internalFormElement.getConfiguration().getData().children();
+            List<FieldType> children = internalFormElement.configuration().data().children();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
@@ -132,9 +132,9 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
             @SuppressWarnings("unchecked")
             RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form =
-                    (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.getConfiguration().child().configuration();
+                    (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.configuration().child().configuration();
             for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
-                String textValue = reflectionService.getString(record, child.getField());
+                String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
@@ -155,19 +155,19 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
-        Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.getConfiguration();
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.getData();
+        Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.configuration();
+        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.data();
         FieldType referenceField = (data.getManyToMany() != null) ?
                 data.getManyToMany().associativeSourceIdField() :
                 data.getOneToMany().getReferenceField(data);
 
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.getConfiguration().factory()).create(
+        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.configuration().factory()).create(
                 entityId,
                 foreignKeyValue,
                 referenceField,
                 collectionData.child(),
-                collectionData.getData(),
-                collectionData.getData().getDataStore(),
+                collectionData.data(),
+                collectionData.data().getDataStore(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 () -> {

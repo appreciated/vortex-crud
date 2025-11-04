@@ -45,7 +45,7 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                configService.getConfiguration().getRouteRenderers(),
+                configService.configuration().getRouteRenderers(),
                 dataStoreUtil
         );
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();

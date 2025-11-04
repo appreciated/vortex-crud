@@ -9,7 +9,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 
 public interface VortexCrudConfigService<ModelClass, FieldType, RepositoryType> {
 
-    Application<ModelClass, FieldType, RepositoryType> getConfiguration();
+    Application<ModelClass, FieldType, RepositoryType> configuration();
 
     String getApplicationName();
 

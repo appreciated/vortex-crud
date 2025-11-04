@@ -68,7 +68,7 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
                 routeFactory,
                 itemFactory,
                 (KanbanConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration(),
-                configService.getConfiguration(),
+                configService.configuration(),
                 dialogFactoryRegistry,
                 fileProviderRegistry,
                 fieldNameResolver,

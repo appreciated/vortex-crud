@@ -53,6 +53,6 @@ class CustomAccessChecker implements NavigationAccessChecker {
 
     private RouteRenderer<?, ?, ?> findRoute(String path) {
         String firstSegment = path.contains("/") ? path.substring(0, path.indexOf("/")) : path;
-        return configService.getConfiguration().getRouteRenderers().get(firstSegment);
+        return configService.configuration().getRouteRenderers().get(firstSegment);
     }
 }

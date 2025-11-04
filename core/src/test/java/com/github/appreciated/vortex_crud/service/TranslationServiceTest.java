@@ -39,7 +39,7 @@ class TranslationServiceTest {
         MockitoAnnotations.openMocks(this);
 
         // Mock the configuration service
-        when(configService.getConfiguration()).thenReturn(application);
+        when(configService.configuration()).thenReturn(application);
         when(application.getI18nBundlePrefix()).thenReturn("i18n/messages");
 
         translationService = new TranslationService(configService);

@@ -25,7 +25,7 @@ public record ImageField<ModelClass, FieldType, RepositoryType>(
         }
     }
 
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> getConfiguration() {
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
         return configuration;
     }
 }

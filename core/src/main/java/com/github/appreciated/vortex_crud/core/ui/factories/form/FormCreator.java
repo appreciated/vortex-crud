@@ -46,8 +46,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
-            if (element.getType() != ViewFieldType.COLLECTION) {
-                FieldType fieldName = element.getField();
+            if (element.type() != ViewFieldType.COLLECTION) {
+                FieldType fieldName = element.field();
                 Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
@@ -89,12 +89,12 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     ((HasSize) component).setWidthFull();
                 }
                 if (component instanceof HasLabel) {
-                    ((HasLabel) component).setLabel(component.getTranslation(element.getLabel()));
+                    ((HasLabel) component).setLabel(component.getTranslation(element.label()));
                     form.add(component);
-                    form.setColspan(component, element.getSpan());
+                    form.setColspan(component, element.span());
                 } else {
-                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(element.getLabel()));
-                    form.setColspan(formItem, element.getSpan());
+                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(element.label()));
+                    form.setColspan(formItem, element.span());
                 }
             } else {
                 Component collection = collectionFactoryRegistry.getFactory(element.factory()).createCollection(
@@ -105,7 +105,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                         this
                 );
                 form.add(collection);
-                form.setColspan(collection, element.getSpan());
+                form.setColspan(collection, element.span());
             }
         }
     }

@@ -77,7 +77,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.getConfiguration().getDataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().getDataStores().get(dataStoreKey);
 
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration =
