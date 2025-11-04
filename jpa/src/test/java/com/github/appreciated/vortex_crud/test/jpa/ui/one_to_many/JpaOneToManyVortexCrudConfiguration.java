@@ -5,6 +5,8 @@ import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -43,6 +45,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                         .children(List.of(
                                 JpaFieldElement.of("name", "relations.labels.name").build(),
                                 JpaCollectionElement.of("relations.labels.children")
+                                        .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JpaCollection.of(FormDialogFactory.class)
                                                 .data(JpaCollectionConfiguration.of(childRepository)
                                                         .oneToMany(new JpaOneToMany("parent"))

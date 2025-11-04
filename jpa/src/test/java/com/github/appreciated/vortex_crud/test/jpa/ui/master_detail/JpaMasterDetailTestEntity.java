@@ -17,6 +17,9 @@ public class JpaMasterDetailTestEntity {
     private String title;
 
     @TextField
+    private String description;
+
+    @TextField
     private String status;
 
     public Integer getId() {
@@ -33,6 +36,14 @@ public class JpaMasterDetailTestEntity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getStatus() {

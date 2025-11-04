@@ -30,7 +30,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.of("title", "route.images.labels.title").build()
+                                JpaFieldElement.of("title", "route.tasks.labels.title").build()
                         ))
                         .build())
                 .build();
@@ -42,7 +42,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .title("route.done-tasks.title")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
-                        .descriptionField("description")
+                        .descriptionField("status")
                         .build())
                 .child(taskForm)
                 .build());
