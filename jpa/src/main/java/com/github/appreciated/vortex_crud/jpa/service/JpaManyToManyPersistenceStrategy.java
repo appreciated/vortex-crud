@@ -38,7 +38,16 @@ public class JpaManyToManyPersistenceStrategy<DataStoreId> implements ManyToMany
         if (entity == null) {
             return List.of();
         }
-        return ((java.util.Collection<DataStoreId>) reflectionService.getValue(entity, manyToMany.referenceField(null))).stream().toList();
+
+        // Get the collection field value
+        java.util.Collection<DataStoreId> collection = (java.util.Collection<DataStoreId>) reflectionService.getValue(entity, manyToMany.referenceField(null));
+
+        // Return empty list if collection is null (can happen with JPA lazy loading or uninitialized fields)
+        if (collection == null) {
+            return List.of();
+        }
+
+        return collection.stream().toList();
     }
 
     @Override

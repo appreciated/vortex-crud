@@ -35,7 +35,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                         .build()
         );
 
-        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
                 .configuration(JpaFormRendererConfiguration.builder()

@@ -185,6 +185,13 @@ public class ReflectionService<FieldType> {
         }
 
         Object collectionObj = getValue(entity, fieldName);
+
+        // If collection is null, initialize it with a new ArrayList
+        if (collectionObj == null) {
+            collectionObj = new java.util.ArrayList<>();
+            setValue(entity, fieldName, collectionObj);
+        }
+
         if (!(collectionObj instanceof Collection)) {
             return false;
         }
@@ -209,6 +216,12 @@ public class ReflectionService<FieldType> {
         }
 
         Object collectionObj = getValue(entity, fieldName);
+
+        // If collection is null, there's nothing to remove from
+        if (collectionObj == null) {
+            return false;
+        }
+
         if (!(collectionObj instanceof Collection)) {
             return false;
         }
