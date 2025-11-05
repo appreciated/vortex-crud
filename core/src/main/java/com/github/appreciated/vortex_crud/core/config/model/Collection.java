@@ -7,7 +7,7 @@ import lombok.With;
 @Builder(toBuilder = true)
 @With
 public record Collection<ModelClass, FieldType, RepositoryType>(
-    CollectionConfig<FieldType> config,
+    CollectionConfig<FieldType> configuration,
     String label,
     Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory,
     CollectionConfiguration<ModelClass, FieldType, RepositoryType> data,

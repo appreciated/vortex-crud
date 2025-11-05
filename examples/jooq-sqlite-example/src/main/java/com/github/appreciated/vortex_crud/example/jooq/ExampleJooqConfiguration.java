@@ -2,9 +2,6 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
-import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
-import com.github.appreciated.vortex_crud.core.config.model.fields.VideoField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -61,7 +58,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 TASKS.ID, JooqIdField.builder().build(),
                                 TASKS.TITLE, JooqTextField.builder().required(true).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
                                 TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
-                                TASKS.ASSIGNED_TO, new ReferenceField<>(USERS, TASKS.ID, USERS.USERNAME, List.of(USERS.USERNAME)) /* 1:1 Relation */,
+                                TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(USERS).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build() /* 1:1 Relation */,
                                 TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                                 TASKS.DUE_DATE, JooqDateField.builder().build(), //.readOnlyForRoles("developer").build(),
                                 TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
@@ -84,14 +81,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 IMAGES.ID, JooqIdField.builder().build(),
                                 IMAGES.TITLE, JooqTextField.builder().required(true).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
-                                IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
+                                IMAGES.URL, JooqImageField.builder().configuration(JooqImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
                         ))
                         .build()),
                 Map.entry(VIDEOS, JooqDataStoreConfig.of(VIDEOS)
                         .fields(Map.of(
                                 VIDEOS.ID, JooqIdField.builder().build(),
                                 VIDEOS.TITLE, JooqTextField.builder().required(true).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
-                                VIDEOS.URL, new VideoField<>(new VideoFieldRendererConfiguration<>(LocalVideoResourceProvider.class))
+                                VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(LocalVideoResourceProvider.class).build()).build()
                         ))
                         .build()),
                 Map.entry(USERS,
@@ -105,14 +102,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .build())
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRendererConfiguration.builder()
+        FormRendererConfiguration taskForm = JooqFormRendererConfiguration.builder()
                 .titleField(TASKS.TITLE)
-                .children(
-                        JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title"),
-                        JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description"),
-                        JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status"),
-                        JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date"),
-                        JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to"),
+                .children(List.of(
+                        JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
+                        JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description").build(),
+                        JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
+                        JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
+                        JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                         JooqCollectionElement.of("route.tasks.labels.comments")
                                 .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
                                 .configuration(JooqCollection.of(FormDialogFactory.class)
@@ -140,8 +137,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 .children(List.of(TASKS.TITLE)).build()
                                         )
                                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                        .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)))
-                                .build()
+                                        .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)).build())
+                                .build())
                 )
                 .build();
 
