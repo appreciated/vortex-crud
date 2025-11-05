@@ -113,7 +113,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
                                 JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
+                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>)ListCollectionFactory.class)
                                         .configuration(JooqCollection.of(FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
@@ -128,7 +128,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 ).build()
                                         ).build(),
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
+                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.of(ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASKS)
                                                         .manyToMany(new JooqManyToMany(

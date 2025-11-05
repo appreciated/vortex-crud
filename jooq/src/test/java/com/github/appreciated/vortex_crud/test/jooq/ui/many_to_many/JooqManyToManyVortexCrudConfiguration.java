@@ -52,7 +52,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                                                         .children(List.of(MANY_TO_MANY_ITEM.NAME))
                                                         .build())
                                                 .emptyMessage("relations.related.empty")
-                                                .config(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig<org.jooq.TableField<?, ?>>(MANY_TO_MANY_ITEM.NAME))
+                                                .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig<org.jooq.TableField<?, ?>>(MANY_TO_MANY_ITEM.NAME))
                                                 .build())
                                         .build()
                         ))

@@ -44,7 +44,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                                         .configuration(JpaCollection.of(ConnectDialogFactory.class)
                                                 .data(build)
                                                 .emptyMessage("relations.related.empty")
-                                                .config(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
+                                                .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
                                                 .build())
                                         .build()
                         ))
