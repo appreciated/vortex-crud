@@ -7,9 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -30,14 +27,14 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 SUBROUTE_TASKS, JooqDataStoreConfig.of(SUBROUTE_TASKS)
                         .fields(Map.of(
-                                SUBROUTE_TASKS.ID, new IdField<>(),
-                                SUBROUTE_TASKS.TITLE, new TextField<>(),
-                                SUBROUTE_TASKS.STATUS, new TextField<>()
+                                SUBROUTE_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                SUBROUTE_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                SUBROUTE_TASKS.STATUS, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         ))
                         .build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(SUBROUTE_TASKS)
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .titleField(SUBROUTE_TASKS.TITLE)
@@ -46,17 +43,17 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(SubmenuRouteFactory.class)
+        routes.put("tasks", JooqSubmenuRoute.builder()
                 .dataStoreKey(SUBROUTE_TASKS)
                 .title("route.tasks.title")
                 .childrenMap(Map.of(
-                        "open", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+                        "open", JooqMasterDetailRoute.builder()
                                 .dataStoreKey(SUBROUTE_TASKS)
                                 .title("route.open-tasks.title")
                                 .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
                                         .titleField(SUBROUTE_TASKS.TITLE)
                                         .build())
-                                .childrenMap(Map.of("form", taskForm))
+                                .child(taskForm)
                                 .build()
                 ))
                 .build());

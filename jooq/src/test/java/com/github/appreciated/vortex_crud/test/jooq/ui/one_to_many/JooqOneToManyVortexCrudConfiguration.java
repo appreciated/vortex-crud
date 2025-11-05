@@ -8,8 +8,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
@@ -33,17 +31,17 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 ONE_TO_MANY_PARENT, JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
                         .fields(Map.of(
-                                ONE_TO_MANY_PARENT.ID, new IdField<>(),
-                                ONE_TO_MANY_PARENT.NAME, new TextField<>()
+                                ONE_TO_MANY_PARENT.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                ONE_TO_MANY_PARENT.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build(),
                 ONE_TO_MANY_CHILD, JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
                         .fields(Map.of(
-                                ONE_TO_MANY_CHILD.ID, new IdField<>(),
-                                ONE_TO_MANY_CHILD.NAME, new TextField<>()
+                                ONE_TO_MANY_CHILD.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                ONE_TO_MANY_CHILD.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
                 .dataStoreKey(ONE_TO_MANY_CHILD)
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .titleField(ONE_TO_MANY_CHILD.NAME)
@@ -53,7 +51,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                         .build())
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
                 .dataStoreKey(ONE_TO_MANY_PARENT)
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .titleField(ONE_TO_MANY_PARENT.NAME)
@@ -75,7 +73,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("one-to-many-test", JooqRouteRenderer.of(ListRouteFactory.class)
+        routes.put("one-to-many-test", JooqListRoute.builder()
                 .dataStoreKey(ONE_TO_MANY_PARENT)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
@@ -85,7 +83,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
                         ))
                         .build())
-                .childrenMap(Map.of("form", parentForm))
+                .child(parentForm)
                 .build());
 
         return JooqApplication.builder()

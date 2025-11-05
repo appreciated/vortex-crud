@@ -10,8 +10,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -33,14 +31,18 @@ public class JooqCardVortexCrudConfiguration
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 CARD_IMAGES, JooqDataStoreConfig.of(CARD_IMAGES)
                         .fields(Map.of(
-                                CARD_IMAGES.ID, new IdField<>(),
-                                CARD_IMAGES.TITLE, new TextField<>(),
-                                CARD_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
+                                CARD_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                CARD_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                        .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .build())
+                                        .build()
                         ))
                         .build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreKey(CARD_IMAGES)
                 .title("route.projects.title-cards")
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -53,13 +55,13 @@ public class JooqCardVortexCrudConfiguration
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("images-grid", JooqRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images-grid", JooqGridRoute.builder()
                 .dataStoreKey(CARD_IMAGES)
                 .title("route.images-cards")
                 .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
                         .titleField(CARD_IMAGES.TITLE)
                         .imageField(CARD_IMAGES.URL)
-                        .imageFactory(LocalImageResourceProvider.class)
+                        .resourceProvider(LocalImageResourceProvider.class)
                         .build())
                 .child(imageForm)
                 .build());

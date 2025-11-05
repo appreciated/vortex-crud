@@ -7,8 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -30,14 +28,14 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MASTER_DETAIL_TASKS, JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
                         .fields(Map.of(
-                                MASTER_DETAIL_TASKS.ID, new IdField<>(),
-                                MASTER_DETAIL_TASKS.TITLE, new TextField<>(),
-                                MASTER_DETAIL_TASKS.STATUS, new TextField<>()
+                                MASTER_DETAIL_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                MASTER_DETAIL_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                MASTER_DETAIL_TASKS.STATUS, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         ))
                         .build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(MASTER_DETAIL_TASKS)
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .titleField(MASTER_DETAIL_TASKS.TITLE)
@@ -46,7 +44,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("tasks", JooqRouteRenderer.of(MasterDetailRouteFactory.class)
+        routes.put("tasks", JooqMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(MASTER_DETAIL_TASKS)
                 .title("route.done-tasks.title")

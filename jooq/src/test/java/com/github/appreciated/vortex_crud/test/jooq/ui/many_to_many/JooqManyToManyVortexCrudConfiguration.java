@@ -7,8 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -34,11 +32,11 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 MANY_TO_MANY_ITEM, JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
                         .fields(Map.of(
                                 MANY_TO_MANY_ITEM.ID, JooqIdField.builder().build(),
-                                MANY_TO_MANY_ITEM.NAME, TextField.builder().build())
+                                MANY_TO_MANY_ITEM.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build())
                         ).build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqFormRoute.builder()
                 .dataStoreKey(MANY_TO_MANY_ITEM)
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
                         .titleField(MANY_TO_MANY_ITEM.NAME)
@@ -63,7 +61,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("many-to-many-test", JooqRouteRenderer.of(ListRouteFactory.class)
+        routes.put("many-to-many-test", JooqListRoute.builder()
                 .dataStoreKey(MANY_TO_MANY_ITEM)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
@@ -73,7 +71,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build()
                         ))
                         .build())
-                .childrenMap(Map.of("form", itemForm))
+                .child(itemForm)
                 .build());
 
         return JooqApplication.builder()

@@ -10,8 +10,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -32,14 +30,18 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 FROM_SLIDE_IMAGES, JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
                         .fields(Map.of(
-                                FROM_SLIDE_IMAGES.ID, new IdField<>(),
-                                FROM_SLIDE_IMAGES.TITLE, new TextField<>(true),
-                                FROM_SLIDE_IMAGES.URL, new ImageField<>(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class))
+                                FROM_SLIDE_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                FROM_SLIDE_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().required(true).build(),
+                                FROM_SLIDE_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                        .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .build())
+                                        .build()
                         ))
                         .build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqRouteRenderer.of(FormSlideRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqFormSlideRoute.builder()
                 .dataStoreKey(FROM_SLIDE_IMAGES)
                 .title("route.projects.title-cards")
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -52,13 +54,13 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("images", JooqRouteRenderer.of(GridRouteFactory.class)
+        routes.put("images", JooqGridRoute.builder()
                 .dataStoreKey(FROM_SLIDE_IMAGES)
                 .title("route.image-cards")
                 .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
                         .imageField(FROM_SLIDE_IMAGES.URL)
-                        .imageFactory(LocalImageResourceProvider.class)
+                        .resourceProvider(LocalImageResourceProvider.class)
                         .build())
                 .child(formSlideDialog)
                 .build());

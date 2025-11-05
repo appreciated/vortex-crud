@@ -4,8 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import org.jooq.TableField;
@@ -38,11 +36,13 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
                                 VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
                                 VALIDATION_TEST.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
-                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(new ImageFieldRendererConfiguration<>(LocalImageResourceProvider.class)).build()
+                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                        .resourceProvider(LocalImageResourceProvider.class)
+                                        .build()).build()
                         )).build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqRouteRenderer.of(FormRouteFactory.class)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreKey(VALIDATION_TEST)
                 .title("route.projects.title-cards")
                 .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
@@ -61,7 +61,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("field-validation-test", JooqRouteRenderer.of(ListRouteFactory.class)
+        routes.put("field-validation-test", JooqListRoute.builder()
                 .dataStoreKey(VALIDATION_TEST)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
@@ -72,7 +72,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
                         ))
                         .build())
-                .childrenMap(Map.of("form", validationForm))
+                .child(validationForm)
                 .build());
 
         LinkedHashMap<JooqFieldValidationTestEnum, String> enumOptions = new LinkedHashMap<>();
