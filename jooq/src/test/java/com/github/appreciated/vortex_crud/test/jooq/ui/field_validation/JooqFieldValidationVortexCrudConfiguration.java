@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import org.jooq.TableField;
@@ -45,7 +44,7 @@ public class JooqFieldValidationVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreKey(VALIDATION_TEST)
                 .title("route.projects.title-cards")
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(VALIDATION_TEST.REQUIRED_FIELD)
                         .children(List.of(
                                 JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),
@@ -65,7 +64,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .dataStoreKey(VALIDATION_TEST)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqListItemRendererConfiguration.builder()
                         .filterField(VALIDATION_TEST.REQUIRED_FIELD)
                         .children(List.of(
                                 JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),

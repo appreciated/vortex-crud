@@ -8,7 +8,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import org.jooq.TableField;
@@ -39,7 +38,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(KANBAN_TASKS)
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(KANBAN_TASKS.TITLE)
                         .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())

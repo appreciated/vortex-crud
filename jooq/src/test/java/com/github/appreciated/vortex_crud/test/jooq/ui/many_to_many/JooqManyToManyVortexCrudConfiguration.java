@@ -6,7 +6,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -38,7 +37,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqFormRoute.builder()
                 .dataStoreKey(MANY_TO_MANY_ITEM)
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(MANY_TO_MANY_ITEM.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),

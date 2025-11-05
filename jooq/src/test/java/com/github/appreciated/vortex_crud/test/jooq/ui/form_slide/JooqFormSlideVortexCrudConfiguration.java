@@ -44,7 +44,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqFormSlideRoute.builder()
                 .dataStoreKey(FROM_SLIDE_IMAGES)
                 .title("route.projects.title-cards")
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(FROM_SLIDE_IMAGES.TITLE, "route.image.labels.title").build(),

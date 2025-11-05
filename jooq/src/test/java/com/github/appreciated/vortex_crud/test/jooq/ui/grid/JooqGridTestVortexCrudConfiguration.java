@@ -9,7 +9,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -45,7 +44,7 @@ public class JooqGridTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreKey(GRID_IMAGES)
                 .title("route.projects.title-cards")
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(GRID_IMAGES.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
@@ -58,7 +57,7 @@ public class JooqGridTestVortexCrudConfiguration
         routes.put("images-list", JooqListRoute.builder()
                 .dataStoreKey(GRID_IMAGES)
                 .title("route.images-list")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqListItemRendererConfiguration.builder()
                         .inlineEdit(true)
                         .filterField(GRID_IMAGES.TITLE)
                         .children(List.of(

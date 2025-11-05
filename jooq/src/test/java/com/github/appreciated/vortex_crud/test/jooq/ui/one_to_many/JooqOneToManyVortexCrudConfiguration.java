@@ -7,7 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
@@ -43,7 +42,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
                 .dataStoreKey(ONE_TO_MANY_CHILD)
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(ONE_TO_MANY_CHILD.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
@@ -53,7 +52,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
                 .dataStoreKey(ONE_TO_MANY_PARENT)
-                .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(ONE_TO_MANY_PARENT.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
@@ -77,7 +76,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .dataStoreKey(ONE_TO_MANY_PARENT)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqListItemRendererConfiguration.builder()
                         .filterField(ONE_TO_MANY_PARENT.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
