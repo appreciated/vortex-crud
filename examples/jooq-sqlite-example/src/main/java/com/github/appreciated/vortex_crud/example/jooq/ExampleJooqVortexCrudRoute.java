@@ -8,9 +8,9 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRoute
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridOrListRendererConfiguration;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFormRendererConfiguration;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRenderer;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRendererConfiguration;
 import com.vaadin.flow.router.Route;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -34,25 +34,25 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
     @Override
     protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
         return JooqRouteRenderer.of(GridRouteFactory.class)
-                .dataStore(PROJECTS)
+                .dataStoreKey(PROJECTS)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
-                .configuration(JooqGridOrListRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
                         .titleField(PROJECTS.NAME)
                         .descriptionField(PROJECTS.DESCRIPTION)
                         .build())
-                .roles(List.of("manager", "admin"))
+                .writeRoles(List.of("manager", "admin"))
                 .child(JooqRouteRenderer.of(FormRouteFactory.class)
-                        .dataStore(PROJECTS)
+                        .dataStoreKey(PROJECTS)
                         .title("route.projects.title-cards")
-                        .configuration(JooqRouteRendererConfiguration.of(CardFactory.class)
+                        .configuration(JooqFormRendererConfiguration.builder()
                                 .titleField(PROJECTS.NAME)
-                                .children(
-                                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name"),
-                                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description"),
-                                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date"),
-                                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date")
-                                )
+                                .children(List.of(
+                                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                                ))
                                 .build())
                         .build())
                 .build();
