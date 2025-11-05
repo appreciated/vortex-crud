@@ -102,44 +102,47 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .build())
         );
 
-        FormRendererConfiguration taskForm = JooqFormRendererConfiguration.builder()
-                .titleField(TASKS.TITLE)
-                .children(List.of(
-                        JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
-                        JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description").build(),
-                        JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
-                        JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
-                        JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
-                        JooqCollectionElement.of("route.tasks.labels.comments")
-                                .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
-                                .configuration(JooqCollection.of(FormDialogFactory.class)
-                                        .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
-                                                .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
-                                                .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
-                                                .build()
-                                        )
-                                        .emptyMessage("route.tasks.labels.comments-empty-message")
-                                        .child(JooqFormRoute.builder()
-                                                .children(List.of(
-                                                        JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
-                                                )).build()
-                                        ).build()
-                                ).build(),
-                        JooqCollectionElement.of("route.tasks.labels.related-tasks")
-                                .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
-                                .configuration(JooqCollection.of(ConnectDialogFactory.class)
-                                        .data(JooqCollectionConfiguration.of(TASKS)
-                                                .manyToMany(new JooqManyToMany(
-                                                        TASK_HAS_TASK.TASK_ID,
-                                                        TASK_HAS_TASK.RELATED_TASK_ID,
-                                                        TASKS.ID,
-                                                        TASK_HAS_TASK))
-                                                .children(List.of(TASKS.TITLE)).build()
-                                        )
-                                        .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                        .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)).build())
-                                .build())
-                )
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
+                .dataStoreKey(TASKS)
+                .configuration(JooqFormRendererConfiguration.builder()
+                        .titleField(TASKS.TITLE)
+                        .children(List.of(
+                                JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
+                                JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description").build(),
+                                JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
+                                JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
+                                JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
+                                JooqCollectionElement.of("route.tasks.labels.comments")
+                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
+                                        .configuration(JooqCollection.of(FormDialogFactory.class)
+                                                .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
+                                                        .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
+                                                        .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
+                                                        .build()
+                                                )
+                                                .emptyMessage("route.tasks.labels.comments-empty-message")
+                                                .child(JooqFormRoute.builder()
+                                                        .children(List.of(
+                                                                JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
+                                                        )).build()
+                                                ).build()
+                                        ).build(),
+                                JooqCollectionElement.of("route.tasks.labels.related-tasks")
+                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) ListCollectionFactory.class)
+                                        .configuration(JooqCollection.of(ConnectDialogFactory.class)
+                                                .data(JooqCollectionConfiguration.of(TASKS)
+                                                        .manyToMany(new JooqManyToMany(
+                                                                TASK_HAS_TASK.TASK_ID,
+                                                                TASK_HAS_TASK.RELATED_TASK_ID,
+                                                                TASKS.ID,
+                                                                TASK_HAS_TASK))
+                                                        .children(List.of(TASKS.TITLE)).build()
+                                                )
+                                                .emptyMessage("route.tasks.labels.related-tasks-empty-message")
+                                                .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)).build())
+                                        .build())
+                        )
+                        .build())
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
@@ -200,6 +203,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreKey(PROJECTS)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(PROJECTS.NAME)
+                        .descriptionField(PROJECTS.DESCRIPTION)
+                        .build())
                 .writeRoles(List.of("admin", "manager"))
                 .child(projectForm)
                 .build());
