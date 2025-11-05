@@ -21,8 +21,13 @@ public record MasterDetailRoute<ModelClass, FieldType, RepositoryType>(
     SerializableSupplier<Component> iconFactory,
     List<String> writeRoles,
     List<String> readOnlyRoles,
-    RouteRenderer<ModelClass, FieldType, RepositoryType> child
-) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
+    FormRouteProvider<ModelClass, FieldType, RepositoryType> child
+) implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType>{
+
+    @Override
+    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
+        return child.formConfiguration();
+    }
 
     @SuppressWarnings("unchecked")
     public static class MasterDetailRouteBuilder<ModelClass, FieldType, RepositoryType> {

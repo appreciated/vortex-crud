@@ -66,15 +66,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        RouteRenderer<ModelClass, FieldType, RepositoryType> routeForIndex = routeResolver.getRouteForIndex(currentPathIndex);
-        FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider;
-        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form;
-        if (routeForIndex instanceof FormRouteProvider<ModelClass, FieldType, RepositoryType>) {
-            routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeForIndex;
-        } else {
-            routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) ((MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeForIndex).child();
-        }
-        form = routeProvider.formConfiguration();
+        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof FormRouteProvider<ModelClass, FieldType, RepositoryType>;
+        FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = routeProvider.formConfiguration();
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider, form);
     }
