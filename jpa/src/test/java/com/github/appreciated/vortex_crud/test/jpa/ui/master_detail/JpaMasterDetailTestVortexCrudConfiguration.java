@@ -30,7 +30,8 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.of("title", "route.tasks.labels.title").build()
+                                JpaFieldElement.of("title", "route.tasks.labels.title").build(),
+                                JpaFieldElement.of("description", "route.tasks.labels.description").build()
                         ))
                         .build())
                 .build();

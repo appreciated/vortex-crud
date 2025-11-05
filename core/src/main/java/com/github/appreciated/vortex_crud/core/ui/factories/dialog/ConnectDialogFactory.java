@@ -10,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.vaadin.flow.component.ModalityMode;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -68,7 +69,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
         VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
-        ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.getManyToMany();
+        ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.manyToMany();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
         dialog.setHeaderTitle(dialog.getTranslation("button.link.title"));
@@ -147,7 +148,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
         dialog.add(layout);
         dialog.getFooter().add(cancelButton, connectButton);
 
-        dialog.setModal(false);
+        dialog.setModality(ModalityMode.VISUAL);
         dialog.setDraggable(false);
         dialog.setMinWidth(500, Unit.PIXELS);
         return dialog;

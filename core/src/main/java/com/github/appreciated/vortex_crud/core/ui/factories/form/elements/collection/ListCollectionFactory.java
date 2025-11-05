@@ -78,15 +78,15 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         list.add(header);
         CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration().data();
 
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(data.getDataStore());
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(data.dataStore());
 
-        java.util.Collection<Object> records = (data.getManyToMany() != null) ?
-                (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.getManyToMany(), foreignKeyValue) :
-                (java.util.Collection<Object>) data.getOneToMany().getData(foreignKeyValue, dataStore, data);
+        java.util.Collection<Object> records = (data.manyToMany() != null) ?
+                (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
+                (java.util.Collection<Object>) data.oneToMany().getData(foreignKeyValue, dataStore, data);
 
-        if (internalFormElement.configuration().data().getOneToMany() != null) {
+        if (internalFormElement.configuration().data().oneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
-        } else if (internalFormElement.configuration().data().getManyToMany() != null) {
+        } else if (internalFormElement.configuration().data().manyToMany() != null) {
             addManyToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
@@ -157,9 +157,9 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                             HorizontalLayout header) {
         Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.configuration();
         CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.data();
-        FieldType referenceField = (data.getManyToMany() != null) ?
-                data.getManyToMany().associativeSourceIdField() :
-                data.getOneToMany().getReferenceField(data);
+        FieldType referenceField = (data.manyToMany() != null) ?
+                data.manyToMany().associativeSourceIdField() :
+                data.oneToMany().getReferenceField(data);
 
         com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.configuration().factory()).create(
                 entityId,
@@ -167,7 +167,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 referenceField,
                 collectionData.child(),
                 collectionData.data(),
-                collectionData.data().getDataStore(),
+                collectionData.data().dataStore(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 () -> {

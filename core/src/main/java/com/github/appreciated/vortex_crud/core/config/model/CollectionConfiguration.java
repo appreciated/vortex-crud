@@ -13,20 +13,4 @@ public record CollectionConfiguration<ModelClass, FieldType, RepositoryType>(
     ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany,
     List<FieldType> children
 ) {
-    // Explicit getters for backwards compatibility
-    public RepositoryType getDataStore() {
-        return dataStore;
-    }
-
-    public OneToMany<ModelClass, FieldType, RepositoryType> getOneToMany() {
-        return oneToMany;
-    }
-
-    public ManyToMany<ModelClass, FieldType, RepositoryType> getManyToMany() {
-        return manyToMany;
-    }
-
-    public List<FieldType> children() {
-        return children;
-    }
 }
