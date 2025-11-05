@@ -82,7 +82,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .configuration(JpaCollection.of(ConnectDialogFactory.class)
                         .data(build2)
                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                        .config(new CollectionConfig("title"))
+                        .configuration(new CollectionConfig("title"))
                         .build())
                 .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
