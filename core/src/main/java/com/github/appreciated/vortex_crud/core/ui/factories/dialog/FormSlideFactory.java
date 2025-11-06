@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.vaadin.flow.component.ModalityMode;
 import com.vaadin.flow.component.dialog.Dialog;
 
 /**
@@ -25,7 +26,7 @@ public class FormSlideFactory<ModelClass, FieldType, RepositoryType>
     protected Dialog instantiateDialog() {
         Dialog dialog = new Dialog();
         dialog.setCloseOnOutsideClick(true);
-        dialog.setModal(false);
+        dialog.setModality(ModalityMode.VISUAL);
         dialog.setDraggable(false);
         dialog.addClassName("form-slide-dialog");
         dialog.setWidth("400px");
