@@ -214,13 +214,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreKey(PROJECTS)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                //.filterField(PROJECTS.NAME) // TODO
-                .columns(List.of(
-                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
-                ))
+                .configuration(JooqListItemRendererConfiguration.builder()
+                        .filterField(PROJECTS.NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                                JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                                JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                        ))
+                        .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
                 .child(projectForm)
                 .build());
