@@ -122,9 +122,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 )
                                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                                 .child(JooqFormRoute.builder()
-                                                        .children(List.of(
-                                                                JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
-                                                        )).build()
+                                                        .configuration(JooqFormRendererConfiguration.builder()
+                                                                .titleField(TASK_COMMENTS.COMMENT_TEXT)
+                                                                .children(List.of(
+                                                                        JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
+                                                                ))
+                                                                .build())
+                                                        .build()
                                                 ).build()
                                         ).build(),
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
