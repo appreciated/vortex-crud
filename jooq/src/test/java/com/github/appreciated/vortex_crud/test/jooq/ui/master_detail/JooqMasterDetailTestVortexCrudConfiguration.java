@@ -4,10 +4,10 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
-import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -28,10 +28,9 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
                 MASTER_DETAIL_TASKS, JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
                         .fields(Map.of(
-                                MASTER_DETAIL_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                                MASTER_DETAIL_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                                MASTER_DETAIL_TASKS.DESCRIPTION, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                                MASTER_DETAIL_TASKS.STATUS, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
+                                MASTER_DETAIL_TASKS.ID, JooqIdField.builder().build(),
+                                MASTER_DETAIL_TASKS.TITLE, JooqTextField.builder().build(),
+                                MASTER_DETAIL_TASKS.DESCRIPTION, JooqTextField.builder().build()
                         ))
                         .build()
         );

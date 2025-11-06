@@ -28,9 +28,9 @@ public class JooqFieldValidationVortexCrudConfiguration
                 VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
                         .fields(Map.of(
                                 VALIDATION_TEST.ID, JooqIdField.builder().build(),
-                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().validation(TextFieldValidation.builder().maxLength(255).build()).build(),
+                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
                                 VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validation(TextFieldValidation.builder().maxLength(500).build()).build(),
-                                VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validation(NumberFieldValidation.builder().min(0.0).build()).build(),
+                                VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validation(NumberFieldValidation.builder().min(1.0).build()).build(),
                                 VALIDATION_TEST.DATE_FIELD, JooqDateField.builder().build(),
                                 VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
                                 VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
@@ -41,7 +41,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                         )).build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreKey(VALIDATION_TEST)
                 .title("route.projects.title-cards")
                 .configuration(JooqFormRendererConfiguration.builder()
