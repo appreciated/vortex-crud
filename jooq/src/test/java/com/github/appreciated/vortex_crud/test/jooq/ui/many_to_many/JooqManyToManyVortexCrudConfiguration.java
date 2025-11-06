@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -41,7 +43,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                         .titleField(MANY_TO_MANY_ITEM.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
-                                JooqCollectionElement.of("relations.labels.related")
+                                JooqCollectionElement.of("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ListCollectionFactory.class)
                                         .configuration(JooqCollection.of(ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(MANY_TO_MANY_ITEM)
                                                         .manyToMany(new JooqManyToMany(
@@ -52,7 +54,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                                                         .children(List.of(MANY_TO_MANY_ITEM.NAME))
                                                         .build())
                                                 .emptyMessage("relations.related.empty")
-                                                .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig<org.jooq.TableField<?, ?>>(MANY_TO_MANY_ITEM.NAME))
+                                                .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig(MANY_TO_MANY_ITEM.NAME))
                                                 .build())
                                         .build()
                         ))
