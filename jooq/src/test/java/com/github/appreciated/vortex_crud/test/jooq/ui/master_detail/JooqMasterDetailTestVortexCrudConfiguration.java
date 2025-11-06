@@ -30,6 +30,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                         .fields(Map.of(
                                 MASTER_DETAIL_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 MASTER_DETAIL_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                MASTER_DETAIL_TASKS.DESCRIPTION, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 MASTER_DETAIL_TASKS.STATUS, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         ))
                         .build()
@@ -37,9 +38,13 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(MASTER_DETAIL_TASKS)
+                .title("route.projects.title-cards")
                 .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(MASTER_DETAIL_TASKS.TITLE)
-                        .children(List.of(JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build()))
+                        .children(List.of(
+                                JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
+                                JooqFieldElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
+                        ))
                         .build())
                 .build();
 
@@ -48,9 +53,9 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(MASTER_DETAIL_TASKS)
                 .title("route.done-tasks.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
+                .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(MASTER_DETAIL_TASKS.TITLE)
-                        .descriptionField(MASTER_DETAIL_TASKS.DESCRIPTION)
+                        .descriptionField(MASTER_DETAIL_TASKS.STATUS)
                         .build())
                 .child(taskForm)
                 .build());
