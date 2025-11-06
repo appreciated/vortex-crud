@@ -7,6 +7,8 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
@@ -57,6 +59,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                         .children(List.of(
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
                                 JooqCollectionElement.of("relations.labels.children")
+                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.of(FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(ONE_TO_MANY_CHILD)
                                                         .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
