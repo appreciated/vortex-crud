@@ -115,6 +115,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 dataStore.deleteRecordById(dataStoreUtil.getId(record));
                 loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
             });
+            item.addActions(remove);
             list.add(item);
         }
     }

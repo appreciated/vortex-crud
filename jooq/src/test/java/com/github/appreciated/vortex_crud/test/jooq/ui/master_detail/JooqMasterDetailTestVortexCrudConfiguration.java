@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -34,7 +35,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                         .build()
         );
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(MASTER_DETAIL_TASKS)
                 .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(MASTER_DETAIL_TASKS.TITLE)

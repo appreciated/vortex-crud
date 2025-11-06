@@ -15,7 +15,7 @@ public record JpaManyToMany<ModelClass>(
 
     @Override
     public String referenceField(CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
-        return "";
+        return referenceField;
     }
 
     @Override
