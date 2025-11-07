@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaMasterDetailRoute {
     public static MasterDetailRoute.MasterDetailRouteBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return MasterDetailRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return MasterDetailRoute.builder();
     }
 }

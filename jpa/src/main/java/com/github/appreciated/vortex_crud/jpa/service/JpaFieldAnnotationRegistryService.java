@@ -49,7 +49,6 @@ public class JpaFieldAnnotationRegistryService {
     }
 
     public boolean hasFieldAnnotation(Field field) {
-        boolean b = registeredAnnotations.stream().anyMatch(field::isAnnotationPresent);
-        return b;
+        return registeredAnnotations.stream().anyMatch(field::isAnnotationPresent);
     }
 }

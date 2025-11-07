@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaVersioning {
     public static Versioning.VersioningBuilder<JpaRepository<?, ?>> of() {
-        return Versioning.<JpaRepository<?, ?>>builder();
+        return Versioning.builder();
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaKanbanConfiguration {
     public static KanbanConfiguration.KanbanConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return KanbanConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return KanbanConfiguration.builder();
     }
 }

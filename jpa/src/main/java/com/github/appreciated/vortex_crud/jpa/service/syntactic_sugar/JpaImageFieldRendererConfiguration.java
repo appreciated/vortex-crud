@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaImageFieldRendererConfiguration {
     public static ImageFieldRendererConfiguration.ImageFieldRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return ImageFieldRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return ImageFieldRendererConfiguration.builder();
     }
 }

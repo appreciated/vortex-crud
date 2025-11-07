@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaListItemRendererConfiguration {
     public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return ListItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return ListItemRendererConfiguration.builder();
     }
 }

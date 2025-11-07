@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaCollection {
     public static Collection.CollectionBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> of(Class<? extends VortexCrudDialogFactory> factory) {
-        return Collection.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .factory((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) factory);
+        return Collection.builder();
     }
 }

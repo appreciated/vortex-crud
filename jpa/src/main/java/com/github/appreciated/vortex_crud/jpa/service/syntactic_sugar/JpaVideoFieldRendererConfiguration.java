@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaVideoFieldRendererConfiguration {
     public static VideoFieldRendererConfiguration.VideoFieldRendererConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return VideoFieldRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return VideoFieldRendererConfiguration.builder();
     }
 }

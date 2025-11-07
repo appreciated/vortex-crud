@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaFormRoute {
     public static FormRoute.FormRouteBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
+        return FormRoute.builder();
     }
 }

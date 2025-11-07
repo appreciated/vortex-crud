@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaApplication extends Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    public static JpaApplication.JpaApplicationBuilder<?, ?> of() {
-        return JpaApplication.builder();
+    public static Application.ApplicationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
+        return Application.builder();
     }
 }
