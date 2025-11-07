@@ -7,7 +7,8 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
 public class JooqCollection extends Collection<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(Class<? extends VortexCrudDialogFactory> factory) {
-        return Collection.builder();
+    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder(Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> factory) {
+        return Collection.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().factory(factory);
     }
 }
+

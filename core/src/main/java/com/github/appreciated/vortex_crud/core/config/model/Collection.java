@@ -18,6 +18,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> {
 
     private String label;
 
+    @Builder.Default
     private Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory;
 
     private CollectionConfiguration<ModelClass, FieldType, RepositoryType> data;
