@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +18,12 @@ import java.util.stream.Collectors;
  */
 @Component
 public class RbacPermissionChecker implements com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker {
+
+    private VortexCrudConfigService<?, ?, ?> configService;
+
+    public RbacPermissionChecker(VortexCrudConfigService<?, ?, ?> configService) {
+        this.configService = configService;
+    }
 
     /**
      * Determines the access level for the current user on an access-controlled resource.
