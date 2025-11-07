@@ -1,14 +1,21 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Builder(toBuilder = true)
-@With
-public record Versioning<RepositoryType>(
-    boolean enabled,
-    List<RepositoryType> dataStores
-) {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class Versioning<RepositoryType> {
+
+    private boolean enabled;
+
+    private List<RepositoryType> dataStores;
 }

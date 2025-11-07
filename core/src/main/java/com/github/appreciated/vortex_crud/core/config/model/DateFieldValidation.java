@@ -2,20 +2,27 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 
 /**
  * Validation for date picker components.
  */
-@Builder(toBuilder = true)
-@With
-public record DateFieldValidation(
-    LocalDate min,
-    LocalDate max
-) implements Validation {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class DateFieldValidation implements Validation {
+
+    private LocalDate min;
+
+    private LocalDate max;
 
     @Override
     public void applyToComponent(Component component) {

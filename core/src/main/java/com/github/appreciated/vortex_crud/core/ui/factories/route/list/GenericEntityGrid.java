@@ -37,7 +37,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().getDataStores().get(routeRenderer.dataStoreKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(routeRenderer.dataStoreKey());
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();

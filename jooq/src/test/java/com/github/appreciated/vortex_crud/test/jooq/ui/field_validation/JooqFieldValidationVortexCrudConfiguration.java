@@ -28,8 +28,8 @@ public class JooqFieldValidationVortexCrudConfiguration
                 VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
                         .fields(Map.of(
                                 VALIDATION_TEST.ID, JooqIdField.builder().build(),
-                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validation(TextFieldValidation.builder().maxLength(255).build()).build(),
-                                VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validation(TextFieldValidation.builder().maxLength(500).build()).build(),
+                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validation(MaxLengthTextFieldValidation.builder().maxLength(255).build()).build(),
+                                VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validation(MaxLengthTextFieldValidation.builder().maxLength(500).build()).build(),
                                 VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validation(NumberFieldValidation.builder().min(1.0).build()).build(),
                                 VALIDATION_TEST.DATE_FIELD, JooqDateField.builder().build(),
                                 VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),

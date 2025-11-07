@@ -1,16 +1,23 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder(toBuilder = true)
-@With
-public record Selects(
-    Map<String, LinkedHashMap<?, String>> configs
-) {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class Selects {
+
+    private Map<String, LinkedHashMap<?, String>> configs;
+
     // Explicit getters for backwards compatibility
     public Map<String, LinkedHashMap<?, String>> getConfigs() {
         return configs;

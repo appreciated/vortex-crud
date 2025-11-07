@@ -2,21 +2,36 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>(
-        Class<? extends VortexCrudItemFactory<FieldType>> factory,
-        FieldType titleField,
-        FieldType descriptionField,
-        FieldType imageField,
-        Class<? extends VortexCrudResourceProvider> resourceProvider,
-        boolean inlineEdit,
-        FieldType filterField,
-        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
-        List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms
-) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
+@Getter
+public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
+    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    private List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms;
 }

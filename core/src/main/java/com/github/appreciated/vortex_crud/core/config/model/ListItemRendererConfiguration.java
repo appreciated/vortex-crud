@@ -3,21 +3,37 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType>(
-        Class<? extends VortexCrudItemFactory<FieldType>> factory,
-        FieldType titleField,
-        FieldType descriptionField,
-        FieldType imageField,
-        Class<? extends VortexCrudResourceProvider> resourceProvider,
-        boolean inlineEdit,
-        FieldType filterField,
-        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children
-) implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+@Getter
+public class ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
+
+    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
     public static class ListItemRendererConfigurationBuilder<ModelClass, FieldType, RepositoryType> {
         ListItemRendererConfigurationBuilder() {
             factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;

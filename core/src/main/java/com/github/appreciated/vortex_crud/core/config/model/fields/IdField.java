@@ -4,26 +4,27 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IdFieldFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 /**
  * Thin Field type for IdFieldFactory.
  */
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record IdField<ModelClass, FieldType, RepositoryType>(
-        Validation validation,
-        boolean required,
-        List<String> writeRoles,
-        List<String> readOnlyRoles,
-        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
-) implements Field<ModelClass, FieldType, RepositoryType> {
+@Getter
+public class IdField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    Validation validation;
+    boolean required;
+    List<String> writeRoles;
+    List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
-    public static class IdFieldBuilder<ModelClass, FieldType, RepositoryType> {
-        IdFieldBuilder() {
-            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IdFieldFactory.class;
-        }
-    }
-
+    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IdFieldFactory.class;
 }

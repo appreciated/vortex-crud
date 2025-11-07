@@ -5,28 +5,25 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfigu
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.VideoFieldFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record VideoField<ModelClass, FieldType, RepositoryType>(
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
-        Validation validation,
-        boolean required,
-        List<String> writeRoles,
-        List<String> readOnlyRoles,
-        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
-) implements Field<ModelClass, FieldType, RepositoryType> {
+@Getter
+public class VideoField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    Validation validation;
+    boolean required;
+    List<String> writeRoles;
+    List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
-    public static class VideoFieldBuilder<ModelClass, FieldType, RepositoryType> {
-        VideoFieldBuilder() {
-            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) VideoFieldFactory.class;
-        }
-    }
-
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
-        return configuration;
-    }
-
+    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) VideoFieldFactory.class;
 }

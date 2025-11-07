@@ -5,10 +5,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-
-public class JooqTextField {
-    public static 
-    TextField.TextFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+public class JooqTextField extends TextField<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+    public static TextField.TextFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return TextField.builder();
     }
 }

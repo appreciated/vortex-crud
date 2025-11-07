@@ -1,21 +1,25 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
-@Builder(toBuilder = true)
-@With
-public record DataStoreConfig<ModelClass, FieldType, RepositoryType>(
-    RepositoryType factory,
-    Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields
-) {
-    // Explicit getters for backwards compatibility
-    public RepositoryType factory() {
-        return factory;
-    }
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class DataStoreConfig<ModelClass, FieldType, RepositoryType> {
 
+    private RepositoryType factory;
+
+    private Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields;
+
+    // Explicit getters for backwards compatibility
     public Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> getFields() {
         return fields;
     }

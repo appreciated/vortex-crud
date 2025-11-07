@@ -2,19 +2,27 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.NumberField;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * Validation for number field components.
  */
-@Builder(toBuilder = true)
-@With
-public record NumberFieldValidation(
-    Double min,
-    Double max,
-    Double step
-) implements Validation {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class NumberFieldValidation implements Validation {
+
+    private Double min;
+
+    private Double max;
+
+    private Double step;
 
     @Override
     public void applyToComponent(Component component) {

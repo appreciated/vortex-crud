@@ -98,7 +98,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         }
 
         RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().getDataStores().get(table);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
         String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
         ModelClass entity = creationMode ? dataStore.newInstance() : dataStore.getRecordById(lastSegment);

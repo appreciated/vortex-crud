@@ -39,7 +39,7 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
         factories.put(DateFieldFactory.class, new DateFieldFactory<>());
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
-        factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.getSelects(), configuration.getDataStores()));
+        factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.selects(), configuration.dataStores()));
         factories.put(DoubleNumberFieldFactory.class, new DoubleNumberFieldFactory<>());
         factories.put(BigDecimalNumberFieldFactory.class, new BigDecimalNumberFieldFactory<>());
         factories.put(IntegerNumberFieldFactory.class, new IntegerNumberFieldFactory<>());

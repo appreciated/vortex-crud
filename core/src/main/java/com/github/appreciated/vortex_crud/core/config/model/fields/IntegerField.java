@@ -4,26 +4,27 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.IntegerNumberFieldFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 /**
  * Thin Field type for IntegerNumberFieldFactory.
  */
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record IntegerField<ModelClass, FieldType, RepositoryType>(
-        Validation validation,
-        boolean required,
-        List<String> writeRoles,
-        List<String> readOnlyRoles,
-        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
-) implements Field<ModelClass, FieldType, RepositoryType> {
+@Getter
+public class IntegerField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    Validation validation;
+    boolean required;
+    List<String> writeRoles;
+    List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
-    public static class IntegerFieldBuilder<ModelClass, FieldType, RepositoryType> {
-        IntegerFieldBuilder() {
-            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IntegerNumberFieldFactory.class;
-        }
-    }
-
+    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IntegerNumberFieldFactory.class;
 }

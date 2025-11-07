@@ -4,25 +4,40 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Builder(toBuilder = true)
-@With
-public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
-    RepositoryType dataStoreKey,
-    String title,
-    boolean isDefaultRoute,
-    Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-    boolean isHiddenInMenu,
-    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
-    SerializableSupplier<Component> iconFactory,
-    List<String> writeRoles,
-    List<String> readOnlyRoles,
-    RouteRenderer<ModelClass, FieldType, RepositoryType> child
-) implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+
+    private RepositoryType dataStoreKey;
+
+    private String title;
+
+    private boolean isDefaultRoute;
+
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+
+    private boolean isHiddenInMenu;
+
+    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+
+    private SerializableSupplier<Component> iconFactory;
+
+    private List<String> writeRoles;
+
+    private List<String> readOnlyRoles;
+
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
     @SuppressWarnings("unchecked")
     public static class KanbanRouteBuilder<ModelClass, FieldType, RepositoryType> {
@@ -45,9 +60,5 @@ public record KanbanRoute<ModelClass, FieldType, RepositoryType>(
 
     public List<String> getReadOnlyRoles() {
         return readOnlyRoles;
-    }
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
-        return child;
     }
 }

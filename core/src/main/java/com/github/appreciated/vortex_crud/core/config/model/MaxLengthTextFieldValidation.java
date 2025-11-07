@@ -3,17 +3,23 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * Validation for text-based components like TextField and TextArea.
  */
-@Builder(toBuilder = true)
-@With
-public record TextFieldValidation(
-    int maxLength
-) implements Validation {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class MaxLengthTextFieldValidation implements Validation {
+
+    private int maxLength;
 
     @Override
     public void applyToComponent(Component component) {

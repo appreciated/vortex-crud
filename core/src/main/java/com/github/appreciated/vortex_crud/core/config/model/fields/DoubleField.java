@@ -4,26 +4,27 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DoubleNumberFieldFactory;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
 /**
  * Thin Field type for DoubleNumberFieldFactory.
  */
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public record DoubleField<ModelClass, FieldType, RepositoryType>(
-        Validation validation,
-        boolean required,
-        List<String> writeRoles,
-        List<String> readOnlyRoles,
-        Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory
-) implements Field<ModelClass, FieldType, RepositoryType> {
+@Getter
+public class DoubleField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    Validation validation;
+    boolean required;
+    List<String> writeRoles;
+    List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
-    public static class DoubleFieldBuilder<ModelClass, FieldType, RepositoryType> {
-        DoubleFieldBuilder() {
-            factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) DoubleNumberFieldFactory.class;
-        }
-    }
-
+    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) DoubleNumberFieldFactory.class;
 }

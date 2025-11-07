@@ -1,14 +1,20 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import lombok.Data;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Data
-@SuperBuilder(toBuilder = true)
-public abstract class Application<ModelClass, FieldType, RepositoryType> {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class Application<ModelClass, FieldType, RepositoryType> {
 
     private String name;
 
@@ -36,5 +42,17 @@ public abstract class Application<ModelClass, FieldType, RepositoryType> {
 
     public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getRouteRenderers() {
         return routes;
+    }
+
+    public String getI18nBundlePrefix() {
+        return i18nBundlePrefix;
+    }
+
+    public Selects getSelects() {
+        return selects;
+    }
+
+    public Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> getDataStores() {
+        return dataStores;
     }
 }

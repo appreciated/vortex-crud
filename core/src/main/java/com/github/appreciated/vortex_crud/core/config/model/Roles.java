@@ -1,13 +1,19 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.With;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Builder(toBuilder = true)
-@With
-public record Roles(
-    List<String> roles
-) {
+@Accessors(fluent = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+public class Roles {
+
+    private List<String> roles;
 }
