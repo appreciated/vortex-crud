@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
@@ -29,8 +30,8 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         CollectionConfiguration.CollectionConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> relatedItems = JpaCollectionConfiguration.builder(itemRepository)
-                .manyToMany(new JpaManyToMany(itemRepository, "relatedItems"));
-        CollectionConfiguration build = relatedItems
+                .manyToMany(new JpaManyToMany<>(itemRepository, "relatedItems"));
+        CollectionConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = relatedItems
                 .children(List.of("name"))
                 .build();
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = JpaFormRoute.builder()
@@ -39,8 +40,8 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("name", "relations.labels.name").build(),
-                                JpaCollectionElement.builder("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class)ListCollectionFactory.class)
-                                        .configuration(JpaCollection.builder(ConnectDialogFactory.class)
+                                JpaCollectionElement.builder("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ListCollectionFactory.class)
+                                        .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(build)
                                                 .emptyMessage("relations.related.empty")
                                                 .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
