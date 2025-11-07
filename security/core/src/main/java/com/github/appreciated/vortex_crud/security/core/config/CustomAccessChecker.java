@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 class CustomAccessChecker implements NavigationAccessChecker {
 
     private final VortexCrudConfigService<?, ?, ?> configService;
-    private final RbacPermissionChecker permissionChecker;
+    private final LocalStorageRbacPermissionChecker permissionChecker;
 
     public CustomAccessChecker(VortexCrudConfigService<?, ?, ?> configService,
-                               RbacPermissionChecker permissionChecker) {
+                               LocalStorageRbacPermissionChecker permissionChecker) {
         this.configService = configService;
         this.permissionChecker = permissionChecker;
     }

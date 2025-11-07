@@ -63,6 +63,22 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.factory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
+                // Apply RBAC field-level permissions
+                if (permissionChecker != null) {
+                    com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker.AccessLevel accessLevel =
+                        permissionChecker.getAccessLevel(field);
+
+                    if (accessLevel == com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker.AccessLevel.NONE) {
+                        // Skip this field entirely if user has no access
+                        continue;
+                    } else if (accessLevel == com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker.AccessLevel.READ_ONLY) {
+                        // Make the field read-only if user only has read access
+                        if (component instanceof HasValue) {
+                            ((HasValue<?, ?>) component).setReadOnly(true);
+                        }
+                    }
+                }
+
                 // Apply validation if present
                 if (field.validation() != null) {
                     field.validation().applyToComponent(component);

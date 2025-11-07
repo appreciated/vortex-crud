@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker.AccessLevel;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,15 +23,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @DisplayName("RbacPermissionChecker Tests")
-class RbacPermissionCheckerTest {
+class LocalStorageRbacPermissionCheckerTest {
 
-    private RbacPermissionChecker permissionChecker;
+    private LocalStorageRbacPermissionChecker permissionChecker;
     private SecurityContext securityContext;
     private Authentication authentication;
+    private VortexCrudConfigService<?, ?, ?> configService;
+    private Application<?, ?, ?> application;
+    private IdentityAndAccessManagement<?, ?, ?> identityAndAccessManagement;
 
     @BeforeEach
+    @SuppressWarnings("unchecked")
     void setUp() {
-        permissionChecker = new RbacPermissionChecker();
+        configService = mock(VortexCrudConfigService.class);
+        application = mock(Application.class);
+        identityAndAccessManagement = mock(IdentityAndAccessManagement.class);
+
+        when(configService.configuration()).thenReturn((Application) application);
+        when(application.identityAndAccessManagement()).thenReturn((IdentityAndAccessManagement) identityAndAccessManagement);
+
+        permissionChecker = new LocalStorageRbacPermissionChecker(configService);
         securityContext = mock(SecurityContext.class);
         authentication = mock(Authentication.class);
         SecurityContextHolder.setContext(securityContext);
@@ -293,6 +307,82 @@ class RbacPermissionCheckerTest {
         assertTrue(roles.contains("admin"));
         assertTrue(roles.contains("user"));
         assertTrue(roles.contains("editor"));
+    }
+
+    // ==================== currentUserHasRequiredRoles Tests ====================
+
+    @Test
+    @DisplayName("currentUserHasRequiredRoles should return true when user has the role")
+    void currentUserHasRequiredRoles_userHasRequiredRoles_returnsTrue() {
+        setupAuthentication(List.of("admin", "user"));
+
+        assertTrue(permissionChecker.currentUserHasRequiredRoles("admin"));
+        assertTrue(permissionChecker.currentUserHasRequiredRoles("user"));
+    }
+
+    @Test
+    @DisplayName("currentUserHasRequiredRoles should return false when user does not have the role")
+    void currentUserHasRequiredRoles_userDoesNotHaveRequiredRoles_returnsFalse() {
+        setupAuthentication(List.of("user"));
+
+        assertFalse(permissionChecker.currentUserHasRequiredRoles("admin"));
+    }
+
+    @Test
+    @DisplayName("currentUserHasRequiredRoles should return false when role is null")
+    void currentUserHasRequiredRoles_nullRequiredRoles_returnsFalse() {
+        setupAuthentication(List.of("admin"));
+
+        assertFalse(permissionChecker.currentUserHasRequiredRoles(null));
+    }
+
+    @Test
+    @DisplayName("currentUserHasRequiredRoles should return false when not authenticated")
+    void currentUserHasRequiredRoles_notAuthenticated_returnsFalse() {
+        when(securityContext.getAuthentication()).thenReturn(null);
+
+        assertFalse(permissionChecker.currentUserHasRequiredRoles("admin"));
+    }
+
+    // ==================== getCurrentUserEntity Tests ====================
+
+    @Test
+    @DisplayName("getCurrentUserEntity should return user entity when IAM configured")
+    @SuppressWarnings("unchecked")
+    void getCurrentUserEntity_iamConfigured_returnsUserEntity() {
+        Object mockUserEntity = new Object();
+        when(((IdentityAndAccessManagement<Object, Object, Object>) identityAndAccessManagement).getCurrentUserEntity()).thenReturn(mockUserEntity);
+
+        Object result = permissionChecker.getCurrentUserEntity();
+        assertEquals(mockUserEntity, result);
+    }
+
+    @Test
+    @DisplayName("getCurrentUserEntity should return null when IAM not configured")
+    void getCurrentUserEntity_iamNotConfigured_returnsNull() {
+        when(application.identityAndAccessManagement()).thenReturn(null);
+
+        Object result = permissionChecker.getCurrentUserEntity();
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("getCurrentUserEntity should return null when config service is null")
+    void getCurrentUserEntity_configServiceNull_returnsNull() {
+        LocalStorageRbacPermissionChecker checkerWithoutConfig = new LocalStorageRbacPermissionChecker(null);
+
+        Object result = checkerWithoutConfig.getCurrentUserEntity();
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("getCurrentUserEntity should return null when IAM returns null")
+    @SuppressWarnings("unchecked")
+    void getCurrentUserEntity_iamReturnsNull_returnsNull() {
+        when(((IdentityAndAccessManagement<Object, Object, Object>) identityAndAccessManagement).getCurrentUserEntity()).thenReturn(null);
+
+        Object result = permissionChecker.getCurrentUserEntity();
+        assertNull(result);
     }
 
     // ==================== Helper Methods ====================

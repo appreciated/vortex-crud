@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
+import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,17 +19,18 @@ import java.util.stream.Collectors;
  * Implements the core interface to avoid circular dependencies.
  */
 @Component
-public class RbacPermissionChecker implements com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker {
+public class LocalStorageRbacPermissionChecker implements RbacPermissionChecker {
 
     private VortexCrudConfigService<?, ?, ?> configService;
 
-    public RbacPermissionChecker(VortexCrudConfigService<?, ?, ?> configService) {
+    public LocalStorageRbacPermissionChecker(VortexCrudConfigService<?, ?, ?> configService) {
         this.configService = configService;
     }
 
     /**
      * Determines the access level for the current user on an access-controlled resource.
      */
+    @Override
     public AccessLevel getAccessLevel(AccessControlled resource) {
         if (resource == null) {
             return AccessLevel.WRITE;
@@ -64,6 +67,7 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
     /**
      * Checks if the current user can write to the resource.
      */
+    @Override
     public boolean canWrite(AccessControlled resource) {
         return getAccessLevel(resource) == AccessLevel.WRITE;
     }
@@ -71,6 +75,7 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
     /**
      * Checks if the current user can read the resource.
      */
+    @Override
     public boolean canRead(AccessControlled resource) {
         AccessLevel level = getAccessLevel(resource);
         return level == AccessLevel.READ_ONLY || level == AccessLevel.WRITE;
@@ -79,6 +84,7 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
     /**
      * Checks if the current user has any access to the resource.
      */
+    @Override
     public boolean hasAccess(AccessControlled resource) {
         return getAccessLevel(resource) != AccessLevel.NONE;
     }
@@ -86,6 +92,7 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
     /**
      * Checks if the current user is authenticated.
      */
+    @Override
     public boolean isAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth != null && auth.isAuthenticated()
@@ -95,6 +102,7 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
     /**
      * Gets the current authenticated user's roles.
      */
+    @Override
     public Set<String> getCurrentUserRoles() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
@@ -115,5 +123,34 @@ public class RbacPermissionChecker implements com.github.appreciated.vortex_crud
             return role.substring(5);
         }
         return role;
+    }
+
+    /**
+     * Checks if the current user has a specific role.
+     */
+    @Override
+    public boolean currentUserHasRequiredRoles(String role) {
+        if (role == null) {
+            return false;
+        }
+        return getCurrentUserRoles().contains(role);
+    }
+
+    /**
+     * Gets the current authenticated user entity from the data store.
+     * Delegates to IdentityAndAccessManagement if configured.
+     */
+    @Override
+    public Object getCurrentUserEntity() {
+        if (configService == null) {
+            return null;
+        }
+
+        IdentityAndAccessManagement<?, ?, ?> iam = configService.configuration().identityAndAccessManagement();
+        if (iam == null) {
+            return null;
+        }
+
+        return iam.getCurrentUserEntity();
     }
 }
