@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
@@ -26,19 +25,16 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
     private final DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory;
     private final VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry;
     private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
 
     @Autowired(required = false)
     private com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker permissionChecker;
 
     public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
                        VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
-                       ReflectionService<FieldType> reflectionService,
-                       VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
+                       ReflectionService<FieldType> reflectionService) {
         this.componentFactory = componentFactory;
         this.collectionFactoryRegistry = collectionFactoryRegistry;
         this.reflectionService = reflectionService;
-        this.configService = configService;
     }
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
