@@ -25,6 +25,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private boolean isDefaultRoute;
 
+    @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
 
     private boolean isHiddenInMenu;

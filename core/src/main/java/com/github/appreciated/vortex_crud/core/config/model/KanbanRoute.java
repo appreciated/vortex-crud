@@ -25,6 +25,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private boolean isDefaultRoute;
 
+    @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) KanbanFactory.class;
 
     private boolean isHiddenInMenu;

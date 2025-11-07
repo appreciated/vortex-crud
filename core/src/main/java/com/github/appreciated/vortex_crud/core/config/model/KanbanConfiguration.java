@@ -18,6 +18,7 @@ import java.util.List;
 @Getter
 public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
+    @Builder.Default
     private Class<? extends VortexCrudItemFactory<FieldType>> factory= (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
 
     private FieldType titleField;

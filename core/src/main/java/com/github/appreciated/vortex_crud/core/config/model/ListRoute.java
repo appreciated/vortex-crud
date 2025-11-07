@@ -25,6 +25,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean isDefaultRoute;
 
+    @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ListRouteFactory.class;
 
     private boolean isHiddenInMenu;

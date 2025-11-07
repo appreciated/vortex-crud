@@ -26,5 +26,6 @@ public class IntegerField<ModelClass, FieldType, RepositoryType> implements Fiel
     List<String> writeRoles;
     List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
+    @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IntegerNumberFieldFactory.class;
 }

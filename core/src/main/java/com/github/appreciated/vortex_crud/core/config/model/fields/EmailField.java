@@ -26,5 +26,6 @@ public class EmailField<ModelClass, FieldType, RepositoryType> implements Field<
     List<String> writeRoles;
     List<String> readOnlyRoles;
     @SuppressWarnings("unchecked")
+    @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) EmailFieldFactory.class;
 }

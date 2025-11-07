@@ -25,5 +25,6 @@ public class TextField<ModelClass, FieldType, RepositoryType> implements Field<M
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
+    @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) TextFieldFactory.class;
 }
