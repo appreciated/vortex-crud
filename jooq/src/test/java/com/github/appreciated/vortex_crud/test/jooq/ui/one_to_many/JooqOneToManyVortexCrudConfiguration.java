@@ -60,7 +60,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
                                 JooqCollectionElement.of("relations.labels.children")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.of(FormDialogFactory.class)
+                                        .configuration(JooqCollection.builder(FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(ONE_TO_MANY_CHILD)
                                                         .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
                                                         .children(List.of(ONE_TO_MANY_CHILD.NAME))
