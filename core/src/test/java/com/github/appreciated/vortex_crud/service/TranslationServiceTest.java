@@ -40,7 +40,7 @@ class TranslationServiceTest {
 
         // Mock the configuration service
         when(configService.configuration()).thenReturn(application);
-        when(application.getI18nBundlePrefix()).thenReturn("i18n/messages");
+        when(application.i18nBundlePrefix()).thenReturn("i18n/messages");
 
         translationService = new TranslationService(configService);
     }
