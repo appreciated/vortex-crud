@@ -134,7 +134,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
 
         // Check write permissions for save/delete buttons
-        boolean hasWriteAccess = permissionChecker == null || permissionChecker.canWrite(routeRenderer);
+        boolean hasWriteAccess = permissionChecker == null || permissionChecker.hasUserWriteAccessToRoute(routeRenderer);
 
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(
                 isWrapped,
