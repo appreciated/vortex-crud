@@ -30,7 +30,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
                 .dataStoreKey(taskRepository)
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
-                        .children(List.of(JpaFieldElement.of("title", "route.tasks.labels.title").build()))
+                        .children(List.of(JpaFieldElement.builder("title", "route.tasks.labels.title").build()))
                         .build())
                 .build();
 

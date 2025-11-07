@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqCheckboxField {
-    public static 
-    CheckboxField.CheckboxFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static CheckboxField.CheckboxFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return CheckboxField.builder();
     }
 }

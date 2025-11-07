@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqPasswordField {
-    public static 
-    PasswordField.PasswordFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static PasswordField.PasswordFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return PasswordField.builder();
     }
 }

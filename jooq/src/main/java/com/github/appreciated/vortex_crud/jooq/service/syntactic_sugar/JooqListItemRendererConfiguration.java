@@ -5,12 +5,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqListItemRendererConfiguration {
+public class JooqListItemRendererConfiguration extends ListItemRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return ListItemRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
-    }
-
-    public static ListItemRendererConfiguration.ListItemRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return ListItemRendererConfiguration.builder();
     }
 }

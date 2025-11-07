@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqDateTimePickerField {
-    public static 
-    DateTimePickerField.DateTimePickerFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static DateTimePickerField.DateTimePickerFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return DateTimePickerField.builder();
     }
 }

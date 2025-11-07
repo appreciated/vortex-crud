@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqReferenceField {
-    public static 
-    ReferenceField.ReferenceFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static ReferenceField.ReferenceFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return ReferenceField.builder();
     }
 }

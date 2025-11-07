@@ -28,8 +28,8 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.of("title", "route.images.labels.title").build(),
-                                JpaFieldElement.of("url", "route.images.labels.image").build()
+                                JpaFieldElement.builder("title", "route.images.labels.title").build(),
+                                JpaFieldElement.builder("url", "route.images.labels.image").build()
                         ))
                         .build())
                 .build();
@@ -42,8 +42,8 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(
-                                JpaFieldElement.of("url", "route.projects.labels.description").build(),
-                                JpaFieldElement.of("title", "route.projects.labels.name").build()
+                                JpaFieldElement.builder("url", "route.projects.labels.description").build(),
+                                JpaFieldElement.builder("title", "route.projects.labels.name").build()
                         ))
                         .build())
                 .child(imageForm)

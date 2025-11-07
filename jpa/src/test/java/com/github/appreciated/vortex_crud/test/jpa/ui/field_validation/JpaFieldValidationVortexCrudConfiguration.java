@@ -30,14 +30,14 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("requiredField")
                         .children(List.of(
-                                JpaFieldElement.of("requiredField", "validation.fields.required").build(),
-                                JpaFieldElement.of("emailField", "validation.fields.email").build(),
-                                JpaFieldElement.of("numericField", "validation.fields.numeric").build(),
-                                JpaFieldElement.of("dateField", "validation.fields.date").build(),
-                                JpaFieldElement.of("dateTimeField", "validation.fields.datetime").build(),
-                                JpaFieldElement.of("checkboxField", "validation.fields.checkbox").build(),
-                                JpaFieldElement.of("enumField", "validation.fields.enum").build(),
-                                JpaFieldElement.of("imageField", "validation.fields.image").build()
+                                JpaFieldElement.builder("requiredField", "validation.fields.required").build(),
+                                JpaFieldElement.builder("emailField", "validation.fields.email").build(),
+                                JpaFieldElement.builder("numericField", "validation.fields.numeric").build(),
+                                JpaFieldElement.builder("dateField", "validation.fields.date").build(),
+                                JpaFieldElement.builder("dateTimeField", "validation.fields.datetime").build(),
+                                JpaFieldElement.builder("checkboxField", "validation.fields.checkbox").build(),
+                                JpaFieldElement.builder("enumField", "validation.fields.enum").build(),
+                                JpaFieldElement.builder("imageField", "validation.fields.image").build()
                         ))
                         .build())
                 .build();
@@ -46,8 +46,8 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
         RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaListItemRendererConfiguration.builder()
                 .filterField("requiredField")
                 .children(List.of(
-                        JpaFieldElement.of("requiredField", "route.projects.labels.name").build(),
-                        JpaFieldElement.of("emailField", "route.projects.labels.description").build()
+                        JpaFieldElement.builder("requiredField", "route.projects.labels.name").build(),
+                        JpaFieldElement.builder("emailField", "route.projects.labels.description").build()
                 ))
                 .build();
         routes.put("field-validation-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()

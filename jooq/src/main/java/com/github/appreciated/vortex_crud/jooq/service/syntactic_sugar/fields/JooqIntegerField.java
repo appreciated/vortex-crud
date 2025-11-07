@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqIntegerField {
-    public static 
-    IntegerField.IntegerFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static IntegerField.IntegerFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return IntegerField.builder();
     }
 }

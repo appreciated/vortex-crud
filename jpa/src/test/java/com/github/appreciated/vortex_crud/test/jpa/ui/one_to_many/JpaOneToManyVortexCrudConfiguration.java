@@ -34,7 +34,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreKey(childRepository)
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
-                        .children(List.of(JpaFieldElement.of("name", "relations.labels.name").build()))
+                        .children(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
                         .build())
                 .build();
 
@@ -43,11 +43,11 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
-                                JpaFieldElement.of("name", "relations.labels.name").build(),
-                                JpaCollectionElement.of("relations.labels.children")
+                                JpaFieldElement.builder("name", "relations.labels.name").build(),
+                                JpaCollectionElement.builder("relations.labels.children")
                                         .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JpaCollection.of(FormDialogFactory.class)
-                                                .data(JpaCollectionConfiguration.of(childRepository)
+                                        .configuration(JpaCollection.builder(FormDialogFactory.class)
+                                                .data(JpaCollectionConfiguration.builder(childRepository)
                                                         .oneToMany(new JpaOneToMany("parent"))
                                                         .children(List.of("name"))
                                                         .build())
@@ -67,7 +67,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .filterField("name")
                         .children(List.of(
-                                JpaFieldElement.of("name", "relations.labels.name").build()
+                                JpaFieldElement.builder("name", "relations.labels.name").build()
                         ))
                         .build())
                 .child(parentForm)

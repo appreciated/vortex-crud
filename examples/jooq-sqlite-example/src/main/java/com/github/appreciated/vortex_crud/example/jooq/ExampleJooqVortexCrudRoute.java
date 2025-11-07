@@ -2,15 +2,9 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFormRendererConfiguration;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridItemRendererConfiguration;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqRouteRenderer;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.router.Route;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -33,16 +27,16 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
 
     @Override
     protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
-        return JooqRouteRenderer.of(GridRouteFactory.class)
+        return JooqGridRoute.builder()
                 .dataStoreKey(PROJECTS)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
-                .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(PROJECTS.NAME)
                         .descriptionField(PROJECTS.DESCRIPTION)
                         .build())
                 .writeRoles(List.of("manager", "admin"))
-                .child(JooqRouteRenderer.of(FormRouteFactory.class)
+                .child(JooqFormRoute.builder()
                         .dataStoreKey(PROJECTS)
                         .title("route.projects.title-cards")
                         .configuration(JooqFormRendererConfiguration.builder()

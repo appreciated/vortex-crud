@@ -54,7 +54,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreKey(KANBAN_TASKS)
                 .title("route.open-tasks.title")
-                .configuration(JooqKanbanConfiguration.of()
+                .configuration(JooqKanbanConfiguration.builder()
                         .titleField(KANBAN_TASKS.TITLE)
                         .descriptionField(KANBAN_TASKS.DESCRIPTION)
                         .columnField(KANBAN_TASKS.STATUS)

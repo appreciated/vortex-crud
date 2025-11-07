@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaDataStoreConfig {
-    public static DataStoreConfig.DataStoreConfigBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> of(JpaRepository<?, ?> factory) {
+    public static DataStoreConfig.DataStoreConfigBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder(JpaRepository<?, ?> factory) {
         return DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .factory(factory);
     }

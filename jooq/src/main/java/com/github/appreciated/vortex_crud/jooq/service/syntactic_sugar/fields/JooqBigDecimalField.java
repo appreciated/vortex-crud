@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqBigDecimalField {
-    public static 
-    BigDecimalField.BigDecimalFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static BigDecimalField.BigDecimalFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return BigDecimalField.builder();
     }
 }

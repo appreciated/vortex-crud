@@ -4,8 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.model.Collection;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public class JpaCollection {
-    public static Collection.CollectionBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> of(Class<? extends VortexCrudDialogFactory> factory) {
+public class JpaCollection extends Collection<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+    public static Collection.CollectionBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder(Class<? extends VortexCrudDialogFactory> factory) {
         return Collection.builder();
     }
 }

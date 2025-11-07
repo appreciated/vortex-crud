@@ -28,7 +28,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
-                taskRepository, JpaDataStoreConfig.of(taskRepository)
+                taskRepository, JpaDataStoreConfig.builder(taskRepository)
                         .fields(Map.of(
                                 "id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),

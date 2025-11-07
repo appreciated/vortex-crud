@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqTextAreaField {
-    public static 
-    TextAreaField.TextAreaFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static TextAreaField.TextAreaFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return TextAreaField.builder();
     }
 }

@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqImageField {
-    public static 
-    ImageField.ImageFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static ImageField.ImageFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return ImageField.builder();
     }
 }

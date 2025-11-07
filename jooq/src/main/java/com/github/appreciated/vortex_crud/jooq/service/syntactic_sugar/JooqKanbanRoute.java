@@ -5,28 +5,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-/**
- * JOOQ-specific kanban route builder.
- * Usage: JooqKanbanRoute.builder()
- *     .dataStore(TABLE)
- *     .columnField(TABLE.STATUS)  // Required
- *     .titleField(TABLE.TITLE)
- *     .children(...)
- *     .build()
- */
-public class JooqKanbanRoute {
-
-    /**
-     * Create a new JOOQ kanban route builder
-     */
+public class JooqKanbanRoute extends KanbanRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static KanbanRoute.KanbanRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return KanbanRoute.builder();
-    }
-
-    /**
-     * Create a new JOOQ kanban route builder
-     */
-    public static KanbanRoute.KanbanRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of() {
         return KanbanRoute.builder();
     }
 }

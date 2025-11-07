@@ -26,7 +26,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = Map.of(
-                imageRepository, JpaDataStoreConfig.of(imageRepository)
+                imageRepository, JpaDataStoreConfig.builder(imageRepository)
                         .fields(Map.of(
                                 "id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
@@ -41,8 +41,8 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.of("title", "route.images.labels.title").build(),
-                                JpaFieldElement.of("url", "route.images.labels.image").build()
+                                JpaFieldElement.builder("title", "route.images.labels.title").build(),
+                                JpaFieldElement.builder("url", "route.images.labels.image").build()
                         ))
                         .build())
                 .build();

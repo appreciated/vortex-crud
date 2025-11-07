@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqDoubleField {
-    public static 
-    DoubleField.DoubleFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static DoubleField.DoubleFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return DoubleField.builder();
     }
 }

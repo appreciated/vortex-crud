@@ -5,8 +5,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqFormSlideRoute {
+public class JooqFormSlideRoute extends FormSlideRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static FormSlideRoute.FormSlideRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return FormSlideRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
+        return FormSlideRoute.builder();
     }
 }

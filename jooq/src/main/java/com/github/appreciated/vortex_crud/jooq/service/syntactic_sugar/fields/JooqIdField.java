@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqIdField {
-    public static 
-    IdField.IdFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static IdField.IdFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return IdField.builder();
     }
 }

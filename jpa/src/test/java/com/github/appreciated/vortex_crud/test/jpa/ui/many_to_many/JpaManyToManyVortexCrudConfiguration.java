@@ -28,7 +28,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        CollectionConfiguration.CollectionConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> relatedItems = JpaCollectionConfiguration.of(itemRepository)
+        CollectionConfiguration.CollectionConfigurationBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> relatedItems = JpaCollectionConfiguration.builder(itemRepository)
                 .manyToMany(new JpaManyToMany(itemRepository, "relatedItems"));
         CollectionConfiguration build = relatedItems
                 .children(List.of("name"))
@@ -38,9 +38,9 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
-                                JpaFieldElement.of("name", "relations.labels.name").build(),
-                                JpaCollectionElement.of("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class)ListCollectionFactory.class)
-                                        .configuration(JpaCollection.of(ConnectDialogFactory.class)
+                                JpaFieldElement.builder("name", "relations.labels.name").build(),
+                                JpaCollectionElement.builder("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class)ListCollectionFactory.class)
+                                        .configuration(JpaCollection.builder(ConnectDialogFactory.class)
                                                 .data(build)
                                                 .emptyMessage("relations.related.empty")
                                                 .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig("name"))
@@ -58,7 +58,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .filterField("name")
                         .children(List.of(
-                                JpaFieldElement.of("name", "relations.labels.name").build()
+                                JpaFieldElement.builder("name", "relations.labels.name").build()
                         ))
                         .build())
                 .child(itemForm)

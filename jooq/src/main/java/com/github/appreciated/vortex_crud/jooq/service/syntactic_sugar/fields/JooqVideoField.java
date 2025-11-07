@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqVideoField {
-    public static 
-    VideoField.VideoFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static VideoField.VideoFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return VideoField.builder();
     }
 }

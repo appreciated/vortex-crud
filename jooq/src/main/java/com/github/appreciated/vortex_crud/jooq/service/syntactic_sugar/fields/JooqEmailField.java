@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqEmailField {
-    public static 
-    EmailField.EmailFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static EmailField.EmailFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return EmailField.builder();
     }
 }

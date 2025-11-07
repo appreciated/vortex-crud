@@ -7,8 +7,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqSelectField {
-    public static 
-    SelectField.SelectFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+    public static SelectField.SelectFieldBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return SelectField.builder();
     }
 }

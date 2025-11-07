@@ -9,7 +9,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -57,7 +56,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         routes.put("images", JooqGridRoute.builder()
                 .dataStoreKey(FROM_SLIDE_IMAGES)
                 .title("route.image-cards")
-                .configuration(JooqGridItemRendererConfiguration.of(CardFactory.class)
+                .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
                         .imageField(FROM_SLIDE_IMAGES.URL)
                         .resourceProvider(LocalImageResourceProvider.class)

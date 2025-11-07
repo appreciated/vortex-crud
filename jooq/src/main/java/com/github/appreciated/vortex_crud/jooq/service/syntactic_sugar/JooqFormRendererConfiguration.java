@@ -5,8 +5,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqFormRendererConfiguration {
+public class JooqFormRendererConfiguration extends FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static FormRendererConfiguration.FormRendererConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return FormRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
+        return FormRendererConfiguration.builder();
     }
 }
