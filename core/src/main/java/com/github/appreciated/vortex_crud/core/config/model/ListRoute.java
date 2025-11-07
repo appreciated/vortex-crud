@@ -25,7 +25,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ListRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -40,11 +40,4 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns;
-
-    @SuppressWarnings("unchecked")
-    public static class ListRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        ListRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ListRouteFactory.class;
-        }
-    }
 }

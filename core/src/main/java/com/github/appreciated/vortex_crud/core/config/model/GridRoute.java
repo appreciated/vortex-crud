@@ -25,7 +25,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory= (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) GridRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -38,13 +38,6 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     private List<String> readOnlyRoles;
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
-
-    @SuppressWarnings("unchecked")
-    public static class GridRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        GridRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) GridRouteFactory.class;
-        }
-    }
 
     public List<String> getWriteRoles() {
         return writeRoles;

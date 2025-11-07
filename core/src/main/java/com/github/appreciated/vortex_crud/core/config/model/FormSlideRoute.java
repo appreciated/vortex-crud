@@ -25,7 +25,7 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormSlideRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -42,12 +42,5 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static class FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        FormSlideRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormSlideRouteFactory.class;
-        }
     }
 }

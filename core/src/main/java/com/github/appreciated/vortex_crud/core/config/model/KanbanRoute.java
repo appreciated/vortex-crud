@@ -25,7 +25,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) KanbanFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -38,13 +38,6 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<String> readOnlyRoles;
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
-
-    @SuppressWarnings("unchecked")
-    public static class KanbanRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        KanbanRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) KanbanFactory.class;
-        }
-    }
 
     public RepositoryType getDataStoreKey() {
         return dataStoreKey;

@@ -26,7 +26,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SubmenuRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -39,11 +39,4 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     private List<String> readOnlyRoles;
 
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap;
-
-    @SuppressWarnings("unchecked")
-    public static class SubmenuRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        SubmenuRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SubmenuRouteFactory.class;
-        }
-    }
 }

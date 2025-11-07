@@ -25,7 +25,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -42,13 +42,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static class FormRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        FormRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
-        }
     }
 
     public RepositoryType getDataStoreKey() {

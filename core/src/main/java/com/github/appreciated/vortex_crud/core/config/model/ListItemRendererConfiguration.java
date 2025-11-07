@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 public class ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+    private Class<? extends VortexCrudItemFactory<FieldType>> factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
 
     private FieldType titleField;
 
@@ -33,10 +33,4 @@ public class ListItemRendererConfiguration<ModelClass, FieldType, RepositoryType
     private FieldType filterField;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    public static class ListItemRendererConfigurationBuilder<ModelClass, FieldType, RepositoryType> {
-        ListItemRendererConfigurationBuilder() {
-            factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
-        }
-    }
 }

@@ -25,7 +25,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private boolean isDefaultRoute;
 
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory= (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
@@ -42,12 +42,5 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return child.formConfiguration();
-    }
-
-    @SuppressWarnings("unchecked")
-    public static class MasterDetailRouteBuilder<ModelClass, FieldType, RepositoryType> {
-        MasterDetailRouteBuilder() {
-            factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
-        }
     }
 }

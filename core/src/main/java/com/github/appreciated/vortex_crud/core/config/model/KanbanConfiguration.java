@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+    private Class<? extends VortexCrudItemFactory<FieldType>> factory= (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
 
     private FieldType titleField;
 
@@ -37,10 +37,4 @@ public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implemen
     private FieldType columnField;
 
     private FieldType rowIndexField;
-
-    public static class KanbanConfigurationBuilder<ModelClass, FieldType, RepositoryType> {
-        KanbanConfigurationBuilder() {
-            factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
-        }
-    }
 }
