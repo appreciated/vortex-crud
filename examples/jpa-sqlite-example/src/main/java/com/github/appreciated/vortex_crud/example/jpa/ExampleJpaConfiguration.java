@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
@@ -57,7 +58,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
                 .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>)ListCollectionFactory.class)
-                .configuration(JpaCollection.builder(FormDialogFactory.class)
+                .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.builder(taskCommentRepository)
                                 .oneToMany(new JpaOneToMany("task"))
                                 .children(List.of("commentText"))
@@ -79,7 +80,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
         InternalFormElement build1 = JpaCollectionElement.builder("route.tasks.labels.related-tasks")
                 .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
-                .configuration(JpaCollection.builder(ConnectDialogFactory.class)
+                .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ConnectDialogFactory.class)
                         .data(build2)
                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")
                         .configuration(new CollectionConfig("title"))

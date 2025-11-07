@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
@@ -114,7 +115,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.of(FormDialogFactory.class)
+                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class)FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
                                                         .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
@@ -133,7 +134,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         ).build(),
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.of(ConnectDialogFactory.class)
+                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>)(Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASKS)
                                                         .manyToMany(new JooqManyToMany(
                                                                 TASK_HAS_TASK.TASK_ID,
