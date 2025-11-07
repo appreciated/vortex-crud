@@ -21,7 +21,7 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
     }
 
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration() {
-        configuration.setDataStores(registry.getDataStores());
+        configuration.dataStores(registry.getDataStores());
         return configuration;
     }
 

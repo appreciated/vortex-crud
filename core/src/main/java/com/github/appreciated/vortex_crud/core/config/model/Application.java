@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.LinkedHashMap;
@@ -14,6 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter // Needed for JpaVortexCrudConfigService
 public class Application<ModelClass, FieldType, RepositoryType> {
 
     private String name;
