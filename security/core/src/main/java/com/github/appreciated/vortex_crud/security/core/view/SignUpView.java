@@ -49,10 +49,10 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(config.getRepositoryKey());
+        VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(config.repositoryKey());
         Object entity = dataStore.newInstance();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.configuration().getDataStores().get(config.getRepositoryKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.configuration().getDataStores().get(config.repositoryKey());
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(entity);
@@ -64,20 +64,20 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         List<InternalFormElement<ModelClass, FieldType, RepositoryType>> allFields = new java.util.ArrayList<>();
 
         // Add username and password fields from config
-        if (config.getUsername() != null) {
-            allFields.add(config.getUsername());
+        if (config.username() != null) {
+            allFields.add(config.username());
         }
-        if (config.getPassword() != null) {
-            allFields.add(config.getPassword());
+        if (config.password() != null) {
+            allFields.add(config.password());
         }
 
         // Add additional sign-up fields
-        if (config.getSignUpFields() != null) {
-            allFields.addAll(config.getSignUpFields());
+        if (config.signUpFields() != null) {
+            allFields.addAll(config.signUpFields());
         }
 
         formCreator.bindAndAddToLayout(
-                config.getRepositoryKey(),
+                config.repositoryKey(),
                 null,
                 allFields,
                 entity,
@@ -92,7 +92,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 binder.writeBean(entity);
 
                 // Hash the password before saving
-                FieldType passwordField = config.getPassword().field();
+                FieldType passwordField = config.password().field();
                 Object passwordValue = reflectionService.getValue(entity, passwordField);
                 if (passwordValue != null) {
                     String hashedPassword = passwordEncoder.encode(passwordValue.toString());

@@ -8,7 +8,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
  * Implementations should check user roles against resource permissions.
  * This interface is in core to avoid circular dependencies.
  */
-public interface RbacPermissionChecker<ModelClass, FieldType, RepositoryType> {
+public interface VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> {
 
 
     enum FieldAccessLevel {
@@ -30,7 +30,7 @@ public interface RbacPermissionChecker<ModelClass, FieldType, RepositoryType> {
      *
      * @return The current user entity, or null if not authenticated or IAM not configured
      */
-    Object getCurrentUserEntity();
+    Object currentUserEntity();
 
     /**
      * Checks if the current user can write to the resource.

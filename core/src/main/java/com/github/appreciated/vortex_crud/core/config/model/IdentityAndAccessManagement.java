@@ -5,50 +5,27 @@ import com.vaadin.flow.component.Component;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
-import java.util.Set;
 
 public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> {
 
-    RepositoryType getRepositoryKey();
+    RepositoryType repositoryKey();
 
-    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> getSignUpFields();
 
-    Class<? extends Component> getLoginView();
+    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields();
 
-    Class<? extends Component> getSignUpView();
+    Class<? extends Component> loginView();
 
-    InternalFormElement<ModelClass, FieldType, RepositoryType> getUsername();
+    Class<? extends Component> signUpView();
 
-    InternalFormElement<ModelClass, FieldType, RepositoryType> getPassword();
+    InternalFormElement<ModelClass, FieldType, RepositoryType> username();
+
+    InternalFormElement<ModelClass, FieldType, RepositoryType> password();
 
     boolean isSignUpEnabled();
 
-    FieldType getRolesField();
+    FieldType rolesField();
 
-    Roles getRoles();
+    Roles roles();
 
     List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity);
-
-    /**
-     * Gets the current authenticated user entity from the data store.
-     * This method should check the current security context and fetch the user entity.
-     *
-     * @return The current user entity, or null if not authenticated
-     */
-    Object getCurrentUserEntity();
-
-    /**
-     * Gets the roles for the current authenticated user.
-     *
-     * @return Set of role names for the current user, or empty set if not authenticated
-     */
-    Set<String> getCurrentUserRoles();
-
-    /**
-     * Checks if the current user has a specific role.
-     *
-     * @param role The role name to check
-     * @return true if the user has the role, false otherwise
-     */
-    boolean currentUserHasRole(String role);
 }

@@ -310,8 +310,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .routes(routes)
                 .versioning(JpaVersioning.builder().dataStores(List.of(projectRepository, taskRepository, taskCommentRepository)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
-                .selects(Selects.builder().configs(
-                        Map.of("task-status", taskStatuses)).build())
+                .selects(new Selects(Map.of("task-status", taskStatuses)))
                 .build();
     }
 }

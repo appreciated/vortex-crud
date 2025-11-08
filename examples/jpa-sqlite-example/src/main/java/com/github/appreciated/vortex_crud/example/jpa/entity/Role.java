@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.security.core.view.VortexCrudRoleProvider;
+import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
 import jakarta.persistence.*;
 
 import java.util.List;

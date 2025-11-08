@@ -69,10 +69,10 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
 
         // If this route has children, recurse into them
         if (currentRouteRenderer instanceof RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> multi &&
-                multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
+            multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
             buildRouteMapForPathSection(sectionIndex + 1, multi.childrenMap());
         } else if (currentRouteRenderer instanceof RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> single &&
-                single.child() != null) {
+                   single.child() != null) {
             // For single child routes, create a map with the child as a wildcard (null key)
             Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> singleChildMap = new HashMap<>();
             singleChildMap.put(null, single.child());

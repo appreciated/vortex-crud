@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
@@ -28,7 +28,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
     private final ReflectionService<FieldType> reflectionService;
 
     @Autowired(required = false)
-    private com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
+    private VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
     public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
                        VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
@@ -62,10 +62,10 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
                 // Apply RBAC field-level permissions
                 if (permissionChecker != null) {
-                    RbacPermissionChecker.FieldAccessLevel userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
-                    if (userFieldAccess == RbacPermissionChecker.FieldAccessLevel.NONE) {
+                    VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
+                    if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
                         continue;
-                    } else if (userFieldAccess == RbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
+                    } else if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
                         // Make the field read-only if user only has read access
                         if (component instanceof HasValue) {
                             ((HasValue<?, ?>) component).setReadOnly(true);

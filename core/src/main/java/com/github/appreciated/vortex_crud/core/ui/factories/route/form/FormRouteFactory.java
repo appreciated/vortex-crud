@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.security.RbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -41,7 +41,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
-    private final RbacPermissionChecker permissionChecker;
+    private final VortexCrudRbacPermissionChecker permissionChecker;
 
     public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -49,7 +49,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                             ReflectionService<FieldType> reflectionService,
-                            RbacPermissionChecker permissionChecker
+                            VortexCrudRbacPermissionChecker permissionChecker
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;

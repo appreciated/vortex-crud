@@ -63,10 +63,10 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             try {
                 // Get user DataStore (vortex-crud pattern)
                 VortexCrudDataStore<FieldType, Object> dataStore =
-                        (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(userManagement.getRepositoryKey());
+                        (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(userManagement.repositoryKey());
 
                 // Query for user by username field
-                FieldType usernameField = userManagement.getUsername().field();
+                FieldType usernameField = userManagement.username().field();
                 List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
 
                 if (users.isEmpty()) {
@@ -77,7 +77,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 Object userEntity = users.getFirst();
 
                 // Get password hash using ReflectionService
-                FieldType passwordField = userManagement.getPassword().field();
+                FieldType passwordField = userManagement.password().field();
                 Object passwordValue = reflectionService.getValue(userEntity, passwordField);
 
                 if (passwordValue == null || !passwordEncoder.matches(password, passwordValue.toString())) {

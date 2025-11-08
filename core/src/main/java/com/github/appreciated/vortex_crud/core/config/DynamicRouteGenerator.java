@@ -28,8 +28,8 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
         IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().getUserManagement();
         if (userManagement != null) {
             RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
-            configuration.setRoute("login", userManagement.getLoginView());
-            configuration.setRoute("sign-up", userManagement.getSignUpView());
+            configuration.setRoute("login", userManagement.loginView());
+            configuration.setRoute("sign-up", userManagement.signUpView());
         }
     }
 

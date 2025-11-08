@@ -1,58 +1,106 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudPermissionResolutionService;
 import com.vaadin.flow.server.auth.AccessCheckResult;
 import com.vaadin.flow.server.auth.NavigationAccessChecker;
 import com.vaadin.flow.server.auth.NavigationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Custom access checker for Role-Based Access Control (RBAC) at the route level.
+ * Uses VortexCrudPermissionResolutionService for proper nested route resolution.
  */
 @Component
-class CustomAccessChecker implements NavigationAccessChecker {
+class CustomAccessChecker<ModelClass, FieldType, RepositoryType> implements NavigationAccessChecker {
 
-    private final VortexCrudConfigService<?, ?, ?> configService;
-    private final LocalStorageRbacPermissionChecker permissionChecker;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
+    private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService;
 
-    public CustomAccessChecker(VortexCrudConfigService<?, ?, ?> configService,
-                               LocalStorageRbacPermissionChecker permissionChecker) {
+    public CustomAccessChecker(
+            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
+            @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService) {
         this.configService = configService;
         this.permissionChecker = permissionChecker;
+        this.resolutionService = resolutionService;
     }
 
     @Override
     public AccessCheckResult check(NavigationContext context) {
-        String path = context.getLocation().getPath();
+        try {
+            String path = context.getLocation().getPath();
 
-        // Allow public routes
-        if (path.startsWith("login") || path.startsWith("sign-up") || path.startsWith("access-denied")) {
+            // Allow public routes (login, sign-up, access-denied)
+            if (isPublicRoute(path)) {
+                return context.allow();
+            }
+
+            // Check if IAM is enabled
+            if (!isIAMEnabled()) {
+                // If IAM is not enabled, allow all routes
+                return context.allow();
+            }
+
+            // Check if user is authenticated
+            if (!permissionChecker.isAuthenticated()) {
+                return context.deny("Not authenticated");
+            }
+
+            // If resolution service is not available, allow access
+            if (resolutionService == null) {
+                return context.allow();
+            }
+
+            // Resolve path to route using the resolution service
+            RouteRenderer<ModelClass, FieldType, RepositoryType> route = resolutionService.resolveRouteForPath(path);
+
+            // If route is null, it's not managed by vortex-crud, allow it
+            if (route == null) {
+                return context.allow();
+            }
+
+            // Check if user has read access to the route
+            if (permissionChecker.hasUserReadAccessToRoute(route)) {
+                return context.allow();
+            }
+
+            // User does not have permission to access this route
+            return context.deny("Insufficient permissions");
+        } catch (Exception e) {
+            // In case of any error, allow navigation to avoid breaking the application
+            // Log the error in production
+            System.err.println("Error in CustomAccessChecker: " + e.getMessage());
+            e.printStackTrace();
             return context.allow();
         }
-
-        // Check authentication
-        if (!permissionChecker.isAuthenticated()) {
-            return context.deny("Not authenticated");
-        }
-
-        // Find route configuration
-        RouteRenderer<?, ?, ?> route = findRoute(path);
-        if (route == null) {
-            return context.allow();
-        }
-
-        // Check if user has access to the route
-        if (permissionChecker.hasAccess(route)) {
-            return context.allow();
-        }
-
-        // Redirect to custom access denied view by throwing exception
-        return context.deny("Insufficient permissions");
     }
 
-    private RouteRenderer<?, ?, ?> findRoute(String path) {
-        String firstSegment = path.contains("/") ? path.substring(0, path.indexOf("/")) : path;
-        return configService.configuration().getRouteRenderers().get(firstSegment);
+    /**
+     * Checks if the given path is a public route that should always be accessible.
+     *
+     * @param path The navigation path
+     * @return true if the path is a public route, false otherwise
+     */
+    private boolean isPublicRoute(String path) {
+        return path.startsWith("login")
+                || path.startsWith("sign-up")
+                || path.startsWith("access-denied");
+    }
+
+    /**
+     * Checks if Identity and Access Management is enabled in the configuration.
+     *
+     * @return true if IAM is enabled, false otherwise
+     */
+    private boolean isIAMEnabled() {
+        if (configService == null || configService.configuration() == null) {
+            return false;
+        }
+        return configService.configuration().identityAndAccessManagement() != null;
     }
 }
