@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
  * Uses VortexCrudPermissionResolutionService for proper nested route resolution.
  */
 @Component
-class CustomAccessChecker<ModelClass, FieldType, RepositoryType> implements NavigationAccessChecker {
+class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> implements NavigationAccessChecker {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
     private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService;
 
-    public CustomAccessChecker(
+    public VortexCrudNavigationAccessChecker(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
             @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService) {

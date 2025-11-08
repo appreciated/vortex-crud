@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-class CustomAccessCheckerTest {
+class VortexCrudNavigationAccessCheckerTest {
 
     @Mock
     private VortexCrudConfigService<String, String, String> configService;
@@ -34,7 +34,7 @@ class CustomAccessCheckerTest {
     @Mock
     private Location location;
 
-    private CustomAccessChecker<String, String, String> accessChecker;
+    private VortexCrudNavigationAccessChecker<String, String, String> accessChecker;
 
     private AutoCloseable mocks;
 
@@ -45,7 +45,7 @@ class CustomAccessCheckerTest {
         when(configService.configuration()).thenReturn(application);
         when(context.getLocation()).thenReturn(location);
 
-        accessChecker = new CustomAccessChecker<>(configService, permissionChecker, resolutionService);
+        accessChecker = new VortexCrudNavigationAccessChecker<>(configService, permissionChecker, resolutionService);
     }
 
     // ========== Public Routes Tests ==========
@@ -225,8 +225,8 @@ class CustomAccessCheckerTest {
 
     @Test
     void testCheck_NullConfigService_AllowsAccess() {
-        CustomAccessChecker<String, String, String> checkerWithNullConfig =
-                new CustomAccessChecker<>(null, permissionChecker, resolutionService);
+        VortexCrudNavigationAccessChecker<String, String, String> checkerWithNullConfig =
+                new VortexCrudNavigationAccessChecker<>(null, permissionChecker, resolutionService);
 
         when(location.getPath()).thenReturn("some-route");
 

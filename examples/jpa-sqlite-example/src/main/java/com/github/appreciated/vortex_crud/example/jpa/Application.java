@@ -2,14 +2,15 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Inline;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.server.AppShellSettings;
 import com.vaadin.flow.theme.aura.Aura;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @StyleSheet(Aura.STYLESHEET)
-@StyleSheet("./aura-dark.css")
 @Push
 public class Application implements AppShellConfigurator {
 
@@ -17,5 +18,9 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
+    @Override
+    public void configurePage(AppShellSettings settings) {
+        settings.addInlineWithContents("html{--aura-color-scheme: dark;}", Inline.Wrapping.STYLESHEET);
+    }
 }
 

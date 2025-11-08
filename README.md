@@ -392,9 +392,10 @@ CREATE TABLE task_comments (...);
 - **Custom Repository Support**: Allow adding custom repositories f.e. create an example where access to a local directory is given
 - Explore missing features by creating actual demos of:
   - **Small Project management software** 
-  - **Small development platform like Github / Gitlab** (without the pipeline and the actual git part, just use file)
+  - **Small development platform like GitHub / Gitlab** (without the pipeline and the actual git part, just use file)
 - Allow form routes alternatively to be a root route, resulting in not editing a collection of entries but a specific entry based on a id (like the userprofile)
 - Notifications
+- Repository Hooks (OnBefore, OnAfter ; Update, Create, Delete, Read)
 
 ### Developer Experience
 - **Simplified Configuration DSL**: Reduce verbosity and nesting in configuration
