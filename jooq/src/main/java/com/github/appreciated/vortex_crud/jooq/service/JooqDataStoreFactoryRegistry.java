@@ -29,7 +29,7 @@ public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryR
         for (Map.Entry<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> entry : configService.configuration().getDataStores().entrySet()) {
             TableImpl<?> table = entry.getKey();
             Class<?> recordType = table.getRecordType();
-            factories.put(table, new JooqDataStore(recordType, dslContext, entry.getValue().getHooks()));
+            factories.put(table, new JooqDataStore(recordType, dslContext, entry.getValue().hooks()));
         }
     }
 
