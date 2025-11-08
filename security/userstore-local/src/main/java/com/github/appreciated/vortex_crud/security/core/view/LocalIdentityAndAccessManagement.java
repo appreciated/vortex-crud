@@ -30,7 +30,9 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
     private Class<? extends Component> loginView;
     private Class<? extends Component> signUpView;
-    private Roles roles;
+    private Roles availableRoles;
+    private List<String> defaultReadRoles;
+    private List<String> defaultWriteRoles;
     private boolean signUpEnabled;
 
 

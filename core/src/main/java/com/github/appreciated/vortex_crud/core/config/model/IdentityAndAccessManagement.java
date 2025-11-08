@@ -25,7 +25,11 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
 
     FieldType rolesField();
 
-    Roles roles();
+    Roles availableRoles();
+
+    List<String> defaultReadRoles();
+
+    List<String> defaultWriteRoles();
 
     List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity);
 }

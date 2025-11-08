@@ -2,7 +2,9 @@ package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
+import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.service.LocalStorageUserContextService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,9 +23,13 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
         implements VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> {
 
     private final LocalStorageUserContextService<ModelClass, FieldType, RepositoryType> userContextService;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
 
-    public LocalStorageVortexCrudRbacPermissionChecker(LocalStorageUserContextService<ModelClass, FieldType, RepositoryType> userContextService) {
+    public LocalStorageVortexCrudRbacPermissionChecker(
+            LocalStorageUserContextService<ModelClass, FieldType, RepositoryType> userContextService,
+            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
         this.userContextService = userContextService;
+        this.configService = configService;
     }
 
     @Override
@@ -61,8 +67,18 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
             return false;
         }
 
-        // If no write roles are defined, deny access by default
+        // Get write roles from resource, or use defaults if not specified
         List<String> writeRoles = resource.writeRoles();
+        if (writeRoles == null || writeRoles.isEmpty()) {
+            // Use default write roles from IdentityAndAccessManagement
+            IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam =
+                configService.configuration().identityAndAccessManagement();
+            if (iam != null) {
+                writeRoles = iam.defaultWriteRoles();
+            }
+        }
+
+        // If still no write roles are defined, deny access by default
         if (writeRoles == null || writeRoles.isEmpty()) {
             return false;
         }
@@ -83,9 +99,22 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
             return false;
         }
 
-        // Get write roles and read-only roles
+        // Get write roles and read-only roles from resource, or use defaults if not specified
         List<String> writeRoles = resource.writeRoles();
         List<String> readOnlyRoles = resource.readOnlyRoles();
+
+        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = null;
+        if (configService.configuration() != null) {
+            iam = configService.configuration().identityAndAccessManagement();
+        }
+
+        // Use default roles if not specified
+        if ((writeRoles == null || writeRoles.isEmpty()) && iam != null) {
+            writeRoles = iam.defaultWriteRoles();
+        }
+        if ((readOnlyRoles == null || readOnlyRoles.isEmpty()) && iam != null) {
+            readOnlyRoles = iam.defaultReadRoles();
+        }
 
         // If neither write nor read roles are defined, deny access by default
         boolean hasWriteRoles = writeRoles != null && !writeRoles.isEmpty();

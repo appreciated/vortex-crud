@@ -125,7 +125,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
         //TODO Remove before release
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                "admin@example.com",
+                "max@mustermann.de",
                 "password",
                 Collections.singletonList(new SimpleGrantedAuthority("admin"))
         );
