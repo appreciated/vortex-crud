@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -29,9 +30,10 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
 
     public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
                                        JpaFieldService jpaFieldService,
-                                       JpaFieldTypeResolverService fieldTypeResolverService, JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
+                                       JpaFieldTypeResolverService fieldTypeResolverService,
+                                       JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
         this.jpaFieldService = jpaFieldService;
-        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, fieldTypeResolverService, jpaFieldAnnotationRegistryService)));
+        repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, jpaFieldAnnotationRegistryService, new DataStoreHooks<>())));
     }
 
     @Override

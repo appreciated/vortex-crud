@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import org.jetbrains.annotations.NotNull;
 import org.jooq.DSLContext;
@@ -8,7 +9,6 @@ import org.jooq.TableField;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.DSL;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,13 +21,15 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     private final DSLContext dslContext;
     private final Class<ModelClass> record;
     private final JooqVortexCrudDataStoreUtilStrategy utilStrategy;
+    private final DataStoreHooks<ModelClass> hooks;
 
-    public JooqDataStore(Class<ModelClass> record, DSLContext dslContext) {
+    public JooqDataStore(Class<ModelClass> record, DSLContext dslContext, DataStoreHooks<ModelClass> hooks) {
         this.dslContext = dslContext;
         if (record == null) {
             throw new IllegalArgumentException("Table name cannot be null");
         }
         this.record = record;
+        this.hooks = hooks;
         utilStrategy = new JooqVortexCrudDataStoreUtilStrategy();
     }
 
@@ -42,7 +44,9 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public void deleteRecord(ModelClass entity) {
+        hooks.beforeDeletes().forEach(hook -> hook.execute(entity));
         deleteRecordById(utilStrategy.getId(entity));
+        hooks.afterDeletes().forEach(hook -> hook.execute(entity));
     }
 
     @Override
@@ -56,10 +60,16 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public Object insertRecord(ModelClass entity) {
+        // Execute before hooks
+        hooks.beforeCreates().forEach(hook -> hook.execute(entity));
         ModelClass dst = dslContext.newRecord((Table<ModelClass>) getTable());
         dst.from(entity);
         dst.store();
-        return utilStrategy.getId(entity);
+
+        // Execute after hooks
+        hooks.afterCreates().forEach(hook -> hook.execute(entity));
+
+        return utilStrategy.getId(dst);
     }
 
     @Override
@@ -148,14 +158,18 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public void deleteRecordById(Object id) {
-        dslContext.deleteFrom(getTable())
-                .where(DSL.field("id").eq(id))
-                .execute();
-    }
+        // Fetch the entity before deletion for hooks
+        ModelClass entity = getRecordById(id);
+        if (entity != null) {
+            // Execute before delete hooks
+            hooks.beforeDeletes().forEach(hook -> hook.execute(entity));
+            dslContext.deleteFrom(getTable())
+                    .where(DSL.field("id").eq(id))
+                    .execute();
 
-    @Override
-    public void deleteAllRecords() {
-        dslContext.deleteFrom(getTable()).execute();
+            // Execute after delete hooks
+            hooks.afterDeletes().forEach(hook -> hook.execute(entity));
+        }
     }
 
     @Override
@@ -175,11 +189,6 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     private Table<?> getTable() {
         ModelClass modelInstance = newInstance();
         return modelInstance.getTable();
-    }
-
-    @Override
-    public Field getField(String foreignKeyField) {
-        return null;
     }
 
 }

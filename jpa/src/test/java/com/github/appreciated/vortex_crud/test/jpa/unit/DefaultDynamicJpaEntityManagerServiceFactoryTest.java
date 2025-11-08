@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
@@ -40,7 +41,7 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore<>(testRepository, fieldTypeResolver, jpaFieldAnnotationRegistryService);
+        dataStore = new JpaRepositoryDataStore(testRepository, jpaFieldAnnotationRegistryService, new DataStoreHooks<>());
     }
 
     @AfterEach
@@ -131,18 +132,6 @@ class DefaultDynamicJpaEntityManagerServiceFactoryTest {
 
         TestEntity record = dataStore.getRecordById(1);
         assertNull(record);
-    }
-
-    @Test
-    void testDeleteAllRecords() {
-        // Insert multiple records and delete them all
-        insertTestRecord("Alice", 25);
-        insertTestRecord("Bob", 35);
-
-        dataStore.deleteAllRecords();
-
-        List<TestEntity> records = dataStore.getRecordsFromTable(0, 10);
-        assertTrue(records.isEmpty());
     }
 
     // Utility method to insert a test record

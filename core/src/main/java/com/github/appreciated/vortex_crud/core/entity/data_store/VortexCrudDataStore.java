@@ -95,11 +95,6 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
     void deleteRecordById(Object id);
 
     /**
-     * Deletes all records from the data store.
-     */
-    void deleteAllRecords();
-
-    /**
      * Counts the number of records in the data store.
      *
      * @return The number of records
@@ -114,14 +109,6 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @return The number of records matching the criteria
      */
     int countWhereColumnLike(FieldType filterField, String filterValue);
-
-    /**
-     * Gets a field by name.
-     *
-     * @param foreignKeyField The name of the field
-     * @return The field
-     */
-    java.lang.reflect.Field getField(String foreignKeyField);
 
     Class<ModelClass> getModelClass();
 

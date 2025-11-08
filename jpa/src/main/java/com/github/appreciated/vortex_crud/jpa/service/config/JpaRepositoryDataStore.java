@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.jpa.service.config;
 
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldTypeResolverService;
 import jakarta.persistence.Id;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,30 +23,20 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
 
     private final JpaRepository<ModelClass, Object> repository;
     private final Class<ModelClass> repositoryModelClass;
-    private final JpaFieldTypeResolverService resolverService;
     private JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService;
     private final Map<String, java.lang.reflect.Field> fields;
     private final java.lang.reflect.Field idField;
+    private final DataStoreHooks<ModelClass> hooks;
 
     public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
-                                  JpaFieldTypeResolverService resolverService,
-                                  JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
+                                  JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService,
+                                  DataStoreHooks<ModelClass> hooks) {
         this.repository = (JpaRepository<ModelClass, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
-        this.resolverService = resolverService;
         this.jpaFieldAnnotationRegistryService = jpaFieldAnnotationRegistryService;
+        this.hooks = hooks;
         this.fields = getModelFields();
         this.idField = findIdField(repositoryModelClass);
-    }
-
-    /**
-     * Constructor that accepts a mapper parameter for backward compatibility with tests.
-     * The mapper is ignored as it's no longer needed.
-     */
-    public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
-                                  Object mapper,
-                                  JpaFieldTypeResolverService resolverService, JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
-        this(repository, resolverService, jpaFieldAnnotationRegistryService);
     }
 
     private Map<String, java.lang.reflect.Field> getModelFields() {
@@ -114,12 +104,19 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
                         }
                     }
                 }
-                return getId(repository.save(entity));
+
+                hooks.beforeUpdates().forEach(hook -> hook.execute(entity));
+                Object id1 = getId(repository.save(entity));
+                hooks.afterUpdates().forEach(hook -> hook.execute(entity));
+                return id1;
             }
         }
 
         // For new entities or if existing entity not found
-        return getId(repository.save(entity));
+        hooks.beforeCreates().forEach(hook -> hook.execute(entity));
+        Object id1 = getId(repository.save(entity));
+        hooks.afterCreates().forEach(hook -> hook.execute(entity));
+        return id1;
     }
 
     private Object getId(ModelClass save) {
@@ -337,15 +334,9 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
      */
     @Transactional
     public void deleteRecordById(Object id) {
+        hooks.beforeDeletes().forEach(hook -> hook.execute(null));
         repository.deleteById(id);
-    }
-
-    /**
-     * Delete all records from the table.
-     */
-    @Transactional
-    public void deleteAllRecords() {
-        repository.deleteAll();
+        hooks.afterDeletes().forEach(hook -> hook.execute(null));
     }
 
     public int count() {
@@ -364,11 +355,6 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
 
     public Collection<java.lang.reflect.Field> getFields() {
         return fields.values();
-    }
-
-    @Override
-    public java.lang.reflect.Field getField(String foreignKeyField) {
-        return fields.get(foreignKeyField);
     }
 
     public Class<ModelClass> getModelClass() {
@@ -398,6 +384,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
 
     @Override
     public void deleteRecord(ModelClass entity) {
+
         repository.delete(entity);
     }
 
