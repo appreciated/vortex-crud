@@ -11,13 +11,13 @@ INSERT INTO roles (id, name) VALUES (3, 'guest');
 -- Password for all users is 'password'
 
 -- Update existing users from database/V1.sql with proper auth data
-UPDATE users SET password_hash = '$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', first_name = 'Max', last_name = 'Mustermann' WHERE id = 1;
-UPDATE users SET password_hash = '$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', first_name = 'Erika', last_name = 'Musterfrau' WHERE id = 2;
-UPDATE users SET password_hash = '$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', first_name = 'John', last_name = 'Doe' WHERE id = 3;
+INSERT INTO users (id, username, password_hash, first_name, last_name) VALUES (1, 'max@mustermann.de','$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', 'Max', 'Mustermann');
+INSERT INTO users (id, username, password_hash, first_name, last_name) VALUES (2, 'erika@musterfrau.de','$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', 'Erika', 'Musterfrau');
+INSERT INTO users (id, username, password_hash, first_name, last_name) VALUES (3, 'john@doe.com','$2a$12$7WbHd.u40WxYhw2Uty.qzepjLLfyzm4f7Ns6jgwLUjNxRsWyuwxXG', 'John', 'Doe');
 
 -- changeset jpa-sqlite-example-vortex-crud:7
 -- Assign roles to users
 -- Existing users from database/V1.sql
-INSERT INTO user_roles (user_id, role_id) VALUES (1, 1); -- viewer role for max@mustermann.de
+INSERT INTO user_roles (user_id, role_id) VALUES (1, 1); -- viewer admin for max@mustermann.de
 INSERT INTO user_roles (user_id, role_id) VALUES (2, 2); -- viewer role for erika@musterfrau.de
-INSERT INTO user_roles (user_id, role_id) VALUES (3, 3); -- editor role for john@doe.com
+INSERT INTO user_roles (user_id, role_id) VALUES (3, 3); -- editor guest for john@doe.com
