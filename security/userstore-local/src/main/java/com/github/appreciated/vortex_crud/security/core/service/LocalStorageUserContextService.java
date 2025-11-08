@@ -120,19 +120,6 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
                 .collect(Collectors.toSet());
     }
 
-    /**
-     * Checks if the current user has a specific role.
-     *
-     * @param role The role name to check
-     * @return true if the user has the role, false otherwise
-     */
-    public boolean currentUserHasRole(String role) {
-        if (role == null) {
-            return false;
-        }
-        return currentUserRoles().contains(role);
-    }
-
     private IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> getIdentityAndAccessManagement() {
         if (configService == null || configService.configuration() == null) {
             return null;
