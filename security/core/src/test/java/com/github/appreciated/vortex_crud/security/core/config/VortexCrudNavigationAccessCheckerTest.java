@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudPermissionResolutionService;
 import com.vaadin.flow.router.Location;
@@ -20,7 +21,7 @@ class VortexCrudNavigationAccessCheckerTest {
     private VortexCrudConfigService<String, String, String> configService;
 
     @Mock
-    private LocalStorageRbacPermissionChecker<String, String, String> permissionChecker;
+    private VortexCrudRbacPermissionChecker<String, String, String> permissionChecker;
 
     @Mock
     private VortexCrudPermissionResolutionService<String, String, String> resolutionService;

@@ -3,7 +3,8 @@ package com.github.appreciated.vortex_crud.security.core.config;
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
-import com.github.appreciated.vortex_crud.security.core.service.LocalUserContextService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.security.core.service.LocalStorageUserContextService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,17 +20,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class LocalStorageVortexCrudRbacPermissionCheckerTest {
 
     @Mock
-    private LocalUserContextService<String, String, String> userContextService;
+    private LocalStorageUserContextService<String, String, String> userContextService;
 
-    private LocalStorageRbacPermissionChecker<String, String, String> permissionChecker;
+    @Mock
+    private VortexCrudConfigService<String, String, String> crudConfigService;
+
+    private LocalStorageVortexCrudRbacPermissionChecker<String, String, String> permissionChecker;
 
     private AutoCloseable mocks;
 
@@ -37,7 +40,7 @@ class LocalStorageVortexCrudRbacPermissionCheckerTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
 
-        permissionChecker = new LocalStorageRbacPermissionChecker<>(userContextService);
+        permissionChecker = new LocalStorageVortexCrudRbacPermissionChecker<>(userContextService, crudConfigService);
     }
 
     @AfterEach
@@ -105,8 +108,8 @@ class LocalStorageVortexCrudRbacPermissionCheckerTest {
 
     @Test
     void testcurrentUserEntity_WithNullService() {
-        LocalStorageRbacPermissionChecker<String, String, String> checker =
-                new LocalStorageRbacPermissionChecker<>(null);
+        LocalStorageUserContextService<String, String, String> checker =
+                new LocalStorageUserContextService<>(null, null, null);
 
         Object result = checker.currentUserEntity();
 
