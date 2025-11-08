@@ -40,7 +40,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(routeRenderer.dataStoreKey());
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
-                (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
+                routeRenderer.configuration();
 
         assert gridOrListConfiguration.filterField() != null;
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.filterField()).withConfigurableFilter();

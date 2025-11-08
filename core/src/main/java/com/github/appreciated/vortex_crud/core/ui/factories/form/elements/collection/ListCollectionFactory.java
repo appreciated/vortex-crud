@@ -131,9 +131,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
-            @SuppressWarnings("unchecked")
-            RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form =
-                    (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) internalFormElement.configuration().child().configuration();
+            RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form = internalFormElement.configuration().child().configuration();
             for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
                 String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));

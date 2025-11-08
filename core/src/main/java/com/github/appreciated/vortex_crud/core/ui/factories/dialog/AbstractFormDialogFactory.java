@@ -79,9 +79,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
 
-        @SuppressWarnings("unchecked")
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration =
-                (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>) formRouteRenderer.configuration();
+        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
         formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById,
                 routeFactory, tables, binder, layout);
 

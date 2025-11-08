@@ -29,9 +29,9 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
             VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService,
-            VortexCrudRbacPermissionChecker permissionChecker
+            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        this.formRouteFactory = new FormRouteFactory<ModelClass, FieldType, RepositoryType>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, resolver, reflectionService, permissionChecker);
+        this.formRouteFactory = new FormRouteFactory<ModelClass, FieldType, RepositoryType>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService, permissionChecker);
     }
 
     @Override

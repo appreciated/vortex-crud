@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -39,23 +38,20 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudRbacPermissionChecker permissionChecker;
+    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
     public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
-                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                             ReflectionService<FieldType> reflectionService,
-                            VortexCrudRbacPermissionChecker permissionChecker
+                            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
         this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
-        this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
     }

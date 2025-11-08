@@ -250,8 +250,7 @@ public class ReflectionService<FieldType> {
             Field field = entity.getClass().getDeclaredField(propertyName);
             Type genericType = field.getGenericType();
 
-            if (genericType instanceof ParameterizedType) {
-                ParameterizedType paramType = (ParameterizedType) genericType;
+            if (genericType instanceof ParameterizedType paramType) {
                 Type[] typeArgs = paramType.getActualTypeArguments();
 
                 if (typeArgs.length > 0 && typeArgs[0] instanceof Class) {

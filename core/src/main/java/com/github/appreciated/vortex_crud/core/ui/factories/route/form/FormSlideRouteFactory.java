@@ -22,8 +22,8 @@ public class FormSlideRouteFactory<ModelClass, FieldType, RepositoryType>
                                  VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
                                  VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                                  ReflectionService<FieldType> reflectionService,
-                                 VortexCrudRbacPermissionChecker permissionChecker
+                                 VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        super(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, fieldNameResolver, reflectionService,permissionChecker);
+        super(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService,permissionChecker);
     }
 }
