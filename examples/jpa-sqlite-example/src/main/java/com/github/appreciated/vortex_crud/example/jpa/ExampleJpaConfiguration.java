@@ -225,8 +225,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .inlineEdit(true)
                         .filterField("title")
                         .children(List.of(
-                                JpaFieldElement.builder("url", "route.projects.labels.description").build(),
-                                JpaFieldElement.builder("title", "route.projects.labels.name").build()
+                                JpaFieldElement.builder("url", "route.images.labels.image").build(),
+                                JpaFieldElement.builder("title", "route.images.labels.title").build()
                         ))
                         .build())
                 .writeRoles(List.of("admin"))

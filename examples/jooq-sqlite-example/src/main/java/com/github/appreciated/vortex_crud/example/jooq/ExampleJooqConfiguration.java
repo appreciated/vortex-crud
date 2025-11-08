@@ -276,8 +276,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .inlineEdit(true)
                         .filterField(IMAGES.TITLE)
                         .children(List.of(
-                                JooqFieldElement.of(IMAGES.URL, "route.projects.labels.description").build(),
-                                JooqFieldElement.of(IMAGES.TITLE, "route.projects.labels.name").build()
+                                JooqFieldElement.of(IMAGES.URL, "route.images.labels.image").build(),
+                                JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build()
                         ))
                         .build())
                 .writeRoles(List.of("admin"))
