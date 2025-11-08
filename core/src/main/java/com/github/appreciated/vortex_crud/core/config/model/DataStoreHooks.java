@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Accessors;
 
@@ -16,8 +14,6 @@ import java.util.List;
  * @param <ModelClass> The entity type
  */
 @Accessors(fluent = true)
-@NoArgsConstructor
-@Builder
 @Getter
 public class DataStoreHooks<ModelClass> {
     @Singular

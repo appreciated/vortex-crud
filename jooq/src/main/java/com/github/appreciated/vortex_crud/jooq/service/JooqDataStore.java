@@ -29,6 +29,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
             throw new IllegalArgumentException("Table name cannot be null");
         }
         this.record = record;
+        assert hooks != null;
         this.hooks = hooks;
         utilStrategy = new JooqVortexCrudDataStoreUtilStrategy();
     }

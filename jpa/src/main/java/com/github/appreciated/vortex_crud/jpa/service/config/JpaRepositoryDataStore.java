@@ -34,6 +34,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         this.repository = (JpaRepository<ModelClass, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.jpaFieldAnnotationRegistryService = jpaFieldAnnotationRegistryService;
+        assert hooks != null;
         this.hooks = hooks;
         this.fields = getModelFields();
         this.idField = findIdField(repositoryModelClass);

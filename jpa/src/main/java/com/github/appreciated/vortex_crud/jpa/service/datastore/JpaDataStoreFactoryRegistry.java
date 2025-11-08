@@ -30,7 +30,6 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
 
     public JpaDataStoreFactoryRegistry(List<JpaRepository<?, ?>> repositoryList,
                                        JpaFieldService jpaFieldService,
-                                       JpaFieldTypeResolverService fieldTypeResolverService,
                                        JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
         this.jpaFieldService = jpaFieldService;
         repositoryList.forEach(repository -> addFactory(repository, new JpaRepositoryDataStore(repository, jpaFieldAnnotationRegistryService, new DataStoreHooks<>())));
