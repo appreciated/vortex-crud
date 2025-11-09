@@ -102,7 +102,7 @@ Standard form view for creating and editing entities.
 
 - **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
 - **Multi-Form**: Handles multiple forms in a single route (configured via `MultiFormRouteFactory`)
-- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanDetailFactory`)
+- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
@@ -532,7 +532,7 @@ classDiagram
     class DataStore
     class Field
     class VortexCrudRouteFactory
-    class KanbanDetailFactory
+    class KanbanFactory
     class AppLayout
     class MenuItem
     class FormRouteFactory
@@ -545,7 +545,7 @@ classDiagram
     class Collection
 
     VortexCrudRouteFactory <|-- GridRouteFactory: implements
-    VortexCrudRouteFactory <|-- KanbanDetailFactory: implements
+    VortexCrudRouteFactory <|-- KanbanFactory: implements
     VortexCrudRouteFactory <|-- ListRouteFactory: implements
     VortexCrudRouteFactory <|-- MasterDetailRouteFactory: implements
     VortexCrudRouteFactory <|-- SubmenuRouteFactory: implements
@@ -566,7 +566,7 @@ classDiagram
     Element --> Field: references
     Collection --> Field: references
     Collection --> Dialog: creates
-    KanbanDetailFactory --> Dialog: creates
+    KanbanFactory --> Dialog: creates
     Dialog --> Form: creates
 ```
 
@@ -581,7 +581,7 @@ classDiagram
     class VortexCrudRouteFactory
     class FormRouteFactory
     class GridRouteFactory
-    class KanbanDetailFactory
+    class KanbanFactory
     class ListRouteFactory
     class MasterDetailRouteFactory
     class SubmenuRouteFactory
@@ -589,7 +589,7 @@ classDiagram
     class DataStore
 
     VortexCrudRouteFactory <|-- GridRouteFactory: implements
-    VortexCrudRouteFactory <|-- KanbanDetailFactory: implements
+    VortexCrudRouteFactory <|-- KanbanFactory: implements
     VortexCrudRouteFactory <|-- ListRouteFactory: implements
     VortexCrudRouteFactory <|-- MasterDetailRouteFactory: implements
     VortexCrudRouteFactory <|-- SubmenuRouteFactory: implements
@@ -600,7 +600,7 @@ classDiagram
     ListRouteFactory --> DataStore: uses
     GridRouteFactory --> DataStore: uses
     FormRouteFactory --> DataStore: uses
-    KanbanDetailFactory --> DataStore: uses
+    KanbanFactory --> DataStore: uses
     MasterDetailRouteFactory --> DataStore: uses
     MultiFormRouteFactory --> FormRouteFactory: contains
 ```
