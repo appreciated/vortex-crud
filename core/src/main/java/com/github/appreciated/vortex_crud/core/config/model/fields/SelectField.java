@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.SelectFieldFactory;
+import com.vaadin.flow.data.binder.Validator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import java.util.List;
 @Getter
 public class SelectField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
     String values;
-    Validation validation;
+    List<Validator<?>> validators;
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;

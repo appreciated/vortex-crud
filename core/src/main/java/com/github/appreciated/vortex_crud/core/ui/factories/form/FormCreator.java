@@ -73,17 +73,19 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     }
                 }
 
-                // Apply validation if present
-                if (field.validation() != null) {
-                    field.validation().applyToComponent(component);
-                }
-
                 Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
                 if (fieldName instanceof String propertyName) {
                     builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
                 }
                 if (field.required() && component instanceof HasValue) {
                     builder = builder.asRequired();
+                }
+
+                // Apply custom validators if present
+                if (field.validators() != null && !field.validators().isEmpty()) {
+                    for (Validator<?> validator : field.validators()) {
+                        builder = builder.withValidator((Validator<Object>) validator);
+                    }
                 }
 
                 builder.bind(

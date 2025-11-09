@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.Validation;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldFactory;
+import com.vaadin.flow.data.binder.Validator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Fi
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ReferenceFieldFactory.class;
 
     @Override
-    public Validation validation() {
+    public List<Validator<?>> validators() {
         return null;
     }
 }
