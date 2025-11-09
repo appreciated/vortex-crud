@@ -20,6 +20,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.Query;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
@@ -45,9 +46,10 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
 
-    private final GenericFilterableDataProvider<FieldType> dataProvider;
+    private ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
     private final FullCalendar calendar;
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
+    private final Map<String, Entry> entryMap = new HashMap<>();
 
     public CalendarView(RepositoryType dataStoreIdentifier,
                         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
@@ -77,7 +79,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeResolver = routeResolver;
         this.calendarConfiguration = calendarConfiguration;
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField()).withConfigurableFilter();
 
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();
@@ -123,15 +125,18 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void refreshCalendar() {
-        calendar.removeAllEntries();
+        // Remove all existing entries
+        new ArrayList<>(entryMap.values()).forEach(calendar::removeEntry);
         entryToEntityMap.clear();
+        entryMap.clear();
 
         Query<Object, String> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
         dataProvider.fetch(query).forEach(entity -> {
             Entry entry = createEntryFromEntity(entity);
             if (entry != null) {
-                calendar.addEntry(entry);
+                calendar.add(entry);
                 entryToEntityMap.put(entry.getId(), entity);
+                entryMap.put(entry.getId(), entry);
             }
         });
     }
