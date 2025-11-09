@@ -126,15 +126,15 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     private void refreshCalendar() {
         // Remove all existing entries
-        new ArrayList<>(entryMap.values()).forEach(calendar::removeEntry);
+        new ArrayList<>(entryMap.values()).forEach(entry -> calendar.removeEntry(entry));
         entryToEntityMap.clear();
         entryMap.clear();
 
-        Query<Object, String> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
+        Query<Object, Void> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
         dataProvider.fetch(query).forEach(entity -> {
             Entry entry = createEntryFromEntity(entity);
             if (entry != null) {
-                calendar.add(entry);
+                calendar.addEntry(entry);
                 entryToEntityMap.put(entry.getId(), entity);
                 entryMap.put(entry.getId(), entry);
             }
