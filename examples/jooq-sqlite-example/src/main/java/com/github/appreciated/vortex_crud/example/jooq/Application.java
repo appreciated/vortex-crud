@@ -20,6 +20,6 @@ public class Application implements AppShellConfigurator {
 
     @Override
     public void configurePage(AppShellSettings settings) {
-        settings.addInlineWithContents("html{--aura-color-scheme: dark;}", Inline.Wrapping.STYLESHEET);
+        settings.addInlineWithContents("html{--aura-color-scheme: dark; --aura-app-layout-inset: 0.9rem;}", Inline.Wrapping.STYLESHEET);
     }
 }

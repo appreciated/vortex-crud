@@ -9,7 +9,6 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -18,6 +17,9 @@ import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
+
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
+import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.BETWEEN;
 
 public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends AppLayout {
 
@@ -45,8 +47,14 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         Button logoutButton = new Button("Logout", click -> {
             handleLogout();
         });
-        HorizontalLayout horizontalLayout = new HorizontalLayout(toggle, title, logoutButton);
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        HorizontalLayout actionButtons = new HorizontalLayout(logoutButton);
+        actionButtons.setAlignItems(CENTER);
+        HorizontalLayout appToggleTitle = new HorizontalLayout(toggle, title);
+        appToggleTitle.setAlignItems(CENTER);
+        HorizontalLayout horizontalLayout = new HorizontalLayout(appToggleTitle, actionButtons);
+        horizontalLayout.setWidthFull();
+        horizontalLayout.setAlignItems(CENTER);
+        horizontalLayout.setJustifyContentMode(BETWEEN);
         horizontalLayout.setPadding(true);
         addToNavbar(horizontalLayout);
 
