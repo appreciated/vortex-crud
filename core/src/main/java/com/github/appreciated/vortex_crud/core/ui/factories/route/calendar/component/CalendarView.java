@@ -25,7 +25,6 @@ import com.vaadin.flow.data.provider.Query;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
-import org.vaadin.stefan.fullcalendar.InMemoryEntryProvider;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -126,24 +125,19 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void refreshCalendar() {
-        InMemoryEntryProvider<Entry> entryProvider = calendar.getEntryProvider().asInMemory();
-
-        // Remove all existing entries
-        new ArrayList<>(entryMap.values()).forEach(entry -> entryProvider.removeEntry(entry));
+        // Clear entry tracking maps
         entryToEntityMap.clear();
         entryMap.clear();
 
+        // Fetch all entities and create entries
         Query<Object, Void> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
         dataProvider.fetch(query).forEach(entity -> {
             Entry entry = createEntryFromEntity(entity);
             if (entry != null) {
-                entryProvider.addEntry(entry);
                 entryToEntityMap.put(entry.getId(), entity);
                 entryMap.put(entry.getId(), entry);
             }
         });
-
-        entryProvider.refreshAll();
     }
 
     private Entry createEntryFromEntity(Object entity) {
