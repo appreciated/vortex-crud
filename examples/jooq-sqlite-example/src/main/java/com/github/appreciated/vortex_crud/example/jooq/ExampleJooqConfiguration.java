@@ -18,6 +18,7 @@ import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAcc
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -48,8 +49,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 Map.entry(PROJECTS, JooqDataStoreConfig.of(PROJECTS)
                         .fields(Map.of(
                                 PROJECTS.ID, JooqIdField.builder().build(),
-                                PROJECTS.NAME, JooqTextField.builder().required(true).validation(new MaxLengthTextFieldValidation(255)).build(),
-                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validation(new MaxLengthTextFieldValidation(500)).build(),
+                                PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                                 PROJECTS.START_DATE, JooqDateField.builder().build(),
                                 PROJECTS.END_DATE, JooqDateField.builder().build(),
                                 PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
@@ -58,8 +59,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 Map.entry(TASKS, JooqDataStoreConfig.of(TASKS)
                         .fields(Map.of(
                                 TASKS.ID, JooqIdField.builder().build(),
-                                TASKS.TITLE, JooqTextField.builder().required(true).validation(new MaxLengthTextFieldValidation(255)).build(),
-                                TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validation(new MaxLengthTextFieldValidation(255)).build(),
+                                TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(USERS).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build() /* 1:1 Relation */,
                                 TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                                 TASKS.DUE_DATE, JooqDateField.builder().build(), //.readOnlyForRoles("developer").build(),
@@ -75,21 +76,21 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 Map.entry(TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
                         .fields(Map.of(
                                 TASK_COMMENTS.ID, JooqIdField.builder().build(),
-                                TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validation(new MaxLengthTextFieldValidation(1000)).build(),
+                                TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
                                 TASK_COMMENTS.USER_ID, JooqDoubleField.builder().build(),
                                 TASK_COMMENTS.CREATED_AT, JooqDateTimePickerField.builder().build()))
                         .build()),
                 Map.entry(IMAGES, JooqDataStoreConfig.of(IMAGES)
                         .fields(Map.of(
                                 IMAGES.ID, JooqIdField.builder().build(),
-                                IMAGES.TITLE, JooqTextField.builder().required(true).validation(new MaxLengthTextFieldValidation(255)).build(),
+                                IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 IMAGES.URL, JooqImageField.builder().configuration(JooqImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
                         ))
                         .build()),
                 Map.entry(VIDEOS, JooqDataStoreConfig.of(VIDEOS)
                         .fields(Map.of(
                                 VIDEOS.ID, JooqIdField.builder().build(),
-                                VIDEOS.TITLE, JooqTextField.builder().required(true).validation(new MaxLengthTextFieldValidation(255)).build(),
+                                VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(LocalVideoResourceProvider.class).build()).build()
                         ))
                         .build()),
@@ -98,7 +99,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .fields(Map.of(
                                         USERS.ID, JooqIdField.builder().build(),
                                         USERS.USERNAME, JooqEmailField.builder().build(),
-                                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validation(new MaxLengthTextFieldValidation(255)).build(),
+                                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
                                 ))
                                 .build())
