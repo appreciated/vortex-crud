@@ -193,6 +193,16 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .filterField("title")
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
+                // Example: Add menu actions for dropdown filters
+                .menuActions(List.of(
+                    DataStoreDropdownMenuAction.<String, JpaRepository<?, ?>>builder()
+                        .dataStoreKey(userRepository)
+                        .labelField("username")  // Field to use for display labels
+                        .placeholder("Filter by user...")
+                        .label("Assigned User")
+                        .limit(50)
+                        .build()
+                ))
                 .child(taskForm)
                 .build());
         routes.put("done-tasks", JpaMasterDetailRoute.builder()

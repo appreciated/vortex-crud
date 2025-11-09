@@ -245,6 +245,16 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .filterField(TASKS.TITLE)
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
+                // Example: Add menu actions for dropdown filters
+                .menuActions(List.of(
+                    DataStoreDropdownMenuAction.<TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreKey(USERS)
+                        .labelField(USERS.USERNAME)  // Field to use for display labels
+                        .placeholder("Filter by user...")
+                        .label("Assigned User")
+                        .limit(50)
+                        .build()
+                ))
                 .child(taskForm)
                 .build());
         routes.put("done-tasks", JooqMasterDetailRoute.builder()

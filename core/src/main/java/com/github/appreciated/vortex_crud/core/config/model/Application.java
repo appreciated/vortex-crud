@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +34,10 @@ public class Application<ModelClass, FieldType, RepositoryType> {
     private LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     /**
-     * Default menu action component factories that will be applied to all routes.
-     * These can be overridden or supplemented by route-specific menu action factories.
+     * Default menu actions that will be applied to all routes.
+     * These can be overridden or supplemented by route-specific menu actions.
      */
-    private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> defaultMenuActionFactories;
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> defaultMenuActions;
 
     public String getApplicationName() {
         return name;

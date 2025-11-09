@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -42,10 +41,10 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     /**
-     * List of menu action component factories for adding custom components to the menu.
+     * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
-    private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 
     public RepositoryType getDataStoreKey() {
         return dataStoreKey;
