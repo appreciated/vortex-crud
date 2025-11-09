@@ -14,6 +14,7 @@ import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.vaadin.flow.server.VaadinServletRequest;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -280,6 +281,28 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .childrenMap(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
+                .build());
+
+        routes.put("profile", JpaRootFormRoute.builder()
+                .iconFactory(USER::create)
+                .dataStoreKey(userRepository)
+                .title("route.profile.title")
+                .entityFilterField("username")
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .configuration(JpaFormRendererConfiguration.builder()
+                        .titleField("username")
+                        .children(List.of(
+                                JpaFieldElement.builder("username", "route.profile.labels.username").build(),
+                                JpaFieldElement.builder("firstName", "route.profile.labels.first_name").build(),
+                                JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build()
+                        ))
+                        .build())
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();

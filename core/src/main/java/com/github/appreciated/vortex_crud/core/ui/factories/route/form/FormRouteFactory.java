@@ -95,9 +95,33 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         RepositoryType table = routeRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        String lastSegment = routeResolver.getLastSegment();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
-        ModelClass entity = creationMode ? dataStore.newInstance() : dataStore.getRecordById(lastSegment);
+
+        ModelClass entity;
+        if (creationMode) {
+            entity = dataStore.newInstance();
+        } else if (routeRenderer instanceof RootFormRoute) {
+            // Root entry mode: fetch by filter instead of URL path ID
+            RootFormRoute<ModelClass, FieldType, RepositoryType> rootFormRoute =
+                (RootFormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+            FieldType filterField = rootFormRoute.entityFilterField();
+            Object filterValue = rootFormRoute.entityFilterValueProvider().get();
+
+            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
+                filterField, filterValue, 0, 1);
+
+            if (results.isEmpty()) {
+                throw new IllegalStateException(
+                    "No entity found for filter field: " + filterField +
+                    " with value: " + filterValue);
+            }
+            entity = results.get(0);  // Take first result
+        } else {
+            // Traditional mode: fetch by ID from URL path
+            String lastSegment = routeResolver.getLastSegment();
+            entity = dataStore.getRecordById(lastSegment);
+        }
+
         formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, factoryRegistry, tables, binder, form);
         binder.setBean(entity);
 
