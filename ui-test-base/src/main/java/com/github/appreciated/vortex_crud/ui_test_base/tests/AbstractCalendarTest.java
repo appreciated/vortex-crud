@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public abstract class AbstractCalendarTest extends BaseUITest {
             throw new RuntimeException(e);
         }
         // Check if there are events rendered in the calendar
-        WebElement shadowRoot = calendar.getShadowRoot();
+        SearchContext shadowRoot = calendar.getShadowRoot();
         if (shadowRoot != null) {
             List<WebElement> events = shadowRoot.findElements(By.cssSelector(".fc-event"));
             assertTrue(events.size() > 0, "Calendar should have at least one event");
@@ -111,7 +112,7 @@ public abstract class AbstractCalendarTest extends BaseUITest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        WebElement shadowRoot = calendar.getShadowRoot();
+        SearchContext shadowRoot = calendar.getShadowRoot();
         if (shadowRoot != null) {
             List<WebElement> events = shadowRoot.findElements(By.cssSelector(".fc-event"));
             if (!events.isEmpty()) {
