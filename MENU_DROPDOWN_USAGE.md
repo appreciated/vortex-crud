@@ -89,6 +89,15 @@ DataStoreDropdownMenuActionFactory<User, UserField, UserRepository> factory =
 // - Create a new DataStoreDropdown instance
 ```
 
+## Configuration Levels
+
+Menu actions can be configured at two levels:
+
+1. **Application Level** - Default menu actions applied to all routes
+2. **Route Level** - Route-specific menu actions for individual routes
+
+Route-level menu actions supplement (not replace) application-level defaults. Both will be rendered together.
+
 ## Integration with Routes
 
 ### Adding to GridRoute
@@ -181,6 +190,68 @@ public class EmployeeApplicationConfig {
 }
 ```
 
+## Application-Level Default Menu Actions
+
+You can configure default menu actions that apply to all routes at the Application level:
+
+```java
+public Application<Object, EmployeeField, EmployeeRepository> createApplication(
+        Map<EmployeeRepository, VortexCrudDataStore<EmployeeField, ?>> dataStores) {
+
+    // 1. Create a default filter that will appear on all routes
+    DataStoreDropdownConfig<Status, StatusField, StatusRepository> statusConfig =
+        DataStoreDropdownConfig.<Status, StatusField, StatusRepository>builder()
+            .dataStoreKey(StatusRepository.STATUSES)
+            .labelProvider(status -> status.getName())
+            .placeholder("Filter by status...")
+            .build();
+
+    MenuActionComponentFactory<Object, EmployeeField, EmployeeRepository> defaultStatusFilter =
+        new DataStoreDropdownMenuActionFactory<>(statusConfig, dataStores);
+
+    // 2. Create a default export button for all routes
+    MenuActionComponentFactory<Object, EmployeeField, EmployeeRepository> defaultExportButton =
+        () -> {
+            Button exportBtn = new Button("Export", VaadinIcon.DOWNLOAD.create());
+            exportBtn.addClickListener(e -> {
+                // Global export logic
+            });
+            return exportBtn;
+        };
+
+    // 3. Build application with default menu actions
+    return Application.<Object, EmployeeField, EmployeeRepository>builder()
+        .name("Employee Management")
+        .dataStores(dataStoreConfigs)
+        .defaultMenuActionFactories(List.of(defaultStatusFilter, defaultExportButton))
+        .routes(routesMap)
+        .build();
+}
+```
+
+### Combining Application and Route-Level Menu Actions
+
+Both application-level and route-level menu actions will be rendered together:
+
+```java
+// Application-level: Export button (appears on all routes)
+MenuActionComponentFactory<Object, EmployeeField, EmployeeRepository> defaultExportButton = ...;
+
+Application<Object, EmployeeField, EmployeeRepository> app =
+    Application.<Object, EmployeeField, EmployeeRepository>builder()
+        .defaultMenuActionFactories(List.of(defaultExportButton))
+        .routes(...)
+        .build();
+
+// Route-level: Department filter (appears only on employee route)
+GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
+    GridRoute.<Employee, EmployeeField, EmployeeRepository>builder()
+        .menuActionFactories(List.of(deptFilterFactory))
+        .build();
+
+// Result: Employee route will show BOTH the export button AND the department filter
+```
+
 ## Multiple Menu Actions
 
 You can add multiple menu action components to a single route:
@@ -253,8 +324,16 @@ GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
   - `MenuActionComponentFactory.java` - Factory interface
   - `DataStoreDropdownMenuActionFactory.java` - Dropdown factory implementation
 
+### Extended Configuration Classes
+
+- **Location**: `com.github.appreciated.vortex_crud.core.config.model`
+  - `Application.java` - Extended with `defaultMenuActionFactories` field for application-wide menu actions
+
 ### Extended Route Classes
 
 - **Location**: `com.github.appreciated.vortex_crud.core.config.model`
-  - `GridRoute.java` - Extended with `menuActionFactories` field for menu action support
-  - `ListRoute.java` - Extended with `menuActionFactories` field for menu action support
+  - `GridRoute.java` - Extended with `menuActionFactories` field for route-specific menu actions
+  - `ListRoute.java` - Extended with `menuActionFactories` field for route-specific menu actions
+  - `FormRoute.java` - Extended with `menuActionFactories` field for route-specific menu actions
+  - `KanbanRoute.java` - Extended with `menuActionFactories` field for route-specific menu actions
+  - `SubmenuRoute.java` - Extended with `menuActionFactories` field for route-specific menu actions
