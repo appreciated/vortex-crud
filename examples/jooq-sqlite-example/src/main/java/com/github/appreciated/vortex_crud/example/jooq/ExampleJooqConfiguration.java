@@ -346,7 +346,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                             ? request.getUserPrincipal().getName()
                             : null;
                 })
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(USERS.USERNAME)
                         .children(List.of(
                                 JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
