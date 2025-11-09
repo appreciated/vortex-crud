@@ -18,6 +18,7 @@ import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAcc
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -331,6 +332,27 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .childrenMap(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
+                .build());
+
+        routes.put("profile", JooqRootFormRoute.builder()
+                .iconFactory(USER::create)
+                .dataStoreKey(USERS)
+                .title("route.profile.title")
+                .entityFilterField(USERS.USERNAME)
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .configuration(JooqFormRendererConfiguration.builder()
+                        .titleField(USERS.USERNAME)
+                        .children(List.of(
+                                JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                                JooqFieldElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
+                        ))
+                        .build())
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
