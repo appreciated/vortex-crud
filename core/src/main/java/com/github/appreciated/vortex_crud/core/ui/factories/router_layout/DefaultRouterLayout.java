@@ -35,7 +35,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
 
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1(getTranslation(configService.getApplicationName()));
+        H1 title = new H1(getTranslation(configService.applicationName()));
         title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
         SideNav nav = getSideNav();

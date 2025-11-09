@@ -28,7 +28,7 @@ class VortexCrudConfigServiceTest {
 
         // Mock the configuration provider
         when(configProvider.get()).thenReturn(application);
-        when(application.getApplicationName()).thenReturn("Test Application");
+        when(application.applicationName()).thenReturn("Test Application");
 
         configService = new TestVortexCrudConfigService(configProvider);
     }
@@ -41,8 +41,8 @@ class VortexCrudConfigServiceTest {
     }
 
     @Test
-    void testGetApplicationName() {
-        String appName = configService.getApplicationName();
+    void testapplicationName() {
+        String appName = configService.applicationName();
         assertEquals("Test Application", appName, "Application name should match the mocked name");
     }
 
@@ -63,8 +63,8 @@ class VortexCrudConfigServiceTest {
         }
 
         @Override
-        public String getApplicationName() {
-            return configuration().getApplicationName();
+        public String applicationName() {
+            return configuration().applicationName();
         }
     }
 }

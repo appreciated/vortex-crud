@@ -11,7 +11,7 @@ public interface VortexCrudConfigService<ModelClass, FieldType, RepositoryType> 
 
     Application<ModelClass, FieldType, RepositoryType> configuration();
 
-    String getApplicationName();
+    String applicationName();
 
     default boolean isIdentityAndAccessManagementEnabled() {
         return configuration() != null;
