@@ -90,4 +90,6 @@ public class RootFormRoute<ModelClass, FieldType, RepositoryType>  implements Fo
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
         return formConfiguration;
     }
+
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }

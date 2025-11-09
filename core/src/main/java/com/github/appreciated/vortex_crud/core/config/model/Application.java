@@ -39,27 +39,5 @@ public class Application<ModelClass, FieldType, RepositoryType> {
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> defaultMenuActions;
 
-    public String getApplicationName() {
-        return name;
-    }
-
-    public IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> getUserManagement() {
-        return identityAndAccessManagement;
-    }
-
-    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getRouteRenderers() {
-        return routes;
-    }
-
-    public String getI18nBundlePrefix() {
-        return i18nBundlePrefix;
-    }
-
-    public Selects getSelects() {
-        return selects;
-    }
-
-    public Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> getDataStores() {
-        return dataStores;
-    }
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }

@@ -44,4 +44,6 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return child.formConfiguration();
     }
+
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }

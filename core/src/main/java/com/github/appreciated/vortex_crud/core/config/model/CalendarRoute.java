@@ -47,19 +47,5 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
      */
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }

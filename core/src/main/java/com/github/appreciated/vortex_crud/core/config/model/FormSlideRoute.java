@@ -44,4 +44,6 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
     }
+
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }
