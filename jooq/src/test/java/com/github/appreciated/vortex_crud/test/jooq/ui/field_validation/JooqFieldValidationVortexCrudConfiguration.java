@@ -44,7 +44,7 @@ public class JooqFieldValidationVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreKey(VALIDATION_TEST)
                 .title("route.projects.title-cards")
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(VALIDATION_TEST.REQUIRED_FIELD)
                         .children(List.of(
                                 JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),

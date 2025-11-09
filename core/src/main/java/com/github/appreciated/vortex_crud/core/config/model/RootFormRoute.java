@@ -38,11 +38,47 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class RootFormRoute<ModelClass, FieldType, RepositoryType> extends FormRoute<ModelClass, FieldType, RepositoryType> {
+@Builder
+public class RootFormRoute<ModelClass, FieldType, RepositoryType>  implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    /**
-     * The field to filter on when fetching the entity.
-     */
+    private RepositoryType dataStoreKey;
+
+    private String title;
+
+    private boolean isDefaultRoute;
+
+    @Builder.Default
+    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+
+    private boolean isHiddenInMenu;
+
+    private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
+
+    private SerializableSupplier<Component> iconFactory;
+
+    private List<String> writeRoles;
+
+    private List<String> readOnlyRoles;
+
+    private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    public RepositoryType getDataStoreKey() {
+        return dataStoreKey;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<String> getWriteRoles() {
+        return writeRoles;
+    }
+
+    public List<String> getReadOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+
     private FieldType entityFilterField;
 
     /**
@@ -50,26 +86,8 @@ public class RootFormRoute<ModelClass, FieldType, RepositoryType> extends FormRo
      */
     private SerializableSupplier<Object> entityFilterValueProvider;
 
-    @Builder(builderMethodName = "rootFormRouteBuilder")
-    public RootFormRoute(
-            RepositoryType dataStoreKey,
-            String title,
-            boolean isDefaultRoute,
-            Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory,
-            boolean isHiddenInMenu,
-            RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration,
-            SerializableSupplier<Component> iconFactory,
-            List<String> writeRoles,
-            List<String> readOnlyRoles,
-            List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children,
-            // New fields for root entry mode
-            FieldType entityFilterField,
-            SerializableSupplier<Object> entityFilterValueProvider
-    ) {
-        super(dataStoreKey, title, isDefaultRoute,
-              factory != null ? factory : (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class,
-              isHiddenInMenu, configuration, iconFactory, writeRoles, readOnlyRoles, children);
-        this.entityFilterField = entityFilterField;
-        this.entityFilterValueProvider = entityFilterValueProvider;
+    @Override
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
+        return formConfiguration;
     }
 }

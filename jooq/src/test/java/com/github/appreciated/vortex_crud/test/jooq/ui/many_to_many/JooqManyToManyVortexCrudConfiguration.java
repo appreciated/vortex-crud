@@ -40,7 +40,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqFormRoute.builder()
                 .dataStoreKey(MANY_TO_MANY_ITEM)
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(MANY_TO_MANY_ITEM.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),

@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -46,7 +46,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer;
+    private final MasterDetailRoute<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
@@ -71,7 +71,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
 
-        routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey());

@@ -30,7 +30,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -39,11 +39,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private List<String> readOnlyRoles;
 
     private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    @Override
-    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
-        return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
-    }
 
     public RepositoryType getDataStoreKey() {
         return dataStoreKey;
@@ -59,5 +54,10 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     public List<String> getReadOnlyRoles() {
         return readOnlyRoles;
+    }
+
+    @Override
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
+        return formConfiguration;
     }
 }

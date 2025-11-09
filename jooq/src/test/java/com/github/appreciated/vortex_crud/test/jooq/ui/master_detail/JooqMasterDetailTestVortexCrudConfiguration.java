@@ -38,7 +38,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(MASTER_DETAIL_TASKS)
                 .title("route.projects.title-cards")
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(MASTER_DETAIL_TASKS.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),

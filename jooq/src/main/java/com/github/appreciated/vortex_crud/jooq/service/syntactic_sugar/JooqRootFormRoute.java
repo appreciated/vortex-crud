@@ -7,6 +7,6 @@ import org.jooq.impl.TableImpl;
 
 public class JooqRootFormRoute extends RootFormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static RootFormRoute.RootFormRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return RootFormRoute.rootFormRouteBuilder();
+        return RootFormRoute.builder();
     }
 }

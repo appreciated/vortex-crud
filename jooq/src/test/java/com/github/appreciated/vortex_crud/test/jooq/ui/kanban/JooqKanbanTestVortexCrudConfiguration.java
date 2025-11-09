@@ -38,7 +38,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(KANBAN_TASKS)
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(KANBAN_TASKS.TITLE)
                         .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())

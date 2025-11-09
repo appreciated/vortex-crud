@@ -44,7 +44,7 @@ public class JooqI18NTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreKey(I18N_IMAGES)
                 .title("route.projects.title-cards")
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(I18N_IMAGES.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),

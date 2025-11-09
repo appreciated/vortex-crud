@@ -28,7 +28,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(JpaFieldElement.builder("title", "route.tasks.labels.title").build()))
                         .build())
