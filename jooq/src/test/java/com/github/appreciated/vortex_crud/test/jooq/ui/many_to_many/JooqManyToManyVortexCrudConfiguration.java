@@ -78,7 +78,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
         return JooqApplication.builder()
                 .dataStores(dataStores)
-                .name("application.name")
+                .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();

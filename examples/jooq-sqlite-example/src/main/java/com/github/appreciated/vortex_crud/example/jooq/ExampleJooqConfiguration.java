@@ -373,7 +373,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         return JooqApplication.builder()
-                .name("application.name")
+                .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .repositoryKey(USERS)

@@ -17,7 +17,7 @@ import java.util.Map;
 @Getter
 public class Application<ModelClass, FieldType, RepositoryType> {
 
-    private String name;
+    private String applicationName;
 
     private String i18nBundlePrefix;
 

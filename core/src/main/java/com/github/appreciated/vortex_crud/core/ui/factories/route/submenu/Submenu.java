@@ -113,7 +113,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
 
             routeButton.getElement().addEventListener("click", event -> getUI().ifPresent(ui -> {
                 String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
-                pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.configuration().getRouteRenderers(), dataStoreUtil);
+                pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.configuration().routes(), dataStoreUtil);
                 ui.getPage().getHistory().pushState(null, pathForEntity);
                 if (active != null) {
                     active.removeClassName("active");

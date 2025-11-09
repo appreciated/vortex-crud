@@ -312,7 +312,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         return JpaApplication.builder()
-                .name("application.name")
+                .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
                 .identityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()

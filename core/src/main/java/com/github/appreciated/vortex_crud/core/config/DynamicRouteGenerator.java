@@ -22,10 +22,10 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        Set<String> keys = configService.configuration().getRouteRenderers().keySet();
+        Set<String> keys = configService.configuration().routes().keySet();
         keys.forEach(this::registerRoute);
 
-        IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().getUserManagement();
+        IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().identityAndAccessManagement();
         if (userManagement != null) {
             RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
             configuration.setRoute("login", userManagement.loginView());

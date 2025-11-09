@@ -149,7 +149,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
             pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory,
                     pathForEntity,
-                    configService.configuration().getRouteRenderers(),
+                    configService.configuration().routes(),
                     dataStoreUtil);
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, pathForEntity);

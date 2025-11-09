@@ -48,7 +48,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
         Application<ModelClass, FieldType, RepositoryType> configuration = configService.configuration();
         IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement =
-                configuration.getUserManagement();
+                configuration.identityAndAccessManagement();
 
         if (userManagement == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -96,7 +96,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             }
         });
 
-        add(new H1(getTranslation(configuration.getApplicationName())), login);
+        add(new H1(getTranslation(configuration.applicationName())), login);
 
         if (userManagement.isSignUpEnabled()) {
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));

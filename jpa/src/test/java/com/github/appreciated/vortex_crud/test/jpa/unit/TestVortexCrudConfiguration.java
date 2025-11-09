@@ -13,7 +13,7 @@ public class TestVortexCrudConfiguration implements VortexCrudConfigurationProvi
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
 
         return JpaApplication.builder()
-                .name("application.name")
+                .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .build();
     }
