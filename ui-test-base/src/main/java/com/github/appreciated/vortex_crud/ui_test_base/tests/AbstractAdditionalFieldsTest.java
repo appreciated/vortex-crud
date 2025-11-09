@@ -67,17 +67,17 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         nameField.sendKeys("TextArea Test");
 
         // Fill in TextArea field
-        WebElement textAreaField = driver.findElement(By.tagName("vaadin-text-area"))
+        WebElement textAreaField = waitForElement(By.tagName("vaadin-text-area"))
                 .findElement(By.tagName("textarea"));
         textAreaField.sendKeys("This is a multi-line\ntext area\nwith several lines");
 
         // Fill BigDecimal field
-        WebElement bigDecimalField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement bigDecimalField = waitForElement(By.tagName("vaadin-number-field"))
                 .findElement(By.tagName("input"));
         bigDecimalField.sendKeys("123.45");
 
         // Fill Password field
-        WebElement passwordField = driver.findElement(By.tagName("vaadin-password-field"))
+        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
                 .findElement(By.tagName("input"));
         passwordField.sendKeys("SecurePassword123");
 
@@ -95,7 +95,7 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Find password field
-        WebElement passwordField = driver.findElement(By.tagName("vaadin-password-field"))
+        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
                 .findElement(By.tagName("input"));
 
         // Verify it's a password type input (masked)
@@ -118,12 +118,12 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         nameField.sendKeys("BigDecimal Test");
 
         // Test BigDecimal with high precision
-        WebElement bigDecimalField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement bigDecimalField = waitForElement(By.tagName("vaadin-number-field"))
                 .findElement(By.tagName("input"));
         bigDecimalField.sendKeys("999999.99");
 
         // Fill required password field
-        WebElement passwordField = driver.findElement(By.tagName("vaadin-password-field"))
+        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
                 .findElement(By.tagName("input"));
         passwordField.sendKeys("password");
 
@@ -157,11 +157,11 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
                 .findElement(By.tagName("input"));
         nameField.sendKeys("Created Entity");
 
-        WebElement passwordField = driver.findElement(By.tagName("vaadin-password-field"))
+        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
                 .findElement(By.tagName("input"));
         passwordField.sendKeys("newpassword");
 
-        WebElement bigDecimalField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement bigDecimalField = waitForElement(By.tagName("vaadin-number-field"))
                 .findElement(By.tagName("input"));
         bigDecimalField.sendKeys("50.00");
 
