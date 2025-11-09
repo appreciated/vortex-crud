@@ -15,7 +15,7 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
 
     @Autowired
     public JpaVortexCrudConfigService(VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configurationProvider, JpaDataStoreFactoryRegistry registry) {
-        configuration =  configurationProvider.get().toBuilder().dataStores(registry.getDataStores()).build();
+        configuration =  configurationProvider.get().toBuilder().dataStores(registry.dataStores()).build();
     }
 
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration() {

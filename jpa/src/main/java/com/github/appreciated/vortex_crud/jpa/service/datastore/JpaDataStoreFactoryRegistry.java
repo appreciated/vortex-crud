@@ -48,7 +48,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
         modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), table);
     }
 
-    public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getDataStores() {
+    public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores() {
         return factories.entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 entry -> DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()

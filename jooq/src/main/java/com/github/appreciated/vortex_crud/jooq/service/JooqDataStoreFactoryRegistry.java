@@ -26,7 +26,7 @@ public class JooqDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryR
     private final HashMap<TableImpl<?>, VortexCrudDataStore<TableField<?, ?>, TableRecord<?>>> factories = new HashMap<>();
 
     public JooqDataStoreFactoryRegistry(VortexCrudConfigService<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configService, DSLContext dslContext) {
-        for (Map.Entry<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> entry : configService.configuration().getDataStores().entrySet()) {
+        for (Map.Entry<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> entry : configService.configuration().dataStores().entrySet()) {
             TableImpl<?> table = entry.getKey();
             Class<?> recordType = table.getRecordType();
             factories.put(table, new JooqDataStore(recordType, dslContext, entry.getValue().hooks()));
