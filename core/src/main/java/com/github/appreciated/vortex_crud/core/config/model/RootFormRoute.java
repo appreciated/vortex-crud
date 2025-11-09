@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -13,12 +12,34 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * Configuration for a form route that edits a specific single entry based on filtering,
+ * rather than using an ID from the URL path.
+ * <p>
+ * This is useful for routes like user profiles where the entity is determined by
+ * the current user context (e.g., Spring Security) rather than a URL parameter.
+ * <p>
+ * Example:
+ * <pre>
+ * RootFormRoute.builder()
+ *     .dataStoreKey(userRepository)
+ *     .title("route.profile.title")
+ *     .entityFilterField("username")
+ *     .entityFilterValueProvider(() -> getCurrentUsername())
+ *     .configuration(...)
+ *     .build()
+ * </pre>
+ *
+ * @param <ModelClass>    The entity class type
+ * @param <FieldType>     The field type (e.g., String for JPA, TableField for jOOQ)
+ * @param <RepositoryType> The repository/table type
+ */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
-public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+@Builder
+public class RootFormRoute<ModelClass, FieldType, RepositoryType>  implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType dataStoreKey;
 
@@ -41,12 +62,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    /**
-     * List of menu action component factories for adding custom components to the menu.
-     * This can include dropdowns, filters, action buttons, etc.
-     */
-    private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
-
     public RepositoryType getDataStoreKey() {
         return dataStoreKey;
     }
@@ -62,6 +77,14 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     public List<String> getReadOnlyRoles() {
         return readOnlyRoles;
     }
+
+
+    private FieldType entityFilterField;
+
+    /**
+     * Provider that supplies the filter value dynamically (e.g., from security context).
+     */
+    private SerializableSupplier<Object> entityFilterValueProvider;
 
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {

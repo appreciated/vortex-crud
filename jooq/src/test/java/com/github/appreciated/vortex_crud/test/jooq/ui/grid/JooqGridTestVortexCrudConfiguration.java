@@ -44,7 +44,7 @@ public class JooqGridTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreKey(GRID_IMAGES)
                 .title("route.projects.title-cards")
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(GRID_IMAGES.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),

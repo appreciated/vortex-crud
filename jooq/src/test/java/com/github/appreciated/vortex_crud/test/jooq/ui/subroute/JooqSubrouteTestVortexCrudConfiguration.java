@@ -36,7 +36,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(SUBROUTE_TASKS)
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(SUBROUTE_TASKS.TITLE)
                         .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
                         .build())

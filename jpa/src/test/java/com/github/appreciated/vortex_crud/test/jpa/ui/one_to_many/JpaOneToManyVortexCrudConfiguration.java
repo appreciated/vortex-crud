@@ -33,7 +33,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> childForm = JpaFormRoute.builder()
                 .dataStoreKey(childRepository)
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
                         .build())
@@ -41,7 +41,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
 
         FormRoute parentForm = JpaFormRoute.builder()
                 .dataStoreKey(parentRepository)
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("name", "relations.labels.name").build(),

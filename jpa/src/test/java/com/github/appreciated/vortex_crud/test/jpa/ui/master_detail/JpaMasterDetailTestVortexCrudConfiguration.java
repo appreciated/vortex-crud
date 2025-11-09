@@ -27,7 +27,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.tasks.labels.title").build(),

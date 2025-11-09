@@ -25,7 +25,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.images.labels.title").build(),

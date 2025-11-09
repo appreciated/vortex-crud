@@ -36,7 +36,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = JpaFormRoute.builder()
                 .dataStoreKey(itemRepository)
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("name", "relations.labels.name").build(),

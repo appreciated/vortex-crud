@@ -27,7 +27,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaFormRoute.builder()
                 .dataStoreKey(validationEntityRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("requiredField")
                         .children(List.of(
                                 JpaFieldElement.builder("requiredField", "validation.fields.required").build(),

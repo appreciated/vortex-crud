@@ -17,6 +17,7 @@ import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .build())
                         .emptyMessage("route.tasks.labels.comments-empty-message")
                         .child(JpaFormRoute.builder()
-                                .configuration(JpaFormRendererConfiguration.builder()
+                                .formConfiguration(JpaFormRendererConfiguration.builder()
                                         .titleField("name")
                                         .children(List.of(
                                                 JpaFieldElement.builder("commentText", "route.tasks.labels.comment").build()
@@ -88,7 +89,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
@@ -104,7 +105,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
                 .dataStoreKey(projectRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("name", "route.projects.labels.name").build(),
@@ -117,7 +118,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.images.labels.title").build(),
@@ -141,7 +142,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
                 .dataStoreKey(videoRepository)
                 .title("route.videos.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.videos.labels.title").build(),
@@ -280,6 +281,28 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .childrenMap(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
+                .build());
+
+        routes.put("profile", JpaRootFormRoute.builder()
+                .iconFactory(USER::create)
+                .dataStoreKey(userRepository)
+                .title("route.profile.title")
+                .entityFilterField("username")
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .formConfiguration(JpaFormRendererConfiguration.builder()
+                        .titleField("username")
+                        .children(List.of(
+                                JpaFieldElement.builder("username", "route.profile.labels.username").build(),
+                                JpaFieldElement.builder("firstName", "route.profile.labels.first_name").build(),
+                                JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build()
+                        ))
+                        .build())
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();

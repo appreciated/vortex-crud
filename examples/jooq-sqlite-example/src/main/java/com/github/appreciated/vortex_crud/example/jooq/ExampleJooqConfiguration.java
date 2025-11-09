@@ -18,6 +18,7 @@ import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAcc
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -105,7 +106,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreKey(TASKS)
-                .configuration(JooqFormRendererConfiguration.builder()
+                .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(TASKS.TITLE)
                         .children(List.of(
                                 JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
@@ -123,7 +124,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                 )
                                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                                 .child(JooqFormRoute.builder()
-                                                        .configuration(JooqFormRendererConfiguration.builder()
+                                                        .formConfiguration(JooqFormRendererConfiguration.builder()
                                                                 .titleField(TASK_COMMENTS.COMMENT_TEXT)
                                                                 .children(List.of(
                                                                         JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
@@ -152,7 +153,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
                 .dataStoreKey(PROJECTS)
-                .title("route.projects.title-cards").configuration(JooqFormRendererConfiguration.builder()
+                .title("route.projects.title-cards").formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(PROJECTS.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
@@ -166,7 +167,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreKey(IMAGES)
                 .title("route.projects.title-cards")
-                .configuration(
+                .formConfiguration(
                         JooqFormRendererConfiguration.builder()
                                 .titleField(IMAGES.TITLE)
                                 .children(List.of(
@@ -192,7 +193,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> videoForm = JooqFormRoute.builder()
                 .dataStoreKey(VIDEOS)
-                .title("route.videos.title-cards").configuration(
+                .title("route.videos.title-cards").formConfiguration(
                         JooqFormRendererConfiguration.builder()
                                 .titleField(VIDEOS.TITLE)
                                 .children(List.of(
@@ -331,6 +332,27 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .childrenMap(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
+                .build());
+
+        routes.put("profile", JooqRootFormRoute.builder()
+                .iconFactory(USER::create)
+                .dataStoreKey(USERS)
+                .title("route.profile.title")
+                .entityFilterField(USERS.USERNAME)
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(USERS.USERNAME)
+                        .children(List.of(
+                                JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                                JooqFieldElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
+                        ))
+                        .build())
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
