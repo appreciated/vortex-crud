@@ -91,7 +91,7 @@ DataStoreDropdownMenuActionFactory<User, UserField, UserRepository> factory =
 
 ## Integration with Routes
 
-### Adding to GridItemRendererConfiguration
+### Adding to GridRoute
 
 ```java
 // Create dropdown configuration
@@ -108,20 +108,20 @@ DataStoreDropdownConfig<Department, DepartmentField, DepartmentRepository> deptC
 MenuActionComponentFactory<Employee, EmployeeField, EmployeeRepository> menuActionFactory =
     new DataStoreDropdownMenuActionFactory<>(deptConfig, dataStores);
 
-// Configure grid with menu action
+// Configure grid item renderer
 GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridConfig =
     GridItemRendererConfiguration.<Employee, EmployeeField, EmployeeRepository>builder()
         .titleField(EmployeeField.NAME)
         .descriptionField(EmployeeField.EMAIL)
-        .menuActionFactories(List.of(menuActionFactory))
         .build();
 
-// Create grid route with the configuration
+// Create grid route with menu actions at the route level
 GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
     GridRoute.<Employee, EmployeeField, EmployeeRepository>builder()
         .dataStoreKey(EmployeeRepository.EMPLOYEES)
         .title("employees.title")
         .configuration(gridConfig)
+        .menuActionFactories(List.of(menuActionFactory))
         .build();
 ```
 
@@ -151,22 +151,22 @@ public class EmployeeApplicationConfig {
         MenuActionComponentFactory<Employee, EmployeeField, EmployeeRepository> deptFilterFactory =
             new DataStoreDropdownMenuActionFactory<>(deptDropdownConfig, dataStores);
 
-        // 3. Configure grid with menu actions
+        // 3. Configure grid item renderer
         GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridConfig =
             GridItemRendererConfiguration.<Employee, EmployeeField, EmployeeRepository>builder()
                 .titleField(EmployeeField.FULL_NAME)
                 .descriptionField(EmployeeField.EMAIL)
                 .imageField(EmployeeField.PHOTO)
-                .menuActionFactories(List.of(deptFilterFactory))
                 .build();
 
-        // 4. Create the grid route
+        // 4. Create the grid route with menu actions at the route level
         GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
             GridRoute.<Employee, EmployeeField, EmployeeRepository>builder()
                 .dataStoreKey(EmployeeRepository.EMPLOYEES)
                 .title("employees.grid.title")
                 .configuration(gridConfig)
                 .iconFactory(() -> VaadinIcon.USERS.create())
+                .menuActionFactories(List.of(deptFilterFactory))
                 .build();
 
         // 5. Build application with routes
@@ -194,10 +194,12 @@ MenuActionComponentFactory<Employee, EmployeeField, EmployeeRepository> deptFilt
 MenuActionComponentFactory<Employee, EmployeeField, EmployeeRepository> statusFilter =
     new DataStoreDropdownMenuActionFactory<>(statusDropdownConfig, dataStores);
 
-// Add both to configuration
-GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridConfig =
-    GridItemRendererConfiguration.<Employee, EmployeeField, EmployeeRepository>builder()
-        .titleField(EmployeeField.FULL_NAME)
+// Add both to the GridRoute
+GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
+    GridRoute.<Employee, EmployeeField, EmployeeRepository>builder()
+        .dataStoreKey(EmployeeRepository.EMPLOYEES)
+        .title("employees.title")
+        .configuration(gridConfig)
         .menuActionFactories(List.of(deptFilter, statusFilter))
         .build();
 ```
@@ -217,10 +219,12 @@ MenuActionComponentFactory<Employee, EmployeeField, EmployeeRepository> customBu
         return exportButton;
     };
 
-// Add custom factory alongside dropdown
-GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridConfig =
-    GridItemRendererConfiguration.<Employee, EmployeeField, EmployeeRepository>builder()
-        .titleField(EmployeeField.FULL_NAME)
+// Add custom factory alongside dropdown to the GridRoute
+GridRoute<Employee, EmployeeField, EmployeeRepository> employeeRoute =
+    GridRoute.<Employee, EmployeeField, EmployeeRepository>builder()
+        .dataStoreKey(EmployeeRepository.EMPLOYEES)
+        .title("employees.title")
+        .configuration(gridConfig)
         .menuActionFactories(List.of(deptFilterFactory, customButtonFactory))
         .build();
 ```
@@ -235,7 +239,7 @@ GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridC
 
 4. **Refresh**: Call `dropdown.refresh()` to reload data if the underlying data changes.
 
-5. **Configuration Field**: The `menuActionFactories` field is added to specific configuration classes like `GridItemRendererConfiguration`, allowing each route type to optionally support menu actions without affecting the base interface.
+5. **Route-Level Configuration**: Menu actions are configured at the Route level (GridRoute, ListRoute) rather than at the Configuration level, keeping the core configuration interfaces stable and allowing flexibility in menu customization per route.
 
 ## API Reference
 
@@ -249,7 +253,8 @@ GridItemRendererConfiguration<Employee, EmployeeField, EmployeeRepository> gridC
   - `MenuActionComponentFactory.java` - Factory interface
   - `DataStoreDropdownMenuActionFactory.java` - Dropdown factory implementation
 
-### Extended Configuration Classes
+### Extended Route Classes
 
 - **Location**: `com.github.appreciated.vortex_crud.core.config.model`
-  - `GridItemRendererConfiguration.java` - Extended with `menuActionFactories` field for menu action support
+  - `GridRoute.java` - Extended with `menuActionFactories` field for menu action support
+  - `ListRoute.java` - Extended with `menuActionFactories` field for menu action support

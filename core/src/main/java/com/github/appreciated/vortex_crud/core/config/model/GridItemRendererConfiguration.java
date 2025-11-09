@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +34,4 @@ public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType
     private FieldType filterField;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    /**
-     * List of menu action component factories for adding custom components to the menu.
-     * This can include dropdowns, filters, action buttons, etc.
-     */
-    private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 }
