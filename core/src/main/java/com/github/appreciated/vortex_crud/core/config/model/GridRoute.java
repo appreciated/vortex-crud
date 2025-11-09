@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -39,6 +40,12 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     private List<String> readOnlyRoles;
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+
+    /**
+     * List of menu action component factories for adding custom components to the menu.
+     * This can include dropdowns, filters, action buttons, etc.
+     */
+    private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
     public List<String> getWriteRoles() {
         return writeRoles;
