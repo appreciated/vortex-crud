@@ -100,12 +100,12 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         ModelClass entity;
         if (creationMode) {
             entity = dataStore.newInstance();
-        } else if (routeRenderer instanceof RootFormRoute) {
+        } else if (routeRenderer instanceof SingleFormRoute) {
             // Root entry mode: fetch by filter instead of URL path ID
-            RootFormRoute<ModelClass, FieldType, RepositoryType> rootFormRoute =
-                (RootFormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
-            FieldType filterField = rootFormRoute.entityFilterField();
-            Object filterValue = rootFormRoute.entityFilterValueProvider().get();
+            SingleFormRoute<ModelClass, FieldType, RepositoryType> singleFormRoute =
+                (SingleFormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+            FieldType filterField = singleFormRoute.entityFilterField();
+            Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
             java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
                 filterField, filterValue, 0, 1);

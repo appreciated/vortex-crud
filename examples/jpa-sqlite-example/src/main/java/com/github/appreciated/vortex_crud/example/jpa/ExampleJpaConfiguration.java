@@ -283,7 +283,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         "image-form", imageForm))
                 .build());
 
-        routes.put("profile", JpaRootFormRoute.builder()
+        routes.put("profile", JpaSingleFormRoute.builder()
                 .iconFactory(USER::create)
                 .dataStoreKey(userRepository)
                 .title("route.profile.title")

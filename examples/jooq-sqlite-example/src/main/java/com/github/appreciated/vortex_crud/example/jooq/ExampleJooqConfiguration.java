@@ -345,7 +345,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         "image-form", imageForm))
                 .build());
 
-        routes.put("profile", JooqRootFormRoute.builder()
+        routes.put("profile", JooqSingleFormRoute.builder()
                 .iconFactory(USER::create)
                 .dataStoreKey(USERS)
                 .title("route.profile.title")

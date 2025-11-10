@@ -39,7 +39,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
-public class RootFormRoute<ModelClass, FieldType, RepositoryType>  implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class SingleFormRoute<ModelClass, FieldType, RepositoryType>  implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType dataStoreKey;
 
