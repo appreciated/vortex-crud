@@ -13,15 +13,15 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * Configuration for a form route that edits a specific single entry based on filtering,
- * rather than using an ID from the URL path.
+ * Configuration for a form route that edits a specific single entry based on configuration, rather than using an ID
+ * from the URL path.
  * <p>
  * This is useful for routes like user profiles where the entity is determined by
  * the current user context (e.g., Spring Security) rather than a URL parameter.
  * <p>
  * Example:
  * <pre>
- * RootFormRoute.builder()
+ * SingleFormRoute.builder()
  *     .dataStoreKey(userRepository)
  *     .title("route.profile.title")
  *     .entityFilterField("username")
