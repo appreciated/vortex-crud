@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -27,7 +28,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 ADDITIONAL_FIELDS_TEST, JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
                         .fields(Map.of(
                                 ADDITIONAL_FIELDS_TEST.ID, JooqIdField.builder().build(),
-                                ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validation(MaxLengthTextFieldValidation.builder().maxLength(255).build()).build(),
+                                ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
                                 ADDITIONAL_FIELDS_TEST.DESCRIPTION, JooqTextAreaField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.PASSWORD, JooqPasswordField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.PRICE, JooqBigDecimalField.builder().build(),
@@ -68,7 +69,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .build());
 
         return JooqApplication.builder()
-                .name("application.name")
+                .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .dataStores(dataStores)
