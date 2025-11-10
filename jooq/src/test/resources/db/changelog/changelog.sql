@@ -174,3 +174,14 @@ CREATE TABLE from_slide_images
     url   VARCHAR(255)
 );
 
+-- changeset Create additional_fields_test table for testing TextArea, Password, Video, BigDecimal fields:18
+CREATE TABLE additional_fields_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    password    VARCHAR(255),
+    price       DECIMAL(10, 2),
+    video_url   VARCHAR(255)
+);
+
