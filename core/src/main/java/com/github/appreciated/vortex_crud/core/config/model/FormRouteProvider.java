@@ -13,4 +13,6 @@ public interface FormRouteProvider<ModelClass, FieldType, RepositoryType> extend
      * @return the form renderer configuration
      */
     FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration();
+
+    boolean isDeleteButtonHidden();
 }

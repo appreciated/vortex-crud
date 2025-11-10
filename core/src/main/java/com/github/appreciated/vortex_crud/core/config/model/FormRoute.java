@@ -30,6 +30,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private boolean isHiddenInMenu;
 
+    private final boolean isDeleteButtonHidden = false;
+
     private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
 
     private SerializableSupplier<Component> iconFactory;

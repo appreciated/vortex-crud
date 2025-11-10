@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererCon
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -27,11 +26,10 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
-            VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService,
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        this.formRouteFactory = new FormRouteFactory<ModelClass, FieldType, RepositoryType>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService, permissionChecker);
+        this.formRouteFactory = new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService, permissionChecker);
     }
 
     @Override
@@ -40,13 +38,12 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        @SuppressWarnings("unchecked")
         MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
                 (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         Div div = new Div();
         for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.forms()) {
             assert detailRouteSetting != null;
-            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), routeRenderer, child));
+            div.add(formRouteFactory.getForm(routeResolver, true, true, detailRouteSetting.isCreationMode(), false, routeRenderer, child));
         }
         return div;
     }

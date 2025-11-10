@@ -39,7 +39,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Builder
-public class SingleFormRoute<ModelClass, FieldType, RepositoryType>  implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType dataStoreKey;
 
@@ -51,6 +51,8 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType>  implements 
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
 
     private boolean isHiddenInMenu;
+
+    private final boolean isDeleteButtonHidden = true;
 
     private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
 

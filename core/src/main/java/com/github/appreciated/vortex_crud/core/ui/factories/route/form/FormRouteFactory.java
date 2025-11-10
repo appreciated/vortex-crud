@@ -66,13 +66,14 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = routeProvider.formConfiguration();
         assert detailRouteSetting != null;
-        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider, form);
+        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider, form);
     }
 
     public VerticalLayout getForm(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                                   boolean isWrapped,
                                   boolean isHeaderHidden,
                                   boolean creationMode,
+                                  boolean isDeleteButtonHidden,
                                   RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                                   RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> formRouteRendererConfiguration) {
         VerticalLayout layout = new VerticalLayout();
@@ -161,7 +162,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                 creationMode && hasWriteAccess,
                 hasWriteAccess ? onSave : null,
                 null,
-                hasWriteAccess ? onDelete : null,
+                hasWriteAccess && !isDeleteButtonHidden ? onDelete : null,
                 onBack,
                 titleComponent
         );

@@ -30,6 +30,8 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private boolean isHiddenInMenu;
 
+    private final boolean isDeleteButtonHidden = true;
+
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     private SerializableSupplier<Component> iconFactory;

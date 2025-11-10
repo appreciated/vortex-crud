@@ -30,6 +30,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private boolean isHiddenInMenu;
 
+    private final boolean isDeleteButtonHidden = false;
+
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     private SerializableSupplier<Component> iconFactory;
