@@ -185,3 +185,13 @@ CREATE TABLE additional_fields_test
     video_url   VARCHAR(255)
 );
 
+-- changeset Create multi_form_test table for testing MultiFormRoute:19
+CREATE TABLE multi_form_test
+(
+    id           INTEGER PRIMARY KEY,
+    profile_name VARCHAR(255) NOT NULL,
+    email        VARCHAR(255) NOT NULL,
+    description  TEXT,
+    age          INTEGER
+);
+
