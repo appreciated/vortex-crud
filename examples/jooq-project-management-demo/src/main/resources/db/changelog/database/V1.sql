@@ -283,83 +283,36 @@ CREATE INDEX idx_activity_entity ON activity_log(entity_type, entity_id);
 CREATE INDEX idx_notification_user ON notification(user_id, is_read);
 CREATE INDEX idx_custom_field_entity ON custom_field_definition(entity_type);
 
--- Sample Data
+-- Minimal Sample Data
 -- ============================================================================
 
--- Sample Teams
+-- Sample Team
 INSERT INTO team (name, description) VALUES
-('Engineering', 'Software development team'),
-('Product', 'Product management team'),
-('Design', 'UI/UX design team');
+('Engineering', 'Software development team');
 
 -- Sample Labels
-INSERT INTO label (name, color, description, category) VALUES
-('bug', '#d73a4a', 'Something is not working', 'type'),
-('enhancement', '#a2eeef', 'New feature or request', 'type'),
-('documentation', '#0075ca', 'Improvements or additions to documentation', 'type'),
-('high-priority', '#b60205', 'High priority item', 'priority'),
-('good-first-issue', '#7057ff', 'Good for newcomers', 'difficulty'),
-('help-wanted', '#008672', 'Extra attention is needed', 'status');
+INSERT INTO label (name, color, description) VALUES
+('bug', '#d73a4a', 'Something is not working'),
+('enhancement', '#a2eeef', 'New feature or request');
 
--- Sample Projects
-INSERT INTO project (name, code, description, status, priority, start_date, end_date, owner_id, team_id, color) VALUES
-('Vortex CRUD Framework', 'VCRUD', 'Development of the Vortex CRUD framework with advanced features', 'active', 'high', '2025-01-01', '2025-12-31', 1, 1, '#3b82f6'),
-('Mobile App Redesign', 'MOBILE', 'Complete redesign of the mobile application', 'planning', 'medium', '2025-03-01', '2025-06-30', 1, 3, '#10b981'),
-('Customer Portal', 'PORTAL', 'New customer self-service portal', 'active', 'high', '2025-02-01', '2025-08-31', 1, 1, '#f59e0b');
+-- Sample Project
+INSERT INTO project (name, code, description, status, priority, start_date, end_date, owner_id, team_id) VALUES
+('Demo Project', 'DEMO', 'Sample project for testing', 'active', 'high', '2025-01-01', '2025-12-31', 1, 1);
 
--- Sample Sprints
+-- Sample Sprint
 INSERT INTO sprint (project_id, name, goal, start_date, end_date, status, sprint_number, capacity_hours) VALUES
-(1, 'Sprint 1 - Foundation', 'Set up project structure and core entities', '2025-01-01', '2025-01-14', 'completed', 1, 80),
-(1, 'Sprint 2 - Custom Fields', 'Implement custom fields functionality', '2025-01-15', '2025-01-28', 'active', 2, 80),
-(1, 'Sprint 3 - UI Polish', 'Polish user interface and add advanced views', '2025-01-29', '2025-02-11', 'planned', 3, 80);
+(1, 'Sprint 1', 'Initial sprint', '2025-01-01', '2025-01-14', 'active', 1, 80);
 
--- Sample Milestones
-INSERT INTO milestone (project_id, title, description, due_date, status, completion_percentage) VALUES
-(1, 'Alpha Release', 'First functional version with basic features', '2025-02-15', 'open', 75),
-(1, 'Beta Release', 'Feature-complete version for testing', '2025-04-15', 'open', 30),
-(2, 'Design Complete', 'All UI/UX designs finalized', '2025-04-01', 'open', 0),
-(3, 'MVP Launch', 'Minimum viable product ready for customers', '2025-05-01', 'open', 45);
+-- Sample Milestone
+INSERT INTO milestone (project_id, title, description, due_date, status) VALUES
+(1, 'v1.0 Release', 'First release', '2025-06-01', 'open');
 
 -- Sample Tasks
-INSERT INTO task (project_id, sprint_id, milestone_id, task_number, title, description, task_type, status, priority, assignee_id, reporter_id, estimated_hours, story_points, due_date) VALUES
-(1, 2, 1, 1, 'Design custom fields database schema', 'Create comprehensive database schema for custom fields with meta table', 'task', 'done', 'high', 1, 1, 4, 3, '2025-01-16'),
-(1, 2, 1, 2, 'Implement custom field service layer', 'Build service layer for managing custom field definitions', 'task', 'in_progress', 'high', 1, 1, 8, 5, '2025-01-20'),
-(1, 2, 1, 3, 'Create UI for custom field management', 'Admin interface for creating and managing custom fields', 'story', 'todo', 'medium', 1, 1, 12, 8, '2025-01-25'),
-(1, 2, 1, 4, 'Add custom fields to entity forms', 'Dynamically render custom fields in entity forms', 'task', 'todo', 'high', 1, 1, 8, 5, '2025-01-27'),
-(1, NULL, 1, 5, 'Fix task filtering bug', 'Task filters not working correctly on kanban board', 'bug', 'in_review', 'high', 1, 1, 2, 2, '2025-01-18'),
-(2, NULL, 3, 1, 'Create wireframes for new mobile design', 'Sketch out all major screens', 'task', 'done', 'high', 1, 1, 16, 8, '2025-03-10'),
-(2, NULL, 3, 2, 'User research for mobile app', 'Conduct interviews with 10 users', 'task', 'in_progress', 'medium', 1, 1, 20, 5, '2025-03-20'),
-(3, NULL, 4, 1, 'Set up customer authentication', 'Implement OAuth2 authentication for customers', 'story', 'done', 'highest', 1, 1, 16, 13, '2025-02-15'),
-(3, NULL, 4, 2, 'Build customer dashboard', 'Overview dashboard showing key metrics', 'story', 'in_progress', 'high', 1, 1, 24, 8, '2025-02-28'),
-(3, NULL, 4, 3, 'Implement ticket submission form', 'Allow customers to submit support tickets', 'task', 'todo', 'medium', 1, 1, 8, 5, '2025-03-05');
+INSERT INTO task (project_id, sprint_id, task_number, title, description, task_type, status, priority, reporter_id) VALUES
+(1, 1, 1, 'Setup project', 'Initialize project structure', 'task', 'done', 'high', 1),
+(1, 1, 2, 'Implement feature X', 'Add new feature', 'story', 'in_progress', 'medium', 1);
 
--- Sample Task Comments
-INSERT INTO task_comment (task_id, author_id, content) VALUES
-(1, 1, 'Completed the initial schema design. Added support for JSON fields and meta table.'),
-(1, 1, 'Schema reviewed and approved. Moving to implementation.'),
-(2, 1, 'Started working on the CRUD operations for custom field definitions.'),
-(5, 1, 'Found the issue - filter was not being applied correctly. Fix in progress.');
-
--- Sample Time Entries
-INSERT INTO time_entry (task_id, user_id, hours, date, description, is_billable) VALUES
-(1, 1, 4.0, '2025-01-16', 'Database schema design and documentation', 1),
-(1, 1, 2.0, '2025-01-16', 'Schema review and revisions', 1),
-(2, 1, 6.5, '2025-01-17', 'Implementation of custom field service', 1),
-(5, 1, 1.5, '2025-01-18', 'Bug investigation and fix', 1);
-
--- Sample Task Labels
-INSERT INTO task_label (task_id, label_id) VALUES
-(5, 1), -- Bug
-(3, 2), -- Enhancement
-(4, 2), -- Enhancement
-(3, 5), -- Good first issue
-(2, 4); -- High priority
-
--- Sample Custom Field Definitions
-INSERT INTO custom_field_definition (entity_type, field_name, field_label, field_type, field_order, is_required, options, description) VALUES
-('project', 'client_name', 'Client Name', 'text', 1, 1, NULL, 'Name of the client for this project'),
-('project', 'contract_value', 'Contract Value', 'number', 2, 0, NULL, 'Total contract value in USD'),
-('project', 'project_type', 'Project Type', 'select', 3, 0, '["Internal", "Client", "Open Source", "R&D"]', 'Type of project'),
-('task', 'severity', 'Bug Severity', 'select', 1, 0, '["Minor", "Major", "Critical", "Blocker"]', 'Severity level for bugs'),
-('task', 'test_coverage', 'Test Coverage %', 'number', 2, 0, NULL, 'Percentage of code covered by tests'),
-('task', 'requires_documentation', 'Requires Documentation', 'checkbox', 3, 0, NULL, 'Whether this task requires documentation updates');
+-- Sample Custom Field Definition
+INSERT INTO custom_field_definition (entity_type, field_name, field_label, field_type, is_required, description) VALUES
+('project', 'client_name', 'Client Name', 'text', 1, 'Name of the client'),
+('task', 'severity', 'Bug Severity', 'select', 0, 'Severity level for bugs');

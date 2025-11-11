@@ -1,308 +1,52 @@
 # Project Management Platform Demo
 
-A comprehensive project management platform built with Vortex CRUD framework and jOOQ, demonstrating advanced features including custom fields support.
+A project management platform demo built with Vortex CRUD and jOOQ, showcasing custom fields support.
 
-## Overview
+## Features
 
-This demo showcases a full-featured project management system similar to Jira, Linear, or Asana, with the added capability of user-defined custom fields stored in JSON format.
+- **Projects**: Project tracking with progress, budget, timelines
+- **Tasks**: Task management with types (task, bug, story, epic, subtask)
+- **Sprints**: Agile sprint planning
+- **Milestones**: Delivery tracking
+- **Teams**: Team organization
+- **Time Tracking**: Hour logging
+- **Custom Fields**: User-defined fields with JSON storage
 
-## Key Features
+## Custom Fields System
 
-### Core Functionality
-- **Projects**: Manage multiple projects with tracking of progress, budget, and timelines
-- **Tasks/Issues**: Complete task management with types (task, bug, story, epic, subtask)
-- **Sprints**: Agile sprint planning and tracking
-- **Milestones**: Major delivery points and goals
-- **Teams**: Organization and team management
-- **Time Tracking**: Log hours worked on tasks
-- **Labels**: Flexible categorization system
-- **Comments**: Discussion and collaboration
-- **Dependencies**: Task dependency tracking
-- **Attachments**: File uploads for tasks and projects
-
-### Custom Fields System ⭐
-
-The platform includes a sophisticated custom fields system that allows administrators to:
-
-1. **Define Custom Fields**: Create field definitions for any entity type
-2. **Multiple Field Types**: Support for text, number, date, select, multiselect, checkbox
-3. **Validation Rules**: Set required fields and validation constraints
-4. **JSON Storage**: Field values stored in JSON columns for flexibility
-5. **Meta Table**: `custom_field_definition` table describes available fields
-6. **Dynamic Forms**: Forms automatically render custom fields based on definitions
-
-#### Custom Fields Architecture
-
-```
-custom_field_definition (meta table)
-├── entity_type (e.g., 'project', 'task', 'sprint')
-├── field_name (database column name)
-├── field_label (UI display name)
-├── field_type (text, number, date, select, etc.)
-├── options (JSON array for select types)
-├── validation_rules (JSON validation config)
-└── is_required
-
-Entity tables (project, task, sprint, etc.)
-└── custom_fields (TEXT column containing JSON)
-    Example: {"client_name": "ACME Corp", "contract_value": 50000}
-```
+Uses a meta table approach:
+- `custom_field_definition` - Stores field metadata (type, validation, options)
+- Entity tables have `custom_fields` JSON column for values
+- Supports: text, number, date, select, multiselect, checkbox
 
 ## Database Schema
 
-### Core Tables
-- `project` - Projects with code, status, priority, budget tracking
-- `task` - Tasks/issues with full workflow support
-- `sprint` - Time-boxed iterations
-- `milestone` - Major goals and delivery points
-- `team` - Team organization
-- `team_member` - Team membership (M:N)
-- `label` - Tags and labels
-- `task_label` - Task labels (M:N)
-- `task_comment` - Task discussions
-- `time_entry` - Time tracking entries
-- `task_dependency` - Task relationships
-- `task_watcher` - Task subscribers
-- `project_member` - Project team (M:N)
-- `attachment` - File attachments
-- `activity_log` - Audit trail
-- `notification` - User notifications
+Core tables: `project`, `task`, `sprint`, `milestone`, `team`, `label`, `task_comment`, `time_entry`, `task_dependency`, `attachment`, `custom_field_definition`
 
-### Custom Fields Tables
-- `custom_field_definition` - Field metadata and configuration
+## Technology
 
-### Sample Data Included
-- 3 teams (Engineering, Product, Design)
-- 3 projects with realistic data
-- 3 sprints (completed, active, planned)
-- 4 milestones with progress tracking
-- 10 tasks across different projects and sprints
-- 6 labels (bug, enhancement, documentation, etc.)
-- Task comments, time entries, and custom field definitions
-
-## Technology Stack
-
-- **Framework**: Vortex CRUD 1.0.0-SNAPSHOT
-- **ORM**: jOOQ 3.19.22 (type-safe SQL)
-- **Database**: SQLite 3.47.1.0
-- **Migrations**: Liquibase 4.29.0
-- **UI**: Vaadin 25.0.0-beta4 with Aura theme
-- **Java**: 21
-- **Spring Boot**: 4.0.0-M3
-
-## Project Structure
-
-```
-jooq-project-management-demo/
-├── src/main/
-│   ├── java/.../projectmanagement/
-│   │   ├── Application.java                    # Spring Boot entry point
-│   │   ├── enums/                              # Status enums
-│   │   │   ├── ProjectStatus.java
-│   │   │   ├── TaskStatus.java
-│   │   │   ├── TaskType.java
-│   │   │   ├── Priority.java
-│   │   │   └── SprintStatus.java
-│   │   ├── config/                             # (To be implemented)
-│   │   │   └── ProjectManagementConfiguration.java
-│   │   ├── service/                            # (To be implemented)
-│   │   │   └── CustomFieldService.java
-│   │   └── jooq/                               # (Generated by jOOQ)
-│   │       └── tables/...
-│   └── resources/
-│       ├── application.properties
-│       ├── pm_i18n_en.properties              # Internationalization
-│       └── db/changelog/
-│           ├── db.changelog-master.yaml
-│           ├── vortex-crud/                    # Framework tables
-│           │   ├── V1.sql                      # Users, roles, audit
-│           │   └── V2.sql                      # Version tracking
-│           └── database/                       # Application schema
-│               └── V1.sql                      # Complete PM schema
-├── pom.xml                                     # Maven configuration
-└── README.md
-```
+- jOOQ 3.19.22 (type-safe SQL)
+- SQLite 3.47.1.0
+- Liquibase 4.29.0
+- Vaadin 25.0.0-beta4
+- Spring Boot 4.0.0-M3
+- Java 21
 
 ## Getting Started
 
-### Prerequisites
-- Java 21 or higher
-- Maven 3.8+
-
-### Build and Run
-
-1. **Generate jOOQ classes and run migrations**:
-   ```bash
-   cd examples/jooq-project-management-demo
-   mvn clean generate-sources
-   ```
-
-2. **Run the application**:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-3. **Access the application**:
-   - URL: http://localhost:8081
-   - Default credentials: (configured in vortex-crud security)
-
-### Database Location
-- Database file: `project-management-demo.db` (SQLite)
-- Created automatically on first run
-
-## Implementation Roadmap
-
-### ✅ Completed
-1. Database schema design with 20+ tables
-2. Comprehensive sample data
-3. Custom fields meta system design
-4. Enum types for all statuses
-5. Maven/jOOQ/Liquibase configuration
-6. Internationalization setup
-
-### 🚧 To Be Implemented
-
-#### 1. jOOQ Configuration Provider
-Create `ProjectManagementConfiguration.java` implementing `VortexCrudConfigurationProvider`:
-
-```java
-@Service
-public class ProjectManagementConfiguration
-    implements VortexCrudConfigurationProvider<TableImpl<?>, TableField<?, ?>, TableImpl<?>> {
-
-    @Autowired
-    private DSLContext dslContext;
-
-    @Override
-    public com.github.appreciated.vortex_crud.core.config.model.Application<...> get() {
-        // Define routes for projects, tasks, sprints, etc.
-        // Configure forms with custom field rendering
-        return JooqApplication.builder()
-            .applicationName("application.name")
-            .i18nBundlePrefix("pm_i18n")
-            .routes(configureRoutes())
-            .build();
-    }
-}
+```bash
+cd examples/jooq-project-management-demo
+mvn clean generate-sources  # Generate jOOQ classes
+mvn spring-boot:run          # Run application
 ```
 
-#### 2. Custom Fields Service Layer
-```java
-public class CustomFieldService {
-    // CRUD for custom field definitions
-    // JSON serialization/deserialization
-    // Dynamic form field generation
-    // Validation logic
-}
-```
+Access: http://localhost:8081
 
-#### 3. Route Configuration
-Configure Vortex CRUD routes for:
-- **Projects Grid** - Card view of all projects
-- **Tasks Kanban** - Task board with status columns
-- **Tasks List** - Table view with filters
-- **Sprints Timeline** - Sprint calendar view
-- **Teams Management** - Team structure
-- **Time Tracking** - Time entry forms
-- **Custom Fields Admin** - Field definition management
+## Next Steps
 
-#### 4. Custom Field UI Integration
-- Dynamic form rendering based on custom field definitions
-- Field type-specific components (date pickers, dropdowns, etc.)
-- Validation and error handling
-- JSON serialization for storage
+1. Implement `ProjectManagementConfiguration.java` (Vortex CRUD config provider)
+2. Configure routes (Projects, Tasks, Sprints)
+3. Implement `CustomFieldService.java` for dynamic field handling
+4. Add UI components for custom field management
 
-#### 5. Advanced Features
-- Dashboard with metrics
-- Task filtering and search
-- Bulk operations
-- Export functionality
-- Email notifications
-
-## Custom Fields Example Usage
-
-### Define a Custom Field
-```sql
-INSERT INTO custom_field_definition
-(entity_type, field_name, field_label, field_type, options, is_required)
-VALUES
-('project', 'client_name', 'Client Name', 'text', NULL, 1);
-```
-
-### Store Custom Field Value
-```sql
-UPDATE project
-SET custom_fields = '{"client_name": "ACME Corporation", "contract_value": 150000}'
-WHERE id = 1;
-```
-
-### Retrieve and Display
-The Vortex CRUD framework will automatically:
-1. Read field definitions from `custom_field_definition`
-2. Parse JSON from `custom_fields` column
-3. Render appropriate form components
-4. Validate and save back to JSON
-
-## Configuration Tips
-
-### jOOQ Code Generation
-- Runs automatically during `mvn generate-sources`
-- Generates type-safe table classes
-- Enum converters configured for status fields
-- Output: `target/generated-sources/com/github/appreciated/.../jooq/`
-
-### Adding New Entities
-1. Add SQL to `src/main/resources/db/changelog/database/V2.sql`
-2. Run `mvn clean generate-sources` to regenerate jOOQ classes
-3. Create corresponding route configuration
-4. Add i18n labels to `pm_i18n_en.properties`
-
-### Custom Field Types
-Supported types in `field_type` column:
-- `text` - Single-line text input
-- `number` - Numeric input with validation
-- `date` - Date picker
-- `select` - Dropdown (options in JSON)
-- `multiselect` - Multi-select dropdown
-- `checkbox` - Boolean toggle
-
-## Performance Considerations
-
-1. **Indexes**: All foreign keys and frequently queried columns are indexed
-2. **JSON Fields**: SQLite JSON functions can query inside custom_fields column
-3. **Pagination**: Use jOOQ `.limit()` and `.offset()` for large datasets
-4. **Caching**: Consider caching custom field definitions
-
-## Security
-
-- Role-based access control via Vortex CRUD security module
-- Audit logging for all CRUD operations
-- Activity log for tracking changes
-- User authentication and authorization
-
-## Contributing
-
-This is a demo application showcasing Vortex CRUD capabilities. To extend:
-
-1. Fork the repository
-2. Implement the configuration provider
-3. Add custom routes and views
-4. Enhance the custom fields UI
-5. Add tests
-6. Submit a pull request
-
-## License
-
-This demo is part of the Vortex CRUD framework project.
-
-## Support
-
-For questions about:
-- **Vortex CRUD Framework**: See main repository documentation
-- **jOOQ**: https://www.jooq.org/doc/latest/manual/
-- **Vaadin**: https://vaadin.com/docs
-
-## Related Demos
-
-- [Development Platform Demo](../jooq-dev-platform-demo/) - GitHub/GitLab-like platform
-- [JPA SQLite Example](../jpa-sqlite-example/) - Basic CRUD example with JPA
+See [DEMO_OVERVIEW.md](../DEMO_OVERVIEW.md) for architecture details.
