@@ -28,12 +28,13 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
     List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions();
 
     /**
-     * Custom action buttons that can be added to the route.
-     * These actions provide full access to the data store and selected entities.
+     * Custom action components that can be added to the route.
+     * Actions can be global, single-entity, or multi-entity based, and provide
+     * full access to the data store and selected entities through the context.
      *
-     * @return List of custom actions
+     * @return List of route actions
      */
-    default List<CustomRouteAction<ModelClass>> customActions() {
+    default List<RouteAction<ModelClass>> routeActions() {
         return List.of();
     }
 }

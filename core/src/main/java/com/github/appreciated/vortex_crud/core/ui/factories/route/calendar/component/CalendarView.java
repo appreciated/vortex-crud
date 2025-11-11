@@ -122,7 +122,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                 null,
                 null,
                 routeHeader,
-                routeRenderer.customActions(),
+                routeRenderer.routeActions(),
                 actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));

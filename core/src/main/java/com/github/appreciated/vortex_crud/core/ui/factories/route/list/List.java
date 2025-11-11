@@ -54,7 +54,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 null,
                 null,
                 routeHeader,
-                routeRenderer.customActions(),
+                routeRenderer.routeActions(),
                 actionContext);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);

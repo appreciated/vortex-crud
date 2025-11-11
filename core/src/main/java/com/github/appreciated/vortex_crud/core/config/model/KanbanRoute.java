@@ -47,10 +47,10 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 
     /**
-     * List of custom action buttons that can be added to this route.
-     * These actions provide full access to the data store and selected entities.
+     * List of route action components that can be added to this route.
+     * Route actions can provide custom UI components with full access to the data store and selected entities.
      */
-    private List<CustomRouteAction<ModelClass>> customActions;
+    private List<RouteAction<ModelClass>> routeActions;
 
     public RepositoryType getDataStoreKey() {
         return dataStoreKey;

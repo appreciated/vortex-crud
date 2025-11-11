@@ -255,58 +255,64 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .limit(50)
                         .build()
                 ))
-                // Example: Add custom action buttons
-                .customActions(List.of(
+                // Example: Add custom route action components
+                .routeActions(List.of(
                     // Global action - Export all tasks
-                    CustomRouteAction.<TableRecord<?>>builder()
-                        .label("Export Tasks")
-                        .icon(() -> VaadinIcon.DOWNLOAD.create())
-                        .actionType(CustomRouteActionType.GLOBAL)
-                        .style(CustomRouteActionStyle.SECONDARY)
-                        .tooltip("Export all tasks to CSV")
-                        .handler(context -> {
-                            // Get all tasks from the data store
-                            int count = context.getDataStore().count();
-                            context.showSuccessNotification(
-                                "Exported " + count + " tasks successfully!");
-                            // In a real app, you would generate a CSV file here
+                    GlobalRouteAction.<TableRecord<?>>builder()
+                        .componentFactory(context -> {
+                            com.vaadin.flow.component.button.Button exportBtn =
+                                new com.vaadin.flow.component.button.Button("Export Tasks", VaadinIcon.DOWNLOAD.create());
+                            exportBtn.getElement().setAttribute("title", "Export all tasks to CSV");
+                            exportBtn.addClickListener(e -> {
+                                int count = context.getDataStore().count();
+                                context.showSuccessNotification("Exported " + count + " tasks successfully!");
+                                // In a real app, you would generate a CSV file here
+                            });
+                            return exportBtn;
                         })
                         .build(),
                     // Global action with confirmation - Generate report
-                    CustomRouteAction.<TableRecord<?>>builder()
-                        .label("Generate Report")
-                        .icon(() -> VaadinIcon.FILE_TEXT.create())
-                        .actionType(CustomRouteActionType.GLOBAL)
-                        .style(CustomRouteActionStyle.PRIMARY)
-                        .tooltip("Generate a comprehensive task report")
-                        .requiresConfirmation(true)
-                        .confirmationTitle("Generate Report")
-                        .confirmationMessage("This will analyze all tasks and generate a comprehensive report. Continue?")
-                        .handler(context -> {
-                            context.executeWithNotification(
-                                ctx -> {
-                                    // Simulate report generation
-                                    int totalTasks = ctx.getDataStore().count();
-                                    // In a real app, you would generate a PDF/Excel report here
-                                },
-                                "Report generated successfully!",
-                                "Failed to generate report"
-                            );
+                    GlobalRouteAction.<TableRecord<?>>builder()
+                        .componentFactory(context -> {
+                            com.vaadin.flow.component.button.Button reportBtn =
+                                new com.vaadin.flow.component.button.Button("Generate Report", VaadinIcon.FILE_TEXT.create());
+                            reportBtn.addThemeVariants(com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY);
+                            reportBtn.addClickListener(e -> {
+                                context.showConfirmationDialog(
+                                    "Generate Report",
+                                    "This will analyze all tasks and generate a comprehensive report. Continue?",
+                                    () -> {
+                                        try {
+                                            int totalTasks = context.getDataStore().count();
+                                            // In a real app, you would generate a PDF/Excel report here
+                                            context.showSuccessNotification("Report generated successfully!");
+                                        } catch (Exception ex) {
+                                            context.showErrorNotification("Failed to generate report: " + ex.getMessage());
+                                        }
+                                    }
+                                );
+                            });
+                            return reportBtn;
                         })
                         .build(),
                     // Global action - Archive completed tasks
-                    CustomRouteAction.<TableRecord<?>>builder()
-                        .label("Archive Completed")
-                        .icon(() -> VaadinIcon.ARCHIVE.create())
-                        .actionType(CustomRouteActionType.GLOBAL)
-                        .style(CustomRouteActionStyle.TERTIARY)
-                        .tooltip("Archive all completed tasks")
-                        .requiresConfirmation(true)
-                        .confirmationTitle("Archive Tasks")
-                        .confirmationMessage("Are you sure you want to archive all completed tasks?")
-                        .handler(context -> {
-                            // In a real app, you would filter by status and archive
-                            context.showSuccessNotification("Completed tasks archived!");
+                    GlobalRouteAction.<TableRecord<?>>builder()
+                        .componentFactory(context -> {
+                            com.vaadin.flow.component.button.Button archiveBtn =
+                                new com.vaadin.flow.component.button.Button("Archive Completed", VaadinIcon.ARCHIVE.create());
+                            archiveBtn.addThemeVariants(com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY);
+                            archiveBtn.addClickListener(e -> {
+                                context.showConfirmationDialog(
+                                    "Archive Tasks",
+                                    "Are you sure you want to archive all completed tasks?",
+                                    () -> {
+                                        // In a real app, you would filter by status and archive
+                                        context.showSuccessNotification("Completed tasks archived!");
+                                        context.getRefreshCallback().run();
+                                    }
+                                );
+                            });
+                            return archiveBtn;
                         })
                         .build()
                 ))

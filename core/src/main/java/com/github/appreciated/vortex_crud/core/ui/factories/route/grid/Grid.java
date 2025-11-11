@@ -57,7 +57,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 null,
                 null,
                 routeHeader,
-                routeRenderer.customActions(),
+                routeRenderer.routeActions(),
                 actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));

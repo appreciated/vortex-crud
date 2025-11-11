@@ -104,7 +104,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                 null,
                 null,
                 routeHeader,
-                routeRenderer.customActions(),
+                routeRenderer.routeActions(),
                 actionContext);
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));

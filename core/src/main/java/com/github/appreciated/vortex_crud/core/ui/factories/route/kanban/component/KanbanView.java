@@ -155,7 +155,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 null,
                 null,
                 routeHeader,
-                routeRenderer.customActions(),
+                routeRenderer.routeActions(),
                 actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
