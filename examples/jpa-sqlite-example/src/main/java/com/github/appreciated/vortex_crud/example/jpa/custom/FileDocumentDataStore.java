@@ -1,8 +1,7 @@
-package com.github.appreciated.vortex_crud.filesystem.service.config;
+package com.github.appreciated.vortex_crud.example.jpa.custom;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.filesystem.entity.Document;
 
 import java.io.IOException;
 import java.nio.file.Files;

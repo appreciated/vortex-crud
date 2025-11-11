@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.filesystem.entity;
+package com.github.appreciated.vortex_crud.example.jpa.custom;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

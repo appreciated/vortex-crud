@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa;
 
-import com.github.appreciated.vortex_crud.filesystem.service.config.FileDocumentDataStore;
+import com.github.appreciated.vortex_crud.example.jpa.custom.FileDocumentDataStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
