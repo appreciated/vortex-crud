@@ -25,7 +25,7 @@ public class FileFieldRendererConfiguration<ModelClass, FieldType, RepositoryTyp
 
     private FieldType descriptionField;
 
-    private FieldType fileField;
+    private FieldType imageField;
 
     private Class<? extends VortexCrudResourceProvider> resourceProvider;
 

@@ -25,7 +25,7 @@ public class PdfFieldRendererConfiguration<ModelClass, FieldType, RepositoryType
 
     private FieldType descriptionField;
 
-    private FieldType pdfField;
+    private FieldType imageField;
 
     private Class<? extends VortexCrudResourceProvider> resourceProvider;
 
