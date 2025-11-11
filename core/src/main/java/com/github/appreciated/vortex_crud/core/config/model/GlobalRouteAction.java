@@ -61,6 +61,11 @@ public class GlobalRouteAction<ModelClass> implements RouteAction<ModelClass> {
     private boolean visible = true;
 
     @Override
+    public SerializableSupplier<Component> componentFactory() {
+        return componentFactory;
+    }
+
+    @Override
     public void handle(CustomRouteActionContext<ModelClass> context) {
         handler.accept(context);
     }

@@ -70,6 +70,11 @@ public class MultiEntityRouteAction<ModelClass> implements RouteAction<ModelClas
     private boolean visible = true;
 
     @Override
+    public SerializableSupplier<Component> componentFactory() {
+        return componentFactory;
+    }
+
+    @Override
     public void handle(CustomRouteActionContext<ModelClass> context) {
         handler.accept(context);
     }

@@ -25,7 +25,7 @@ public class CustomRouteActionContext<ModelClass> implements Serializable {
     /**
      * The data store for performing CRUD operations on entities.
      */
-    private final VortexCrudDataStore<ModelClass> dataStore;
+    private final VortexCrudDataStore<?, ModelClass> dataStore;
 
     /**
      * The currently selected entities (may be empty for GLOBAL actions).
