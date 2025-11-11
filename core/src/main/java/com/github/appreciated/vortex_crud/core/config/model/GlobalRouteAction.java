@@ -64,4 +64,10 @@ public class GlobalRouteAction<ModelClass> implements RouteAction<ModelClass> {
     public void handle(CustomRouteActionContext<ModelClass> context) {
         handler.accept(context);
     }
+
+    @Override
+    public boolean isEnabled(CustomRouteActionContext<ModelClass> context) {
+        // Global actions are always enabled
+        return true;
+    }
 }

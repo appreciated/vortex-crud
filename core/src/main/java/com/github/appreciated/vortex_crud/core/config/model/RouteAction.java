@@ -60,4 +60,18 @@ public interface RouteAction<ModelClass> extends Serializable {
     default boolean visible() {
         return true;
     }
+
+    /**
+     * Whether this action should be enabled based on the current context.
+     * This is checked before rendering and determines if the component is enabled.
+     * Default implementation always returns true (always enabled).
+     *
+     * <p>Action implementations should override this to provide selection-based enablement.</p>
+     *
+     * @param context The action context with selected entities
+     * @return true if the action should be enabled
+     */
+    default boolean isEnabled(CustomRouteActionContext<ModelClass> context) {
+        return true;
+    }
 }

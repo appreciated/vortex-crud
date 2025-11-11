@@ -73,4 +73,10 @@ public class MultiEntityRouteAction<ModelClass> implements RouteAction<ModelClas
     public void handle(CustomRouteActionContext<ModelClass> context) {
         handler.accept(context);
     }
+
+    @Override
+    public boolean isEnabled(CustomRouteActionContext<ModelClass> context) {
+        // Multi entity actions require at least one selected entity
+        return !context.getSelectedEntities().isEmpty();
+    }
 }

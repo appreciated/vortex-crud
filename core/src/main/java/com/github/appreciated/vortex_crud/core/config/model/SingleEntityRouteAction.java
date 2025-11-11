@@ -67,4 +67,10 @@ public class SingleEntityRouteAction<ModelClass> implements RouteAction<ModelCla
     public void handle(CustomRouteActionContext<ModelClass> context) {
         handler.accept(context);
     }
+
+    @Override
+    public boolean isEnabled(CustomRouteActionContext<ModelClass> context) {
+        // Single entity actions require exactly one selected entity
+        return context.getSelectedEntities().size() == 1;
+    }
 }
