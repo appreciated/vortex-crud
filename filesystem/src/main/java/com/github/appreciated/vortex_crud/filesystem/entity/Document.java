@@ -1,41 +1,20 @@
 package com.github.appreciated.vortex_crud.filesystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
 
 /**
- * Represents a document/file in the filesystem.
- * This entity maps to actual files in a directory.
+ * Represents a text file in the filesystem.
  */
 public class Document {
 
-    @JsonProperty("id")
     private Long id;
-
-    @JsonProperty("fileName")
     private String fileName;
-
-    @JsonProperty("title")
     private String title;
-
-    @JsonProperty("content")
     private String content;
-
-    @JsonProperty("fileSize")
     private Long fileSize;
-
-    @JsonProperty("createdAt")
     private LocalDateTime createdAt;
-
-    @JsonProperty("modifiedAt")
     private LocalDateTime modifiedAt;
 
-    @JsonIgnore
-    private transient String filePath;
-
-    // Constructors
     public Document() {
     }
 
@@ -104,14 +83,6 @@ public class Document {
 
     public void setModifiedAt(LocalDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     @Override

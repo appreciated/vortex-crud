@@ -246,7 +246,6 @@ public class FileDocumentDataStore implements VortexCrudDataStore<String, Docume
             doc.setFileSize(attrs.size());
             doc.setCreatedAt(LocalDateTime.ofInstant(attrs.creationTime().toInstant(), ZoneId.systemDefault()));
             doc.setModifiedAt(LocalDateTime.ofInstant(attrs.lastModifiedTime().toInstant(), ZoneId.systemDefault()));
-            doc.setFilePath(filePath.toString());
 
             return doc;
         } catch (IOException e) {
