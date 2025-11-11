@@ -15,7 +15,6 @@ public class JooqCustomDataStoreTest extends AbstractCustomDataStoreTest {
 
     @Override
     protected String getExpectedVisibleValue() {
-        // This should match content from one of the document files
-        return "README";
+        return "example";
     }
 }
