@@ -101,8 +101,10 @@ Standard form view for creating and editing entities.
 ### Additional Route Types
 
 - **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
-- **Multi-Form**: Handles multiple forms in a single route (configured via `MultiFormRouteFactory`)
+- **Single Form Route**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured using `SingleFormRoute` model.
+- **Multi-Form Route**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
 - **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
+- **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
@@ -183,7 +185,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         // Build the vortex-crud application using defined routes and datastores
         return JooqApplication.builder()
-                .withName("application.name")
+                .withApplicationName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withRoutes(routes)
                 .withDataStores(dataStores)
@@ -295,7 +297,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         );
 
         return JpaApplication.builder()
-                .withName("application.name")
+                .withApplicationName("application.name")
                 .withI18nBundlePrefix("some_i18n")
                 .withRoutes(routes)
                 .build();
@@ -391,9 +393,8 @@ CREATE TABLE task_comments (...);
 ### High priority
 - **Custom Repository Support**: Allow adding custom repositories f.e. create an example where access to a local directory is given
 - Explore missing features by creating actual demos of:
-  - **Small Project management software** 
+  - **Small Project management software**
   - **Small development platform like GitHub / Gitlab** (without the pipeline and the actual git part, just use file)
-- Allow form routes alternatively to be a root route, resulting in not editing a collection of entries but a specific entry based on a id (like the userprofile)
 - Notifications
 - Repository Hooks (OnBefore, OnAfter ; Update, Create, Delete, Read)
 
@@ -432,8 +433,8 @@ CREATE TABLE task_comments (...);
 
 ### Enhanced Validation
 - **Field Validation Framework**: Comprehensive validation system
-  - Built-in validators (email, URL, regex, range, length)
-  - Custom validation logic
+  - Built-in Vaadin Flow validators (email, URL, regex, range, string length)
+  - Custom validation logic support
   - Cross-field validation
   - Async validation (e.g., uniqueness checks)
 - **Entity-Level Validation**: Business rule validation across multiple fields
@@ -441,7 +442,6 @@ CREATE TABLE task_comments (...);
 ### Additional UI Components
 - **Additional Form Controls**: Radio Button Groups, Select Groups, Links, Color Pickers, File Upload, Image collections
 - **Additional Routes**:
-  - **Calendar Route**: Timeline and calendar views for date-based entities
   - **Map Route**: Geographic data visualization
   - **Chart/Dashboard Route**: Analytics and reporting dashboards
   - **Generic Block Route**: Flexible block-based layouts
