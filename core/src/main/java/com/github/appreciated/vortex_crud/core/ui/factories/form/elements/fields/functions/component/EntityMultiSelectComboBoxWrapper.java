@@ -14,14 +14,14 @@ import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Set<Object>>, Set<Object>>, HasLabel {
 
     private final MultiSelectComboBox<Object> multiSelectComboBox;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
-    private Set<Object> currentValue;
 
     public EntityMultiSelectComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                             VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
@@ -31,7 +31,6 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
         MultiSelectField<ModelClass, FieldType, RepositoryType> multiSelectField = (MultiSelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = dataStoreFactoryRegistry.getDataStore(multiSelectField.dataStore());
         this.multiSelectComboBox = new MultiSelectComboBox<>();
-        this.currentValue = new HashSet<>();
 
         // Set up the MultiSelectComboBox with a data provider and label generator
         multiSelectComboBox.setDataProvider(
@@ -45,21 +44,13 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
                 .orElse("")
         );
 
-        // Add a value change listener to handle when new values are selected
-        multiSelectComboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? new HashSet<>(event.getValue()) : new HashSet<>());
         multiSelectComboBox.setWidthFull();
         add(multiSelectComboBox);
     }
 
-    // Return the MultiSelectComboBox component
-    public Component getComponent() {
-        return multiSelectComboBox;
-    }
-
-    // Implementing getValue() to return the current selected entities
     @Override
     public Set<Object> getValue() {
-        return currentValue;
+        return multiSelectComboBox.getValue();
     }
 
     @Override
@@ -67,26 +58,17 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
         return multiSelectComboBox.addValueChangeListener(listener);
     }
 
-    // Implementing setValue() to load entities based on their IDs
     @Override
-    public void setValue(Set<Object> ids) {
-        if (ids != null && !ids.isEmpty()) {
-            Set<Object> entities = new HashSet<>();
-            for (Object id : ids) {
-                if (!(id instanceof Number)) {
-                    entities.add(id);
-                } else {
-                    Object entity = dataStore.getRecordById(id);
-                    if (entity != null) {
-                        entities.add(entity);
-                    }
-                }
-            }
+    public void setValue(Set<Object> value) {
+        if (value != null && !value.isEmpty()) {
+            // If values are IDs (Numbers), fetch entities; otherwise use as-is
+            Set<Object> entities = value.stream()
+                    .map(v -> v instanceof Number ? dataStore.getRecordById(v) : v)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
             multiSelectComboBox.setValue(entities);
-            currentValue = new HashSet<>(ids);
         } else {
             multiSelectComboBox.clear();
-            currentValue = new HashSet<>();
         }
     }
 
