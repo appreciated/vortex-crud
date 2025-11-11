@@ -91,7 +91,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         this.routeResolver = routeResolver;
         Selects selects = configService.selects();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> config = configService.dataStores().get(dataStoreIdentifier);
-        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.getFields().get(kanbanConfigurationConfig.columnField());
+        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanConfigurationConfig.columnField());
 
         this.kanbanConfigurationConfig = kanbanConfigurationConfig;
         this.itemFactory = itemFactoryRegistry.getFactory(kanbanConfigurationConfig.factory());
@@ -114,7 +114,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         });
 
         Object selectName = ((SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField).values();
-        Map<?, String> selectConfig = selects.getConfigs().get(selectName);
+        Map<?, String> selectConfig = selects.configs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");

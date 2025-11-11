@@ -23,7 +23,7 @@ public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implement
 
         SelectField<ModelClass, FieldType, RepositoryType> sf = (SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         String selectName = sf.values();
-        Map<?, String> selectConfig = selects.getConfigs().get(selectName);
+        Map<?, String> selectConfig = selects.configs().get(selectName);
 
         if (selectConfig == null) {
             throw new IllegalStateException("selectConfig must not be null");

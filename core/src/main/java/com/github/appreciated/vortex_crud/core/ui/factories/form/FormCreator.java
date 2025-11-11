@@ -47,7 +47,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
                                    FormLayout form) {
-        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.getFields();
+        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {

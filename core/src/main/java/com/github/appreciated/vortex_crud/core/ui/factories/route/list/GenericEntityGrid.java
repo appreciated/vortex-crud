@@ -44,7 +44,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
 
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.filterField()).withConfigurableFilter();
 
-        Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.getFields();
+        Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.children()) {
