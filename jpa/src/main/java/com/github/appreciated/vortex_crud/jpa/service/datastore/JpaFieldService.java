@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.PdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.FileFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.fields.BigDecimalField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DoubleField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IntegerField;
@@ -10,6 +12,8 @@ import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaVideoFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaPdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFileFieldRendererConfiguration;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -81,6 +85,20 @@ public class JpaFieldService {
                     })).or(() -> getAnnotation(entityField, VideoField.class).map(videoField -> {
                         VideoFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaVideoFieldRendererConfiguration.builder().resourceProvider(videoField.value()).build();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.VideoField
+                                .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .configuration(cfg)
+                                .required(required)
+                                .build();
+                    })).or(() -> getAnnotation(entityField, PdfField.class).map(pdfField -> {
+                        PdfFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaPdfFieldRendererConfiguration.builder().resourceProvider(pdfField.value()).build();
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.PdfField
+                                .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .configuration(cfg)
+                                .required(required)
+                                .build();
+                    })).or(() -> getAnnotation(entityField, com.github.appreciated.vortex_crud.jpa.service.annoations.FileField.class).map(fileField -> {
+                        FileFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaFileFieldRendererConfiguration.builder().resourceProvider(fileField.value()).build();
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.FileField
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .configuration(cfg)
                                 .required(required)
