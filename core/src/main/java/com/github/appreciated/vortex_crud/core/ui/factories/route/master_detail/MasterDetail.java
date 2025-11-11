@@ -91,7 +91,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
         // Create action context for custom actions
         CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
-                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .dataStore((VortexCrudDataStore<?, ModelClass>) this.dataStore)
                 .selectedEntities(new HashSet<>())  // MasterDetail doesn't support selection yet
                 .refreshCallback(() -> UI.getCurrent().getPage().reload())
                 .viewComponent(this)

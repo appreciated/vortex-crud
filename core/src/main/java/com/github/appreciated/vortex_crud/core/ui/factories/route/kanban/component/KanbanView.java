@@ -139,7 +139,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
         // Create action context for custom actions
         CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
-                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .dataStore((VortexCrudDataStore<?, ModelClass>) this.dataStore)
                 .selectedEntities(new HashSet<>())  // Kanban doesn't support selection yet
                 .refreshCallback(() -> {
                     refreshColumns();

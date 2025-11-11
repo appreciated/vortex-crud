@@ -106,7 +106,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
         // Create action context for custom actions
         CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
-                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .dataStore((VortexCrudDataStore<?, ModelClass>) this.dataStore)
                 .selectedEntities(new HashSet<>())  // Calendar doesn't support selection yet
                 .refreshCallback(() -> {
                     refreshCalendar();
