@@ -396,7 +396,6 @@ CREATE TABLE task_comments (...);
   - **Small Project management software**
   - **Small development platform like GitHub / Gitlab** (without the pipeline and the actual git part, just use file)
 - Notifications
-- Repository Hooks (OnBefore, OnAfter ; Update, Create, Delete, Read)
 
 ### Developer Experience
 - **Simplified Configuration DSL**: Reduce verbosity and nesting in configuration
@@ -416,9 +415,9 @@ CREATE TABLE task_comments (...);
 
 ### Framework Flexibility
 - **Hook Points & Extension API**: Comprehensive hook system for customization
-  - Lifecycle hooks (before/after save, load, delete)
-  - Validation hooks
-  - Action hooks (if button pressed to this)
+  - Lifecycle hooks (OnBefore/OnAfter for Create, Update, Delete, Read operations)
+  - Validation hooks with custom validation logic
+  - Action hooks (custom button actions and workflows)
   - Data transformation hooks
 
 ### API & Integration
@@ -440,19 +439,18 @@ CREATE TABLE task_comments (...);
 - **Entity-Level Validation**: Business rule validation across multiple fields
 
 ### Additional UI Components
-- **Additional Form Controls**: Radio Button Groups, Select Groups, Links, Color Pickers, File Upload, Image collections
+- **Additional Form Controls**: Radio Button Groups, Color Pickers, File Upload (multi-file), Image collections, Slider controls
 - **Additional Routes**:
   - **Map Route**: Geographic data visualization
   - **Chart/Dashboard Route**: Analytics and reporting dashboards
   - **Generic Block Route**: Flexible block-based layouts
-- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor
+- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor, Rating fields
 - **Alternative Collection Editing**: Spreadsheet-style editing, Bulk editing, Drag-and-drop reordering
 
 ### Advanced Features
 - **Entity Versioning**: Track entity history (configuration structure defined, implementation pending)
 - **Entity Auditing**: Comprehensive audit logging (configuration structure defined, implementation pending)
 - **Prefiltered Routes**: Define routes that show filtered subsets of data
-- **Custom Menu Routes**: Programmatically add routes outside the main menu
 - **Route Filters**: Advanced filtering for all route types (especially kanban)
 - **Full-Text Search**: Integrate search engines (Elasticsearch, PostgreSQL full-text)
 - **Soft Delete**: Configurable soft delete with trash/restore functionality
