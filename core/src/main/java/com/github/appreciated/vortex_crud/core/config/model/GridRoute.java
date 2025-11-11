@@ -45,12 +45,4 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
 }

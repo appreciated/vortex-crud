@@ -48,22 +48,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
-
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
         return formConfiguration;

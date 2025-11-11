@@ -15,11 +15,5 @@ import java.util.Map;
 @Builder
 @Getter
 public class Selects {
-
     private Map<String, LinkedHashMap<?, String>> configs;
-
-    // Explicit getters for backwards compatibility
-    public Map<String, LinkedHashMap<?, String>> getConfigs() {
-        return configs;
-    }
 }

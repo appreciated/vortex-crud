@@ -45,20 +45,4 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
-
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
 }

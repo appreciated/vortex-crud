@@ -22,8 +22,4 @@ public class DataStoreConfig<ModelClass, FieldType, RepositoryType> {
     @Builder.Default
     private DataStoreHooks<?> hooks = new DataStoreHooks<>();
 
-    // Explicit getters for backwards compatibility
-    public Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> getFields() {
-        return fields;
-    }
 }

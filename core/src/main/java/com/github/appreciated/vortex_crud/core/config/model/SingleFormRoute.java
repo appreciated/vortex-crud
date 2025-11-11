@@ -64,23 +64,6 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    public RepositoryType getDataStoreKey() {
-        return dataStoreKey;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<String> getWriteRoles() {
-        return writeRoles;
-    }
-
-    public List<String> getReadOnlyRoles() {
-        return readOnlyRoles;
-    }
-
-
     private FieldType entityFilterField;
 
     /**
@@ -88,10 +71,10 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
      */
     private SerializableSupplier<Object> entityFilterValueProvider;
 
+    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
         return formConfiguration;
     }
-
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 }
