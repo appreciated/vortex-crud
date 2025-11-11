@@ -1,0 +1,41 @@
+Custom Repository Use Cases
+
+Real-world scenarios where custom repositories shine:
+
+1. Document Management
+   - Store files on disk or S3
+   - Metadata in database, content in filesystem
+   - Version control with git
+
+2. Legacy System Integration
+   - Read from old databases you can't modify
+   - Transform legacy schemas to modern models
+   - Gradual migration strategy
+
+3. External API Integration
+   - Treat REST APIs as data sources
+   - Cache responses locally
+   - Consistent interface for external data
+
+4. Multi-Database Applications
+   - PostgreSQL for transactions
+   - MongoDB for logs/analytics
+   - Redis for caching
+   - All in one UI!
+
+5. Time-Series Data
+   - InfluxDB for metrics
+   - Specialized queries
+   - High-performance reads
+
+6. Search Engines
+   - Elasticsearch for full-text search
+   - Rich query capabilities
+   - Aggregations and analytics
+
+7. Graph Databases
+   - Neo4j for relationships
+   - Complex traversals
+   - Social network data
+
+The beauty of VortexCrudDataStore: one interface, unlimited backends!

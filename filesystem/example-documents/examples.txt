@@ -1,0 +1,31 @@
+Real-World Custom Repository Examples
+
+1. S3 Document Store
+   - Store files in Amazon S3
+   - Metadata in JSON files or database
+   - Search using S3 Select or Athena
+
+2. MongoDB Data Store
+   - Use MongoDB for flexible schemas
+   - Leverage MongoDB queries
+   - Support embedded documents
+
+3. REST API Proxy
+   - Access external REST APIs
+   - Map API responses to entities
+   - Cache responses locally
+
+4. Hybrid Storage
+   - Metadata in PostgreSQL
+   - Files in local filesystem or S3
+   - Full-text search in Elasticsearch
+
+5. Legacy System Integration
+   - Read from legacy databases
+   - Transform old schemas to new models
+   - Gradual migration path
+
+6. Multi-Tenant Storage
+   - Separate file stores per tenant
+   - Tenant-aware data access
+   - Isolated data directories

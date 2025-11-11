@@ -1,0 +1,12 @@
+Welcome to VortexCRUD FileSystem Module!
+
+This example demonstrates how to integrate custom repository support
+by accessing files from a local directory.
+
+The FileSystemDataStore allows you to:
+- Store and retrieve entities as JSON files
+- Access actual files in a directory structure
+- Implement custom data access patterns
+- Use any storage backend (local files, S3, FTP, etc.)
+
+Check out the other example files in this directory!
