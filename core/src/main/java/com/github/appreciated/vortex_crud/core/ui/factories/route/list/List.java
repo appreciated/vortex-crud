@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.CustomRouteActionContext;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -17,6 +18,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
+
+import java.util.HashSet;
 
 public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
     private final GenericEntityGrid<ModelClass, FieldType, RepositoryType> entityGrid;
@@ -35,13 +38,24 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         RepositoryType dataStore = routeRenderer.dataStoreKey();
+
+        // Create action context for custom actions
+        CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
+                .dataStore(dataStoreFactoryRegistry.getDataStore(dataStore))
+                .selectedEntities(new HashSet<>())  // List doesn't support selection yet
+                .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                .viewComponent(this)
+                .build();
+
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
                 event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStore, formCreator, routeFactoryRegistry),
                 null,
                 null,
-                routeHeader);
+                routeHeader,
+                routeRenderer.customActions(),
+                actionContext);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);
         add(headerBar, textField, entityGrid);

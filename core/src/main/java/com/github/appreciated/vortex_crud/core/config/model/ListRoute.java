@@ -47,4 +47,10 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
+    /**
+     * List of custom action buttons that can be added to this route.
+     * These actions provide full access to the data store and selected entities.
+     */
+    private List<CustomRouteAction<ModelClass>> customActions;
 }

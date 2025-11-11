@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.CustomRouteActionContext;
 import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -29,6 +30,8 @@ import com.vaadin.flow.component.splitlayout.SplitLayoutVariant;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+
+import java.util.HashSet;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
 
@@ -85,13 +88,24 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         detailContainer.setWidth("unset");
 
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
+
+        // Create action context for custom actions
+        CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
+                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .selectedEntities(new HashSet<>())  // MasterDetail doesn't support selection yet
+                .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                .viewComponent(this)
+                .build();
+
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
                 event -> onAdd(),
                 null,
                 null,
-                routeHeader);
+                routeHeader,
+                routeRenderer.customActions(),
+                actionContext);
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         textField.getStyle().set("--lumo-border-radius-m", "var(--vaadin-card-border-radius)");

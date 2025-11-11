@@ -136,13 +136,27 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         kanbanBoard.setSizeFull();
 
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
+
+        // Create action context for custom actions
+        CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
+                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .selectedEntities(new HashSet<>())  // Kanban doesn't support selection yet
+                .refreshCallback(() -> {
+                    refreshColumns();
+                    UI.getCurrent().getPage().reload();
+                })
+                .viewComponent(this)
+                .build();
+
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
                 event -> onAdd(dialogFactoryRegistry, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, dataStoreIdentifier, formCreator, routeFactory),
                 null,
                 null,
-                routeHeader);
+                routeHeader,
+                routeRenderer.customActions(),
+                actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
 

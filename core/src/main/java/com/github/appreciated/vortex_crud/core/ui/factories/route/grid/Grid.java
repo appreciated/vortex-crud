@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.CustomRouteActionContext;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -22,6 +23,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
 
+import java.util.HashSet;
+
 public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
     private final VirtualItemGrid<ModelClass, FieldType, RepositoryType> virtualGrid;
 
@@ -38,13 +41,24 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
+
+        // Create action context for custom actions
+        CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
+                .dataStore(dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey()))
+                .selectedEntities(new HashSet<>())  // Grid doesn't support selection yet
+                .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                .viewComponent(this)
+                .build();
+
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
                 event -> onAdd(dialogFactoryRegistry, routeRenderer, routeRenderer.dataStoreKey(), formCreator, routeFactoryRegistry),
                 null,
                 null,
-                routeHeader);
+                routeHeader,
+                routeRenderer.customActions(),
+                actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
         virtualGrid = new VirtualItemGrid<>(routeResolver,

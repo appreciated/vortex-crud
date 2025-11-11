@@ -26,4 +26,14 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
     SerializableSupplier<Component> iconFactory();
 
     List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions();
+
+    /**
+     * Custom action buttons that can be added to the route.
+     * These actions provide full access to the data store and selected entities.
+     *
+     * @return List of custom actions
+     */
+    default List<CustomRouteAction<ModelClass>> customActions() {
+        return List.of();
+    }
 }

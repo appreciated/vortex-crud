@@ -48,4 +48,10 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     }
 
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
+    /**
+     * List of custom action buttons that can be added to this route.
+     * These actions provide full access to the data store and selected entities.
+     */
+    private List<CustomRouteAction<ModelClass>> customActions;
 }

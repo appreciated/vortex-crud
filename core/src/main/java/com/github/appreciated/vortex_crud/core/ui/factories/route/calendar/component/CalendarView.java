@@ -103,13 +103,27 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         refreshCalendar();
 
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
+
+        // Create action context for custom actions
+        CustomRouteActionContext<ModelClass> actionContext = CustomRouteActionContext.<ModelClass>builder()
+                .dataStore((VortexCrudDataStore<ModelClass>) this.dataStore)
+                .selectedEntities(new HashSet<>())  // Calendar doesn't support selection yet
+                .refreshCallback(() -> {
+                    refreshCalendar();
+                    UI.getCurrent().getPage().reload();
+                })
+                .viewComponent(this)
+                .build();
+
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
                 event -> onAdd(null),
                 null,
                 null,
-                routeHeader);
+                routeHeader,
+                routeRenderer.customActions(),
+                actionContext);
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
 

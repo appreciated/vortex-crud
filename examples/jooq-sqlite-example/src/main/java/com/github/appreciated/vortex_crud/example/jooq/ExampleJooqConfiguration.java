@@ -255,6 +255,61 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .limit(50)
                         .build()
                 ))
+                // Example: Add custom action buttons
+                .customActions(List.of(
+                    // Global action - Export all tasks
+                    CustomRouteAction.<TableRecord<?>>builder()
+                        .label("Export Tasks")
+                        .icon(() -> VaadinIcon.DOWNLOAD.create())
+                        .actionType(CustomRouteActionType.GLOBAL)
+                        .style(CustomRouteActionStyle.SECONDARY)
+                        .tooltip("Export all tasks to CSV")
+                        .handler(context -> {
+                            // Get all tasks from the data store
+                            int count = context.getDataStore().count();
+                            context.showSuccessNotification(
+                                "Exported " + count + " tasks successfully!");
+                            // In a real app, you would generate a CSV file here
+                        })
+                        .build(),
+                    // Global action with confirmation - Generate report
+                    CustomRouteAction.<TableRecord<?>>builder()
+                        .label("Generate Report")
+                        .icon(() -> VaadinIcon.FILE_TEXT.create())
+                        .actionType(CustomRouteActionType.GLOBAL)
+                        .style(CustomRouteActionStyle.PRIMARY)
+                        .tooltip("Generate a comprehensive task report")
+                        .requiresConfirmation(true)
+                        .confirmationTitle("Generate Report")
+                        .confirmationMessage("This will analyze all tasks and generate a comprehensive report. Continue?")
+                        .handler(context -> {
+                            context.executeWithNotification(
+                                ctx -> {
+                                    // Simulate report generation
+                                    int totalTasks = ctx.getDataStore().count();
+                                    // In a real app, you would generate a PDF/Excel report here
+                                },
+                                "Report generated successfully!",
+                                "Failed to generate report"
+                            );
+                        })
+                        .build(),
+                    // Global action - Archive completed tasks
+                    CustomRouteAction.<TableRecord<?>>builder()
+                        .label("Archive Completed")
+                        .icon(() -> VaadinIcon.ARCHIVE.create())
+                        .actionType(CustomRouteActionType.GLOBAL)
+                        .style(CustomRouteActionStyle.TERTIARY)
+                        .tooltip("Archive all completed tasks")
+                        .requiresConfirmation(true)
+                        .confirmationTitle("Archive Tasks")
+                        .confirmationMessage("Are you sure you want to archive all completed tasks?")
+                        .handler(context -> {
+                            // In a real app, you would filter by status and archive
+                            context.showSuccessNotification("Completed tasks archived!");
+                        })
+                        .build()
+                ))
                 .child(taskForm)
                 .build());
         routes.put("done-tasks", JooqMasterDetailRoute.builder()
