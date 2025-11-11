@@ -40,6 +40,58 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Users.USERS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Videos.VIDEOS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
+/**
+ * Example jOOQ configuration for Vortex CRUD demonstrating various route types and configurations.
+ *
+ * <h2>Linking to Configured Views</h2>
+ *
+ * All routes configured in this class can be accessed via URL paths following this pattern:
+ * <pre>
+ * /test/route-key                   → Collection view (grid/list/kanban)
+ * /test/route-key/entity-id         → Entity edit form
+ * /test/route-key/entity-id/child   → Nested child routes
+ * </pre>
+ *
+ * <h3>Available Routes in this Configuration:</h3>
+ * <ul>
+ *   <li><b>projects-cards</b> → Grid view with cards: /test/projects-cards</li>
+ *   <li><b>projects-list</b> → List view with inline editing: /test/projects-list</li>
+ *   <li><b>open-tasks</b> → Kanban board: /test/open-tasks</li>
+ *   <li><b>done-tasks</b> → Master-detail view: /test/done-tasks</li>
+ *   <li><b>images-grid</b> → Image gallery: /test/images-grid</li>
+ *   <li><b>images-list</b> → Image list: /test/images-list</li>
+ *   <li><b>images-slide</b> → Image grid with slide-out form: /test/images-slide</li>
+ *   <li><b>videos-grid</b> → Video gallery: /test/videos-grid</li>
+ *   <li><b>videos-list</b> → Video list: /test/videos-list</li>
+ *   <li><b>submenu</b> → Submenu route: /test/submenu/project-form or /test/submenu/image-form</li>
+ *   <li><b>profile</b> → User profile (single form): /test/profile</li>
+ * </ul>
+ *
+ * <h3>Navigation Examples:</h3>
+ * <pre>{@code
+ * // Navigate to collection view
+ * UI.getCurrent().navigate("test/projects-cards");
+ *
+ * // Navigate to specific entity form
+ * Integer projectId = 123;
+ * UI.getCurrent().navigate("test/projects-cards/" + projectId);
+ *
+ * // Navigate to submenu child
+ * UI.getCurrent().navigate("test/submenu/project-form");
+ *
+ * // Create a hyperlink
+ * Anchor link = new Anchor("test/projects-cards", "View Projects");
+ *
+ * // Create a button with navigation
+ * Button btn = new Button("View Tasks", event -> {
+ *     UI.getCurrent().navigate("test/open-tasks");
+ * });
+ * }</pre>
+ *
+ * <p>For comprehensive examples, see {@link NavigationExamplesComponent}</p>
+ *
+ * @see NavigationExamplesComponent Comprehensive navigation examples
+ */
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
