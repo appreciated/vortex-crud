@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.function.SerializableFunction;
+import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,16 +18,16 @@ import lombok.experimental.Accessors;
  * <p>Usage example:</p>
  * <pre>{@code
  * GlobalRouteAction.<Task>builder()
- *     .componentFactory(context -> {
- *         Button exportBtn = new Button("Export All", VaadinIcon.DOWNLOAD.create());
- *         exportBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
- *         exportBtn.addClickListener(e -> {
- *             List<Task> allTasks = context.getDataStore()
- *                 .getRecordsFromTable(0, Integer.MAX_VALUE);
- *             exportToCSV(allTasks);
- *             context.showSuccessNotification("Exported " + allTasks.size() + " tasks");
- *         });
- *         return exportBtn;
+ *     .componentFactory(() -> {
+ *         Button btn = new Button("Export All", VaadinIcon.DOWNLOAD.create());
+ *         btn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+ *         return btn;
+ *     })
+ *     .handler(context -> {
+ *         List<Task> allTasks = context.getDataStore()
+ *             .getRecordsFromTable(0, Integer.MAX_VALUE);
+ *         exportToCSV(allTasks);
+ *         context.showSuccessNotification("Exported " + allTasks.size() + " tasks");
  *     })
  *     .visible(true)
  *     .build()
@@ -44,9 +44,15 @@ public class GlobalRouteAction<ModelClass> implements RouteAction<ModelClass> {
 
     /**
      * Factory that creates the component for this action.
-     * The factory receives the action context and should return a component with click listeners registered.
+     * Should return a component without click listeners.
      */
-    private SerializableFunction<CustomRouteActionContext<ModelClass>, Component> componentFactory;
+    private SerializableSupplier<Component> componentFactory;
+
+    /**
+     * Handler that executes when the component is clicked.
+     * Receives the action context with access to the data store and UI utilities.
+     */
+    private SerializableConsumer<CustomRouteActionContext<ModelClass>> handler;
 
     /**
      * Whether this action should be visible.
@@ -55,7 +61,7 @@ public class GlobalRouteAction<ModelClass> implements RouteAction<ModelClass> {
     private boolean visible = true;
 
     @Override
-    public SerializableSupplier<Component> componentFactory(CustomRouteActionContext<ModelClass> context) {
-        return () -> componentFactory.apply(context);
+    public void handle(CustomRouteActionContext<ModelClass> context) {
+        handler.accept(context);
     }
 }

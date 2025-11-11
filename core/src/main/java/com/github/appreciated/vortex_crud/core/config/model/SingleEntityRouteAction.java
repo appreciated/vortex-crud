@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.function.SerializableFunction;
+import com.vaadin.flow.function.SerializableConsumer;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,28 +11,24 @@ import lombok.experimental.Accessors;
 
 /**
  * A route action that operates on a single selected entity.
- * The action button will be disabled if no entity or multiple entities are selected.
+ * The action component will be disabled if no entity or multiple entities are selected.
  *
  * <p>Examples: Edit, Approve, Archive, Send Email, Duplicate</p>
  *
  * <p>Usage example:</p>
  * <pre>{@code
  * SingleEntityRouteAction.<Task>builder()
- *     .componentFactory(context -> {
- *         Button approveBtn = new Button("Approve", VaadinIcon.CHECK.create());
- *         approveBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
- *
- *         // Button is automatically enabled/disabled based on selection
- *         approveBtn.setEnabled(context.getSelectedEntities().size() == 1);
- *
- *         approveBtn.addClickListener(e -> {
- *             Task task = context.getFirstSelectedEntity();
- *             task.setStatus("APPROVED");
- *             context.getDataStore().updateRecordById(task);
- *             context.showSuccessNotification("Task approved!");
- *             context.getRefreshCallback().run();
- *         });
- *         return approveBtn;
+ *     .componentFactory(() -> {
+ *         Button btn = new Button("Approve", VaadinIcon.CHECK.create());
+ *         btn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+ *         return btn;
+ *     })
+ *     .handler(context -> {
+ *         Task task = context.getFirstSelectedEntity();
+ *         task.setStatus("APPROVED");
+ *         context.getDataStore().updateRecordById(task);
+ *         context.showSuccessNotification("Task approved!");
+ *         context.getRefreshCallback().run();
  *     })
  *     .visible(true)
  *     .build()
@@ -49,10 +45,17 @@ public class SingleEntityRouteAction<ModelClass> implements RouteAction<ModelCla
 
     /**
      * Factory that creates the component for this action.
-     * The factory receives the action context and should return a component with click listeners registered.
-     * The component should check context.getSelectedEntities().size() == 1 to enable/disable itself.
+     * Should return a component without click listeners.
+     * The framework will automatically enable/disable based on selection.
      */
-    private SerializableFunction<CustomRouteActionContext<ModelClass>, Component> componentFactory;
+    private SerializableSupplier<Component> componentFactory;
+
+    /**
+     * Handler that executes when the component is clicked.
+     * Only called when exactly one entity is selected.
+     * Receives the action context with access to the selected entity.
+     */
+    private SerializableConsumer<CustomRouteActionContext<ModelClass>> handler;
 
     /**
      * Whether this action should be visible.
@@ -61,7 +64,7 @@ public class SingleEntityRouteAction<ModelClass> implements RouteAction<ModelCla
     private boolean visible = true;
 
     @Override
-    public SerializableSupplier<Component> componentFactory(CustomRouteActionContext<ModelClass> context) {
-        return () -> componentFactory.apply(context);
+    public void handle(CustomRouteActionContext<ModelClass> context) {
+        handler.accept(context);
     }
 }

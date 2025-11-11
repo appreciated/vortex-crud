@@ -1,10 +1,11 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
-import com.github.appreciated.vortex_crud.core.config.model.CustomRouteActionContext;
-import com.github.appreciated.vortex_crud.core.config.model.RouteAction;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ClickNotifier;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -55,8 +56,26 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
                     continue;
                 }
 
-                // Get the component from the action's factory
-                Component actionComponent = action.componentFactory(actionContext).get();
+                // Create the component from the factory
+                Component actionComponent = action.componentFactory().get();
+
+                // Register click listener if the component supports it
+                if (actionComponent instanceof ClickNotifier) {
+                    ((ClickNotifier<?>) actionComponent).addClickListener(e -> {
+                        try {
+                            action.handle(actionContext);
+                        } catch (Exception ex) {
+                            actionContext.showErrorNotification("Action failed: " + ex.getMessage());
+                            ex.printStackTrace();
+                        }
+                    });
+                }
+
+                // Handle enablement for entity-based actions
+                if (actionComponent instanceof HasEnabled) {
+                    updateComponentEnablement((HasEnabled) actionComponent, action, actionContext);
+                }
+
                 add(actionComponent);
             }
         }
@@ -82,5 +101,23 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
         setAlignItems(CENTER);
         setMinHeight("53px");
         getStyle().set("box-sizing", "content-box");
+    }
+
+    /**
+     * Updates component enablement based on action type and selection state.
+     */
+    private <ModelClass> void updateComponentEnablement(HasEnabled component,
+                                                         RouteAction<ModelClass> action,
+                                                         CustomRouteActionContext<ModelClass> context) {
+        if (action instanceof GlobalRouteAction) {
+            // Global actions are always enabled
+            component.setEnabled(true);
+        } else if (action instanceof SingleEntityRouteAction) {
+            // Single entity actions require exactly one selected entity
+            component.setEnabled(context.getSelectedEntities().size() == 1);
+        } else if (action instanceof MultiEntityRouteAction) {
+            // Multi entity actions require at least one selected entity
+            component.setEnabled(!context.getSelectedEntities().isEmpty());
+        }
     }
 }
