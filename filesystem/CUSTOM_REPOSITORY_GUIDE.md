@@ -181,11 +181,16 @@ The `VortexCrudDataStore` interface requires these methods:
 | `getModelClass()` | Return entity class |
 | `newInstance()` | Create new entity instance |
 
-## Lifecycle Hooks
+## Lifecycle Hooks (Optional)
 
-Add custom logic at lifecycle events:
+Hooks are completely optional. Add them only when you need custom logic at lifecycle events:
 
 ```java
+// Simple usage - no hooks
+FileSystemDataStore<Product> simpleStore =
+    new FileSystemDataStore<>(Product.class, Paths.get("data"));
+
+// Advanced usage - with hooks
 DataStoreHooks<Product> hooks = new DataStoreHooks<>();
 
 hooks.addBeforeCreate(product -> {
@@ -210,6 +215,9 @@ hooks.addBeforeDelete(product -> {
         throw new IllegalStateException("Cannot delete product with active orders");
     }
 });
+
+FileSystemDataStore<Product> storeWithHooks =
+    new FileSystemDataStore<>(Product.class, Paths.get("data"), hooks);
 ```
 
 ## Real-World Examples

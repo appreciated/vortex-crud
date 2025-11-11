@@ -30,6 +30,23 @@ public class FileDocumentDataStore implements VortexCrudDataStore<String, Docume
     private final Map<Long, String> idToFileNameMap = new HashMap<>();
     private long nextId = 1;
 
+    /**
+     * Create a FileDocumentDataStore without hooks.
+     * This is the recommended constructor for simple use cases.
+     *
+     * @param documentsDirectory The directory containing the documents
+     */
+    public FileDocumentDataStore(Path documentsDirectory) {
+        this(documentsDirectory, new DataStoreHooks<>());
+    }
+
+    /**
+     * Create a FileDocumentDataStore with custom hooks.
+     * Use this constructor if you need to add lifecycle hooks.
+     *
+     * @param documentsDirectory The directory containing the documents
+     * @param hooks Lifecycle hooks (optional)
+     */
     public FileDocumentDataStore(Path documentsDirectory, DataStoreHooks<Document> hooks) {
         this.documentsDirectory = documentsDirectory;
         this.hooks = hooks != null ? hooks : new DataStoreHooks<>();

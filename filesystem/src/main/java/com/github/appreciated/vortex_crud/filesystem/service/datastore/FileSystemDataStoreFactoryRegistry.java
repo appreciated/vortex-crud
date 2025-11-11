@@ -26,17 +26,22 @@ public class FileSystemDataStoreFactoryRegistry implements VortexCrudDataStoreFa
     /**
      * Register a new entity type with the registry.
      * This will create a FileSystemDataStore for the given model class.
+     * No hooks are added - use registerEntityType(modelClass, hooks) if you need them.
      *
      * @param modelClass The entity class to register
      * @param <T>        The entity type
      * @return The created FileSystemDataStore
      */
+    @SuppressWarnings("unchecked")
     public <T> FileSystemDataStore<T> registerEntityType(Class<T> modelClass) {
-        return registerEntityType(modelClass, new DataStoreHooks<>());
+        FileSystemDataStore<T> dataStore = new FileSystemDataStore<>(modelClass, baseStorageDirectory);
+        dataStores.put(modelClass, (VortexCrudDataStore<String, Object>) dataStore);
+        return dataStore;
     }
 
     /**
      * Register a new entity type with the registry with custom hooks.
+     * Only use this if you need lifecycle hooks - otherwise use registerEntityType(modelClass).
      *
      * @param modelClass The entity class to register
      * @param hooks      Custom hooks for entity lifecycle events

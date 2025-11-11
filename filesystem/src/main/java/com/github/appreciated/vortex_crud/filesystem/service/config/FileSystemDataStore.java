@@ -32,6 +32,25 @@ public class FileSystemDataStore<ModelClass> implements VortexCrudDataStore<Stri
     private final DataStoreHooks<ModelClass> hooks;
     private final AtomicLong idGenerator;
 
+    /**
+     * Create a FileSystemDataStore without hooks.
+     * This is the recommended constructor for simple use cases.
+     *
+     * @param modelClass The entity class
+     * @param storageDirectory The base storage directory
+     */
+    public FileSystemDataStore(Class<ModelClass> modelClass, Path storageDirectory) {
+        this(modelClass, storageDirectory, new DataStoreHooks<>());
+    }
+
+    /**
+     * Create a FileSystemDataStore with custom hooks.
+     * Use this constructor if you need to add lifecycle hooks.
+     *
+     * @param modelClass The entity class
+     * @param storageDirectory The base storage directory
+     * @param hooks Lifecycle hooks (optional)
+     */
     public FileSystemDataStore(Class<ModelClass> modelClass,
                                Path storageDirectory,
                                DataStoreHooks<ModelClass> hooks) {

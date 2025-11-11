@@ -27,16 +27,26 @@ A generic file system data store that stores entities as JSON files.
 
 **Usage:**
 ```java
+// Simple usage - no hooks needed
 FileSystemDataStore<Product> productStore = new FileSystemDataStore<>(
     Product.class,
-    Paths.get("data"),
-    new DataStoreHooks<>()
+    Paths.get("data")
 );
 
 Product product = new Product("Laptop", "Gaming laptop", 1299.99);
 Object id = productStore.insertRecord(product);
 
 List<Product> products = productStore.getRecordsFromTable(0, 10);
+
+// Advanced usage - with hooks (optional)
+DataStoreHooks<Product> hooks = new DataStoreHooks<>();
+hooks.addBeforeCreate(p -> System.out.println("Creating: " + p.getName()));
+
+FileSystemDataStore<Product> productStoreWithHooks = new FileSystemDataStore<>(
+    Product.class,
+    Paths.get("data"),
+    hooks
+);
 ```
 
 ### FileDocumentDataStore
@@ -51,10 +61,8 @@ A specialized data store for managing actual text files in a directory.
 
 **Usage:**
 ```java
-FileDocumentDataStore documentStore = new FileDocumentDataStore(
-    Paths.get("documents"),
-    new DataStoreHooks<>()
-);
+// Simple usage - no hooks needed
+FileDocumentDataStore documentStore = new FileDocumentDataStore(Paths.get("documents"));
 
 // Access existing files
 List<Document> docs = documentStore.getRecordsFromTable(0, 10);
@@ -110,10 +118,8 @@ public class CustomStorageConfiguration {
 
     @Bean
     public FileDocumentDataStore documentStore() {
-        return new FileDocumentDataStore(
-            Paths.get("documents"),
-            new DataStoreHooks<>()
-        );
+        // That's it! Hooks are optional.
+        return new FileDocumentDataStore(Paths.get("documents"));
     }
 }
 ```
