@@ -44,7 +44,11 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 routeHeader);
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);
-        add(headerBar, textField, entityGrid);
+        add(headerBar);
+        if (routeRenderer.configuration() != null && routeRenderer.configuration().filterField() != null) {
+            add(textField);
+        }
+        add(entityGrid);
         setSizeFull();
         setPadding(true);
         setSpacing(true);

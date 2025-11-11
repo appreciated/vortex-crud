@@ -7,7 +7,7 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
     public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField) {
         super(query -> {
                     String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
+                    if (filterText.isEmpty() || filterField == null) {
                         return (java.util.stream.Stream<Object>) dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream();
                     } else {
                         return (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream();
@@ -15,7 +15,7 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
                 },
                 query -> {
                     String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
+                    if (filterText.isEmpty() || filterField == null) {
                         return dataStore.count();
                     } else {
                         return dataStore.countWhereColumnLike(filterField, filterText);
