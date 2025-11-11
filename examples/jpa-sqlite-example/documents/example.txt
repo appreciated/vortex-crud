@@ -1,0 +1,4 @@
+This is a simple example document for testing FileDocumentDataStore.
+
+The filesystem module allows you to access files from a local directory
+and manage them through vortex-crud UI alongside your JPA entities.
