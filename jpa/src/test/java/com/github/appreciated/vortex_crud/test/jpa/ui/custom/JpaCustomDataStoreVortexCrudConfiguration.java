@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.custom;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.list_route.ListRoute;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.example.jpa.custom.FileDocumentDataStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
