@@ -1,16 +1,19 @@
 # Project Management Platform Demo
 
-A project management platform demo built with Vortex CRUD and jOOQ, showcasing custom fields support.
+A simplified project management platform demo built with Vortex CRUD and jOOQ, showcasing custom fields support.
 
 ## Features
 
 - **Projects**: Project tracking with progress, budget, timelines
 - **Tasks**: Task management with types (task, bug, story, epic, subtask)
-- **Sprints**: Agile sprint planning
 - **Milestones**: Delivery tracking
-- **Teams**: Team organization
-- **Time Tracking**: Hour logging
+- **Labels**: Flexible categorization
+- **Comments**: Basic collaboration
 - **Custom Fields**: User-defined fields with JSON storage
+
+## Database Schema (8 tables)
+
+Core tables: `custom_field_definition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`
 
 ## Custom Fields System
 
@@ -19,13 +22,9 @@ Uses a meta table approach:
 - Entity tables have `custom_fields` JSON column for values
 - Supports: text, number, date, select, multiselect, checkbox
 
-## Database Schema
-
-Core tables: `project`, `task`, `sprint`, `milestone`, `team`, `label`, `task_comment`, `time_entry`, `task_dependency`, `attachment`, `custom_field_definition`
-
 ## Technology
 
-- jOOQ 3.19.22 (type-safe SQL)
+- jOOQ 3.19.22 (type-safe SQL with enum support)
 - SQLite 3.47.1.0
 - Liquibase 4.29.0
 - Vaadin 25.0.0-beta4
@@ -45,7 +44,7 @@ Access: http://localhost:8081
 ## Next Steps
 
 1. Implement `ProjectManagementConfiguration.java` (Vortex CRUD config provider)
-2. Configure routes (Projects, Tasks, Sprints)
+2. Configure routes (Projects, Tasks, Milestones)
 3. Implement `CustomFieldService.java` for dynamic field handling
 4. Add UI components for custom field management
 

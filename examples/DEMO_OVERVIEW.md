@@ -1,22 +1,22 @@
 # Vortex CRUD Demo Applications
 
-Two demo applications showcasing the Vortex CRUD framework with custom fields support using jOOQ.
+Two simplified demo applications showcasing the Vortex CRUD framework with custom fields support using jOOQ.
 
 ## Demos
 
 ### 1. Project Management Platform
 **Port:** 8081 | **Path:** `jooq-project-management-demo/`
 
-Features: Projects, Tasks, Sprints, Milestones, Teams, Time Tracking, Labels
+Features: Projects, Tasks, Milestones, Labels, Comments, Custom Fields
 
-**Database:** 20+ tables including `project`, `task`, `sprint`, `milestone`, `team`, `label`, `custom_field_definition`
+**Database:** 8 tables - `custom_field_definition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`
 
 ### 2. Development Platform
 **Port:** 8082 | **Path:** `jooq-dev-platform-demo/`
 
-Features: Repositories, Issues, Pull Requests, Branches, Files, Organizations
+Features: Repositories, Organizations, Issues, Pull Requests, Milestones, Labels, Comments, Custom Fields
 
-**Database:** 30+ tables including `repository`, `issue`, `pull_request`, `branch`, `repository_file`, `custom_field_definition`
+**Database:** 12 tables - `custom_field_definition`, `organization`, `organization_member`, `repository`, `repository_collaborator`, `label`, `milestone`, `issue`, `issue_label`, `pull_request`, `pull_request_label`, `comment`
 
 ## Custom Fields System
 
@@ -114,7 +114,7 @@ mvn spring-boot:run                         # Run application
 
 ## Technology
 
-- **jOOQ 3.19.22** - Type-safe SQL queries
+- **jOOQ 3.19.22** - Type-safe SQL queries with enum support
 - **SQLite 3.47.1.0** - Database with JSON support
 - **Liquibase 4.29.0** - Database migrations
 - **Vaadin 25.0.0-beta4** - UI framework
@@ -123,8 +123,8 @@ mvn spring-boot:run                         # Run application
 
 ## Next Steps
 
-1. Implement configuration provider (`ProjectManagementConfiguration.java`)
-2. Configure routes using Vortex CRUD builders
+1. Implement configuration provider (`ProjectManagementConfiguration.java` or `DevPlatformConfiguration.java`)
+2. Configure routes using Vortex CRUD builders (Grid, List, Form views)
 3. Implement `CustomFieldService` for dynamic field handling
 4. Add UI components for custom field management
 
