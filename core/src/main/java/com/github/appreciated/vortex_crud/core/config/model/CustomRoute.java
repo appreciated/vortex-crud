@@ -23,7 +23,7 @@ import java.util.List;
  * <p>Example usage:</p>
  * <pre>{@code
  * // 1. Create your custom view with @Route annotation:
- * @Route("dashboard")  // IMPORTANT: Path must match config key below
+ * @Route(value = "dashboard", layout = ProxyRouterLayout.class)  // MUST specify layout for menu
  * public class DashboardView extends VerticalLayout {
  *     public DashboardView() {
  *         add(new H1("My Custom Dashboard"));
@@ -40,6 +40,8 @@ import java.util.List;
  *
  * <p><strong>Common Pitfalls:</strong></p>
  * <ul>
+ *   <li><strong>Missing layout:</strong> You MUST specify {@code layout = ProxyRouterLayout.class} in your
+ *       @Route annotation, otherwise your view won't have the VortexCrud menu/navigation.</li>
  *   <li><strong>Path mismatch:</strong> If your @Route("foo") doesn't match routes.put("bar", ...),
  *       the menu will navigate to the wrong path. Always ensure they match.</li>
  *   <li><strong>No dataStoreKey:</strong> CustomRoute doesn't require a dataStoreKey since custom views

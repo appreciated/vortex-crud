@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.custom_route;
 
+import com.github.appreciated.vortex_crud.core.ui.routes.ProxyRouterLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
@@ -13,11 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * <p>
  * This view:
  * - Is annotated with @Route to make it a Vaadin route
+ * - Specifies ProxyRouterLayout to include the VortexCrud menu/navigation
  * - Can inject Spring beans for accessing data and services
  * - Has complete control over its rendering and logic
  * - Gets added to the menu via CustomRoute configuration
  */
-@Route("dashboard")
+@Route(value = "dashboard", layout = ProxyRouterLayout.class)
 public class CustomDashboardView extends VerticalLayout {
 
     @Autowired
