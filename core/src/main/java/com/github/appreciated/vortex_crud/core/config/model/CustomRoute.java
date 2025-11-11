@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,20 +14,26 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * A route that allows complete customization of the rendered component through a custom renderer.
- * This route provides maximum flexibility for creating custom views that don't fit the standard patterns.
+ * A route configuration for integrating custom Vaadin views (annotated with @Route) into the VortexCrud menu system.
+ * This allows users to create their own views with full control and add them to the VortexCrud navigation menu.
  *
  * <p>Example usage:</p>
  * <pre>{@code
- * CustomRoute.builder()
- *     .dataStoreKey(myRepository)
- *     .title("custom.view")
- *     .componentRenderer(context -> {
- *         VerticalLayout layout = new VerticalLayout();
- *         // Build custom component using context.getDataStore(), etc.
- *         return layout;
- *     })
- *     .build()
+ * // 1. Create your custom view with @Route annotation:
+ * @Route("dashboard")
+ * public class DashboardView extends VerticalLayout {
+ *     public DashboardView() {
+ *         add(new H1("My Custom Dashboard"));
+ *         // ... your custom logic ...
+ *     }
+ * }
+ *
+ * // 2. Add it to VortexCrud menu in your configuration:
+ * routes.put("dashboard", CustomRoute.builder()
+ *     .title("menu.dashboard")
+ *     .viewClass(DashboardView.class)
+ *     .iconFactory(() -> VaadinIcon.DASHBOARD.create())
+ *     .build());
  * }</pre>
  *
  * @param <ModelClass>     The entity model class
@@ -38,25 +45,36 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class CustomRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
+public class CustomRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
+    /**
+     * Optional data store key. Not required for custom routes since they manage their own data.
+     */
+    @Nullable
     private RepositoryType dataStoreKey;
 
+    /**
+     * The translation key for the menu item title (e.g., "menu.dashboard").
+     */
     private String title;
+
+    /**
+     * The Vaadin view class annotated with @Route. This class will be instantiated by Vaadin's routing system.
+     */
+    private Class<? extends Component> viewClass;
 
     private boolean isDefaultRoute;
 
+    /**
+     * Factory is not used for CustomRoute since routing is handled by Vaadin's @Route system.
+     * A no-op factory is provided for interface compatibility.
+     */
     @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) CustomRouteFactory.class;
 
     private boolean isHiddenInMenu;
 
-    /**
-     * The custom component renderer that will be invoked to render this route.
-     * This renderer receives a context with access to all necessary services and configuration.
-     */
-    private CustomComponentRenderer<ModelClass, FieldType, RepositoryType> componentRenderer;
-
+    @Nullable
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     private SerializableSupplier<Component> iconFactory;
@@ -66,18 +84,14 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<String> readOnlyRoles;
 
     /**
-     * Optional child route. If provided, the child can be rendered within the custom component
-     * by accessing it through the route configuration.
-     */
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
-
-    /**
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
+    @Nullable
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
 
     @Override
+    @Nullable
     public RepositoryType dataStoreKey() {
         return dataStoreKey;
     }

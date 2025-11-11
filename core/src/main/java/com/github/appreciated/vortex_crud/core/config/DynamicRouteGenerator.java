@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.config;
 
+import com.github.appreciated.vortex_crud.core.config.model.CustomRoute;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute;
 import com.github.appreciated.vortex_crud.core.ui.routes.ProxyRouterLayout;
@@ -9,7 +11,7 @@ import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.util.Map;
 
 @Component
 public class DynamicRouteGenerator implements VaadinServiceInitListener {
@@ -22,8 +24,13 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        Set<String> keys = configService.configuration().routes().keySet();
-        keys.forEach(this::registerRoute);
+        Map<String, ? extends RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
+        routes.forEach((path, route) -> {
+            // Skip CustomRoute as it should be registered independently with @Route annotation
+            if (!(route instanceof CustomRoute)) {
+                registerRoute(path);
+            }
+        });
 
         IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().identityAndAccessManagement();
         if (userManagement != null) {
