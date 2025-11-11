@@ -50,9 +50,9 @@ public class JpaCustomRouteTestVortexCrudConfiguration implements VortexCrudConf
                 .build());
 
         // CustomRoute - integrates the @Route annotated CustomDashboardView into the menu
+        // Note: The @Route("dashboard") path in CustomDashboardView must match this config key
         routes.put("dashboard", CustomRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .title("route.dashboard.title")
-                .viewClass(CustomDashboardView.class)
                 .iconFactory(() -> VaadinIcon.DASHBOARD.create())
                 .build());
 

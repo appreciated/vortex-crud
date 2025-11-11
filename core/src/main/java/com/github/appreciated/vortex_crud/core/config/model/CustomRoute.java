@@ -17,10 +17,13 @@ import java.util.List;
  * A route configuration for integrating custom Vaadin views (annotated with @Route) into the VortexCrud menu system.
  * This allows users to create their own views with full control and add them to the VortexCrud navigation menu.
  *
+ * <p><strong>Important:</strong> CustomRoute is ONLY a menu entry. The actual routing is handled entirely by
+ * Vaadin's @Route annotation. You must ensure the @Route path matches the configuration key.</p>
+ *
  * <p>Example usage:</p>
  * <pre>{@code
  * // 1. Create your custom view with @Route annotation:
- * @Route("dashboard")
+ * @Route("dashboard")  // IMPORTANT: Path must match config key below
  * public class DashboardView extends VerticalLayout {
  *     public DashboardView() {
  *         add(new H1("My Custom Dashboard"));
@@ -29,12 +32,19 @@ import java.util.List;
  * }
  *
  * // 2. Add it to VortexCrud menu in your configuration:
- * routes.put("dashboard", CustomRoute.builder()
+ * routes.put("dashboard", CustomRoute.builder()  // Key must match @Route path
  *     .title("menu.dashboard")
- *     .viewClass(DashboardView.class)
  *     .iconFactory(() -> VaadinIcon.DASHBOARD.create())
  *     .build());
  * }</pre>
+ *
+ * <p><strong>Common Pitfalls:</strong></p>
+ * <ul>
+ *   <li><strong>Path mismatch:</strong> If your @Route("foo") doesn't match routes.put("bar", ...),
+ *       the menu will navigate to the wrong path. Always ensure they match.</li>
+ *   <li><strong>No dataStoreKey:</strong> CustomRoute doesn't require a dataStoreKey since custom views
+ *       manage their own data. Don't use menuActions that require a dataStore.</li>
+ * </ul>
  *
  * @param <ModelClass>     The entity model class
  * @param <FieldType>      The field type (typically an enum or descriptor)
@@ -57,11 +67,6 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
      * The translation key for the menu item title (e.g., "menu.dashboard").
      */
     private String title;
-
-    /**
-     * The Vaadin view class annotated with @Route. This class will be instantiated by Vaadin's routing system.
-     */
-    private Class<? extends Component> viewClass;
 
     private boolean isDefaultRoute;
 
@@ -86,6 +91,8 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     /**
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
+     * <p><strong>Warning:</strong> If using menuActions that require a dataStore, you must provide
+     * a valid dataStoreKey. Otherwise, a runtime exception will occur when the menu action is rendered.</p>
      */
     @Nullable
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
