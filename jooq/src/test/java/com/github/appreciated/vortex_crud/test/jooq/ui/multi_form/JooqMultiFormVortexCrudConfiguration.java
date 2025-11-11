@@ -40,7 +40,19 @@ public class JooqMultiFormVortexCrudConfiguration
                         )).build()
         );
 
-        // First form: Basic Information
+        // Complete form configuration with all fields for dialog-based create/edit
+        FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> completeFormConfig =
+                JooqFormRendererConfiguration.builder()
+                        .titleField(MULTI_FORM_TEST.PROFILE_NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
+                                JooqFieldElement.of(MULTI_FORM_TEST.EMAIL, "multi_form.fields.email").build(),
+                                JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
+                                JooqFieldElement.of(MULTI_FORM_TEST.AGE, "multi_form.fields.age").build()
+                        ))
+                        .build();
+
+        // Individual form configurations for multi-form rendering
         FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> basicInfoForm =
                 JooqFormRendererConfiguration.builder()
                         .titleField(MULTI_FORM_TEST.PROFILE_NAME)
@@ -50,7 +62,6 @@ public class JooqMultiFormVortexCrudConfiguration
                         ))
                         .build();
 
-        // Second form: Additional Details
         FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalDetailsForm =
                 JooqFormRendererConfiguration.builder()
                         .titleField(MULTI_FORM_TEST.DESCRIPTION)
@@ -71,19 +82,13 @@ public class JooqMultiFormVortexCrudConfiguration
                         .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        // Use the complete form config for the list (for dialog create/edit)
         routes.put("multi-form-test", JooqListRoute.builder()
                 .dataStoreKey(MULTI_FORM_TEST)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(MULTI_FORM_TEST.PROFILE_NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.list.profile_name").build(),
-                                JooqFieldElement.of(MULTI_FORM_TEST.EMAIL, "multi_form.list.email").build(),
-                                JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
-                                JooqFieldElement.of(MULTI_FORM_TEST.AGE, "multi_form.fields.age").build()
-                        ))
-                        .build())
+                .configuration(completeFormConfig)
                 .child(multiFormRoute)
                 .build());
 

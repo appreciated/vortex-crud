@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListItemRendererConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,19 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        // First form: Basic Information
+        // Complete form configuration with all fields for dialog-based create/edit
+        FormRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> completeFormConfig =
+                JpaFormRendererConfiguration.builder()
+                        .titleField("profileName")
+                        .children(List.of(
+                                JpaFieldElement.builder("profileName", "multi_form.fields.profile_name").build(),
+                                JpaFieldElement.builder("email", "multi_form.fields.email").build(),
+                                JpaFieldElement.builder("description", "multi_form.fields.description").build(),
+                                JpaFieldElement.builder("age", "multi_form.fields.age").build()
+                        ))
+                        .build();
+
+        // Individual form configurations for multi-form rendering
         FormRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> basicInfoForm =
                 JpaFormRendererConfiguration.builder()
                         .titleField("profileName")
@@ -35,7 +46,6 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                         ))
                         .build();
 
-        // Second form: Additional Details
         FormRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalDetailsForm =
                 JpaFormRendererConfiguration.builder()
                         .titleField("description")
@@ -56,22 +66,13 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                         .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listConfig =
-                JpaListItemRendererConfiguration.builder()
-                        .filterField("profileName")
-                        .children(List.of(
-                                JpaFieldElement.builder("profileName", "multi_form.list.profile_name").build(),
-                                JpaFieldElement.builder("email", "multi_form.list.email").build(),
-                                JpaFieldElement.builder("description", "multi_form.fields.description").build(),
-                                JpaFieldElement.builder("age", "multi_form.fields.age").build()
-                        ))
-                        .build();
 
+        // Use the complete form config for the list (for dialog create/edit)
         routes.put("multi-form-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreKey(multiFormRepository)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .configuration(listConfig)
+                .configuration(completeFormConfig)
                 .child(multiFormRoute)
                 .build());
 

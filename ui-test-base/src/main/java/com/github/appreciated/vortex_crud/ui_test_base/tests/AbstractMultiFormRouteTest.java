@@ -31,23 +31,23 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormListingVisible() {
         navigateTo(getMultiFormPath());
-        WebElement webElement = waitForAnyElementContainingText("Profile Name");
+        WebElement webElement = waitForAnyElementContainingText("Max Mustermann");
         assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
     }
 
     @Test
     void testMultiFormEntityLoading() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Profile Name").click();
+        waitForAnyElementContainingText("Max Mustermann").click();
         waitForUrlToBe(getMultiFormPath() + "/1");
 
         // Verify first form fields (Basic Information)
-        waitForElementWithTagAndValue("vaadin-text-field", "Profile Name");
+        waitForElementWithTagAndValue("vaadin-text-field", "Max Mustermann");
         waitForElementWithTagAndValue("vaadin-email-field", "profile@example.com");
 
         // Verify second form fields (Additional Details)
         waitForElementWithTagAndValue("vaadin-text-area", "This is a profile description");
-        waitForElementWithTagAndValue("vaadin-number-field", "25");
+        waitForElementWithTagAndValue("vaadin-integer-field", "25");
     }
 
     @Test
@@ -98,7 +98,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
                 .findElement(By.tagName("textarea"));
         descriptionField.sendKeys("This is a created profile");
 
-        WebElement ageField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
                 .findElement(By.tagName("input"));
         ageField.sendKeys("30");
 
@@ -111,7 +111,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormUpdateEntry() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Profile Name").click();
+        waitForAnyElementContainingText("Max Mustermann").click();
         waitForUrlToBe(getMultiFormPath() + "/1");
 
         // Update field from first form
@@ -121,7 +121,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         nameField.sendKeys("Updated Profile");
 
         // Update field from second form
-        WebElement ageField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
                 .findElement(By.tagName("input"));
         ageField.clear();
         ageField.sendKeys("35");
@@ -135,7 +135,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormDeleteEntry() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Profile Name").click();
+        waitForAnyElementContainingText("Max Mustermann").click();
         waitForUrlToBe(getMultiFormPath() + "/1");
 
         waitForAnyElementContainingText("Delete").click();
@@ -163,7 +163,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
                 .findElement(By.tagName("textarea"));
         descriptionField.sendKeys("Complete profile description");
 
-        WebElement ageField = driver.findElement(By.tagName("vaadin-number-field"))
+        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
                 .findElement(By.tagName("input"));
         ageField.sendKeys("28");
 
@@ -180,6 +180,6 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
 
         // Verify second form data
         waitForElementWithTagAndValue("vaadin-text-area", "Complete profile description");
-        waitForElementWithTagAndValue("vaadin-number-field", "28");
+        waitForElementWithTagAndValue("vaadin-integer-field", "28");
     }
 }
