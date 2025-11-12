@@ -117,7 +117,7 @@ mvn spring-boot:run                         # Run application
 - **jOOQ 3.19.22** - Type-safe SQL queries with enum support
 - **SQLite 3.47.1.0** - Database with JSON support
 - **Liquibase 4.29.0** - Database migrations
-- **Spring Boot 4.0.0-M3**
+- **Spring Boot**
 - **Java 21**
 
 ## Next Steps

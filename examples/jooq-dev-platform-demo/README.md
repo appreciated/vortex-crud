@@ -29,7 +29,7 @@ Uses a meta table approach:
 - jOOQ 3.19.22 (type-safe SQL with enum support)
 - SQLite 3.47.1.0
 - Liquibase 4.29.0
-- Spring Boot 4.0.0-M3
+- Spring Boot
 - Java 21
 
 ## Getting Started
