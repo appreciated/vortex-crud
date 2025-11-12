@@ -20,6 +20,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
+import jakarta.annotation.Nullable;
 
 /**
  * Base implementation for dialog factories that render CRUD forms.
@@ -47,9 +48,9 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
     }
 
     @Override
-    public Dialog create(@org.jetbrains.annotations.Nullable Object entityId,
-                         @org.jetbrains.annotations.Nullable Object foreignKeyValue,
-                         @org.jetbrains.annotations.Nullable FieldType foreignKeyField,
+    public Dialog create(@Nullable Object entityId,
+                         @Nullable Object foreignKeyValue,
+                         @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
                          RepositoryType dataStoreKey,

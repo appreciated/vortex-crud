@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.jooq.DSLContext;
 import org.jooq.Table;
 import org.jooq.TableField;
