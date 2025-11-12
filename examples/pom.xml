@@ -21,5 +21,7 @@
     <modules>
         <module>jpa-sqlite-example</module>
         <module>jooq-sqlite-example</module>
+        <module>jooq-dev-platform-demo</module>
+        <module>jooq-project-management-demo</module>
     </modules>
 </project>
