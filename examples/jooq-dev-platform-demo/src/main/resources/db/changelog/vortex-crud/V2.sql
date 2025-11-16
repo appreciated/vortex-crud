@@ -6,6 +6,11 @@ INSERT INTO roles (id, name) VALUES (1, 'admin');
 INSERT INTO roles (id, name) VALUES (2, 'viewer');
 INSERT INTO roles (id, name) VALUES (3, 'guest');
 
+-- changeset jooq-sqlite-example-vortex-crud:5a
+-- Add first_name and last_name columns to users table
+ALTER TABLE users ADD COLUMN first_name VARCHAR(100);
+ALTER TABLE users ADD COLUMN last_name VARCHAR(100);
+
 -- changeset jooq-sqlite-example-vortex-crud:6
 -- Update existing users with password hashes and names, or insert if they don't exist
 -- Password for all users is 'password'
