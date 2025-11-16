@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -75,16 +72,42 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         }
 
         Binder<Object> binder = new Binder<>(Object.class);
-        FormLayout layout = new FormLayout();
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, routeFactory, tables, binder, layout);
+
+        com.vaadin.flow.component.Component formContent;
+
+        // Handle multi-form vs single-form configurations differently
+        if (configuration instanceof MultiFormRendererConfiguration) {
+            MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> multiFormConfig =
+                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
+
+            com.vaadin.flow.component.html.Div formsContainer = new com.vaadin.flow.component.html.Div();
+
+            // Create a separate FormLayout for each form in the multi-form configuration
+            for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> childForm : multiFormConfig.forms()) {
+                FormLayout childFormLayout = new FormLayout();
+                childFormLayout.setMaxWidth("1000px");
+                childFormLayout.setResponsiveSteps(
+                    new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
+                );
+                formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, childForm.children(), recordById, routeFactory, tables, binder, childFormLayout);
+                formsContainer.add(childFormLayout);
+            }
+            formContent = formsContainer;
+        } else {
+            // Single form configuration
+            FormLayout layout = new FormLayout();
+            formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, routeFactory, tables, binder, layout);
+            formContent = layout;
+        }
+
         binder.setBean(recordById);
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
 
-        dialog.add(layout);
+        dialog.add(formContent);
         dialog.setModality(VISUAL);
         dialog.setDraggable(false);
         dialog.setMinWidth(500, Unit.PIXELS);
