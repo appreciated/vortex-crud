@@ -67,7 +67,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
 
-        // Use the complete form config for the list (for dialog create/edit)
+        // Use multi-form route for create/edit
         routes.put("multi-form-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreKey(multiFormRepository)
                 .iconFactory(USER::create)

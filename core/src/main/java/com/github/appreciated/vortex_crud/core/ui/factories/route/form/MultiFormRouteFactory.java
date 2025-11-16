@@ -84,11 +84,21 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
+        MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
+                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         if (!creationMode) {
-            binder.bindReadOnly(
-                    titleComponent,
-                    entity1 -> prefix + reflectionService.getString(entity1, routeRenderer.configuration().titleField())
-            );
+            // Use titleField from multi-form config, or fall back to first form's titleField
+            FieldType titleField = formConfiguration.titleField();
+            if (titleField == null && !formConfiguration.forms().isEmpty()) {
+                titleField = formConfiguration.forms().get(0).titleField();
+            }
+            if (titleField != null) {
+                FieldType finalTitleField = titleField;
+                binder.bindReadOnly(
+                        titleComponent,
+                        entity1 -> prefix + reflectionService.getString(entity1, finalTitleField)
+                );
+            }
         } else {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
@@ -96,10 +106,6 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         RepositoryType table = routeRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
         VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
-
-        MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
-                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
-
 
         ModelClass entity;
         if (creationMode) {
@@ -112,7 +118,11 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         Div Forms = new Div();
         for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.forms()) {
-            Forms.add(formRouteFactory.getForm(routeResolver, true, true, false, false, routeRenderer, child));
+            com.vaadin.flow.component.formlayout.FormLayout childFormLayout = new com.vaadin.flow.component.formlayout.FormLayout();
+            childFormLayout.setMaxWidth("1000px");
+            childFormLayout.setResponsiveSteps(new com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep("250px", 2, com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition.TOP));
+            formCreator.bindAndAddToLayout(table, routeRenderer, child.children(), entity, factoryRegistry, tables, binder, childFormLayout);
+            Forms.add(childFormLayout);
         }
 
         binder.setBean(entity);

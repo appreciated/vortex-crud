@@ -68,7 +68,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 null,
                 null,
                 null,
-                routeRenderer.child(),
+                routeRenderer,
                 null,
                 dataStore,
                 routeFactory,

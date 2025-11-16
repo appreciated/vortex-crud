@@ -141,7 +141,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
 
         waitForUrlToBe(getMultiFormPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Profile Name')]"));
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Max Mustermann')]"));
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 
