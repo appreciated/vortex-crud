@@ -2,14 +2,13 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> {
 
     RepositoryType repositoryKey();
-
 
     List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields();
 
@@ -31,5 +30,5 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
 
     List<String> defaultWriteRoles();
 
-    List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity);
+    List<? extends Serializable> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity);
 }

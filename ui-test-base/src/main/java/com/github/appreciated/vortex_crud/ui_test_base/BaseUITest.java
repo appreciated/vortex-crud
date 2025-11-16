@@ -58,7 +58,7 @@ public abstract class BaseUITest {
 
         ChromeOptions options = new ChromeOptions();
         if (!disableHeadless) {
-            options.addArguments("--headless=new");
+            //options.addArguments("--headless=new");
         }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");

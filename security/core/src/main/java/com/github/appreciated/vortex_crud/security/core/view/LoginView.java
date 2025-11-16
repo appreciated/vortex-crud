@@ -86,7 +86,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
                 }
 
                 // Authentication successful - create Spring Security session
-                List<SimpleGrantedAuthority> authorities = userManagement.resolveRolesForEntity(reflectionService, userEntity);
+                List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) userManagement.resolveRolesForEntity(reflectionService, userEntity);
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, authorities);
                 setSecurityContextFor(authToken);
             } catch (Exception e) {

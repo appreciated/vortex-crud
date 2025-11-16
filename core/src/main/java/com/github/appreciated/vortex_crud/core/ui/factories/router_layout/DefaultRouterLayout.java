@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -14,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.server.VaadinServletRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
 
@@ -24,9 +24,11 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyConte
 public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends AppLayout {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final VortexCrudLogoutService logoutService;
 
-    public DefaultRouterLayout(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
+    public DefaultRouterLayout(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService, VortexCrudLogoutService logoutService) {
         this.configService = configService;
+        this.logoutService = logoutService;
     }
 
     @Override
@@ -44,9 +46,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         scroller.getStyle().set("padding", "calc(var(--lumo-space-xs) * 1.5)");
 
         addToDrawer(scroller);
-        Button logoutButton = new Button("Logout", click -> {
-            handleLogout();
-        });
+        Button logoutButton = new Button("Logout", click -> handleLogout());
         HorizontalLayout actionButtons = new HorizontalLayout(logoutButton);
         actionButtons.setAlignItems(CENTER);
         HorizontalLayout appToggleTitle = new HorizontalLayout(toggle, title);
@@ -83,10 +83,10 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         return nav;
     }
 
+
     private void handleLogout() {
         // Clear the Spring Security context
-        SecurityContextHolder.clearContext();
-
+        logoutService.logout();
         // Invalidate the HTTP session
         VaadinServletRequest request = VaadinServletRequest.getCurrent();
         if (request != null && request.getHttpServletRequest().getSession(false) != null) {
