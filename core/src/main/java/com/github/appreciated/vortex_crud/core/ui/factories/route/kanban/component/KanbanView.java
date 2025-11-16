@@ -106,6 +106,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     fileProviderRegistry,
                     fieldNameResolver,
                     reflectionService));
+            cardWrapper.getStyle().set("margin", "5px 0");
             cardWrapper.addClickListener(event -> {
                 String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, dataStoreUtil.getId(entity));
                 getUI().ifPresent(ui -> ui.navigate(nextRoute));
@@ -234,7 +235,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private VerticalLayout createColumn(String title, Object columnDatabaseValue) {
         Grid<Object> grid = new Grid<>();
         grid.getStyle().set("--vaadin-grid-cell-padding", "0");
-        grid.getStyle().set("--lumo-base-color", "transparent");
+        grid.getStyle().set("--vaadin-background-color", "transparent");
         grid.setHeight("90%");
         grid.setWidthFull();
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
