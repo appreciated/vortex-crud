@@ -88,7 +88,12 @@ public class JooqMultiFormVortexCrudConfiguration
                 .dataStoreKey(MULTI_FORM_TEST)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .configuration(completeFormConfig)
+                .configuration(ListItemRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .filterField(MULTI_FORM_TEST.PROFILE_NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
+                        ))
+                        .build())
                 .child(multiFormRoute)
                 .build());
 
