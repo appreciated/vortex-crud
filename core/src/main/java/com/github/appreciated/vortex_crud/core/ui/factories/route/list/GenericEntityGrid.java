@@ -42,7 +42,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 routeRenderer.configuration();
 
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration.filterField()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration != null ? gridOrListConfiguration.filterField() : null).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 

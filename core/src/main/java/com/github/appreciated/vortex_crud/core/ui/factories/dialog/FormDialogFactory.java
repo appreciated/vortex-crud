@@ -75,14 +75,14 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         }
 
         Binder<Object> binder = new Binder<>(Object.class);
-        binder.setBean(recordById);
-        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
         formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, routeFactory, tables, binder, layout);
+        binder.setBean(recordById);
+        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
 
         dialog.add(layout);
         dialog.setModality(VISUAL);
