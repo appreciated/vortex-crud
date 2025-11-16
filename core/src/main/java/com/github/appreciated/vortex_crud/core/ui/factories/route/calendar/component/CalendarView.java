@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.component;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.CalendarConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -232,12 +235,12 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
                     this.dataStore.updateRecordById(recordById);
                     refreshCalendar();
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
                 () -> {
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
@@ -249,7 +252,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         Integer currentIndex = routeResolver.determineActiveRouteIndex();
-        int i = currentIndex + 2;
+        int i = currentIndex + 1;
         if (routeResolver.hasPathForIndex(i)) {
             String pathForIndex = routeResolver.getPathForIndex(i);
             Object recordById = dataStore.getRecordById(pathForIndex);

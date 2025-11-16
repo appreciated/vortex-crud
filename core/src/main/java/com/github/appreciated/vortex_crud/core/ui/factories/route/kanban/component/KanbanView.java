@@ -108,7 +108,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     reflectionService));
             cardWrapper.getStyle().set("margin", "5px 0");
             cardWrapper.addClickListener(event -> {
-                String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, dataStoreUtil.getId(entity));
+                String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
                 getUI().ifPresent(ui -> ui.navigate(nextRoute));
             });
             return cardWrapper;
@@ -184,12 +184,12 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
                     this.dataStore.updateRecordById(recordById);
                     refreshColumns();
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
                 () -> {
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex() + 1, null);
+                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
@@ -210,7 +210,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         Integer currentIndex = routeResolver.determineActiveRouteIndex();
-        int i = currentIndex + 2;
+        int i = currentIndex + 1;
         if (routeResolver.hasPathForIndex(i)) {
             String pathForIndex = routeResolver.getPathForIndex(i);
             Object recordById = dataStore.getRecordById(pathForIndex);
