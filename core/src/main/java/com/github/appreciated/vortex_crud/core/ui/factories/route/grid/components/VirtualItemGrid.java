@@ -86,6 +86,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
             HorizontalLayout wrapper = new HorizontalLayout();
             wrapper.setSpacing(true);
             wrapper.setWidthFull();
+            wrapper.getStyle().set("margin-bottom", "var(--vaadin-gap-s)");
             List<ModelClass> list = item.list();
             for (ModelClass entity : list) {
                 Component component = itemFactory.renderItem(itemRendererConfiguration,
@@ -98,7 +99,6 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 Div div = new Div(component);
                 div.getStyle()
                         .set("display", "flex")
-                        .set("flex", "0 1 auto")
                         .set("flex", "0 1 auto");
 
                 div.setWidthFull();
