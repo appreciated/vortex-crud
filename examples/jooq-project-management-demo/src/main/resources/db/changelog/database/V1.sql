@@ -1,7 +1,10 @@
+-- liquibase formatted sql
+
 -- ============================================================================
 -- Project Management Platform - Simplified Schema
 -- ============================================================================
 
+-- changeset project-management-demo:1
 -- Custom Fields Meta System
 -- ============================================================================
 CREATE TABLE custom_field_definition (
@@ -22,6 +25,7 @@ CREATE TABLE custom_field_definition (
     UNIQUE(entity_type, field_name)
 );
 
+-- changeset project-management-demo:2
 -- Projects
 -- ============================================================================
 CREATE TABLE project (
@@ -42,6 +46,7 @@ CREATE TABLE project (
     custom_fields TEXT
 );
 
+-- changeset project-management-demo:3
 -- Project Members
 -- ============================================================================
 CREATE TABLE project_member (
@@ -54,6 +59,7 @@ CREATE TABLE project_member (
     UNIQUE(project_id, user_id)
 );
 
+-- changeset project-management-demo:4
 -- Milestones
 -- ============================================================================
 CREATE TABLE milestone (
@@ -70,6 +76,7 @@ CREATE TABLE milestone (
     FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
 );
 
+-- changeset project-management-demo:5
 -- Labels / Tags
 -- ============================================================================
 CREATE TABLE label (
@@ -80,6 +87,7 @@ CREATE TABLE label (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
+-- changeset project-management-demo:6
 -- Tasks / Issues
 -- ============================================================================
 CREATE TABLE task (
@@ -106,6 +114,7 @@ CREATE TABLE task (
     UNIQUE(project_id, task_number)
 );
 
+-- changeset project-management-demo:7
 -- Task Labels (Many-to-Many)
 -- ============================================================================
 CREATE TABLE task_label (
@@ -117,6 +126,7 @@ CREATE TABLE task_label (
     UNIQUE(task_id, label_id)
 );
 
+-- changeset project-management-demo:8
 -- Comments
 -- ============================================================================
 CREATE TABLE task_comment (
@@ -128,6 +138,7 @@ CREATE TABLE task_comment (
     FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE
 );
 
+-- changeset project-management-demo:9
 -- Indexes for Performance
 -- ============================================================================
 CREATE INDEX idx_task_project ON task(project_id);
@@ -137,6 +148,7 @@ CREATE INDEX idx_task_parent ON task(parent_task_id);
 CREATE INDEX idx_comment_task ON task_comment(task_id);
 CREATE INDEX idx_custom_field_entity ON custom_field_definition(entity_type);
 
+-- changeset project-management-demo:10
 -- Minimal Sample Data
 -- ============================================================================
 

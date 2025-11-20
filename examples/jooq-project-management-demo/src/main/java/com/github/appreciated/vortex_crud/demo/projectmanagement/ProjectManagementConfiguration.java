@@ -32,7 +32,6 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.Tables.*;
-import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
 public class ProjectManagementConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -42,43 +41,43 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Data Store Configurations
         Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.ofEntries(
                 Map.entry(PROJECT, JooqDataStoreConfig.of(PROJECT)
-                        .fields(Map.of(
-                                PROJECT.ID, JooqIdField.builder().build(),
-                                PROJECT.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
-                                PROJECT.CODE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
-                                PROJECT.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                                PROJECT.STATUS, JooqSelectField.builder().values("project-status").build(),
-                                PROJECT.PRIORITY, JooqSelectField.builder().values("priority").build(),
-                                PROJECT.START_DATE, JooqDateField.builder().build(),
-                                PROJECT.END_DATE, JooqDateField.builder().build(),
-                                PROJECT.OWNER_ID, JooqReferenceField.builder().dataStore(USERS).field(PROJECT.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                PROJECT.PROGRESS_PERCENTAGE, JooqIntegerField.builder().build(),
-                                PROJECT.COLOR, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
-                                PROJECT.IS_ARCHIVED, JooqCheckboxField.builder().build(),
-                                PROJECT.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                PROJECT.UPDATED_AT, JooqDateTimePickerField.builder().build(),
-                                PROJECT.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                        .fields(Map.ofEntries(
+                                Map.entry(PROJECT.ID, JooqIdField.builder().build()),
+                                Map.entry(PROJECT.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                                Map.entry(PROJECT.CODE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build()),
+                                Map.entry(PROJECT.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build()),
+                                Map.entry(PROJECT.STATUS, JooqSelectField.builder().values("project-status").build()),
+                                Map.entry(PROJECT.PRIORITY, JooqSelectField.builder().values("priority").build()),
+                                Map.entry(PROJECT.START_DATE, JooqDateField.builder().build()),
+                                Map.entry(PROJECT.END_DATE, JooqDateField.builder().build()),
+                                Map.entry(PROJECT.OWNER_ID, JooqReferenceField.builder().dataStore(USERS).field(PROJECT.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(PROJECT.PROGRESS_PERCENTAGE, JooqIntegerField.builder().build()),
+                                Map.entry(PROJECT.COLOR, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build()),
+                                Map.entry(PROJECT.IS_ARCHIVED, JooqCheckboxField.builder().build()),
+                                Map.entry(PROJECT.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PROJECT.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PROJECT.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                         .build()),
 
                 Map.entry(TASK, JooqDataStoreConfig.of(TASK)
-                        .fields(Map.of(
-                                TASK.ID, JooqIdField.builder().build(),
-                                TASK.PROJECT_ID, JooqReferenceField.builder().dataStore(PROJECT).field(TASK.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
-                                TASK.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(TASK.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build(),
-                                TASK.PARENT_TASK_ID, JooqReferenceField.builder().dataStore(TASK).field(TASK.PARENT_TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
-                                TASK.TASK_NUMBER, JooqIntegerField.builder().required(true).build(),
-                                TASK.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build(),
-                                TASK.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build(),
-                                TASK.TASK_TYPE, JooqSelectField.builder().values("task-type").build(),
-                                TASK.STATUS, JooqSelectField.builder().values("task-status").build(),
-                                TASK.PRIORITY, JooqSelectField.builder().values("priority").build(),
-                                TASK.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(TASK.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                TASK.REPORTER_ID, JooqReferenceField.builder().dataStore(USERS).field(TASK.REPORTER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                TASK.ESTIMATED_HOURS, JooqDoubleField.builder().build(),
-                                TASK.DUE_DATE, JooqDateField.builder().build(),
-                                TASK.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                TASK.UPDATED_AT, JooqDateTimePickerField.builder().build(),
-                                TASK.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                        .fields(Map.ofEntries(
+                                Map.entry(TASK.ID, JooqIdField.builder().build()),
+                                Map.entry(TASK.PROJECT_ID, JooqReferenceField.builder().dataStore(PROJECT).field(TASK.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
+                                Map.entry(TASK.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(TASK.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                                Map.entry(TASK.PARENT_TASK_ID, JooqReferenceField.builder().dataStore(TASK).field(TASK.PARENT_TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build()),
+                                Map.entry(TASK.TASK_NUMBER, JooqIntegerField.builder().required(true).build()),
+                                Map.entry(TASK.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
+                                Map.entry(TASK.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
+                                Map.entry(TASK.TASK_TYPE, JooqSelectField.builder().values("task-type").build()),
+                                Map.entry(TASK.STATUS, JooqSelectField.builder().values("task-status").build()),
+                                Map.entry(TASK.PRIORITY, JooqSelectField.builder().values("priority").build()),
+                                Map.entry(TASK.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(TASK.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(TASK.REPORTER_ID, JooqReferenceField.builder().dataStore(USERS).field(TASK.REPORTER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(TASK.ESTIMATED_HOURS, JooqDoubleField.builder().build()),
+                                Map.entry(TASK.DUE_DATE, JooqDateField.builder().build()),
+                                Map.entry(TASK.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(TASK.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(TASK.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                         .build()),
 
                 Map.entry(MILESTONE, JooqDataStoreConfig.of(MILESTONE)
@@ -217,7 +216,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         routes.put("projects", JooqGridRoute.builder()
                 .isDefaultRoute(true)
                 .dataStoreKey(PROJECT)
-                .iconFactory(RECORDS::create)
+                .iconFactory(VaadinIcon.RECORDS::create)
                 .title("route.projects.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(PROJECT.NAME)
@@ -228,7 +227,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build());
 
         routes.put("tasks-kanban", JooqKanbanRoute.builder()
-                .iconFactory(TASKS::create)
+                .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreKey(TASK)
                 .title("route.tasks.title")
                 .configuration(JooqKanbanConfiguration.builder()
@@ -243,7 +242,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         routes.put("milestones", JooqGridRoute.builder()
                 .dataStoreKey(MILESTONE)
-                .iconFactory(FLAG::create)
+                .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(MILESTONE.TITLE)
