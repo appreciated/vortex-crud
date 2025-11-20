@@ -3,10 +3,12 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
@@ -21,6 +23,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.DataProvider;
+
+import java.util.Collections;
 
 public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
     private final VirtualItemGrid<ModelClass, FieldType, RepositoryType> virtualGrid;
@@ -45,6 +49,22 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 null,
                 null,
                 routeHeader);
+
+        // Render custom route actions if configured
+        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
+            VortexCrudDataStore<FieldType, ModelClass> dataStore =
+                dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey());
+
+            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+                RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
+                    .dataStore(dataStore)
+                    .selectedEntities(Collections.emptyList())  // No selection support yet
+                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                    .viewComponent(this)
+                    .build();
+                contextConsumer.accept(context);
+            });
+        }
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
         virtualGrid = new VirtualItemGrid<>(routeResolver,

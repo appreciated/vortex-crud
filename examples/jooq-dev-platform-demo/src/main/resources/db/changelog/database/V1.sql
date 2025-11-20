@@ -1,9 +1,6 @@
--- ============================================================================
--- Development Platform - Simplified Schema
--- ============================================================================
+-- liquibase formatted sql
 
--- Custom Fields Meta System
--- ============================================================================
+-- changeset dev-platform-demo:1
 CREATE TABLE custom_field_definition (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     entity_type VARCHAR(50) NOT NULL,
@@ -22,8 +19,7 @@ CREATE TABLE custom_field_definition (
     UNIQUE(entity_type, field_name)
 );
 
--- Organizations
--- ============================================================================
+-- changeset dev-platform-demo:2
 CREATE TABLE organization (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE,
@@ -35,6 +31,7 @@ CREATE TABLE organization (
     custom_fields TEXT
 );
 
+-- changeset dev-platform-demo:3
 CREATE TABLE organization_member (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     organization_id INTEGER NOT NULL,
@@ -45,8 +42,7 @@ CREATE TABLE organization_member (
     UNIQUE(organization_id, user_id)
 );
 
--- Repositories
--- ============================================================================
+-- changeset dev-platform-demo:4
 CREATE TABLE repository (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -68,8 +64,7 @@ CREATE TABLE repository (
     FOREIGN KEY (organization_id) REFERENCES organization(id) ON DELETE CASCADE
 );
 
--- Repository Collaborators
--- ============================================================================
+-- changeset dev-platform-demo:5
 CREATE TABLE repository_collaborator (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     repository_id INTEGER NOT NULL,
@@ -80,8 +75,7 @@ CREATE TABLE repository_collaborator (
     UNIQUE(repository_id, user_id)
 );
 
--- Labels
--- ============================================================================
+-- changeset dev-platform-demo:6
 CREATE TABLE label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     repository_id INTEGER NOT NULL,
@@ -93,8 +87,7 @@ CREATE TABLE label (
     UNIQUE(repository_id, name)
 );
 
--- Milestones
--- ============================================================================
+-- changeset dev-platform-demo:7
 CREATE TABLE milestone (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     repository_id INTEGER NOT NULL,
@@ -108,8 +101,7 @@ CREATE TABLE milestone (
     FOREIGN KEY (repository_id) REFERENCES repository(id) ON DELETE CASCADE
 );
 
--- Issues
--- ============================================================================
+-- changeset dev-platform-demo:8
 CREATE TABLE issue (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     repository_id INTEGER NOT NULL,
@@ -131,8 +123,7 @@ CREATE TABLE issue (
     UNIQUE(repository_id, issue_number)
 );
 
--- Issue Labels (Many-to-Many)
--- ============================================================================
+-- changeset dev-platform-demo:9
 CREATE TABLE issue_label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     issue_id INTEGER NOT NULL,
@@ -142,8 +133,7 @@ CREATE TABLE issue_label (
     UNIQUE(issue_id, label_id)
 );
 
--- Pull Requests
--- ============================================================================
+-- changeset dev-platform-demo:10
 CREATE TABLE pull_request (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     repository_id INTEGER NOT NULL,
@@ -167,8 +157,7 @@ CREATE TABLE pull_request (
     UNIQUE(repository_id, pr_number)
 );
 
--- Pull Request Labels
--- ============================================================================
+-- changeset dev-platform-demo:11
 CREATE TABLE pull_request_label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     pull_request_id INTEGER NOT NULL,
@@ -178,8 +167,7 @@ CREATE TABLE pull_request_label (
     UNIQUE(pull_request_id, label_id)
 );
 
--- Comments (unified for Issues and PRs)
--- ============================================================================
+-- changeset dev-platform-demo:12
 CREATE TABLE comment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     entity_type VARCHAR(20) NOT NULL,
@@ -190,8 +178,7 @@ CREATE TABLE comment (
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for Performance
--- ============================================================================
+-- changeset dev-platform-demo:13
 CREATE INDEX idx_repo_owner ON repository(owner_id);
 CREATE INDEX idx_repo_org ON repository(organization_id);
 CREATE INDEX idx_repo_visibility ON repository(visibility);
@@ -203,8 +190,7 @@ CREATE INDEX idx_pr_state ON pull_request(state);
 CREATE INDEX idx_comment_entity ON comment(entity_type, entity_id);
 CREATE INDEX idx_custom_field_entity ON custom_field_definition(entity_type);
 
--- Minimal Sample Data
--- ============================================================================
+-- changeset dev-platform-demo:14
 
 -- Sample Organization
 INSERT INTO organization (name, display_name, description) VALUES

@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
@@ -92,6 +93,19 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                 null,
                 null,
                 routeHeader);
+
+        // Render custom route actions if configured
+        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
+            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+                RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
+                    .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
+                    .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
+                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                    .viewComponent(this)
+                    .build();
+                contextConsumer.accept(context);
+            });
+        }
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         textField.getStyle().set("--lumo-border-radius-m", "var(--vaadin-card-border-radius)");
