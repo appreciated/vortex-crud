@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
@@ -13,13 +12,11 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
-import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -32,6 +29,8 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
+import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.COMMENT;
+import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.USERS;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
@@ -54,64 +53,64 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .build()),
 
                 Map.entry(REPOSITORY, JooqDataStoreConfig.of(REPOSITORY)
-                        .fields(Map.of(
-                                REPOSITORY.ID, JooqIdField.builder().build(),
-                                REPOSITORY.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
-                                REPOSITORY.SLUG, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
-                                REPOSITORY.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build(),
-                                REPOSITORY.OWNER_ID, JooqReferenceField.builder().dataStore(USERS).field(REPOSITORY.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                REPOSITORY.ORGANIZATION_ID, JooqReferenceField.builder().dataStore(ORGANIZATION).field(REPOSITORY.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build(),
-                                REPOSITORY.VISIBILITY, JooqSelectField.builder().values("repository-visibility").build(),
-                                REPOSITORY.DEFAULT_BRANCH, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
-                                REPOSITORY.IS_ARCHIVED, JooqCheckboxField.builder().build(),
-                                REPOSITORY.STAR_COUNT, JooqIntegerField.builder().build(),
-                                REPOSITORY.FORK_COUNT, JooqIntegerField.builder().build(),
-                                REPOSITORY.LANGUAGE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
-                                REPOSITORY.TOPICS, JooqTextAreaField.builder().build(),
-                                REPOSITORY.README_CONTENT, JooqTextAreaField.builder().build(),
-                                REPOSITORY.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                REPOSITORY.UPDATED_AT, JooqDateTimePickerField.builder().build(),
-                                REPOSITORY.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                        .fields(Map.ofEntries(
+                                Map.entry(REPOSITORY.ID, JooqIdField.builder().build()),
+                                Map.entry(REPOSITORY.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                                Map.entry(REPOSITORY.SLUG, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                                Map.entry(REPOSITORY.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
+                                Map.entry(REPOSITORY.OWNER_ID, JooqReferenceField.builder().dataStore(USERS).field(REPOSITORY.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(REPOSITORY.ORGANIZATION_ID, JooqReferenceField.builder().dataStore(ORGANIZATION).field(REPOSITORY.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build()),
+                                Map.entry(REPOSITORY.VISIBILITY, JooqSelectField.builder().values("repository-visibility").build()),
+                                Map.entry(REPOSITORY.DEFAULT_BRANCH, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                                Map.entry(REPOSITORY.IS_ARCHIVED, JooqCheckboxField.builder().build()),
+                                Map.entry(REPOSITORY.STAR_COUNT, JooqIntegerField.builder().build()),
+                                Map.entry(REPOSITORY.FORK_COUNT, JooqIntegerField.builder().build()),
+                                Map.entry(REPOSITORY.LANGUAGE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
+                                Map.entry(REPOSITORY.TOPICS, JooqTextAreaField.builder().build()),
+                                Map.entry(REPOSITORY.README_CONTENT, JooqTextAreaField.builder().build()),
+                                Map.entry(REPOSITORY.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(REPOSITORY.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(REPOSITORY.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                         .build()),
 
                 Map.entry(ISSUE, JooqDataStoreConfig.of(ISSUE)
-                        .fields(Map.of(
-                                ISSUE.ID, JooqIdField.builder().build(),
-                                ISSUE.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(ISSUE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
-                                ISSUE.ISSUE_NUMBER, JooqIntegerField.builder().required(true).build(),
-                                ISSUE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build(),
-                                ISSUE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build(),
-                                ISSUE.STATE, JooqSelectField.builder().values("issue-state").build(),
-                                ISSUE.ISSUE_TYPE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
-                                ISSUE.PRIORITY, JooqSelectField.builder().values("priority").build(),
-                                ISSUE.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                ISSUE.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                ISSUE.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(ISSUE.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build(),
-                                ISSUE.CLOSED_AT, JooqDateTimePickerField.builder().build(),
-                                ISSUE.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                ISSUE.UPDATED_AT, JooqDateTimePickerField.builder().build(),
-                                ISSUE.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                        .fields(Map.ofEntries(
+                                Map.entry(ISSUE.ID, JooqIdField.builder().build()),
+                                Map.entry(ISSUE.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(ISSUE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
+                                Map.entry(ISSUE.ISSUE_NUMBER, JooqIntegerField.builder().required(true).build()),
+                                Map.entry(ISSUE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
+                                Map.entry(ISSUE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
+                                Map.entry(ISSUE.STATE, JooqSelectField.builder().values("issue-state").build()),
+                                Map.entry(ISSUE.ISSUE_TYPE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
+                                Map.entry(ISSUE.PRIORITY, JooqSelectField.builder().values("priority").build()),
+                                Map.entry(ISSUE.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(ISSUE.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(ISSUE.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(ISSUE.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                                Map.entry(ISSUE.CLOSED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(ISSUE.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(ISSUE.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(ISSUE.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                         .build()),
 
                 Map.entry(PULL_REQUEST, JooqDataStoreConfig.of(PULL_REQUEST)
-                        .fields(Map.of(
-                                PULL_REQUEST.ID, JooqIdField.builder().build(),
-                                PULL_REQUEST.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(PULL_REQUEST.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
-                                PULL_REQUEST.PR_NUMBER, JooqIntegerField.builder().required(true).build(),
-                                PULL_REQUEST.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build(),
-                                PULL_REQUEST.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build(),
-                                PULL_REQUEST.STATE, JooqSelectField.builder().values("pull-request-state").build(),
-                                PULL_REQUEST.SOURCE_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
-                                PULL_REQUEST.TARGET_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
-                                PULL_REQUEST.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                PULL_REQUEST.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                PULL_REQUEST.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(PULL_REQUEST.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build(),
-                                PULL_REQUEST.IS_DRAFT, JooqCheckboxField.builder().build(),
-                                PULL_REQUEST.MERGED_AT, JooqDateTimePickerField.builder().build(),
-                                PULL_REQUEST.CLOSED_AT, JooqDateTimePickerField.builder().build(),
-                                PULL_REQUEST.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                PULL_REQUEST.UPDATED_AT, JooqDateTimePickerField.builder().build(),
-                                PULL_REQUEST.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                        .fields(Map.ofEntries(
+                                Map.entry(PULL_REQUEST.ID, JooqIdField.builder().build()),
+                                Map.entry(PULL_REQUEST.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(PULL_REQUEST.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
+                                Map.entry(PULL_REQUEST.PR_NUMBER, JooqIntegerField.builder().required(true).build()),
+                                Map.entry(PULL_REQUEST.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
+                                Map.entry(PULL_REQUEST.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
+                                Map.entry(PULL_REQUEST.STATE, JooqSelectField.builder().values("pull-request-state").build()),
+                                Map.entry(PULL_REQUEST.SOURCE_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                                Map.entry(PULL_REQUEST.TARGET_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                                Map.entry(PULL_REQUEST.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(PULL_REQUEST.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                                Map.entry(PULL_REQUEST.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(PULL_REQUEST.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                                Map.entry(PULL_REQUEST.IS_DRAFT, JooqCheckboxField.builder().build()),
+                                Map.entry(PULL_REQUEST.MERGED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PULL_REQUEST.CLOSED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PULL_REQUEST.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PULL_REQUEST.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                                Map.entry(PULL_REQUEST.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                         .build()),
 
                 Map.entry(MILESTONE, JooqDataStoreConfig.of(MILESTONE)
