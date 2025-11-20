@@ -29,9 +29,6 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
-import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.COMMENT;
-import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.USERS;
-import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
 public class DevPlatformConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
