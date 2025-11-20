@@ -59,15 +59,11 @@ webpack.generated.js
 /examples/jooq-sqlite-example/types.d.ts
 /examples/jooq-sqlite-example/vite.config.ts
 
-/examples/jooq-sqlite-example/jooq-example-database.db
-/examples/jpa-sqlite-example/jpa-example-database.db
-/jooq/jooq-database.db
 /jooq/package.json
 /jooq/package-lock.json
 /jooq/tsconfig.json
 /jooq/types.d.ts
 /jooq/src/main/frontend
-/jpa/jpa-database.db
 /ui-test/target/
 /jpa/src/main/frontend/
 /jpa/package-lock.json
@@ -77,7 +73,6 @@ webpack.generated.js
 /jpa/vite.config.ts
 /jpa/src/main/bundles
 /src/main/frontend
-/jooq/test-jooq-database.db
 /jooq/.vaadin-node-tasks.lock
 /jooq/src/main/bundles
 /jooq/vite.config.ts
@@ -90,3 +85,9 @@ webpack.generated.js
 /examples/jooq-dev-platform-demo/src/main/frontend
 /examples/jooq-project-management-demo/target/
 /examples/jooq-project-management-demo/src/main/frontend
+/examples/jooq-dev-platform-demo/src/main/bundles/dev.bundle
+/examples/jooq-dev-platform-demo/src/main/bundles/README.md
+/examples/jooq-project-management-demo/src/main/bundles/dev.bundle
+/examples/jooq-project-management-demo/src/main/bundles/README.md
+
+*.db
