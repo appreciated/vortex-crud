@@ -375,7 +375,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         return JooqApplication.builder()
                 .applicationName("application.name")
-                .i18nBundlePrefix("messages")
+                .i18nBundlePrefix("dev_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .repositoryKey(USERS)
                         .availableRoles(Roles.builder().roles(List.of("admin", "developer", "contributor", "viewer")).build())

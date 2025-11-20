@@ -285,7 +285,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         return JooqApplication.builder()
                 .applicationName("application.name")
-                .i18nBundlePrefix("messages")
+                .i18nBundlePrefix("pm_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .repositoryKey(USERS)
                         .availableRoles(Roles.builder().roles(List.of("admin", "manager", "developer", "viewer")).build())
