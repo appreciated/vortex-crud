@@ -17,6 +17,7 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -281,7 +282,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         routes.put("repositories", JooqGridRoute.builder()
                 .isDefaultRoute(true)
                 .dataStoreKey(REPOSITORY)
-                .iconFactory(STORAGE::create)
+                .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(REPOSITORY.NAME)
@@ -292,7 +293,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("issues", JooqKanbanRoute.builder()
-                .iconFactory(BUG::create)
+                .iconFactory(VaadinIcon.BUG::create)
                 .dataStoreKey(ISSUE)
                 .title("route.issues.title")
                 .configuration(JooqKanbanConfiguration.builder()
@@ -307,7 +308,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("pull-requests", JooqListRoute.builder()
                 .dataStoreKey(PULL_REQUEST)
-                .iconFactory(COMPILE::create)
+                .iconFactory(VaadinIcon.COMPILE::create)
                 .title("route.pull_requests.title")
                 .configuration(JooqListItemRendererConfiguration.builder()
                         .filterField(PULL_REQUEST.TITLE)
@@ -323,7 +324,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("organizations", JooqGridRoute.builder()
                 .dataStoreKey(ORGANIZATION)
-                .iconFactory(BUILDING::create)
+                .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.organizations.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(ORGANIZATION.NAME)
@@ -335,7 +336,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("milestones", JooqListRoute.builder()
                 .dataStoreKey(MILESTONE)
-                .iconFactory(FLAG::create)
+                .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
                 .configuration(JooqListItemRendererConfiguration.builder()
                         .filterField(MILESTONE.TITLE)
