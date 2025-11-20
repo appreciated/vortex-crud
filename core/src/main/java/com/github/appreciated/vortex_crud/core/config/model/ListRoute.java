@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -47,4 +48,11 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
+    /**
+     * List of custom route actions with full access to data store and selected entities.
+     * These actions will be rendered in the route header and automatically
+     * enabled/disabled based on selection state.
+     */
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
 }
