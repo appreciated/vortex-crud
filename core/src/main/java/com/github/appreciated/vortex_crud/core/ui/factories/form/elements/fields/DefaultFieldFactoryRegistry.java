@@ -40,6 +40,7 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(DateFieldFactory.class, new DateFieldFactory<>());
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
         factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.selects(), configuration.dataStores()));
+        factories.put(MultiSelectValueFieldFactory.class, new MultiSelectValueFieldFactory<>(configuration.selects(), configuration.dataStores()));
         factories.put(DoubleNumberFieldFactory.class, new DoubleNumberFieldFactory<>());
         factories.put(BigDecimalNumberFieldFactory.class, new BigDecimalNumberFieldFactory<>());
         factories.put(IntegerNumberFieldFactory.class, new IntegerNumberFieldFactory<>());
@@ -65,6 +66,9 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         // Resolve by concrete Field implementation class (raw checks to avoid generic incompatibilities)
         if (field instanceof SelectField) {
             return getFactory(SelectFieldFactory.class);
+        }
+        if (field instanceof MultiSelectValueField) {
+            return getFactory(MultiSelectValueFieldFactory.class);
         }
         if (field instanceof ImageField) {
             return getFactory(ImageFieldFactory.class);

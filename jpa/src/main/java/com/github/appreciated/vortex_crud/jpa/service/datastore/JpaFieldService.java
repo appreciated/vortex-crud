@@ -105,6 +105,12 @@ public class JpaFieldService {
                                     .values(selectField.value())
                                     .required(required)
                                     .build()
+                    )).or(() -> getAnnotation(entityField, MultiSelectValueField.class).map(multiSelectValueField ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectValueField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .values(multiSelectValueField.value())
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, BigDecimalNumberField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) BigDecimalField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
