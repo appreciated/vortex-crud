@@ -25,7 +25,6 @@ import java.io.Serializable;
  *         List<Task> tasks = context.getDataStore()
  *             .getRecordsFromTable(0, Integer.MAX_VALUE);
  *         // Export logic here
- *         context.showSuccessNotification("Exported " + tasks.size() + " tasks");
  *     })
  *     .build()
  * }</pre>

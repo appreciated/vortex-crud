@@ -25,7 +25,6 @@ import lombok.experimental.Accessors;
  *         Task task = context.getFirstSelectedEntity();
  *         task.setStatus("APPROVED");
  *         context.getDataStore().updateRecord(task);
- *         context.showSuccessNotification("Task approved!");
  *         context.getRefreshCallback().run();
  *     })
  *     .build()

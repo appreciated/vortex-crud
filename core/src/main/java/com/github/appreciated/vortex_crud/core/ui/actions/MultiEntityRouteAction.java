@@ -23,8 +23,6 @@ import lombok.experimental.Accessors;
  *     .handler(context -> {
  *         List<Task> selectedTasks = context.getSelectedEntities();
  *         exportTasks(selectedTasks);
- *         context.showSuccessNotification(
- *             "Exported " + selectedTasks.size() + " task(s)");
  *     })
  *     .build()
  * }</pre>

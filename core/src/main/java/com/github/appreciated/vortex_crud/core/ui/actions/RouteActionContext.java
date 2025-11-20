@@ -23,7 +23,6 @@ import java.util.List;
  *         Task task = context.getFirstSelectedEntity();
  *         task.setStatus("APPROVED");
  *         context.getDataStore().updateRecord(task);
- *         context.showSuccessNotification("Task approved!");
  *         context.getRefreshCallback().run();
  *     })
  *     .build()

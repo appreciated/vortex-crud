@@ -26,7 +26,6 @@ import lombok.experimental.Accessors;
  *         List<Task> allTasks = context.getDataStore()
  *             .getRecordsFromTable(0, Integer.MAX_VALUE);
  *         exportTasks(allTasks);
- *         context.showSuccessNotification("Exported " + allTasks.size() + " tasks");
  *     })
  *     .build()
  * }</pre>
