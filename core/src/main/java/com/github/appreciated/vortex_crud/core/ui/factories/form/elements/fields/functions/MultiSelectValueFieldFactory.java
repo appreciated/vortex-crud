@@ -30,7 +30,7 @@ public class MultiSelectValueFieldFactory<ModelClass, FieldType, RepositoryType>
         }
 
         Set<?> keySet = selectConfig.keySet();
-        checkboxGroup.setItems(new ArrayList<>(keySet));
+        checkboxGroup.setItems(new ArrayList(keySet));
         checkboxGroup.setItemLabelGenerator(item -> checkboxGroup.getTranslation(selectConfig.get(item)));
 
         return checkboxGroup;

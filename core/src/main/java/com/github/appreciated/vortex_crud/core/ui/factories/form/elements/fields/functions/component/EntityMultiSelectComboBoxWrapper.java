@@ -32,7 +32,10 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
 
         // Set up the MultiSelectComboBox with a data provider and label generator
         multiSelectComboBox.setDataProvider(
-                (filterValue, i, i1) -> dataStore.getRecordsFromTableWhereColumnLike(multiSelectField.filterField(), filterValue, i, i1).stream(),
+                (filterValue, offset, limit) ->
+                        dataStore.getRecordsFromTableWhereColumnLike(multiSelectField.filterField(), filterValue, offset, limit)
+                                .stream()
+                                .map(obj -> (Object) obj),
                 filterValue -> dataStore.countWhereColumnLike(multiSelectField.filterField(), filterValue)
         );
 
