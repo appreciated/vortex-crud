@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa.custom;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import lombok.Data;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,11 +15,17 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
     private final Map<Integer, Note> store = new HashMap<>();
     private final AtomicInteger idCounter = new AtomicInteger(1);
 
-    @Data
     public static class Note {
         private Integer id;
         private String title;
         private String content;
+
+        public Integer getId() { return id; }
+        public void setId(Integer id) { this.id = id; }
+        public String getTitle() { return title; }
+        public void setTitle(String title) { this.title = title; }
+        public String getContent() { return content; }
+        public void setContent(String content) { this.content = content; }
     }
 
     @Override

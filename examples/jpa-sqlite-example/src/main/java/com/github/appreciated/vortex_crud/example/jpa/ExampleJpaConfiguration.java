@@ -22,7 +22,6 @@ import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -44,8 +43,11 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final VideoRepository videoRepository;
     private final JpaDataStoreFactoryRegistry registry;
 
-    // Marker key for custom data store
-    private static final JpaRepository<?, ?> NOTES_KEY = new JpaRepositoryImplementation<>() {};
+    // Marker key for custom data store - cast required due to type erasure
+    @SuppressWarnings("unchecked")
+    private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) (Object) new Object() {
+        public String toString() { return "NotesDataStore"; }
+    };
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
