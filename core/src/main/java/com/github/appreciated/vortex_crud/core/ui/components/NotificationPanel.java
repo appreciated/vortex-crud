@@ -176,6 +176,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
     private List<?> queryNotifications(boolean unreadOnly) {
         List<?> notifications;
+        int limit = configuration.limit();
 
         // If we need to filter by read status
         if (unreadOnly && configuration.readStatusField() != null) {
@@ -185,7 +186,9 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 // Since we can't easily do compound queries, we'll query by filter and filter in memory
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
                     configuration.filterField(),
-                    configuration.filterValue()
+                    configuration.filterValue(),
+                    0,
+                    limit * 2  // Get more than needed to account for filtering
                 );
 
                 // Filter for unread in memory
@@ -194,7 +197,9 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 // Query only by read status
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
                     configuration.readStatusField(),
-                    configuration.readStatusValueForUnread()
+                    configuration.readStatusValueForUnread(),
+                    0,
+                    limit
                 );
             }
         } else {
@@ -202,16 +207,18 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
             if (configuration.filterField() != null && configuration.filterValue() != null) {
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
                     configuration.filterField(),
-                    configuration.filterValue()
+                    configuration.filterValue(),
+                    0,
+                    limit
                 );
             } else {
-                notifications = dataStore.getAllRecords();
+                notifications = dataStore.getRecordsFromTable(0, limit);
             }
         }
 
         // Limit the results
-        if (notifications != null && notifications.size() > configuration.limit()) {
-            notifications = notifications.subList(0, configuration.limit());
+        if (notifications != null && notifications.size() > limit) {
+            notifications = notifications.subList(0, limit);
         }
 
         return notifications != null ? notifications : new ArrayList<>();
@@ -323,8 +330,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 reflectionService.setValue(notification, configuration.readStatusField(), readValue);
 
                 // Update in database
-                Object id = dataStore.getIdValue(notification);
-                dataStore.updateRecordById(id, notification);
+                dataStore.updateRecordById(notification);
             }
 
             // Refresh the UI
