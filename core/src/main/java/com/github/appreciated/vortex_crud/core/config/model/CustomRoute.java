@@ -13,8 +13,8 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * Adds a user-defined @Route view to the VortexCrud menu.
- * Create your view with @Route(value = "path", layout = ProxyRouterLayout.class) then add CustomRoute to menu.
+ * Adds a custom component to the VortexCrud menu.
+ * Just pass your component class and it will be registered as a route with ProxyRouterLayout.
  */
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -22,6 +22,8 @@ import java.util.List;
 @Builder
 @Getter
 public class CustomRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+
+    private Class<? extends Component> componentClass;
 
     @Builder.Default
     private RepositoryType dataStoreKey = null;

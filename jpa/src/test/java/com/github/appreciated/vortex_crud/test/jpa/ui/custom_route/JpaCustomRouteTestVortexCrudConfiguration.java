@@ -12,23 +12,19 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * Simplified VortexCrud configuration for CustomRoute testing.
- * <p>
- * This demonstrates how to add a CustomRoute entry to the VortexCrud menu.
- * No entities, repositories, or data stores needed - just a link to your custom @Route view.
- * </p>
+ * Minimal CustomRoute configuration - just pass your component class.
  */
 @Service
 public class JpaCustomRouteTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        // Simply add a CustomRoute that links to the @Route annotated CustomDashboardView
         Map<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = Map.of(
                 "dashboard", CustomRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                        .componentClass(CustomDashboardView.class)
                         .title("route.dashboard.title")
                         .iconFactory(() -> VaadinIcon.DASHBOARD.create())
-                        .isDefaultRoute(true)  // This will be the landing page
+                        .isDefaultRoute(true)
                         .build()
         );
 

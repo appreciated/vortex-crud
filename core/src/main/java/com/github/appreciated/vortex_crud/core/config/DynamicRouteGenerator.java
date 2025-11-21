@@ -26,25 +26,23 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
     @Override
     public void serviceInit(ServiceInitEvent event) {
         Map<String, RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
+        RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
 
-        // Register routes, but skip CustomRoute instances (they're registered via @Route annotation)
         routes.forEach((path, routeRenderer) -> {
-            if (!(routeRenderer instanceof CustomRoute)) {
-                registerRoute(path);
+            if (routeRenderer instanceof CustomRoute<?, ?, ?> customRoute) {
+                // Register custom component with ProxyRouterLayout
+                configuration.setRoute(path, customRoute.componentClass(), ProxyRouterLayout.class);
+            } else {
+                // Register normal VortexCrud dynamic route
+                configuration.setRoute(path + "/:path*", InternalDynamicRoute.class, ProxyRouterLayout.class);
             }
         });
 
         IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().identityAndAccessManagement();
         if (userManagement != null) {
-            RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
             configuration.setRoute("login", userManagement.loginView());
             configuration.setRoute("sign-up", userManagement.signUpView());
         }
-    }
-
-    public void registerRoute(String path) {
-        RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
-        configuration.setRoute(path + "/:path*", InternalDynamicRoute.class, ProxyRouterLayout.class);
     }
 
 }
