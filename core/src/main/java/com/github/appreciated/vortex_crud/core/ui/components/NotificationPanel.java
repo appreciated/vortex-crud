@@ -47,13 +47,14 @@ import java.util.List;
  *   <li>Fully internationalized with i18n keys</li>
  * </ul>
  *
+ * @param <ModelClass> The type of model/entity class
  * @param <FieldType> The type used to identify fields (String for JPA, TableField for jOOQ)
  * @param <RepositoryType> The type of repository/table key
  */
-public class NotificationPanel<FieldType, RepositoryType> extends Div {
+public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Div {
 
     private final NotificationPanelConfiguration<FieldType, RepositoryType> configuration;
-    private final VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
     private VortexCrudDataStore<FieldType, ?> dataStore;
@@ -64,7 +65,7 @@ public class NotificationPanel<FieldType, RepositoryType> extends Div {
 
     public NotificationPanel(
             NotificationPanelConfiguration<FieldType, RepositoryType> configuration,
-            VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry,
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configuration = configuration;
         this.dataStoreRegistry = dataStoreRegistry;
@@ -95,7 +96,7 @@ public class NotificationPanel<FieldType, RepositoryType> extends Div {
         popover = new Popover();
         popover.setTarget(button);
         popover.setWidth("300px");
-        popover.addThemeVariants(PopoverVariant.ARROW, PopoverVariant.LUMO_NO_PADDING);
+        popover.addThemeVariants(PopoverVariant.LUMO_NO_PADDING);
         popover.setPosition(PopoverPosition.BOTTOM);
         popover.setModal(true);
         popover.setAriaLabelledBy("notifications-heading");

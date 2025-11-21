@@ -13,13 +13,13 @@ public class DefaultRouterLayoutFactory<ModelClass, FieldType, RepositoryType> i
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudLogoutService logoutService;
-    private final VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
     public DefaultRouterLayoutFactory(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             @Autowired(required = false) VortexCrudLogoutService logoutService,
-            VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry,
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configService = configService;
         this.logoutService = logoutService;

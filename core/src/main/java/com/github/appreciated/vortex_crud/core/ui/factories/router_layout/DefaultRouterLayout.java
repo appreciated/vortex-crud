@@ -29,13 +29,13 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudLogoutService logoutService;
-    private final VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry;
+    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
     public DefaultRouterLayout(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudLogoutService logoutService,
-            VortexCrudDataStoreFactoryRegistry<FieldType, RepositoryType> dataStoreRegistry,
+            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configService = configService;
         this.logoutService = logoutService;
@@ -67,7 +67,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         NotificationPanelConfiguration<FieldType, RepositoryType> notificationConfig =
                 configService.configuration().notificationPanelConfiguration();
         if (notificationConfig != null) {
-            NotificationPanel<FieldType, RepositoryType> notificationPanel =
+            NotificationPanel<ModelClass, FieldType, RepositoryType> notificationPanel =
                     new NotificationPanel<>(notificationConfig, dataStoreRegistry, reflectionService);
             actionButtons.add(notificationPanel);
         }
