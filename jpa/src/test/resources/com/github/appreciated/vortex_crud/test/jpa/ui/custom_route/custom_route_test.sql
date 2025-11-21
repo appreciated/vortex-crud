@@ -1,2 +1,0 @@
--- CustomRoute test - no database setup needed
--- CustomRoute simply links to a @Route annotated view, no entities required
