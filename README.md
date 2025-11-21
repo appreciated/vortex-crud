@@ -71,6 +71,11 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 - **Multi-Selection Fields**: Support for multi-select with ComboBox and CheckboxGroup variants
 - **Custom Action Buttons**: Add custom action buttons to routes for specialized workflows
 - **Custom Routes**: Add routes not visible in the menu.
+- **Lifecycle Hooks**: Intercept operations with before/after hooks for Create, Update, Delete, and Read operations
+- **Field Validation**: Use built-in Vaadin validators (email, URL, regex, range, string length) with support for custom validation logic
+- **Demo Applications**: Two production-ready demo apps showcasing real-world usage:
+  - **Project Management Platform** (8 tables with custom fields)
+  - **Development Platform** (12 tables, GitHub/GitLab-style)
 
 # <a name="supported-routes-inputs">Features in Detail</a>
 
@@ -405,9 +410,6 @@ CREATE TABLE task_comments (...);
 
 ### High priority
 - **Custom Repository Support**: Allow adding custom repositories f.e. create an example where access to a local directory is given
-- Explore missing features by creating actual demos of:
-  - **Small Project management software**
-  - **Small development platform like GitHub / Gitlab** (without the pipeline and the actual git part, just use file)
 - Notifications
 
 ### Developer Experience
@@ -427,11 +429,10 @@ CREATE TABLE task_comments (...);
   - Suggest optimizations
 
 ### Framework Flexibility
-- **Hook Points & Extension API**: Comprehensive hook system for customization
-  - Lifecycle hooks (OnBefore/OnAfter for Create, Update, Delete, Read operations)
-  - Validation hooks with custom validation logic
-  - Action hooks (custom button actions and workflows)
-  - Data transformation hooks
+- **Enhanced Hook System**: Extend existing lifecycle hooks
+  - Add validation hooks with custom validation logic
+  - Add data transformation hooks
+  - Improve hook documentation and examples
 
 ### API & Integration
 - **REST API Generation**: Auto-generate REST endpoints for data stores
@@ -444,12 +445,10 @@ CREATE TABLE task_comments (...);
 - **Export/Import**: Bulk data export and import (CSV, JSON, Excel)
 
 ### Enhanced Validation
-- **Field Validation Framework**: Comprehensive validation system
-  - Built-in Vaadin Flow validators (email, URL, regex, range, string length)
-  - Custom validation logic support
+- **Extended Validation Features**: Build on existing field validation
   - Cross-field validation
   - Async validation (e.g., uniqueness checks)
-- **Entity-Level Validation**: Business rule validation across multiple fields
+  - Entity-level validation: Business rule validation across multiple fields
 
 ### Additional UI Components
 - **Additional Form Controls**: Radio Button Groups, Color Pickers, File Upload (multi-file), Image collections, Slider controls
