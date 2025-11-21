@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDia
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
@@ -58,6 +59,7 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(KanbanFactory.class, new KanbanFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(CalendarFactory.class, new CalendarFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
+        factories.put(CustomRouteFactory.class, new CustomRouteFactory<>());
     }
 
     public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> getFactory(Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory) {
