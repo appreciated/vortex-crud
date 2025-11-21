@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
@@ -48,4 +49,11 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
+    /**
+     * List of custom route actions with full access to data store and selected entities.
+     * These actions will be rendered in the route header and automatically
+     * enabled/disabled based on selection state.
+     */
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
 }

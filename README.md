@@ -62,12 +62,14 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
     - **JPA Support**
         - **Database Schema Validation**: Receive notifications if the data model no longer fits your application.
 - **i18n Support**
-- **Entity Relationship Support**: Manage relationships between entities (One-to-One, One-to-Many).
+- **Entity Relationship Support**: Manage relationships between entities (One-to-One, One-to-Many, Many-to-Many).
 - **Menu**
 - **Appbar**: With app name and icon
 - **Nested Hierarchies**
 - **Data Filtering**: Filter entity lists in "grid," "list," and "master-detail" routes.
-- **Media Support**: Image and video field types available (functionality in development)
+- **Media Support**: Image, video, PDF, and file field types available
+- **Multi-Selection Fields**: Support for multi-select with ComboBox and CheckboxGroup variants
+- **Custom Action Buttons**: Add custom action buttons to routes for specialized workflows
 - **Custom Routes**: Add routes not visible in the menu.
 
 # <a name="supported-routes-inputs">Features in Detail</a>
@@ -117,9 +119,14 @@ Standard form view for creating and editing entities.
   - Date
   - DateTime
   - Image
+  - Video
+  - PDF
+  - File
   - Number
   - Select
   - Checkbox
+  - MultiSelect (ComboBox and CheckboxGroup variants)
+  - MultiSelectValue (for enums and string values)
   - TextArea
 - **Relationships**: One-to-One, Many-to-One, Many-to-Many
 
@@ -226,6 +233,12 @@ Unlike jOOQ (which uses manual field configuration), **JPA field types are defin
 **Media Fields:**
 - `@ImageField` - Image upload and display
 - `@VideoField` - Video handling
+- `@PdfField` - PDF file upload and handling
+- `@FileField` - General file upload and handling
+
+**Multi-Selection Fields:**
+- `@MultiSelectField` - Multi-selection with ComboBox or CheckboxGroup
+- `@MultiSelectValueField` - Multi-select for enums and string values
 
 #### JPA Entity Example with Annotations
 
