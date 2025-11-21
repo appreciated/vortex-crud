@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.PdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.FileFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.fields.BigDecimalField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DoubleField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IntegerField;
@@ -10,6 +12,8 @@ import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaVideoFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaPdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFileFieldRendererConfiguration;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -71,7 +75,21 @@ public class JpaFieldService {
                                 .children(children)
                                 .required(required)
                                 .build();
-                    }).or(() -> getAnnotation(entityField, ImageField.class).map(imageField -> {
+                    }).or(() -> getAnnotation(entityField, MultiSelectField.class).map(multiSelectField -> {
+                        Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
+                        JpaRepository<?, ?> repository = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
+                        List<String> children = Arrays.asList(multiSelectField.fields());
+                        String filterField = multiSelectField.value();
+                        String fieldName = entityField.getName();
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectField
+                                .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .dataStore(repository)
+                                .field(fieldName)
+                                .filterField(filterField)
+                                .children(children)
+                                .required(required)
+                                .build();
+                    })).or(() -> getAnnotation(entityField, ImageField.class).map(imageField -> {
                         ImageFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaImageFieldRendererConfiguration.builder().resourceProvider(imageField.value()).build();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.ImageField
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
@@ -85,10 +103,30 @@ public class JpaFieldService {
                                 .configuration(cfg)
                                 .required(required)
                                 .build();
+                    })).or(() -> getAnnotation(entityField, PdfField.class).map(pdfField -> {
+                        PdfFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaPdfFieldRendererConfiguration.builder().resourceProvider(pdfField.value()).build();
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.PdfField
+                                .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .configuration(cfg)
+                                .required(required)
+                                .build();
+                    })).or(() -> getAnnotation(entityField, FileField.class).map(fileField -> {
+                        FileFieldRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> cfg = JpaFileFieldRendererConfiguration.builder().resourceProvider(fileField.value()).build();
+                        return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.FileField
+                                .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .configuration(cfg)
+                                .required(required)
+                                .build();
                     })).or(() -> getAnnotation(entityField, SelectField.class).map(selectField ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.SelectField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                     .values(selectField.value())
+                                    .required(required)
+                                    .build()
+                    )).or(() -> getAnnotation(entityField, MultiSelectValueField.class).map(multiSelectValueField ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectValueField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .values(multiSelectValueField.value())
                                     .required(required)
                                     .build()
                     )).or(() -> getAnnotation(entityField, BigDecimalNumberField.class).map(ann ->

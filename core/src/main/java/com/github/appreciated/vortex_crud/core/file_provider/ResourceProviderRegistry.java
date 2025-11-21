@@ -21,9 +21,13 @@ public class ResourceProviderRegistry implements VortexCrudFileProviderRegistry 
     public ResourceProviderRegistry() {
         LocalImageResourceProvider imageProvider = new LocalImageResourceProvider();
         LocalVideoResourceProvider videoProvider = new LocalVideoResourceProvider();
+        LocalPdfResourceProvider pdfProvider = new LocalPdfResourceProvider();
+        LocalFileResourceProvider fileProvider = new LocalFileResourceProvider();
 
         factories.put(LocalImageResourceProvider.class, imageProvider);
         factories.put(LocalVideoResourceProvider.class, videoProvider);
+        factories.put(LocalPdfResourceProvider.class, pdfProvider);
+        factories.put(LocalFileResourceProvider.class, fileProvider);
     }
 
     public Map<Class<? extends VortexCrudResourceProvider>, VortexCrudResourceProvider> getFactories() {
