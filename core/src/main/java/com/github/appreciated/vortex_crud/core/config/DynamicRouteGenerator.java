@@ -25,7 +25,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        Map<String, RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
+        var routes = configService.configuration().routes();
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
 
         routes.forEach((path, routeRenderer) -> {
