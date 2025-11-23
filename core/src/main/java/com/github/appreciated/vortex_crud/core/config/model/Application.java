@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ public class Application<ModelClass, FieldType, RepositoryType> {
 
     private Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> dataStores;
 
-    private LinkedHashMap<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
+    private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     /**
      * Default menu actions that will be applied to all routes.

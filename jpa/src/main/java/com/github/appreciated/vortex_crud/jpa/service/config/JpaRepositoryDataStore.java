@@ -34,8 +34,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         this.repository = (JpaRepository<ModelClass, Object>) repository;
         this.repositoryModelClass = getEntityClass(repository);
         this.jpaFieldAnnotationRegistryService = jpaFieldAnnotationRegistryService;
-        assert hooks != null;
-        this.hooks = hooks;
+        this.hooks = hooks; // Hooks are now optional
         this.fields = getModelFields();
         this.idField = findIdField(repositoryModelClass);
     }
@@ -106,17 +105,17 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
                     }
                 }
 
-                hooks.beforeUpdates().forEach(hook -> hook.execute(entity));
+                if (hooks != null) hooks.beforeUpdates().forEach(hook -> hook.execute(entity));
                 Object id1 = getId(repository.save(entity));
-                hooks.afterUpdates().forEach(hook -> hook.execute(entity));
+                if (hooks != null) hooks.afterUpdates().forEach(hook -> hook.execute(entity));
                 return id1;
             }
         }
 
         // For new entities or if existing entity not found
-        hooks.beforeCreates().forEach(hook -> hook.execute(entity));
+        if (hooks != null) hooks.beforeCreates().forEach(hook -> hook.execute(entity));
         Object id1 = getId(repository.save(entity));
-        hooks.afterCreates().forEach(hook -> hook.execute(entity));
+        if (hooks != null) hooks.afterCreates().forEach(hook -> hook.execute(entity));
         return id1;
     }
 
@@ -335,9 +334,9 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
      */
     @Transactional
     public void deleteRecordById(Object id) {
-        hooks.beforeDeletes().forEach(hook -> hook.execute(null));
+        if (hooks != null) hooks.beforeDeletes().forEach(hook -> hook.execute(null));
         repository.deleteById(id);
-        hooks.afterDeletes().forEach(hook -> hook.execute(null));
+        if (hooks != null) hooks.afterDeletes().forEach(hook -> hook.execute(null));
     }
 
     public int count() {

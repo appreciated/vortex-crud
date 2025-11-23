@@ -9,8 +9,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFac
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
+import com.github.appreciated.vortex_crud.example.jpa.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
@@ -18,6 +20,7 @@ import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAcc
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.server.VaadinServletRequest;
+import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +41,13 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
+    private final JpaDataStoreFactoryRegistry registry;
+
+    // Marker key for custom data store - cast required due to type erasure
+    @SuppressWarnings("unchecked")
+    private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) (Object) new Object() {
+        public String toString() { return "NotesDataStore"; }
+    };
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
@@ -45,7 +55,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
             TaskCommentRepository taskCommentRepository,
             TaskRepository taskRepository,
             UserRepository userRepository,
-            VideoRepository videoRepository
+            VideoRepository videoRepository,
+            JpaDataStoreFactoryRegistry registry
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
@@ -53,6 +64,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
+        this.registry = registry;
+    }
+
+    @PostConstruct
+    void registerCustomDataStores() {
+        registry.addFactory(NOTES_KEY, (com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore) new SimpleMapDataStore());
     }
 
     @Override
@@ -302,6 +319,27 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 JpaFieldElement.builder("firstName", "route.profile.labels.first_name").build(),
                                 JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build()
                         ))
+                        .build())
+                .build());
+
+        // Custom in-memory data store example
+        routes.put("notes", JpaGridRoute.builder()
+                .dataStoreKey(NOTES_KEY)
+                .iconFactory(NOTEBOOK::create)
+                .title("Notes (Custom DataStore)")
+                .configuration(JpaGridItemRendererConfiguration.builder()
+                        .titleField("title")
+                        .descriptionField("content")
+                        .build())
+                .child(JpaFormRoute.builder()
+                        .dataStoreKey(NOTES_KEY)
+                        .formConfiguration(JpaFormRendererConfiguration.builder()
+                                .titleField("title")
+                                .children(List.of(
+                                        JpaFieldElement.builder("title", "Title").build(),
+                                        JpaFieldElement.builder("content", "Content").build()
+                                ))
+                                .build())
                         .build())
                 .build());
 
