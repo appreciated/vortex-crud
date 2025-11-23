@@ -7,12 +7,14 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.ServiceInitEvent;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Configuration class for handling default route redirects in a Vaadin application.
@@ -24,7 +26,7 @@ import java.util.Optional;
 public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> implements VaadinServiceInitListener {
 
     private final Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routeConfigs;
-    private static Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>> defaultRoute;
+    private static final Map<VaadinService, String> defaultRoutes = new ConcurrentHashMap<>();
 
     public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
         this.routeConfigs = configService.configuration().routes();
@@ -32,17 +34,22 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<? extends Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>> defaultRoutes = routeConfigs
+        List<? extends Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>> configuredDefaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
-        if (defaultRoutes.size() > 1) {
+
+        Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>> defaultRouteEntry;
+
+        if (configuredDefaultRoutes.size() > 1) {
             throw new IllegalStateException("More than one default route configured");
         } else {
-            defaultRoute = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>>) (Optional<?>) defaultRoutes.stream().findFirst();
+            defaultRouteEntry = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>>) (Optional<?>) configuredDefaultRoutes.stream().findFirst();
 
         }
-        if (defaultRoute.isPresent()) {
+        if (defaultRouteEntry.isPresent()) {
+            defaultRoutes.put(event.getSource(), defaultRouteEntry.get().getKey());
+            event.getSource().addServiceDestroyListener(e -> defaultRoutes.remove(e.getSource()));
             RouteConfiguration.forApplicationScope().setRoute("", VortexCrudDefaultRedirect.class);
         }
     }
@@ -51,7 +58,10 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
 
         @Override
         public void beforeEnter(BeforeEnterEvent event) {
-            event.forwardTo(defaultRoute.get().getKey());
+            String target = defaultRoutes.get(VaadinService.getCurrent());
+            if (target != null) {
+                event.forwardTo(target);
+            }
         }
     }
 }
