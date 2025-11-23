@@ -23,7 +23,6 @@ import com.vaadin.flow.component.tabs.TabSheetVariant;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
     private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
-    private VortexCrudDataStore<FieldType, ?> dataStore;
+    private VortexCrudDataStore dataStore;
     private MessageList unreadList;
     private MessageList allList;
     private Div unreadContent;
