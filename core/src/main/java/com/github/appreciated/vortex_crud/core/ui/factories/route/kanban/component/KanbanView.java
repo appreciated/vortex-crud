@@ -351,7 +351,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 try {
                     reflectionService.setValue(draggedItem, kanbanConfigurationConfig.rowIndexField(), newPosition);
                 } catch (Exception e) {
-                    System.out.println();
+                    // Ignore exception if setting row index fails
                 }
             }
             dataStore.updateRecordById(draggedItem);
