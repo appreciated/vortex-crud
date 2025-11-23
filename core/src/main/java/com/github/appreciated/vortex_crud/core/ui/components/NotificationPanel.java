@@ -20,6 +20,8 @@ import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.tabs.TabSheetVariant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -52,6 +54,7 @@ import java.util.List;
  */
 public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Div {
 
+    private static final Logger log = LoggerFactory.getLogger(NotificationPanel.class);
     private final NotificationPanelConfiguration<FieldType, RepositoryType> configuration;
     private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
@@ -168,8 +171,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 });
             }
         } catch (Exception e) {
-            System.err.println("Error loading notifications: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error loading notifications", e);
         }
     }
 
@@ -278,7 +280,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 MessageListItem item = new MessageListItem(message, timestamp, userName, avatarUrl);
                 items.add(item);
             } catch (Exception e) {
-                System.err.println("Error converting notification to message item: " + e.getMessage());
+                log.error("Error converting notification to message item", e);
             }
         }
 
@@ -340,8 +342,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 popover.close();
             }
         } catch (Exception e) {
-            System.err.println("Error marking notifications as read: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error marking notifications as read", e);
         }
     }
 

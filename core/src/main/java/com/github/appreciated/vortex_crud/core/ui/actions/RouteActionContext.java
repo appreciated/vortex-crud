@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Context object provided to route actions when they are executed.
@@ -57,6 +59,12 @@ public class RouteActionContext<FieldType, ModelClass> implements Serializable {
     private final Component viewComponent;
 
     /**
+     * Custom attributes map to pass arbitrary data to the action context.
+     */
+    @Builder.Default
+    private final Map<String, Object> attributes = new HashMap<>();
+
+    /**
      * Gets the first selected entity.
      * Useful for single-entity actions.
      *
@@ -75,6 +83,16 @@ public class RouteActionContext<FieldType, ModelClass> implements Serializable {
      */
     public int getSelectionCount() {
         return selectedEntities != null ? selectedEntities.size() : 0;
+    }
+
+    /**
+     * Retrieves a custom attribute by key.
+     *
+     * @param key The key of the attribute
+     * @return The value of the attribute, or null if not found
+     */
+    public Object getAttribute(String key) {
+        return attributes.get(key);
     }
 
     /**

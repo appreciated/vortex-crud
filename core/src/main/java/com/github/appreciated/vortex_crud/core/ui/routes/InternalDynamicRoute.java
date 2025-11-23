@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.DefaultRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -14,17 +13,30 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 
 /**
  * A dynamic route component that renders different views based on the route path.
- * It uses the {@link VortexCrudConfigService} to retrieve configuration details and the {@link DefaultRouteFactoryRegistry}
+ * It uses the {@link VortexCrudConfigService} to retrieve configuration details and the {@link VortexCrudRouteFactoryRegistry}
  * to generate the appropriate view container for the specified route.
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
+ * <p>
+ * This class serves as the entry point for all dynamic routes in the application.
+ * </p>
+ *
+ * @param <ModelClass>     The type of the model class.
+ * @param <FieldType>      The type of the field identifier.
+ * @param <RepositoryType> The type of the repository.
  */
-
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
+    /**
+     * Constructs a new {@code InternalDynamicRoute}.
+     *
+     * @param configService        The configuration service to access application settings.
+     * @param routeFactoryRegistry The registry to look up route factories.
+     * @param dataStoreUtil        Utility strategy for data store operations.
+     */
     public InternalDynamicRoute(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                 VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
                                 VortexCrudDataStoreUtilStrategy dataStoreUtil
@@ -38,7 +50,8 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         String path = event.getRouteParameters().get("path").orElse("");
-        if (!path.isEmpty()) {
+        // Ensure path starts with / if it's not empty, to match route resolution expectations
+        if (!path.isEmpty() && !path.startsWith("/")) {
             path = "/" + path;
         }
         removeAll();
