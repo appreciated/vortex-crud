@@ -39,4 +39,10 @@ public class Application<ModelClass, FieldType, RepositoryType> {
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> defaultMenuActions;
 
     private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+
+    /**
+     * Optional notification panel configuration.
+     * When provided, a notification bell icon will be displayed in the application header.
+     */
+    private NotificationPanelConfiguration<FieldType, RepositoryType> notificationPanelConfiguration;
 }
