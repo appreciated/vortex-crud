@@ -51,6 +51,7 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
         factories.put(PasswordFieldFactory.class, new PasswordFieldFactory<>());
+        factories.put(MarkDownFieldFactory.class, new MarkDownFieldFactory<>());
     }
 
     public Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> getFactories() {
@@ -108,6 +109,9 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         }
         if (field instanceof IdField) {
             return getFactory(IdFieldFactory.class);
+        }
+        if (field instanceof MarkDownField) {
+            return getFactory(MarkDownFieldFactory.class);
         }
         // Default to TextFieldFactory for simple cases
         return getFactory(TextFieldFactory.class);

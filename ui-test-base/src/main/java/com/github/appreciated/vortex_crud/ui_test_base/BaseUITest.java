@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -157,6 +158,18 @@ public abstract class BaseUITest {
         } catch (StaleElementReferenceException e) {
             return false;
         }
+    }
+
+    protected void clickAndWaitForReload(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("window.vortexTestFlag = true;");
+        element.click();
+        wait.until(d -> {
+            try {
+                return ((JavascriptExecutor) d).executeScript("return window.vortexTestFlag;") == null;
+            } catch (Exception e) {
+                return true;
+            }
+        });
     }
 
 }
