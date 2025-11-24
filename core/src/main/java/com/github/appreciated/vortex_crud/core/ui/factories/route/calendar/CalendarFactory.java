@@ -64,7 +64,7 @@ public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements V
 
         return new CalendarView<>(routeRenderer.dataStoreKey(),
                 routeRenderer,
-                dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey()),
+                routeRenderer.dataStore().getDataStore(dataStoreFactoryRegistry),
                 routeFactory,
                 itemFactory,
                 (CalendarConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration(),

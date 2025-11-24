@@ -79,7 +79,11 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
         super.onAttach(attachEvent);
 
         // Get the data store
-        dataStore = dataStoreRegistry.getDataStore(configuration.dataStoreKey());
+        if (configuration.dataStore() != null) {
+            dataStore = configuration.dataStore();
+        } else {
+            dataStore = dataStoreRegistry.getDataStore(configuration.dataStoreKey());
+        }
 
         // Build the UI
         buildUI();

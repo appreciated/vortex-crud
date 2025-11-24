@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreProvider;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
@@ -103,9 +104,10 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        DataStoreProvider<ModelClass, FieldType, RepositoryType> provider = routeRenderer.dataStore();
+        RepositoryType table = provider.getKey();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = provider.getConfig(configService);
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = provider.getDataStore(dataStoreFactoryRegistry);
 
         ModelClass entity;
         if (creationMode) {

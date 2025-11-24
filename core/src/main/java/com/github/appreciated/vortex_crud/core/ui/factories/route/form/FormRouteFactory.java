@@ -94,9 +94,10 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        DataStoreProvider<ModelClass, FieldType, RepositoryType> provider = routeRenderer.dataStore();
+        RepositoryType table = provider.getKey();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = provider.getConfig(configService);
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = provider.getDataStore(dataStoreFactoryRegistry);
 
         ModelClass entity;
         if (creationMode) {

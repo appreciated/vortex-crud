@@ -64,7 +64,7 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
 
         return new KanbanView<>(routeRenderer.dataStoreKey(),
                 routeRenderer,
-                dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey()),
+                routeRenderer.dataStore().getDataStore(dataStoreFactoryRegistry),
                 routeFactory,
                 itemFactory,
                 (KanbanConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration(),

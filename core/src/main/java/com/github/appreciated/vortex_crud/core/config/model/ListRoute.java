@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
@@ -20,7 +21,25 @@ import java.util.List;
 @Getter
 public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, AccessControlled {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+
+    public static class ListRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+        public ListRouteBuilder<ModelClass, FieldType, RepositoryType> dataStoreKey(RepositoryType key) {
+            this.dataStore = new KeyDataStoreProvider<>(key);
+            return this;
+        }
+
+        public ListRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store) {
+            this.dataStore = new InstanceDataStoreProvider<>(store);
+            return this;
+        }
+
+        public ListRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store, DataStoreConfig<ModelClass, FieldType, RepositoryType> config) {
+            this.dataStore = new InstanceDataStoreProvider<>(store, config);
+            return this;
+        }
+    }
 
     private String title;
 

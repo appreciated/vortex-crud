@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.vaadin.flow.component.Component;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,25 @@ import java.util.List;
 @Getter
 public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+
+    public static class FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+        public FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> dataStoreKey(RepositoryType key) {
+            this.dataStore = new KeyDataStoreProvider<>(key);
+            return this;
+        }
+
+        public FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store) {
+            this.dataStore = new InstanceDataStoreProvider<>(store);
+            return this;
+        }
+
+        public FormSlideRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store, DataStoreConfig<ModelClass, FieldType, RepositoryType> config) {
+            this.dataStore = new InstanceDataStoreProvider<>(store, config);
+            return this;
+        }
+    }
 
     private String title;
 

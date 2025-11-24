@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.function.SerializableFunction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,20 @@ public class DataStoreDropdownConfig<ModelClass, FieldType, RepositoryType> {
      * The data store key to use for fetching data
      */
     private RepositoryType dataStoreKey;
+
+    /**
+     * The data store instance (optional, if dataStoreKey is not provided)
+     */
+    private VortexCrudDataStore<FieldType, ModelClass> dataStore;
+
+    public static class DataStoreDropdownConfigBuilder<ModelClass, FieldType, RepositoryType> {
+        private VortexCrudDataStore<FieldType, ModelClass> dataStore;
+
+        public DataStoreDropdownConfigBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> dataStore) {
+            this.dataStore = dataStore;
+            return this;
+        }
+    }
 
     /**
      * The field to filter on in the data store query

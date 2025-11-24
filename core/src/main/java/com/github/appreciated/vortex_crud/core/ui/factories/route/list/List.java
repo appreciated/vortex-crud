@@ -50,7 +50,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> vortexDataStore =
-                dataStoreFactoryRegistry.getDataStore(dataStore);
+                    routeRenderer.dataStore().getDataStore(dataStoreFactoryRegistry);
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()

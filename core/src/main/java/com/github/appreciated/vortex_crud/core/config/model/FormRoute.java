@@ -1,5 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -19,7 +21,25 @@ import java.util.List;
 @Getter
 public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+
+    public static class FormRouteBuilder<ModelClass, FieldType, RepositoryType> {
+        private DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore;
+        public FormRouteBuilder<ModelClass, FieldType, RepositoryType> dataStoreKey(RepositoryType key) {
+            this.dataStore = new KeyDataStoreProvider<>(key);
+            return this;
+        }
+
+        public FormRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store) {
+            this.dataStore = new InstanceDataStoreProvider<>(store);
+            return this;
+        }
+
+        public FormRouteBuilder<ModelClass, FieldType, RepositoryType> dataStore(VortexCrudDataStore<FieldType, ModelClass> store, DataStoreConfig<ModelClass, FieldType, RepositoryType> config) {
+            this.dataStore = new InstanceDataStoreProvider<>(store, config);
+            return this;
+        }
+    }
 
     private String title;
 

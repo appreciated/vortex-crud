@@ -12,7 +12,11 @@ import java.util.List;
  */
 public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled {
 
-    RepositoryType dataStoreKey();
+    DataStoreProvider<ModelClass, FieldType, RepositoryType> dataStore();
+
+    default RepositoryType dataStoreKey() {
+        return dataStore() != null ? dataStore().getKey() : null;
+    }
 
     String title();
 

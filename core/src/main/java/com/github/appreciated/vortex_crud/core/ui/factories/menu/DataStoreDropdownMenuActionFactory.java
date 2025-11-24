@@ -37,18 +37,25 @@ public class DataStoreDropdownMenuActionFactory<ModelClass, FieldType, Repositor
 
     @Override
     public Component get() {
-        VortexCrudDataStore<FieldType, ?> dataStore = dataStores.get(config.dataStoreKey());
+        VortexCrudDataStore<FieldType, ModelClass> typedDataStore;
 
-        if (dataStore == null) {
-            throw new IllegalArgumentException(
-                "No data store found for key: " + config.dataStoreKey()
-            );
+        if (config.dataStore() != null) {
+            typedDataStore = config.dataStore();
+        } else {
+            VortexCrudDataStore<FieldType, ?> dataStore = dataStores.get(config.dataStoreKey());
+
+            if (dataStore == null) {
+                throw new IllegalArgumentException(
+                        "No data store found for key: " + config.dataStoreKey()
+                );
+            }
+
+            // Cast is safe because we're using the same data store that was registered
+            @SuppressWarnings("unchecked")
+            VortexCrudDataStore<FieldType, ModelClass> castedDataStore =
+                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore;
+            typedDataStore = castedDataStore;
         }
-
-        // Cast is safe because we're using the same data store that was registered
-        @SuppressWarnings("unchecked")
-        VortexCrudDataStore<FieldType, ModelClass> typedDataStore =
-            (VortexCrudDataStore<FieldType, ModelClass>) dataStore;
 
         return new DataStoreDropdown<>(config, typedDataStore);
     }
