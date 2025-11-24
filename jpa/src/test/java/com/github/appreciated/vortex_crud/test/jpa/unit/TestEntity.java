@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.unit;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DoubleNumberField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IntegerNumberField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
@@ -19,7 +19,7 @@ public class TestEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @DoubleNumberField
+    @IntegerNumberField
     @Column(name = "age", nullable = false)
     private Integer age;
 
