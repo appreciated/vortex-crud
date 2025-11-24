@@ -102,7 +102,7 @@ public abstract class AbstractGridTest extends BaseUITest {
         WebElement field = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"))
                 .findElement(By.tagName("input"));
         field.sendKeys("Created Entry");
-        waitForAnyElementContainingText("Save").click();
+        clickAndWaitForReload(waitForAnyElementContainingText("Save"));
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Created Entry");
     }
