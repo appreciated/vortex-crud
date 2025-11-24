@@ -56,7 +56,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 PROJECTS.ID, JooqIdField.builder().build(),
                                 PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
+                                PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                                 PROJECTS.START_DATE, JooqDateField.builder().build(),
                                 PROJECTS.END_DATE, JooqDateField.builder().build(),
                                 PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
@@ -66,7 +66,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 TASKS.ID, JooqIdField.builder().build(),
                                 TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                TASKS.DESCRIPTION, JooqMarkDownField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(USERS).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build() /* 1:1 Relation */,
                                 TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                                 TASKS.DUE_DATE, JooqDateField.builder().build(), //.readOnlyForRoles("developer").build(),
