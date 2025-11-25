@@ -29,6 +29,8 @@ public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Fi
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ReferenceFieldFactory.class;
 
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     @Override
     public List<Validator<?>> validators() {
         return null;

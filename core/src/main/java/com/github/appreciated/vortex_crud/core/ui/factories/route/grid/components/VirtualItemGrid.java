@@ -5,12 +5,11 @@ import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConf
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
@@ -48,8 +47,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     @SuppressWarnings("unchecked")
     public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                            RouteRenderer<ModelClass, FieldType, RepositoryType> config,
-                           VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
-                           VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
+                           VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                            ReflectionService<FieldType> reflectionService,
@@ -62,10 +60,10 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.dataStoreUtil = dataStoreUtil;
         RepositoryType table = config.dataStoreKey();
 
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        this.dataStore = configService.configuration().dataStores().get(table).dataStoreInstance();
         itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.configuration();
 
-        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
+        this.itemFactory = itemRendererConfiguration.factoryInstance();
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {

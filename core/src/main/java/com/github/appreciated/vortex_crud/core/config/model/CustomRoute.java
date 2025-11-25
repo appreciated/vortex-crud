@@ -36,6 +36,8 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory =
             (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) CustomRouteFactory.class;
 
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     private boolean isHiddenInMenu;
 
     @Builder.Default

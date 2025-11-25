@@ -29,6 +29,8 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ListRouteFactory.class;
 
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     private boolean isHiddenInMenu;
 
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;

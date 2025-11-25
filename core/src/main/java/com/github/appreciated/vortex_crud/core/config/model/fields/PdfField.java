@@ -27,4 +27,6 @@ public class PdfField<ModelClass, FieldType, RepositoryType> implements Field<Mo
     @SuppressWarnings("unchecked")
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) PdfFieldFactory.class;
+
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
 }

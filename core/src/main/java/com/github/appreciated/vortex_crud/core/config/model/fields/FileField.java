@@ -27,4 +27,6 @@ public class FileField<ModelClass, FieldType, RepositoryType> implements Field<M
     @SuppressWarnings("unchecked")
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FileFieldFactory.class;
+
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
 }

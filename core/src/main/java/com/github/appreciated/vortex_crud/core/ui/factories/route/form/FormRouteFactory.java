@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -12,7 +11,6 @@ import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithS
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -34,24 +32,18 @@ import jakarta.annotation.Nullable;
 
 public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
-    public FormRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
-                            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+    public FormRouteFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
                             ReflectionService<FieldType> reflectionService,
                             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
-        this.factoryRegistry = factoryRegistry;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
     }
@@ -96,7 +88,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         RepositoryType table = routeRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
         ModelClass entity;
         if (creationMode) {
@@ -123,7 +115,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, factoryRegistry, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

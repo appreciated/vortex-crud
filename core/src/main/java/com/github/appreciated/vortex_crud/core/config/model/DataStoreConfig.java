@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,13 @@ import java.util.Map;
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class DataStoreConfig<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType factory;
+
+    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
 
     private Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields;
 

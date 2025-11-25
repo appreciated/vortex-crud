@@ -8,6 +8,10 @@ import java.util.List;
 public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled {
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory();
 
+    default VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return null;
+    }
+
     /**
      * Get the validators to apply to this field.
      * Users can now directly pass Vaadin Flow binder validators.

@@ -27,4 +27,6 @@ public class ImageField<ModelClass, FieldType, RepositoryType> implements Field<
     @SuppressWarnings("unchecked")
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ImageFieldFactory.class;
+
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
 }

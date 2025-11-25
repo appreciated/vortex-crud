@@ -14,11 +14,8 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -41,8 +38,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final RepositoryType dataStoreIdentifier;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
-    private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final ReflectionService<FieldType> reflectionService;
@@ -57,11 +52,8 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     public CalendarView(RepositoryType dataStoreIdentifier,
                         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudDataStore<FieldType, ?> dataStore,
-                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                        VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                         CalendarConfiguration<ModelClass, FieldType, RepositoryType> calendarConfiguration,
                         Application<ModelClass, FieldType, RepositoryType> configService,
-                        VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                         VortexCrudFileProviderRegistry fileProviderRegistry,
                         VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
@@ -73,8 +65,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.dataStoreIdentifier = dataStoreIdentifier;
         this.routeRenderer = routeRenderer;
         this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
-        this.routeFactory = routeFactory;
-        this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.formCreator = formCreator;
         this.reflectionService = reflectionService;
@@ -223,14 +213,13 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void openDialog(Object entity) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().factory()).create(
+        Dialog dialog = ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().dialogFactoryInstance().create(
                 dataStoreUtil.getId(entity),
                 null,
                 null,
                 ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
                 null,
                 dataStoreIdentifier,
-                routeFactory,
                 () -> {
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
                     this.dataStore.updateRecordById(recordById);
@@ -262,14 +251,13 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     private void onAdd(LocalDateTime defaultStart) {
         Object entity = new Object();
-        Dialog dialog = dialogFactoryRegistry.getFactory(((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().factory()).create(
+        Dialog dialog = ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().dialogFactoryInstance().create(
                 null,
                 null,
                 null,
                 ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
                 null,
                 dataStoreIdentifier,
-                routeFactory,
                 () -> {
                     Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
                     this.dataStore.updateRecordById(recordById);

@@ -11,8 +11,8 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.example.jpa.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
@@ -27,7 +27,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinServletRequest;
-import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +47,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
-    private final JpaDataStoreFactoryRegistry registry;
 
     // Marker key for custom data store - cast required due to type erasure
     @SuppressWarnings("unchecked")
@@ -62,8 +60,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
             TaskCommentRepository taskCommentRepository,
             TaskRepository taskRepository,
             UserRepository userRepository,
-            VideoRepository videoRepository,
-            JpaDataStoreFactoryRegistry registry
+            VideoRepository videoRepository
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
@@ -71,12 +68,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
-        this.registry = registry;
-    }
-
-    @PostConstruct
-    void registerCustomDataStores() {
-        registry.addFactory(NOTES_KEY, (com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore) new SimpleMapDataStore());
     }
 
     @Override
@@ -393,7 +384,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
+        DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .factory(NOTES_KEY)
+                .dataStoreInstance((VortexCrudDataStore) new SimpleMapDataStore())
+                .fields(Map.of(
+                        "title", JpaFieldElement.builder("title", "Title").build(),
+                        "content", JpaFieldElement.builder("content", "Content").build()
+                ))
+                .build();
+
         return JpaApplication.builder()
+                .dataStores(Map.of(NOTES_KEY, notesConfig))
                 .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
                 .identityAndAccessManagement(

@@ -26,4 +26,6 @@ public class MultiSelectValueField<ModelClass, FieldType, RepositoryType> implem
     @SuppressWarnings("unchecked")
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MultiSelectValueFieldFactory.class;
+
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
 }

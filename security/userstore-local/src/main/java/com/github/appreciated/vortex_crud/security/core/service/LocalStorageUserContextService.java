@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -25,15 +24,12 @@ import java.util.stream.Collectors;
 public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
     public LocalStorageUserContextService(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configService = configService;
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.reflectionService = reflectionService;
     }
 
@@ -92,7 +88,7 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
 
         try {
             VortexCrudDataStore<FieldType, Object> dataStore =
-                    (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(iam.repositoryKey());
+                    (VortexCrudDataStore<FieldType, Object>) configService.configuration().dataStores().get(iam.repositoryKey()).dataStoreInstance();
 
             FieldType usernameField = iam.username().field();
             List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);

@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.HasValue.ValueChangeEvent;
@@ -22,12 +22,12 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
     private final VortexCrudDataStore<FieldType, ?> dataStore;
 
     public EntityMultiSelectComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                                            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                                            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                             Field<ModelClass, FieldType, RepositoryType> dataStoreField,
                                             ReflectionService<FieldType> reflectionService
     ) {
         MultiSelectField<ModelClass, FieldType, RepositoryType> multiSelectField = (MultiSelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(multiSelectField.dataStore());
+        this.dataStore = configService.configuration().dataStores().get(multiSelectField.dataStore()).dataStoreInstance();
         this.multiSelectComboBox = new MultiSelectComboBox<>();
 
         // Set up the MultiSelectComboBox with a data provider and label generator

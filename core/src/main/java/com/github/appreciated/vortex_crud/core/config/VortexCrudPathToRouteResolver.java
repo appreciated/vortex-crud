@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipl
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final String path;
     private String[] sections;
@@ -22,13 +20,11 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
     private final Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routesConfig;
 
     // Constructor
-    public VortexCrudPathToRouteResolver(VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                         String path,
+    public VortexCrudPathToRouteResolver(String path,
                                          Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routesConfig,
                                          VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.path = path;
-        this.routeFactoryRegistry = routeFactoryRegistry;
         this.dataStoreUtil = dataStoreUtil;
         this.pathRoutes = new HashMap<>();
         this.routesConfig = routesConfig;
@@ -57,7 +53,7 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         if (currentRouteRenderer == null && currentRoutes.containsKey(null)) {
             currentRouteRenderer = currentRoutes.get(null);
             pathRoutes.put(sectionIndex, currentRouteRenderer);
-        } else if (routeFactoryRegistry.isContainerRoute(currentRouteRenderer)) {
+        } else if (currentRouteRenderer != null && currentRouteRenderer.factoryInstance().isContainerRoute()) {
             pathRoutes.put(sectionIndex, currentRouteRenderer);
         }
 
@@ -120,8 +116,8 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
             RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.get(currentKey);
             RouteRenderer<ModelClass, FieldType, RepositoryType> nextRouteRenderer = pathRoutes.get(nextKey);
 
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = routeFactoryRegistry.getFactory(currentRouteRenderer.factory());
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = routeFactoryRegistry.getFactory(nextRouteRenderer.factory());
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = currentRouteRenderer.factoryInstance();
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = nextRouteRenderer.factoryInstance();
 
             if (currentFactory == null) {
                 throw new IllegalStateException("The route does not have a factory set");

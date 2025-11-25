@@ -29,6 +29,8 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SubmenuRouteFactory.class;
 
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     private boolean isHiddenInMenu;
 
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;

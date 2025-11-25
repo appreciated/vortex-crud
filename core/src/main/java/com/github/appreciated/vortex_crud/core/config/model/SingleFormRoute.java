@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -49,6 +50,10 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactoryInstance;
 
     private boolean isHiddenInMenu;
 

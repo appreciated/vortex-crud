@@ -4,16 +4,13 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -27,12 +24,9 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
     public List(Integer currentPathIndex,
                 VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                 VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                 VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry,
                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                 VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
@@ -42,7 +36,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStore, formCreator, routeFactoryRegistry),
+                event -> onAdd(routeRenderer, dataStore, formCreator),
                 null,
                 null,
                 routeHeader);
@@ -50,7 +44,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> vortexDataStore =
-                dataStoreFactoryRegistry.getDataStore(dataStore);
+                configService.configuration().dataStores().get(dataStore).dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
@@ -64,7 +58,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);
+        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, configService, columnCallbackRegistry, dataStoreUtil);
         add(headerBar);
         if (routeRenderer.configuration() != null && routeRenderer.configuration().filterField() != null) {
             add(textField);
@@ -84,15 +78,14 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, RepositoryType dataStore, FormCreator<ModelClass, FieldType, RepositoryType> formCreator, VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.child().factory()).create(
+    private void onAdd(RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, RepositoryType dataStore, FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+        Dialog dialog = routeRenderer.child().dialogFactoryInstance().create(
                 null,
                 null,
                 null,
                 routeRenderer.child(),
                 null,
                 dataStore,
-                routeFactory,
                 () -> UI.getCurrent().getPage().reload(),
                 () -> {
 

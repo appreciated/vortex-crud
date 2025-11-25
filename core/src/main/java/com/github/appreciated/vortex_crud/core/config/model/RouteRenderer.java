@@ -20,6 +20,12 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory();
 
+    VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance();
+
+    default com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactoryInstance() {
+        return null;
+    }
+
     boolean isHiddenInMenu();
 
     RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration();

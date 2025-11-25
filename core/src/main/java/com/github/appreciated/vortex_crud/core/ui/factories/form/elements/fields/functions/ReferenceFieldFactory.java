@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
@@ -14,21 +14,21 @@ import java.util.List;
 public class ReferenceFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudDataStoreFieldNameResolver<FieldType> resolver;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> managerFactoryRegistry;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final ReflectionService<FieldType> reflectionService;
 
     public ReferenceFieldFactory(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> managerFactoryRegistry,
+                                 VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                  ReflectionService<FieldType> reflectionService
     ) {
         this.resolver = resolver;
-        this.managerFactoryRegistry = managerFactoryRegistry;
+        this.configService = configService;
         this.reflectionService = reflectionService;
     }
 
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
-        return new EntityComboBoxWrapper<>(resolver, managerFactoryRegistry, dataStoreField, reflectionService);
+        return new EntityComboBoxWrapper<>(resolver, configService, dataStoreField, reflectionService);
     }
 
     @Override

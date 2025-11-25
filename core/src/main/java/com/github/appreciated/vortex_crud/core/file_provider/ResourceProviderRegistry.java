@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.file_provider;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public class ResourceProviderRegistry implements VortexCrudFileProviderRegistry 
 
     @Override
     public VortexCrudResourceProvider getFactory(Class<? extends VortexCrudResourceProvider> type) {
-        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(DefaultFieldFactoryRegistry.class.getName(), type)));
+        return Optional.ofNullable(factories.get(type)).orElseThrow(() -> new IllegalStateException("%s cannot provide factory for key '%s'".formatted(ResourceProviderRegistry.class.getName(), type)));
     }
 
     @Override

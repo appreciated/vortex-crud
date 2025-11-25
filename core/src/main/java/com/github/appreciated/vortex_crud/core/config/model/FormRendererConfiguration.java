@@ -19,6 +19,8 @@ public class FormRendererConfiguration<ModelClass, FieldType, RepositoryType> im
 
     private Class<? extends VortexCrudItemFactory<FieldType>> factory;
 
+    private VortexCrudItemFactory<FieldType> factoryInstance;
+
     private FieldType titleField;
 
     private FieldType descriptionField;

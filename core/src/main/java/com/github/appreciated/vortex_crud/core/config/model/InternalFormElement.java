@@ -10,13 +10,15 @@ import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     private FieldType field;
 
     private Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory;
+
+    private VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
 
     private boolean readOnly;
 
@@ -32,6 +34,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     public InternalFormElement(FieldType field,
                                Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory,
+                               VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factoryInstance,
                                boolean readOnly,
                                List<String> readOnlyForRoles,
                                String label,
@@ -40,6 +43,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
                                Collection<ModelClass, FieldType, RepositoryType> configuration) {
         this.field = field;
         this.factory = factory;
+        this.factoryInstance = factoryInstance;
         this.readOnly = readOnly;
         this.readOnlyForRoles = readOnlyForRoles;
         this.label = label;

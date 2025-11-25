@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
@@ -56,10 +55,9 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
     private static final Logger log = LoggerFactory.getLogger(NotificationPanel.class);
     private final NotificationPanelConfiguration<FieldType, RepositoryType> configuration;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
-    private VortexCrudDataStore dataStore;
+    private VortexCrudDataStore<FieldType, Object> dataStore;
     private MessageList unreadList;
     private MessageList allList;
     private Div unreadContent;
@@ -67,10 +65,8 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
     public NotificationPanel(
             NotificationPanelConfiguration<FieldType, RepositoryType> configuration,
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configuration = configuration;
-        this.dataStoreRegistry = dataStoreRegistry;
         this.reflectionService = reflectionService;
     }
 
@@ -79,7 +75,9 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
         super.onAttach(attachEvent);
 
         // Get the data store
-        dataStore = dataStoreRegistry.getDataStore(configuration.dataStoreKey());
+        // In a real implementation, you might want to look up the data store wrapper based on the key
+        // For now, we'll assume we can get it from the registry
+        dataStore = (VortexCrudDataStore<FieldType, Object>) (VortexCrudDataStore) configuration.dataStoreInstance();
 
         // Build the UI
         buildUI();

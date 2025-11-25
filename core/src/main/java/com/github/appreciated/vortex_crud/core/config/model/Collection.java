@@ -20,6 +20,8 @@ public class Collection<ModelClass, FieldType, RepositoryType> {
 
     private Class<? extends VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factory;
 
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     private CollectionConfiguration<ModelClass, FieldType, RepositoryType> data;
 
     private String emptyMessage;

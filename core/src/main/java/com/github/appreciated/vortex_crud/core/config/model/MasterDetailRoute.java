@@ -29,6 +29,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     @Builder.Default
     private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory= (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
 
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     private boolean isHiddenInMenu;
 
     private final boolean isDeleteButtonHidden = false;

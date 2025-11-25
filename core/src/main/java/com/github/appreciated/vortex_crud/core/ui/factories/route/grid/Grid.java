@@ -4,18 +4,15 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.EntityItemList;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components.VirtualItemGrid;
 import com.vaadin.flow.component.UI;
@@ -31,11 +28,8 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
     public Grid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                 RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+                VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                 VortexCrudFileProviderRegistry fileProviderRegistry,
                 VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                 ReflectionService<FieldType> reflectionService,
@@ -45,7 +39,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, routeRenderer, routeRenderer.dataStoreKey(), formCreator, routeFactoryRegistry),
+                event -> onAdd(routeRenderer, routeRenderer.dataStoreKey(), formCreator),
                 null,
                 null,
                 routeHeader);
@@ -53,7 +47,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> dataStore =
-                dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey());
+                configService.configuration().dataStores().get(routeRenderer.dataStoreKey()).dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
@@ -69,8 +63,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
         virtualGrid = new VirtualItemGrid<>(routeResolver,
                 routeRenderer,
-                dataStoreFactoryRegistry,
-                itemFactoryRegistry,
+                configService,
                 fileProviderRegistry,
                 resolver,
                 reflectionService,
@@ -91,19 +84,16 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                       RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
+    private void onAdd(RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        RepositoryType dataStore,
-                       FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                       VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.child().factory()).create(
+                       FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+        Dialog dialog = routeRenderer.child().dialogFactoryInstance().create(
                 null,
                 null,
                 null,
                 routeRenderer.child(),
                 null,
                 dataStore,
-                routeFactory,
                 () -> UI.getCurrent().getPage().reload(),
                 () -> {
 

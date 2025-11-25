@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,6 +53,8 @@ public class NotificationPanelConfiguration<FieldType, RepositoryType> {
      * The data store key (repository or table) containing notification data
      */
     private RepositoryType dataStoreKey;
+
+    private VortexCrudDataStore<FieldType, ?> dataStoreInstance;
 
     /**
      * Field containing the notification message/content

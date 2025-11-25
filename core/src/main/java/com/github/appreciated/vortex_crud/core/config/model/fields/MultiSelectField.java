@@ -29,6 +29,8 @@ public class MultiSelectField<ModelClass, FieldType, RepositoryType> implements 
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MultiSelectFieldFactory.class;
 
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+
     @Override
     public List<Validator<?>> validators() {
         return null;
