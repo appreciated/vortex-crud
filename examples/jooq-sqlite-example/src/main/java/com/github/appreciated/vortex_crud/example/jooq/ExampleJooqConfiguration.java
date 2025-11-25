@@ -17,13 +17,7 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
-import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.TableField;
@@ -56,7 +50,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 PROJECTS.ID, JooqIdField.builder().build(),
                                 PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
+                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                                 PROJECTS.START_DATE, JooqDateField.builder().build(),
                                 PROJECTS.END_DATE, JooqDateField.builder().build(),
                                 PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
@@ -66,7 +60,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(Map.of(
                                 TASKS.ID, JooqIdField.builder().build(),
                                 TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                TASKS.DESCRIPTION, JooqMarkDownField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(USERS).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build() /* 1:1 Relation */,
                                 TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                                 TASKS.DUE_DATE, JooqDateField.builder().build(), //.readOnlyForRoles("developer").build(),
@@ -237,40 +231,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         ))
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
-                .routeActions(List.of(
-                        GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Export All", VaadinIcon.DOWNLOAD.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    Notification.show("Exporting all projects...");
-                                })
-                                .build(),
-                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Mark Important", VaadinIcon.STAR.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    TableRecord<?> project = context.getFirstSelectedEntity();
-                                    Notification.show("Marked project as important");
-                                })
-                                .build(),
-                        MultiEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Archive Selected", VaadinIcon.ARCHIVE.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    int count = context.getSelectionCount();
-                                    Notification.show("Archiving " + count + " projects...");
-                                })
-                                .build()
-                ))
                 .child(projectForm)
                 .build());
         routes.put("open-tasks", JooqKanbanRoute.builder()

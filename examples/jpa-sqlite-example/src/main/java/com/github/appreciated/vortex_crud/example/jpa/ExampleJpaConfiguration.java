@@ -17,15 +17,8 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
-import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -203,43 +196,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         ))
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
-                .routeActions(List.of(
-                        GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Export All", VaadinIcon.DOWNLOAD.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    Notification.show("Exporting all projects...");
-                                })
-                                .build(),
-                        SingleEntityRouteAction.<String, JpaRepository<?, ?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Mark Important", VaadinIcon.STAR.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    // Note: accessing context.getFirstSelectedEntity() might cause ClassCastException
-                                    // if the generic type JpaRepository is strictly enforced by compiler inserts
-                                    // but the runtime object is a POJO.
-                                    // Safest is to just show notification.
-                                    Notification.show("Marked project as important");
-                                })
-                                .build(),
-                        MultiEntityRouteAction.<String, JpaRepository<?, ?>>builder()
-                                .componentFactory(() -> {
-                                    Button btn = new Button("Archive Selected", VaadinIcon.ARCHIVE.create());
-                                    btn.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                                    return btn;
-                                })
-                                .handler(context -> {
-                                    int count = context.getSelectionCount();
-                                    Notification.show("Archiving " + count + " projects...");
-                                })
-                                .build()
-                ))
                 .child(projectForm)
                 .build());
         routes.put("open-tasks", JpaKanbanRoute.builder()

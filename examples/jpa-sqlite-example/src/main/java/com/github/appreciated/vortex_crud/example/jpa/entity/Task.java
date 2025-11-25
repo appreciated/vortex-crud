@@ -24,7 +24,7 @@ public class Task {
     @Nonnull
     private String title;
 
-    @MarkDownField
+    @TextAreaField
     @Length(max = 1000)
     private String description;
 

@@ -27,13 +27,12 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
         );
     }
 
-    @SuppressWarnings("unchecked")
     private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
         if (filterText.isEmpty() || filterField == null) {
-            return (Stream<Object>) dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream();
+            return dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         } else {
-            return (Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream();
+            return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         }
     }
 

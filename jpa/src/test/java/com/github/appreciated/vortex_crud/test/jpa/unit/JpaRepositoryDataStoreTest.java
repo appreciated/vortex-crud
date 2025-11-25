@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @EnableJpaRepositories
-class DefaultDynamicJpaEntityManagerServiceFactoryTest {
+class JpaRepositoryDataStoreTest {
 
     @Autowired
     private EntityManager entityManager;

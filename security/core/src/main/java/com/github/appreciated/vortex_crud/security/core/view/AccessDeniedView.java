@@ -107,37 +107,32 @@ public class AccessDeniedView extends VerticalLayout implements BeforeEnterObser
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         // Check if there's a custom message in query parameters
-        java.util.Map<String, java.util.List<String>> parameters = event.getLocation().getQueryParameters().getParameters();
-        if (parameters.containsKey("message")) {
-            parameters.get("message")
-                    .stream()
-                    .findFirst()
-                    .ifPresent(messageDetails::setText);
-        }
+        event.getLocation().getQueryParameters().getParameters().get("message")
+                .stream()
+                .findFirst()
+                .ifPresent(msg -> messageDetails.setText(msg));
 
         // Check if there's a reason parameter
-        if (parameters.containsKey("reason")) {
-            parameters.get("reason")
-                    .stream()
-                    .findFirst()
-                    .ifPresent(reason -> {
-                        switch (reason.toLowerCase()) {
-                            case "insufficient_roles":
-                                messageDetails.setText(
-                                        "Your current role doesn't have permission to view this page. " +
-                                                "Please contact your administrator if you need access."
-                                );
-                                break;
-                            case "readonly":
-                                messageDetails.setText(
-                                        "You have read-only access to this resource. " +
-                                                "Write permissions are required to perform this action."
-                                );
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-        }
+        event.getLocation().getQueryParameters().getParameters().get("reason")
+                .stream()
+                .findFirst()
+                .ifPresent(reason -> {
+                    switch (reason.toLowerCase()) {
+                        case "insufficient_roles":
+                            messageDetails.setText(
+                                    "Your current role doesn't have permission to view this page. " +
+                                    "Please contact your administrator if you need access."
+                            );
+                            break;
+                        case "readonly":
+                            messageDetails.setText(
+                                    "You have read-only access to this resource. " +
+                                    "Write permissions are required to perform this action."
+                            );
+                            break;
+                        default:
+                            break;
+                    }
+                });
     }
 }

@@ -39,13 +39,12 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
 
-        Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>> defaultRouteEntry;
+        Optional<? extends Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>> defaultRouteEntry;
 
         if (configuredDefaultRoutes.size() > 1) {
             throw new IllegalStateException("More than one default route configured");
         } else {
-            defaultRouteEntry = (Optional<? extends Map.Entry<String, RouteRenderer<?, ?, ?>>>) (Optional<?>) configuredDefaultRoutes.stream().findFirst();
-
+            defaultRouteEntry = configuredDefaultRoutes.stream().findFirst();
         }
         if (defaultRouteEntry.isPresent()) {
             defaultRoutes.put(event.getSource(), defaultRouteEntry.get().getKey());

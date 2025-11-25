@@ -25,6 +25,7 @@ public class MarkDownField<ModelClass, FieldType, RepositoryType> implements Fie
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
+    @SuppressWarnings("unchecked")
     @Builder.Default
     Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MarkDownFieldFactory.class;
 }

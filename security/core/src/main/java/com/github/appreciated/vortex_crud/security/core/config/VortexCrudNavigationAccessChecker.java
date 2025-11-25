@@ -7,8 +7,6 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudPermissionResol
 import com.vaadin.flow.server.auth.AccessCheckResult;
 import com.vaadin.flow.server.auth.NavigationAccessChecker;
 import com.vaadin.flow.server.auth.NavigationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> implements NavigationAccessChecker {
-
-    private static final Logger log = LoggerFactory.getLogger(VortexCrudNavigationAccessChecker.class);
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
@@ -78,7 +74,8 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
         } catch (Exception e) {
             // In case of any error, allow navigation to avoid breaking the application
             // Log the error in production
-            log.error("Error in CustomAccessChecker: {}", e.getMessage(), e);
+            System.err.println("Error in CustomAccessChecker: " + e.getMessage());
+            e.printStackTrace();
             return context.allow();
         }
     }
