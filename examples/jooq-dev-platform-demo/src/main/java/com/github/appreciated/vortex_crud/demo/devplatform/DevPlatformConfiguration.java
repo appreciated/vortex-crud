@@ -65,7 +65,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 Map.entry(REPOSITORY.FORK_COUNT, JooqIntegerField.builder().build()),
                                 Map.entry(REPOSITORY.LANGUAGE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
                                 Map.entry(REPOSITORY.TOPICS, JooqTextAreaField.builder().build()),
-                                Map.entry(REPOSITORY.README_CONTENT, JooqTextAreaField.builder().build()),
+                                Map.entry(REPOSITORY.README_CONTENT, JooqMarkDownField.builder().build()),
                                 Map.entry(REPOSITORY.CREATED_AT, JooqDateTimePickerField.builder().build()),
                                 Map.entry(REPOSITORY.UPDATED_AT, JooqDateTimePickerField.builder().build()),
                                 Map.entry(REPOSITORY.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
