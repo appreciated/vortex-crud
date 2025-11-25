@@ -165,48 +165,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                                 USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
-
-                Map.entry(CUSTOM_FIELD_DEFINITION, JooqDataStoreConfig.of(CUSTOM_FIELD_DEFINITION)
-                        .fields(Map.ofEntries(
-                                Map.entry(CUSTOM_FIELD_DEFINITION.ID, JooqIdField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, JooqSelectField.builder().values("entity-type").required(true).build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, JooqSelectField.builder().values("field-type").required(true).build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, JooqIntegerField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, JooqCheckboxField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, JooqTextField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.OPTIONS, JooqTextAreaField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, JooqTextAreaField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.DESCRIPTION, JooqTextAreaField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, JooqCheckboxField.builder().build()),
-                                Map.entry(CUSTOM_FIELD_DEFINITION.CREATED_AT, JooqDateTimePickerField.builder().build())
-                        ))
                         .build())
         );
-
-        // Custom Field Definition Form
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> customFieldForm = JooqFormRoute.builder()
-                .dataStoreKey(CUSTOM_FIELD_DEFINITION)
-                .title("route.custom_fields.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
-                        .children(List.of(
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom_fields.labels.entity_type").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom_fields.labels.field_name").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom_fields.labels.field_label").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom_fields.labels.field_type").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom_fields.labels.field_order").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom_fields.labels.is_required").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "route.custom_fields.labels.default_value").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom_fields.labels.options").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "route.custom_fields.labels.validation_rules").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom_fields.labels.description").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom_fields.labels.is_active").build()
-                        ))
-                        .build())
-                .build();
 
         // Issue Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
@@ -389,35 +349,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .child(milestoneForm)
                 .build());
 
-        routes.put("milestones-calendar", JooqCalendarRoute.builder()
-                .dataStoreKey(MILESTONE)
-                .iconFactory(VaadinIcon.CALENDAR::create)
-                .title("route.milestones.title-calendar")
-                .configuration(JooqCalendarConfiguration.builder()
-                        .titleField(MILESTONE.TITLE)
-                        .descriptionField(MILESTONE.DESCRIPTION)
-                        .startDateField(MILESTONE.DUE_DATE)
-                        .build())
-                .writeRoles(List.of("admin", "developer"))
-                .child(milestoneForm)
-                .build());
-
-        routes.put("custom-fields", JooqListRoute.builder()
-                .dataStoreKey(CUSTOM_FIELD_DEFINITION)
-                .iconFactory(VaadinIcon.TOOLS::create)
-                .title("route.custom_fields.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
-                        .children(List.of(
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom_fields.labels.entity_type").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom_fields.labels.field_label").build(),
-                                JooqFieldElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom_fields.labels.field_type").build()
-                        ))
-                        .build())
-                .writeRoles(List.of("admin"))
-                .child(customFieldForm)
-                .build());
-
         // Select Options
         LinkedHashMap<RepositoryVisibility, String> repositoryVisibilities = new LinkedHashMap<>();
         repositoryVisibilities.put(RepositoryVisibility.PUBLIC, "selects.repository-visibility.public");
@@ -439,21 +370,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         priorities.put(Priority.HIGH, "selects.priority.high");
         priorities.put(Priority.CRITICAL, "selects.priority.critical");
 
-        LinkedHashMap<String, String> entityTypes = new LinkedHashMap<>();
-        entityTypes.put("repository", "selects.entity-type.repository");
-        entityTypes.put("issue", "selects.entity-type.issue");
-        entityTypes.put("pull_request", "selects.entity-type.pull_request");
-        entityTypes.put("organization", "selects.entity-type.organization");
-        entityTypes.put("milestone", "selects.entity-type.milestone");
-
-        LinkedHashMap<String, String> fieldTypes = new LinkedHashMap<>();
-        fieldTypes.put("text", "selects.field-type.text");
-        fieldTypes.put("number", "selects.field-type.number");
-        fieldTypes.put("date", "selects.field-type.date");
-        fieldTypes.put("select", "selects.field-type.select");
-        fieldTypes.put("multiselect", "selects.field-type.multiselect");
-        fieldTypes.put("checkbox", "selects.field-type.checkbox");
-
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("dev_i18n")
@@ -474,14 +390,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .versioning(JooqVersioning.builder().dataStores(List.of(REPOSITORY, ISSUE, PULL_REQUEST, ORGANIZATION, MILESTONE)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(Selects.builder()
-                        .configs(Map.ofEntries(
-                                Map.entry("repository-visibility", repositoryVisibilities),
-                                Map.entry("issue-state", issueStates),
-                                Map.entry("pull-request-state", pullRequestStates),
-                                Map.entry("priority", priorities),
-                                Map.entry("entity-type", entityTypes),
-                                Map.entry("field-type", fieldTypes)
-                        ))
+                        .configs(Map.of(
+                                "repository-visibility", repositoryVisibilities,
+                                "issue-state", issueStates,
+                                "pull-request-state", pullRequestStates,
+                                "priority", priorities))
                         .build())
                 .dataStores(dataStores)
                 .build();

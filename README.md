@@ -628,4 +628,3 @@ To get started with development
     - Go to: `examples\jooq-sqlite-example\`
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
     - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
-

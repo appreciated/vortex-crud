@@ -1,10 +1,11 @@
-package com.github.appreciated.vortex_crud.jooq.service;
+package com.github.appreciated.vortex_crud.test.jooq.unit;
 
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
 import com.github.appreciated.vortex_crud.jooq.models.tables.TestTable;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.TestTableRecord;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(classes = JooqDataStoreTest.Config.class)
+@TestPropertySource(properties = "spring.datasource.url=jdbc:sqlite::memory:")
 @Transactional
 class JooqDataStoreTest {
 
@@ -42,6 +45,8 @@ class JooqDataStoreTest {
     @BeforeEach
     void setUp() {
         dataStore = new JooqDataStore<>(TestTableRecord.class, dslContext, new DataStoreHooks<>());
+        // Create table for in-memory DB
+        dslContext.execute("CREATE TABLE IF NOT EXISTS test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL, age INTEGER NOT NULL)");
         // Clear table
         dslContext.deleteFrom(TestTable.TEST_TABLE).execute();
     }
