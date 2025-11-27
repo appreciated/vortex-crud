@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,13 +53,13 @@ class LocalIdentityAndAccessManagementTest {
 
     @Test
     void testResolveRolesForEntity_WithNullRolesFieldInConfig() {
-         LocalIdentityAndAccessManagement<String, String, String> configWithoutRoles = LocalIdentityAndAccessManagement.<String, String, String>builder()
+        LocalIdentityAndAccessManagement<String, String, String> configWithoutRoles = LocalIdentityAndAccessManagement.<String, String, String>builder()
                 .rolesField(null)
                 .build();
 
-         Object userEntity = new Object();
-         List<SimpleGrantedAuthority> authorities = configWithoutRoles.resolveRolesForEntity(reflectionService, userEntity);
-         assertTrue(authorities.isEmpty());
+        Object userEntity = new Object();
+        List<SimpleGrantedAuthority> authorities = configWithoutRoles.resolveRolesForEntity(reflectionService, userEntity);
+        assertTrue(authorities.isEmpty());
     }
 
     @Test

@@ -96,17 +96,17 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         } else if (routeRenderer instanceof SingleFormRoute) {
             // Root entry mode: fetch by filter instead of URL path ID
             SingleFormRoute<ModelClass, FieldType, RepositoryType> singleFormRoute =
-                (SingleFormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+                    (SingleFormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
             FieldType filterField = singleFormRoute.entityFilterField();
             Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
             java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
-                filterField, filterValue, 0, 1);
+                    filterField, filterValue, 0, 1);
 
             if (results.isEmpty()) {
                 throw new IllegalStateException(
-                    "No entity found for filter field: " + filterField +
-                    " with value: " + filterValue);
+                        "No entity found for filter field: " + filterField +
+                        " with value: " + filterValue);
             }
             entity = results.get(0);  // Take first result
         } else {

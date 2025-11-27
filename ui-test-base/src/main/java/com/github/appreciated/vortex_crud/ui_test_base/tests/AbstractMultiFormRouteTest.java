@@ -85,7 +85,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill fields from first form (Basic Information)
-        WebElement nameField =  waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"));
+        WebElement nameField = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"));
         nameField.sendKeys("Created Profile");
 
         WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))

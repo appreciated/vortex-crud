@@ -39,7 +39,7 @@ import lombok.experimental.Accessors;
  *     .build()
  * }</pre>
  *
- * @param <FieldType> The type used to identify fields (String for JPA, TableField for jOOQ)
+ * @param <FieldType>      The type used to identify fields (String for JPA, TableField for jOOQ)
  * @param <RepositoryType> The type of repository/table key (JpaRepository for JPA, TableImpl for jOOQ)
  */
 @Accessors(fluent = true)

@@ -11,7 +11,10 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.*;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
@@ -138,7 +141,7 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
             }
 
             if (route.factory() != null && dialogFactories.containsKey(route.factory())) {
-                 setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
+                setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
             }
 
             // Handle Configuration (ItemFactory)
@@ -157,17 +160,17 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
                 if (config.children() != null) {
                     for (InternalFormElement element : (List<InternalFormElement>) config.children()) {
                         if (element.factory() != null) {
-                             setField(element, "factoryInstance", listCollectionFactory);
+                            setField(element, "factoryInstance", listCollectionFactory);
                         }
 
                         if (element.configuration() != null) {
-                             Collection col = element.configuration();
-                             if (col.factory() != null) {
-                                 setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                             }
-                             if (col.child() != null) {
-                                 traverseRoutes(List.of(col.child()));
-                             }
+                            Collection col = element.configuration();
+                            if (col.factory() != null) {
+                                setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                            }
+                            if (col.child() != null) {
+                                traverseRoutes(List.of(col.child()));
+                            }
                         }
                     }
                 }
@@ -176,23 +179,23 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
                     MultiFormRendererConfiguration multiConfig = (MultiFormRendererConfiguration) config;
                     if (multiConfig.forms() != null) {
                         for (Object childFormObj : multiConfig.forms()) {
-                             RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
-                             if (childForm.children() != null) {
-                                 for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
-                                     if (element.factory() != null) {
-                                         setField(element, "factoryInstance", listCollectionFactory);
-                                     }
-                                     if (element.configuration() != null) {
-                                         Collection col = element.configuration();
-                                         if (col.factory() != null) {
-                                             setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                                         }
-                                         if (col.child() != null) {
-                                             traverseRoutes(List.of(col.child()));
-                                         }
-                                     }
-                                 }
-                             }
+                            RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
+                            if (childForm.children() != null) {
+                                for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
+                                    if (element.factory() != null) {
+                                        setField(element, "factoryInstance", listCollectionFactory);
+                                    }
+                                    if (element.configuration() != null) {
+                                        Collection col = element.configuration();
+                                        if (col.factory() != null) {
+                                            setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                                        }
+                                        if (col.child() != null) {
+                                            traverseRoutes(List.of(col.child()));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

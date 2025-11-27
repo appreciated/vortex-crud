@@ -2,7 +2,9 @@ package com.github.appreciated.vortex_crud.example.jpa.custom;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -20,12 +22,29 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
         private String title;
         private String content;
 
-        public Integer getId() { return id; }
-        public void setId(Integer id) { this.id = id; }
-        public String getTitle() { return title; }
-        public void setTitle(String title) { this.title = title; }
-        public String getContent() { return content; }
-        public void setContent(String content) { this.content = content; }
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
     }
 
     @Override

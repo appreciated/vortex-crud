@@ -125,13 +125,13 @@ public class AccessDeniedView extends VerticalLayout implements BeforeEnterObser
                             case "insufficient_roles":
                                 messageDetails.setText(
                                         "Your current role doesn't have permission to view this page. " +
-                                                "Please contact your administrator if you need access."
+                                        "Please contact your administrator if you need access."
                                 );
                                 break;
                             case "readonly":
                                 messageDetails.setText(
                                         "You have read-only access to this resource. " +
-                                                "Write permissions are required to perform this action."
+                                        "Write permissions are required to perform this action."
                                 );
                                 break;
                             default:

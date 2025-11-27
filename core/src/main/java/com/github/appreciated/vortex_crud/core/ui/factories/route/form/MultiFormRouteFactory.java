@@ -57,7 +57,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof MultiFormRoute<ModelClass,FieldType,RepositoryType>;
+        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof MultiFormRoute<ModelClass, FieldType, RepositoryType>;
         MultiFormRoute<ModelClass, FieldType, RepositoryType> routeProvider = (MultiFormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         assert detailRouteSetting != null;
         return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), false, routeProvider);

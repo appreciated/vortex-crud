@@ -47,8 +47,8 @@ import java.util.List;
  *   <li>Fully internationalized with i18n keys</li>
  * </ul>
  *
- * @param <ModelClass> The type of model/entity class
- * @param <FieldType> The type used to identify fields (String for JPA, TableField for jOOQ)
+ * @param <ModelClass>     The type of model/entity class
+ * @param <FieldType>      The type used to identify fields (String for JPA, TableField for jOOQ)
  * @param <RepositoryType> The type of repository/table key
  */
 public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Div {
@@ -184,10 +184,10 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
                 // We need to filter by both read status and custom filter
                 // Since we can't easily do compound queries, we'll query by filter and filter in memory
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.filterField(),
-                    configuration.filterValue(),
-                    0,
-                    limit * 2  // Get more than needed to account for filtering
+                        configuration.filterField(),
+                        configuration.filterValue(),
+                        0,
+                        limit * 2  // Get more than needed to account for filtering
                 );
 
                 // Filter for unread in memory
@@ -195,20 +195,20 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
             } else {
                 // Query only by read status
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.readStatusField(),
-                    configuration.readStatusValueForUnread(),
-                    0,
-                    limit
+                        configuration.readStatusField(),
+                        configuration.readStatusValueForUnread(),
+                        0,
+                        limit
                 );
             }
         } else {
             // Query all notifications
             if (configuration.filterField() != null && configuration.filterValue() != null) {
                 notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.filterField(),
-                    configuration.filterValue(),
-                    0,
-                    limit
+                        configuration.filterField(),
+                        configuration.filterValue(),
+                        0,
+                        limit
                 );
             } else {
                 notifications = dataStore.getRecordsFromTable(0, limit);

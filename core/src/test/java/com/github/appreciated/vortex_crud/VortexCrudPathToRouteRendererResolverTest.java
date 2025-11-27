@@ -140,7 +140,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
                 path,
-                 routesConfig,
+                routesConfig,
                 dataStoreUtil
         );
 

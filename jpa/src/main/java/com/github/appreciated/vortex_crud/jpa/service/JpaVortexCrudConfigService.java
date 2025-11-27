@@ -11,11 +11,12 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.*;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
@@ -156,7 +157,7 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
 
             // Also check if the route itself needs a dialog factory (e.g. if it's a form route used as a child)
             if (route.factory() != null && dialogFactories.containsKey(route.factory())) {
-                 setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
+                setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
             }
 
             // Handle Configuration (ItemFactory)
@@ -179,23 +180,23 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
                 if (config.children() != null) {
                     for (InternalFormElement element : (List<InternalFormElement>) config.children()) {
                         if (element.factory() != null) {
-                             // For collections, we use listCollectionFactory
-                             // Check if factory class matches ListCollectionFactory or similar
-                             // Or just look up in a collection factories map if we had one
-                             // For now we only have ListCollectionFactory
-                             setField(element, "factoryInstance", listCollectionFactory);
+                            // For collections, we use listCollectionFactory
+                            // Check if factory class matches ListCollectionFactory or similar
+                            // Or just look up in a collection factories map if we had one
+                            // For now we only have ListCollectionFactory
+                            setField(element, "factoryInstance", listCollectionFactory);
                         }
 
                         // Collection config
                         if (element.configuration() != null) {
-                             Collection col = element.configuration();
-                             if (col.factory() != null) {
-                                 // Dialog factory for collection
-                                 setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                             }
-                             if (col.child() != null) {
-                                 traverseRoutes(List.of(col.child()));
-                             }
+                            Collection col = element.configuration();
+                            if (col.factory() != null) {
+                                // Dialog factory for collection
+                                setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                            }
+                            if (col.child() != null) {
+                                traverseRoutes(List.of(col.child()));
+                            }
                         }
                     }
                 }
@@ -205,24 +206,24 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
                     MultiFormRendererConfiguration multiConfig = (MultiFormRendererConfiguration) config;
                     if (multiConfig.forms() != null) {
                         for (Object childFormObj : multiConfig.forms()) {
-                             RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
-                             // Recurse/populate fields in child forms?
-                             if (childForm.children() != null) {
-                                 for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
-                                     if (element.factory() != null) {
-                                         setField(element, "factoryInstance", listCollectionFactory);
-                                     }
-                                     if (element.configuration() != null) {
-                                         Collection col = element.configuration();
-                                         if (col.factory() != null) {
-                                             setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                                         }
-                                         if (col.child() != null) {
-                                             traverseRoutes(List.of(col.child()));
-                                         }
-                                     }
-                                 }
-                             }
+                            RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
+                            // Recurse/populate fields in child forms?
+                            if (childForm.children() != null) {
+                                for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
+                                    if (element.factory() != null) {
+                                        setField(element, "factoryInstance", listCollectionFactory);
+                                    }
+                                    if (element.configuration() != null) {
+                                        Collection col = element.configuration();
+                                        if (col.factory() != null) {
+                                            setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                                        }
+                                        if (col.child() != null) {
+                                            traverseRoutes(List.of(col.child()));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

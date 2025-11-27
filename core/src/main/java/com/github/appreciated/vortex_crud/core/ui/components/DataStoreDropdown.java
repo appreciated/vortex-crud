@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.List;
 
@@ -11,8 +10,8 @@ import java.util.List;
  * This component uses the {@link VortexCrudDataStore#getRecordsFromTableWhereColumnEquals} method
  * to filter and fetch data based on the provided configuration.
  *
- * @param <ModelClass> The type of entity in the data store
- * @param <FieldType> The type used to identify fields in the data store
+ * @param <ModelClass>     The type of entity in the data store
+ * @param <FieldType>      The type used to identify fields in the data store
  * @param <RepositoryType> The type of repository key
  */
 public class DataStoreDropdown<ModelClass, FieldType, RepositoryType> extends ComboBox<ModelClass> {
@@ -23,7 +22,7 @@ public class DataStoreDropdown<ModelClass, FieldType, RepositoryType> extends Co
     /**
      * Creates a new DataStoreDropdown with the given configuration and data store.
      *
-     * @param config The configuration for this dropdown
+     * @param config    The configuration for this dropdown
      * @param dataStore The data store to fetch data from
      */
     public DataStoreDropdown(

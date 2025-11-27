@@ -12,8 +12,8 @@ import java.util.Map;
  * This factory creates a dropdown that fetches its data from a VortexCrudDataStore
  * using the configured filter parameters.
  *
- * @param <ModelClass> The type of entity
- * @param <FieldType> The type used to identify fields
+ * @param <ModelClass>     The type of entity
+ * @param <FieldType>      The type used to identify fields
  * @param <RepositoryType> The type of repository key
  */
 public class DataStoreDropdownMenuActionFactory<ModelClass, FieldType, RepositoryType>
@@ -25,7 +25,7 @@ public class DataStoreDropdownMenuActionFactory<ModelClass, FieldType, Repositor
     /**
      * Creates a new DataStoreDropdownMenuActionFactory.
      *
-     * @param config The configuration for the dropdown
+     * @param config     The configuration for the dropdown
      * @param dataStores Map of available data stores
      */
     public DataStoreDropdownMenuActionFactory(
@@ -41,14 +41,14 @@ public class DataStoreDropdownMenuActionFactory<ModelClass, FieldType, Repositor
 
         if (dataStore == null) {
             throw new IllegalArgumentException(
-                "No data store found for key: " + config.dataStoreKey()
+                    "No data store found for key: " + config.dataStoreKey()
             );
         }
 
         // Cast is safe because we're using the same data store that was registered
         @SuppressWarnings("unchecked")
         VortexCrudDataStore<FieldType, ModelClass> typedDataStore =
-            (VortexCrudDataStore<FieldType, ModelClass>) dataStore;
+                (VortexCrudDataStore<FieldType, ModelClass>) dataStore;
 
         return new DataStoreDropdown<>(config, typedDataStore);
     }

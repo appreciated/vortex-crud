@@ -32,8 +32,8 @@ import java.util.List;
  *     .build()
  * </pre>
  *
- * @param <ModelClass>    The entity class type
- * @param <FieldType>     The field type (e.g., String for JPA, TableField for jOOQ)
+ * @param <ModelClass>     The entity class type
+ * @param <FieldType>      The field type (e.g., String for JPA, TableField for jOOQ)
  * @param <RepositoryType> The repository/table type
  */
 @Accessors(fluent = true)

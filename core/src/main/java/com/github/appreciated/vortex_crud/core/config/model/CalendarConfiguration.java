@@ -19,7 +19,7 @@ import java.util.List;
 public class CalendarConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory= (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private Class<? extends VortexCrudItemFactory<FieldType>> factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
 
     private VortexCrudItemFactory<FieldType> factoryInstance;
 

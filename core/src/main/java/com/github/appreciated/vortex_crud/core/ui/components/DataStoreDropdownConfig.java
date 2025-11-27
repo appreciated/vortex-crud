@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
  * Configuration for a data store dropdown component.
  * This configuration allows filtering data from a data store using a specific field and value.
  *
- * @param <ModelClass> The type of entity in the data store
- * @param <FieldType> The type used to identify fields in the data store
+ * @param <ModelClass>     The type of entity in the data store
+ * @param <FieldType>      The type used to identify fields in the data store
  * @param <RepositoryType> The type of repository key
  */
 @Accessors(fluent = true)

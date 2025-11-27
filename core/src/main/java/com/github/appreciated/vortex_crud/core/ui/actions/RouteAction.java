@@ -29,7 +29,7 @@ import java.io.Serializable;
  *     .build()
  * }</pre>
  *
- * @param <FieldType> The type used to identify fields in the data store
+ * @param <FieldType>  The type used to identify fields in the data store
  * @param <ModelClass> The type of entity
  */
 public interface RouteAction<FieldType, ModelClass> extends Serializable {

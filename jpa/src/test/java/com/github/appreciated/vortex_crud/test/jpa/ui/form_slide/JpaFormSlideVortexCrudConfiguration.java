@@ -43,7 +43,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
         RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
                 .dataStoreKey(imageRepository)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder().factory((Class<? extends VortexCrudItemFactory<String>>) (Class<?>)CardFactory.class)
+                .configuration(JpaFormRendererConfiguration.builder().factory((Class<? extends VortexCrudItemFactory<String>>) (Class<?>) CardFactory.class)
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.images.labels.title").build(),
