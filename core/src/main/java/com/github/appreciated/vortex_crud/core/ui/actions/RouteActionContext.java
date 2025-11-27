@@ -30,7 +30,7 @@ import java.util.Map;
  *     .build()
  * }</pre>
  *
- * @param <FieldType>  The type used to identify fields in the data store
+ * @param <FieldType> The type used to identify fields in the data store
  * @param <ModelClass> The type of entity
  */
 @Accessors(fluent = true)
@@ -72,8 +72,8 @@ public class RouteActionContext<FieldType, ModelClass> implements Serializable {
      */
     public ModelClass getFirstSelectedEntity() {
         return selectedEntities != null && !selectedEntities.isEmpty()
-                ? selectedEntities.get(0)
-                : null;
+            ? selectedEntities.get(0)
+            : null;
     }
 
     /**

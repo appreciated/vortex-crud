@@ -8,8 +8,8 @@ import com.vaadin.flow.function.SerializableSupplier;
  * Menu action components are additional UI elements that can be added to route headers
  * or menu bars to provide custom functionality like dropdowns, filters, or action buttons.
  *
- * @param <ModelClass>     The type of entity
- * @param <FieldType>      The type used to identify fields
+ * @param <ModelClass> The type of entity
+ * @param <FieldType> The type used to identify fields
  * @param <RepositoryType> The type of repository key
  */
 @FunctionalInterface

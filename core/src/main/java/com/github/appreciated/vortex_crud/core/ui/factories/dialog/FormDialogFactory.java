@@ -76,7 +76,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         // Handle multi-form vs single-form configurations differently
         if (configuration instanceof MultiFormRendererConfiguration) {
             MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> multiFormConfig =
-                    (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
+                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
 
             com.vaadin.flow.component.html.Div formsContainer = new com.vaadin.flow.component.html.Div();
 
@@ -85,7 +85,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                 FormLayout childFormLayout = new FormLayout();
                 childFormLayout.setMaxWidth("1000px");
                 childFormLayout.setResponsiveSteps(
-                        new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
+                    new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
                 );
                 formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, childForm.children(), recordById, tables, binder, childFormLayout);
                 formsContainer.add(childFormLayout);

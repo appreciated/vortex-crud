@@ -2,7 +2,11 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
-import com.vaadin.flow.component.*;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ClickNotifier;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.HasEnabled;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -68,10 +72,10 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
      * Renders custom route actions and registers their handlers.
      * This method should be called after the standard buttons are added.
      *
-     * @param actions         The list of route actions to render
+     * @param actions The list of route actions to render
      * @param contextProvider Provider for the current action context (allows dynamic updates)
-     * @param <FieldType>     The type used to identify fields
-     * @param <ModelClass>    The type of entity
+     * @param <FieldType> The type used to identify fields
+     * @param <ModelClass> The type of entity
      */
     public <FieldType, ModelClass> void renderActions(
             List<RouteAction<FieldType, ModelClass>> actions,
@@ -113,8 +117,8 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
      * Updates the enabled state of all action components based on current context.
      * Call this method when the selection state changes.
      *
-     * @param context      The current action context
-     * @param <FieldType>  The type used to identify fields
+     * @param context The current action context
+     * @param <FieldType> The type used to identify fields
      * @param <ModelClass> The type of entity
      */
     public <FieldType, ModelClass> void updateActionStates(RouteActionContext<FieldType, ModelClass> context) {

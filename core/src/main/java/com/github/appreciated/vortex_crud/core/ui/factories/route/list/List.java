@@ -44,15 +44,15 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> vortexDataStore =
-                    configService.configuration().dataStores().get(dataStore).dataStoreInstance();
+                configService.configuration().dataStores().get(dataStore).dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
-                        .dataStore(vortexDataStore)
-                        .selectedEntities(Collections.emptyList())  // No selection support yet
-                        .refreshCallback(() -> UI.getCurrent().getPage().reload())
-                        .viewComponent(this)
-                        .build();
+                    .dataStore(vortexDataStore)
+                    .selectedEntities(Collections.emptyList())  // No selection support yet
+                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                    .viewComponent(this)
+                    .build();
                 contextConsumer.accept(context);
             });
         }

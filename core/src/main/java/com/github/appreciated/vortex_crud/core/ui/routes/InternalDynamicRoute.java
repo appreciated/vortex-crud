@@ -31,8 +31,8 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
-     * @param configService The configuration service to access application settings.
-     * @param dataStoreUtil Utility strategy for data store operations.
+     * @param configService        The configuration service to access application settings.
+     * @param dataStoreUtil        Utility strategy for data store operations.
      */
     public InternalDynamicRoute(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                 VortexCrudDataStoreUtilStrategy dataStoreUtil

@@ -91,8 +91,8 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
      */
     private boolean isPublicRoute(String path) {
         return path.startsWith("login")
-               || path.startsWith("sign-up")
-               || path.startsWith("access-denied");
+                || path.startsWith("sign-up")
+                || path.startsWith("access-denied");
     }
 
     /**

@@ -106,7 +106,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         signUpButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         Button loginButton = new Button("Already have an account? Login", event ->
-                UI.getCurrent().navigate(LoginView.class)
+            UI.getCurrent().navigate(LoginView.class)
         );
         loginButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 

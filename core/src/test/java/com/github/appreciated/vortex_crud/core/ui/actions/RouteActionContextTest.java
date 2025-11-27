@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,8 +16,7 @@ class RouteActionContextTest {
     void testBuilderAndGetters() {
         VortexCrudDataStore<String, Object> dataStore = Mockito.mock(VortexCrudDataStore.class);
         Component viewComponent = Mockito.mock(Component.class);
-        Runnable refreshCallback = () -> {
-        };
+        Runnable refreshCallback = () -> {};
         Object entity = new Object();
 
         RouteActionContext<String, Object> context = RouteActionContext.<String, Object>builder()
@@ -51,19 +51,19 @@ class RouteActionContextTest {
 
     @Test
     void testFirstSelectedEntityNullWhenEmpty() {
-        RouteActionContext<String, Object> context = RouteActionContext.<String, Object>builder()
+         RouteActionContext<String, Object> context = RouteActionContext.<String, Object>builder()
                 .selectedEntities(Collections.emptyList())
                 .build();
-        assertNull(context.getFirstSelectedEntity());
-        assertEquals(0, context.getSelectionCount());
+         assertNull(context.getFirstSelectedEntity());
+         assertEquals(0, context.getSelectionCount());
     }
 
     @Test
     void testFirstSelectedEntityNullWhenNullList() {
-        RouteActionContext<String, Object> context = RouteActionContext.<String, Object>builder()
+         RouteActionContext<String, Object> context = RouteActionContext.<String, Object>builder()
                 .selectedEntities(null)
                 .build();
-        assertNull(context.getFirstSelectedEntity());
-        assertEquals(0, context.getSelectionCount());
+         assertNull(context.getFirstSelectedEntity());
+         assertEquals(0, context.getSelectionCount());
     }
 }

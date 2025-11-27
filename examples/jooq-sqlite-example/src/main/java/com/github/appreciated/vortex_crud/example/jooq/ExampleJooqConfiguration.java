@@ -5,9 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
@@ -20,6 +17,9 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -123,7 +123,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) FormDialogFactory.class)
+                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class)FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
                                                         .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
@@ -142,7 +142,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         ).build(),
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>)(Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASKS)
                                                         .manyToMany(new JooqManyToMany(
                                                                 TASK_HAS_TASK.TASK_ID,
@@ -287,13 +287,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
                 // Example: Add menu actions for dropdown filters
                 .menuActions(List.of(
-                        DataStoreDropdownMenuAction.<TableField<?, ?>, TableImpl<?>>builder()
-                                .dataStoreKey(USERS)
-                                .labelField(USERS.USERNAME)  // Field to use for display labels
-                                .placeholder("Filter by user...")
-                                .label("Assigned User")
-                                .limit(50)
-                                .build()
+                    DataStoreDropdownMenuAction.<TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreKey(USERS)
+                        .labelField(USERS.USERNAME)  // Field to use for display labels
+                        .placeholder("Filter by user...")
+                        .label("Assigned User")
+                        .limit(50)
+                        .build()
                 ))
                 .child(taskForm)
                 .build());

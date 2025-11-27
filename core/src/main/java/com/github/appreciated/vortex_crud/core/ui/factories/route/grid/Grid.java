@@ -47,15 +47,15 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> dataStore =
-                    configService.configuration().dataStores().get(routeRenderer.dataStoreKey()).dataStoreInstance();
+                configService.configuration().dataStores().get(routeRenderer.dataStoreKey()).dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
-                        .dataStore(dataStore)
-                        .selectedEntities(Collections.emptyList())  // No selection support yet
-                        .refreshCallback(() -> UI.getCurrent().getPage().reload())
-                        .viewComponent(this)
-                        .build();
+                    .dataStore(dataStore)
+                    .selectedEntities(Collections.emptyList())  // No selection support yet
+                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                    .viewComponent(this)
+                    .build();
                 contextConsumer.accept(context);
             });
         }

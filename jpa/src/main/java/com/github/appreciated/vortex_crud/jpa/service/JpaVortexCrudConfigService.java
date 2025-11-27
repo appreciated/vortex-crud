@@ -11,12 +11,14 @@ import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProvi
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.*;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.*;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.PasswordFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
@@ -44,6 +46,7 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
     private final Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration;
     private final Map<Class<?>, VortexCrudRouteFactory> routeFactories = new HashMap<>();
     private final Map<Class<?>, VortexCrudDialogFactory> dialogFactories = new HashMap<>();
+    private final Map<Class<?>, VortexCrudFieldFactory> fieldFactories = new HashMap<>();
     private final ListCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listCollectionFactory;
 
     public JpaVortexCrudConfigService(
@@ -71,6 +74,31 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
             modelRepositoryMap.put(dataStore.getModelClass(), repository);
         }
 
+        Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> providedConfig = configurationProvider.get();
+        Selects selects = providedConfig.selects();
+
+        // Populate Field Factories
+        fieldFactories.put(TextFieldFactory.class, new TextFieldFactory<>());
+        fieldFactories.put(IntegerNumberFieldFactory.class, new IntegerNumberFieldFactory<>());
+        fieldFactories.put(DoubleNumberFieldFactory.class, new DoubleNumberFieldFactory<>());
+        fieldFactories.put(BigDecimalNumberFieldFactory.class, new BigDecimalNumberFieldFactory<>());
+        fieldFactories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(fieldNameResolver, this, reflectionService));
+        fieldFactories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<>(fieldNameResolver, this, reflectionService));
+        fieldFactories.put(SelectFieldFactory.class, new SelectFieldFactory<>(selects, null));
+        fieldFactories.put(MultiSelectValueFieldFactory.class, new MultiSelectValueFieldFactory<>(selects, null));
+        fieldFactories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
+        fieldFactories.put(VideoFieldFactory.class, new VideoFieldFactory<>(fileProviderRegistry));
+        fieldFactories.put(PdfFieldFactory.class, new PdfFieldFactory<>(fileProviderRegistry));
+        fieldFactories.put(FileFieldFactory.class, new FileFieldFactory<>(fileProviderRegistry));
+        fieldFactories.put(MarkDownFieldFactory.class, new MarkDownFieldFactory<>());
+        fieldFactories.put(PasswordFieldFactory.class, new PasswordFieldFactory<>());
+        fieldFactories.put(EmailFieldFactory.class, new EmailFieldFactory<>());
+        fieldFactories.put(DateFieldFactory.class, new DateFieldFactory<>());
+        fieldFactories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
+        fieldFactories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
+        fieldFactories.put(IdFieldFactory.class, new IdFieldFactory<>());
+        fieldFactories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
+
         Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = new HashMap<>();
         for (Map.Entry<JpaRepository<?, ?>, JpaRepositoryDataStore<?>> entry : repoDataStoreMap.entrySet()) {
             JpaRepository<?, ?> repo = entry.getKey();
@@ -79,7 +107,7 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
 
             // Populate factoryInstance for Fields
             for (Field<?, ?, ?> field : fields.values()) {
-                setField(field, "factoryInstance", instantiate(field.factory()));
+                setField(field, "factoryInstance", fieldFactories.get(field.factory()));
             }
 
             DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> config = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
@@ -112,10 +140,21 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
         this.listCollectionFactory = new ListCollectionFactory<>(this, reflectionService, dataStoreUtil, manyToManyPersistenceStrategy);
 
         // 4. Build Application
-        Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> providedConfig = configurationProvider.get();
         if (providedConfig.dataStores() != null) {
             dataStores.putAll(providedConfig.dataStores());
+
+            // Populate instances for existing data stores (e.g. manually defined ones)
+            // Assuming dataStoreInstance is already set for manually defined ones, or we can't do much.
+            // But fields in those configs might need factory instances.
+            for (DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> dsConfig : providedConfig.dataStores().values()) {
+                if (dsConfig.fields() != null) {
+                    for (Field<?, ?, ?> field : dsConfig.fields().values()) {
+                        setField(field, "factoryInstance", fieldFactories.get(field.factory()));
+                    }
+                }
+            }
         }
+
         this.configuration = providedConfig.toBuilder()
                 .dataStores(dataStores)
                 .build();
@@ -147,7 +186,6 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
             }
 
             // Set Dialog Factory Instance
-            // Use child's factory type to determine dialog factory
             if (route instanceof RouteRendererSingleChild) {
                 RouteRenderer child = ((RouteRendererSingleChild) route).child();
                 if (child != null && child.factory() != null) {
@@ -155,75 +193,63 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
                 }
             }
 
-            // Also check if the route itself needs a dialog factory (e.g. if it's a form route used as a child)
             if (route.factory() != null && dialogFactories.containsKey(route.factory())) {
-                setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
+                 setField(route, "dialogFactoryInstance", dialogFactories.get(route.factory()));
             }
 
             // Handle Configuration (ItemFactory)
             RouteRendererConfiguration config = route.configuration();
             if (config != null) {
                 try {
-                    // Check if it has factory field
                     java.lang.reflect.Method factoryMethod = config.getClass().getMethod("factory");
                     Class<?> factoryClass = (Class<?>) factoryMethod.invoke(config);
                     if (factoryClass != null) {
-                        // Instantiate Item Factory (CardFactory etc.)
-                        // Assuming no-arg constructor for ItemFactories for now
                         setField(config, "factoryInstance", instantiate(factoryClass));
                     }
                 } catch (Exception e) {
-                    // Ignore if no factory method
+                    // Ignore
                 }
 
                 // Handle children (InternalFormElement)
                 if (config.children() != null) {
                     for (InternalFormElement element : (List<InternalFormElement>) config.children()) {
                         if (element.factory() != null) {
-                            // For collections, we use listCollectionFactory
-                            // Check if factory class matches ListCollectionFactory or similar
-                            // Or just look up in a collection factories map if we had one
-                            // For now we only have ListCollectionFactory
-                            setField(element, "factoryInstance", listCollectionFactory);
+                             setField(element, "factoryInstance", listCollectionFactory);
                         }
 
-                        // Collection config
                         if (element.configuration() != null) {
-                            Collection col = element.configuration();
-                            if (col.factory() != null) {
-                                // Dialog factory for collection
-                                setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                            }
-                            if (col.child() != null) {
-                                traverseRoutes(List.of(col.child()));
-                            }
+                             Collection col = element.configuration();
+                             if (col.factory() != null) {
+                                 setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                             }
+                             if (col.child() != null) {
+                                 traverseRoutes(List.of(col.child()));
+                             }
                         }
                     }
                 }
 
-                // Handle MultiForm children
                 if (config instanceof MultiFormRendererConfiguration) {
                     MultiFormRendererConfiguration multiConfig = (MultiFormRendererConfiguration) config;
                     if (multiConfig.forms() != null) {
                         for (Object childFormObj : multiConfig.forms()) {
-                            RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
-                            // Recurse/populate fields in child forms?
-                            if (childForm.children() != null) {
-                                for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
-                                    if (element.factory() != null) {
-                                        setField(element, "factoryInstance", listCollectionFactory);
-                                    }
-                                    if (element.configuration() != null) {
-                                        Collection col = element.configuration();
-                                        if (col.factory() != null) {
-                                            setField(col, "factoryInstance", dialogFactories.get(col.factory()));
-                                        }
-                                        if (col.child() != null) {
-                                            traverseRoutes(List.of(col.child()));
-                                        }
-                                    }
-                                }
-                            }
+                             RouteRendererConfiguration childForm = (RouteRendererConfiguration) childFormObj;
+                             if (childForm.children() != null) {
+                                 for (InternalFormElement element : (List<InternalFormElement>) childForm.children()) {
+                                     if (element.factory() != null) {
+                                         setField(element, "factoryInstance", listCollectionFactory);
+                                     }
+                                     if (element.configuration() != null) {
+                                         Collection col = element.configuration();
+                                         if (col.factory() != null) {
+                                             setField(col, "factoryInstance", dialogFactories.get(col.factory()));
+                                         }
+                                         if (col.child() != null) {
+                                             traverseRoutes(List.of(col.child()));
+                                         }
+                                     }
+                                 }
+                             }
                         }
                     }
                 }

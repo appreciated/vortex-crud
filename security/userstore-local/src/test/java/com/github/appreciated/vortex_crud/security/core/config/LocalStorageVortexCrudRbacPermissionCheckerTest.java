@@ -109,7 +109,7 @@ class LocalStorageVortexCrudRbacPermissionCheckerTest {
     @Test
     void testcurrentUserEntity_WithNullService() {
         LocalStorageUserContextService<String, String, String> checker =
-                new LocalStorageUserContextService<>(null, null);
+                new LocalStorageUserContextService<>(null, null, null);
 
         Object result = checker.currentUserEntity();
 

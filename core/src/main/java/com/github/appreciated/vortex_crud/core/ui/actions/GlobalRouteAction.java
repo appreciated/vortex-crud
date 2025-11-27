@@ -30,7 +30,7 @@ import lombok.experimental.Accessors;
  *     .build()
  * }</pre>
  *
- * @param <FieldType>  The type used to identify fields in the data store
+ * @param <FieldType> The type used to identify fields in the data store
  * @param <ModelClass> The type of entity
  */
 @Accessors(fluent = true)

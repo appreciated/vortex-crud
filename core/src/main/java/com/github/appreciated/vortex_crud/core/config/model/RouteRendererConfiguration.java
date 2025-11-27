@@ -7,18 +7,11 @@ import java.util.List;
 
 public interface RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
     Class<? extends VortexCrudItemFactory<FieldType>> factory();
-
     FieldType titleField();
-
     FieldType descriptionField();
-
     FieldType imageField();
-
     Class<? extends VortexCrudResourceProvider> resourceProvider();
-
     boolean inlineEdit();
-
     FieldType filterField();
-
     List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children();
 }

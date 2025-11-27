@@ -2,12 +2,8 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
@@ -15,11 +11,15 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.example.jpa.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
+import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.button.Button;
@@ -51,9 +51,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     // Marker key for custom data store - cast required due to type erasure
     @SuppressWarnings("unchecked")
     private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) (Object) new Object() {
-        public String toString() {
-            return "NotesDataStore";
-        }
+        public String toString() { return "NotesDataStore"; }
     };
 
     public ExampleJpaConfiguration(
@@ -75,7 +73,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
+                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>)ListCollectionFactory.class)
                 .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.builder(taskCommentRepository)
                                 .oneToMany(new JpaOneToMany("task"))

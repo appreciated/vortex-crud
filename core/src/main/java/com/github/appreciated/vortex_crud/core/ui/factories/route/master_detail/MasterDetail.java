@@ -90,11 +90,11 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
-                        .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
-                        .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
-                        .refreshCallback(() -> UI.getCurrent().getPage().reload())
-                        .viewComponent(this)
-                        .build();
+                    .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
+                    .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
+                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                    .viewComponent(this)
+                    .build();
                 contextConsumer.accept(context);
             });
         }
