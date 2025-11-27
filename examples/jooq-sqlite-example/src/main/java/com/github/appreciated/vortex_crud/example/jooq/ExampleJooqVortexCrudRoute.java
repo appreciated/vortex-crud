@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.router.Route;
@@ -19,10 +18,9 @@ import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     public ExampleJooqVortexCrudRoute(
-            VortexCrudRouteFactoryRegistry<TableRecord<?>, TableField<?, ?>, TableImpl<?>> routeFactoryRegistry,
             VortexCrudDataStoreUtilStrategy storeUtilStrategy
     ) {
-        super(routeFactoryRegistry, storeUtilStrategy);
+        super(storeUtilStrategy);
     }
 
     @Override

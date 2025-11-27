@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.github.appreciated.vortex_crud.service.TestContainerRouteFactory;
 import com.github.appreciated.vortex_crud.service.TestNonContainerRouteFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,23 +21,20 @@ import static org.mockito.Mockito.when;
 class VortexCrudPathToRouteRendererResolverTest {
 
     @Mock
-    private VortexCrudRouteFactoryRegistry registry;
-
-    @Mock
     private VortexCrudDataStoreUtilStrategy dataStoreUtil;
+
+    private TestContainerRouteFactory containerFactory;
+    private TestNonContainerRouteFactory nonContainerFactory;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        TestContainerRouteFactory containerFactory = mock(TestContainerRouteFactory.class);
+        containerFactory = mock(TestContainerRouteFactory.class);
         when(containerFactory.isContainerRoute()).thenReturn(true);  // Wrappable Routen
-        when(registry.getFactory(TestContainerRouteFactory.class)).thenReturn(containerFactory);
 
-        TestNonContainerRouteFactory nonContainerFactory = mock(TestNonContainerRouteFactory.class);
+        nonContainerFactory = mock(TestNonContainerRouteFactory.class);
         when(nonContainerFactory.isContainerRoute()).thenReturn(false);  // Non-wrappable Routen
-        when(registry.getFactory(TestNonContainerRouteFactory.class)).thenReturn(nonContainerFactory);
-
     }
 
     @Test
@@ -49,12 +45,14 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Build child first
         ListRoute<String, String, String> childRouteRenderer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
+                .factoryInstance(containerFactory)
                 .title("childRouteWithContainer")
                 .build();
 
         // Build parent with child
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
+                .factoryInstance(containerFactory)
                 .title("routeWithContainer")
                 .child(childRouteRenderer)
                 .build();
@@ -63,7 +61,6 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         String path = "routeWithContainer/routeWithContainer";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
-                registry,
                 path,
                 routesConfig,
                 dataStoreUtil
@@ -84,12 +81,14 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Build child first
         ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         // Build parent with child
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .child(routeRendererWithoutContainer2)
                 .build();
@@ -98,7 +97,6 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         String path = "routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
-                registry,
                 path,
                 routesConfig,
                 dataStoreUtil
@@ -119,17 +117,20 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Build from innermost to outermost
         ListRoute<String, String, String> secondChild = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         ListRoute<String, String, String> firstChild = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
+                .factoryInstance(containerFactory)
                 .title("routeWithoutContainer1")
                 .child(secondChild)
                 .build();
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
+                .factoryInstance(containerFactory)
                 .title("routeWithContainer")
                 .child(firstChild)
                 .build();
@@ -138,7 +139,6 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
-                registry,
                 path,
                  routesConfig,
                 dataStoreUtil
@@ -158,6 +158,7 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .build();
 
@@ -165,7 +166,6 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         String path = "routeWithoutContainer1";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
-                registry,
                 path,
                 routesConfig,
                 dataStoreUtil
@@ -186,17 +186,20 @@ class VortexCrudPathToRouteRendererResolverTest {
         // Build from innermost to outermost
         ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
                 .factory(TestNonContainerRouteFactory.class)
+                .factoryInstance(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .child(routeRendererWithoutContainer2)
                 .build();
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
                 .factory(TestContainerRouteFactory.class)
+                .factoryInstance(containerFactory)
                 .title("routeWithContainer")
                 .child(routeRendererWithoutContainer1)
                 .build();
@@ -205,7 +208,6 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         String path = "routeWithContainer/routeWithoutContainer1/routeWithoutContainer2";
         VortexCrudPathToRouteResolver<String, String, String> vortexCrudPath = new VortexCrudPathToRouteResolver<>(
-                registry,
                 path,
                 routesConfig,
                 dataStoreUtil

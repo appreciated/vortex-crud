@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.security.core.view;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import org.junit.jupiter.api.AfterEach;
@@ -19,8 +18,6 @@ class LoginViewTest {
 
     @Mock
     private VortexCrudConfigService<String, String, String> configService;
-    @Mock
-    private VortexCrudDataStoreFactoryRegistry<String, String, String> dataStoreFactoryRegistry;
     @Mock
     private ReflectionService<String> reflectionService;
     @Mock
@@ -52,7 +49,6 @@ class LoginViewTest {
     void testInstantiation() {
         LoginView<String, String, String> view = new LoginView<>(
                 configService,
-                dataStoreFactoryRegistry,
                 reflectionService,
                 passwordEncoder
         );

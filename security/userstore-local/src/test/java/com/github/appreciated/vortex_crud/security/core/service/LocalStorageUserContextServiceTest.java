@@ -1,10 +1,10 @@
 package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,9 +39,6 @@ class LocalStorageUserContextServiceTest {
     private VortexCrudConfigService<String, String, String> configService;
 
     @Mock
-    private VortexCrudDataStoreFactoryRegistry<String, String, String> dataStoreFactoryRegistry;
-
-    @Mock
     private ReflectionService<String> reflectionService;
 
     @Mock
@@ -56,6 +54,9 @@ class LocalStorageUserContextServiceTest {
     @Mock
     private InternalFormElement<String, String, String> usernameElement;
 
+    @Mock
+    private Map<String, DataStoreConfig<String, String, String>> dataStoresMap;
+
     private LocalStorageUserContextService<String, String, String> userContextService;
 
     private AutoCloseable mocks;
@@ -63,7 +64,8 @@ class LocalStorageUserContextServiceTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-        userContextService = new LocalStorageUserContextService<>(configService, dataStoreFactoryRegistry, reflectionService);
+        when(application.dataStores()).thenReturn(dataStoresMap);
+        userContextService = new LocalStorageUserContextService<>(configService, reflectionService);
     }
 
     @AfterEach
@@ -183,7 +185,11 @@ class LocalStorageUserContextServiceTest {
         when(identityAndAccessManagement.repositoryKey()).thenReturn("userRepository");
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
+
+        DataStoreConfig<String, String, String> dsConfig = mock(DataStoreConfig.class);
+        when(dataStoresMap.get("userRepository")).thenReturn(dsConfig);
+        when(dsConfig.dataStoreInstance()).thenReturn(dataStore);
+
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(List.of(expectedUser));
 
@@ -254,7 +260,11 @@ class LocalStorageUserContextServiceTest {
         when(identityAndAccessManagement.repositoryKey()).thenReturn("userRepository");
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
+
+        DataStoreConfig<String, String, String> dsConfig = mock(DataStoreConfig.class);
+        when(dataStoresMap.get("userRepository")).thenReturn(dsConfig);
+        when(dsConfig.dataStoreInstance()).thenReturn(dataStore);
+
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(Collections.emptyList());
 
@@ -323,7 +333,11 @@ class LocalStorageUserContextServiceTest {
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
         when(identityAndAccessManagement.rolesField()).thenReturn(rolesField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
+
+        DataStoreConfig<String, String, String> dsConfig = mock(DataStoreConfig.class);
+        when(dataStoresMap.get("userRepository")).thenReturn(dsConfig);
+        when(dsConfig.dataStoreInstance()).thenReturn(dataStore);
+
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(List.of(userEntity));
         when(reflectionService.getValue(userEntity, rolesField)).thenReturn(roles);
