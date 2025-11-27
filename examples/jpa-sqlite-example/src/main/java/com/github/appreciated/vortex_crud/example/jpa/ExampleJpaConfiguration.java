@@ -45,9 +45,16 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
     // Marker key for custom data store - cast required due to type erasure
     @SuppressWarnings("unchecked")
-    private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) (Object) new Object() {
-        public String toString() { return "NotesDataStore"; }
-    };
+    private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) java.lang.reflect.Proxy.newProxyInstance(
+            ExampleJpaConfiguration.class.getClassLoader(),
+            new Class[] { JpaRepository.class },
+            (proxy, method, args) -> {
+                if (method.getName().equals("toString")) return "NotesDataStore";
+                if (method.getName().equals("hashCode")) return 42;
+                if (method.getName().equals("equals")) return proxy == args[0];
+                return null;
+            }
+    );
 
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
