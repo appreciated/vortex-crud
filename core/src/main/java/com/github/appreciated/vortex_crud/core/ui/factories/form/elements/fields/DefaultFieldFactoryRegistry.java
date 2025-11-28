@@ -48,6 +48,9 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<>(resolver, dataStoreFactoryRegistry, reflectionService));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
         factories.put(VideoFieldFactory.class, new VideoFieldFactory<>(fileProviderRegistry));
+        factories.put(FileFieldFactory.class, new FileFieldFactory<>(fileProviderRegistry));
+        factories.put(PdfFieldFactory.class, new PdfFieldFactory<>(fileProviderRegistry));
+        factories.put(MarkDownFieldFactory.class, new MarkDownFieldFactory<>());
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());
         factories.put(IdFieldFactory.class, new IdFieldFactory<>());
         factories.put(PasswordFieldFactory.class, new PasswordFieldFactory<>());
@@ -75,6 +78,15 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         }
         if (field instanceof VideoField) {
             return getFactory(VideoFieldFactory.class);
+        }
+        if (field instanceof FileField) {
+            return getFactory(FileFieldFactory.class);
+        }
+        if (field instanceof PdfField) {
+            return getFactory(PdfFieldFactory.class);
+        }
+        if (field instanceof MarkDownField) {
+            return getFactory(MarkDownFieldFactory.class);
         }
         if (field instanceof ReferenceField) {
             return getFactory(ReferenceFieldFactory.class);
