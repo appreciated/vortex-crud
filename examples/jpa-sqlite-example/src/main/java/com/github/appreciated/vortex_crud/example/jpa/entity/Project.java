@@ -1,10 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -33,6 +32,19 @@ public class Project {
 
     @DateTimePickerField
     private LocalDateTime updatedAt;
+
+    @MultiSelectValueField("project-tags")
+    private String tags;
+
+    @CheckboxField
+    private Boolean active;
+
+    @BigDecimalNumberField
+    private BigDecimal budget;
+
+    @MarkDownField
+    @Column(columnDefinition = "TEXT")
+    private String notes;
 
     // Getters and Setters
     public Integer getId() {
@@ -89,5 +101,37 @@ public class Project {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public BigDecimal getBudget() {
+        return budget;
+    }
+
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }
