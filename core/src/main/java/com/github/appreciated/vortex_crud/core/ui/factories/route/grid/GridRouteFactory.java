@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -18,7 +17,6 @@ import jakarta.annotation.Nullable;
 
 public class GridRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
@@ -29,7 +27,6 @@ public class GridRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public GridRouteFactory(
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
@@ -39,7 +36,6 @@ public class GridRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             ReflectionService<FieldType> reflectionService,
             VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.formCreator = formCreator;
         this.dialogFactoryRegistry = dialogFactoryRegistry;
         this.routeFactoryRegistry = routeFactoryRegistry;
@@ -59,7 +55,6 @@ public class GridRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         return new Grid<>(routeResolver,
                 routeRenderer,
-                dataStoreFactoryRegistry,
                 formCreator,
                 dialogFactoryRegistry,
                 routeFactoryRegistry,

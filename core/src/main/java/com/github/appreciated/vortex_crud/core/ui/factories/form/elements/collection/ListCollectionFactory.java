@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -25,19 +24,17 @@ import static com.vaadin.flow.component.button.ButtonVariant.*;
 
 public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactory;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
 
-    public ListCollectionFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+    public ListCollectionFactory(
                                  VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactory,
                                  ReflectionService<FieldType> reflectionService,
                                  VortexCrudDataStoreUtilStrategy dataStoreUtil,
                                  ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.dialogFactory = dialogFactory;
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
@@ -78,7 +75,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         list.add(header);
         CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration().data();
 
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(data.dataStore());
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
 
         java.util.Collection<Object> records = (data.manyToMany() != null) ?
                 (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
@@ -166,7 +163,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 referenceField,
                 collectionData.child(),
                 collectionData.data(),
-                collectionData.data().dataStore(),
+                collectionData.data().dataStoreInstance(),
                 routeFactoryRegistry,
                 () -> loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header),
                 () -> {

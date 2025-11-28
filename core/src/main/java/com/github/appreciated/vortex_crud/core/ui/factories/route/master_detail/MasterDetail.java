@@ -7,7 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -55,7 +54,6 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     @SuppressWarnings("unchecked")
     public MasterDetail(Integer currentPathIndex,
                         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                        VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                         VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                         VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                         VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -75,7 +73,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey());
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
         this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
         assert routeRenderer.child() != null;

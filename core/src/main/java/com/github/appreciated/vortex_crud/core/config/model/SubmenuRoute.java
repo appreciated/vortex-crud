@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType dataStoreKey;
+    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
 
     private String title;
 

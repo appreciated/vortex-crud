@@ -229,7 +229,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                 null,
                 ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
                 null,
-                dataStoreIdentifier,
+                (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                 routeFactory,
                 () -> {
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
@@ -268,7 +268,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                 null,
                 ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
                 null,
-                dataStoreIdentifier,
+                (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                 routeFactory,
                 () -> {
                     Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));

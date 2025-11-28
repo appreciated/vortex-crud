@@ -6,7 +6,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -29,19 +28,16 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
     protected final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    protected final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     protected final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     protected final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
     protected final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     protected VortexCrudDataStore<FieldType, Object> dataStore;
 
     public AbstractFormDialogFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                     VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                      VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                                      VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                                      VortexCrudDataStoreUtilStrategy dataStoreUtil) {
         this.configService = configService;
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
         this.dataStoreUtil = dataStoreUtil;
@@ -53,13 +49,13 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
                          @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
-                         RepositoryType dataStoreKey,
+                         VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener,
                          FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
         Dialog dialog = instantiateDialog();
 
         Object recordById = this.dataStore.getRecordById(entityId);
@@ -78,10 +74,10 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(formRouteRenderer.dataStoreKey());
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById,
+        formCreator.bindAndAddToLayout(formRouteRenderer.dataStoreKey(), formRouteRenderer, configuration.children(), recordById,
                 routeFactory, tables, binder, layout);
 
         dialog.add(layout);

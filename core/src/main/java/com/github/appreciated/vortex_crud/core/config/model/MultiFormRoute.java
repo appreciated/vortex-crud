@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -43,6 +44,7 @@ import java.util.List;
 public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     private RepositoryType dataStoreKey;
+    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
 
     private String title;
 

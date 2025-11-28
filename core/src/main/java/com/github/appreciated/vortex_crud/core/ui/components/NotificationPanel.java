@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -56,7 +56,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
     private static final Logger log = LoggerFactory.getLogger(NotificationPanel.class);
     private final NotificationPanelConfiguration<FieldType, RepositoryType> configuration;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
+    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final ReflectionService<FieldType> reflectionService;
 
     private VortexCrudDataStore dataStore;
@@ -67,10 +67,10 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
     public NotificationPanel(
             NotificationPanelConfiguration<FieldType, RepositoryType> configuration,
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
+            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             ReflectionService<FieldType> reflectionService) {
         this.configuration = configuration;
-        this.dataStoreRegistry = dataStoreRegistry;
+        this.configService = configService;
         this.reflectionService = reflectionService;
     }
 
@@ -79,7 +79,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
         super.onAttach(attachEvent);
 
         // Get the data store
-        dataStore = dataStoreRegistry.getDataStore(configuration.dataStoreKey());
+        dataStore = configService.configuration().dataStores().get(configuration.dataStoreKey()).dataStoreInstance();
 
         // Build the UI
         buildUI();

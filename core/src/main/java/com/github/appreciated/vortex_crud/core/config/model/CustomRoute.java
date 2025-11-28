@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -27,6 +28,8 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     @Builder.Default
     private RepositoryType dataStoreKey = null;
+
+    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
 
     private String title;
 

@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
@@ -24,7 +23,7 @@ public class CollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> im
 
     private final Map<Class<? extends VortexCrudCollectionFactory>, VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
-    public CollectionFactoryRegistry(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+    public CollectionFactoryRegistry(
                                      VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                                      ReflectionService<FieldType> reflectionService,
                                      VortexCrudDataStoreUtilStrategy dataStoreUtil,
@@ -33,7 +32,6 @@ public class CollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> im
         factories.put(
                 ListCollectionFactory.class,
                 new ListCollectionFactory<>(
-                        dataStoreFactoryRegistry,
                         dialogFactoryRegistry,
                         reflectionService,
                         dataStoreUtil,

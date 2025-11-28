@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -29,7 +28,6 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
     private final Map<Class<? extends VortexCrudFieldFactory>, VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
     public DefaultFieldFactoryRegistry(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                       VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                        ReflectionService<FieldType> reflectionService) {
@@ -44,8 +42,8 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(DoubleNumberFieldFactory.class, new DoubleNumberFieldFactory<>());
         factories.put(BigDecimalNumberFieldFactory.class, new BigDecimalNumberFieldFactory<>());
         factories.put(IntegerNumberFieldFactory.class, new IntegerNumberFieldFactory<>());
-        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(resolver, dataStoreFactoryRegistry, reflectionService));
-        factories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<>(resolver, dataStoreFactoryRegistry, reflectionService));
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(resolver, configService, reflectionService));
+        factories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<>(resolver, configService, reflectionService));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
         factories.put(VideoFieldFactory.class, new VideoFieldFactory<>(fileProviderRegistry));
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());

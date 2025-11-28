@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -25,20 +24,17 @@ import static com.vaadin.flow.component.ModalityMode.VISUAL;
 public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private VortexCrudDataStore<FieldType, Object> dataStore;
 
     public FormDialogFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                             VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                              VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                              VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                              VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.configService = configService;
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.fieldNameResolver = fieldNameResolver;
         this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
         this.dataStoreUtil = dataStoreUtil;
@@ -50,13 +46,13 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                          @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
-                         RepositoryType dataStoreKey,
+                         VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener,
                          FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(dataStoreKey);
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -73,6 +69,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
 
         Binder<Object> binder = new Binder<>(Object.class);
 
+        RepositoryType dataStoreKey = formRouteRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();

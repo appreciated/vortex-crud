@@ -52,7 +52,7 @@ public class JpaFieldService {
      * @param dataStore The data store containing fields to process
      * @return A map of field names to configure Field objects
      */
-    public Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore, JpaDataStoreFactoryRegistry jpaDataStoreFactoryRegistry) {
+    public Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore, Map<Class<?>, JpaRepository<?, ?>> repositoryMap) {
         Collection<Field> fields = dataStore.getFields();
         Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> collect = fields.stream()
                 .filter(jpaFieldAnnotationRegistryService::hasFieldAnnotation)
@@ -63,7 +63,10 @@ public class JpaFieldService {
 
                     return getAnnotation(entityField, ReferenceField.class).map(referenceField -> {
                         Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
-                        JpaRepository<?, ?> repository = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
+                        JpaRepository<?, ?> repository = repositoryMap.get(targetEntityClass);
+                        if (repository == null) {
+                            throw new IllegalStateException("No repository found for class " + targetEntityClass);
+                        }
                         List<String> children = Arrays.asList(referenceField.fields());
                         String filterField = referenceField.value();
                         String fieldName = entityField.getName();
@@ -77,7 +80,10 @@ public class JpaFieldService {
                                 .build();
                     }).or(() -> getAnnotation(entityField, MultiSelectField.class).map(multiSelectField -> {
                         Class<?> targetEntityClass = fieldTypeResolver.resolveTargetClass(dataStore, entityField);
-                        JpaRepository<?, ?> repository = jpaDataStoreFactoryRegistry.getFactory(targetEntityClass);
+                        JpaRepository<?, ?> repository = repositoryMap.get(targetEntityClass);
+                        if (repository == null) {
+                            throw new IllegalStateException("No repository found for class " + targetEntityClass);
+                        }
                         List<String> children = Arrays.asList(multiSelectField.fields());
                         String filterField = multiSelectField.value();
                         String fieldName = entityField.getName();

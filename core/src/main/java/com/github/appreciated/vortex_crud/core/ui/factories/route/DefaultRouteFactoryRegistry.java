@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -41,7 +40,6 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
     public DefaultRouteFactoryRegistry(VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                                        VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                        VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> listColumnCallbackRegistry,
-                                       VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                        VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                                        VortexCrudFileProviderRegistry fileProviderRegistry,
                                        VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
@@ -50,14 +48,14 @@ public class DefaultRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> 
                                        VortexCrudDataStoreUtilStrategy dataStoreUtil,
                                        @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(dataStoreFactoryRegistry, itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
-        factories.put(ListRouteFactory.class, new ListRouteFactory<>(dataStoreFactoryRegistry, configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver, dataStoreUtil));
-        factories.put(GridRouteFactory.class, new GridRouteFactory<>(dataStoreFactoryRegistry, formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
-        factories.put(FormRouteFactory.class, new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, reflectionService, permissionChecker));
-        factories.put(FormSlideRouteFactory.class, new FormSlideRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
-        factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreatorService, this, reflectionService, permissionChecker));
-        factories.put(KanbanFactory.class, new KanbanFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
-        factories.put(CalendarFactory.class, new CalendarFactory<>(dataStoreFactoryRegistry, configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(MasterDetailRouteFactory.class, new MasterDetailRouteFactory<>(itemFactoryRegistry, this, configService, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(ListRouteFactory.class, new ListRouteFactory<>(configService, listColumnCallbackRegistry, formCreatorService, dialogFactoryRegistry, this, resolver, dataStoreUtil));
+        factories.put(GridRouteFactory.class, new GridRouteFactory<>(formCreatorService, dialogFactoryRegistry, this, itemFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(FormRouteFactory.class, new FormRouteFactory<>(configService, formCreatorService, this, reflectionService, permissionChecker));
+        factories.put(FormSlideRouteFactory.class, new FormSlideRouteFactory<>(configService, formCreatorService, this, resolver, reflectionService, permissionChecker));
+        factories.put(MultiFormRouteFactory.class, new MultiFormRouteFactory<>(configService, formCreatorService, this, reflectionService, permissionChecker));
+        factories.put(KanbanFactory.class, new KanbanFactory<>(configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
+        factories.put(CalendarFactory.class, new CalendarFactory<>(configService, itemFactoryRegistry, this, formCreatorService, dialogFactoryRegistry, fileProviderRegistry, resolver, reflectionService, dataStoreUtil));
         factories.put(SubmenuRouteFactory.class, new SubmenuRouteFactory<>(this, configService, dataStoreUtil));
         factories.put(CustomRouteFactory.class, new CustomRouteFactory<>());
     }

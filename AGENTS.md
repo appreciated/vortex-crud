@@ -11,7 +11,7 @@
 ### DO:
 - **Use `VortexCrudDataStore` directly for ALL data access**
 - Look at existing implementations: `FormRouteFactory`, `FormDialogFactory`, `SignUpView`
-- Use `VortexCrudDataStoreFactoryRegistry` to get DataStores
+- **Use `RouteRenderer.dataStoreInstance()` or `DataStoreConfig.dataStoreInstance()` to get DataStores**
 - Use `ReflectionService` for field access, not direct field manipulation
 
 ---
@@ -19,9 +19,8 @@
 ## Key Pattern
 
 ```java
-// Get DataStore (NOT a repository!)
-VortexCrudDataStore<FieldType, Object> dataStore =
-    dataStoreFactoryRegistry.getDataStore(repositoryKey);
+// Get DataStore from configuration
+VortexCrudDataStore<FieldType, Object> dataStore = routeRenderer.dataStoreInstance();
 
 // Create/save entities
 Object entity = dataStore.newInstance();

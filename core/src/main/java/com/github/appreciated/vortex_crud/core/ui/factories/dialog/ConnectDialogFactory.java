@@ -6,7 +6,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
@@ -26,16 +25,13 @@ import java.util.stream.Collectors;
 
 public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy;
 
     public ConnectDialogFactory(
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
             ReflectionService<FieldType> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.reflectionService = reflectionService;
         this.dataStoreUtilStrategy = dataStoreUtilStrategy;
@@ -62,13 +58,12 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
-                         RepositoryType dataStoreKey,
+                         VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          OnStoreListener storeListener,
                          OnCancelListener cancelListener,
                          FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
 
-        VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(dataStoreKey);
         ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.manyToMany();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");

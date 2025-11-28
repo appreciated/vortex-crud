@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
@@ -27,7 +26,6 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
     public List(Integer currentPathIndex,
                 VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                 VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                 VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry,
                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
@@ -38,19 +36,17 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     ) {
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
-        RepositoryType dataStore = routeRenderer.dataStoreKey();
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, routeRenderer, dataStore, formCreator, routeFactoryRegistry),
+                event -> onAdd(dialogFactoryRegistry, routeRenderer, routeRenderer.dataStoreInstance(), formCreator, routeFactoryRegistry),
                 null,
                 null,
                 routeHeader);
 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
-            VortexCrudDataStore<FieldType, ModelClass> vortexDataStore =
-                dataStoreFactoryRegistry.getDataStore(dataStore);
+            VortexCrudDataStore<FieldType, ModelClass> vortexDataStore = routeRenderer.dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
@@ -64,7 +60,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, dataStoreFactoryRegistry, configService, columnCallbackRegistry, dataStoreUtil);
+        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, configService, columnCallbackRegistry, dataStoreUtil);
         add(headerBar);
         if (routeRenderer.configuration() != null && routeRenderer.configuration().filterField() != null) {
             add(textField);
@@ -84,7 +80,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
     }
 
-    private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, RepositoryType dataStore, FormCreator<ModelClass, FieldType, RepositoryType> formCreator, VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
+    private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, VortexCrudDataStore<FieldType, ModelClass> dataStore, FormCreator<ModelClass, FieldType, RepositoryType> formCreator, VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
         Dialog dialog = dialogFactoryRegistry.getFactory(routeRenderer.child().factory()).create(
                 null,
                 null,

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -15,11 +14,10 @@ public class FormSlideFactory<ModelClass, FieldType, RepositoryType>
         extends AbstractFormDialogFactory<ModelClass, FieldType, RepositoryType> {
 
     public FormSlideFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                             VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                             VortexCrudDataStoreUtilStrategy dataStoreUtil) {
-        super(configService, dataStoreFactoryRegistry, fieldNameResolver, foreignKeyResolutionStrategy, dataStoreUtil);
+        super(configService, fieldNameResolver, foreignKeyResolutionStrategy, dataStoreUtil);
     }
 
     @Override

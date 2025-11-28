@@ -141,7 +141,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(dialogFactoryRegistry, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, dataStoreIdentifier, formCreator, routeFactory),
+                event -> onAdd(dialogFactoryRegistry, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, (VortexCrudDataStore<FieldType, ModelClass>) dataStore, formCreator, routeFactory),
                 null,
                 null,
                 routeHeader);
@@ -192,7 +192,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 null,
                 routeRenderer.child(),
                 null,
-                dataStoreIdentifier,
+                (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                 routeFactory,
                 () -> {
                     Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
@@ -386,7 +386,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
     private void onAdd(VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                       RepositoryType dataStore,
+                       VortexCrudDataStore<FieldType, ModelClass> dataStore,
                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory) {
         Object entity = new Object();

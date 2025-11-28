@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -12,18 +13,20 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.example.jpa.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaDataStoreFactoryRegistry;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.server.VaadinServletRequest;
-import jakarta.annotation.PostConstruct;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +44,14 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
-    private final JpaDataStoreFactoryRegistry registry;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldService fieldService;
 
     // Marker key for custom data store - cast required due to type erasure
     @SuppressWarnings("unchecked")
     private static final JpaRepository<?, ?> NOTES_KEY = (JpaRepository<?, ?>) java.lang.reflect.Proxy.newProxyInstance(
             ExampleJpaConfiguration.class.getClassLoader(),
-            new Class[] { JpaRepository.class },
+            new Class[]{JpaRepository.class},
             (proxy, method, args) -> {
                 if (method.getName().equals("toString")) return "NotesDataStore";
                 if (method.getName().equals("hashCode")) return 42;
@@ -63,7 +67,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
             TaskRepository taskRepository,
             UserRepository userRepository,
             VideoRepository videoRepository,
-            JpaDataStoreFactoryRegistry registry
+            JpaFieldAnnotationRegistryService annotationRegistryService,
+            JpaFieldService fieldService
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
@@ -71,20 +76,49 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
-        this.registry = registry;
-    }
-
-    @PostConstruct
-    void registerCustomDataStores() {
-        registry.addFactory(NOTES_KEY, (com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore) new SimpleMapDataStore());
+        this.annotationRegistryService = annotationRegistryService;
+        this.fieldService = fieldService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        // 1. Create DataStores
+        JpaRepositoryDataStore<?> projectStore = new JpaRepositoryDataStore<>(projectRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepositoryDataStore<?> taskStore = new JpaRepositoryDataStore<>(taskRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepositoryDataStore<?> commentStore = new JpaRepositoryDataStore<>(taskCommentRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepositoryDataStore<?> imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepositoryDataStore<?> videoStore = new JpaRepositoryDataStore<>(videoRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepositoryDataStore<?> userStore = new JpaRepositoryDataStore<>(userRepository, annotationRegistryService, new DataStoreHooks<>());
+        SimpleMapDataStore notesStore = new SimpleMapDataStore();
+
+        // 2. Build map of Class -> Repository for FieldService
+        Map<Class<?>, JpaRepository<?, ?>> repoMap = new HashMap<>();
+        repoMap.put(projectStore.getModelClass(), projectRepository);
+        repoMap.put(taskStore.getModelClass(), taskRepository);
+        repoMap.put(commentStore.getModelClass(), taskCommentRepository);
+        repoMap.put(imageStore.getModelClass(), imageRepository);
+        repoMap.put(videoStore.getModelClass(), videoRepository);
+        repoMap.put(userStore.getModelClass(), userRepository);
+
+        // 3. Build DataStoreConfig map
+        Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores = new HashMap<>();
+        dataStores.put(projectRepository, createConfig(projectRepository, projectStore, repoMap));
+        dataStores.put(taskRepository, createConfig(taskRepository, taskStore, repoMap));
+        dataStores.put(taskCommentRepository, createConfig(taskCommentRepository, commentStore, repoMap));
+        dataStores.put(imageRepository, createConfig(imageRepository, imageStore, repoMap));
+        dataStores.put(videoRepository, createConfig(videoRepository, videoStore, repoMap));
+        dataStores.put(userRepository, createConfig(userRepository, userStore, repoMap));
+        dataStores.put(NOTES_KEY, DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .factory(NOTES_KEY)
+                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .fields(Map.of())
+                .build());
+
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>)ListCollectionFactory.class)
+                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
                 .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.builder(taskCommentRepository)
+                                .dataStoreInstance((VortexCrudDataStore) commentStore)
                                 .oneToMany(new JpaOneToMany("task"))
                                 .children(List.of("commentText"))
                                 .build())
@@ -100,6 +134,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
         CollectionConfiguration build2 = JpaCollectionConfiguration.builder(taskRepository)
+                .dataStoreInstance((VortexCrudDataStore) taskStore)
                 .manyToMany(new JpaManyToMany(taskRepository, "relatedTasks"))
                 .children(List.of("title"))
                 .build();
@@ -113,6 +148,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreKey(taskRepository)
+                .dataStoreInstance((VortexCrudDataStore) taskStore)
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
                         .children(List.of(
@@ -128,6 +164,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
                 .dataStoreKey(projectRepository)
+                .dataStoreInstance((VortexCrudDataStore) projectStore)
                 .title("route.projects.title-cards")
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("name")
@@ -141,6 +178,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreKey(imageRepository)
+                .dataStoreInstance((VortexCrudDataStore) imageStore)
                 .title("route.projects.title-cards")
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
@@ -153,6 +191,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         FormSlideRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
                 .dataStoreKey(imageRepository)
+                .dataStoreInstance((VortexCrudDataStore) imageStore)
                 .title("route.projects.title-cards")
                 .configuration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
@@ -165,6 +204,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
                 .dataStoreKey(videoRepository)
+                .dataStoreInstance((VortexCrudDataStore) videoStore)
                 .title("route.videos.title-cards")
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
@@ -179,6 +219,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("projects-cards", JpaGridRoute.builder()
                 .isDefaultRoute(true)
                 .dataStoreKey(projectRepository)
+                .dataStoreInstance((VortexCrudDataStore) projectStore)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -190,6 +231,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
         routes.put("projects-list", JpaListRoute.builder()
                 .dataStoreKey(projectRepository)
+                .dataStoreInstance((VortexCrudDataStore) projectStore)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
@@ -208,6 +250,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("open-tasks", JpaKanbanRoute.builder()
                 .iconFactory(TASKS::create)
                 .dataStoreKey(taskRepository)
+                .dataStoreInstance((VortexCrudDataStore) taskStore)
                 .title("route.open-tasks.title")
                 .configuration(JpaKanbanConfiguration.builder()
                         .titleField("title")
@@ -222,6 +265,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("done-tasks", JpaMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreKey(taskRepository)
+                .dataStoreInstance((VortexCrudDataStore) taskStore)
                 .title("route.done-tasks.title")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
@@ -232,6 +276,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
         routes.put("images-grid", JpaGridRoute.builder()
                 .dataStoreKey(imageRepository)
+                .dataStoreInstance((VortexCrudDataStore) imageStore)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -244,6 +289,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
         routes.put("images-list", JpaListRoute.builder()
                 .dataStoreKey(imageRepository)
+                .dataStoreInstance((VortexCrudDataStore) imageStore)
                 .iconFactory(CAMERA::create)
                 .title("route.images-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
@@ -260,6 +306,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         routes.put("images-slide", JpaGridRoute.builder()
                 .dataStoreKey(imageRepository)
+                .dataStoreInstance((VortexCrudDataStore) imageStore)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -273,6 +320,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         routes.put("videos-grid", JpaGridRoute.builder()
                 .dataStoreKey(videoRepository)
+                .dataStoreInstance((VortexCrudDataStore) videoStore)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -284,6 +332,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         routes.put("videos-list", JpaListRoute.builder()
                 .dataStoreKey(videoRepository)
+                .dataStoreInstance((VortexCrudDataStore) videoStore)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
@@ -301,6 +350,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("submenu", JpaSubmenuRoute.builder()
                 .iconFactory(MENU::create)
                 .dataStoreKey(projectRepository)
+                .dataStoreInstance((VortexCrudDataStore) projectStore)
                 .title("route.submenu.title")
                 .childrenMap(Map.of(
                         "project-form", projectForm,
@@ -310,6 +360,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("profile", JpaSingleFormRoute.builder()
                 .iconFactory(USER::create)
                 .dataStoreKey(userRepository)
+                .dataStoreInstance((VortexCrudDataStore) userStore)
                 .title("route.profile.title")
                 .entityFilterField("username")
                 .entityFilterValueProvider(() -> {
@@ -332,6 +383,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         // Custom in-memory data store example
         routes.put("notes", JpaGridRoute.builder()
                 .dataStoreKey(NOTES_KEY)
+                .dataStoreInstance((VortexCrudDataStore) notesStore)
                 .iconFactory(NOTEBOOK::create)
                 .title("Notes (Custom DataStore)")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -340,6 +392,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .child(JpaFormRoute.builder()
                         .dataStoreKey(NOTES_KEY)
+                        .dataStoreInstance((VortexCrudDataStore) notesStore)
                         .formConfiguration(JpaFormRendererConfiguration.builder()
                                 .titleField("title")
                                 .children(List.of(
@@ -390,6 +443,18 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .versioning(JpaVersioning.builder().dataStores(List.of(projectRepository, taskRepository, taskCommentRepository)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(new Selects(Map.of("task-status", taskStatuses)))
+                .dataStores(dataStores)
+                .build();
+    }
+
+    private DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createConfig(
+            JpaRepository<?, ?> repo,
+            JpaRepositoryDataStore<?> store,
+            Map<Class<?>, JpaRepository<?, ?>> repoMap) {
+        return DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .factory(repo)
+                .dataStoreInstance((VortexCrudDataStore) store)
+                .fields(fieldService.getFieldsForDataStore(store, repoMap))
                 .build();
     }
 }

@@ -6,7 +6,6 @@ import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererCon
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -33,7 +32,6 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
     private final FormRouteFactory<ModelClass, FieldType, RepositoryType> formRouteFactory;
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
@@ -43,20 +41,18 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
     private String titleColumn;
 
     public MultiFormRouteFactory(
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
             com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService,
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.formCreator = formCreator;
         this.factoryRegistry = factoryRegistry;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
-        this.formRouteFactory = new FormRouteFactory<>(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService, permissionChecker);
+        this.formRouteFactory = new FormRouteFactory<>(configService, formCreator, factoryRegistry, reflectionService, permissionChecker);
     }
 
     @Override
@@ -105,7 +101,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         RepositoryType table = routeRenderer.dataStoreKey();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = routeRenderer.dataStoreInstance();
 
         ModelClass entity;
         if (creationMode) {

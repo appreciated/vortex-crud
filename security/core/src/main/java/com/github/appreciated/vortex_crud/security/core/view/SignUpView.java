@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -33,7 +32,6 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
             ReflectionService<FieldType> reflectionService,
             PasswordEncoder passwordEncoder
     ) {
@@ -49,7 +47,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) dataStoreFactoryRegistry.getDataStore(config.repositoryKey());
+        VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) config.dataStoreInstance();
         Object entity = dataStore.newInstance();
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.configuration().dataStores().get(config.repositoryKey());

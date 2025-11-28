@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConf
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -48,7 +47,6 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     @SuppressWarnings("unchecked")
     public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                            RouteRenderer<ModelClass, FieldType, RepositoryType> config,
-                           VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                            VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                            VortexCrudFileProviderRegistry fileProviderRegistry,
                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
@@ -62,7 +60,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.dataStoreUtil = dataStoreUtil;
         RepositoryType table = config.dataStoreKey();
 
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreInstance();
         itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.configuration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
