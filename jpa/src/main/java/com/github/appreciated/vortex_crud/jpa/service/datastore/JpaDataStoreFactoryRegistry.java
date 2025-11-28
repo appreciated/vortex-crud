@@ -45,7 +45,7 @@ public class JpaDataStoreFactoryRegistry implements VortexCrudDataStoreFactoryRe
     @Override
     public void addFactory(JpaRepository<?, ?> table, VortexCrudDataStore<String, JpaRepository<?, ?>> factory) {
         factories.put(table, factory);
-        modelFactoryMapping.put(((JpaRepositoryDataStore<?>) factory).getModelClass(), table);
+        modelFactoryMapping.put(factory.getModelClass(), table);
     }
 
     public Map<JpaRepository<?, ?>, DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> dataStores() {
