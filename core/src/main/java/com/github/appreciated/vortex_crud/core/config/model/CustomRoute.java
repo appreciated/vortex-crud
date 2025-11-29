@@ -26,10 +26,7 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private Class<? extends Component> componentClass;
 
-    @Builder.Default
-    private RepositoryType dataStoreKey = null;
-
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -51,5 +48,5 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<String> readOnlyRoles;
 
     @Builder.Default
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions = null;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions = null;
 }

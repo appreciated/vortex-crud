@@ -13,7 +13,7 @@ public class MultiSelectValueFieldFactory<ModelClass, FieldType, RepositoryType>
 
     private final Selects selects;
 
-    public MultiSelectValueFieldFactory(Selects selects, Map<RepositoryType, ?> tablesConfig) {
+    public MultiSelectValueFieldFactory(Selects selects) {
         this.selects = selects;
     }
 

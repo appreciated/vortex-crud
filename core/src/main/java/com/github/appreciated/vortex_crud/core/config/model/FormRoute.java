@@ -20,8 +20,7 @@ import java.util.List;
 @Getter
 public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -48,7 +47,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {

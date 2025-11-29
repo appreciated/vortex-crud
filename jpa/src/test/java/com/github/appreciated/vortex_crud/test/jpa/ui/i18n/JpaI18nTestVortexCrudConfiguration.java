@@ -1,29 +1,46 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaImageRepository imageRepository;
+    private final JpaFieldService fieldService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
 
-    public JpaI18nTestVortexCrudConfiguration(JpaImageRepository imageRepository) {
+    public JpaI18nTestVortexCrudConfiguration(JpaImageRepository imageRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
         this.imageRepository = imageRepository;
+        this.fieldService = fieldService;
+        this.annotationRegistryService = annotationRegistryService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService, new DataStoreHooks<>());
+        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(imageStore.getModelClass(), imageStore);
+
+        var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore)
+                .withServices(fieldService, storeMap)
+                .build();
+
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreKey(imageRepository)
+                .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
@@ -36,7 +53,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JpaListRoute.builder()
-                .dataStoreKey(imageRepository)
+                .dataStoreConfig(imageConfig)
                 .title("route.images-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)

@@ -69,8 +69,8 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
 
         Binder<Object> binder = new Binder<>(Object.class);
 
-        RepositoryType dataStoreKey = formRouteRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
+        RepositoryType dataStoreKey = tables.factory();
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
 

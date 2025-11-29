@@ -58,9 +58,8 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.fieldNameResolver = fieldNameResolver;
         this.reflectionService = reflectionService;
         this.dataStoreUtil = dataStoreUtil;
-        RepositoryType table = config.dataStoreKey();
 
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreConfig().dataStoreInstance();
         itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.configuration();
 
         this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());

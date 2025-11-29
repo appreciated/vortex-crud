@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -12,7 +13,12 @@ import java.util.List;
  */
 public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass> {
 
-    RepositoryType dataStoreKey();
+    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
+
+    @Override
+    default VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
+        return dataStoreConfig() != null ? dataStoreConfig().dataStoreInstance() : null;
+    }
 
     String title();
 
@@ -26,7 +32,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     SerializableSupplier<Component> iconFactory();
 
-    List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions();
+    List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions();
 
     /**
      * List of custom route actions with full access to data store and selected entities.

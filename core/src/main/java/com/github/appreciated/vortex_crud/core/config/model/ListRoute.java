@@ -21,8 +21,7 @@ import java.util.List;
 @Getter
 public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, AccessControlled {
 
-    private RepositoryType dataStoreKey;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -49,7 +48,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     /**
      * List of custom route actions with full access to data store and selected entities.

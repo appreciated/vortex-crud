@@ -91,7 +91,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         this.dataStoreUtil = dataStoreUtil;
         this.routeResolver = routeResolver;
         Selects selects = configService.selects();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = configService.dataStores().get(dataStoreIdentifier);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = routeRenderer.dataStoreConfig();
         Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanConfigurationConfig.columnField());
 
         this.kanbanConfigurationConfig = kanbanConfigurationConfig;

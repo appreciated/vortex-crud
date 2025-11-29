@@ -16,8 +16,12 @@ import java.util.List;
 @Getter
 public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass> {
 
-    private RepositoryType dataStore;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
+
+    @Override
+    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
+        return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
+    }
 
     private OneToMany<ModelClass, FieldType, RepositoryType> oneToMany;
 

@@ -31,11 +31,11 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         this.routeResolver = routeResolver;
         this.dataStoreUtil = dataStoreUtil;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        RepositoryType table = routeRenderer.dataStoreKey();
-        VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        RepositoryType table = tables.factory();
+        VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(routeRenderer.dataStoreKey());
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 routeRenderer.configuration();

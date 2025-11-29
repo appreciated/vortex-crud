@@ -74,10 +74,10 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(formRouteRenderer.dataStoreKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-        formCreator.bindAndAddToLayout(formRouteRenderer.dataStoreKey(), formRouteRenderer, configuration.children(), recordById,
+        formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, configuration.children(), recordById,
                 routeFactory, tables, binder, layout);
 
         dialog.add(layout);

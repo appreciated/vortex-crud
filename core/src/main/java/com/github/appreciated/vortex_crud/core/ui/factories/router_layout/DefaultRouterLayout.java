@@ -60,11 +60,11 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         actionButtons.setAlignItems(CENTER);
 
         // Add notification panel if configured
-        NotificationPanelConfiguration<FieldType, RepositoryType> notificationConfig =
+        NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationConfig =
                 configService.configuration().notificationPanelConfiguration();
         if (notificationConfig != null) {
             NotificationPanel<ModelClass, FieldType, RepositoryType> notificationPanel =
-                    new NotificationPanel<>(notificationConfig, configService, reflectionService);
+                    new NotificationPanel<>(notificationConfig, reflectionService);
             actionButtons.add(notificationPanel);
         }
 

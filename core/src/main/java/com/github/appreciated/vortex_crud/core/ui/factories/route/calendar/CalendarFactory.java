@@ -58,7 +58,7 @@ public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements V
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new CalendarView<>(routeRenderer.dataStoreKey(),
+        return new CalendarView<>(routeRenderer.dataStoreConfig().factory(),
                 routeRenderer,
                 routeRenderer.dataStoreInstance(),
                 routeFactory,

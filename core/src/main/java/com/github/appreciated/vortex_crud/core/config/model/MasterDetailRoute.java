@@ -21,8 +21,7 @@ import java.util.List;
 @Getter
 public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -50,7 +49,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         return child.formConfiguration();
     }
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     /**
      * List of custom route actions with full access to data store and selected entities.

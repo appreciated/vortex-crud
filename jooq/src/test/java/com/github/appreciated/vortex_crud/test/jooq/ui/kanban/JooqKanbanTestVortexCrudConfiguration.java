@@ -1,15 +1,15 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.kanban;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -24,20 +24,26 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.KanbanTasks.
 @Service
 public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqKanbanTestVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                KANBAN_TASKS, JooqDataStoreConfig.of(KANBAN_TASKS)
+        JooqDataStore store = new JooqDataStore(KANBAN_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(KANBAN_TASKS)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 KANBAN_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 KANBAN_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 KANBAN_TASKS.STATUS, SelectField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().values("enum-options").build()
                         ))
-                        .build()
-        );
+                        .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreKey(KANBAN_TASKS)
+                .dataStoreConfig(config)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(KANBAN_TASKS.TITLE)
                         .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
@@ -52,7 +58,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
-                .dataStoreKey(KANBAN_TASKS)
+                .dataStoreConfig(config)
                 .title("route.open-tasks.title")
                 .configuration(JooqKanbanConfiguration.builder()
                         .titleField(KANBAN_TASKS.TITLE)
@@ -69,7 +75,6 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }

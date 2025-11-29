@@ -20,8 +20,7 @@ import java.util.List;
 @Getter
 public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -49,5 +48,5 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
     }
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 }

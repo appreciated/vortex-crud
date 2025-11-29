@@ -37,13 +37,13 @@ public class DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> 
         factories.put(TextAreaFieldFactory.class, new TextAreaFieldFactory<>());
         factories.put(DateFieldFactory.class, new DateFieldFactory<>());
         factories.put(DateTimePickerFactory.class, new DateTimePickerFactory<>());
-        factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.selects(), configuration.dataStores()));
-        factories.put(MultiSelectValueFieldFactory.class, new MultiSelectValueFieldFactory<>(configuration.selects(), configuration.dataStores()));
+        factories.put(SelectFieldFactory.class, new SelectFieldFactory<>(configuration.selects()));
+        factories.put(MultiSelectValueFieldFactory.class, new MultiSelectValueFieldFactory<>(configuration.selects()));
         factories.put(DoubleNumberFieldFactory.class, new DoubleNumberFieldFactory<>());
         factories.put(BigDecimalNumberFieldFactory.class, new BigDecimalNumberFieldFactory<>());
         factories.put(IntegerNumberFieldFactory.class, new IntegerNumberFieldFactory<>());
-        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<>(resolver, configService, reflectionService));
-        factories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<>(resolver, configService, reflectionService));
+        factories.put(ReferenceFieldFactory.class, new ReferenceFieldFactory<ModelClass, FieldType, RepositoryType>(resolver, reflectionService));
+        factories.put(MultiSelectFieldFactory.class, new MultiSelectFieldFactory<ModelClass, FieldType, RepositoryType>(resolver, reflectionService));
         factories.put(ImageFieldFactory.class, new ImageFieldFactory<>(fileProviderRegistry));
         factories.put(VideoFieldFactory.class, new VideoFieldFactory<>(fileProviderRegistry));
         factories.put(CheckboxFieldFactory.class, new CheckboxFieldFactory<>());

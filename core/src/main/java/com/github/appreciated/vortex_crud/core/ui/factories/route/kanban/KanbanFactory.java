@@ -58,7 +58,7 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView<>(routeRenderer.dataStoreKey(),
+        return new KanbanView<>(routeRenderer.dataStoreConfig().factory(),
                 routeRenderer,
                 routeRenderer.dataStoreInstance(),
                 routeFactory,

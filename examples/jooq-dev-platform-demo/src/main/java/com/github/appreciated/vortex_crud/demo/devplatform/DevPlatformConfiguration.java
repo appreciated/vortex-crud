@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.demo.devplatform;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
@@ -11,6 +12,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.IssueState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
@@ -19,6 +21,7 @@ import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -34,143 +37,169 @@ import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 @Service
 public class DevPlatformConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public DevPlatformConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        // Data Store Configurations
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.ofEntries(
-                Map.entry(ORGANIZATION, JooqDataStoreConfig.of(ORGANIZATION)
-                        .fields(Map.of(
-                                ORGANIZATION.ID, JooqIdField.builder().build(),
-                                ORGANIZATION.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
-                                ORGANIZATION.DISPLAY_NAME, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
-                                ORGANIZATION.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                                ORGANIZATION.WEBSITE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                ORGANIZATION.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                ORGANIZATION.IS_ACTIVE, JooqCheckboxField.builder().build(),
-                                ORGANIZATION.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
-                        .build()),
+        // Data Stores
+        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore issueStore = new JooqDataStore(ISSUE.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore pullRequestStore = new JooqDataStore(PULL_REQUEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore commentStore = new JooqDataStore(COMMENT.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
 
-                Map.entry(REPOSITORY, JooqDataStoreConfig.of(REPOSITORY)
-                        .fields(Map.ofEntries(
-                                Map.entry(REPOSITORY.ID, JooqIdField.builder().build()),
-                                Map.entry(REPOSITORY.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
-                                Map.entry(REPOSITORY.SLUG, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
-                                Map.entry(REPOSITORY.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
-                                Map.entry(REPOSITORY.OWNER_ID, JooqReferenceField.builder().dataStore(USERS).field(REPOSITORY.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
-                                Map.entry(REPOSITORY.ORGANIZATION_ID, JooqReferenceField.builder().dataStore(ORGANIZATION).field(REPOSITORY.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build()),
-                                Map.entry(REPOSITORY.VISIBILITY, JooqSelectField.builder().values("repository-visibility").build()),
-                                Map.entry(REPOSITORY.DEFAULT_BRANCH, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
-                                Map.entry(REPOSITORY.IS_ARCHIVED, JooqCheckboxField.builder().build()),
-                                Map.entry(REPOSITORY.STAR_COUNT, JooqIntegerField.builder().build()),
-                                Map.entry(REPOSITORY.FORK_COUNT, JooqIntegerField.builder().build()),
-                                Map.entry(REPOSITORY.LANGUAGE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
-                                Map.entry(REPOSITORY.TOPICS, JooqTextAreaField.builder().build()),
-                                Map.entry(REPOSITORY.README_CONTENT, JooqMarkDownField.builder().build()),
-                                Map.entry(REPOSITORY.CREATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(REPOSITORY.UPDATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(REPOSITORY.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
-                        .build()),
+        // Configs
+        var usersConfig = JooqDataStoreConfig.of(USERS)
+                .dataStoreInstance((VortexCrudDataStore) usersStore)
+                .fields(Map.of(
+                        USERS.ID, JooqIdField.builder().build(),
+                        USERS.USERNAME, JooqEmailField.builder().required(true).build(),
+                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
 
-                Map.entry(ISSUE, JooqDataStoreConfig.of(ISSUE)
-                        .fields(Map.ofEntries(
-                                Map.entry(ISSUE.ID, JooqIdField.builder().build()),
-                                Map.entry(ISSUE.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(ISSUE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
-                                Map.entry(ISSUE.ISSUE_NUMBER, JooqIntegerField.builder().required(true).build()),
-                                Map.entry(ISSUE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
-                                Map.entry(ISSUE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
-                                Map.entry(ISSUE.STATE, JooqSelectField.builder().values("issue-state").build()),
-                                Map.entry(ISSUE.ISSUE_TYPE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
-                                Map.entry(ISSUE.PRIORITY, JooqSelectField.builder().values("priority").build()),
-                                Map.entry(ISSUE.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
-                                Map.entry(ISSUE.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(ISSUE.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
-                                Map.entry(ISSUE.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(ISSUE.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
-                                Map.entry(ISSUE.CLOSED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(ISSUE.CREATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(ISSUE.UPDATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(ISSUE.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
-                        .build()),
+        var organizationConfig = JooqDataStoreConfig.of(ORGANIZATION)
+                .dataStoreInstance((VortexCrudDataStore) organizationStore)
+                .fields(Map.of(
+                        ORGANIZATION.ID, JooqIdField.builder().build(),
+                        ORGANIZATION.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
+                        ORGANIZATION.DISPLAY_NAME, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
+                        ORGANIZATION.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
+                        ORGANIZATION.WEBSITE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        ORGANIZATION.CREATED_AT, JooqDateTimePickerField.builder().build(),
+                        ORGANIZATION.IS_ACTIVE, JooqCheckboxField.builder().build(),
+                        ORGANIZATION.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                .build();
 
-                Map.entry(PULL_REQUEST, JooqDataStoreConfig.of(PULL_REQUEST)
-                        .fields(Map.ofEntries(
-                                Map.entry(PULL_REQUEST.ID, JooqIdField.builder().build()),
-                                Map.entry(PULL_REQUEST.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(PULL_REQUEST.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
-                                Map.entry(PULL_REQUEST.PR_NUMBER, JooqIntegerField.builder().required(true).build()),
-                                Map.entry(PULL_REQUEST.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
-                                Map.entry(PULL_REQUEST.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
-                                Map.entry(PULL_REQUEST.STATE, JooqSelectField.builder().values("pull-request-state").build()),
-                                Map.entry(PULL_REQUEST.SOURCE_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
-                                Map.entry(PULL_REQUEST.TARGET_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
-                                Map.entry(PULL_REQUEST.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
-                                Map.entry(PULL_REQUEST.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(USERS).field(PULL_REQUEST.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
-                                Map.entry(PULL_REQUEST.MILESTONE_ID, JooqReferenceField.builder().dataStore(MILESTONE).field(PULL_REQUEST.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
-                                Map.entry(PULL_REQUEST.IS_DRAFT, JooqCheckboxField.builder().build()),
-                                Map.entry(PULL_REQUEST.MERGED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(PULL_REQUEST.CLOSED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(PULL_REQUEST.CREATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(PULL_REQUEST.UPDATED_AT, JooqDateTimePickerField.builder().build()),
-                                Map.entry(PULL_REQUEST.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
-                        .build()),
+        var repositoryConfig = JooqDataStoreConfig.of(REPOSITORY)
+                .dataStoreInstance((VortexCrudDataStore) repositoryStore)
+                .fields(Map.ofEntries(
+                        Map.entry(REPOSITORY.ID, JooqIdField.builder().build()),
+                        Map.entry(REPOSITORY.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(REPOSITORY.SLUG, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(REPOSITORY.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
+                        Map.entry(REPOSITORY.OWNER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(REPOSITORY.OWNER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                        Map.entry(REPOSITORY.ORGANIZATION_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) organizationStore).field(REPOSITORY.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build()),
+                        Map.entry(REPOSITORY.VISIBILITY, JooqSelectField.builder().values("repository-visibility").build()),
+                        Map.entry(REPOSITORY.DEFAULT_BRANCH, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(REPOSITORY.IS_ARCHIVED, JooqCheckboxField.builder().build()),
+                        Map.entry(REPOSITORY.STAR_COUNT, JooqIntegerField.builder().build()),
+                        Map.entry(REPOSITORY.FORK_COUNT, JooqIntegerField.builder().build()),
+                        Map.entry(REPOSITORY.LANGUAGE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
+                        Map.entry(REPOSITORY.TOPICS, JooqTextAreaField.builder().build()),
+                        Map.entry(REPOSITORY.README_CONTENT, JooqMarkDownField.builder().build()),
+                        Map.entry(REPOSITORY.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(REPOSITORY.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(REPOSITORY.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
+                .build();
 
-                Map.entry(MILESTONE, JooqDataStoreConfig.of(MILESTONE)
-                        .fields(Map.of(
-                                MILESTONE.ID, JooqIdField.builder().build(),
-                                MILESTONE.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(MILESTONE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
-                                MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
-                                MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                                MILESTONE.STATE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
-                                MILESTONE.DUE_DATE, JooqDateField.builder().build(),
-                                MILESTONE.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                MILESTONE.CLOSED_AT, JooqDateTimePickerField.builder().build(),
-                                MILESTONE.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
-                        .build()),
+        var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
+                .dataStoreInstance((VortexCrudDataStore) milestoneStore)
+                .fields(Map.of(
+                        MILESTONE.ID, JooqIdField.builder().build(),
+                        MILESTONE.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(MILESTONE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
+                        MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
+                        MILESTONE.STATE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
+                        MILESTONE.DUE_DATE, JooqDateField.builder().build(),
+                        MILESTONE.CREATED_AT, JooqDateTimePickerField.builder().build(),
+                        MILESTONE.CLOSED_AT, JooqDateTimePickerField.builder().build(),
+                        MILESTONE.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                .build();
 
-                Map.entry(LABEL, JooqDataStoreConfig.of(LABEL)
-                        .fields(Map.of(
-                                LABEL.ID, JooqIdField.builder().build(),
-                                LABEL.REPOSITORY_ID, JooqReferenceField.builder().dataStore(REPOSITORY).field(LABEL.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
-                                LABEL.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
-                                LABEL.COLOR, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
-                                LABEL.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                                LABEL.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
+        var issueConfig = JooqDataStoreConfig.of(ISSUE)
+                .dataStoreInstance((VortexCrudDataStore) issueStore)
+                .fields(Map.ofEntries(
+                        Map.entry(ISSUE.ID, JooqIdField.builder().build()),
+                        Map.entry(ISSUE.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(ISSUE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
+                        Map.entry(ISSUE.ISSUE_NUMBER, JooqIntegerField.builder().required(true).build()),
+                        Map.entry(ISSUE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
+                        Map.entry(ISSUE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
+                        Map.entry(ISSUE.STATE, JooqSelectField.builder().values("issue-state").build()),
+                        Map.entry(ISSUE.ISSUE_TYPE, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
+                        Map.entry(ISSUE.PRIORITY, JooqSelectField.builder().values("priority").build()),
+                        Map.entry(ISSUE.AUTHOR_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(ISSUE.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                        Map.entry(ISSUE.ASSIGNEE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(ISSUE.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                        Map.entry(ISSUE.MILESTONE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) milestoneStore).field(ISSUE.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                        Map.entry(ISSUE.CLOSED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(ISSUE.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(ISSUE.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(ISSUE.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
+                .build();
 
-                Map.entry(COMMENT, JooqDataStoreConfig.of(COMMENT)
-                        .fields(Map.of(
-                                COMMENT.ID, JooqIdField.builder().build(),
-                                COMMENT.ENTITY_TYPE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
-                                COMMENT.ENTITY_ID, JooqIntegerField.builder().required(true).build(),
-                                COMMENT.AUTHOR_ID, JooqReferenceField.builder().dataStore(USERS).field(COMMENT.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                                COMMENT.CONTENT, JooqTextAreaField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build(),
-                                COMMENT.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                COMMENT.UPDATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
+        var pullRequestConfig = JooqDataStoreConfig.of(PULL_REQUEST)
+                .dataStoreInstance((VortexCrudDataStore) pullRequestStore)
+                .fields(Map.ofEntries(
+                        Map.entry(PULL_REQUEST.ID, JooqIdField.builder().build()),
+                        Map.entry(PULL_REQUEST.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(PULL_REQUEST.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
+                        Map.entry(PULL_REQUEST.PR_NUMBER, JooqIntegerField.builder().required(true).build()),
+                        Map.entry(PULL_REQUEST.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
+                        Map.entry(PULL_REQUEST.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build()),
+                        Map.entry(PULL_REQUEST.STATE, JooqSelectField.builder().values("pull-request-state").build()),
+                        Map.entry(PULL_REQUEST.SOURCE_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                        Map.entry(PULL_REQUEST.TARGET_BRANCH, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                        Map.entry(PULL_REQUEST.AUTHOR_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(PULL_REQUEST.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                        Map.entry(PULL_REQUEST.ASSIGNEE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(PULL_REQUEST.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
+                        Map.entry(PULL_REQUEST.MILESTONE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) milestoneStore).field(PULL_REQUEST.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                        Map.entry(PULL_REQUEST.IS_DRAFT, JooqCheckboxField.builder().build()),
+                        Map.entry(PULL_REQUEST.MERGED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PULL_REQUEST.CLOSED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PULL_REQUEST.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PULL_REQUEST.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PULL_REQUEST.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
+                .build();
 
-                Map.entry(ISSUE_LABEL, JooqDataStoreConfig.of(ISSUE_LABEL)
-                        .fields(Map.of(
-                                ISSUE_LABEL.ID, JooqIdField.builder().build(),
-                                ISSUE_LABEL.ISSUE_ID, JooqReferenceField.builder().dataStore(ISSUE).field(ISSUE_LABEL.ISSUE_ID).filterField(ISSUE.TITLE).children(List.of(ISSUE.TITLE)).build(),
-                                ISSUE_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore(LABEL).field(ISSUE_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
-                        .build()),
+        var labelConfig = JooqDataStoreConfig.of(LABEL)
+                .dataStoreInstance((VortexCrudDataStore) labelStore)
+                .fields(Map.of(
+                        LABEL.ID, JooqIdField.builder().build(),
+                        LABEL.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(LABEL.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        LABEL.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
+                        LABEL.COLOR, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
+                        LABEL.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
+                        LABEL.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
 
-                Map.entry(PULL_REQUEST_LABEL, JooqDataStoreConfig.of(PULL_REQUEST_LABEL)
-                        .fields(Map.of(
-                                PULL_REQUEST_LABEL.ID, JooqIdField.builder().build(),
-                                PULL_REQUEST_LABEL.PULL_REQUEST_ID, JooqReferenceField.builder().dataStore(PULL_REQUEST).field(PULL_REQUEST_LABEL.PULL_REQUEST_ID).filterField(PULL_REQUEST.TITLE).children(List.of(PULL_REQUEST.TITLE)).build(),
-                                PULL_REQUEST_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore(LABEL).field(PULL_REQUEST_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
-                        .build()),
+        var commentConfig = JooqDataStoreConfig.of(COMMENT)
+                .dataStoreInstance((VortexCrudDataStore) commentStore)
+                .fields(Map.of(
+                        COMMENT.ID, JooqIdField.builder().build(),
+                        COMMENT.ENTITY_TYPE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
+                        COMMENT.ENTITY_ID, JooqIntegerField.builder().required(true).build(),
+                        COMMENT.AUTHOR_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(COMMENT.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        COMMENT.CONTENT, JooqTextAreaField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 5000 characters", 0, 5000))).build(),
+                        COMMENT.CREATED_AT, JooqDateTimePickerField.builder().build(),
+                        COMMENT.UPDATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
 
-                Map.entry(USERS, JooqDataStoreConfig.of(USERS)
-                        .fields(Map.of(
-                                USERS.ID, JooqIdField.builder().build(),
-                                USERS.USERNAME, JooqEmailField.builder().required(true).build(),
-                                USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build())
-        );
+        var issueLabelConfig = JooqDataStoreConfig.of(ISSUE_LABEL)
+                .dataStoreInstance((VortexCrudDataStore) issueLabelStore)
+                .fields(Map.of(
+                        ISSUE_LABEL.ID, JooqIdField.builder().build(),
+                        ISSUE_LABEL.ISSUE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) issueStore).field(ISSUE_LABEL.ISSUE_ID).filterField(ISSUE.TITLE).children(List.of(ISSUE.TITLE)).build(),
+                        ISSUE_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(ISSUE_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
+                .build();
+
+        var pullRequestLabelConfig = JooqDataStoreConfig.of(PULL_REQUEST_LABEL)
+                .dataStoreInstance((VortexCrudDataStore) pullRequestLabelStore)
+                .fields(Map.of(
+                        PULL_REQUEST_LABEL.ID, JooqIdField.builder().build(),
+                        PULL_REQUEST_LABEL.PULL_REQUEST_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) pullRequestStore).field(PULL_REQUEST_LABEL.PULL_REQUEST_ID).filterField(PULL_REQUEST.TITLE).children(List.of(PULL_REQUEST.TITLE)).build(),
+                        PULL_REQUEST_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(PULL_REQUEST_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
+                .build();
 
         // Issue Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
-                .dataStoreKey(ISSUE)
+                .dataStoreConfig(issueConfig)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(ISSUE.TITLE)
                         .children(List.of(
@@ -184,7 +213,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.issues.labels.labels")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
-                                                .data(JooqCollectionConfiguration.of(LABEL)
+                                                .data(JooqCollectionConfiguration.of(labelConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 ISSUE_LABEL.ISSUE_ID,
                                                                 ISSUE_LABEL.LABEL_ID,
@@ -201,7 +230,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Pull Request Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
-                .dataStoreKey(PULL_REQUEST)
+                .dataStoreConfig(pullRequestConfig)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(PULL_REQUEST.TITLE)
                         .children(List.of(
@@ -215,7 +244,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.pull_requests.labels.labels")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
-                                                .data(JooqCollectionConfiguration.of(LABEL)
+                                                .data(JooqCollectionConfiguration.of(labelConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 PULL_REQUEST_LABEL.PULL_REQUEST_ID,
                                                                 PULL_REQUEST_LABEL.LABEL_ID,
@@ -232,7 +261,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Repository Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> repositoryForm = JooqFormRoute.builder()
-                .dataStoreKey(REPOSITORY)
+                .dataStoreConfig(repositoryConfig)
                 .title("route.repositories.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(REPOSITORY.NAME)
@@ -250,7 +279,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Organization Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> organizationForm = JooqFormRoute.builder()
-                .dataStoreKey(ORGANIZATION)
+                .dataStoreConfig(organizationConfig)
                 .title("route.organizations.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(ORGANIZATION.NAME)
@@ -264,7 +293,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Milestone Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> milestoneForm = JooqFormRoute.builder()
-                .dataStoreKey(MILESTONE)
+                .dataStoreConfig(milestoneConfig)
                 .title("route.milestones.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(MILESTONE.TITLE)
@@ -281,7 +310,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("repositories", JooqGridRoute.builder()
                 .isDefaultRoute(true)
-                .dataStoreKey(REPOSITORY)
+                .dataStoreConfig(repositoryConfig)
                 .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -294,7 +323,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("issues", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.BUG::create)
-                .dataStoreKey(ISSUE)
+                .dataStoreConfig(issueConfig)
                 .title("route.issues.title")
                 .configuration(JooqKanbanConfiguration.builder()
                         .titleField(ISSUE.TITLE)
@@ -307,7 +336,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("pull-requests", JooqListRoute.builder()
-                .dataStoreKey(PULL_REQUEST)
+                .dataStoreConfig(pullRequestConfig)
                 .iconFactory(VaadinIcon.COMPILE::create)
                 .title("route.pull_requests.title")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -323,7 +352,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("organizations", JooqGridRoute.builder()
-                .dataStoreKey(ORGANIZATION)
+                .dataStoreConfig(organizationConfig)
                 .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.organizations.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -335,7 +364,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("milestones", JooqListRoute.builder()
-                .dataStoreKey(MILESTONE)
+                .dataStoreConfig(milestoneConfig)
                 .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -374,7 +403,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .applicationName("application.name")
                 .i18nBundlePrefix("dev_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .repositoryKey(USERS)
+                        .dataStoreConfig(usersConfig)
                         .availableRoles(Roles.builder().roles(List.of("admin", "developer", "contributor", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "developer"))
@@ -396,7 +425,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "pull-request-state", pullRequestStates,
                                 "priority", priorities))
                         .build())
-                .dataStores(dataStores)
                 .build();
     }
 }

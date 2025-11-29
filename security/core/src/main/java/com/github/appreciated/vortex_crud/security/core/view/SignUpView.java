@@ -50,7 +50,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) config.dataStoreInstance();
         Object entity = dataStore.newInstance();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = configService.configuration().dataStores().get(config.repositoryKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = config.dataStoreConfig();
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(entity);
@@ -75,7 +75,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         }
 
         formCreator.bindAndAddToLayout(
-                config.repositoryKey(),
+                config.dataStoreConfig().factory(),
                 null,
                 allFields,
                 entity,

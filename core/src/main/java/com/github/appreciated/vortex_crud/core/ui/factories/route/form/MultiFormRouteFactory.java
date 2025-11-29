@@ -99,9 +99,9 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
         }
 
-        RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = routeRenderer.dataStoreInstance();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        RepositoryType table = tables.factory();
+        VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
         ModelClass entity;
         if (creationMode) {

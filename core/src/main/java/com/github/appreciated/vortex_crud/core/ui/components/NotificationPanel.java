@@ -55,8 +55,7 @@ import java.util.List;
 public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Div {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationPanel.class);
-    private final NotificationPanelConfiguration<FieldType, RepositoryType> configuration;
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
+    private final NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> configuration;
     private final ReflectionService<FieldType> reflectionService;
 
     private VortexCrudDataStore dataStore;
@@ -66,11 +65,9 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
     private Popover popover;
 
     public NotificationPanel(
-            NotificationPanelConfiguration<FieldType, RepositoryType> configuration,
-            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+            NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> configuration,
             ReflectionService<FieldType> reflectionService) {
         this.configuration = configuration;
-        this.configService = configService;
         this.reflectionService = reflectionService;
     }
 
@@ -79,7 +76,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
         super.onAttach(attachEvent);
 
         // Get the data store
-        dataStore = configService.configuration().dataStores().get(configuration.dataStoreKey()).dataStoreInstance();
+        dataStore = configuration.dataStoreConfig().dataStoreInstance();
 
         // Build the UI
         buildUI();

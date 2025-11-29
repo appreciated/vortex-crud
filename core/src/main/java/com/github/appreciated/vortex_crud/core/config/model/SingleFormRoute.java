@@ -42,8 +42,7 @@ import java.util.List;
 @Builder
 public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
-    private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -73,7 +72,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
      */
     private SerializableSupplier<Object> entityFilterValueProvider;
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {

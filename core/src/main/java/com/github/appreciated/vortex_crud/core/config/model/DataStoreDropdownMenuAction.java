@@ -18,12 +18,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DataStoreDropdownMenuAction<FieldType, RepositoryType> {
+public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> {
 
     /**
-     * The data store key to use for fetching data
+     * The data store config to use for fetching data
      */
-    private RepositoryType dataStoreKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     /**
      * The field to filter on in the data store query
