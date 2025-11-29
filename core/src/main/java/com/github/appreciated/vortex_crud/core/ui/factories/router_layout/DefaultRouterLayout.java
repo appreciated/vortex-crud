@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -29,17 +28,14 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudLogoutService logoutService;
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry;
     private final ReflectionService<FieldType> reflectionService;
 
     public DefaultRouterLayout(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudLogoutService logoutService,
-            VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreRegistry,
             ReflectionService<FieldType> reflectionService) {
         this.configService = configService;
         this.logoutService = logoutService;
-        this.dataStoreRegistry = dataStoreRegistry;
         this.reflectionService = reflectionService;
     }
 
@@ -64,11 +60,11 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         actionButtons.setAlignItems(CENTER);
 
         // Add notification panel if configured
-        NotificationPanelConfiguration<FieldType, RepositoryType> notificationConfig =
+        NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationConfig =
                 configService.configuration().notificationPanelConfiguration();
         if (notificationConfig != null) {
             NotificationPanel<ModelClass, FieldType, RepositoryType> notificationPanel =
-                    new NotificationPanel<>(notificationConfig, dataStoreRegistry, reflectionService);
+                    new NotificationPanel<>(notificationConfig, reflectionService);
             actionButtons.add(notificationPanel);
         }
 

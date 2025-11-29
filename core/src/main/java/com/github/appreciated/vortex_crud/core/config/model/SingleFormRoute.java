@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -41,7 +42,7 @@ import java.util.List;
 @Builder
 public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -71,7 +72,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
      */
     private SerializableSupplier<Object> entityFilterValueProvider;
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {

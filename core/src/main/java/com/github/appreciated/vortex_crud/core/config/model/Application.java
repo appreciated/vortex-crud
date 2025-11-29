@@ -28,21 +28,19 @@ public class Application<ModelClass, FieldType, RepositoryType> {
 
     private Auditing auditing;
 
-    private Map<RepositoryType, DataStoreConfig<ModelClass, FieldType, RepositoryType>> dataStores;
-
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     /**
      * Default menu actions that will be applied to all routes.
      * These can be overridden or supplemented by route-specific menu actions.
      */
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> defaultMenuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> defaultMenuActions;
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     /**
      * Optional notification panel configuration.
      * When provided, a notification bell icon will be displayed in the application header.
      */
-    private NotificationPanelConfiguration<FieldType, RepositoryType> notificationPanelConfiguration;
+    private NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration;
 }

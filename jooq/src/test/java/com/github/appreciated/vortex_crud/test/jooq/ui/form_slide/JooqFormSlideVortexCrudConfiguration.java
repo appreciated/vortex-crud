@@ -1,15 +1,18 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.form_slide;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -24,10 +27,17 @@ import static com.github.appreciated.vortex_crud.jooq.models.Tables.FROM_SLIDE_I
 @Service
 public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqFormSlideVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                FROM_SLIDE_IMAGES, JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
+        JooqDataStore store = new JooqDataStore(FROM_SLIDE_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 FROM_SLIDE_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 FROM_SLIDE_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().required(true).build(),
@@ -37,11 +47,10 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                                                 .build())
                                         .build()
                         ))
-                        .build()
-        );
+                        .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqFormSlideRoute.builder()
-                .dataStoreKey(FROM_SLIDE_IMAGES)
+                .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .configuration(JooqFormRendererConfiguration.builder()
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
@@ -54,7 +63,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images", JooqGridRoute.builder()
-                .dataStoreKey(FROM_SLIDE_IMAGES)
+                .dataStoreConfig(config)
                 .title("route.image-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
@@ -68,7 +77,6 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .build();
     }
 }

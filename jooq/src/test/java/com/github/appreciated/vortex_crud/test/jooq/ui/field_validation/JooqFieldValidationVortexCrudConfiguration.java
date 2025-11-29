@@ -1,12 +1,15 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.vaadin.flow.data.validator.DoubleRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -24,10 +27,17 @@ import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 public class JooqFieldValidationVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqFieldValidationVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                VALIDATION_TEST, JooqDataStoreConfig.of(VALIDATION_TEST)
+        JooqDataStore store = new JooqDataStore(VALIDATION_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(VALIDATION_TEST)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 VALIDATION_TEST.ID, JooqIdField.builder().build(),
                                 VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
@@ -40,11 +50,10 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .resourceProvider(LocalImageResourceProvider.class)
                                         .build()).build()
-                        )).build()
-        );
+                        )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
-                .dataStoreKey(VALIDATION_TEST)
+                .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(VALIDATION_TEST.REQUIRED_FIELD)
@@ -63,7 +72,7 @@ public class JooqFieldValidationVortexCrudConfiguration
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("field-validation-test", JooqListRoute.builder()
-                .dataStoreKey(VALIDATION_TEST)
+                .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -85,7 +94,6 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }

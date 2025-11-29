@@ -1,13 +1,13 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -22,20 +22,26 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.SubrouteTask
 @Service
 public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqSubrouteTestVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                SUBROUTE_TASKS, JooqDataStoreConfig.of(SUBROUTE_TASKS)
+        JooqDataStore store = new JooqDataStore(SUBROUTE_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(SUBROUTE_TASKS)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 SUBROUTE_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 SUBROUTE_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 SUBROUTE_TASKS.STATUS, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         ))
-                        .build()
-        );
+                        .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreKey(SUBROUTE_TASKS)
+                .dataStoreConfig(config)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(SUBROUTE_TASKS.TITLE)
                         .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
@@ -44,11 +50,11 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqSubmenuRoute.builder()
-                .dataStoreKey(SUBROUTE_TASKS)
+                .dataStoreConfig(config)
                 .title("route.tasks.title")
                 .childrenMap(Map.of(
                         "open", JooqMasterDetailRoute.builder()
-                                .dataStoreKey(SUBROUTE_TASKS)
+                                .dataStoreConfig(config)
                                 .title("route.open-tasks.title")
                                 .configuration(JooqListItemRendererConfiguration.builder()
                                         .titleField(SUBROUTE_TASKS.TITLE)
@@ -62,7 +68,6 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .build();
     }
 }

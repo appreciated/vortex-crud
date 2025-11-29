@@ -1,11 +1,14 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -22,10 +25,17 @@ import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 public class JooqAdditionalFieldsVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqAdditionalFieldsVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                ADDITIONAL_FIELDS_TEST, JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
+        JooqDataStore store = new JooqDataStore(ADDITIONAL_FIELDS_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 ADDITIONAL_FIELDS_TEST.ID, JooqIdField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
@@ -35,11 +45,10 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                                 ADDITIONAL_FIELDS_TEST.VIDEO_URL, JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .resourceProvider(LocalVideoResourceProvider.class)
                                         .build()).build()
-                        )).build()
-        );
+                        )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalFieldsForm = JooqFormRoute.builder()
-                .dataStoreKey(ADDITIONAL_FIELDS_TEST)
+                .dataStoreConfig(config)
                 .title("route.additional-fields.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(ADDITIONAL_FIELDS_TEST.NAME)
@@ -55,7 +64,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("additional-fields-test", JooqListRoute.builder()
-                .dataStoreKey(ADDITIONAL_FIELDS_TEST)
+                .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.additional-fields.title-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -72,8 +81,6 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .build();
     }
-
 }

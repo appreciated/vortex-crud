@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
@@ -15,7 +14,6 @@ import jakarta.annotation.Nullable;
 
 public class ListRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
@@ -24,8 +22,7 @@ public class ListRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public ListRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
-                            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+    public ListRouteFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                             VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry,
                             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                             VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
@@ -33,7 +30,6 @@ public class ListRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
                             VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.columnCallbackRegistry = columnCallbackRegistry;
         this.formCreator = formCreator;
@@ -49,7 +45,6 @@ public class ListRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         return new List<>(currentPathIndex,
                 routeResolver,
-                dataStoreFactoryRegistry,
                 configService,
                 columnCallbackRegistry,
                 formCreator,

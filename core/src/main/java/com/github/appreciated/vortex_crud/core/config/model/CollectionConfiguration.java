@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
+public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass> {
 
-    private RepositoryType dataStore;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
+
+    @Override
+    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
+        return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
+    }
 
     private OneToMany<ModelClass, FieldType, RepositoryType> oneToMany;
 

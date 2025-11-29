@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.KanbanConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -20,7 +19,6 @@ import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
 public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudItemFactoryRegistry<FieldType> itemFactory;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
@@ -31,8 +29,7 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public KanbanFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
-                         VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
+    public KanbanFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                          VortexCrudItemFactoryRegistry<FieldType> itemFactory,
                          VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                          FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
@@ -43,7 +40,6 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
                          VortexCrudDataStoreUtilStrategy dataStoreUtil
 
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.configService = configService;
         this.itemFactory = itemFactory;
         this.routeFactory = routeFactory;
@@ -62,9 +58,9 @@ public class KanbanFactory<ModelClass, FieldType, RepositoryType> implements Vor
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new KanbanView<>(routeRenderer.dataStoreKey(),
+        return new KanbanView<>(routeRenderer.dataStoreConfig().factory(),
                 routeRenderer,
-                dataStoreFactoryRegistry.getDataStore(routeRenderer.dataStoreKey()),
+                routeRenderer.dataStoreInstance(),
                 routeFactory,
                 itemFactory,
                 (KanbanConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration(),

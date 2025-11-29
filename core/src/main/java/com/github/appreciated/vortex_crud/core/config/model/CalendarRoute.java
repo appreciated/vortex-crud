@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
@@ -21,7 +22,7 @@ import java.util.List;
 @Getter
 public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -48,7 +49,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
      */
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     /**
      * List of custom route actions with full access to data store and selected entities.

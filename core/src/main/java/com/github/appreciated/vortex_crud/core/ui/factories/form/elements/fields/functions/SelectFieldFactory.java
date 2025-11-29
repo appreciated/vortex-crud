@@ -13,7 +13,7 @@ public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implement
 
     private final Selects selects;
 
-    public SelectFieldFactory(Selects selects, Map<RepositoryType, ?> tablesConfig) {
+    public SelectFieldFactory(Selects selects) {
         this.selects = selects;
     }
 

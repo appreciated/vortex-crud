@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -25,7 +24,6 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                              RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                             VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                              VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                              VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> listColumnFactory,
                              VortexCrudDataStoreUtilStrategy dataStoreUtil
@@ -33,11 +31,11 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         this.routeResolver = routeResolver;
         this.dataStoreUtil = dataStoreUtil;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        RepositoryType table = routeRenderer.dataStoreKey();
-        VortexCrudDataStore<FieldType, ?> dataStore = dataStoreFactoryRegistry.getDataStore(table);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        RepositoryType table = tables.factory();
+        VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(routeRenderer.dataStoreKey());
         @SuppressWarnings("unchecked")
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 routeRenderer.configuration();

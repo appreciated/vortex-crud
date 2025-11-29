@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -38,9 +37,6 @@ class LocalStorageUserContextServiceTest {
     private VortexCrudConfigService<String, String, String> configService;
 
     @Mock
-    private VortexCrudDataStoreFactoryRegistry<String, String, String> dataStoreFactoryRegistry;
-
-    @Mock
     private ReflectionService<String> reflectionService;
 
     @Mock
@@ -63,7 +59,7 @@ class LocalStorageUserContextServiceTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-        userContextService = new LocalStorageUserContextService<>(configService, dataStoreFactoryRegistry, reflectionService);
+        userContextService = new LocalStorageUserContextService<>(configService, reflectionService);
     }
 
     @AfterEach
@@ -180,10 +176,9 @@ class LocalStorageUserContextServiceTest {
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.repositoryKey()).thenReturn("userRepository");
+        when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(List.of(expectedUser));
 
@@ -251,10 +246,9 @@ class LocalStorageUserContextServiceTest {
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.repositoryKey()).thenReturn("userRepository");
+        when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(Collections.emptyList());
 
@@ -280,7 +274,7 @@ class LocalStorageUserContextServiceTest {
         // Setup mocks to throw exception
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.repositoryKey()).thenThrow(new RuntimeException("Test exception"));
+        when(identityAndAccessManagement.dataStoreInstance()).thenThrow(new RuntimeException("Test exception"));
 
         // Execute
         Object result = userContextService.currentUserEntity();
@@ -319,11 +313,10 @@ class LocalStorageUserContextServiceTest {
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.repositoryKey()).thenReturn("userRepository");
+        when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
         when(identityAndAccessManagement.rolesField()).thenReturn(rolesField);
-        when(dataStoreFactoryRegistry.getDataStore("userRepository")).thenReturn(dataStore);
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(List.of(userEntity));
         when(reflectionService.getValue(userEntity, rolesField)).thenReturn(roles);

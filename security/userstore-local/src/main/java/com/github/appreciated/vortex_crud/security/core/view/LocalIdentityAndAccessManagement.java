@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.security.core.view;
 
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.Roles;
@@ -23,7 +24,7 @@ import java.util.List;
 @Getter
 public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> implements IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType repositoryKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
     private FieldType rolesField;

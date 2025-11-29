@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -10,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFac
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -20,6 +22,7 @@ import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -43,70 +46,94 @@ import static com.vaadin.flow.component.icon.VaadinIcon.*;
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public ExampleJooqConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.ofEntries(
-                Map.entry(PROJECTS, JooqDataStoreConfig.of(PROJECTS)
+        JooqDataStore projectsStore = new JooqDataStore(PROJECTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore tasksStore = new JooqDataStore(TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore taskHasTaskStore = new JooqDataStore(TASK_HAS_TASK.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore commentsStore = new JooqDataStore(TASK_COMMENTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore imagesStore = new JooqDataStore(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore videosStore = new JooqDataStore(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+
+        var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
+                .dataStoreInstance((VortexCrudDataStore) projectsStore)
+                .fields(Map.of(
+                        PROJECTS.ID, JooqIdField.builder().build(),
+                        PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
+                        PROJECTS.START_DATE, JooqDateField.builder().build(),
+                        PROJECTS.END_DATE, JooqDateField.builder().build(),
+                        PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
+                        PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var usersConfig = JooqDataStoreConfig.of(USERS)
+                        .dataStoreInstance((VortexCrudDataStore) usersStore)
                         .fields(Map.of(
-                                PROJECTS.ID, JooqIdField.builder().build(),
-                                PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                                PROJECTS.START_DATE, JooqDateField.builder().build(),
-                                PROJECTS.END_DATE, JooqDateField.builder().build(),
-                                PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
-                Map.entry(TASKS, JooqDataStoreConfig.of(TASKS)
-                        .fields(Map.of(
-                                TASKS.ID, JooqIdField.builder().build(),
-                                TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(USERS).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build() /* 1:1 Relation */,
-                                TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
-                                TASKS.DUE_DATE, JooqDateField.builder().build(), //.readOnlyForRoles("developer").build(),
-                                TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
-                                TASKS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                                TASKS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
-                Map.entry(TASK_HAS_TASK, JooqDataStoreConfig.of(TASK_HAS_TASK)
-                        .fields(Map.of(
-                                TASK_HAS_TASK.TASK_ID, JooqIdField.builder().build(),
-                                TASK_HAS_TASK.RELATED_TASK_ID, JooqIdField.builder().build()))
-                        .build()),
-                Map.entry(TASK_COMMENTS, JooqDataStoreConfig.of(TASK_COMMENTS)
-                        .fields(Map.of(
-                                TASK_COMMENTS.ID, JooqIdField.builder().build(),
-                                TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                                TASK_COMMENTS.USER_ID, JooqDoubleField.builder().build(),
-                                TASK_COMMENTS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                        .build()),
-                Map.entry(IMAGES, JooqDataStoreConfig.of(IMAGES)
-                        .fields(Map.of(
-                                IMAGES.ID, JooqIdField.builder().build(),
-                                IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                IMAGES.URL, JooqImageField.builder().configuration(JooqImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
+                                USERS.ID, JooqIdField.builder().build(),
+                                USERS.USERNAME, JooqEmailField.builder().build(),
+                                USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
                         ))
-                        .build()),
-                Map.entry(VIDEOS, JooqDataStoreConfig.of(VIDEOS)
-                        .fields(Map.of(
-                                VIDEOS.ID, JooqIdField.builder().build(),
-                                VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(LocalVideoResourceProvider.class).build()).build()
-                        ))
-                        .build()),
-                Map.entry(USERS,
-                        JooqDataStoreConfig.of(USERS)
-                                .fields(Map.of(
-                                        USERS.ID, JooqIdField.builder().build(),
-                                        USERS.USERNAME, JooqEmailField.builder().build(),
-                                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                        USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
-                                ))
-                                .build())
-        );
+                        .build();
+
+        var tasksConfig = JooqDataStoreConfig.of(TASKS)
+                .dataStoreInstance((VortexCrudDataStore) tasksStore)
+                .fields(Map.of(
+                        TASKS.ID, JooqIdField.builder().build(),
+                        TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
+                        TASKS.DUE_DATE, JooqDateField.builder().build(),
+                        TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
+                        TASKS.CREATED_AT, JooqDateTimePickerField.builder().build(),
+                        TASKS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var taskHasTaskConfig = JooqDataStoreConfig.of(TASK_HAS_TASK)
+                .dataStoreInstance((VortexCrudDataStore) taskHasTaskStore)
+                .fields(Map.of(
+                        TASK_HAS_TASK.TASK_ID, JooqIdField.builder().build(),
+                        TASK_HAS_TASK.RELATED_TASK_ID, JooqIdField.builder().build()))
+                .build();
+
+        var commentsConfig = JooqDataStoreConfig.of(TASK_COMMENTS)
+                .dataStoreInstance((VortexCrudDataStore) commentsStore)
+                .fields(Map.of(
+                        TASK_COMMENTS.ID, JooqIdField.builder().build(),
+                        TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
+                        TASK_COMMENTS.USER_ID, JooqDoubleField.builder().build(),
+                        TASK_COMMENTS.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var imagesConfig = JooqDataStoreConfig.of(IMAGES)
+                .dataStoreInstance((VortexCrudDataStore) imagesStore)
+                .fields(Map.of(
+                        IMAGES.ID, JooqIdField.builder().build(),
+                        IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        IMAGES.URL, JooqImageField.builder().configuration(JooqImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
+                ))
+                .build();
+
+        var videosConfig = JooqDataStoreConfig.of(VIDEOS)
+                .dataStoreInstance((VortexCrudDataStore) videosStore)
+                .fields(Map.of(
+                        VIDEOS.ID, JooqIdField.builder().build(),
+                        VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(LocalVideoResourceProvider.class).build()).build()
+                ))
+                .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreKey(TASKS)
+                .dataStoreConfig(tasksConfig)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(TASKS.TITLE)
                         .children(List.of(
@@ -118,7 +145,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.tasks.labels.comments")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class)FormDialogFactory.class)
-                                                .data(JooqCollectionConfiguration.of(TASK_COMMENTS)
+                                                .data(JooqCollectionConfiguration.of(commentsConfig)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
                                                         .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
                                                         .build()
@@ -137,7 +164,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqCollectionElement.of("route.tasks.labels.related-tasks")
                                         .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>)(Class) ConnectDialogFactory.class)
-                                                .data(JooqCollectionConfiguration.of(TASKS)
+                                                .data(JooqCollectionConfiguration.of(tasksConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 TASK_HAS_TASK.TASK_ID,
                                                                 TASK_HAS_TASK.RELATED_TASK_ID,
@@ -153,7 +180,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
-                .dataStoreKey(PROJECTS)
+                .dataStoreConfig(projectsConfig)
                 .title("route.projects.title-cards").formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(PROJECTS.NAME)
                         .children(List.of(
@@ -166,7 +193,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
-                .dataStoreKey(IMAGES)
+                .dataStoreConfig(imagesConfig)
                 .title("route.projects.title-cards")
                 .formConfiguration(
                         JooqFormRendererConfiguration.builder()
@@ -179,7 +206,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageSlideForm = JooqFormSlideRoute.builder()
-                .dataStoreKey(IMAGES)
+                .dataStoreConfig(imagesConfig)
                 .title("route.projects.title-cards")
                 .configuration(
                         JooqFormRendererConfiguration.builder()
@@ -193,7 +220,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 ).build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> videoForm = JooqFormRoute.builder()
-                .dataStoreKey(VIDEOS)
+                .dataStoreConfig(videosConfig)
                 .title("route.videos.title-cards").formConfiguration(
                         JooqFormRendererConfiguration.builder()
                                 .titleField(VIDEOS.TITLE)
@@ -207,7 +234,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqGridRoute.builder()
                 .isDefaultRoute(true)
-                .dataStoreKey(PROJECTS)
+                .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -218,7 +245,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .child(projectForm)
                 .build());
         routes.put("projects-list", JooqListRoute.builder()
-                .dataStoreKey(PROJECTS)
+                .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -235,7 +262,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
         routes.put("open-tasks", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
-                .dataStoreKey(TASKS)
+                .dataStoreConfig(tasksConfig)
                 .title("route.open-tasks.title")
                 .configuration(JooqKanbanConfiguration.builder()
                         .titleField(TASKS.TITLE)
@@ -245,11 +272,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .filterField(TASKS.TITLE)
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                // Example: Add menu actions for dropdown filters
                 .menuActions(List.of(
-                    DataStoreDropdownMenuAction.<TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreKey(USERS)
-                        .labelField(USERS.USERNAME)  // Field to use for display labels
+                    DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(usersConfig)
+                        .labelField(USERS.USERNAME)
                         .placeholder("Filter by user...")
                         .label("Assigned User")
                         .limit(50)
@@ -259,7 +285,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
         routes.put("done-tasks", JooqMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
-                .dataStoreKey(TASKS)
+                .dataStoreConfig(tasksConfig)
                 .title("route.done-tasks.title")
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(TASKS.TITLE)
@@ -269,7 +295,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .child(taskForm)
                 .build());
         routes.put("images-grid", JooqGridRoute.builder()
-                .dataStoreKey(IMAGES)
+                .dataStoreConfig(imagesConfig)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -281,7 +307,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .child(imageForm)
                 .build());
         routes.put("images-list", JooqListRoute.builder()
-                .dataStoreKey(IMAGES)
+                .dataStoreConfig(imagesConfig)
                 .iconFactory(CAMERA::create)
                 .title("route.images-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -297,7 +323,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("images-slide", JooqGridRoute.builder()
-                .dataStoreKey(IMAGES)
+                .dataStoreConfig(imagesConfig)
                 .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -310,7 +336,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("videos-grid", JooqGridRoute.builder()
-                .dataStoreKey(VIDEOS)
+                .dataStoreConfig(videosConfig)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
@@ -321,7 +347,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("videos-list", JooqListRoute.builder()
-                .dataStoreKey(VIDEOS)
+                .dataStoreConfig(videosConfig)
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
@@ -338,7 +364,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("submenu", JooqSubmenuRoute.builder()
                 .iconFactory(MENU::create)
-                .dataStoreKey(PROJECTS)
+                .dataStoreConfig(projectsConfig)
                 .title("route.submenu.title")
                 .childrenMap(Map.of(
                         "project-form", projectForm,
@@ -347,7 +373,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("profile", JooqSingleFormRoute.builder()
                 .iconFactory(USER::create)
-                .dataStoreKey(USERS)
+                .dataStoreConfig(usersConfig)
                 .title("route.profile.title")
                 .entityFilterField(USERS.USERNAME)
                 .entityFilterValueProvider(() -> {
@@ -376,7 +402,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .repositoryKey(USERS)
+                        .dataStoreConfig(usersConfig)
                         .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin"))
@@ -394,7 +420,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .selects(Selects.builder()
                         .configs(Map.of("task-status", taskStatuses))
                         .build())
-                .dataStores(dataStores)
                 .build();
     }
 }

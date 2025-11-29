@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
@@ -16,7 +15,6 @@ import jakarta.annotation.Nullable;
 
 public class MasterDetailRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry;
     private final VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry;
     private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
@@ -25,7 +23,7 @@ public class MasterDetailRouteFactory<ModelClass, FieldType, RepositoryType> imp
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public MasterDetailRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+    public MasterDetailRouteFactory(
                                     VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
                                     VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                                     VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -34,7 +32,6 @@ public class MasterDetailRouteFactory<ModelClass, FieldType, RepositoryType> imp
                                     ReflectionService<FieldType> reflectionService,
                                     VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        this.dataStoreFactoryRegistry = dataStoreFactoryRegistry;
         this.itemFactoryRegistry = itemFactoryRegistry;
         this.routeFactory = routeFactory;
         this.configService = configService;
@@ -50,7 +47,6 @@ public class MasterDetailRouteFactory<ModelClass, FieldType, RepositoryType> imp
                                  @Nullable DetailRouteSetting detailRouteSetting) {
         return new MasterDetail<>(currentPathIndex,
                 routeResolver,
-                dataStoreFactoryRegistry,
                 itemFactoryRegistry,
                 routeFactory,
                 configService,

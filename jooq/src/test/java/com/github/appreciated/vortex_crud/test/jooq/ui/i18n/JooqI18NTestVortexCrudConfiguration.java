@@ -1,15 +1,15 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.i18n;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -25,10 +25,17 @@ import static com.github.appreciated.vortex_crud.jooq.models.Tables.I18N_IMAGES;
 public class JooqI18NTestVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private final DSLContext dsl;
+
+    public JooqI18NTestVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        Map<TableImpl<?>, DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> dataStores = Map.of(
-                I18N_IMAGES, JooqDataStoreConfig.of(I18N_IMAGES)
+        JooqDataStore store = new JooqDataStore(I18N_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(I18N_IMAGES)
+                        .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
                                 I18N_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 I18N_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
@@ -38,11 +45,10 @@ public class JooqI18NTestVortexCrudConfiguration
                                                 .build())
                                         .build()
                         ))
-                        .build()
-        );
+                        .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
-                .dataStoreKey(I18N_IMAGES)
+                .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
                         .titleField(I18N_IMAGES.TITLE)
@@ -55,7 +61,7 @@ public class JooqI18NTestVortexCrudConfiguration
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JooqListRoute.builder()
-                .dataStoreKey(I18N_IMAGES)
+                .dataStoreConfig(config)
                 .title("route.images-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
                         .inlineEdit(true)
@@ -72,7 +78,6 @@ public class JooqI18NTestVortexCrudConfiguration
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
-                .dataStores(dataStores)
                 .build();
     }
 

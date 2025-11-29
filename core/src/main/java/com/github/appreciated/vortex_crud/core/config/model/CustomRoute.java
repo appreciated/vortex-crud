@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -25,8 +26,7 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private Class<? extends Component> componentClass;
 
-    @Builder.Default
-    private RepositoryType dataStoreKey = null;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -48,5 +48,5 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<String> readOnlyRoles;
 
     @Builder.Default
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions = null;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions = null;
 }

@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
@@ -16,7 +15,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 public class FormSlideRouteFactory<ModelClass, FieldType, RepositoryType>
         extends FormRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    public FormSlideRouteFactory(VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
+    public FormSlideRouteFactory(
                                  VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
                                  FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                                  VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
@@ -24,6 +23,6 @@ public class FormSlideRouteFactory<ModelClass, FieldType, RepositoryType>
                                  ReflectionService<FieldType> reflectionService,
                                  VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
     ) {
-        super(dataStoreFactoryRegistry, configService, formCreator, factoryRegistry, reflectionService,permissionChecker);
+        super(configService, formCreator, factoryRegistry, reflectionService,permissionChecker);
     }
 }

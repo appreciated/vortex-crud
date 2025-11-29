@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -29,18 +28,17 @@ public class DefaultDialogFactoryRegistry<ModelClass, FieldType, RepositoryType>
     private final Map<Class<?>, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> factories = new HashMap<>();
 
     public DefaultDialogFactoryRegistry(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                        VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                         VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                         VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
                                         ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
                                         ReflectionService<FieldType> reflectionService,
                                         VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
-        factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
-        factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
-        factories.put(MultiFormRouteFactory.class, new FormDialogFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
-        factories.put(FormSlideRouteFactory.class, new FormSlideFactory<>(configService, dataStoreFactoryRegistry, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
-        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(dataStoreFactoryRegistry, manyToManyPersistenceStrategy, reflectionService, dataStoreUtil));
+        factories.put(FormDialogFactory.class, new FormDialogFactory<>(configService, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
+        factories.put(FormRouteFactory.class, new FormDialogFactory<>(configService, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
+        factories.put(MultiFormRouteFactory.class, new FormDialogFactory<>(configService, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
+        factories.put(FormSlideRouteFactory.class, new FormSlideFactory<>(configService, resolver, foreignKeyResolutionStrategy, dataStoreUtil));
+        factories.put(ConnectDialogFactory.class, new ConnectDialogFactory<>(manyToManyPersistenceStrategy, reflectionService, dataStoreUtil));
     }
 
     public Map<Class<?>, VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType>> getFactories() {

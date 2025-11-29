@@ -1,7 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -17,15 +21,26 @@ import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaFieldValidationRepository validationEntityRepository;
+    private final JpaFieldService fieldService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
 
-    public JpaFieldValidationVortexCrudConfiguration(JpaFieldValidationRepository validationEntityRepository) {
+    public JpaFieldValidationVortexCrudConfiguration(JpaFieldValidationRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
         this.validationEntityRepository = validationEntityRepository;
+        this.fieldService = fieldService;
+        this.annotationRegistryService = annotationRegistryService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        var store = new JpaRepositoryDataStore<>(validationEntityRepository, annotationRegistryService, new DataStoreHooks<>());
+        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
+
+        var config = JpaDataStoreConfig.builder(validationEntityRepository, store)
+                .withServices(fieldService, storeMap)
+                .build();
+
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaFormRoute.builder()
-                .dataStoreKey(validationEntityRepository)
+                .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("requiredField")
@@ -51,7 +66,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 ))
                 .build();
         routes.put("field-validation-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .dataStoreKey(validationEntityRepository)
+                .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .configuration(build)
@@ -70,5 +85,4 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
                 .build();
     }
-
 }

@@ -46,12 +46,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class NotificationPanelConfiguration<FieldType, RepositoryType> {
+public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> {
 
     /**
-     * The data store key (repository or table) containing notification data
+     * The data store config containing notification data
      */
-    private RepositoryType dataStoreKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     /**
      * Field containing the notification message/content

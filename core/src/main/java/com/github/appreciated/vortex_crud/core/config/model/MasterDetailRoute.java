@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
@@ -20,7 +21,7 @@ import java.util.List;
 @Getter
 public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    private RepositoryType dataStoreKey;
+    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
 
@@ -48,7 +49,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         return child.formConfiguration();
     }
 
-    private List<DataStoreDropdownMenuAction<FieldType, RepositoryType>> menuActions;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     /**
      * List of custom route actions with full access to data store and selected entities.

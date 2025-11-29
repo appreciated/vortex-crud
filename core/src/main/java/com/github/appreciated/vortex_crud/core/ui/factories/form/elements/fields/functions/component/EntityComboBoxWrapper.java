@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
@@ -21,12 +20,11 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                                 VortexCrudDataStoreFactoryRegistry<ModelClass, FieldType, RepositoryType> dataStoreFactoryRegistry,
                                  Field<ModelClass, FieldType, RepositoryType> dataStoreField,
                                  ReflectionService<FieldType> reflectionService
     ) {
         ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        this.dataStore = dataStoreFactoryRegistry.getDataStore(refField.dataStore());
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
