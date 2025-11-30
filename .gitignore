@@ -89,5 +89,8 @@ webpack.generated.js
 /examples/jooq-dev-platform-demo/src/main/bundles/README.md
 /examples/jooq-project-management-demo/src/main/bundles/dev.bundle
 /examples/jooq-project-management-demo/src/main/bundles/README.md
+/examples/jooq-ressource-planner-demo/target/
+/examples/jooq-ressource-planner-demo/src/main/frontend
+/examples/jooq-ressource-planner-demo/src/main/bundles
 
 *.db

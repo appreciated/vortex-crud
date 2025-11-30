@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: vortex-crud/V1.sql
+      relativeToChangelogFile: true
