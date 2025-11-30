@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "images")
@@ -17,7 +17,7 @@ public class JpaImageEntity {
     private Integer id;
 
     @TextField
-    @NotNull
+    @NotBlank(message = "This field is required")
     @Column(nullable = false)
     private String title;
 

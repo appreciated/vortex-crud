@@ -39,7 +39,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         // Attempt to save without filling required fields
         waitForAnyElementContainingText("Save").click();
 
-        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
+        WebElement errorMessage = waitForAnyElementContainingText("Entry could not be saved");
         assertTrue(errorMessage.isDisplayed());
 
         // Fill required title field and save

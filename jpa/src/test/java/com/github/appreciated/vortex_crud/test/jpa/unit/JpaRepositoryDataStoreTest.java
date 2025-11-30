@@ -52,6 +52,7 @@ class JpaRepositoryDataStoreTest {
     // Dynamically create a test table
     private void createTestTable() {
         transactionTemplate.executeWithoutResult(transactionStatus -> {
+            entityManager.createNativeQuery("DROP TABLE IF EXISTS test_table").executeUpdate();
             entityManager.createNativeQuery("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255), age INT)")
                     .executeUpdate();
         });
