@@ -39,6 +39,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        // Selects config
         LinkedHashMap<String, String> tagOptions = new LinkedHashMap<>();
         tagOptions.put("tag1", "Tag 1");
         tagOptions.put("tag2", "Tag 2");
@@ -65,44 +66,47 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
                 ))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.missing.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
-                                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
-                                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
-                        ))
-                        .build())
-                .build();
+        // Form Route
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
+            .dataStoreConfig(config)
+            .title("route.missing.title")
+            .formConfiguration(JooqFormRendererConfiguration.builder()
+                .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
+                .children(List.of(
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
+                ))
+                .build())
+            .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        // List Route with Global Action
         routes.put("missing-features-test", JooqListRoute.builder()
-                .dataStoreConfig(config)
-                .iconFactory(COG::create)
-                .title("route.missing.list")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
-                        ))
-                        .build())
-                .routeActions(List.of(
-                        GlobalRouteAction.<TableField<?, ?>, TableImpl<?>>builder()
-                                .componentFactory(() -> new Button("Print", PRINT.create()))
-                                .handler(ctx -> {})
-                                .build()
-                ))
-                .child(form)
-                .build());
+            .dataStoreConfig(config)
+            .iconFactory(COG::create)
+            .title("route.missing.list")
+            .configuration(JooqListItemRendererConfiguration.builder()
+                 .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
+                 .children(List.of(
+                      JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
+                 ))
+                 .build())
+            .routeActions(List.of(
+                 GlobalRouteAction.<TableField<?, ?>, TableImpl<?>>builder()
+                    .componentFactory(() -> new Button("Print", PRINT.create()))
+                    .handler(ctx -> {})
+                    .build()
+            ))
+            .child(form)
+            .build());
 
         return JooqApplication.builder()
-                .applicationName("application.name")
-                .i18nBundlePrefix("ui_test_i18n")
-                .routes(routes)
-                .selects(selects)
-                .build();
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
+            .build();
     }
 }

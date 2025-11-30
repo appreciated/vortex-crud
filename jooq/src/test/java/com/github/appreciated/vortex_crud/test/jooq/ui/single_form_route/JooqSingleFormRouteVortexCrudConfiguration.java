@@ -35,6 +35,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        // Selects config
         LinkedHashMap<String, String> tagOptions = new LinkedHashMap<>();
         tagOptions.put("tag1", "Tag 1");
         tagOptions.put("tag2", "Tag 2");
@@ -62,25 +63,27 @@ public class JooqSingleFormRouteVortexCrudConfiguration
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        // Single Form Route
         routes.put("single-form-test", JooqSingleFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("Single Form")
-                .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
-                .entityFilterValueProvider(() -> 1)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
-                                JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
-                        ))
-                        .build())
-                .build());
+             .dataStoreConfig(config)
+             .title("Single Form")
+             .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
+             .entityFilterValueProvider(() -> 1)
+             .formConfiguration(JooqFormRendererConfiguration.builder()
+                 .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
+                 .children(List.of(
+                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
+                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
+                 ))
+                 .build())
+             .build());
 
         return JooqApplication.builder()
-                .applicationName("application.name")
-                .i18nBundlePrefix("ui_test_i18n")
-                .routes(routes)
-                .selects(selects)
-                .build();
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
+            .build();
     }
 }

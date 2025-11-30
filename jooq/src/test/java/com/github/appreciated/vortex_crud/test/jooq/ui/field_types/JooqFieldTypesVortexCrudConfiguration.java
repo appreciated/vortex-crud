@@ -35,6 +35,7 @@ public class JooqFieldTypesVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        // Selects config
         LinkedHashMap<String, String> tagOptions = new LinkedHashMap<>();
         tagOptions.put("tag1", "Tag 1");
         tagOptions.put("tag2", "Tag 2");
@@ -61,37 +62,40 @@ public class JooqFieldTypesVortexCrudConfiguration
                 ))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.missing.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(FIELD_TYPES_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
-                                JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
-                                JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
-                        ))
-                        .build())
-                .build();
+        // Form Route
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
+            .dataStoreConfig(config)
+            .title("route.missing.title")
+            .formConfiguration(JooqFormRendererConfiguration.builder()
+                .titleField(FIELD_TYPES_TEST.NAME)
+                .children(List.of(
+                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
+                    JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
+                    JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
+                ))
+                .build())
+            .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        // List Route
         routes.put("missing-features-test", JooqListRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.missing.list")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(FIELD_TYPES_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
-                        ))
-                        .build())
-                .child(form)
-                .build());
+            .dataStoreConfig(config)
+            .title("route.missing.list")
+            .configuration(JooqListItemRendererConfiguration.builder()
+                 .filterField(FIELD_TYPES_TEST.NAME)
+                 .children(List.of(
+                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                 ))
+                 .build())
+            .child(form)
+            .build());
 
         return JooqApplication.builder()
-                .applicationName("application.name")
-                .i18nBundlePrefix("ui_test_i18n")
-                .routes(routes)
-                .selects(selects)
-                .build();
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
+            .build();
     }
 }
