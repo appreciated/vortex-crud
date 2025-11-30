@@ -2,10 +2,10 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
-import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -96,7 +96,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var imageStore = createStore(imageRepository);
         var videoStore = createStore(videoRepository);
         var userStore = createStore(userRepository);
-        SimpleMapDataStore notesStore = new SimpleMapDataStore();
+
+        SimpleMapDataStore<String> notesStore = new SimpleMapDataStore<>(s -> s);
 
         // 2. Build map of Class -> DataStore
         Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
@@ -118,9 +119,18 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
                 .dataStoreInstance((VortexCrudDataStore) notesStore)
-                .fields(Map.of(
-                        "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
-                        "content", TextAreaField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()
+                .fields(Map.ofEntries(
+                        Map.entry("id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("content", TextAreaField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("price", BigDecimalField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("active", CheckboxField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("projectDuration", DateRangeField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("eventDuration", DateTimeRangeField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("attachment", FileField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("markdownContent", MarkDownField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("tags", MultiSelectValueField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()),
+                        Map.entry("document", PdfField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build())
                 ))
                 .build();
 
@@ -218,11 +228,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        routes.put("projects-cards", JpaGridRoute.builder()
+        // Projects Routes
+        var projectCards = JpaGridRoute.builder()
                 .isDefaultRoute(true)
                 .dataStoreConfig(projectConfig)
-                .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("name")
@@ -230,10 +239,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin", "manager"))
                 .child(projectForm)
-                .build());
-        routes.put("projects-list", JpaListRoute.builder()
+                .build();
+
+        var projectList = JpaListRoute.builder()
                 .dataStoreConfig(projectConfig)
-                .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
@@ -247,9 +256,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
                 .child(projectForm)
-                .build());
-        routes.put("open-tasks", JpaKanbanRoute.builder()
-                .iconFactory(TASKS::create)
+                .build();
+
+        // Tasks Routes
+        var openTasks = JpaKanbanRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.open-tasks.title")
                 .configuration(JpaKanbanConfiguration.builder()
@@ -260,10 +270,19 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .filterField("title")
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
+                .menuActions(List.of(
+                        DataStoreDropdownMenuAction.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                .dataStoreConfig(userConfig)
+                                .labelField("username")
+                                .placeholder("Filter by user...")
+                                .label("Assigned User")
+                                .limit(50)
+                                .build()
+                ))
                 .child(taskForm)
-                .build());
-        routes.put("done-tasks", JpaMasterDetailRoute.builder()
-                .iconFactory(CHECK_CIRCLE::create)
+                .build();
+
+        var doneTasks = JpaMasterDetailRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.done-tasks.title")
                 .configuration(JpaGridItemRendererConfiguration.builder()
@@ -272,10 +291,11 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin", "manager"))
                 .child(taskForm)
-                .build());
-        routes.put("images-grid", JpaGridRoute.builder()
+                .build();
+
+        // Images Routes
+        var imagesGrid = JpaGridRoute.builder()
                 .dataStoreConfig(imageConfig)
-                .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
@@ -284,10 +304,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageForm)
-                .build());
-        routes.put("images-list", JpaListRoute.builder()
+                .build();
+
+        var imagesList = JpaListRoute.builder()
                 .dataStoreConfig(imageConfig)
-                .iconFactory(CAMERA::create)
                 .title("route.images-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
@@ -299,11 +319,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageForm)
-                .build());
+                .build();
 
-        routes.put("images-slide", JpaGridRoute.builder()
+        var imagesSlide = JpaGridRoute.builder()
                 .dataStoreConfig(imageConfig)
-                .iconFactory(CAMERA::create)
                 .title("route.images-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
@@ -312,22 +331,21 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageSlideForm)
-                .build());
+                .build();
 
-        routes.put("videos-grid", JpaGridRoute.builder()
+        // Videos Routes
+        var videosGrid = JpaGridRoute.builder()
                 .dataStoreConfig(videoConfig)
-                .iconFactory(MOVIE::create)
                 .title("route.videos.title-cards")
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(videoForm)
-                .build());
+                .build();
 
-        routes.put("videos-list", JpaListRoute.builder()
+        var videosList = JpaListRoute.builder()
                 .dataStoreConfig(videoConfig)
-                .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
                 .configuration(JpaListItemRendererConfiguration.builder()
                         .inlineEdit(true)
@@ -339,18 +357,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(videoForm)
-                .build());
+                .build();
 
-        routes.put("submenu", JpaSubmenuRoute.builder()
-                .iconFactory(MENU::create)
-                .dataStoreConfig(projectConfig)
-                .title("route.submenu.title")
-                .childrenMap(Map.of(
-                        "project-form", projectForm,
-                        "image-form", imageForm))
-                .build());
-
-        routes.put("profile", JpaSingleFormRoute.builder()
+        // Profile Route
+        var profileRoute = JpaSingleFormRoute.builder()
                 .iconFactory(USER::create)
                 .dataStoreConfig(userConfig)
                 .title("route.profile.title")
@@ -370,10 +380,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build()
                         ))
                         .build())
-                .build());
+                .build();
 
-        // Custom in-memory data store example
-        routes.put("notes", JpaGridRoute.builder()
+        // Notes Route
+        var notesRoute = JpaGridRoute.builder()
                 .dataStoreConfig(notesConfig)
                 .iconFactory(NOTEBOOK::create)
                 .title("Notes (Custom DataStore)")
@@ -387,11 +397,56 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .titleField("title")
                                 .children(List.of(
                                         JpaFieldElement.builder("title", "Title").build(),
-                                        JpaFieldElement.builder("content", "Content").build()
+                                        JpaFieldElement.builder("content", "Content").build(),
+                                        JpaFieldElement.builder("price", "Price").build(),
+                                        JpaFieldElement.builder("active", "Active").build(),
+                                        JpaFieldElement.builder("projectDuration", "Project Duration").build(),
+                                        JpaFieldElement.builder("eventDuration", "Event Duration").build(),
+                                        JpaFieldElement.builder("attachment", "Attachment").build(),
+                                        JpaFieldElement.builder("markdownContent", "Markdown").build(),
+                                        JpaFieldElement.builder("tags", "Tags").build(),
+                                        JpaFieldElement.builder("document", "Document").build()
                                 ))
                                 .build())
                         .build())
+                .build();
+
+        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+
+        routes.put("projects", JpaSubmenuRoute.builder()
+                .title("Projects")
+                .iconFactory(FACTORY::create)
+                .childrenMap(Map.of("cards", projectCards, "list", projectList))
                 .build());
+
+        routes.put("tasks", JpaSubmenuRoute.builder()
+                .title("Tasks")
+                .iconFactory(TASKS::create)
+                .childrenMap(Map.of("open", openTasks, "done", doneTasks))
+                .build());
+
+        routes.put("media", JpaSubmenuRoute.builder()
+                .title("Media")
+                .iconFactory(CAMERA::create)
+                .childrenMap(Map.of(
+                        "images", JpaSubmenuRoute.builder()
+                                .title("Images")
+                                .childrenMap(Map.of(
+                                        "grid", imagesGrid,
+                                        "list", imagesList,
+                                        "slide", imagesSlide
+                                )).build(),
+                        "videos", JpaSubmenuRoute.builder()
+                                .title("Videos")
+                                .childrenMap(Map.of(
+                                        "grid", videosGrid,
+                                        "list", videosList
+                                )).build()
+                )).build());
+
+        routes.put("profile", profileRoute);
+
+        routes.put("notes", notesRoute);
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
         taskStatuses.put(TODO, "selects.task-status.todo");

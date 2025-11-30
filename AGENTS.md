@@ -49,3 +49,9 @@ dataStore.insertRecord(entity);
 1. ✅ Use VortexCrudDataStore (NOT custom repos/services)
 2. ✅ Update examples (jpa-sqlite-example AND jooq-sqlite-example) if adding features
 3. ✅ Update AGENTS.md if you learned something universally valuable
+## Integrating Custom DataStores in jOOQ Applications
+
+If you need to add a custom (e.g., in-memory) DataStore to a jOOQ-typed Application (`Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>>`):
+- You must adapt the custom DataStore to use `TableField` as keys.
+- You can create mock `TableField` instances using `Proxy` to represent the fields of your custom model.
+- See `ExampleJooqConfiguration` and `SimpleMapDataStore` for a reference implementation.

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.example.jpa.custom;
+package com.github.appreciated.vortex_crud.example.jooq.custom;
 
 import com.github.appreciated.vortex_crud.core.entity.DateRange;
 import com.github.appreciated.vortex_crud.core.entity.DateTimeRange;
