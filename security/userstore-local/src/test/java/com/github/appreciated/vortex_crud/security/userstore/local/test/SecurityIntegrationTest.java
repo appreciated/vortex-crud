@@ -1,5 +1,9 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.TranslationService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.userstore.local.util.InMemoryDataStore;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.AfterEach;
@@ -11,22 +15,33 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = SecurityTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public class SecurityIntegrationTest extends BaseUITest {
 
-    @Autowired
-    private InMemoryDataStore<TestUser> userRepository;
-    @Autowired
-    private InMemoryDataStore<TestRole> roleRepository;
+    private InMemoryDataStore<TestUser> userRepository = new InMemoryDataStore<>(TestUser.class);
+    private InMemoryDataStore<TestRole> roleRepository  = new InMemoryDataStore<>(TestRole.class);
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @MockitoBean
+    private ReflectionService reflectionService;
+
+    @MockitoBean
+    private VortexCrudForeignKeyResolutionStrategy vortexCrudForeignKeyResolutionStrategy;
+
+    @MockitoBean
+    private VortexCrudConfigService vortexCrudConfigService;
+
+    @MockitoBean
+    private TranslationService translationService;
 
     @Value(value = "${local.server.port}")
     private int port;
