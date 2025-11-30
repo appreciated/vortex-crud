@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractGridTest extends BaseUITest {
 
     protected String getPath() {
-        return "images-list";
+        return "images-grid";
     }
 
     protected String getExpectedVisibleValue() {
@@ -44,7 +44,7 @@ public abstract class AbstractGridTest extends BaseUITest {
     void testGridListingVisible() {
         navigateTo(getPath());
         WebElement element = waitForAnyElementContainingText(getExpectedVisibleValue());
-        assertEquals("vaadin-grid-cell-content", element.getTagName());
+        assertEquals("h4", element.getTagName());
     }
 
     @Test
