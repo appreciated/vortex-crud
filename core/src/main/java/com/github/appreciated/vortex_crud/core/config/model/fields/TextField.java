@@ -26,7 +26,10 @@ public class TextField<ModelClass, FieldType, RepositoryType> implements Field<M
     List<String> writeRoles;
     List<String> readOnlyRoles;
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) TextFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new TextFieldFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

@@ -25,9 +25,11 @@ public class BigDecimalField<ModelClass, FieldType, RepositoryType> implements F
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) BigDecimalNumberFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new BigDecimalNumberFieldFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

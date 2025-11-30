@@ -19,7 +19,12 @@ import java.util.List;
 public class ImageFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private VortexCrudItemFactory<FieldType> factory = new CardFactory<>();
+
+    @Override
+    public VortexCrudItemFactory<FieldType> factoryInstance() {
+        return factory;
+    }
 
     private FieldType titleField;
 

@@ -25,9 +25,11 @@ public class DateTimePickerField<ModelClass, FieldType, RepositoryType> implemen
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) DateTimePickerFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new DateTimePickerFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

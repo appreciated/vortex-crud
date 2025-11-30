@@ -13,13 +13,6 @@ import com.vaadin.flow.component.dialog.Dialog;
 public class FormSlideFactory<ModelClass, FieldType, RepositoryType>
         extends AbstractFormDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    public FormSlideFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                            VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
-                            VortexCrudDataStoreUtilStrategy dataStoreUtil) {
-        super(configService, fieldNameResolver, foreignKeyResolutionStrategy, dataStoreUtil);
-    }
-
     @Override
     protected Dialog instantiateDialog() {
         Dialog dialog = new Dialog();

@@ -26,7 +26,10 @@ public class MarkDownField<ModelClass, FieldType, RepositoryType> implements Fie
     List<String> writeRoles;
     List<String> readOnlyRoles;
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MarkDownFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MarkDownFieldFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

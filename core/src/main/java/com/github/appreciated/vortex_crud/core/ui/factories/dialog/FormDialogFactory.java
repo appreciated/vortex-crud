@@ -1,12 +1,8 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,22 +18,7 @@ import static com.vaadin.flow.component.ModalityMode.VISUAL;
 
 public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private VortexCrudDataStore<FieldType, Object> dataStore;
-
-    public FormDialogFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                             VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
-                             VortexCrudDataStoreUtilStrategy dataStoreUtil
-    ) {
-        this.configService = configService;
-        this.fieldNameResolver = fieldNameResolver;
-        this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
-        this.dataStoreUtil = dataStoreUtil;
-    }
 
     @Override
     public Dialog create(@Nullable Object entityId,
@@ -48,9 +29,9 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                          RepositoryType dataStoreKey,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener,
-                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
 
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) configService.configuration().dataStores().get(dataStoreKey).dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) context.configService().configuration().dataStores().get(dataStoreKey).dataStoreInstance();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
 
@@ -59,7 +40,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
             recordById = this.dataStore.newInstance();
         }
 
-        if (dataStoreUtil.isNew(recordById)) {
+        if (context.dataStoreUtil().isNew(recordById)) {
             dialog.setHeaderTitle(dialog.getTranslation("button.create.title"));
         } else {
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
@@ -67,7 +48,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
 
         Binder<Object> binder = new Binder<>(Object.class);
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = context.configService().configuration().dataStores().get(dataStoreKey);
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
 
@@ -87,19 +68,19 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                 childFormLayout.setResponsiveSteps(
                     new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP)
                 );
-                formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, childForm.children(), recordById, tables, binder, childFormLayout);
+                context.formCreator().bindAndAddToLayout(dataStoreKey, formRouteRenderer, childForm.children(), recordById, tables, binder, childFormLayout, context);
                 formsContainer.add(childFormLayout);
             }
             formContent = formsContainer;
         } else {
             // Single form configuration
             FormLayout layout = new FormLayout();
-            formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, tables, binder, layout);
+            context.formCreator().bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, tables, binder, layout, context);
             formContent = layout;
         }
 
         binder.setBean(recordById);
-        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
+        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener, context);
 
         dialog.add(formContent);
         dialog.setModality(VISUAL);
@@ -108,7 +89,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         return dialog;
     }
 
-    private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener) {
+    private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog, OnStoreListener listener, OnCancelListener onCancelListener, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
             dialog.close();
@@ -116,8 +97,8 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, fieldNameResolver);
-                if (dataStoreUtil.isNew(entity)) {
+                context.foreignKeyResolutionStrategy().resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, context.fieldNameResolver());
+                if (context.dataStoreUtil().isNew(entity)) {
                     if (dataStore.getModelClass().isInstance(entity)) {
                         dataStore.insertRecord(entity);
                     } else {

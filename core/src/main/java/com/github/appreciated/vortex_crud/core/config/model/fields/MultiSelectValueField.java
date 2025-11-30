@@ -23,9 +23,11 @@ public class MultiSelectValueField<ModelClass, FieldType, RepositoryType> implem
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MultiSelectValueFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MultiSelectValueFieldFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

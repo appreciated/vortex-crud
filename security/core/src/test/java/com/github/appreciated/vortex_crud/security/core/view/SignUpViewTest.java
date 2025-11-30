@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessMan
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,8 @@ import static org.mockito.Mockito.when;
 
 class SignUpViewTest {
 
+    @Mock
+    private VortexCrudContext<String, String, String> context;
     @Mock
     private VortexCrudConfigService<String, String, String> configService;
     @Mock
@@ -45,6 +48,10 @@ class SignUpViewTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
+
+        when(context.configService()).thenReturn(configService);
+        when(context.formCreator()).thenReturn(formCreator);
+        when(context.reflectionService()).thenReturn(reflectionService);
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
@@ -69,9 +76,7 @@ class SignUpViewTest {
         when(dataStore.newInstance()).thenReturn(new Object());
 
         SignUpView<String, String, String> view = new SignUpView<>(
-                configService,
-                formCreator,
-                reflectionService,
+                context,
                 passwordEncoder
         );
 

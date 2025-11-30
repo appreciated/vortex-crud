@@ -27,9 +27,12 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory= (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MasterDetailRouteFactory<>();
 
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 
     private boolean isHiddenInMenu;
 

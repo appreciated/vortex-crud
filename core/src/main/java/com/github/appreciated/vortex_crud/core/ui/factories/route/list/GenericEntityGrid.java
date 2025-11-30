@@ -3,9 +3,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 
@@ -20,19 +19,17 @@ import java.util.Map;
 public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Grid<Object> {
 
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                              RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                             VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> listColumnFactory,
-                             VortexCrudDataStoreUtilStrategy dataStoreUtil
+                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.routeResolver = routeResolver;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(routeRenderer.dataStoreKey());
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = context.configService().configuration().dataStores().get(routeRenderer.dataStoreKey());
         VortexCrudDataStore<FieldType, ?> dataStore = tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
         @SuppressWarnings("unchecked")
@@ -47,7 +44,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.children()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
-            listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
+            context.listColumnCallbackRegistry().getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
         }
 
         setDataProvider(dataProvider);
@@ -61,7 +58,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
      * @param entity the clicked Object
      */
     private void onItemClick(Object entity) {
-        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
+        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), context.dataStoreUtil().getId(entity));
         getUI().ifPresent(ui -> ui.navigate(nextRoute));
     }
 }

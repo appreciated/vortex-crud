@@ -3,12 +3,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.ModalityMode;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -25,21 +21,6 @@ import java.util.stream.Collectors;
 
 public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy;
-
-    public ConnectDialogFactory(
-            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-            ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
-            ReflectionService<FieldType> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
-        this.configService = configService;
-        this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtilStrategy = dataStoreUtilStrategy;
-    }
-
     /**
      * Creates a dialog for managing many-to-many relationships between entities.
      *
@@ -51,7 +32,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
      * @param dataStoreKey            The key identifying the target data store.
      * @param storeListener           Callback to be executed when changes are stored successfully.
      * @param cancelListener          Callback to be executed when the operation is cancelled.
-     * @param formCreator             Factory for creating forms.
+     * @param context             Factory for creating forms.
      * @return A Dialog component allowing users to manage entity connections.
      */
     @Override
@@ -63,9 +44,9 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          RepositoryType dataStoreKey,
                          OnStoreListener storeListener,
                          OnCancelListener cancelListener,
-                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
 
-        VortexCrudDataStore<FieldType, ?> dataStore = configService.configuration().dataStores().get(dataStoreKey).dataStoreInstance();
+        VortexCrudDataStore<FieldType, ?> dataStore = context.configService().configuration().dataStores().get(dataStoreKey).dataStoreInstance();
         ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.manyToMany();
         Dialog dialog = new Dialog();
         dialog.setMaxWidth("1200px");
@@ -79,15 +60,15 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
         HashMap<String, Object> availableConnections = new HashMap<>(dataStore.getRecordsFromTable(0, Integer.MAX_VALUE)
                 .stream()
                 .map(o -> (Object) o)
-                .collect(Collectors.toMap(dataStoreUtilStrategy::getId, o -> o)));
+                .collect(Collectors.toMap(context.dataStoreUtil()::getId, o -> o)));
 
-        List<ModelClass> list = manyToManyPersistenceStrategy.resolveManyToMany(
+        List<ModelClass> list = context.manyToManyPersistenceStrategy().resolveManyToMany(
                 dataStore,
                 manyToMany,
                 entityId
         ).stream().toList();
         Set<Object> previousAssociativeEntries = list.stream()
-                .map(dataStoreId -> availableConnections.get(dataStoreUtilStrategy.getId(dataStoreId)))
+                .map(dataStoreId -> availableConnections.get(context.dataStoreUtil().getId(dataStoreId)))
                 .collect(Collectors.toSet());
 
         // Create a list of selectable items
@@ -97,7 +78,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
         connectionList.setItemLabelGenerator(obj -> children.stream()
                 .map(fieldId -> {
                     try {
-                        Object value = reflectionService.getValue(obj, fieldId);
+                        Object value = context.reflectionService().getValue(obj, fieldId);
                         return value != null ? value.toString() : "";
                     } catch (Exception e) {
                         return "";
@@ -124,7 +105,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
 
             // Insert new connections
             if (!toBeInserted.isEmpty()) {
-                manyToManyPersistenceStrategy.insert(foreignKeyValue, toBeInserted, manyToMany);
+                context.manyToManyPersistenceStrategy().insert(foreignKeyValue, toBeInserted, manyToMany);
             }
 
             // Find objects to delete (removed connections)
@@ -134,7 +115,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
 
             // Delete removed connections
             if (!toBeDeleted.isEmpty()) {
-                manyToManyPersistenceStrategy.deleteAll(foreignKeyValue, toBeDeleted, manyToMany);
+                context.manyToManyPersistenceStrategy().deleteAll(foreignKeyValue, toBeDeleted, manyToMany);
             }
 
             storeListener.onStore();

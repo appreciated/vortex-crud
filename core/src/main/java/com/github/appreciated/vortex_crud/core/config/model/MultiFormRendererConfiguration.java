@@ -17,8 +17,8 @@ import java.util.List;
 @Getter
 public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
-
+    // Not using ItemFactory here as MultiFormRendererConfiguration doesn't implement ItemFactory
+    // But keeping structure consistent if needed in future
     private VortexCrudItemFactory<FieldType> factoryInstance;
 
     private FieldType titleField;

@@ -25,9 +25,11 @@ public class TextAreaField<ModelClass, FieldType, RepositoryType> implements Fie
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) TextAreaFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new TextAreaFieldFactory<>();
 
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 }

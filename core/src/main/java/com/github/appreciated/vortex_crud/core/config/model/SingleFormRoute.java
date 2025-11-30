@@ -49,9 +49,12 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
 
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance;
+    @Override
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance() {
+        return factory;
+    }
 
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactoryInstance;
 

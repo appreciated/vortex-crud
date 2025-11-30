@@ -6,12 +6,9 @@ import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererCon
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.ClickEvent;
@@ -29,38 +26,21 @@ import jakarta.annotation.Nullable;
 
 public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final FormRouteFactory<ModelClass, FieldType, RepositoryType> formRouteFactory;
-
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
+    private final FormRouteFactory<ModelClass, FieldType, RepositoryType> formRouteFactory = new FormRouteFactory<>();
 
     private String titleColumn;
-
-    public MultiFormRouteFactory(
-            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-            com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService,
-            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
-    ) {
-        this.configService = configService;
-        this.formCreator = formCreator;
-        this.reflectionService = reflectionService;
-        this.permissionChecker = permissionChecker;
-        this.formRouteFactory = new FormRouteFactory<>(configService, formCreator, reflectionService, permissionChecker);
-    }
 
     @Override
     public Component renderRoute(
             Integer currentPathIndex,
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-            @Nullable DetailRouteSetting detailRouteSetting
+            @Nullable DetailRouteSetting detailRouteSetting,
+            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         assert routeResolver.getRouteForIndex(currentPathIndex) instanceof MultiFormRoute<ModelClass,FieldType,RepositoryType>;
         MultiFormRoute<ModelClass, FieldType, RepositoryType> routeProvider = (MultiFormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         assert detailRouteSetting != null;
-        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), false, routeProvider);
+        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), false, routeProvider, context);
     }
 
     public VerticalLayout getForm(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
@@ -68,7 +48,8 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
                                   boolean isHeaderHidden,
                                   boolean creationMode,
                                   boolean isDeleteButtonHidden,
-                                  MultiFormRoute<ModelClass, FieldType, RepositoryType> routeRenderer) {
+                                  MultiFormRoute<ModelClass, FieldType, RepositoryType> routeRenderer,
+                                  VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
 
@@ -88,7 +69,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
                 FieldType finalTitleField = titleField;
                 binder.bindReadOnly(
                         titleComponent,
-                        entity1 -> prefix + reflectionService.getString(entity1, finalTitleField)
+                        entity1 -> prefix + context.reflectionService().getString(entity1, finalTitleField)
                 );
             }
         } else {
@@ -96,7 +77,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         }
 
         RepositoryType table = routeRenderer.dataStoreKey();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(table);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = context.configService().configuration().dataStores().get(table);
         VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
         ModelClass entity;
@@ -113,7 +94,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
             com.vaadin.flow.component.formlayout.FormLayout childFormLayout = new com.vaadin.flow.component.formlayout.FormLayout();
             childFormLayout.setMaxWidth("1000px");
             childFormLayout.setResponsiveSteps(new com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep("250px", 2, com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition.TOP));
-            formCreator.bindAndAddToLayout(table, routeRenderer, child.children(), entity, tables, binder, childFormLayout);
+            context.formCreator().bindAndAddToLayout(table, routeRenderer, child.children(), entity, tables, binder, childFormLayout, context);
             Forms.add(childFormLayout);
         }
 
@@ -148,7 +129,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         ComponentEventListener<ClickEvent<Button>> onBack = event -> UI.getCurrent().getPage().getHistory().back();
 
         // Check write permissions for save/delete buttons
-        boolean hasWriteAccess = permissionChecker == null || permissionChecker.hasUserWriteAccessToRoute(routeRenderer);
+        boolean hasWriteAccess = context.permissionChecker() == null || context.permissionChecker().hasUserWriteAccessToRoute(routeRenderer);
 
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(
                 isWrapped,

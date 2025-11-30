@@ -222,7 +222,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
                                 JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
                                 JooqCollectionElement.of("route.issues.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
+                                        .factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(LABEL)
                                                         .manyToMany(new JooqManyToMany(
@@ -253,7 +253,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
                                 JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
                                 JooqCollectionElement.of("route.pull_requests.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
+                                        .factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(LABEL)
                                                         .manyToMany(new JooqManyToMany(

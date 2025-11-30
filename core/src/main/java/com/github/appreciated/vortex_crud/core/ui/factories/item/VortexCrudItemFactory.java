@@ -1,9 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.item;
 
 import com.github.appreciated.vortex_crud.core.config.model.ItemFactory;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.Component;
 
 /**
@@ -15,8 +13,6 @@ public interface VortexCrudItemFactory<FieldType> {
     Component renderItem(ItemFactory<FieldType> itemFactory,
                          Object entity,
                          Integer maxWidth,
-                         VortexCrudFileProviderRegistry fileProvider,
-                         VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                         ReflectionService<FieldType> reflectionService
+                         VortexCrudContext<?, FieldType, ?> context
     );
 }

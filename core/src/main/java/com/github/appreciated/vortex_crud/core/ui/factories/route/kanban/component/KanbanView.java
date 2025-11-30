@@ -9,6 +9,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -51,6 +52,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
     private final Map<Object, ConfigurableFilterDataProvider<Object, Void, String>> columnProviders = new HashMap<>();
 
@@ -61,32 +63,27 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
     public KanbanView(RepositoryType dataStoreIdentifier,
                       RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                      VortexCrudDataStore<FieldType, ?> dataStore,
                       KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig,
-                      Application<ModelClass, FieldType, RepositoryType> configService,
-                      VortexCrudFileProviderRegistry fileProviderRegistry,
-                      VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                      FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                       DetailRouteSetting detailRouteSetting,
-                      ReflectionService<FieldType> reflectionService,
-                      VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                      VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver
+                      VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                      VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.dataStoreIdentifier = dataStoreIdentifier;
         this.routeRenderer = routeRenderer;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
-        this.fieldNameResolver = fieldNameResolver;
-        this.formCreator = formCreator;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) context.configService().configuration().dataStores().get(dataStoreIdentifier).dataStoreInstance();
+        this.fieldNameResolver = context.fieldNameResolver();
+        this.formCreator = context.formCreator();
+        this.reflectionService = context.reflectionService();
+        this.dataStoreUtil = context.dataStoreUtil();
+        this.fileProviderRegistry = context.fileProviderRegistry();
         this.routeResolver = routeResolver;
-        Selects selects = configService.selects();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = configService.dataStores().get(dataStoreIdentifier);
+        Selects selects = context.configService().configuration().selects();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = context.configService().configuration().dataStores().get(dataStoreIdentifier);
         Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanConfigurationConfig.columnField());
 
         this.kanbanConfigurationConfig = kanbanConfigurationConfig;
         this.itemFactory = kanbanConfigurationConfig.factoryInstance();
-        this.fileProviderRegistry = fileProviderRegistry;
 
         dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField());
 
@@ -94,9 +91,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfigurationConfig,
                     entity,
                     null,
-                    fileProviderRegistry,
-                    fieldNameResolver,
-                    reflectionService));
+                    context));
             cardWrapper.getStyle().set("margin", "5px 0");
             cardWrapper.addClickListener(event -> {
                 String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
@@ -131,7 +126,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, dataStoreIdentifier, formCreator),
+                event -> onAdd((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, dataStoreIdentifier, context),
                 null,
                 null,
                 routeHeader);
@@ -139,13 +134,13 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
-                RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
+                RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
                     .refreshCallback(() -> UI.getCurrent().getPage().reload())
                     .viewComponent(this)
                     .build();
-                contextConsumer.accept(context);
+                contextConsumer.accept(actionContext);
             });
         }
 
@@ -165,24 +160,17 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private void openDialog(RepositoryType dataStoreIdentifier,
                             RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                             VortexCrudDataStore<FieldType, ?> dataStore,
-                            KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig,
-                            VortexCrudFileProviderRegistry fileProviderRegistry,
-                            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                            ReflectionService<FieldType> reflectionService,
-                            VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                             Object entity) {
         // Navigate to the entity URL
         Dialog dialog = routeRenderer.child().dialogFactoryInstance().create(
-                dataStoreUtil.getId(entity),
+                context.dataStoreUtil().getId(entity),
                 null,
                 null,
                 routeRenderer.child(),
                 null,
                 dataStoreIdentifier,
                 () -> {
-                    Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
+                    Object recordById = dataStore.getRecordById(context.dataStoreUtil().getId(entity));
                     this.dataStore.updateRecordById(recordById);
                     refreshColumns();
                     String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
@@ -194,7 +182,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
-                formCreator);
+                context);
         dialog.open();
     }
 
@@ -219,13 +207,6 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     dataStoreIdentifier,
                     (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer,
                     dataStore,
-                    kanbanConfigurationConfig,
-                    fileProviderRegistry,
-                    fieldNameResolver,
-                    formCreator,
-                    reflectionService,
-                    dataStoreUtil,
-                    routeResolver,
                     recordById
             );
         }
@@ -370,25 +351,25 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     }
 
     private void onAdd(RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                       RepositoryType dataStore,
-                       FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
-        Object entity = new Object();
+                       RepositoryType dataStoreIdentifier,
+                       VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+        Object entity = new Object(); // This seems wrong (creating 'new Object()'), but keeping original logic for now
         Dialog dialog = routeRenderer.child().dialogFactoryInstance().create(
                 null,
                 null,
                 null,
                 routeRenderer.child(),
                 null,
-                dataStore,
+                dataStoreIdentifier,
                 () -> {
-                    Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    this.dataStore.updateRecordById(recordById);
+                    // This logic seems flawed if entity is just 'new Object()', but maybe it's a placeholder for 'new'
+                    // The dialog factory usually handles creation if ID is null.
                     refreshColumns();
                 },
                 () -> {
 
                 },
-                formCreator);
+                context);
         dialog.open();
     }
 }

@@ -183,7 +183,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 JooqFieldElement.of(TASK.ESTIMATED_HOURS, "route.tasks.labels.estimated_hours").build(),
                                 JooqFieldElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build(),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
+                                        .factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) FormDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(TASK_COMMENT)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENT.TASK_ID))
@@ -200,7 +200,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                                 .build())
                                         .build(),
                                 JooqCollectionElement.of("route.tasks.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
+                                        .factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(LABEL)
                                                         .manyToMany(new JooqManyToMany(

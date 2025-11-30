@@ -73,7 +73,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>)ListCollectionFactory.class)
+                .factoryInstance(new ListCollectionFactory<>())
                 .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) FormDialogFactory.class)
                         .data(JpaCollectionConfiguration.builder(taskCommentRepository)
                                 .oneToMany(new JpaOneToMany("task"))
@@ -95,7 +95,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of("title"))
                 .build();
         InternalFormElement build1 = JpaCollectionElement.builder("route.tasks.labels.related-tasks")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
+                .factoryInstance(new ListCollectionFactory<>())
                 .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ConnectDialogFactory.class)
                         .data(build2)
                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")

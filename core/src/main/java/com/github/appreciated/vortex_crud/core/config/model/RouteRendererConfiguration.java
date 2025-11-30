@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import java.util.List;
 
 public interface RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
-    Class<? extends VortexCrudItemFactory<FieldType>> factory();
+    VortexCrudItemFactory<FieldType> factoryInstance();
     FieldType titleField();
     FieldType descriptionField();
     FieldType imageField();

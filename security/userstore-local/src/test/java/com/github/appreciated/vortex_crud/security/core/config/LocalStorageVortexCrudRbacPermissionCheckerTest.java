@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.security.core.service.LocalStorageUserContextService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,9 @@ class LocalStorageVortexCrudRbacPermissionCheckerTest {
 
     @Mock
     private VortexCrudConfigService<String, String, String> crudConfigService;
+
+    @Mock
+    private VortexCrudContext<String, String, String> context;
 
     private LocalStorageVortexCrudRbacPermissionChecker<String, String, String> permissionChecker;
 

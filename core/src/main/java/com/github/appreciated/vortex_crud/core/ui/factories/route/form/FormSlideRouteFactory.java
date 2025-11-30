@@ -14,12 +14,6 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 public class FormSlideRouteFactory<ModelClass, FieldType, RepositoryType>
         extends FormRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    public FormSlideRouteFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                 FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                                 VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                                 ReflectionService<FieldType> reflectionService,
-                                 VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
-    ) {
-        super(configService, formCreator, reflectionService, permissionChecker);
+    public FormSlideRouteFactory() {
     }
 }

@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.custom;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -17,7 +18,8 @@ public class CustomRouteFactory<ModelClass, FieldType, RepositoryType>
     public Component renderRoute(
             Integer currentPathIndex,
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-            @Nullable DetailRouteSetting detailRouteSetting
+            @Nullable DetailRouteSetting detailRouteSetting,
+            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         Div error = new Div();
         error.setText("CustomRoute misconfigured - check @Route annotation and path match");

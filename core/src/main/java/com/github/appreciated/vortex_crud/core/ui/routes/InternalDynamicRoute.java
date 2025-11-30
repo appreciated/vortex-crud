@@ -2,8 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -25,20 +24,16 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  */
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
-     * @param configService        The configuration service to access application settings.
-     * @param dataStoreUtil        Utility strategy for data store operations.
+     * @param context        The context to access application settings.
      */
-    public InternalDynamicRoute(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                VortexCrudDataStoreUtilStrategy dataStoreUtil
+    public InternalDynamicRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
-        this.configService = configService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
         setSizeFull();
     }
 
@@ -52,13 +47,13 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
         removeAll();
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                configService.configuration().routes(),
-                dataStoreUtil
+                context.configService().configuration().routes(),
+                context.dataStoreUtil()
         );
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
         Component component = currentRouteRenderer.factoryInstance()
-                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
+                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false), context);
         add(component);
     }
 }

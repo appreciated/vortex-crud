@@ -19,9 +19,12 @@ import java.util.List;
 public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private VortexCrudItemFactory<FieldType> factory = new CardFactory<>();
 
-    private VortexCrudItemFactory<FieldType> factoryInstance;
+    @Override
+    public VortexCrudItemFactory<FieldType> factoryInstance() {
+        return factory;
+    }
 
     private FieldType titleField;
 

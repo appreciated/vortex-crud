@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
@@ -21,12 +21,12 @@ import java.util.Map;
 
 public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
     public VortexCrudRoute(
-            VortexCrudDataStoreUtilStrategy dataStoreUtil
+            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
         setSizeFull();
     }
 
@@ -56,14 +56,14 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
                 Map.of(routePattern, configuration()),
-                dataStoreUtil
+                context.dataStoreUtil()
         );
 
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
 
         Component component = currentRouteRenderer.factoryInstance()
-                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
+                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false), context);
         add(component);
     }
 }

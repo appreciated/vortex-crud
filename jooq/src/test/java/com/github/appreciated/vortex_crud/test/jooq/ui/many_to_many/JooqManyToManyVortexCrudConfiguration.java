@@ -44,7 +44,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                         .titleField(MANY_TO_MANY_ITEM.NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
-                                JooqCollectionElement.of("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ListCollectionFactory.class)
+                                JooqCollectionElement.of("relations.labels.related").factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(JooqCollectionConfiguration.of(MANY_TO_MANY_ITEM)
                                                         .manyToMany(new JooqManyToMany(

@@ -40,7 +40,8 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("name", "relations.labels.name").build(),
-                                JpaCollectionElement.builder("relations.labels.related").factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ListCollectionFactory.class)
+                                JpaCollectionElement.builder("relations.labels.related")
+                                        .factoryInstance(new ListCollectionFactory<>())
                                         .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ConnectDialogFactory.class)
                                                 .data(build)
                                                 .emptyMessage("relations.related.empty")

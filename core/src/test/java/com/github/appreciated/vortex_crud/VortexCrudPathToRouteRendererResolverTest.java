@@ -44,15 +44,13 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         // Build child first
         ListRoute<String, String, String> childRouteRenderer = ListRoute.<String, String, String>builder()
-                .factory(TestContainerRouteFactory.class)
-                .factoryInstance(containerFactory)
+                .factory(containerFactory)
                 .title("childRouteWithContainer")
                 .build();
 
         // Build parent with child
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
-                .factory(TestContainerRouteFactory.class)
-                .factoryInstance(containerFactory)
+                .factory(containerFactory)
                 .title("routeWithContainer")
                 .child(childRouteRenderer)
                 .build();
@@ -80,15 +78,13 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         // Build child first
         ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         // Build parent with child
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .child(routeRendererWithoutContainer2)
                 .build();
@@ -116,21 +112,18 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         // Build from innermost to outermost
         ListRoute<String, String, String> secondChild = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         ListRoute<String, String, String> firstChild = ListRoute.<String, String, String>builder()
-                .factory(TestContainerRouteFactory.class)
-                .factoryInstance(containerFactory)
+                .factory(containerFactory)
                 .title("routeWithoutContainer1")
                 .child(secondChild)
                 .build();
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
-                .factory(TestContainerRouteFactory.class)
-                .factoryInstance(containerFactory)
+                .factory(containerFactory)
                 .title("routeWithContainer")
                 .child(firstChild)
                 .build();
@@ -157,8 +150,7 @@ class VortexCrudPathToRouteRendererResolverTest {
         Map<String, RouteRenderer<String, String, String>> routesConfig = new HashMap<>();
 
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .build();
 
@@ -185,21 +177,18 @@ class VortexCrudPathToRouteRendererResolverTest {
 
         // Build from innermost to outermost
         ListRoute<String, String, String> routeRendererWithoutContainer2 = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer2")
                 .build();
 
         ListRoute<String, String, String> routeRendererWithoutContainer1 = ListRoute.<String, String, String>builder()
-                .factory(TestNonContainerRouteFactory.class)
-                .factoryInstance(nonContainerFactory)
+                .factory(nonContainerFactory)
                 .title("routeWithoutContainer1")
                 .child(routeRendererWithoutContainer2)
                 .build();
 
         ListRoute<String, String, String> routeRendererWithContainer = ListRoute.<String, String, String>builder()
-                .factory(TestContainerRouteFactory.class)
-                .factoryInstance(containerFactory)
+                .factory(containerFactory)
                 .title("routeWithContainer")
                 .child(routeRendererWithoutContainer1)
                 .build();

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.component;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.CalendarConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
@@ -11,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
@@ -43,6 +43,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
     private final FullCalendar calendar;
@@ -51,24 +52,19 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     public CalendarView(RepositoryType dataStoreIdentifier,
                         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                        VortexCrudDataStore<FieldType, ?> dataStore,
                         CalendarConfiguration<ModelClass, FieldType, RepositoryType> calendarConfiguration,
-                        Application<ModelClass, FieldType, RepositoryType> configService,
-                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                        VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                         DetailRouteSetting detailRouteSetting,
-                        ReflectionService<FieldType> reflectionService,
-                        VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver
+                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                        VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.dataStoreIdentifier = dataStoreIdentifier;
         this.routeRenderer = routeRenderer;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
-        this.fieldNameResolver = fieldNameResolver;
-        this.formCreator = formCreator;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) context.configService().configuration().dataStores().get(dataStoreIdentifier).dataStoreInstance();
+        this.fieldNameResolver = context.fieldNameResolver();
+        this.formCreator = context.formCreator();
+        this.reflectionService = context.reflectionService();
+        this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
         this.calendarConfiguration = calendarConfiguration;
 
@@ -233,7 +229,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     Optional<UI> ui1 = getUI();
                     ui1.ifPresent(ui -> ui.navigate(nextRoute));
                 },
-                formCreator);
+                context);
         dialog.open();
     }
 
@@ -266,7 +262,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                 () -> {
 
                 },
-                formCreator);
+                context);
         dialog.open();
     }
 }

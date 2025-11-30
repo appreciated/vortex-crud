@@ -17,7 +17,12 @@ import java.util.List;
 @Getter
 public class FileFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+    private VortexCrudItemFactory<FieldType> factory;
+
+    @Override
+    public VortexCrudItemFactory<FieldType> factoryInstance() {
+        return factory;
+    }
 
     private FieldType titleField;
 

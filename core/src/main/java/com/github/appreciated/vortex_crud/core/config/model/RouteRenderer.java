@@ -18,8 +18,6 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     boolean isDefaultRoute();
 
-    Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory();
-
     VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factoryInstance();
 
     default com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactoryInstance() {

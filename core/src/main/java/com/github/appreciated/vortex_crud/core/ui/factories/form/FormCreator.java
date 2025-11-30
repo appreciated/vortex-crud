@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -36,7 +37,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                    Object entity,
                                    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
-                                   FormLayout form) {
+                                   FormLayout form,
+                                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
 
         // Iterate over the fields defined in the configuration
@@ -49,7 +51,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factoryInstance();
-                Component component = factory.createComponent(dataStoreKey, fieldName, field);
+                Component component = factory.createComponent(dataStoreKey, fieldName, field, context);
 
                 // Apply RBAC field-level permissions
                 if (permissionChecker != null) {
@@ -100,7 +102,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                         reflectionService.getId(entity),
                         routeRenderer,
                         element,
-                        this
+                        context
                 );
                 form.add(collection);
                 form.setColspan(collection, element.span());

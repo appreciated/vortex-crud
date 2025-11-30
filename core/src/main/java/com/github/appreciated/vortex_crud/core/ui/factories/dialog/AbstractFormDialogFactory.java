@@ -4,12 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.model.CollectionConfigurat
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -26,21 +22,7 @@ import jakarta.annotation.Nullable;
 public abstract class AbstractFormDialogFactory<ModelClass, FieldType, RepositoryType>
         implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    protected final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    protected final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    protected final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
-    protected final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     protected VortexCrudDataStore<FieldType, Object> dataStore;
-
-    public AbstractFormDialogFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                     VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                                     VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
-                                     VortexCrudDataStoreUtilStrategy dataStoreUtil) {
-        this.configService = configService;
-        this.fieldNameResolver = fieldNameResolver;
-        this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
-        this.dataStoreUtil = dataStoreUtil;
-    }
 
     @Override
     public Dialog create(@Nullable Object entityId,
@@ -51,9 +33,9 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
                          RepositoryType dataStoreKey,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener,
-                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
 
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) configService.configuration().dataStores().get(dataStoreKey).dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) context.configService().configuration().dataStores().get(dataStoreKey).dataStoreInstance();
         Dialog dialog = instantiateDialog();
 
         Object recordById = this.dataStore.getRecordById(entityId);
@@ -61,7 +43,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
             recordById = this.dataStore.newInstance();
         }
 
-        if (dataStoreUtil.isNew(recordById)) {
+        if (context.dataStoreUtil().isNew(recordById)) {
             dialog.setHeaderTitle(dialog.getTranslation("button.create.title"));
         } else {
             dialog.setHeaderTitle(dialog.getTranslation("button.edit.title"));
@@ -69,14 +51,14 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(recordById);
-        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener);
+        createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener, context);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = configService.configuration().dataStores().get(dataStoreKey);
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = context.configService().configuration().dataStores().get(dataStoreKey);
 
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-        formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById,
-                tables, binder, layout);
+        context.formCreator().bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById,
+                tables, binder, layout, context);
 
         dialog.add(layout);
         return dialog;
@@ -85,7 +67,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
     protected abstract Dialog instantiateDialog();
 
     private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, Object entity, Dialog dialog,
-                              OnStoreListener listener, OnCancelListener onCancelListener) {
+                              OnStoreListener listener, OnCancelListener onCancelListener, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
             dialog.close();
@@ -93,8 +75,8 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, fieldNameResolver);
-                if (dataStoreUtil.isNew(entity)) {
+                context.foreignKeyResolutionStrategy().resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, context.fieldNameResolver());
+                if (context.dataStoreUtil().isNew(entity)) {
                     if (dataStore.getModelClass().isInstance(entity)) {
                         dataStore.insertRecord(entity);
                     }

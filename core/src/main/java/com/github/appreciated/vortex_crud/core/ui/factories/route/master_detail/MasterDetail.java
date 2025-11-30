@@ -7,10 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -38,10 +35,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final VirtualList<Object> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudFileProviderRegistry fileProviderRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final ReflectionService<FieldType> reflectionService;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final MasterDetailRoute<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout detailContainer;
@@ -51,23 +45,16 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     @SuppressWarnings("unchecked")
     public MasterDetail(Integer currentPathIndex,
                         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                        VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                        VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                        ReflectionService<FieldType> reflectionService,
-                        VortexCrudDataStoreUtilStrategy dataStoreUtil
+                        VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.currentPathIndex = currentPathIndex;
-        this.configService = configService;
-        this.fileProviderRegistry = fileProviderRegistry;
-        this.fieldNameResolver = fieldNameResolver;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
+        this.dataStoreUtil = context.dataStoreUtil();
 
         routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = configService.configuration().dataStores().get(routeRenderer.dataStoreKey()).dataStoreInstance();
+        this.dataStore = context.configService().configuration().dataStores().get(routeRenderer.dataStoreKey()).dataStoreInstance();
         this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
         this.itemFactory = itemRendererConfiguration.factoryInstance();
         assert routeRenderer.child() != null;
@@ -89,13 +76,13 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
-                RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
+                RouteActionContext<FieldType, ModelClass> ctx = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
                     .refreshCallback(() -> UI.getCurrent().getPage().reload())
                     .viewComponent(this)
                     .build();
-                contextConsumer.accept(context);
+                contextConsumer.accept(ctx);
             });
         }
 
@@ -139,7 +126,8 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             Component component = child.factoryInstance().renderRoute(
                     creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,
-                    new DetailRouteSetting(true, false, creation)
+                    new DetailRouteSetting(true, false, creation),
+                    context
             );
             detailContainer.add(component);
         }
@@ -155,7 +143,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
             pathVariables = new VortexCrudPathToRouteResolver<>(
                     pathForEntity,
-                    configService.configuration().routes(),
+                    context.configService().configuration().routes(),
                     dataStoreUtil);
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, pathForEntity);
@@ -167,9 +155,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             Component component = itemFactory.renderItem(itemRendererConfiguration,
                     item,
                     null,
-                    fileProviderRegistry,
-                    fieldNameResolver,
-                    reflectionService);
+                    context);
             component.addClassNames("master");
             Div div = new Div(component);
             if (dataStoreUtil.equals(item, pathVariables.getLastSegment())) {

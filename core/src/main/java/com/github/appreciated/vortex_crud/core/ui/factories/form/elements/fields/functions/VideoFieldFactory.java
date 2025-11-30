@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.VideoField;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.VideoHasValue;
 import com.vaadin.flow.component.Component;
@@ -12,16 +12,10 @@ import java.util.List;
 
 public class VideoFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudFileProviderRegistry fileProviderRegistry;
-
-    public VideoFieldFactory(VortexCrudFileProviderRegistry fileProviderRegistry) {
-        this.fileProviderRegistry = fileProviderRegistry;
-    }
-
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         VideoField<ModelClass, FieldType, RepositoryType> videoField = (VideoField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new VideoHasValue(fileProviderRegistry.getFactory(videoField.configuration().resourceProvider()));
+        return new VideoHasValue(context.fileProviderRegistry().getFactory(videoField.configuration().resourceProvider()));
     }
 
     @Override

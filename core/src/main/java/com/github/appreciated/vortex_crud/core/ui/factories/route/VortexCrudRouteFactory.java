@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.Component;
 import jakarta.annotation.Nullable;
 
@@ -14,7 +15,8 @@ public interface VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
     Component renderRoute(
             Integer currentPathIndex,
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-            @Nullable DetailRouteSetting detailRouteSetting
+            @Nullable DetailRouteSetting detailRouteSetting,
+            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     );
 
     /**
