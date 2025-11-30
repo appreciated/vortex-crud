@@ -1,0 +1,748 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ---------------< com.github.appreciated.vortex-crud:jpa >---------------
+[INFO] Building vortex-crud-jpa 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ jpa ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO]
+[INFO] --- vaadin:25.0.0-beta6:prepare-frontend (default) @ jpa ---
+[INFO] Reflections took 2941 ms to scan 206 urls, producing 14132 keys and 61060 values
+[INFO] The globally installed Node.js version 22.21.1 is older than the required minimum version 24.0.0. Using Node.js from /home/jules/.vaadin.
+[INFO] Visited 120 classes. Took 157 ms.
+[INFO] Copying frontend resources from jar files ...
+[INFO] Visited 207 resources. Took 282 ms.
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ jpa ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 60 source files with javac [debug parameters release 21] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /app/jpa/src/main/java/com/github/appreciated/vortex_crud/jpa/service/JpaManyToManyPersistenceStrategy.java: Some input files use unchecked or unsafe operations.
+[INFO] /app/jpa/src/main/java/com/github/appreciated/vortex_crud/jpa/service/JpaManyToManyPersistenceStrategy.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- vaadin:25.0.0-beta6:build-frontend (default) @ jpa ---
+[INFO] Reflections took 2490 ms to scan 206 urls, producing 14132 keys and 61060 values
+[INFO] Visited 120 classes. Took 142 ms.
+[INFO] Checking if a production mode bundle build is needed
+[INFO] A production mode bundle build is not needed
+[INFO] Copying frontend resources from jar files ...
+[INFO] Visited 207 resources. Took 278 ms.
+[INFO] Build frontend completed in 1035 ms.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jpa ---
+[INFO] Copying 18 resources from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ jpa ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 93 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/additional_fields/JpaAdditionalFieldsTestApplication.java: Some input files use or override a deprecated API.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/additional_fields/JpaAdditionalFieldsTestApplication.java: Recompile with -Xlint:deprecation for details.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/form_slide/JpaFormSlideVortexCrudConfiguration.java: Some input files use unchecked or unsafe operations.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/form_slide/JpaFormSlideVortexCrudConfiguration.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- surefire:3.5.4:test (default-test) @ jpa ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+15:11:18.687 [ForkJoinPool-1-worker-1] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest]: JpaMissingFeaturesTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:11:18.842 [ForkJoinPool-1-worker-1] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTestApplication for test class com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+15:11:19.476 [ForkJoinPool-1-worker-1] INFO io.github.bonigarcia.wdm.WebDriverManager -- Using chromedriver 142.0.7444.175 (resolved driver for Chrome 142)
+15:11:19.497 [ForkJoinPool-1-worker-1] INFO io.github.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as /home/jules/.cache/selenium/chromedriver/linux64/142.0.7444.175/chromedriver
+                         _                                                         _
+ __   __   ___    _ __  | |_    ___  __  __               ___   _ __   _   _    __| |
+ \ \ / /  / _ \  | '__| | __|  / _ \ \ \/ /    _____     / __| | '__| | | | |  / _` |
+  \ V /  | (_) | | |    | |_  |  __/  >  <    |_____|   | (__  | |    | |_| | | (_| |
+   \_/    \___/  |_|     \__|  \___| /_/\_\              \___| |_|     \__,_|  \__,_|
+2025-11-30T15:11:20.025Z  INFO 11065 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : Starting JpaMissingFeaturesTest using Java 21.0.8 with PID 11065 (started by jules in /app/jpa)
+2025-11-30T15:11:20.027Z  INFO 11065 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : No active profile set, falling back to 1 default profile: "default"
+2025-11-30T15:11:21.008Z  INFO 11065 --- [Pool-1-worker-1] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-30T15:11:21.242Z  INFO 11065 --- [Pool-1-worker-1] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 221 ms. Found 1 JPA repository interface.
+2025-11-30T15:11:21.982Z  INFO 11065 --- [Pool-1-worker-1] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2025-11-30T15:11:22.003Z  INFO 11065 --- [Pool-1-worker-1] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-30T15:11:22.003Z  INFO 11065 --- [Pool-1-worker-1] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2025-11-30T15:11:22.093Z  INFO 11065 --- [Pool-1-worker-1] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2031 ms
+2025-11-30T15:11:22.562Z  INFO 11065 --- [Pool-1-worker-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-30T15:11:22.639Z  INFO 11065 --- [Pool-1-worker-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 7.1.8.Final
+2025-11-30T15:11:23.285Z  INFO 11065 --- [Pool-1-worker-1] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-30T15:11:23.333Z  INFO 11065 --- [Pool-1-worker-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-11-30T15:11:23.492Z  INFO 11065 --- [Pool-1-worker-1] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@6c521acd
+2025-11-30T15:11:23.494Z  INFO 11065 --- [Pool-1-worker-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-11-30T15:11:23.548Z  INFO 11065 --- [Pool-1-worker-1] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite::memory:]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.47.1
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-30T15:11:24.971Z  INFO 11065 --- [Pool-1-worker-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-30T15:11:25.020Z  INFO 11065 --- [Pool-1-worker-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-30T15:11:25.140Z  INFO 11065 --- [Pool-1-worker-1] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-30T15:11:25.640Z  WARN 11065 --- [Pool-1-worker-1] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-30T15:11:26.139Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereHandler com.vaadin.flow.server.communication.PushAtmosphereHandler mapped to context-path: /*
+2025-11-30T15:11:26.139Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed the following AtmosphereInterceptor mapped to AtmosphereHandler com.vaadin.flow.server.communication.PushAtmosphereHandler
+2025-11-30T15:11:26.178Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using org.atmosphere.util.VoidAnnotationProcessor for processing annotation
+2025-11-30T15:11:26.187Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.util.ForkJoinPool         : Using ForkJoinPool  java.util.concurrent.ForkJoinPool. Set the org.atmosphere.cpr.broadcaster.maxAsyncWriteThreads to -1 to fully use its power.
+2025-11-30T15:11:26.194Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed WebSocketProtocol org.atmosphere.websocket.protocol.SimpleHttpProtocol
+2025-11-30T15:11:26.199Z  INFO 11065 --- [Pool-1-worker-1] o.a.container.JSR356AsyncSupport         : JSR 356 Mapping path /VAADIN/push
+2025-11-30T15:11:26.214Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installing Default AtmosphereInterceptors
+2025-11-30T15:11:26.215Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.CorsInterceptor : CORS Interceptor Support
+2025-11-30T15:11:26.215Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.CacheHeadersInterceptor : Default Response's Headers Interceptor
+2025-11-30T15:11:26.216Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.PaddingAtmosphereInterceptor : Browser Padding Interceptor Support
+2025-11-30T15:11:26.217Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.AndroidAtmosphereInterceptor : Android Interceptor Support
+2025-11-30T15:11:26.218Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.HeartbeatInterceptor : Heartbeat Interceptor Support
+2025-11-30T15:11:26.218Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.SSEAtmosphereInterceptor : SSE Interceptor Support
+2025-11-30T15:11:26.219Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.JSONPAtmosphereInterceptor : JSONP Interceptor Support
+2025-11-30T15:11:26.220Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.JavaScriptProtocol : Atmosphere JavaScript Protocol
+2025-11-30T15:11:26.220Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor : org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor
+2025-11-30T15:11:26.220Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.OnDisconnectInterceptor : Browser disconnection detection
+2025-11-30T15:11:26.221Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.IdleResourceInterceptor : org.atmosphere.interceptor.IdleResourceInterceptor
+2025-11-30T15:11:26.221Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Set org.atmosphere.cpr.AtmosphereInterceptor.disableDefaults to disable them.
+2025-11-30T15:11:26.221Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor CORS Interceptor Support with priority FIRST_BEFORE_DEFAULT
+2025-11-30T15:11:26.222Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Default Response's Headers Interceptor with priority AFTER_DEFAULT
+2025-11-30T15:11:26.222Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Browser Padding Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:11:26.223Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Android Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:11:26.223Z  INFO 11065 --- [Pool-1-worker-1] o.a.interceptor.HeartbeatInterceptor     : HeartbeatInterceptor configured with padding value 'X', client frequency 0 seconds and server frequency 60 seconds
+2025-11-30T15:11:26.223Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Heartbeat Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:11:26.223Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor SSE Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:11:26.223Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor JSONP Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:11:26.224Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Atmosphere JavaScript Protocol with priority AFTER_DEFAULT
+2025-11-30T15:11:26.224Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor with priority AFTER_DEFAULT
+2025-11-30T15:11:26.224Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Browser disconnection detection with priority AFTER_DEFAULT
+2025-11-30T15:11:26.224Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor org.atmosphere.interceptor.IdleResourceInterceptor with priority BEFORE_DEFAULT
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using EndpointMapper class org.atmosphere.util.DefaultEndpointMapper
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using BroadcasterCache: org.atmosphere.cache.UUIDBroadcasterCache
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Default Broadcaster Class: org.atmosphere.cpr.DefaultBroadcaster
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Broadcaster Shared List Resources: false
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Broadcaster Polling Wait Time 100
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Shared ExecutorService supported: true
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Messaging ExecutorService Pool Size unavailable - Not instance of ThreadPoolExecutor
+2025-11-30T15:11:26.225Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Async I/O Thread Pool Size: 200
+2025-11-30T15:11:26.226Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using BroadcasterFactory: org.atmosphere.cpr.DefaultBroadcasterFactory
+2025-11-30T15:11:26.226Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using AtmosphereResurceFactory: org.atmosphere.cpr.DefaultAtmosphereResourceFactory
+2025-11-30T15:11:26.226Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using WebSocketProcessor: org.atmosphere.websocket.DefaultWebSocketProcessor
+2025-11-30T15:11:26.228Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Invoke AtmosphereInterceptor on WebSocket message true
+2025-11-30T15:11:26.229Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : HttpSession supported: true
+2025-11-30T15:11:26.229Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using org.atmosphere.inject.InjectableObjectFactory for dependency injection and object creation
+2025-11-30T15:11:26.229Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using async support: org.atmosphere.container.JSR356AsyncSupport running under container: Apache Tomcat/11.0.14 using jakarta.servlet/3.0 and jsr356/WebSocket API
+2025-11-30T15:11:26.229Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere Framework 3.0.5.slf4jvaadin1 started.
+2025-11-30T15:11:26.234Z  INFO 11065 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor  Track Message Size Interceptor using | with priority BEFORE_DEFAULT
+2025-11-30T15:11:26.287Z  INFO 11065 --- [Pool-1-worker-1] c.v.f.s.DefaultDeploymentConfiguration   : Vaadin is running in production mode.
+2025-11-30T15:11:26.439Z  INFO 11065 --- [Pool-1-worker-1] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 42857 (http) with context path '/'
+2025-11-30T15:11:26.446Z  INFO 11065 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : Started JpaMissingFeaturesTest in 6.894 seconds (process running for 9.028)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/jules/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2025-11-30T15:11:27.714Z  WARN 11065 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:11:27.844Z  INFO 11065 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-30T15:11:27.845Z  INFO 11065 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-30T15:11:27.848Z  INFO 11065 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-11-30T15:11:29.009Z  WARN 11065 --- [o-auto-1-exec-4] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:11:29.118Z  WARN 11065 --- [o-auto-1-exec-4] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:11:29.168Z  WARN 11065 --- [o-auto-1-exec-4] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:11:29.176Z  WARN 11065 --- [o-auto-1-exec-4] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+2025-11-30T15:11:29.819Z  WARN 11065 --- [o-auto-1-exec-4] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 1, SQLState: null
+2025-11-30T15:11:29.820Z  WARN 11065 --- [o-auto-1-exec-4] org.hibernate.orm.jdbc.error             : [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+2025-11-30T15:11:29.834Z ERROR 11065 --- [o-auto-1-exec-4] c.v.flow.server.DefaultErrorHandler      : Unexpected error: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+
+org.springframework.orm.jpa.JpaSystemException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:223) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:131) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.translateExceptionIfPossible(HibernateExceptionTranslator.java:105) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:199) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:556) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:346) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:157) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:166) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:222) ~[spring-aop-7.0.1.jar:7.0.1]
+	at jdk.proxy2/jdk.proxy2.$Proxy172.findAll(Unknown Source) ~[na:na]
+	at com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore.getRecordsFromTable(JpaRepositoryDataStore.java:139) ~[classes/:na]
+	at com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider.fetchFromDataStore(GenericFilterableDataProvider.java:33) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider.lambda$new$38be8656$1(GenericFilterableDataProvider.java:25) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.data.provider.CallbackDataProvider.fetchFromBackEnd(CallbackDataProvider.java:137) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.AbstractBackEndDataProvider.fetch(AbstractBackEndDataProvider.java:61) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataProviderWrapper.fetch(DataProviderWrapper.java:100) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.doFetchFromDataProvider(DataCommunicator.java:1089) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.fetchFromProvider(DataCommunicator.java:1064) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.activate(DataCommunicator.java:1525) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.collectKeysToFlush(DataCommunicator.java:1468) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.flush(DataCommunicator.java:1258) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.lambda$requestFlush$7258256f$1(DataCommunicator.java:1166) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.internal.StateTree.lambda$runExecutionsBeforeClientResponse$2(StateTree.java:398) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[na:na]
+	at com.vaadin.flow.internal.StateTree.runExecutionsBeforeClientResponse(StateTree.java:393) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlWriter.encodeChanges(UidlWriter.java:396) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlWriter.createUidl(UidlWriter.java:154) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.createUidl(UidlRequestHandler.java:184) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.writeUidl(UidlRequestHandler.java:173) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:136) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:63) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1839) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:402) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106) ~[vaadin-spring-25.0.0-beta6.jar:na]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:333) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:262) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:139) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:177) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:49) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.hibernate.exception.GenericJDBCException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:39) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:115) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:198) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:160) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.StandardStatementCreator.createStatement(StandardStatementCreator.java:47) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:271) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:200) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl.<init>(JdbcValuesResultSetImpl.java:72) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValues(JdbcSelectExecutorStandardImpl.java:372) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:332) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:135) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:100) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:64) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:138) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.lambda$new$1(ConcreteSqmSelectQueryPlan.java:146) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.withCacheableSqmInterpretation(ConcreteSqmSelectQueryPlan.java:455) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.performList(ConcreteSqmSelectQueryPlan.java:388) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.SqmQueryImpl.doList(SqmQueryImpl.java:386) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:154) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.Query.getResultList(Query.java:121) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.readPage(SimpleJpaRepository.java:745) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:479) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:471) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:456) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:278) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:169) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:545) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:290) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:708) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:171) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:146) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:370) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:118) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:135) ~[spring-tx-7.0.1.jar:7.0.1]
+	... 80 common frames omitted
+Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+	at org.sqlite.core.DB.newSQLException(DB.java:1179) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.newSQLException(DB.java:1190) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.throwex(DB.java:1150) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.prepare(DB.java:264) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.CorePreparedStatement.<init>(CorePreparedStatement.java:46) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3PreparedStatement.<init>(JDBC3PreparedStatement.java:32) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4PreparedStatement.<init>(JDBC4PreparedStatement.java:25) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4Connection.prepareStatement(JDBC4Connection.java:34) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Connection.prepareStatement(JDBC3Connection.java:225) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:342) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java) ~[HikariCP-7.0.2.jar:na]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$4.doPrepare(StatementPreparerImpl.java:158) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:187) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	... 120 common frames omitted
+
+2025-11-30T15:11:29.899Z  WARN 11065 --- [sphere-Shared-0] o.atmosphere.cpr.AtmosphereResponseImpl  : AtmosphereResponse for 5c090c43-62ae-4ffb-8417-bb9a35dd3ef6 has been closed
+2025-11-30T15:11:59.040Z  WARN 11065 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:11:59.763Z  WARN 11065 --- [o-auto-1-exec-2] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+2025-11-30T15:11:59.822Z  WARN 11065 --- [o-auto-1-exec-2] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 1, SQLState: null
+2025-11-30T15:11:59.823Z  WARN 11065 --- [o-auto-1-exec-2] org.hibernate.orm.jdbc.error             : [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+2025-11-30T15:11:59.844Z ERROR 11065 --- [o-auto-1-exec-2] c.v.flow.router.InternalServerError      : There was an exception while trying to navigate to 'single-form-test'
+
+org.springframework.orm.jpa.JpaSystemException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 where jmfe1_0.id=? limit ? offset ?]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:223) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:131) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.translateExceptionIfPossible(HibernateExceptionTranslator.java:105) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:199) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:556) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:346) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:157) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:166) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:222) ~[spring-aop-7.0.1.jar:7.0.1]
+	at jdk.proxy2/jdk.proxy2.$Proxy172.findAll(Unknown Source) ~[na:na]
+	at com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore.getRecordsForFieldAndValueAndMatcher(JpaRepositoryDataStore.java:188) ~[classes/:na]
+	at com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore.getRecordsFromTableWhereColumnEquals(JpaRepositoryDataStore.java:145) ~[classes/:na]
+	at com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore.getRecordsFromTableWhereColumnEquals(JpaRepositoryDataStore.java:22) ~[classes/:na]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.getForm(FormRouteFactory.java:107) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.renderRoute(FormRouteFactory.java:65) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.beforeEnter(InternalDynamicRoute.java:67) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:802) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:779) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEventAndPopulateChain(AbstractNavigationStateRenderer.java:696) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.createChainIfEmptyAndExecuteBeforeEnterNavigation(AbstractNavigationStateRenderer.java:662) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handleBeforeNavigationEvents(AbstractNavigationStateRenderer.java:370) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handle(AbstractNavigationStateRenderer.java:208) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.internal.JavaScriptNavigationStateRenderer.handle(JavaScriptNavigationStateRenderer.java:78) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.handleNavigation(UI.java:2041) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.renderViewForRoute(UI.java:2003) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.browserNavigate(UI.java:1888) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.fireEventForListener(ComponentEventBus.java:242) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.handleDomEvent(ComponentEventBus.java:491) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.lambda$addDomTrigger$dd1b7957$1(ComponentEventBus.java:301) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.lambda$fireEvent$2(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.fireEvent(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.EventRpcHandler.handleNode(EventRpcHandler.java:62) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.AbstractRpcInvocationHandler.handle(AbstractRpcInvocationHandler.java:80) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocationData(ServerRpcHandler.java:571) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.lambda$handleInvocations$6(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocations(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleRpc(ServerRpcHandler.java:376) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:135) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:63) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1839) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:402) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106) ~[vaadin-spring-25.0.0-beta6.jar:na]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:333) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:262) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:139) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:177) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:49) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.hibernate.exception.GenericJDBCException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 where jmfe1_0.id=? limit ? offset ?]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:39) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:115) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:198) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:160) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.StandardStatementCreator.createStatement(StandardStatementCreator.java:47) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:271) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:200) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl.<init>(JdbcValuesResultSetImpl.java:72) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValues(JdbcSelectExecutorStandardImpl.java:372) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:332) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:135) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:100) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:64) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:138) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.lambda$new$1(ConcreteSqmSelectQueryPlan.java:146) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.withCacheableSqmInterpretation(ConcreteSqmSelectQueryPlan.java:455) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.performList(ConcreteSqmSelectQueryPlan.java:388) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.SqmQueryImpl.doList(SqmQueryImpl.java:386) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:154) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.Query.getResultList(Query.java:121) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.readPage(SimpleJpaRepository.java:745) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:624) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:278) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:169) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:545) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:290) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:708) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:171) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:146) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:370) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:118) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:135) ~[spring-tx-7.0.1.jar:7.0.1]
+	... 82 common frames omitted
+Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+	at org.sqlite.core.DB.newSQLException(DB.java:1179) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.newSQLException(DB.java:1190) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.throwex(DB.java:1150) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.prepare(DB.java:264) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.CorePreparedStatement.<init>(CorePreparedStatement.java:46) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3PreparedStatement.<init>(JDBC3PreparedStatement.java:32) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4PreparedStatement.<init>(JDBC4PreparedStatement.java:25) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4Connection.prepareStatement(JDBC4Connection.java:34) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Connection.prepareStatement(JDBC3Connection.java:225) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:342) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java) ~[HikariCP-7.0.2.jar:na]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$4.doPrepare(StatementPreparerImpl.java:158) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:187) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	... 120 common frames omitted
+
+2025-11-30T15:12:30.310Z  WARN 11065 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:12:31.035Z  WARN 11065 --- [o-auto-1-exec-8] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:12:31.041Z  WARN 11065 --- [o-auto-1-exec-8] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:12:31.044Z  WARN 11065 --- [o-auto-1-exec-8] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:12:31.045Z  WARN 11065 --- [o-auto-1-exec-8] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+2025-11-30T15:12:31.054Z  WARN 11065 --- [o-auto-1-exec-8] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 1, SQLState: null
+2025-11-30T15:12:31.055Z  WARN 11065 --- [o-auto-1-exec-8] org.hibernate.orm.jdbc.error             : [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+2025-11-30T15:12:31.064Z ERROR 11065 --- [o-auto-1-exec-8] c.v.flow.server.DefaultErrorHandler      : Unexpected error: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+
+org.springframework.orm.jpa.JpaSystemException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:223) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.convertHibernateAccessException(HibernateExceptionTranslator.java:131) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.hibernate.HibernateExceptionTranslator.translateExceptionIfPossible(HibernateExceptionTranslator.java:105) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:199) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:556) ~[spring-orm-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:346) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:157) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:166) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:222) ~[spring-aop-7.0.1.jar:7.0.1]
+	at jdk.proxy2/jdk.proxy2.$Proxy172.findAll(Unknown Source) ~[na:na]
+	at com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore.getRecordsFromTable(JpaRepositoryDataStore.java:139) ~[classes/:na]
+	at com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider.fetchFromDataStore(GenericFilterableDataProvider.java:33) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider.lambda$new$38be8656$1(GenericFilterableDataProvider.java:25) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.data.provider.CallbackDataProvider.fetchFromBackEnd(CallbackDataProvider.java:137) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.AbstractBackEndDataProvider.fetch(AbstractBackEndDataProvider.java:61) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataProviderWrapper.fetch(DataProviderWrapper.java:100) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.doFetchFromDataProvider(DataCommunicator.java:1089) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.fetchFromProvider(DataCommunicator.java:1064) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.activate(DataCommunicator.java:1525) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.collectKeysToFlush(DataCommunicator.java:1468) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.flush(DataCommunicator.java:1258) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.data.provider.DataCommunicator.lambda$requestFlush$7258256f$1(DataCommunicator.java:1166) ~[flow-data-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.internal.StateTree.lambda$runExecutionsBeforeClientResponse$2(StateTree.java:398) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[na:na]
+	at com.vaadin.flow.internal.StateTree.runExecutionsBeforeClientResponse(StateTree.java:393) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlWriter.encodeChanges(UidlWriter.java:396) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlWriter.createUidl(UidlWriter.java:154) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.createUidl(UidlRequestHandler.java:184) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.writeUidl(UidlRequestHandler.java:173) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:136) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:63) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1839) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:402) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106) ~[vaadin-spring-25.0.0-beta6.jar:na]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:333) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:262) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:139) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:177) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:49) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+Caused by: org.hibernate.exception.GenericJDBCException: Could not prepare statement [[SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)] [select jmfe1_0.id,jmfe1_0.date_range,jmfe1_0.date_time_range,jmfe1_0.name,jmfe1_0.notes,jmfe1_0.pdf_doc from missing_features_test jmfe1_0 limit ? offset ?]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:39) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:115) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:198) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl.prepareQueryStatement(StatementPreparerImpl.java:160) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.StandardStatementCreator.createStatement(StandardStatementCreator.java:47) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.executeQuery(DeferredResultSetAccess.java:271) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.DeferredResultSetAccess.getResultSet(DeferredResultSetAccess.java:200) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.results.jdbc.internal.JdbcValuesResultSetImpl.<init>(JdbcValuesResultSetImpl.java:72) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValues(JdbcSelectExecutorStandardImpl.java:372) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.resolveJdbcValuesSource(JdbcSelectExecutorStandardImpl.java:332) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.doExecuteQuery(JdbcSelectExecutorStandardImpl.java:135) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.internal.JdbcSelectExecutorStandardImpl.executeQuery(JdbcSelectExecutorStandardImpl.java:100) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.executeQuery(JdbcSelectExecutor.java:64) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.sql.exec.spi.JdbcSelectExecutor.list(JdbcSelectExecutor.java:138) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.lambda$new$1(ConcreteSqmSelectQueryPlan.java:146) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.withCacheableSqmInterpretation(ConcreteSqmSelectQueryPlan.java:455) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.ConcreteSqmSelectQueryPlan.performList(ConcreteSqmSelectQueryPlan.java:388) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.sqm.internal.SqmQueryImpl.doList(SqmQueryImpl.java:386) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.spi.AbstractSelectionQuery.list(AbstractSelectionQuery.java:154) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.query.Query.getResultList(Query.java:121) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.readPage(SimpleJpaRepository.java:745) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:479) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:471) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.findAll(SimpleJpaRepository.java:456) ~[spring-data-jpa-4.0.0.jar:4.0.0]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:278) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:169) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:545) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:290) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:708) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:171) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:146) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69) ~[spring-data-commons-4.0.0.jar:4.0.0]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:370) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:118) ~[spring-tx-7.0.1.jar:7.0.1]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:179) ~[spring-aop-7.0.1.jar:7.0.1]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:135) ~[spring-tx-7.0.1.jar:7.0.1]
+	... 80 common frames omitted
+Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such column: jmfe1_0.date_range)
+	at org.sqlite.core.DB.newSQLException(DB.java:1179) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.newSQLException(DB.java:1190) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.throwex(DB.java:1150) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare_utf8(Native Method) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.DB.prepare(DB.java:264) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.core.CorePreparedStatement.<init>(CorePreparedStatement.java:46) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3PreparedStatement.<init>(JDBC3PreparedStatement.java:32) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4PreparedStatement.<init>(JDBC4PreparedStatement.java:25) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc4.JDBC4Connection.prepareStatement(JDBC4Connection.java:34) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at org.sqlite.jdbc3.JDBC3Connection.prepareStatement(JDBC3Connection.java:225) ~[sqlite-jdbc-3.47.1.0.jar:na]
+	at com.zaxxer.hikari.pool.ProxyConnection.prepareStatement(ProxyConnection.java:342) ~[HikariCP-7.0.2.jar:na]
+	at com.zaxxer.hikari.pool.HikariProxyConnection.prepareStatement(HikariProxyConnection.java) ~[HikariCP-7.0.2.jar:na]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$4.doPrepare(StatementPreparerImpl.java:158) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:187) ~[hibernate-core-7.1.8.Final.jar:7.1.8.Final]
+	... 120 common frames omitted
+
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 102.6 s <<< FAILURE! -- in com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+[ERROR] com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest.testEntityLoadingAndFields -- Time elapsed: 32.17 s <<< ERROR!
+org.openqa.selenium.TimeoutException:
+Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:35071}, goog:processID: 11157, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:35071/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 2e3f9d47a280782b829bfe4e0678d685
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForElement(BaseUITest.java:106)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForAnyElementContainingText(BaseUITest.java:110)
+	at com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractMissingFeaturesTest.testEntityLoadingAndFields(AbstractMissingFeaturesTest.java:35)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+
+[ERROR] com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest.testSingleFormRoute -- Time elapsed: 31.26 s <<< ERROR!
+org.openqa.selenium.TimeoutException:
+Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:45783}, goog:processID: 11366, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:45783/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 332169af7dd0367e3891d487c8686bb4
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForElement(BaseUITest.java:106)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForAnyElementContainingText(BaseUITest.java:110)
+	at com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractMissingFeaturesTest.testSingleFormRoute(AbstractMissingFeaturesTest.java:77)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+
+[ERROR] com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest.testGlobalRouteActionVisible -- Time elapsed: 31.16 s <<< ERROR!
+org.openqa.selenium.TimeoutException:
+Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Print')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:43981}, goog:processID: 11569, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:43981/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 54be5f101b10bd78be110236270fc107
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForElement(BaseUITest.java:106)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForAnyElementContainingText(BaseUITest.java:110)
+	at com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractMissingFeaturesTest.testGlobalRouteActionVisible(AbstractMissingFeaturesTest.java:29)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Errors:
+[ERROR]   JpaMissingFeaturesTest>AbstractMissingFeaturesTest.testEntityLoadingAndFields:35->BaseUITest.waitForAnyElementContainingText:110->BaseUITest.waitForElement:106 » Timeout Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:35071}, goog:processID: 11157, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:35071/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 2e3f9d47a280782b829bfe4e0678d685
+[ERROR]   JpaMissingFeaturesTest>AbstractMissingFeaturesTest.testGlobalRouteActionVisible:29->BaseUITest.waitForAnyElementContainingText:110->BaseUITest.waitForElement:106 » Timeout Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Print')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:43981}, goog:processID: 11569, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:43981/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 54be5f101b10bd78be110236270fc107
+[ERROR]   JpaMissingFeaturesTest>AbstractMissingFeaturesTest.testSingleFormRoute:77->BaseUITest.waitForAnyElementContainingText:110->BaseUITest.waitForElement:106 » Timeout Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:45783}, goog:processID: 11366, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:45783/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 332169af7dd0367e3891d487c8686bb4
+[INFO]
+[ERROR] Tests run: 3, Failures: 0, Errors: 3, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:59 min
+[INFO] Finished at: 2025-11-30T15:13:01Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project jpa:
+[ERROR]
+[ERROR] See /app/jpa/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

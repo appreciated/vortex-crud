@@ -56,6 +56,18 @@ public abstract class AbstractMissingFeaturesTest extends BaseUITest {
         // Should contain "## Header"
         // Note: MarkDownField cannot be tested in JPA due to missing annotation support, so we fell back to TextAreaField.
         waitForElementWithTagAndValue("vaadin-text-area", "## Header");
+
+        // Check DateRangeField and DateTimeRangeField
+        // These are CustomFields containing "Start" and "End" labels.
+        waitForAnyElementContainingText("Date Range");
+        waitForAnyElementContainingText("DateTime Range");
+
+        // Verify structure (we should see multiple "Start" and "End" labels)
+        List<WebElement> starts = driver.findElements(By.xpath("//label[contains(text(), 'Start')]"));
+        assertTrue(starts.size() >= 2, "Should find at least 2 'Start' labels for DateRange and DateTimeRange");
+
+        List<WebElement> ends = driver.findElements(By.xpath("//label[contains(text(), 'End')]"));
+        assertTrue(ends.size() >= 2, "Should find at least 2 'End' labels for DateRange and DateTimeRange");
     }
 
     @Test

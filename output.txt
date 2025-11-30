@@ -1,0 +1,433 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ---------------< com.github.appreciated.vortex-crud:jpa >---------------
+[INFO] Building vortex-crud-jpa 1.0.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.3.1:resources (default-resources) @ jpa ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO]
+[INFO] --- vaadin:25.0.0-beta6:prepare-frontend (default) @ jpa ---
+[INFO] Reflections took 2790 ms to scan 206 urls, producing 14132 keys and 61060 values
+[INFO] The globally installed Node.js version 22.21.1 is older than the required minimum version 24.0.0. Using Node.js from /home/jules/.vaadin.
+[INFO] Visited 120 classes. Took 155 ms.
+[INFO] Copying frontend resources from jar files ...
+[INFO] Visited 207 resources. Took 280 ms.
+[INFO]
+[INFO] --- compiler:3.14.1:compile (default-compile) @ jpa ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 60 source files with javac [debug parameters release 21] to target/classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /app/jpa/src/main/java/com/github/appreciated/vortex_crud/jpa/service/JpaManyToManyPersistenceStrategy.java: Some input files use unchecked or unsafe operations.
+[INFO] /app/jpa/src/main/java/com/github/appreciated/vortex_crud/jpa/service/JpaManyToManyPersistenceStrategy.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- vaadin:25.0.0-beta6:build-frontend (default) @ jpa ---
+[INFO] Reflections took 2619 ms to scan 206 urls, producing 14132 keys and 61060 values
+[INFO] Visited 120 classes. Took 140 ms.
+[INFO] Checking if a production mode bundle build is needed
+[INFO] A production mode bundle build is not needed
+[INFO] Copying frontend resources from jar files ...
+[INFO] Visited 207 resources. Took 283 ms.
+[INFO] Build frontend completed in 1057 ms.
+[INFO]
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ jpa ---
+[INFO] Copying 18 resources from src/test/resources to target/test-classes
+[INFO]
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ jpa ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 93 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] Annotation processing is enabled because one or more processors were found
+  on the class path. A future release of javac may disable annotation processing
+  unless at least one processor is specified by name (-processor), or a search
+  path is specified (--processor-path, --processor-module-path), or annotation
+  processing is enabled explicitly (-proc:only, -proc:full).
+  Use -Xlint:-options to suppress this message.
+  Use -proc:none to disable annotation processing.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/additional_fields/JpaAdditionalFieldsTestApplication.java: Some input files use or override a deprecated API.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/additional_fields/JpaAdditionalFieldsTestApplication.java: Recompile with -Xlint:deprecation for details.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/form_slide/JpaFormSlideVortexCrudConfiguration.java: Some input files use unchecked or unsafe operations.
+[INFO] /app/jpa/src/test/java/com/github/appreciated/vortex_crud/test/jpa/ui/form_slide/JpaFormSlideVortexCrudConfiguration.java: Recompile with -Xlint:unchecked for details.
+[INFO]
+[INFO] --- surefire:3.5.4:test (default-test) @ jpa ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+15:20:54.477 [ForkJoinPool-1-worker-1] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest]: JpaMissingFeaturesTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:20:54.620 [ForkJoinPool-1-worker-1] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTestApplication for test class com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+15:20:55.216 [ForkJoinPool-1-worker-1] INFO io.github.bonigarcia.wdm.WebDriverManager -- Using chromedriver 142.0.7444.175 (resolved driver for Chrome 142)
+15:20:55.237 [ForkJoinPool-1-worker-1] INFO io.github.bonigarcia.wdm.WebDriverManager -- Exporting webdriver.chrome.driver as /home/jules/.cache/selenium/chromedriver/linux64/142.0.7444.175/chromedriver
+                         _                                                         _
+ __   __   ___    _ __  | |_    ___  __  __               ___   _ __   _   _    __| |
+ \ \ / /  / _ \  | '__| | __|  / _ \ \ \/ /    _____     / __| | '__| | | | |  / _` |
+  \ V /  | (_) | | |    | |_  |  __/  >  <    |_____|   | (__  | |    | |_| | | (_| |
+   \_/    \___/  |_|     \__|  \___| /_/\_\              \___| |_|     \__,_|  \__,_|
+2025-11-30T15:20:55.737Z  INFO 15710 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : Starting JpaMissingFeaturesTest using Java 21.0.8 with PID 15710 (started by jules in /app/jpa)
+2025-11-30T15:20:55.739Z  INFO 15710 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : No active profile set, falling back to 1 default profile: "default"
+2025-11-30T15:20:56.684Z  INFO 15710 --- [Pool-1-worker-1] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-30T15:20:56.910Z  INFO 15710 --- [Pool-1-worker-1] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 214 ms. Found 1 JPA repository interface.
+2025-11-30T15:20:57.611Z  INFO 15710 --- [Pool-1-worker-1] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2025-11-30T15:20:57.630Z  INFO 15710 --- [Pool-1-worker-1] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-11-30T15:20:57.630Z  INFO 15710 --- [Pool-1-worker-1] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2025-11-30T15:20:57.719Z  INFO 15710 --- [Pool-1-worker-1] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1953 ms
+2025-11-30T15:20:58.185Z  INFO 15710 --- [Pool-1-worker-1] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-30T15:20:58.258Z  INFO 15710 --- [Pool-1-worker-1] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 7.1.8.Final
+2025-11-30T15:20:58.897Z  INFO 15710 --- [Pool-1-worker-1] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-30T15:20:58.947Z  INFO 15710 --- [Pool-1-worker-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-11-30T15:20:59.102Z  INFO 15710 --- [Pool-1-worker-1] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@6c0e8e0b
+2025-11-30T15:20:59.104Z  INFO 15710 --- [Pool-1-worker-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-11-30T15:20:59.155Z  INFO 15710 --- [Pool-1-worker-1] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite::memory:]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.47.1
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-30T15:21:00.524Z  INFO 15710 --- [Pool-1-worker-1] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-30T15:21:00.568Z  INFO 15710 --- [Pool-1-worker-1] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-30T15:21:00.687Z  INFO 15710 --- [Pool-1-worker-1] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-30T15:21:01.200Z  WARN 15710 --- [Pool-1-worker-1] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-30T15:21:01.688Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereHandler com.vaadin.flow.server.communication.PushAtmosphereHandler mapped to context-path: /*
+2025-11-30T15:21:01.688Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed the following AtmosphereInterceptor mapped to AtmosphereHandler com.vaadin.flow.server.communication.PushAtmosphereHandler
+2025-11-30T15:21:01.725Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using org.atmosphere.util.VoidAnnotationProcessor for processing annotation
+2025-11-30T15:21:01.734Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.util.ForkJoinPool         : Using ForkJoinPool  java.util.concurrent.ForkJoinPool. Set the org.atmosphere.cpr.broadcaster.maxAsyncWriteThreads to -1 to fully use its power.
+2025-11-30T15:21:01.740Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed WebSocketProtocol org.atmosphere.websocket.protocol.SimpleHttpProtocol
+2025-11-30T15:21:01.746Z  INFO 15710 --- [Pool-1-worker-1] o.a.container.JSR356AsyncSupport         : JSR 356 Mapping path /VAADIN/push
+2025-11-30T15:21:01.759Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installing Default AtmosphereInterceptors
+2025-11-30T15:21:01.760Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.CorsInterceptor : CORS Interceptor Support
+2025-11-30T15:21:01.761Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.CacheHeadersInterceptor : Default Response's Headers Interceptor
+2025-11-30T15:21:01.761Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.PaddingAtmosphereInterceptor : Browser Padding Interceptor Support
+2025-11-30T15:21:01.762Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.AndroidAtmosphereInterceptor : Android Interceptor Support
+2025-11-30T15:21:01.763Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.HeartbeatInterceptor : Heartbeat Interceptor Support
+2025-11-30T15:21:01.763Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.SSEAtmosphereInterceptor : SSE Interceptor Support
+2025-11-30T15:21:01.764Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.JSONPAtmosphereInterceptor : JSONP Interceptor Support
+2025-11-30T15:21:01.764Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.JavaScriptProtocol : Atmosphere JavaScript Protocol
+2025-11-30T15:21:01.765Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor : org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor
+2025-11-30T15:21:01.765Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.OnDisconnectInterceptor : Browser disconnection detection
+2025-11-30T15:21:01.766Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : 	org.atmosphere.interceptor.IdleResourceInterceptor : org.atmosphere.interceptor.IdleResourceInterceptor
+2025-11-30T15:21:01.766Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Set org.atmosphere.cpr.AtmosphereInterceptor.disableDefaults to disable them.
+2025-11-30T15:21:01.766Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor CORS Interceptor Support with priority FIRST_BEFORE_DEFAULT
+2025-11-30T15:21:01.767Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Default Response's Headers Interceptor with priority AFTER_DEFAULT
+2025-11-30T15:21:01.767Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Browser Padding Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:21:01.767Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Android Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] o.a.interceptor.HeartbeatInterceptor     : HeartbeatInterceptor configured with padding value 'X', client frequency 0 seconds and server frequency 60 seconds
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Heartbeat Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor SSE Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor JSONP Interceptor Support with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Atmosphere JavaScript Protocol with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor org.atmosphere.interceptor.WebSocketMessageSuspendInterceptor with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor Browser disconnection detection with priority AFTER_DEFAULT
+2025-11-30T15:21:01.768Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor org.atmosphere.interceptor.IdleResourceInterceptor with priority BEFORE_DEFAULT
+2025-11-30T15:21:01.769Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using EndpointMapper class org.atmosphere.util.DefaultEndpointMapper
+2025-11-30T15:21:01.769Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using BroadcasterCache: org.atmosphere.cache.UUIDBroadcasterCache
+2025-11-30T15:21:01.769Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Default Broadcaster Class: org.atmosphere.cpr.DefaultBroadcaster
+2025-11-30T15:21:01.769Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Broadcaster Shared List Resources: false
+2025-11-30T15:21:01.769Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Broadcaster Polling Wait Time 100
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Shared ExecutorService supported: true
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Messaging ExecutorService Pool Size unavailable - Not instance of ThreadPoolExecutor
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Async I/O Thread Pool Size: 200
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using BroadcasterFactory: org.atmosphere.cpr.DefaultBroadcasterFactory
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using AtmosphereResurceFactory: org.atmosphere.cpr.DefaultAtmosphereResourceFactory
+2025-11-30T15:21:01.770Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Using WebSocketProcessor: org.atmosphere.websocket.DefaultWebSocketProcessor
+2025-11-30T15:21:01.773Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Invoke AtmosphereInterceptor on WebSocket message true
+2025-11-30T15:21:01.773Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : HttpSession supported: true
+2025-11-30T15:21:01.773Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using org.atmosphere.inject.InjectableObjectFactory for dependency injection and object creation
+2025-11-30T15:21:01.773Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere is using async support: org.atmosphere.container.JSR356AsyncSupport running under container: Apache Tomcat/11.0.14 using jakarta.servlet/3.0 and jsr356/WebSocket API
+2025-11-30T15:21:01.773Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Atmosphere Framework 3.0.5.slf4jvaadin1 started.
+2025-11-30T15:21:01.778Z  INFO 15710 --- [Pool-1-worker-1] org.atmosphere.cpr.AtmosphereFramework   : Installed AtmosphereInterceptor  Track Message Size Interceptor using | with priority BEFORE_DEFAULT
+2025-11-30T15:21:01.823Z  INFO 15710 --- [Pool-1-worker-1] c.v.f.s.DefaultDeploymentConfiguration   : Vaadin is running in production mode.
+2025-11-30T15:21:01.967Z  INFO 15710 --- [Pool-1-worker-1] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 42939 (http) with context path '/'
+2025-11-30T15:21:01.975Z  INFO 15710 --- [Pool-1-worker-1] c.g.a.v.t.j.u.m.JpaMissingFeaturesTest   : Started JpaMissingFeaturesTest in 6.681 seconds (process running for 8.747)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (/home/jules/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.8/byte-buddy-agent-1.17.8.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2025-11-30T15:21:03.220Z  WARN 15710 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:21:03.348Z  INFO 15710 --- [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-11-30T15:21:03.348Z  INFO 15710 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-11-30T15:21:03.350Z  INFO 15710 --- [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2025-11-30T15:21:04.483Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:21:04.594Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:21:04.617Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:21:04.619Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+2025-11-30T15:21:05.607Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.title}!' for locale 'en'
+2025-11-30T15:21:05.653Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:21:05.672Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tag 1}!' for locale 'en'
+2025-11-30T15:21:05.673Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tag 2}!' for locale 'en'
+2025-11-30T15:21:05.674Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tags}!' for locale 'en'
+2025-11-30T15:21:05.698Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{PDF}!' for locale 'en'
+2025-11-30T15:21:05.701Z  WARN 15710 --- [o-auto-1-exec-6] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Notes}!' for locale 'en'
+2025-11-30T15:21:05.713Z ERROR 15710 --- [o-auto-1-exec-6] c.v.flow.router.InternalServerError      : There was an exception while trying to navigate to 'missing-features-test/1'
+
+java.lang.IllegalStateException: com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry cannot provide factory for key 'class com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateRangeFieldFactory'
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry.lambda$getFactory$0(DefaultFieldFactoryRegistry.java:63) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403) ~[na:na]
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry.getFactory(DefaultFieldFactoryRegistry.java:63) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator.bindAndAddToLayout(FormCreator.java:61) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.getForm(FormRouteFactory.java:122) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.renderRoute(FormRouteFactory.java:65) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.beforeEnter(InternalDynamicRoute.java:67) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:802) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:779) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEventAndPopulateChain(AbstractNavigationStateRenderer.java:696) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.createChainIfEmptyAndExecuteBeforeEnterNavigation(AbstractNavigationStateRenderer.java:662) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handleBeforeNavigationEvents(AbstractNavigationStateRenderer.java:370) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handle(AbstractNavigationStateRenderer.java:208) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.internal.JavaScriptNavigationStateRenderer.handle(JavaScriptNavigationStateRenderer.java:78) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.handleNavigation(UI.java:2041) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.navigate(UI.java:1245) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.navigate(UI.java:1200) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.list.GenericEntityGrid.lambda$onItemClick$0(GenericEntityGrid.java:66) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at java.base/java.util.Optional.ifPresent(Optional.java:178) ~[na:na]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.list.GenericEntityGrid.onItemClick(GenericEntityGrid.java:66) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.list.GenericEntityGrid.lambda$new$a5a21c34$1(GenericEntityGrid.java:56) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.component.ComponentEventBus.fireEventForListener(ComponentEventBus.java:242) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.handleDomEvent(ComponentEventBus.java:491) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.lambda$addDomTrigger$dd1b7957$1(ComponentEventBus.java:301) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.lambda$fireEvent$2(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.fireEvent(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.EventRpcHandler.handleNode(EventRpcHandler.java:62) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.AbstractRpcInvocationHandler.handle(AbstractRpcInvocationHandler.java:80) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocationData(ServerRpcHandler.java:571) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.lambda$handleInvocations$6(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocations(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleRpc(ServerRpcHandler.java:376) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:135) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:63) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1839) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:402) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106) ~[vaadin-spring-25.0.0-beta6.jar:na]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:333) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:262) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:139) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:177) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:49) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2025-11-30T15:21:37.422Z  WARN 15710 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:21:38.306Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+2025-11-30T15:21:38.358Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:21:38.360Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tag 1}!' for locale 'en'
+2025-11-30T15:21:38.361Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tag 2}!' for locale 'en'
+2025-11-30T15:21:38.361Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Tags}!' for locale 'en'
+2025-11-30T15:21:38.365Z  WARN 15710 --- [o-auto-1-exec-3] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{PDF}!' for locale 'en'
+2025-11-30T15:21:38.367Z ERROR 15710 --- [o-auto-1-exec-3] c.v.flow.router.InternalServerError      : There was an exception while trying to navigate to 'single-form-test'
+
+java.lang.IllegalStateException: com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry cannot provide factory for key 'class com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.DateRangeFieldFactory'
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry.lambda$getFactory$0(DefaultFieldFactoryRegistry.java:63) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403) ~[na:na]
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry.getFactory(DefaultFieldFactoryRegistry.java:63) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator.bindAndAddToLayout(FormCreator.java:61) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.getForm(FormRouteFactory.java:122) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory.renderRoute(FormRouteFactory.java:65) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.beforeEnter(InternalDynamicRoute.java:67) ~[core-1.0-SNAPSHOT.jar:1.0-SNAPSHOT]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:802) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEvent(AbstractNavigationStateRenderer.java:779) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.sendBeforeEnterEventAndPopulateChain(AbstractNavigationStateRenderer.java:696) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.createChainIfEmptyAndExecuteBeforeEnterNavigation(AbstractNavigationStateRenderer.java:662) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handleBeforeNavigationEvents(AbstractNavigationStateRenderer.java:370) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.router.internal.AbstractNavigationStateRenderer.handle(AbstractNavigationStateRenderer.java:208) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.internal.JavaScriptNavigationStateRenderer.handle(JavaScriptNavigationStateRenderer.java:78) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.handleNavigation(UI.java:2041) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.renderViewForRoute(UI.java:2003) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.UI.browserNavigate(UI.java:1888) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.fireEventForListener(ComponentEventBus.java:242) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.handleDomEvent(ComponentEventBus.java:491) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.component.ComponentEventBus.lambda$addDomTrigger$dd1b7957$1(ComponentEventBus.java:301) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.lambda$fireEvent$2(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.internal.nodefeature.ElementListenerMap.fireEvent(ElementListenerMap.java:501) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.EventRpcHandler.handleNode(EventRpcHandler.java:62) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.rpc.AbstractRpcInvocationHandler.handle(AbstractRpcInvocationHandler.java:80) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocationData(ServerRpcHandler.java:571) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.lambda$handleInvocations$6(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleInvocations(ServerRpcHandler.java:552) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.ServerRpcHandler.handleRpc(ServerRpcHandler.java:376) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.communication.UidlRequestHandler.synchronizedHandleRequest(UidlRequestHandler.java:135) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.SynchronizedRequestHandler.handleRequest(SynchronizedRequestHandler.java:63) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinService.handleRequest(VaadinService.java:1839) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.server.VaadinServlet.service(VaadinServlet.java:402) ~[flow-server-25.0.0-beta6.jar:25.0.0-beta6]
+	at com.vaadin.flow.spring.SpringServlet.service(SpringServlet.java:106) ~[vaadin-spring-25.0.0-beta6.jar:na]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.invoke(ApplicationDispatcher.java:513) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.processRequest(ApplicationDispatcher.java:333) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationDispatcher.forward(ApplicationDispatcher.java:262) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.servlet.mvc.ServletForwardingController.handleRequestInternal(ServletForwardingController.java:139) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.AbstractController.handleRequest(AbstractController.java:177) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle(SimpleControllerHandlerAdapter.java:49) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:963) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:866) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1003) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:903) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:649) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:874) ~[spring-webmvc-7.0.1.jar:7.0.1]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:710) ~[tomcat-embed-core-11.0.14.jar:6.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:128) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53) ~[tomcat-embed-websocket-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:199) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-7.0.1.jar:7.0.1]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:107) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:77) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:903) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1778) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:946) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:480) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:57) ~[tomcat-embed-core-11.0.14.jar:11.0.14]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2025-11-30T15:22:08.871Z  WARN 15710 --- [Pool-1-worker-1] o.o.selenium.devtools.CdpVersionFinder   : Unable to find an exact match for CDP version 142, returning the closest version; found: 141; Please update to a Selenium version that supports CDP version 142
+2025-11-30T15:22:09.562Z  WARN 15710 --- [o-auto-1-exec-7] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:22:09.567Z  WARN 15710 --- [o-auto-1-exec-7] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Name}!' for locale 'en'
+2025-11-30T15:22:09.570Z  WARN 15710 --- [o-auto-1-exec-7] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{route.missing.list}!' for locale 'en'
+2025-11-30T15:22:09.571Z  WARN 15710 --- [o-auto-1-exec-7] c.g.a.v.core.service.TranslationService  : Missing i18n key '!{Single Form}!' for locale 'en'
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 75.57 s <<< FAILURE! -- in com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest
+[ERROR] com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest.testEntityLoadingAndFields -- Time elapsed: 34.83 s <<< ERROR!
+org.openqa.selenium.TimeoutException:
+Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Date Range')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:42331}, goog:processID: 15803, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:42331/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 443ddbfe522559e1ed4dbc4cd2ae438c
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForElement(BaseUITest.java:106)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForAnyElementContainingText(BaseUITest.java:110)
+	at com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractMissingFeaturesTest.testEntityLoadingAndFields(AbstractMissingFeaturesTest.java:62)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+
+[ERROR] com.github.appreciated.vortex_crud.test.jpa.ui.missing_features.JpaMissingFeaturesTest.testSingleFormRoute -- Time elapsed: 31.58 s <<< ERROR!
+org.openqa.selenium.TimeoutException:
+Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:42571}, goog:processID: 16011, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:42571/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: df3057ecfb438a95fd0ec5e4ed259c45
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForElement(BaseUITest.java:106)
+	at com.github.appreciated.vortex_crud.ui_test_base.BaseUITest.waitForAnyElementContainingText(BaseUITest.java:110)
+	at com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractMissingFeaturesTest.testSingleFormRoute(AbstractMissingFeaturesTest.java:77)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Errors:
+[ERROR]   JpaMissingFeaturesTest>AbstractMissingFeaturesTest.testEntityLoadingAndFields:62->BaseUITest.waitForAnyElementContainingText:110->BaseUITest.waitForElement:106 » Timeout Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Date Range')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:42331}, goog:processID: 15803, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:42331/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 443ddbfe522559e1ed4dbc4cd2ae438c
+[ERROR]   JpaMissingFeaturesTest>AbstractMissingFeaturesTest.testSingleFormRoute:77->BaseUITest.waitForAnyElementContainingText:110->BaseUITest.waitForElement:106 » Timeout Expected condition failed: waiting for visibility of element located by By.xpath: //*[contains(text(), 'Test Entity 1')] (tried for 30 second(s) with 500 milliseconds interval)
+Build info: version: '4.37.0', revision: '3c1da1e342'
+System info: os.name: 'Linux', os.arch: 'amd64', os.version: '6.8.0', java.version: '21.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 142.0.7444.175, chrome: {chromedriverVersion: 142.0.7444.175 (302067f14a4..., userDataDir: /tmp/ui-test-chrome-user-da...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:42571}, goog:processID: 16011, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: linux, proxy: Proxy(), se:cdp: ws://localhost:42571/devtoo..., se:cdpVersion: 142.0.7444.175, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: df3057ecfb438a95fd0ec5e4ed259c45
+[INFO]
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:32 min
+[INFO] Finished at: 2025-11-30T15:22:10Z
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test (default-test) on project jpa:
+[ERROR]
+[ERROR] See /app/jpa/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
