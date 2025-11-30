@@ -91,5 +91,3 @@ webpack.generated.js
 /examples/jooq-project-management-demo/src/main/bundles/README.md
 
 *.db
-output.txt
-test_output.txt
