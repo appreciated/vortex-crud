@@ -243,3 +243,11 @@ CREATE TABLE single_form_route_test_tags
     tag_value   VARCHAR(255)
 );
 
+-- changeset Create calendar_events table for calendar tests:26
+CREATE TABLE calendar_events
+(
+    id          INTEGER PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    start_date  TIMESTAMP,
+    end_date    TIMESTAMP
+);
