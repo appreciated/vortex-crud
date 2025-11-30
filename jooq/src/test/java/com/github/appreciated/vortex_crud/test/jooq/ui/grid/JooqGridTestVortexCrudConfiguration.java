@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.CARD_IMAGES;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.GRID_IMAGES;
 
 @Service
 public class JooqGridTestVortexCrudConfiguration
@@ -33,13 +33,13 @@ public class JooqGridTestVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(CARD_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
-        var config = JooqDataStoreConfig.of(CARD_IMAGES)
+        JooqDataStore store = new JooqDataStore(GRID_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(GRID_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                CARD_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                                CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                                CARD_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                GRID_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                GRID_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                GRID_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                                 .resourceProvider(LocalImageResourceProvider.class)
                                                 .build())
@@ -51,10 +51,10 @@ public class JooqGridTestVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(CARD_IMAGES.TITLE)
+                        .titleField(GRID_IMAGES.TITLE)
                         .children(List.of(
-                                JooqFieldElement.of(CARD_IMAGES.TITLE, "route.images.labels.title").build(),
-                                JooqFieldElement.of(CARD_IMAGES.URL, "route.images.labels.image").build()
+                                JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
+                                JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
                         ))
                         .build())
                 .build();
@@ -64,8 +64,8 @@ public class JooqGridTestVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.images-cards")
                 .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(CARD_IMAGES.TITLE)
-                        .imageField(CARD_IMAGES.URL)
+                        .titleField(GRID_IMAGES.TITLE)
+                        .imageField(GRID_IMAGES.URL)
                         .resourceProvider(LocalImageResourceProvider.class)
                         .build())
                 .child(imageForm)

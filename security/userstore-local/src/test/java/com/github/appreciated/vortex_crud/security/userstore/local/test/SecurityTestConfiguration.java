@@ -60,7 +60,11 @@ public class SecurityTestConfiguration {
         );
     }
 
-    @Service
+    @Bean
+    public ManyToManyPersistenceStrategy mockManyToManyPersistenceStrategy() {
+        return new MockManyToManyPersistenceStrategy();
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static class MockManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy {
         @Override
@@ -82,7 +86,11 @@ public class SecurityTestConfiguration {
         }
     }
 
-    @Service
+    @Bean
+    public VortexCrudForeignKeyResolutionStrategy mockForeignKeyResolutionStrategy() {
+        return new MockForeignKeyResolutionStrategy();
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static class MockForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy {
         @Override
@@ -91,7 +99,11 @@ public class SecurityTestConfiguration {
         }
     }
 
-    @Service
+    @Bean
+    public VortexCrudDataStoreFieldNameResolver mockFieldNameResolver() {
+        return new MockFieldNameResolver();
+    }
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static class MockFieldNameResolver implements VortexCrudDataStoreFieldNameResolver {
         @Override
