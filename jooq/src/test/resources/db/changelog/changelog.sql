@@ -195,3 +195,51 @@ CREATE TABLE multi_form_test
     age          INTEGER
 );
 
+-- changeset Create field_types_test table for testing various field types:20
+CREATE TABLE field_types_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create field_types_test_tags table for multi-select field:21
+CREATE TABLE field_types_test_tags
+(
+    entity_id   INTEGER NOT NULL,
+    tag_value   VARCHAR(255)
+);
+
+-- changeset Create global_route_action_test table for testing global route actions:22
+CREATE TABLE global_route_action_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create global_route_action_test_tags table for multi-select field:23
+CREATE TABLE global_route_action_test_tags
+(
+    entity_id   INTEGER NOT NULL,
+    tag_value   VARCHAR(255)
+);
+
+-- changeset Create single_form_route_test table for testing single form routes:24
+CREATE TABLE single_form_route_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create single_form_route_test_tags table for multi-select field:25
+CREATE TABLE single_form_route_test_tags
+(
+    entity_id   INTEGER NOT NULL,
+    tag_value   VARCHAR(255)
+);
+
