@@ -4,14 +4,15 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.github.appreciated.vortex_crud.security.userstore.local.util.InMemoryDataStore;
-import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,12 +20,6 @@ import java.util.Map;
 
 @Configuration
 public class SecurityTestConfiguration {
-
-    private final TestRegistry testRegistry;
-
-    public SecurityTestConfiguration(TestRegistry testRegistry) {
-        this.testRegistry = testRegistry;
-    }
 
     @Bean
     public InMemoryDataStore<TestUser> userDataStore() {
@@ -36,85 +31,105 @@ public class SecurityTestConfiguration {
         return new InMemoryDataStore<>(TestRole.class);
     }
 
-    @Bean
-    public VortexCrudConfigurationProvider<Object, String, String> configurationProvider(
-            InMemoryDataStore<TestUser> userDataStore,
-            InMemoryDataStore<TestRole> roleDataStore
-    ) {
-        testRegistry.addFactory("userRepo", (VortexCrudDataStore) userDataStore);
-        testRegistry.addFactory("roleRepo", (VortexCrudDataStore) roleDataStore);
+    @Service
+    public static class SecurityTestVortexCrudConfigurationProvider implements VortexCrudConfigurationProvider<Object, String, String> {
 
-        return new VortexCrudConfigurationProvider<>() {
-            @Override
-            public Application<Object, String, String> get() {
+        private final InMemoryDataStore<TestUser> userDataStore;
+        private final InMemoryDataStore<TestRole> roleDataStore;
 
-                String USER_KEY = "userRepo";
-                String ROLE_KEY = "roleRepo";
+        public SecurityTestVortexCrudConfigurationProvider(
+                InMemoryDataStore<TestUser> userDataStore,
+                InMemoryDataStore<TestRole> roleDataStore
+        ) {
+            this.userDataStore = userDataStore;
+            this.roleDataStore = roleDataStore;
+        }
 
-                DataStoreConfig<Object, String, String> userConfig = DataStoreConfig.<Object, String, String>builder()
-                        .factory(USER_KEY)
-                        .fields(Map.of(
-                                "id", IdField.<Object, String, String>builder().build(),
-                                "username", TextField.<Object, String, String>builder().build(),
-                                "passwordHash", TextField.<Object, String, String>builder().build(),
-                                "roles", TextField.<Object, String, String>builder().build(),
-                                "publicField", TextField.<Object, String, String>builder().build(),
-                                "adminField", TextField.<Object, String, String>builder().writeRoles(List.of("ADMIN")).readOnlyRoles(List.of("USER")).build(),
-                                "secretField", TextField.<Object, String, String>builder().writeRoles(List.of("ADMIN")).readOnlyRoles(List.of("ADMIN")).build()
-                        ))
-                        .build();
+        @Override
+        public Application<Object, String, String> get() {
 
-                DataStoreConfig<Object, String, String> roleConfig = DataStoreConfig.<Object, String, String>builder()
-                        .factory(ROLE_KEY)
-                        .fields(Map.of(
-                                "id", IdField.<Object, String, String>builder().build(),
-                                "name", TextField.<Object, String, String>builder().build()
-                        ))
-                        .build();
+            DataStoreConfig<Object, String, String> userConfig = DataStoreConfig.<Object, String, String>builder()
+                    .dataStoreInstance((VortexCrudDataStore) userDataStore)
+                    .fields(Map.of(
+                            "id", IdField.<Object, String, String>builder().build(),
+                            "username", TextField.<Object, String, String>builder().build(),
+                            "passwordHash", TextField.<Object, String, String>builder().build(),
+                            "roles", TextField.<Object, String, String>builder().build(),
+                            "publicField", TextField.<Object, String, String>builder().build(),
+                            "adminField", TextField.<Object, String, String>builder().writeRoles(List.of("ADMIN")).readOnlyRoles(List.of("USER")).build(),
+                            "secretField", TextField.<Object, String, String>builder().writeRoles(List.of("ADMIN")).readOnlyRoles(List.of("ADMIN")).build()
+                    ))
+                    .build();
 
-                FormRoute<Object, String, String> userForm = FormRoute.<Object, String, String>builder()
-                        .dataStoreKey(USER_KEY)
-                        .title("route.users.title")
-                        .formConfiguration(FormRendererConfiguration.<Object, String, String>builder()
-                                .titleField("username")
-                                .children(List.of(
-                                        InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
-                                        InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
-                                        InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
-                                        InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
-                                ))
-                                .build())
-                        .build();
+            DataStoreConfig<Object, String, String> roleConfig = DataStoreConfig.<Object, String, String>builder()
+                    .dataStoreInstance((VortexCrudDataStore) roleDataStore)
+                    .fields(Map.of(
+                            "id", IdField.<Object, String, String>builder().build(),
+                            "name", TextField.<Object, String, String>builder().build()
+                    ))
+                    .build();
 
-                LinkedHashMap<String, RouteRenderer<Object, String, String>> routes = new LinkedHashMap<>();
-                routes.put("users-grid", GridRoute.<Object, String, String>builder()
-                        .dataStoreKey(USER_KEY)
-                        .title("route.users-grid")
-                        .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
-                                .titleField("username")
-                                .build())
-                        .child(userForm)
-                        .writeRoles(List.of("ADMIN", "USER"))
-                        .readOnlyRoles(List.of("VIEWER"))
-                        .build());
+            FormRoute<Object, String, String> userForm = FormRoute.<Object, String, String>builder()
+                    .dataStoreConfig(userConfig)
+                    .title("route.users.title")
+                    .formConfiguration(FormRendererConfiguration.<Object, String, String>builder()
+                            .titleField("username")
+                            .children(List.of(
+                                    InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
+                                    InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
+                                    InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
+                                    InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
+                            ))
+                            .build())
+                    .build();
 
-                return Application.<Object, String, String>builder()
-                        .applicationName("application.name")
-                        .i18nBundlePrefix("ui_test_i18n")
-                        .routes(routes)
-                        .dataStores(Map.of(USER_KEY, userConfig, ROLE_KEY, roleConfig))
-                        .identityAndAccessManagement(LocalIdentityAndAccessManagement.<Object, String, String>builder()
-                                .repositoryKey(USER_KEY)
-                                .username(InternalFormElement.<Object, String, String>builder().field("username").build())
-                                .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").build())
-                                .rolesField("roles")
-                                .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
-                                .loginView(LoginView.class)
-                                .signUpView(SignUpView.class)
-                                .signUpEnabled(true)
-                                .build())
-                        .build();
-            }
-        };
+            LinkedHashMap<String, RouteRenderer<Object, String, String>> routes = new LinkedHashMap<>();
+            routes.put("users-grid", GridRoute.<Object, String, String>builder()
+                    .dataStoreConfig(userConfig)
+                    .title("route.users-grid")
+                    .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
+                            .titleField("username")
+                            .build())
+                    .child(userForm)
+                    .writeRoles(List.of("ADMIN", "USER"))
+                    .readOnlyRoles(List.of("VIEWER"))
+                    .build());
+
+            return Application.<Object, String, String>builder()
+                    .applicationName("application.name")
+                    .i18nBundlePrefix("ui_test_i18n")
+                    .routes(routes)
+                    .identityAndAccessManagement(LocalIdentityAndAccessManagement.<Object, String, String>builder()
+                            .dataStoreConfig(userConfig)
+                            .username(InternalFormElement.<Object, String, String>builder().field("username").build())
+                            .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").build())
+                            .rolesField("roles")
+                            .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
+                            .loginView(LoginView.class)
+                            .signUpView(SignUpView.class)
+                            .signUpEnabled(true)
+                            .build())
+                    .build();
+        }
+    }
+
+    @Service
+    public static class SecurityTestVortexCrudConfigService implements VortexCrudConfigService<Object, String, String> {
+
+        private final Application<Object, String, String> configuration;
+
+        public SecurityTestVortexCrudConfigService(VortexCrudConfigurationProvider<Object, String, String> configurationProvider) {
+            this.configuration = configurationProvider.get();
+        }
+
+        @Override
+        public Application<Object, String, String> configuration() {
+            return configuration;
+        }
+
+        @Override
+        public String applicationName() {
+            return configuration.applicationName();
+        }
     }
 }
