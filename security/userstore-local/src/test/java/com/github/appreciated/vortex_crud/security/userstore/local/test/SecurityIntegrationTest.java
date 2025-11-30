@@ -1,10 +1,9 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.security.userstore.local.util.InMemoryDataStore;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,19 +13,31 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
 
 public class SecurityIntegrationTest extends BaseUITest {
 
-    private InMemoryDataStore<TestUser> userRepository = new InMemoryDataStore<>(TestUser.class);
-    private InMemoryDataStore<TestRole> roleRepository  = new InMemoryDataStore<>(TestRole.class);
+    @MockitoBean
+    @Qualifier("userDataStore")
+    private VortexCrudDataStore<String, Object> userDataStore;
+
+    @MockitoBean
+    @Qualifier("roleDataStore")
+    private VortexCrudDataStore<String, Object> roleDataStore;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -38,24 +49,57 @@ public class SecurityIntegrationTest extends BaseUITest {
     private VortexCrudForeignKeyResolutionStrategy vortexCrudForeignKeyResolutionStrategy;
 
     @MockitoBean
-    private VortexCrudConfigService vortexCrudConfigService;
-
-    @MockitoBean
     private TranslationService translationService;
 
     @Value(value = "${local.server.port}")
     private int port;
 
+    private final Map<Integer, TestUser> userStore = new HashMap<>();
+    private final Map<Integer, TestRole> roleStore = new HashMap<>();
+    private final AtomicInteger userIdCounter = new AtomicInteger(1);
+    private final AtomicInteger roleIdCounter = new AtomicInteger(1);
+
     @BeforeEach
     public void setupData() {
         System.setProperty("vortex.crud.disable.autologin", "true");
 
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
+        // Clear stores
+        userStore.clear();
+        roleStore.clear();
+        userIdCounter.set(1);
+        roleIdCounter.set(1);
 
-        TestRole adminRole = new TestRole(null, "ADMIN"); roleRepository.insertRecord(adminRole);
-        TestRole userRole = new TestRole(null, "USER"); roleRepository.insertRecord(userRole);
-        TestRole viewerRole = new TestRole(null, "VIEWER"); roleRepository.insertRecord(viewerRole);
+        // Setup minimal mocks for userRepository
+        when(userDataStore.insertRecord(any(TestUser.class))).thenAnswer(inv -> {
+            TestUser user = inv.getArgument(0);
+            if (user.getId() == null) {
+                user.setId(userIdCounter.getAndIncrement());
+            }
+            userStore.put(user.getId(), user);
+            return user.getId();
+        });
+        when(userDataStore.getRecordsFromTableWhereColumnEquals(anyString(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> userStore.values().stream()
+                        .filter(u -> matchesField(u, inv.getArgument(0), inv.getArgument(1)))
+                        .toList());
+
+        // Setup minimal mocks for roleRepository
+        when(roleDataStore.insertRecord(any(TestRole.class))).thenAnswer(inv -> {
+            TestRole role = inv.getArgument(0);
+            if (role.getId() == null) {
+                role.setId(roleIdCounter.getAndIncrement());
+            }
+            roleStore.put(role.getId(), role);
+            return role.getId();
+        });
+
+        // Create test data
+        TestRole adminRole = new TestRole(null, "ADMIN");
+        roleDataStore.insertRecord(adminRole);
+        TestRole userRole = new TestRole(null, "USER");
+        roleDataStore.insertRecord(userRole);
+        TestRole viewerRole = new TestRole(null, "VIEWER");
+        roleDataStore.insertRecord(viewerRole);
 
         createUser("admin", "password", List.of(adminRole));
         createUser("user", "password", List.of(userRole));
@@ -76,7 +120,7 @@ public class SecurityIntegrationTest extends BaseUITest {
         user.setPublicField("Public Value");
         user.setAdminField("Admin Value");
         user.setSecretField("Secret Value");
-        userRepository.insertRecord(user);
+        userDataStore.insertRecord(user);
     }
 
     private void login(String username, String password) {
@@ -190,5 +234,15 @@ public class SecurityIntegrationTest extends BaseUITest {
         if (fieldName.equals("adminField")) return "Admin Field";
         if (fieldName.equals("secretField")) return "Secret Field";
         return fieldName;
+    }
+
+    private boolean matchesField(TestUser user, String field, Object value) {
+        try {
+            java.lang.reflect.Field f = user.getClass().getDeclaredField(field);
+            f.setAccessible(true);
+            return Objects.equals(f.get(user), value);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
