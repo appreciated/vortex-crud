@@ -3,12 +3,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.submenu;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.html.H4;
@@ -29,25 +27,19 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     private final VerticalLayout detailLayout = new VerticalLayout();
     private final RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> routeRenderer;
     private VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final Integer currentPathIndex;
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private Component active;
 
-    public Submenu(Integer currentPathIndex,
-                   VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                   VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                   VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                   VortexCrudDataStoreUtilStrategy dataStoreUtil
+    public Submenu(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                   Integer currentPathIndex,
+                   VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver
     ) {
+        this.context = context;
         this.currentPathIndex = currentPathIndex;
-        this.configService = configService;
-        this.dataStoreUtil = dataStoreUtil;
         routeRenderer = (RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.routeFactory = routeFactory;
         // Master
         VerticalLayout masterLayout = new VerticalLayout();
         masterLayout.setPadding(true);
@@ -113,7 +105,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
 
             routeButton.getElement().addEventListener("click", event -> getUI().ifPresent(ui -> {
                 String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
-                pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory, pathForEntity, configService.configuration().routes(), dataStoreUtil);
+                pathVariables = new VortexCrudPathToRouteResolver<>(context.getRouteFactoryRegistry(), pathForEntity, context.getConfigService().configuration().routes(), context.getDataStoreUtil());
                 ui.getPage().getHistory().pushState(null, pathForEntity);
                 if (active != null) {
                     active.removeClassName("active");
@@ -130,8 +122,8 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = routeFactory.getFactory(subRouteRenderer.factory());
-            Component component = factory.renderRoute(this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = context.getRouteFactoryRegistry().getFactory(subRouteRenderer.factory());
+            Component component = factory.renderRoute(context, this.currentPathIndex + 1, pathVariables, new DetailRouteSetting(true, false, false));
             detailLayout.add(component);
         }
     }

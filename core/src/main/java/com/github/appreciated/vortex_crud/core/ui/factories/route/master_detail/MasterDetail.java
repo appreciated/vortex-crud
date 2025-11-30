@@ -5,20 +5,14 @@ import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConf
 import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
@@ -40,42 +34,25 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final VirtualList<Object> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudFileProviderRegistry fileProviderRegistry;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final MasterDetailRoute<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout detailContainer;
     private ConfigurableFilterDataProvider<Object, Void, String> dataProvider; // Hinzugefügter DataProvider
     private Component active;
 
     @SuppressWarnings("unchecked")
-    public MasterDetail(Integer currentPathIndex,
-                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                        VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
-                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                        VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                        VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                        ReflectionService<FieldType> reflectionService,
-                        VortexCrudDataStoreUtilStrategy dataStoreUtil
-    ) {
+    public MasterDetail(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                        Integer currentPathIndex,
+                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
+        this.context = context;
         this.currentPathIndex = currentPathIndex;
-        this.routeFactory = routeFactory;
-        this.configService = configService;
-        this.fileProviderRegistry = fileProviderRegistry;
-        this.fieldNameResolver = fieldNameResolver;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
 
         routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
         this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
-        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
+        this.itemFactory = context.getItemFactoryRegistry().getFactory(itemRendererConfiguration.factory());
         assert routeRenderer.child() != null;
 
         detailContainer = new VerticalLayout();
@@ -95,13 +72,13 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
-                RouteActionContext<FieldType, ModelClass> context = RouteActionContext.<FieldType, ModelClass>builder()
+                RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
                     .refreshCallback(() -> UI.getCurrent().getPage().reload())
                     .viewComponent(this)
                     .build();
-                contextConsumer.accept(context);
+                contextConsumer.accept(actionContext);
             });
         }
 
@@ -142,7 +119,8 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
             RouteRenderer<ModelClass, FieldType, RepositoryType> child = routeRenderer.child();
-            Component component = routeFactory.getFactory(child.factory()).renderRoute(
+            Component component = context.getRouteFactoryRegistry().getFactory(child.factory()).renderRoute(
+                    context,
                     creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,
                     new DetailRouteSetting(true, false, creation)
@@ -159,10 +137,10 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private void onItemClick(Object entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
-            pathVariables = new VortexCrudPathToRouteResolver<>(routeFactory,
+            pathVariables = new VortexCrudPathToRouteResolver<>(context.getRouteFactoryRegistry(),
                     pathForEntity,
-                    configService.configuration().routes(),
-                    dataStoreUtil);
+                    context.getConfigService().configuration().routes(),
+                    context.getDataStoreUtil());
             setDetail(pathVariables, false);
             ui.getPage().getHistory().pushState(null, pathForEntity);
         });
@@ -170,15 +148,13 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(itemRendererConfiguration,
+            Component component = itemFactory.renderItem(context,
+                    itemRendererConfiguration,
                     item,
-                    null,
-                    fileProviderRegistry,
-                    fieldNameResolver,
-                    reflectionService);
+                    null);
             component.addClassNames("master");
             Div div = new Div(component);
-            if (dataStoreUtil.equals(item, pathVariables.getLastSegment())) {
+            if (context.getDataStoreUtil().equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
                 setNewActive(component);
             }

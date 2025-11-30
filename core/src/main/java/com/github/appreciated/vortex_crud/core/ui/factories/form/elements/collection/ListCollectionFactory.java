@@ -1,14 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item.DefaultCollectionItem;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -24,29 +19,11 @@ import static com.vaadin.flow.component.button.ButtonVariant.*;
 
 public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactory;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
-
-    public ListCollectionFactory(
-                                 VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactory,
-                                 ReflectionService<FieldType> reflectionService,
-                                 VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                                 ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy
-    ) {
-        this.dialogFactory = dialogFactory;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
-        this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
-    }
-
     @Override
-    public Component createCollection(Object foreignKey,
+    public Component createCollection(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                      Object foreignKey,
                                       RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                                      InternalFormElement<ModelClass, FieldType, RepositoryType> factoryConfig,
-                                      VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                                      FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+                                      InternalFormElement<ModelClass, FieldType, RepositoryType> factoryConfig) {
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
         list.setSpacing(false);
@@ -59,16 +36,15 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         header.add(new H4(list.getTranslation(factoryConfig.label())));
         Button button = new Button(VaadinIcon.PLUS.create());
         button.addThemeVariants(LUMO_PRIMARY);
-        button.addClickListener(event -> openDialog(null, foreignKey, factoryConfig, routeFactory, formCreator, list, header));
+        button.addClickListener(event -> openDialog(context, null, foreignKey, factoryConfig, list, header));
         header.add(button);
-        loadCollection(foreignKey, factoryConfig, routeFactory, formCreator, list, header);
+        loadCollection(context, foreignKey, factoryConfig, list, header);
         return list;
     }
 
-    private void loadCollection(Object foreignKeyValue,
+    private void loadCollection(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                Object foreignKeyValue,
                                 InternalFormElement<ModelClass, FieldType, RepositoryType> internalFormElement,
-                                VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                                 VerticalLayout list,
                                 HorizontalLayout header) {
         list.removeAll();
@@ -78,13 +54,13 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         VortexCrudDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
 
         java.util.Collection<Object> records = (data.manyToMany() != null) ?
-                (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
+                (java.util.Collection<Object>) context.getManyToManyPersistenceStrategy().resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
                 (java.util.Collection<Object>) data.oneToMany().getData(foreignKeyValue, dataStore, data);
 
         if (internalFormElement.configuration().data().oneToMany() != null) {
-            addOneToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
+            addOneToManyItems(context, foreignKeyValue, internalFormElement, list, header, records, dataStore);
         } else if (internalFormElement.configuration().data().manyToMany() != null) {
-            addManyToManyItems(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header, records, dataStore);
+            addManyToManyItems(context, foreignKeyValue, internalFormElement, list, header, records, dataStore);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
         }
@@ -93,50 +69,48 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         }
     }
 
-    private void addManyToManyItems(Object foreignKeyValue,
+    private void addManyToManyItems(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                    Object foreignKeyValue,
                                     InternalFormElement<ModelClass, FieldType, RepositoryType> internalFormElement,
-                                    VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                    FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                                     VerticalLayout list,
                                     HorizontalLayout header,
                                     java.util.Collection<Object> records,
                                     VortexCrudDataStore<FieldType, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(context, foreignKeyValue, foreignKeyValue, internalFormElement, list, header));
             List<FieldType> children = internalFormElement.configuration().data().children();
-            children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
+            children.forEach(fieldId -> item.addContent(new Text(context.getReflectionService().getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
-                dataStore.deleteRecordById(dataStoreUtil.getId(record));
-                loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
+                dataStore.deleteRecordById(context.getDataStoreUtil().getId(record));
+                loadCollection(context, foreignKeyValue, internalFormElement, list, header);
             });
             item.addActions(remove);
             list.add(item);
         }
     }
 
-    private void addOneToManyItems(Object foreignKeyValue,
+    private void addOneToManyItems(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                   Object foreignKeyValue,
                                    InternalFormElement<ModelClass, FieldType, RepositoryType> internalFormElement,
-                                   VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                   FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                                    VerticalLayout list,
                                    HorizontalLayout header,
                                    java.util.Collection<Object> records,
                                    VortexCrudDataStore<FieldType, ?> dataStore) {
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
-            item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header));
+            item.getContent().addClickListener(event -> openDialog(context, context.getReflectionService().getId(record), foreignKeyValue, internalFormElement, list, header));
             RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form = internalFormElement.configuration().child().configuration();
             for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
-                String textValue = reflectionService.getString(record, child.field());
+                String textValue = context.getReflectionService().getString(record, child.field());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());
                 remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
-                    dataStore.deleteRecordById(dataStoreUtil.getId(record));
-                    loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header);
+                    dataStore.deleteRecordById(context.getDataStoreUtil().getId(record));
+                    loadCollection(context, foreignKeyValue, internalFormElement, list, header);
                 });
                 item.addActions(remove);
             }
@@ -144,11 +118,10 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         }
     }
 
-    private void openDialog(Object entityId,
+    private void openDialog(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                            Object entityId,
                             Object foreignKeyValue,
                             InternalFormElement<ModelClass, FieldType, RepositoryType> internalFormElement,
-                            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
                             VerticalLayout list,
                             HorizontalLayout header) {
         Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.configuration();
@@ -157,18 +130,17 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 data.manyToMany().associativeSourceIdField() :
                 data.oneToMany().getReferenceField(data);
 
-        com.vaadin.flow.component.dialog.Dialog dialog = dialogFactory.getFactory(internalFormElement.configuration().factory()).create(
+        com.vaadin.flow.component.dialog.Dialog dialog = context.getDialogFactoryRegistry().getFactory(internalFormElement.configuration().factory()).create(
+                context,
                 entityId,
                 foreignKeyValue,
                 referenceField,
                 collectionData.child(),
                 collectionData.data(),
                 collectionData.data().dataStoreInstance(),
-                routeFactoryRegistry,
-                () -> loadCollection(foreignKeyValue, internalFormElement, routeFactoryRegistry, formCreator, list, header),
+                () -> loadCollection(context, foreignKeyValue, internalFormElement, list, header),
                 () -> {
-                },
-                formCreator);
+                });
         dialog.open();
     }
 }

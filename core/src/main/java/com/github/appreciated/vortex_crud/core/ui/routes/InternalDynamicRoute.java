@@ -2,8 +2,9 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
@@ -26,24 +27,15 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  */
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContextProvider<ModelClass, FieldType, RepositoryType> contextProvider;
 
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
-     * @param configService        The configuration service to access application settings.
-     * @param routeFactoryRegistry The registry to look up route factories.
-     * @param dataStoreUtil        Utility strategy for data store operations.
+     * @param contextProvider The context provider to access application services.
      */
-    public InternalDynamicRoute(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                VortexCrudDataStoreUtilStrategy dataStoreUtil
-    ) {
-        this.configService = configService;
-        this.routeFactoryRegistry = routeFactoryRegistry;
-        this.dataStoreUtil = dataStoreUtil;
+    public InternalDynamicRoute(VortexCrudContextProvider<ModelClass, FieldType, RepositoryType> contextProvider) {
+        this.contextProvider = contextProvider;
         setSizeFull();
     }
 
@@ -55,16 +47,17 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
             path = "/" + path;
         }
         removeAll();
+        VortexCrudContext<ModelClass, FieldType, RepositoryType> context = contextProvider.getContext();
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
-                routeFactoryRegistry,
+                context.getRouteFactoryRegistry(),
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                configService.configuration().routes(),
-                dataStoreUtil
+                context.getConfigService().configuration().routes(),
+                context.getDataStoreUtil()
         );
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
-        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.factory())
-                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
+        Component component = context.getRouteFactoryRegistry().getFactory(currentRouteRenderer.factory())
+                .renderRoute(context, currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }
 }

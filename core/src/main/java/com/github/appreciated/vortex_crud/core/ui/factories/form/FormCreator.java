@@ -1,12 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasSize;
@@ -15,7 +12,6 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.validator.BeanValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,26 +20,11 @@ import java.util.Map;
 @Service
 public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
-    private final DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory;
-    private final VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry;
-    private final ReflectionService<FieldType> reflectionService;
-
-    @Autowired(required = false)
-    private VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
-
-    public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
-                       VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
-                       ReflectionService<FieldType> reflectionService) {
-        this.componentFactory = componentFactory;
-        this.collectionFactoryRegistry = collectionFactoryRegistry;
-        this.reflectionService = reflectionService;
-    }
-
-    public void bindAndAddToLayout(RepositoryType dataStoreKey,
+    public void bindAndAddToLayout(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                   RepositoryType dataStoreKey,
                                    RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                                    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fieldsViewConfig,
                                    Object entity,
-                                   VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
                                    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
                                    FormLayout form) {
@@ -58,12 +39,12 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
 
-                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.factory());
+                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = context.getFieldFactoryRegistry().getFactory(field.factory());
                 Component component = factory.createComponent(dataStoreKey, fieldName, field);
 
                 // Apply RBAC field-level permissions
-                if (permissionChecker != null) {
-                    VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
+                if (context.getPermissionChecker() != null) {
+                    VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = context.getPermissionChecker().getUserFieldAccess(routeRenderer, field);
                     if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
                         continue;
                     } else if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
@@ -90,8 +71,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 builder.bind(
-                        entity1 -> reflectionService.getValue(entity1, fieldName),
-                        (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
+                        entity1 -> context.getReflectionService().getValue(entity1, fieldName),
+                        (entity1, o) -> context.getReflectionService().setValue(entity1, fieldName, o)
                 );
 
                 if (component instanceof HasSize) {
@@ -106,12 +87,11 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     form.setColspan(formItem, element.span());
                 }
             } else {
-                Component collection = collectionFactoryRegistry.getFactory(element.factory()).createCollection(
-                        reflectionService.getId(entity),
+                Component collection = context.getCollectionFactoryRegistry().getFactory(element.factory()).createCollection(
+                        context,
+                        context.getReflectionService().getId(entity),
                         routeRenderer,
-                        element,
-                        routeFactory,
-                        this
+                        element
                 );
                 form.add(collection);
                 form.setColspan(collection, element.span());

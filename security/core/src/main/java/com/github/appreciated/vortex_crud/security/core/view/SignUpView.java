@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.UI;
@@ -29,12 +31,15 @@ import java.util.List;
 public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     public SignUpView(
-            VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-            ReflectionService<FieldType> reflectionService,
+            VortexCrudContextProvider<ModelClass, FieldType, RepositoryType> contextProvider,
             PasswordEncoder passwordEncoder
     ) {
+        VortexCrudContext<ModelClass, FieldType, RepositoryType> context = contextProvider.getContext();
+        VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService = context.getConfigService();
+        FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.getFormCreator();
+        ReflectionService<FieldType> reflectionService = context.getReflectionService();
+        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory = context.getRouteFactoryRegistry();
+
         IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config = configService.configuration().identityAndAccessManagement();
 
         if (config == null) {
@@ -75,11 +80,11 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         }
 
         formCreator.bindAndAddToLayout(
+                context,
                 config.dataStoreConfig().factory(),
                 null,
                 allFields,
                 entity,
-                routeFactory,
                 dataStoreConfig,
                 binder,
                 formLayout
