@@ -1,16 +1,22 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.missing_features;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
+import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.vaadin.flow.component.button.Button;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import java.util.LinkedHashMap;
+
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 import static com.vaadin.flow.component.icon.VaadinIcon.PRINT;
 
@@ -18,9 +24,13 @@ import static com.vaadin.flow.component.icon.VaadinIcon.PRINT;
 public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaMissingFeaturesRepository repository;
+    private JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldService fieldService;
 
-    public JpaMissingFeaturesVortexCrudConfiguration(JpaMissingFeaturesRepository repository) {
+    public JpaMissingFeaturesVortexCrudConfiguration(JpaMissingFeaturesRepository repository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {
         this.repository = repository;
+        this.annotationRegistryService = annotationRegistryService;
+        this.fieldService = fieldService;
     }
 
     @Override
@@ -31,15 +41,23 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
         tagOptions.put("tag2", "Tag 2");
 
         Map<String, LinkedHashMap<?, String>> selectsConfig = new HashMap<>();
-        selectsConfig.put("tags", (LinkedHashMap) tagOptions);
+        selectsConfig.put("tags", tagOptions);
 
         Selects selects = Selects.builder()
             .configs(selectsConfig)
             .build();
 
+
+        var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
+        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
+
+        var taskConfig = JpaDataStoreConfig.builder(repository, taskStore)
+                .withServices(fieldService, storeMap)
+                .build();
+
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
-            .dataStoreKey(repository)
+            .dataStoreConfig(taskConfig)
             .title("route.missing.title")
             .formConfiguration(JpaFormRendererConfiguration.builder()
                 .titleField("name")
@@ -56,7 +74,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
 
         // List Route with Global Action
         routes.put("missing-features-test", JpaListRoute.builder()
-            .dataStoreKey(repository)
+            .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
             .configuration(JpaListItemRendererConfiguration.builder()
@@ -76,7 +94,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
 
         // Single Form Route
         routes.put("single-form-test", JpaSingleFormRoute.builder()
-             .dataStoreKey(repository)
+             .dataStoreConfig(taskConfig)
              .title("Single Form")
              .entityFilterField("id")
              .entityFilterValueProvider(() -> 1L)
