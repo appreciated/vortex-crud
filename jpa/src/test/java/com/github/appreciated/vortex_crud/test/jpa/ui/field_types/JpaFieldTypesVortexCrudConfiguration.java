@@ -65,7 +65,9 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
                     JpaFieldElement.builder("name", "Name").build(),
                     JpaFieldElement.builder("tags", "Tags").build(),
                     JpaFieldElement.builder("pdfDoc", "PDF").build(),
-                    JpaFieldElement.builder("notes", "Notes").build()
+                    JpaFieldElement.builder("notes", "Notes").build(),
+                    JpaFieldElement.builder("dateRange", "Date Range").build(),
+                    JpaFieldElement.builder("dateTimeRange", "DateTime Range").build()
                 ))
                 .build())
             .build();
