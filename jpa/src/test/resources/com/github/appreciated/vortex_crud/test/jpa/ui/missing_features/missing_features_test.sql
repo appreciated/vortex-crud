@@ -6,7 +6,9 @@ CREATE TABLE missing_features_test
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     pdf_doc     VARCHAR(255),
-    notes       TEXT
+    notes       TEXT,
+    date_range       VARCHAR(500),
+    date_time_range  VARCHAR(500)
 );
 
 CREATE TABLE missing_features_test_tags

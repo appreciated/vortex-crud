@@ -141,6 +141,16 @@ public class JpaFieldService {
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                     .required(required)
                                     .build()
+                    )).or(() -> getAnnotation(entityField, DateRangeField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.DateRangeField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
+                    )).or(() -> getAnnotation(entityField, DateTimeRangeField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.DateTimeRangeField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).or(() -> getAnnotation(entityField, CheckboxField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.CheckboxField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
