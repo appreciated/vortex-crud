@@ -4,8 +4,15 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
+import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.DefaultDialogFactoryRegistry;
+import org.springframework.context.annotation.Primary;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
@@ -32,11 +39,64 @@ public class SecurityTestConfiguration {
         return new InMemoryDataStore<>(TestRole.class);
     }
 
+    @Bean
+    @Primary
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public DefaultDialogFactoryRegistry defaultDialogFactoryRegistry(
+            VortexCrudConfigService configService,
+            VortexCrudDataStoreFieldNameResolver resolver,
+            VortexCrudForeignKeyResolutionStrategy foreignKeyResolutionStrategy,
+            ManyToManyPersistenceStrategy manyToManyPersistenceStrategy,
+            ReflectionService reflectionService,
+            VortexCrudDataStoreUtilStrategy dataStoreUtil
+    ) {
+        return new DefaultDialogFactoryRegistry(
+                configService,
+                resolver,
+                foreignKeyResolutionStrategy,
+                manyToManyPersistenceStrategy,
+                reflectionService,
+                dataStoreUtil
+        );
+    }
+
     @Service
-    public static class StringFieldNameResolver implements VortexCrudDataStoreFieldNameResolver<String> {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static class MockManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy {
         @Override
-        public String getKeyForFieldType(String fieldName) {
-            return fieldName;
+        public java.util.Collection resolveManyToMany(VortexCrudDataStore targetDataStore, ManyToMany manyToMany, Object sourceId) {
+            return List.of();
+        }
+
+        @Override
+        public void insert(Object sourceId, List targetObjects, ManyToMany manyToMany) {
+        }
+
+        @Override
+        public void deleteAll(Object sourceId, List targetObjects, ManyToMany manyToMany) {
+        }
+
+        @Override
+        public String getObjectId(Object object) {
+            return null;
+        }
+    }
+
+    @Service
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static class MockForeignKeyResolutionStrategy implements VortexCrudForeignKeyResolutionStrategy {
+        @Override
+        public void resolveForeignKey(Object entity, Object foreignKeyField, Object foreignKeyValue, VortexCrudDataStore dataStore, VortexCrudDataStoreFieldNameResolver fieldNameResolver) {
+            // No-op for in-memory test
+        }
+    }
+
+    @Service
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static class MockFieldNameResolver implements VortexCrudDataStoreFieldNameResolver {
+        @Override
+        public String getKeyForFieldType(Object fieldName) {
+            return String.valueOf(fieldName);
         }
     }
 
