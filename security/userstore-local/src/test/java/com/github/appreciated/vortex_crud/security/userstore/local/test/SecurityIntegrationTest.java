@@ -1,0 +1,179 @@
+package com.github.appreciated.vortex_crud.security.userstore.local.test;
+
+import com.github.appreciated.vortex_crud.security.userstore.local.util.InMemoryDataStore;
+import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest(classes = SecurityTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
+public class SecurityIntegrationTest extends BaseUITest {
+
+    @Autowired
+    private InMemoryDataStore<TestUser> userRepository;
+    @Autowired
+    private InMemoryDataStore<TestRole> roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value(value = "${local.server.port}")
+    private int port;
+
+    @BeforeEach
+    public void setupData() {
+        System.setProperty("vortex.crud.disable.autologin", "true");
+
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+
+        TestRole adminRole = new TestRole(null, "ADMIN"); roleRepository.insertRecord(adminRole);
+        TestRole userRole = new TestRole(null, "USER"); roleRepository.insertRecord(userRole);
+        TestRole viewerRole = new TestRole(null, "VIEWER"); roleRepository.insertRecord(viewerRole);
+
+        createUser("admin", "password", List.of(adminRole));
+        createUser("user", "password", List.of(userRole));
+        createUser("viewer", "password", List.of(viewerRole));
+        createUser("guest", "password", List.of());
+    }
+
+    @AfterEach
+    public void cleanup() {
+        System.clearProperty("vortex.crud.disable.autologin");
+    }
+
+    private void createUser(String username, String password, List<TestRole> roles) {
+        TestUser user = new TestUser();
+        user.setUsername(username);
+        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setRoles(roles);
+        user.setPublicField("Public Value");
+        user.setAdminField("Admin Value");
+        user.setSecretField("Secret Value");
+        userRepository.insertRecord(user);
+    }
+
+    private void login(String username, String password) {
+        navigateTo("login");
+        WebElement loginForm = waitForElement(By.tagName("vaadin-login-form"));
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].dispatchEvent(new CustomEvent('login', { detail: { username: arguments[1], password: arguments[2] } }));",
+                loginForm, username, password
+        );
+        waitForUrlToBe("");
+    }
+
+    @Test
+    void testUnauthenticatedAccess() {
+        driver.get("http://127.0.0.1:%s/users-grid".formatted(port));
+        wait.until(ExpectedConditions.urlContains("login"));
+        assertTrue(waitForElement(By.tagName("vaadin-login-form")).isDisplayed());
+    }
+
+    @Test
+    void testAdminAccess() {
+        login("admin", "password");
+        navigateTo("users-grid");
+
+        assertTrue(driver.getCurrentUrl().contains("users-grid"), "Admin should access users-grid");
+
+        clickElement(waitForAnyElementContainingText("admin"));
+        waitForElement(By.tagName("vaadin-form-layout"));
+
+        assertTrue(isFieldVisible("publicField"), "Public field should be visible for ADMIN");
+        assertFalse(isFieldReadOnly("publicField"), "Public field should be editable for ADMIN");
+
+        assertTrue(isFieldVisible("adminField"), "Admin field should be visible for ADMIN");
+        assertFalse(isFieldReadOnly("adminField"), "Admin field should be editable for ADMIN");
+
+        assertTrue(isFieldVisible("secretField"), "Secret field should be visible for ADMIN");
+        assertFalse(isFieldReadOnly("secretField"), "Secret field should be editable for ADMIN");
+    }
+
+    @Test
+    void testUserAccess() {
+        login("user", "password");
+        navigateTo("users-grid");
+
+        assertTrue(driver.getCurrentUrl().contains("users-grid"), "User should access users-grid");
+
+        clickElement(waitForAnyElementContainingText("user"));
+        waitForElement(By.tagName("vaadin-form-layout"));
+
+        assertTrue(isFieldVisible("publicField"), "Public field should be visible for USER");
+        assertFalse(isFieldReadOnly("publicField"), "Public field should be editable for USER");
+
+        assertTrue(isFieldVisible("adminField"), "Admin field should be visible for USER");
+        assertTrue(isFieldReadOnly("adminField"), "Admin field should be read-only for USER");
+
+        assertFalse(isFieldVisible("secretField"), "Secret field should be hidden for USER");
+    }
+
+    @Test
+    void testViewerAccess() {
+        login("viewer", "password");
+        navigateTo("users-grid");
+
+        assertTrue(driver.getCurrentUrl().contains("users-grid"), "Viewer should access users-grid");
+
+        clickElement(waitForAnyElementContainingText("viewer"));
+        waitForElement(By.tagName("vaadin-form-layout"));
+
+        assertTrue(isFieldVisible("publicField"), "Public field should be visible for VIEWER");
+        assertTrue(isFieldReadOnly("publicField"), "Public field should be read-only for VIEWER");
+
+        assertFalse(isFieldVisible("adminField"), "Admin field should be hidden for VIEWER");
+
+        assertFalse(isFieldVisible("secretField"), "Secret field should be hidden for VIEWER");
+    }
+
+    @Test
+    void testGuestAccess() {
+        login("guest", "password");
+        navigateTo("users-grid");
+
+        String url = driver.getCurrentUrl();
+        boolean denied = url.contains("access-denied") || url.contains("login") || driver.getPageSource().contains("Access Denied");
+        assertTrue(denied, "Guest should be denied access to users-grid. Current URL: " + url);
+    }
+
+    private void clickElement(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+    }
+
+    private boolean isFieldVisible(String fieldName) {
+        String label = getLabelForField(fieldName);
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + label + "')]"));
+        return !elements.stream().filter(WebElement::isDisplayed).toList().isEmpty();
+    }
+
+    private boolean isFieldReadOnly(String fieldName) {
+        String label = getLabelForField(fieldName);
+        for (WebElement element : driver.findElements(By.xpath("//vaadin-text-field"))) {
+             String elLabel = element.getAttribute("label");
+             if (elLabel != null && elLabel.equals(label)) {
+                 return element.getAttribute("readonly") != null;
+             }
+        }
+        return false;
+    }
+
+    private String getLabelForField(String fieldName) {
+        if (fieldName.equals("username")) return "Username";
+        if (fieldName.equals("publicField")) return "Public Field";
+        if (fieldName.equals("adminField")) return "Admin Field";
+        if (fieldName.equals("secretField")) return "Secret Field";
+        return fieldName;
+    }
+}

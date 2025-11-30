@@ -121,6 +121,10 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
 
+        if (Boolean.getBoolean("vortex.crud.disable.autologin")) {
+            return;
+        }
+
         //TODO Remove before release
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 "max@mustermann.de",
