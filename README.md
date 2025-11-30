@@ -74,8 +74,8 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 - **Lifecycle Hooks**: Intercept operations with before/after hooks for Create, Update, Delete, and Read operations
 - **Field Validation**: Use built-in Vaadin validators (email, URL, regex, range, string length) with support for custom validation logic
 - **Demo Applications**: Two production-ready demo apps showcasing real-world usage:
-  - **Project Management Platform** (16 tables with custom fields)
-  - **Development Platform** (22 tables, GitHub/GitLab-style)
+  - **Project Management Platform** (8 tables with custom fields)
+  - **Development Platform** (12 tables, GitHub/GitLab-style)
 
 # <a name="supported-routes-inputs">Features in Detail</a>
 
@@ -133,8 +133,6 @@ Standard form view for creating and editing entities.
   - MultiSelect (ComboBox and CheckboxGroup variants)
   - MultiSelectValue (for enums and string values)
   - TextArea
-  - Password
-  - Markdown (jOOQ only)
 - **Relationships**: One-to-One, Many-to-One, Many-to-Many
 
 ## <a name="configuration">Getting Started</a>
@@ -458,7 +456,7 @@ CREATE TABLE task_comments (...);
   - **Map Route**: Geographic data visualization
   - **Chart/Dashboard Route**: Analytics and reporting dashboards
   - **Generic Block Route**: Flexible block-based layouts
-- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor, Rating fields, Markdown (JPA support)
+- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor, Rating fields
 - **Alternative Collection Editing**: Spreadsheet-style editing, Bulk editing, Drag-and-drop reordering
 
 ### Advanced Features
