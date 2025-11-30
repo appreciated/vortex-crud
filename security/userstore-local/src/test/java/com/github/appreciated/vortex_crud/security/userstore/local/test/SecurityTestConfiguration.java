@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
@@ -30,14 +29,6 @@ public class SecurityTestConfiguration {
     @Bean
     public InMemoryDataStore<TestRole> roleDataStore() {
         return new InMemoryDataStore<>(TestRole.class);
-    }
-
-    @Service
-    public static class StringFieldNameResolver implements VortexCrudDataStoreFieldNameResolver<String> {
-        @Override
-        public String getKeyForFieldType(String fieldName) {
-            return fieldName;
-        }
     }
 
     @Service
