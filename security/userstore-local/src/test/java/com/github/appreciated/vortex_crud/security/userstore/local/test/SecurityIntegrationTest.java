@@ -73,13 +73,14 @@ public class SecurityIntegrationTest extends BaseUITest {
         // Prevents UI crashes when components render titles/labels
         when(translationService.getTranslation(anyString(), any())).thenAnswer(inv -> inv.getArgument(0));
 
-        // 3. Mock ReflectionService (CRITICAL for Login)
-        // LoginView uses this to extract passwordHash and roles from the generic entity
+        // 3. Mock ReflectionService (CRITICAL)
+        // Used by LoginView and Grid to read field values from the generic entities
         when(reflectionService.getValue(any(), anyString())).thenAnswer(inv -> {
             Object entity = inv.getArgument(0);
             String fieldName = inv.getArgument(1);
             if (entity == null || fieldName == null) return null;
             try {
+                // Handle nested properties if necessary, or simple reflection
                 java.lang.reflect.Field field = entity.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
                 return field.get(entity);
@@ -88,14 +89,42 @@ public class SecurityIntegrationTest extends BaseUITest {
             }
         });
 
-        // 4. Mock User DataStore Metadata
-        // Vaadin Grid calls these to determine column types and pagination limits
+        // 5. Mock User DataStore - METADATA
         when(userDataStore.getModelClass()).thenReturn((Class) TestUser.class);
         when(userDataStore.newInstance()).thenAnswer(inv -> new TestUser());
+
+        // 6. Mock User DataStore - COUNT (Used for Pagination)
         when(userDataStore.count()).thenAnswer(inv -> userStore.size());
         when(userDataStore.countWhereColumnLike(any(), anyString())).thenAnswer(inv -> userStore.size());
 
-        // 5. Mock User DataStore Insertion
+        // 7. Mock User DataStore - READ OPERATIONS (Cover ALL variations)
+
+        // Basic Fetch
+        when(userDataStore.getRecordsFromTable(anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // Login Fetch
+        when(userDataStore.getRecordsFromTableWhereColumnEquals(anyString(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> userStore.values().stream()
+                        .filter(u -> matchesField(u, inv.getArgument(0), inv.getArgument(1)))
+                        .toList());
+
+        // Ordered Fetch (Vaadin Grid often calls this by default)
+        when(userDataStore.getRecordsFromTableWhereColumnEqualsOrdered(any(), any(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // Like/Filter Fetch (Default search behavior)
+        when(userDataStore.getRecordsFromTableWhereColumnLike(any(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // In-List Fetch
+        when(userDataStore.getRecordsFromTableWhereColumnIn(any(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // ID Fetch
+        when(userDataStore.getRecordById(any())).thenAnswer(inv -> userStore.get(inv.getArgument(0)));
+
+        // 8. Mock User DataStore - WRITE OPERATIONS
         when(userDataStore.insertRecord(any(TestUser.class))).thenAnswer(inv -> {
             TestUser user = inv.getArgument(0);
             if (user.getId() == null) {
@@ -105,22 +134,7 @@ public class SecurityIntegrationTest extends BaseUITest {
             return user.getId();
         });
 
-        // 6. Mock User DataStore Retrieval (Login & Grid)
-        // Used by LoginView to find user by username
-        when(userDataStore.getRecordsFromTableWhereColumnEquals(anyString(), any(), anyInt(), anyInt()))
-                .thenAnswer(inv -> userStore.values().stream()
-                        .filter(u -> matchesField(u, inv.getArgument(0), inv.getArgument(1)))
-                        .toList());
-
-        // Used by Grid to display data
-        when(userDataStore.getRecordsFromTable(anyInt(), anyInt()))
-                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // Used by Grid (sometimes default fetch strategy uses 'Like')
-        when(userDataStore.getRecordsFromTableWhereColumnLike(any(), any(), anyInt(), anyInt()))
-                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // 7. Mock Role DataStore
+        // 9. Mock Role DataStore (Basic support)
         when(roleDataStore.insertRecord(any(TestRole.class))).thenAnswer(inv -> {
             TestRole role = inv.getArgument(0);
             if (role.getId() == null) {
@@ -130,7 +144,7 @@ public class SecurityIntegrationTest extends BaseUITest {
             return role.getId();
         });
 
-        // 8. Create Test Data
+        // 10. Create Test Data
         TestRole adminRole = new TestRole(null, "ADMIN");
         roleDataStore.insertRecord(adminRole);
         TestRole userRole = new TestRole(null, "USER");
