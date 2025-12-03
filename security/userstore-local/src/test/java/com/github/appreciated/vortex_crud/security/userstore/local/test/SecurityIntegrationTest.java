@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -66,13 +63,39 @@ public class SecurityIntegrationTest extends BaseUITest {
     public void setupData() {
         System.setProperty("vortex.crud.disable.autologin", "true");
 
-        // Clear stores
+        // 1. Reset State
         userStore.clear();
         roleStore.clear();
         userIdCounter.set(1);
         roleIdCounter.set(1);
 
-        // Setup minimal mocks for userRepository
+        // 2. Mock TranslationService
+        // Prevents UI crashes when components render titles/labels
+        when(translationService.getTranslation(anyString(), any())).thenAnswer(inv -> inv.getArgument(0));
+
+        // 3. Mock ReflectionService (CRITICAL for Login)
+        // LoginView uses this to extract passwordHash and roles from the generic entity
+        when(reflectionService.getValue(any(), anyString())).thenAnswer(inv -> {
+            Object entity = inv.getArgument(0);
+            String fieldName = inv.getArgument(1);
+            if (entity == null || fieldName == null) return null;
+            try {
+                java.lang.reflect.Field field = entity.getClass().getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(entity);
+            } catch (Exception e) {
+                return null;
+            }
+        });
+
+        // 4. Mock User DataStore Metadata
+        // Vaadin Grid calls these to determine column types and pagination limits
+        when(userDataStore.getModelClass()).thenReturn((Class) TestUser.class);
+        when(userDataStore.newInstance()).thenAnswer(inv -> new TestUser());
+        when(userDataStore.count()).thenAnswer(inv -> userStore.size());
+        when(userDataStore.countWhereColumnLike(any(), anyString())).thenAnswer(inv -> userStore.size());
+
+        // 5. Mock User DataStore Insertion
         when(userDataStore.insertRecord(any(TestUser.class))).thenAnswer(inv -> {
             TestUser user = inv.getArgument(0);
             if (user.getId() == null) {
@@ -81,12 +104,23 @@ public class SecurityIntegrationTest extends BaseUITest {
             userStore.put(user.getId(), user);
             return user.getId();
         });
+
+        // 6. Mock User DataStore Retrieval (Login & Grid)
+        // Used by LoginView to find user by username
         when(userDataStore.getRecordsFromTableWhereColumnEquals(anyString(), any(), anyInt(), anyInt()))
                 .thenAnswer(inv -> userStore.values().stream()
                         .filter(u -> matchesField(u, inv.getArgument(0), inv.getArgument(1)))
                         .toList());
 
-        // Setup minimal mocks for roleRepository
+        // Used by Grid to display data
+        when(userDataStore.getRecordsFromTable(anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // Used by Grid (sometimes default fetch strategy uses 'Like')
+        when(userDataStore.getRecordsFromTableWhereColumnLike(any(), any(), anyInt(), anyInt()))
+                .thenAnswer(inv -> new ArrayList<>(userStore.values()));
+
+        // 7. Mock Role DataStore
         when(roleDataStore.insertRecord(any(TestRole.class))).thenAnswer(inv -> {
             TestRole role = inv.getArgument(0);
             if (role.getId() == null) {
@@ -96,7 +130,7 @@ public class SecurityIntegrationTest extends BaseUITest {
             return role.getId();
         });
 
-        // Create test data
+        // 8. Create Test Data
         TestRole adminRole = new TestRole(null, "ADMIN");
         roleDataStore.insertRecord(adminRole);
         TestRole userRole = new TestRole(null, "USER");
