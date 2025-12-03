@@ -1,24 +1,20 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.component;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.CalendarConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -38,11 +34,9 @@ import java.util.*;
 public class CalendarView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     private final CalendarConfiguration<ModelClass, FieldType, RepositoryType> calendarConfiguration;
-    private final RepositoryType dataStoreIdentifier;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory;
-    private final VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final ReflectionService<FieldType> reflectionService;
@@ -56,31 +50,19 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     public CalendarView(RepositoryType dataStoreIdentifier,
                         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                        VortexCrudDataStore<FieldType, ?> dataStore,
-                        VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
-                        VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
-                        CalendarConfiguration<ModelClass, FieldType, RepositoryType> calendarConfiguration,
-                        Application<ModelClass, FieldType, RepositoryType> configService,
-                        VortexCrudDialogFactoryRegistry<ModelClass, FieldType, RepositoryType> dialogFactoryRegistry,
-                        VortexCrudFileProviderRegistry fileProviderRegistry,
-                        VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                        FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                        DetailRouteSetting detailRouteSetting,
-                        ReflectionService<FieldType> reflectionService,
-                        VortexCrudDataStoreUtilStrategy dataStoreUtil,
-                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver
+                        VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                        DetailRouteSetting detailRouteSetting
     ) {
-        this.dataStoreIdentifier = dataStoreIdentifier;
         this.routeRenderer = routeRenderer;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) dataStore;
-        this.routeFactory = routeFactory;
-        this.dialogFactoryRegistry = dialogFactoryRegistry;
-        this.fieldNameResolver = fieldNameResolver;
-        this.formCreator = formCreator;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
+        this.fieldNameResolver = context.fieldNameResolver();
+        this.formCreator = context.formCreator();
+        this.reflectionService = context.reflectionService();
+        this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
-        this.calendarConfiguration = calendarConfiguration;
+        this.calendarConfiguration = (CalendarConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
 
         dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField()).withConfigurableFilter();
 
@@ -223,29 +205,31 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void openDialog(Object entity) {
-        Dialog dialog = dialogFactoryRegistry.getFactory(((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().factory()).create(
-                dataStoreUtil.getId(entity),
-                null,
-                null,
-                ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
-                null,
-                (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
-                routeFactory,
-                () -> {
-                    Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    this.dataStore.updateRecordById(recordById);
-                    refreshCalendar();
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
-                    Optional<UI> ui1 = getUI();
-                    ui1.ifPresent(ui -> ui.navigate(nextRoute));
-                },
-                () -> {
-                    String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
-                    Optional<UI> ui1 = getUI();
-                    ui1.ifPresent(ui -> ui.navigate(nextRoute));
-                },
-                formCreator);
-        dialog.open();
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> singleChildRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        if (singleChildRenderer.child() != null && singleChildRenderer.child().dialogFactory() != null) {
+            Dialog dialog = singleChildRenderer.child().dialogFactory().create(
+                    dataStoreUtil.getId(entity),
+                    null,
+                    null,
+                    singleChildRenderer.child(),
+                    null,
+                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
+                    context,
+                    () -> {
+                        Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
+                        this.dataStore.updateRecordById(recordById);
+                        refreshCalendar();
+                        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
+                        Optional<UI> ui1 = getUI();
+                        ui1.ifPresent(ui -> ui.navigate(nextRoute));
+                    },
+                    () -> {
+                        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), null);
+                        Optional<UI> ui1 = getUI();
+                        ui1.ifPresent(ui -> ui.navigate(nextRoute));
+                    });
+            dialog.open();
+        }
     }
 
     @Override
@@ -261,24 +245,29 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void onAdd(LocalDateTime defaultStart) {
-        Object entity = new Object();
-        Dialog dialog = dialogFactoryRegistry.getFactory(((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child().factory()).create(
-                null,
-                null,
-                null,
-                ((RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer).child(),
-                null,
-                (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
-                routeFactory,
-                () -> {
-                    Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
-                    this.dataStore.updateRecordById(recordById);
-                    refreshCalendar();
-                },
-                () -> {
+        Object entity = new Object(); // Should be dataStore.newInstance() but keeping original logic if needed, but Dialog logic uses ID which requires entity.
+        // Actually, FormDialogFactory checks if entityId is provided. If null, creates new instance.
+        // So passing null as ID is correct for creation.
 
-                },
-                formCreator);
-        dialog.open();
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> singleChildRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
+
+        if (singleChildRenderer.child() != null && singleChildRenderer.child().dialogFactory() != null) {
+            Dialog dialog = singleChildRenderer.child().dialogFactory().create(
+                    null,
+                    null,
+                    null,
+                    singleChildRenderer.child(),
+                    null,
+                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
+                    context,
+                    () -> {
+                        // Refresh
+                        refreshCalendar();
+                    },
+                    () -> {
+
+                    });
+            dialog.open();
+        }
     }
 }

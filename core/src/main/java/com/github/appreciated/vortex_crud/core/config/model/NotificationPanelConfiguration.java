@@ -9,37 +9,7 @@ import lombok.experimental.Accessors;
 /**
  * Configuration for a notification panel that displays notifications from a custom data store.
  * The notification panel appears as a bell icon in the application header with a popover containing notifications.
- *
- * <p>Example usage (JPA):</p>
- * <pre>{@code
- * NotificationPanelConfiguration.<String, JpaRepository<?, ?>>builder()
- *     .dataStoreKey(notificationRepository)
- *     .messageField("message")
- *     .timestampField("createdAt")
- *     .userNameField("userName")
- *     .userAvatarField("userAvatar")
- *     .readStatusField("isRead")
- *     .readStatusValueForUnread(false)
- *     .limit(20)
- *     .build()
- * }</pre>
- *
- * <p>Example usage (jOOQ):</p>
- * <pre>{@code
- * NotificationPanelConfiguration.<TableField<?, ?>, TableImpl<?>>builder()
- *     .dataStoreKey(NOTIFICATIONS)
- *     .messageField(NOTIFICATIONS.MESSAGE)
- *     .timestampField(NOTIFICATIONS.CREATED_AT)
- *     .userNameField(NOTIFICATIONS.USER_NAME)
- *     .userAvatarField(NOTIFICATIONS.USER_AVATAR)
- *     .readStatusField(NOTIFICATIONS.IS_READ)
- *     .readStatusValueForUnread(false)
- *     .limit(20)
- *     .build()
- * }</pre>
- *
- * @param <FieldType> The type used to identify fields (String for JPA, TableField for jOOQ)
- * @param <RepositoryType> The type of repository/table key (JpaRepository for JPA, TableImpl for jOOQ)
+ * ...
  */
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -145,4 +115,21 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      */
     @Builder.Default
     private String ariaLabel = "Notifications";
+
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
+    public FieldType messageField() { return messageField; }
+    public FieldType timestampField() { return timestampField; }
+    public FieldType userNameField() { return userNameField; }
+    public FieldType userAvatarField() { return userAvatarField; }
+    public FieldType readStatusField() { return readStatusField; }
+    public Object readStatusValueForUnread() { return readStatusValueForUnread; }
+    public int limit() { return limit; }
+    public FieldType filterField() { return filterField; }
+    public Object filterValue() { return filterValue; }
+    public String headingKey() { return headingKey; }
+    public String unreadTabKey() { return unreadTabKey; }
+    public String allTabKey() { return allTabKey; }
+    public String markAllReadKey() { return markAllReadKey; }
+    public String noNewNotificationsKey() { return noNewNotificationsKey; }
+    public String ariaLabel() { return ariaLabel; }
 }

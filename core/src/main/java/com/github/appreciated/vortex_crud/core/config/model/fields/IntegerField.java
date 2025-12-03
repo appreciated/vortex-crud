@@ -25,7 +25,31 @@ public class IntegerField<ModelClass, FieldType, RepositoryType> implements Fiel
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) IntegerNumberFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new IntegerNumberFieldFactory<>();
+
+    @Override
+    public List<Validator<?>> validators() {
+        return validators;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
+    }
 }

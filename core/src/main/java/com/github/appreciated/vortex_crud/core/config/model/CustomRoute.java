@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.custom.CustomRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -13,18 +15,12 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-/**
- * Adds a custom component to the VortexCrud menu.
- * Just pass your component class and it will be registered as a route with ProxyRouterLayout.
- */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 public class CustomRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
-
-    private Class<? extends Component> componentClass;
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
@@ -33,20 +29,39 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory =
-            (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) CustomRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CustomRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
 
-    @Builder.Default
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = null;
+    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     private SerializableSupplier<Component> iconFactory;
+
+    // Add componentClass to hold the view type
+    private Class<? extends Component> componentClass;
 
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
 
-    @Builder.Default
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions = null;
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
+
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
+
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
+    public String title() { return title; }
+    public boolean isDefaultRoute() { return isDefaultRoute; }
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
+    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
+    public boolean isHiddenInMenu() { return isHiddenInMenu; }
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() { return configuration; }
+    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
+    public Class<? extends Component> componentClass() { return componentClass; } // Manual getter
+    public List<String> writeRoles() { return writeRoles; }
+    public List<String> readOnlyRoles() { return readOnlyRoles; }
+    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
+    public List<RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
 }

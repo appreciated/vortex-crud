@@ -2,10 +2,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 
@@ -24,12 +24,10 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                              RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                             VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> listColumnFactory,
-                             VortexCrudDataStoreUtilStrategy dataStoreUtil
+                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.routeResolver = routeResolver;
-        this.dataStoreUtil = dataStoreUtil;
+        this.dataStoreUtil = context.dataStoreUtil();
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
@@ -48,7 +46,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.children()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
-            listColumnFactory.getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
+            context.columnCallbackRegistry().getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
         }
 
         setDataProvider(dataProvider);

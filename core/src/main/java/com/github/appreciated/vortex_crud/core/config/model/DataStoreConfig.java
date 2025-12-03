@@ -24,4 +24,8 @@ public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements H
     @Builder.Default
     private DataStoreHooks<?> hooks = new DataStoreHooks<>();
 
+    public RepositoryType factory() { return factory; }
+    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() { return dataStoreInstance; }
+    public Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields() { return fields; }
+    public DataStoreHooks<?> hooks() { return hooks; }
 }

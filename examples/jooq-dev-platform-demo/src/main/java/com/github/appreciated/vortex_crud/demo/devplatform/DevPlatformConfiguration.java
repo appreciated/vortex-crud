@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
@@ -211,8 +212,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
                                 JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
                                 JooqCollectionElement.of("route.issues.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(labelConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 ISSUE_LABEL.ISSUE_ID,
@@ -242,8 +243,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
                                 JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
                                 JooqCollectionElement.of("route.pull_requests.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(labelConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 PULL_REQUEST_LABEL.PULL_REQUEST_ID,

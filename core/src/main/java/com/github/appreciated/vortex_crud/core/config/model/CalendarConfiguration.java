@@ -19,7 +19,7 @@ import java.util.List;
 public class CalendarConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory= (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private VortexCrudItemFactory<FieldType> factory = new CardFactory<>();
 
     private FieldType titleField;
 
@@ -35,7 +35,7 @@ public class CalendarConfiguration<ModelClass, FieldType, RepositoryType> implem
 
     private FieldType imageField;
 
-    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+    private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 

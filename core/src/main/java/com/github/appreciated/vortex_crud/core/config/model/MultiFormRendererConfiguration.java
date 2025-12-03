@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+    private VortexCrudItemFactory<FieldType> factory;
 
     private FieldType titleField;
 
@@ -25,7 +25,7 @@ public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryTyp
 
     private FieldType imageField;
 
-    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+    private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 
@@ -34,4 +34,14 @@ public class MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryTyp
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms;
+
+    public VortexCrudItemFactory<FieldType> factory() { return factory; }
+    public FieldType titleField() { return titleField; }
+    public FieldType descriptionField() { return descriptionField; }
+    public FieldType imageField() { return imageField; }
+    public VortexCrudResourceProvider resourceProvider() { return resourceProvider; }
+    public boolean inlineEdit() { return inlineEdit; }
+    public FieldType filterField() { return filterField; }
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() { return children; }
+    public List<RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>> forms() { return forms; }
 }

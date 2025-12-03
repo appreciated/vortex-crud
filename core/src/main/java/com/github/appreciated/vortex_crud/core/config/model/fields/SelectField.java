@@ -12,18 +12,46 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * Thin Field type for SelectFieldFactory.
+ */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 public class SelectField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-    String values;
     List<Validator<?>> validators;
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SelectFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new SelectFieldFactory<>();
+
+    String values;
+
+    @Override
+    public List<Validator<?>> validators() {
+        return validators;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
+    }
 }

@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * Thin Field type for TextFieldFactory.
+ * Thin Field type for PasswordFieldFactory.
  */
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -25,7 +25,31 @@ public class PasswordField<ModelClass, FieldType, RepositoryType> implements Fie
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) PasswordFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new PasswordFieldFactory<>();
+
+    @Override
+    public List<Validator<?>> validators() {
+        return validators;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
+    }
 }

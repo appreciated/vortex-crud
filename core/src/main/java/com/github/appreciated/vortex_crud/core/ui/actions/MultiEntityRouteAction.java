@@ -10,25 +10,7 @@ import lombok.experimental.Accessors;
 /**
  * A route action that requires one or more entities to be selected.
  * The action is automatically enabled only when at least one entity is selected.
- *
- * <p>Examples: Bulk Delete, Export Selected, Assign to User, Change Status</p>
- *
- * <p>Example usage:</p>
- * <pre>{@code
- * MultiEntityRouteAction.<Task>builder()
- *     .componentFactory(() -> {
- *         Button btn = new Button("Export Selected", VaadinIcon.DOWNLOAD.create());
- *         return btn;
- *     })
- *     .handler(context -> {
- *         List<Task> selectedTasks = context.getSelectedEntities();
- *         exportTasks(selectedTasks);
- *     })
- *     .build()
- * }</pre>
- *
- * @param <FieldType> The type used to identify fields in the data store
- * @param <ModelClass> The type of entity
+ * ...
  */
 @Accessors(fluent = true)
 @Builder
@@ -64,8 +46,18 @@ public class MultiEntityRouteAction<FieldType, ModelClass> implements RouteActio
     private final int maxSelectionCount = Integer.MAX_VALUE;
 
     @Override
+    public SerializableSupplier<Component> componentFactory() {
+        return componentFactory;
+    }
+
+    @Override
     public void handle(RouteActionContext<FieldType, ModelClass> context) {
         handler.accept(context);
+    }
+
+    @Override
+    public boolean visible() {
+        return visible;
     }
 
     /**

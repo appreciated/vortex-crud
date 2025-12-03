@@ -1,12 +1,10 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.DefaultFieldFactoryRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasSize;
@@ -24,30 +22,22 @@ import java.util.Map;
 @Service
 public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
-    private final DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory;
-    private final VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry;
-    private final ReflectionService<FieldType> reflectionService;
-
     @Autowired(required = false)
     private VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
-    public FormCreator(DefaultFieldFactoryRegistry<ModelClass, FieldType, RepositoryType> componentFactory,
-                       VortexCrudCollectionFactoryRegistry<ModelClass, FieldType, RepositoryType> collectionFactoryRegistry,
-                       ReflectionService<FieldType> reflectionService) {
-        this.componentFactory = componentFactory;
-        this.collectionFactoryRegistry = collectionFactoryRegistry;
-        this.reflectionService = reflectionService;
+    public FormCreator() {
     }
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
                                    RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                                    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fieldsViewConfig,
                                    Object entity,
-                                   VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                                    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
                                    FormLayout form) {
         Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
@@ -58,8 +48,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }
 
-                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = componentFactory.getFactory(field.factory());
-                Component component = factory.createComponent(dataStoreKey, fieldName, field);
+                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factory();
+                Component component = factory.createComponent(dataStoreKey, fieldName, field, context);
 
                 // Apply RBAC field-level permissions
                 if (permissionChecker != null) {
@@ -106,12 +96,11 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     form.setColspan(formItem, element.span());
                 }
             } else {
-                Component collection = collectionFactoryRegistry.getFactory(element.factory()).createCollection(
+                Component collection = element.factory().createCollection(
                         reflectionService.getId(entity),
                         routeRenderer,
                         element,
-                        routeFactory,
-                        this
+                        context
                 );
                 form.add(collection);
                 form.setColspan(collection, element.span());

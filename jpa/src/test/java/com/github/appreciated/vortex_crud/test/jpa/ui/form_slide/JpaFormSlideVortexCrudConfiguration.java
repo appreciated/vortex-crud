@@ -40,14 +40,14 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         .fields(Map.of(
                                 "id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
-                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
+                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(new LocalImageResourceProvider()).build()).build()
                         ))
                         .build();
 
         RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder().factory((Class<? extends VortexCrudItemFactory<String>>) (Class<?>)CardFactory.class)
+                .configuration(JpaFormRendererConfiguration.builder().factory(new CardFactory<>())
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.images.labels.title").build(),
@@ -63,7 +63,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .child(imageForm)
                 .build());

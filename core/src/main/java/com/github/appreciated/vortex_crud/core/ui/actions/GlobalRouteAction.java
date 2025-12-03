@@ -11,27 +11,7 @@ import lombok.experimental.Accessors;
  * A route action that does not require any entity selection.
  * Global actions are always enabled and can perform operations
  * that don't depend on specific entity selections.
- *
- * <p>Examples: Export All, Generate Report, Bulk Import, Refresh Data</p>
- *
- * <p>Example usage:</p>
- * <pre>{@code
- * GlobalRouteAction.<Task>builder()
- *     .componentFactory(() -> {
- *         Button btn = new Button("Export All", VaadinIcon.DOWNLOAD.create());
- *         btn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
- *         return btn;
- *     })
- *     .handler(context -> {
- *         List<Task> allTasks = context.getDataStore()
- *             .getRecordsFromTable(0, Integer.MAX_VALUE);
- *         exportTasks(allTasks);
- *     })
- *     .build()
- * }</pre>
- *
- * @param <FieldType> The type used to identify fields in the data store
- * @param <ModelClass> The type of entity
+ * ...
  */
 @Accessors(fluent = true)
 @Builder
@@ -55,8 +35,18 @@ public class GlobalRouteAction<FieldType, ModelClass> implements RouteAction<Fie
     private final boolean visible = true;
 
     @Override
+    public SerializableSupplier<Component> componentFactory() {
+        return componentFactory;
+    }
+
+    @Override
     public void handle(RouteActionContext<FieldType, ModelClass> context) {
         handler.accept(context);
+    }
+
+    @Override
+    public boolean visible() {
+        return visible;
     }
 
     /**

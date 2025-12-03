@@ -3,12 +3,11 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.ModalityMode;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -25,18 +24,6 @@ import java.util.stream.Collectors;
 
 public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy;
-
-    public ConnectDialogFactory(
-            ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
-            ReflectionService<FieldType> reflectionService, VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy) {
-        this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtilStrategy = dataStoreUtilStrategy;
-    }
-
     /**
      * Creates a dialog for managing many-to-many relationships between entities.
      *
@@ -45,11 +32,10 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
      * @param foreignKeyField         The field in the associative table that references the source entity.
      * @param formRouteRenderer       The renderer configuration for the form route.
      * @param collectionConfiguration Configuration for the collection, including many-to-many relationship details.
-     * @param dataStoreKey            The key identifying the target data store.
-     * @param routeFactory            Registry for route factories.
+     * @param dataStore               The key identifying the target data store.
+     * @param context                 VortexCrudContext.
      * @param storeListener           Callback to be executed when changes are stored successfully.
      * @param cancelListener          Callback to be executed when the operation is cancelled.
-     * @param formCreator             Factory for creating forms.
      * @return A Dialog component allowing users to manage entity connections.
      */
     @Override
@@ -59,10 +45,13 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
-                         VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactory,
+                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                          OnStoreListener storeListener,
-                         OnCancelListener cancelListener,
-                         FormCreator<ModelClass, FieldType, RepositoryType> formCreator) {
+                         OnCancelListener cancelListener) {
+
+        ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy = context.manyToManyPersistenceStrategy();
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
+        VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy = context.dataStoreUtil();
 
         ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.manyToMany();
         Dialog dialog = new Dialog();

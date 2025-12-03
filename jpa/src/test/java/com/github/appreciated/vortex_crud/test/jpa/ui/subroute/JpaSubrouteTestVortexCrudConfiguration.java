@@ -36,7 +36,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(
                                         ImageFieldRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .resourceProvider(new LocalImageResourceProvider())
                                                 .build()
                                 ).build()
                         ))

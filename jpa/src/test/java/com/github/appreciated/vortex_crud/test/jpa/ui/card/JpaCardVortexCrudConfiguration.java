@@ -35,7 +35,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                         .fields(Map.of(
                                 "id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
-                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(LocalImageResourceProvider.class).build()).build()
+                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(new LocalImageResourceProvider()).build()).build()
                         ))
                         .build();
 
@@ -58,7 +58,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .configuration(GridItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                         .titleField("title")
                         .imageField("url")
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .child(imageForm)
                 .build());

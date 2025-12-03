@@ -3,13 +3,12 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactoryRegistry;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
@@ -34,12 +33,12 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
-    private final VortexCrudFileProviderRegistry fileProviderRegistry;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -47,22 +46,18 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     @SuppressWarnings("unchecked")
     public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                            RouteRenderer<ModelClass, FieldType, RepositoryType> config,
-                           VortexCrudItemFactoryRegistry<FieldType> itemFactoryRegistry,
-                           VortexCrudFileProviderRegistry fileProviderRegistry,
-                           VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-                           ReflectionService<FieldType> reflectionService,
-                           VortexCrudDataStoreUtilStrategy dataStoreUtil
+                           VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.pathVariables = routeResolver;
-        this.fileProviderRegistry = fileProviderRegistry;
-        this.fieldNameResolver = fieldNameResolver;
-        this.reflectionService = reflectionService;
-        this.dataStoreUtil = dataStoreUtil;
+        this.context = context;
+        this.fieldNameResolver = context.fieldNameResolver();
+        this.reflectionService = context.reflectionService();
+        this.dataStoreUtil = context.dataStoreUtil();
 
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreConfig().dataStoreInstance();
         itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.configuration();
 
-        this.itemFactory = itemFactoryRegistry.getFactory(itemRendererConfiguration.factory());
+        this.itemFactory = itemRendererConfiguration.factory();
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -89,9 +84,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 Component component = itemFactory.renderItem(itemRendererConfiguration,
                         entity,
                         maxWidth,
-                        fileProviderRegistry,
-                        fieldNameResolver,
-                        reflectionService);
+                        context);
                 component.getStyle().setWidth("100%");
                 Div div = new Div(component);
                 div.getStyle()

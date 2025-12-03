@@ -19,7 +19,7 @@ import java.util.List;
 public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory= (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private VortexCrudItemFactory<FieldType> factory = new CardFactory<>();
 
     private FieldType titleField;
 
@@ -27,7 +27,7 @@ public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implemen
 
     private FieldType imageField;
 
-    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+    private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 
@@ -38,4 +38,15 @@ public class KanbanConfiguration<ModelClass, FieldType, RepositoryType> implemen
     private FieldType columnField;
 
     private FieldType rowIndexField;
+
+    public VortexCrudItemFactory<FieldType> factory() { return factory; }
+    public FieldType titleField() { return titleField; }
+    public FieldType descriptionField() { return descriptionField; }
+    public FieldType imageField() { return imageField; }
+    public VortexCrudResourceProvider resourceProvider() { return resourceProvider; }
+    public boolean inlineEdit() { return inlineEdit; }
+    public FieldType filterField() { return filterField; }
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() { return children; }
+    public FieldType columnField() { return columnField; }
+    public FieldType rowIndexField() { return rowIndexField; }
 }

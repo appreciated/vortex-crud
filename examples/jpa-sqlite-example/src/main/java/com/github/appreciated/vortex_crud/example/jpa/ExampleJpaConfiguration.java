@@ -125,8 +125,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
-                .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) FormDialogFactory.class)
+                .factory(new ListCollectionFactory<>())
+                .configuration(JpaCollection.builder(new FormDialogFactory<>())
                         .data(JpaCollectionConfiguration.builder(commentConfig)
                                 .oneToMany(new JpaOneToMany("task"))
                                 .children(List.of("commentText"))
@@ -147,8 +147,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of("title"))
                 .build();
         InternalFormElement build1 = JpaCollectionElement.builder("route.tasks.labels.related-tasks")
-                .factory((Class<? extends VortexCrudCollectionFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class<?>) ListCollectionFactory.class)
-                .configuration(JpaCollection.builder((Class<? extends VortexCrudDialogFactory<JpaRepository<?, ?>, String, JpaRepository<?, ?>>>) (Class) ConnectDialogFactory.class)
+                .factory(new ListCollectionFactory<>())
+                .configuration(JpaCollection.builder(new ConnectDialogFactory<>())
                         .data(build2)
                         .emptyMessage("route.tasks.labels.related-tasks-empty-message")
                         .configuration(new CollectionConfig("title"))
@@ -266,9 +266,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreConfig(taskConfig)
                 .title("route.done-tasks.title")
-                .configuration(JpaGridItemRendererConfiguration.builder()
+                .formConfiguration(JpaFormRendererConfiguration.builder()
                         .titleField("title")
-                        .descriptionField("description")
+                        .children(List.of(
+                                JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
+                                JpaFieldElement.builder("description", "route.tasks.labels.description").build(),
+                                JpaFieldElement.builder("status", "route.tasks.labels.status").build(),
+                                JpaFieldElement.builder("dueDate", "route.tasks.labels.due_date").build(),
+                                JpaFieldElement.builder("assignedTo", "route.tasks.labels.assigned_to").build(),
+                                build,
+                                build1
+                        ))
                         .build())
                 .writeRoles(List.of("admin", "manager"))
                 .child(taskForm)
@@ -280,7 +288,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageForm)
@@ -308,7 +316,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
                         .imageField("url")
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(imageSlideForm)

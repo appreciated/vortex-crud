@@ -19,7 +19,7 @@ import java.util.List;
 public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType>, ItemFactory<FieldType> {
 
     @Builder.Default
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory = (Class<? extends VortexCrudItemFactory<FieldType>>) (Class<?>) CardFactory.class;
+    private VortexCrudItemFactory<FieldType> factory = new CardFactory<>();
 
     private FieldType titleField;
 
@@ -27,11 +27,20 @@ public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType
 
     private FieldType imageField;
 
-    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+    private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 
     private FieldType filterField;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    public VortexCrudItemFactory<FieldType> factory() { return factory; }
+    public FieldType titleField() { return titleField; }
+    public FieldType descriptionField() { return descriptionField; }
+    public FieldType imageField() { return imageField; }
+    public VortexCrudResourceProvider resourceProvider() { return resourceProvider; }
+    public boolean inlineEdit() { return inlineEdit; }
+    public FieldType filterField() { return filterField; }
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() { return children; }
 }

@@ -28,4 +28,16 @@ public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> impl
     private ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany;
 
     private List<FieldType> children;
+
+    public OneToMany<ModelClass, FieldType, RepositoryType> oneToMany() {
+        return oneToMany;
+    }
+
+    public ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany() {
+        return manyToMany;
+    }
+
+    public List<FieldType> children() {
+        return children;
+    }
 }

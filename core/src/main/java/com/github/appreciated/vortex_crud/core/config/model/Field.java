@@ -6,7 +6,7 @@ import com.vaadin.flow.data.binder.Validator;
 import java.util.List;
 
 public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled {
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory();
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory();
 
     /**
      * Get the validators to apply to this field.
