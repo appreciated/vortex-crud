@@ -51,6 +51,9 @@ public class SecurityIntegrationTest extends BaseUITest {
     @MockitoBean
     private TranslationService translationService;
 
+    @Autowired
+    private com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService<Object, String, String> configService;
+
     @Value(value = "${local.server.port}")
     private int port;
 

@@ -32,7 +32,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
-    public static final int SECONDS = 30;
+    public static final int SECONDS = 5;
     @Value(value = "${local.server.port}")
     private int port;
 
@@ -58,7 +58,7 @@ public abstract class BaseUITest {
 
         ChromeOptions options = new ChromeOptions();
         if (!disableHeadless) {
-            options.addArguments("--headless=new");
+            //options.addArguments("--headless=new");
         }
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
