@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.card;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -41,7 +44,7 @@ public class JooqCardVortexCrudConfiguration
                                 CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 CARD_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .resourceProvider(new LocalImageResourceProvider())
                                                 .build())
                                         .build()
                         ))
@@ -66,7 +69,7 @@ public class JooqCardVortexCrudConfiguration
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(CARD_IMAGES.TITLE)
                         .imageField(CARD_IMAGES.URL)
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .child(imageForm)
                 .build());

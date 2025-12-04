@@ -48,7 +48,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
                                 VALIDATION_TEST.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
                                 VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(LocalImageResourceProvider.class)
+                                        .resourceProvider(new LocalImageResourceProvider())
                                         .build()).build()
                         )).build();
 

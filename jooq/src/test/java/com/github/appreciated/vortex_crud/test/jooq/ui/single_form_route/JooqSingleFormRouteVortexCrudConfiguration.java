@@ -55,7 +55,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
                         SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(LocalPdfResourceProvider.class)
+                                        .resourceProvider(new LocalPdfResourceProvider())
                                         .build())
                                 .build(),
                         SINGLE_FORM_ROUTE_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()

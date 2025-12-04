@@ -59,7 +59,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
                         GLOBAL_ROUTE_ACTION_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(LocalPdfResourceProvider.class)
+                                        .resourceProvider(new LocalPdfResourceProvider())
                                         .build())
                                 .build(),
                         GLOBAL_ROUTE_ACTION_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
