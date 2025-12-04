@@ -166,8 +166,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 JooqFieldElement.of(TASK.ESTIMATED_HOURS, "route.tasks.labels.estimated_hours").build(),
                                 JooqFieldElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build(),
                                 JooqCollectionElement.of("route.tasks.labels.comments")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) FormDialogFactory.class)
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(taskCommentConfig)
                                                         .oneToMany(new JooqOneToMany(TASK_COMMENT.TASK_ID))
                                                         .children(List.of(TASK_COMMENT.CONTENT, TASK_COMMENT.CREATED_AT))
@@ -183,8 +183,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                                 .build())
                                         .build(),
                                 JooqCollectionElement.of("route.tasks.labels.labels")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(labelConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 TASK_LABEL.TASK_ID,

@@ -16,7 +16,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     private FieldType field;
 
-    private Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory;
+    private VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory;
 
     private boolean readOnly;
 
@@ -31,7 +31,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
     private Collection<ModelClass, FieldType, RepositoryType> configuration;
 
     public InternalFormElement(FieldType field,
-                               Class<? extends VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType>> factory,
+                               VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory,
                                boolean readOnly,
                                List<String> readOnlyForRoles,
                                String label,
@@ -53,5 +53,37 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
         } else {
             this.span = span;
         }
+    }
+
+    public FieldType field() {
+        return field;
+    }
+
+    public VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
+    }
+
+    public boolean readOnly() {
+        return readOnly;
+    }
+
+    public List<String> readOnlyForRoles() {
+        return readOnlyForRoles;
+    }
+
+    public String label() {
+        return label;
+    }
+
+    public ViewFieldType type() {
+        return type;
+    }
+
+    public int span() {
+        return span;
+    }
+
+    public Collection<ModelClass, FieldType, RepositoryType> configuration() {
+        return configuration;
     }
 }

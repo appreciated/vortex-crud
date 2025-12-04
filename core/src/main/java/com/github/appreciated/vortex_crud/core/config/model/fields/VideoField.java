@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.VideoFieldFactory;
 import com.vaadin.flow.data.binder.Validator;
@@ -13,18 +13,46 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * Thin Field type for VideoFieldFactory.
+ */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 public class VideoField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-    RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
     List<Validator<?>> validators;
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) VideoFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new VideoFieldFactory<>();
+
+    VideoFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+
+    @Override
+    public List<Validator<?>> validators() {
+        return validators;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
+    }
 }

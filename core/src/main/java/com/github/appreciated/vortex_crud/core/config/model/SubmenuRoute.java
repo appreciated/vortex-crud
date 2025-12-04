@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -28,7 +29,10 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) SubmenuRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new SubmenuRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
 
@@ -42,9 +46,23 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap;
 
-    /**
-     * List of menu actions for adding custom components to the menu.
-     * This can include dropdowns, filters, action buttons, etc.
-     */
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
+
+    @Override
+    public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() {
+        return null;
+    }
+
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
+    public String title() { return title; }
+    public boolean isDefaultRoute() { return isDefaultRoute; }
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
+    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
+    public boolean isHiddenInMenu() { return isHiddenInMenu; }
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() { return configuration; }
+    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
+    public List<String> writeRoles() { return writeRoles; }
+    public List<String> readOnlyRoles() { return readOnlyRoles; }
+    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap() { return childrenMap; }
+    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
 }

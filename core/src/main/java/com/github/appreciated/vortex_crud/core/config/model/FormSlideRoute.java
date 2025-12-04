@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -27,11 +29,12 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormSlideRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormSlideRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
-
-    private final boolean isDeleteButtonHidden = true;
 
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
@@ -43,10 +46,17 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
+    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
+
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
+
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
     }
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
+    @Override
+    public boolean isDeleteButtonHidden() {
+        return false;
+    }
 }

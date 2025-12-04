@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
@@ -29,7 +30,10 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) CalendarFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CalendarFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
 
@@ -43,18 +47,10 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
-    /**
-     * List of menu action component factories for adding custom components to the menu.
-     * This can include dropdowns, filters, action buttons, etc.
-     */
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
-    /**
-     * List of custom route actions with full access to data store and selected entities.
-     * These actions will be rendered in the route header and automatically
-     * enabled/disabled based on selection state.
-     */
     private List<RouteAction<FieldType, ModelClass>> routeActions;
+
 }

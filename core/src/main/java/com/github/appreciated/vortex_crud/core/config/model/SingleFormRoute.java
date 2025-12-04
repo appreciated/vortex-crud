@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -16,24 +19,7 @@ import java.util.List;
 /**
  * Configuration for a form route that edits a specific single entry based on configuration, rather than using an ID
  * from the URL path.
- * <p>
- * This is useful for routes like user profiles where the entity is determined by
- * the current user context (e.g., Spring Security) rather than a URL parameter.
- * <p>
- * Example:
- * <pre>
- * SingleFormRoute.builder()
- *     .dataStoreKey(userRepository)
- *     .title("route.profile.title")
- *     .entityFilterField("username")
- *     .entityFilterValueProvider(() -> getCurrentUsername())
- *     .configuration(...)
- *     .build()
- * </pre>
- *
- * @param <ModelClass>    The entity class type
- * @param <FieldType>     The field type (e.g., String for JPA, TableField for jOOQ)
- * @param <RepositoryType> The repository/table type
+ * ...
  */
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -49,7 +35,10 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) FormRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
     private boolean isHiddenInMenu;
 
@@ -74,8 +63,27 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
+
     @Override
     public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
         return formConfiguration;
     }
+
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
+    public String title() { return title; }
+    public boolean isDefaultRoute() { return isDefaultRoute; }
+    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
+    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
+    public boolean isHiddenInMenu() { return isHiddenInMenu; }
+    public boolean isDeleteButtonHidden() { return isDeleteButtonHidden; }
+    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() { return formConfiguration; }
+    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
+    public List<String> writeRoles() { return writeRoles; }
+    public List<String> readOnlyRoles() { return readOnlyRoles; }
+    public List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children() { return children; }
+    public FieldType entityFilterField() { return entityFilterField; }
+    public SerializableSupplier<Object> entityFilterValueProvider() { return entityFilterValueProvider; }
+    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
+    public List<RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
 }

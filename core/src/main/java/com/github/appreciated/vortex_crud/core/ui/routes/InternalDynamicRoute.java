@@ -2,10 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -13,7 +11,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 
 /**
  * A dynamic route component that renders different views based on the route path.
- * It uses the {@link VortexCrudConfigService} to retrieve configuration details and the {@link VortexCrudRouteFactoryRegistry}
+ * It uses the {@link VortexCrudContext} to retrieve configuration details and the factory instance
  * to generate the appropriate view container for the specified route.
  * Implements {@link BeforeEnterObserver} to handle navigation events and dynamically update the view.
  * <p>
@@ -26,24 +24,15 @@ import com.vaadin.flow.router.BeforeEnterObserver;
  */
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
-     * @param configService        The configuration service to access application settings.
-     * @param routeFactoryRegistry The registry to look up route factories.
-     * @param dataStoreUtil        Utility strategy for data store operations.
+     * @param context The context containing services and configuration.
      */
-    public InternalDynamicRoute(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-                                VortexCrudDataStoreUtilStrategy dataStoreUtil
-    ) {
-        this.configService = configService;
-        this.routeFactoryRegistry = routeFactoryRegistry;
-        this.dataStoreUtil = dataStoreUtil;
+    public InternalDynamicRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+        this.context = context;
         setSizeFull();
     }
 
@@ -56,15 +45,14 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
         }
         removeAll();
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
-                routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
-                configService.configuration().routes(),
-                dataStoreUtil
+                context.configService().configuration().routes(),
+                context.dataStoreUtil()
         );
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
-        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.factory())
-                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
+        Component component = currentRouteRenderer.factory()
+                .renderRoute(context, currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }
 }

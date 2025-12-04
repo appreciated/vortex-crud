@@ -2,9 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.routes;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -22,15 +21,10 @@ import java.util.Map;
 
 public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
 
-    public VortexCrudRoute(
-            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> routeFactoryRegistry,
-            VortexCrudDataStoreUtilStrategy dataStoreUtil
-    ) {
-        this.routeFactoryRegistry = routeFactoryRegistry;
-        this.dataStoreUtil = dataStoreUtil;
+    public VortexCrudRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+        this.context = context;
         setSizeFull();
     }
 
@@ -58,17 +52,16 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
             throw new IllegalArgumentException("The routePattern must not contain a '/'");
         }
         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
-                routeFactoryRegistry,
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
                 Map.of(routePattern, configuration()),
-                dataStoreUtil
+                context.dataStoreUtil()
         );
 
         RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
 
-        Component component = routeFactoryRegistry.getFactory(currentRouteRenderer.factory())
-                .renderRoute(currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
+        Component component = currentRouteRenderer.factory()
+                .renderRoute(context, currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));
         add(component);
     }
 }

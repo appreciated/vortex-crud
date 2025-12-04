@@ -70,4 +70,40 @@ public class DataStoreDropdownConfig<ModelClass, FieldType, RepositoryType> {
      * Label for the dropdown field
      */
     private String label;
+
+    public String label() {
+        return label;
+    }
+
+    public RepositoryType dataStoreKey() {
+        return dataStoreKey;
+    }
+
+    public FieldType filterField() {
+        return filterField;
+    }
+
+    public Object filterValue() {
+        return filterValue;
+    }
+
+    public int limit() {
+        return limit;
+    }
+
+    public SerializableFunction<ModelClass, String> labelProvider() {
+        return labelProvider;
+    }
+
+    public String placeholder() {
+        return placeholder;
+    }
+
+    public boolean readOnly() {
+        return readOnly;
+    }
+
+    public boolean required() {
+        return required;
+    }
 }

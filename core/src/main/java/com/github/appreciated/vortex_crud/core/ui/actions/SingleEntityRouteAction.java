@@ -10,28 +10,7 @@ import lombok.experimental.Accessors;
 /**
  * A route action that requires exactly one entity to be selected.
  * The action is automatically enabled only when exactly one entity is selected.
- *
- * <p>Examples: Edit, Approve, Archive, View Details</p>
- *
- * <p>Example usage:</p>
- * <pre>{@code
- * SingleEntityRouteAction.<Task>builder()
- *     .componentFactory(() -> {
- *         Button btn = new Button("Approve", VaadinIcon.CHECK.create());
- *         btn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
- *         return btn;
- *     })
- *     .handler(context -> {
- *         Task task = context.getFirstSelectedEntity();
- *         task.setStatus("APPROVED");
- *         context.getDataStore().updateRecord(task);
- *         context.getRefreshCallback().run();
- *     })
- *     .build()
- * }</pre>
- *
- * @param <FieldType> The type used to identify fields in the data store
- * @param <ModelClass> The type of entity
+ * ...
  */
 @Accessors(fluent = true)
 @Builder
@@ -55,8 +34,18 @@ public class SingleEntityRouteAction<FieldType, ModelClass> implements RouteActi
     private final boolean visible = true;
 
     @Override
+    public SerializableSupplier<Component> componentFactory() {
+        return componentFactory;
+    }
+
+    @Override
     public void handle(RouteActionContext<FieldType, ModelClass> context) {
         handler.accept(context);
+    }
+
+    @Override
+    public boolean visible() {
+        return visible;
     }
 
     /**

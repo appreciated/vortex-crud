@@ -16,4 +16,8 @@ import java.util.Map;
 @Getter
 public class Selects {
     private Map<String, LinkedHashMap<?, String>> configs;
+
+    public Map<String, LinkedHashMap<?, String>> configs() {
+        return configs;
+    }
 }

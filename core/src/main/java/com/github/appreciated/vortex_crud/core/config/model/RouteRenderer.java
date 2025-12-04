@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
@@ -24,7 +25,11 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     boolean isDefaultRoute();
 
-    Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory();
+    VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory();
+
+    default VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() {
+        return null;
+    }
 
     boolean isHiddenInMenu();
 

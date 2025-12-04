@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 public class PdfFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> implements RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> {
 
-    private Class<? extends VortexCrudItemFactory<FieldType>> factory;
+    private VortexCrudItemFactory<FieldType> factory;
 
     private FieldType titleField;
 
@@ -25,7 +25,7 @@ public class PdfFieldRendererConfiguration<ModelClass, FieldType, RepositoryType
 
     private FieldType imageField;
 
-    private Class<? extends VortexCrudResourceProvider> resourceProvider;
+    private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 

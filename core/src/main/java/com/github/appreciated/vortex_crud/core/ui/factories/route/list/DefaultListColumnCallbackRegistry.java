@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudFileProviderRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -16,9 +15,9 @@ public class DefaultListColumnCallbackRegistry<ModelClass, FieldType, Repository
 
     private final HashMap<String, VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType>> callbacks = new HashMap<>();
 
-    public DefaultListColumnCallbackRegistry(VortexCrudFileProviderRegistry fileProviderRegistry,
+    public DefaultListColumnCallbackRegistry(
                                              com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService<FieldType> reflectionService) {
-        callbacks.put("default", new DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType>(fileProviderRegistry, reflectionService));
+        callbacks.put("default", new DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType>(reflectionService));
     }
 
     @Override

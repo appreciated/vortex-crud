@@ -13,25 +13,49 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+/**
+ * Thin Field type for ReferenceFieldFactory.
+ */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-    VortexCrudDataStore<FieldType, ModelClass> dataStore;
-    FieldType field;
-    FieldType filterField;
-    List<FieldType> children;
+    List<Validator<?>> validators;
     boolean required;
     List<String> writeRoles;
     List<String> readOnlyRoles;
-    @SuppressWarnings("unchecked")
     @Builder.Default
-    Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) ReferenceFieldFactory.class;
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new ReferenceFieldFactory<>();
+
+    FieldType field;
+    FieldType filterField;
+    List<FieldType> children;
+    VortexCrudDataStore<FieldType, ?> dataStore;
 
     @Override
     public List<Validator<?>> validators() {
-        return null;
+        return validators;
+    }
+
+    @Override
+    public boolean required() {
+        return required;
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return writeRoles;
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return readOnlyRoles;
+    }
+
+    @Override
+    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
+        return factory;
     }
 }

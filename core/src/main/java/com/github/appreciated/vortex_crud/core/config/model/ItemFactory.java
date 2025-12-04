@@ -10,5 +10,5 @@ public interface ItemFactory<FieldType> {
 
     FieldType imageField();
 
-    Class<? extends VortexCrudResourceProvider> resourceProvider();
+    VortexCrudResourceProvider resourceProvider();
 }

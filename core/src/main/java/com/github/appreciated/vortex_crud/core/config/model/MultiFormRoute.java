@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -13,29 +16,6 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-/**
- * Configuration for a multi-form route that displays multiple forms simultaneously
- * for a single entity. This is useful for complex forms that need to be organized
- * into multiple sections or tabs.
- * <p>
- * Example:
- * <pre>
- * MultiFormRoute.builder()
- *     .dataStoreKey(userRepository)
- *     .title("route.user.profile.title")
- *     .configuration(MultiFormRendererConfiguration.builder()
- *         .forms(List.of(
- *             FormRendererConfiguration.builder()...build(),
- *             FormRendererConfiguration.builder()...build()
- *         ))
- *         .build())
- *     .build()
- * </pre>
- *
- * @param <ModelClass>    The entity class type
- * @param <FieldType>     The field type (e.g., String for JPA, TableField for jOOQ)
- * @param <RepositoryType> The repository/table type
- */
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,9 +30,14 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory = (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MultiFormRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MultiFormRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
     private boolean isHiddenInMenu;
+
+    private final boolean isDeleteButtonHidden = false;
 
     private MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
@@ -62,11 +47,23 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     /**
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
+
+    @Override
+    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
+        return configuration;
+    }
+
+    /**
+     * List of custom route actions with full access to data store and selected entities.
+     * These actions will be rendered in the route header and automatically
+     * enabled/disabled based on selection state.
+     */
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
 }

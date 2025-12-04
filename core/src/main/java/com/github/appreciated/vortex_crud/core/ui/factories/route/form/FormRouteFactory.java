@@ -2,16 +2,15 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.DetailRouteSetting;
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactoryRegistry;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
@@ -33,27 +32,9 @@ import jakarta.annotation.Nullable;
 
 public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
-    private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
-    private final VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry;
-    private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
-
-    public FormRouteFactory(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                            FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
-                            VortexCrudRouteFactoryRegistry<ModelClass, FieldType, RepositoryType> factoryRegistry,
-                            ReflectionService<FieldType> reflectionService,
-                            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker
-    ) {
-        this.configService = configService;
-        this.formCreator = formCreator;
-        this.factoryRegistry = factoryRegistry;
-        this.reflectionService = reflectionService;
-        this.permissionChecker = permissionChecker;
-    }
-
     @Override
     public Component renderRoute(
+            VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
@@ -62,10 +43,11 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
         FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = routeProvider.formConfiguration();
         assert detailRouteSetting != null;
-        return getForm(routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider, form);
+        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider, form);
     }
 
-    public VerticalLayout getForm(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+    public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                  VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                                   boolean isWrapped,
                                   boolean isHeaderHidden,
                                   boolean creationMode,
@@ -78,6 +60,10 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         form.setMaxWidth("1000px");
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
         String prefix = !isWrapped ? layout.getTranslation(routeRenderer.title()) + " / " : "";
+
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
+        FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();
+        VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker = context.rbacPermissionChecker();
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
@@ -119,7 +105,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, factoryRegistry, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, context, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

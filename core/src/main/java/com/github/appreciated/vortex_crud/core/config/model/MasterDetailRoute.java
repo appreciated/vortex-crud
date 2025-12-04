@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -28,13 +29,18 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>> factory= (Class<? extends VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType>>) (Class<?>) MasterDetailRouteFactory.class;
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MasterDetailRouteFactory<>();
+
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
 
-    private final boolean isDeleteButtonHidden = false;
+    private GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
+
+    private final boolean isDeleteButtonHidden = false;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -42,19 +48,10 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
-    private FormRouteProvider<ModelClass, FieldType, RepositoryType> child;
-
-    @Override
-    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
-        return child.formConfiguration();
-    }
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
-    /**
-     * List of custom route actions with full access to data store and selected entities.
-     * These actions will be rendered in the route header and automatically
-     * enabled/disabled based on selection state.
-     */
     private List<RouteAction<FieldType, ModelClass>> routeActions;
+
 }
