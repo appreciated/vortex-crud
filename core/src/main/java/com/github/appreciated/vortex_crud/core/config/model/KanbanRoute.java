@@ -50,17 +50,4 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
-    public String title() { return title; }
-    public boolean isDefaultRoute() { return isDefaultRoute; }
-    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
-    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
-    public boolean isHiddenInMenu() { return isHiddenInMenu; }
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() { return configuration; }
-    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
-    public List<String> writeRoles() { return writeRoles; }
-    public List<String> readOnlyRoles() { return readOnlyRoles; }
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() { return child; }
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
-    public List<RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
 }

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
@@ -32,13 +32,11 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormSlideRouteFactory<>();
 
     @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormSlideFactory<>();
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean isHiddenInMenu;
 
     private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
-
-    private final boolean isDeleteButtonHidden = false;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -50,25 +48,15 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
-    private List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         return (FormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
     }
 
-    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
-    public String title() { return title; }
-    public boolean isDefaultRoute() { return isDefaultRoute; }
-    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
-    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
-    public boolean isHiddenInMenu() { return isHiddenInMenu; }
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() { return configuration; }
-    public boolean isDeleteButtonHidden() { return isDeleteButtonHidden; }
-    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
-    public List<String> writeRoles() { return writeRoles; }
-    public List<String> readOnlyRoles() { return readOnlyRoles; }
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() { return child; }
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
-    public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
+    @Override
+    public boolean isDeleteButtonHidden() {
+        return false;
+    }
 }

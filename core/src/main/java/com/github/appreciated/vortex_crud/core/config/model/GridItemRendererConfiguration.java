@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
@@ -35,12 +36,4 @@ public class GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    public VortexCrudItemFactory<FieldType> factory() { return factory; }
-    public FieldType titleField() { return titleField; }
-    public FieldType descriptionField() { return descriptionField; }
-    public FieldType imageField() { return imageField; }
-    public VortexCrudResourceProvider resourceProvider() { return resourceProvider; }
-    public boolean inlineEdit() { return inlineEdit; }
-    public FieldType filterField() { return filterField; }
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() { return children; }
 }
