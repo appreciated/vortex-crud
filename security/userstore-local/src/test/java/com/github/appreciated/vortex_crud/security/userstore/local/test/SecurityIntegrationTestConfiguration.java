@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -65,6 +66,8 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                                 InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
                         ))
                         .build())
+                .writeRoles(List.of("ADMIN", "USER"))
+                .readOnlyRoles(List.of("VIEWER"))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<Object, String, String>> routes = new LinkedHashMap<>();
@@ -73,6 +76,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .title("route.users-grid")
                 .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
                         .titleField("username")
+                        .factory((Class) CardFactory.class)
                         .build())
                 .child(userForm)
                 .writeRoles(List.of("ADMIN", "USER"))
