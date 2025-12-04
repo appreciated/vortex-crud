@@ -2,7 +2,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DateRangeField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.DateTimeRangeField;
 import com.github.appreciated.vortex_crud.core.entity.DateRange;
+import com.github.appreciated.vortex_crud.core.entity.DateTimeRange;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +81,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
-                if (fieldName instanceof String propertyName && !(field instanceof DateRangeField)) {
+                if (fieldName instanceof String propertyName && !(field instanceof DateRangeField) && !(field instanceof DateTimeRangeField)) {
                     builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
                 }
                 if (field.required() && component instanceof HasValue) {
@@ -103,6 +106,19 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                 DateRange range = (DateRange) o;
                                 reflectionService.setValue(entity1, dateRangeField.startField(), range.getStart());
                                 reflectionService.setValue(entity1, dateRangeField.endField(), range.getEnd());
+                            }
+                    );
+                } else if (field instanceof DateTimeRangeField) {
+                    DateTimeRangeField<ModelClass, FieldType, RepositoryType> dateTimeRangeField = (DateTimeRangeField<ModelClass, FieldType, RepositoryType>) field;
+                    builder.bind(
+                            entity1 -> new DateTimeRange(
+                                    (LocalDateTime) reflectionService.getValue(entity1, dateTimeRangeField.startField()),
+                                    (LocalDateTime) reflectionService.getValue(entity1, dateTimeRangeField.endField())
+                            ),
+                            (entity1, o) -> {
+                                DateTimeRange range = (DateTimeRange) o;
+                                reflectionService.setValue(entity1, dateTimeRangeField.startField(), range.getStart());
+                                reflectionService.setValue(entity1, dateTimeRangeField.endField(), range.getEnd());
                             }
                     );
                 } else {

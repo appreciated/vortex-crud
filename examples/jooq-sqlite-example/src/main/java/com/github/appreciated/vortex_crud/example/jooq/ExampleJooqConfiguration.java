@@ -73,7 +73,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
                         PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build(),
                         PROJECTS.PDF_URL, JooqPdfField.builder().configuration(JooqPdfFieldRendererConfiguration.builder().resourceProvider(LocalPdfResourceProvider.class).build()).build(),
-                        PROJECTS.DATE_TIME_RANGE, JooqDateTimeRangeField.builder().build()))
+                        PROJECTS.START_DATE_TIME, JooqDateTimeRangeField.builder().startField(PROJECTS.START_DATE_TIME).endField(PROJECTS.END_DATE_TIME).build()))
                 .build();
 
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -190,7 +190,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
                                 JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.date_range").build(),
                                 JooqFieldElement.of(PROJECTS.PDF_URL, "route.projects.labels.pdf").build(),
-                                JooqFieldElement.of(PROJECTS.DATE_TIME_RANGE, "route.projects.labels.date_time_range").build()
+                                JooqFieldElement.of(PROJECTS.START_DATE_TIME, "route.projects.labels.date_time_range").build()
                         )).build()
                 )
                 .build();

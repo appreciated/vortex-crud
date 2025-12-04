@@ -8,5 +8,8 @@ databaseChangeLog:
   - include:
       file: database/V1.sql
       relativeToChangelogFile: true
+  - include:
+      file: database/V2.sql
+      relativeToChangelogFile: true
 
 

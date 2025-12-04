@@ -38,8 +38,9 @@ public class Project {
     @PdfField(LocalPdfResourceProvider.class)
     private String pdfUrl;
 
-    @DateTimeRangeField
-    private DateTimeRange dateTimeRange;
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
 
     // Getters and Setters
     public Integer getId() {
@@ -106,11 +107,19 @@ public class Project {
         this.pdfUrl = pdfUrl;
     }
 
-    public DateTimeRange getDateTimeRange() {
-        return dateTimeRange;
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setDateTimeRange(DateTimeRange dateTimeRange) {
-        this.dateTimeRange = dateTimeRange;
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
     }
 }

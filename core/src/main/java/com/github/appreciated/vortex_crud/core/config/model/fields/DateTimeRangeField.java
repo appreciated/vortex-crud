@@ -21,6 +21,8 @@ import java.util.List;
 @Builder
 @Getter
 public class DateTimeRangeField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
+    FieldType startField;
+    FieldType endField;
     List<Validator<?>> validators;
     boolean required;
     List<String> writeRoles;

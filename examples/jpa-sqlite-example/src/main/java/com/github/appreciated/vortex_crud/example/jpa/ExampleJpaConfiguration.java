@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DateRangeField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.DateTimeRangeField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -115,6 +116,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .startField("startDate")
                 .endField("endDate")
                 .build());
+        projectFields.put("projectDateTimeDuration", DateTimeRangeField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .startField("startDateTime")
+                .endField("endDateTime")
+                .build());
         var projectConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .factory(projectConfigRaw.factory())
                 .dataStoreInstance(projectConfigRaw.dataStoreInstance())
@@ -190,7 +195,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 JpaFieldElement.builder("description", "route.projects.labels.description").build(),
                                 JpaFieldElement.builder("projectDuration", "route.projects.labels.date_range").build(),
                                 JpaFieldElement.builder("pdfUrl", "route.projects.labels.pdf").build(),
-                                JpaFieldElement.builder("dateTimeRange", "route.projects.labels.date_time_range").build()
+                                JpaFieldElement.builder("projectDateTimeDuration", "route.projects.labels.date_time_range").build()
                         ))
                         .build())
                 .build();
