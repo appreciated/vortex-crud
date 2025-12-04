@@ -69,9 +69,9 @@ public class JooqFieldTypesVortexCrudConfiguration
             .formConfiguration(JooqFormRendererConfiguration.builder()
                 .titleField(FIELD_TYPES_TEST.NAME)
                 .children(List.of(
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name"),
-                    JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF"),
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes")
+                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
+                    JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
+                    JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
                 ))
                 .build())
             .build();
@@ -85,17 +85,17 @@ public class JooqFieldTypesVortexCrudConfiguration
             .configuration(JooqListItemRendererConfiguration.builder()
                  .filterField(FIELD_TYPES_TEST.NAME)
                  .children(List.of(
-                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name")
+                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
                  ))
                  .build())
             .child(form)
             .build());
 
         return JooqApplication.builder()
-            .withApplicationName("application.name")
-            .withI18nBundlePrefix("ui_test_i18n")
-            .withRoutes(routes)
-            .withSelects(selects)
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
             .build();
     }
 }

@@ -73,17 +73,17 @@ public class JooqSingleFormRouteVortexCrudConfiguration
              .formConfiguration(JooqFormRendererConfiguration.builder()
                  .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
                  .children(List.of(
-                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name"),
-                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF")
+                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
+                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
                  ))
                  .build())
              .build());
 
         return JooqApplication.builder()
-            .withApplicationName("application.name")
-            .withI18nBundlePrefix("ui_test_i18n")
-            .withRoutes(routes)
-            .withSelects(selects)
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
             .build();
     }
 }

@@ -73,9 +73,9 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .formConfiguration(JooqFormRendererConfiguration.builder()
                 .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
                 .children(List.of(
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name"),
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF"),
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes")
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
+                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
                 ))
                 .build())
             .build();
@@ -90,7 +90,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .configuration(JooqListItemRendererConfiguration.builder()
                  .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
                  .children(List.of(
-                      JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name")
+                      JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
                  ))
                  .build())
             .routeActions(List.of(
@@ -103,10 +103,10 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .build());
 
         return JooqApplication.builder()
-            .withApplicationName("application.name")
-            .withI18nBundlePrefix("ui_test_i18n")
-            .withRoutes(routes)
-            .withSelects(selects)
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .selects(selects)
             .build();
     }
 }

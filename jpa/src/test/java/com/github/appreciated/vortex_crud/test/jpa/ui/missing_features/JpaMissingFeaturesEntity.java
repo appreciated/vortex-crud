@@ -32,6 +32,14 @@ public class JpaMissingFeaturesEntity {
     @TextAreaField
     private String notes;
 
+    @com.github.appreciated.vortex_crud.jpa.service.annoations.DateRangeField
+    @Convert(converter = com.github.appreciated.vortex_crud.jpa.service.converter.DateRangeConverter.class)
+    private com.github.appreciated.vortex_crud.core.entity.DateRange dateRange;
+
+    @com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimeRangeField
+    @Convert(converter = com.github.appreciated.vortex_crud.jpa.service.converter.DateTimeRangeConverter.class)
+    private com.github.appreciated.vortex_crud.core.entity.DateTimeRange dateTimeRange;
+
     public Long getId() {
         return id;
     }
@@ -70,5 +78,21 @@ public class JpaMissingFeaturesEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public com.github.appreciated.vortex_crud.core.entity.DateRange getDateRange() {
+        return dateRange;
+    }
+
+    public void setDateRange(com.github.appreciated.vortex_crud.core.entity.DateRange dateRange) {
+        this.dateRange = dateRange;
+    }
+
+    public com.github.appreciated.vortex_crud.core.entity.DateTimeRange getDateTimeRange() {
+        return dateTimeRange;
+    }
+
+    public void setDateTimeRange(com.github.appreciated.vortex_crud.core.entity.DateTimeRange dateTimeRange) {
+        this.dateTimeRange = dateTimeRange;
     }
 }

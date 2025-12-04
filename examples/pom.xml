@@ -23,5 +23,6 @@
         <module>jooq-sqlite-example</module>
         <module>jooq-dev-platform-demo</module>
         <module>jooq-project-management-demo</module>
+        <module>jooq-ressource-planner-demo</module>
     </modules>
 </project>
