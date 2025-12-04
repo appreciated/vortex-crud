@@ -7,7 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -53,7 +52,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                         .children(List.of(
                                 JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
                                 JooqCollectionElement.of("relations.labels.related").factory(new ListCollectionFactory())
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory())
                                                 .data(JooqCollectionConfiguration.of(config)
                                                         .manyToMany(new JooqManyToMany(
                                                                 ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
