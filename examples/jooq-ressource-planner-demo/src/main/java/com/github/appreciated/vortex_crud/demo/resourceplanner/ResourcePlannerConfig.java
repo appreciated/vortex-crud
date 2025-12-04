@@ -7,15 +7,12 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.AppointmentRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
-import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -141,8 +138,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 JooqFieldElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
                                 JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                                 JooqCollectionElement.of("route.persons.labels.services")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class) ConnectDialogFactory.class)
+                                        .factory(new ListCollectionFactory())
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory())
                                                 .data(JooqCollectionConfiguration.of(typeConfig)
                                                         .manyToMany(new JooqManyToMany(
                                                                 PERSON_APPOINTMENT_TYPE.PERSON_ID,
