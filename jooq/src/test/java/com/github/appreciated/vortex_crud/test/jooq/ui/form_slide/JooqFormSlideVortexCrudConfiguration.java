@@ -43,7 +43,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                                 FROM_SLIDE_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().required(true).build(),
                                 FROM_SLIDE_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .resourceProvider(new LocalImageResourceProvider())
                                                 .build())
                                         .build()
                         ))
@@ -68,7 +68,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(FROM_SLIDE_IMAGES.TITLE)
                         .imageField(FROM_SLIDE_IMAGES.URL)
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .child(formSlideDialog)
                 .build());

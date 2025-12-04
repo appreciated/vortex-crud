@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.grid;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -41,7 +44,7 @@ public class JooqGridTestVortexCrudConfiguration
                                 GRID_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                                .resourceProvider(LocalImageResourceProvider.class)
+                                                .resourceProvider(new LocalImageResourceProvider())
                                                 .build())
                                         .build()
                         ))
@@ -66,7 +69,7 @@ public class JooqGridTestVortexCrudConfiguration
                 .configuration(JooqGridItemRendererConfiguration.builder()
                         .titleField(GRID_IMAGES.TITLE)
                         .imageField(GRID_IMAGES.URL)
-                        .resourceProvider(LocalImageResourceProvider.class)
+                        .resourceProvider(new LocalImageResourceProvider())
                         .build())
                 .child(imageForm)
                 .build());

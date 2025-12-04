@@ -76,7 +76,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .title("route.users-grid")
                 .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
                         .titleField("username")
-                        .factory((Class) CardFactory.class)
+                        .factory(new CardFactory())
                         .build())
                 .child(userForm)
                 .writeRoles(List.of("ADMIN", "USER"))

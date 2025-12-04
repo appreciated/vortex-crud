@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -35,7 +34,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(ADDITIONAL_FIELDS_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 ADDITIONAL_FIELDS_TEST.ID, JooqIdField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
@@ -43,7 +42,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                                 ADDITIONAL_FIELDS_TEST.PASSWORD, JooqPasswordField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.PRICE, JooqBigDecimalField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.VIDEO_URL, JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(LocalVideoResourceProvider.class)
+                                        .resourceProvider(new LocalVideoResourceProvider())
                                         .build()).build()
                         )).build();
 

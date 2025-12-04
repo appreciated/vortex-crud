@@ -55,7 +55,7 @@ public class JooqFieldTypesVortexCrudConfiguration
                         FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         FIELD_TYPES_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(LocalPdfResourceProvider.class)
+                                        .resourceProvider(new LocalPdfResourceProvider())
                                         .build())
                                 .build(),
                         FIELD_TYPES_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
