@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.fields.DateRangeField;
+import com.github.appreciated.vortex_crud.core.entity.DateRange;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactoryRegistry;
@@ -18,6 +20,7 @@ import com.vaadin.flow.data.validator.BeanValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +78,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
-                if (fieldName instanceof String propertyName) {
+                if (fieldName instanceof String propertyName && !(field instanceof DateRangeField)) {
                     builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
                 }
                 if (field.required() && component instanceof HasValue) {
@@ -89,10 +92,25 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                     }
                 }
 
-                builder.bind(
-                        entity1 -> reflectionService.getValue(entity1, fieldName),
-                        (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
-                );
+                if (field instanceof DateRangeField) {
+                    DateRangeField<ModelClass, FieldType, RepositoryType> dateRangeField = (DateRangeField<ModelClass, FieldType, RepositoryType>) field;
+                    builder.bind(
+                            entity1 -> new DateRange(
+                                    (LocalDate) reflectionService.getValue(entity1, dateRangeField.startField()),
+                                    (LocalDate) reflectionService.getValue(entity1, dateRangeField.endField())
+                            ),
+                            (entity1, o) -> {
+                                DateRange range = (DateRange) o;
+                                reflectionService.setValue(entity1, dateRangeField.startField(), range.getStart());
+                                reflectionService.setValue(entity1, dateRangeField.endField(), range.getEnd());
+                            }
+                    );
+                } else {
+                    builder.bind(
+                            entity1 -> reflectionService.getValue(entity1, fieldName),
+                            (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
+                    );
+                }
 
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();

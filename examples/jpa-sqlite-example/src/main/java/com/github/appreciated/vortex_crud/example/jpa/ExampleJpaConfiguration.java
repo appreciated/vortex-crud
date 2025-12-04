@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.fields.DateRangeField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -108,7 +109,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         storeMap.put(userStore.getModelClass(), userStore);
 
         // 3. Build DataStoreConfigs
-        var projectConfig = JpaDataStoreConfig.builder(projectRepository, projectStore).withServices(fieldService, storeMap).build();
+        var projectConfigRaw = JpaDataStoreConfig.builder(projectRepository, projectStore).withServices(fieldService, storeMap).build();
+        Map<String, Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> projectFields = new HashMap<>(projectConfigRaw.fields());
+        projectFields.put("projectDuration", DateRangeField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .startField("startDate")
+                .endField("endDate")
+                .build());
+        var projectConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .factory(projectConfigRaw.factory())
+                .dataStoreInstance(projectConfigRaw.dataStoreInstance())
+                .fields(projectFields)
+                .build();
         var taskConfig = JpaDataStoreConfig.builder(taskRepository, taskStore).withServices(fieldService, storeMap).build();
         var commentConfig = JpaDataStoreConfig.builder(taskCommentRepository, commentStore).withServices(fieldService, storeMap).build();
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore).withServices(fieldService, storeMap).build();
@@ -177,8 +188,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .children(List.of(
                                 JpaFieldElement.builder("name", "route.projects.labels.name").build(),
                                 JpaFieldElement.builder("description", "route.projects.labels.description").build(),
-                                JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
-                                JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
+                                JpaFieldElement.builder("projectDuration", "route.projects.labels.date_range").build(),
+                                JpaFieldElement.builder("pdfUrl", "route.projects.labels.pdf").build(),
+                                JpaFieldElement.builder("dateTimeRange", "route.projects.labels.date_time_range").build()
                         ))
                         .build())
                 .build();
@@ -339,6 +351,19 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(videoForm)
+                .build());
+
+        routes.put("calendar", JpaCalendarRoute.builder()
+                .dataStoreConfig(projectConfig)
+                .iconFactory(CALENDAR::create)
+                .title("route.calendar.title")
+                .configuration(JpaCalendarConfiguration.builder()
+                        .titleField("name")
+                        .descriptionField("description")
+                        .startDateField("startDate")
+                        .endDateField("endDate")
+                        .build())
+                .child(projectForm)
                 .build());
 
         routes.put("submenu", JpaSubmenuRoute.builder()

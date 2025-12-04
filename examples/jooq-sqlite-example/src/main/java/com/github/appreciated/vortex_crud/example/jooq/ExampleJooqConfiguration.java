@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -68,10 +69,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECTS.ID, JooqIdField.builder().build(),
                         PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                        PROJECTS.START_DATE, JooqDateField.builder().build(),
-                        PROJECTS.END_DATE, JooqDateField.builder().build(),
+                        PROJECTS.START_DATE, JooqDateRangeField.builder().startField(PROJECTS.START_DATE).endField(PROJECTS.END_DATE).build(),
                         PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                        PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
+                        PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build(),
+                        PROJECTS.PDF_URL, JooqPdfField.builder().configuration(JooqPdfFieldRendererConfiguration.builder().resourceProvider(LocalPdfResourceProvider.class).build()).build(),
+                        PROJECTS.DATE_TIME_RANGE, JooqDateTimeRangeField.builder().build()))
                 .build();
 
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -186,8 +188,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .children(List.of(
                                 JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                                 JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                                JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                                JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.date_range").build(),
+                                JooqFieldElement.of(PROJECTS.PDF_URL, "route.projects.labels.pdf").build(),
+                                JooqFieldElement.of(PROJECTS.DATE_TIME_RANGE, "route.projects.labels.date_time_range").build()
                         )).build()
                 )
                 .build();
@@ -360,6 +363,19 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(videoForm)
+                .build());
+
+        routes.put("calendar", JooqCalendarRoute.builder()
+                .dataStoreConfig(projectsConfig)
+                .iconFactory(CALENDAR::create)
+                .title("route.calendar.title")
+                .configuration(JooqCalendarConfiguration.builder()
+                        .titleField(PROJECTS.NAME)
+                        .descriptionField(PROJECTS.DESCRIPTION)
+                        .startDateField(PROJECTS.START_DATE)
+                        .endDateField(PROJECTS.END_DATE)
+                        .build())
+                .child(projectForm)
                 .build());
 
         routes.put("submenu", JooqSubmenuRoute.builder()

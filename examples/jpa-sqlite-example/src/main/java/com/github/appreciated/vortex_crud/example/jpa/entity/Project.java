@@ -1,8 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
+import com.github.appreciated.vortex_crud.core.entity.DateRange;
+import com.github.appreciated.vortex_crud.core.entity.DateTimeRange;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -33,6 +34,12 @@ public class Project {
 
     @DateTimePickerField
     private LocalDateTime updatedAt;
+
+    @PdfField(LocalPdfResourceProvider.class)
+    private String pdfUrl;
+
+    @DateTimeRangeField
+    private DateTimeRange dateTimeRange;
 
     // Getters and Setters
     public Integer getId() {
@@ -89,5 +96,21 @@ public class Project {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPdfUrl() {
+        return pdfUrl;
+    }
+
+    public void setPdfUrl(String pdfUrl) {
+        this.pdfUrl = pdfUrl;
+    }
+
+    public DateTimeRange getDateTimeRange() {
+        return dateTimeRange;
+    }
+
+    public void setDateTimeRange(DateTimeRange dateTimeRange) {
+        this.dateTimeRange = dateTimeRange;
     }
 }
