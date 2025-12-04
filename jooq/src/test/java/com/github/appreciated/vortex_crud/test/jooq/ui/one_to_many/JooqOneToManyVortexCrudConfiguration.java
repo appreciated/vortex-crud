@@ -8,9 +8,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -72,8 +70,8 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                         .children(List.of(
                                 JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
                                 JooqCollectionElement.of("relations.labels.children")
-                                        .factory((Class<? extends VortexCrudCollectionFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class<?>) ListCollectionFactory.class)
-                                        .configuration(JooqCollection.builder((Class<? extends VortexCrudDialogFactory<TableRecord<?>, TableField<?, ?>, TableImpl<?>>>) (Class)FormDialogFactory.class)
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(childConfig)
                                                         .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
                                                         .children(List.of(ONE_TO_MANY_CHILD.NAME))

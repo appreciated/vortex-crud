@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -30,9 +29,9 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(SUBROUTE_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore<>(SUBROUTE_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(SUBROUTE_TASKS)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 SUBROUTE_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 SUBROUTE_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
@@ -49,6 +48,9 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        GridItemRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> build = JooqGridItemRendererConfiguration.builder()
+                .titleField(SUBROUTE_TASKS.TITLE)
+                .build();
         routes.put("tasks", JooqSubmenuRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.tasks.title")
@@ -56,9 +58,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                         "open", JooqMasterDetailRoute.builder()
                                 .dataStoreConfig(config)
                                 .title("route.open-tasks.title")
-                                .configuration(JooqListItemRendererConfiguration.builder()
-                                        .titleField(SUBROUTE_TASKS.TITLE)
-                                        .build())
+                                .configuration(build)
                                 .child(taskForm)
                                 .build()
                 ))
