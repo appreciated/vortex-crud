@@ -18,6 +18,7 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
@@ -466,7 +467,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         routes.put("custom", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("Custom Route")
                 .iconFactory(CODE::create)
-                .componentClass(LoginView.class)
+                .componentClass(CustomView.class)
                 .build());
 
         routes.put("documents", JooqGridRoute.builder()
