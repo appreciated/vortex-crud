@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.Component;
 
 public interface VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> {
