@@ -4,13 +4,16 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
+import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -19,7 +22,9 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.DSLContext;
@@ -34,6 +39,7 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.Documents.DOCUMENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PROJECTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
@@ -60,18 +66,24 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore commentsStore = new JooqDataStore(TASK_COMMENTS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore imagesStore = new JooqDataStore(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore videosStore = new JooqDataStore(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore documentsStore = new JooqDataStore(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
 
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance((VortexCrudDataStore) projectsStore)
-                .fields(Map.of(
-                        PROJECTS.ID, JooqIdField.builder().build(),
-                        PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                        PROJECTS.START_DATE, JooqDateField.builder().build(),
-                        PROJECTS.END_DATE, JooqDateField.builder().build(),
-                        PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                        PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
+                .fields(Map.ofEntries(
+                        Map.entry(PROJECTS.ID, JooqIdField.builder().build()),
+                        Map.entry(PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build()),
+                        Map.entry(PROJECTS.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build()),
+                        Map.entry(PROJECTS.START_DATE, JooqDateField.builder().build()),
+                        Map.entry(PROJECTS.END_DATE, JooqDateField.builder().build()),
+                        Map.entry(PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(PROJECTS.TAGS, JooqMultiSelectValueField.builder().values("Software", "Hardware").build()),
+                        Map.entry(PROJECTS.ACTIVE, JooqCheckboxField.builder().build()),
+                        Map.entry(PROJECTS.BUDGET, JooqBigDecimalField.builder().build()),
+                        Map.entry(PROJECTS.RICH_DESCRIPTION, JooqMarkDownField.builder().build())
+                ))
                 .build();
 
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -132,6 +144,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 ))
                 .build();
 
+        var documentsConfig = JooqDataStoreConfig.of(DOCUMENTS)
+                .dataStoreInstance((VortexCrudDataStore) documentsStore)
+                .fields(Map.of(
+                        DOCUMENTS.ID, JooqIdField.builder().build(),
+                        DOCUMENTS.TITLE, JooqTextField.builder().build(),
+                        DOCUMENTS.URL, JooqPdfField.builder().configuration(JooqPdfFieldRendererConfiguration.builder().resourceProvider(new LocalPdfResourceProvider()).build()).build()
+                ))
+                .build();
+
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(tasksConfig)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
@@ -187,7 +208,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                                 JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
                                 JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build(),
+                                JooqFieldElement.of(PROJECTS.TAGS, "Tags").build(),
+                                JooqFieldElement.of(PROJECTS.ACTIVE, "Active").build(),
+                                JooqFieldElement.of(PROJECTS.BUDGET, "Budget").build(),
+                                JooqFieldElement.of(PROJECTS.RICH_DESCRIPTION, "Details").build()
                         )).build()
                 )
                 .build();
@@ -201,6 +226,19 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .children(List.of(
                                         JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build(),
                                         JooqFieldElement.of(IMAGES.URL, "route.images.labels.image").build()
+                                )).build()
+                )
+                .build();
+
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> documentForm = JooqFormRoute.builder()
+                .dataStoreConfig(documentsConfig)
+                .title("Documents")
+                .formConfiguration(
+                        JooqFormRendererConfiguration.builder()
+                                .titleField(DOCUMENTS.TITLE)
+                                .children(List.of(
+                                        JooqFieldElement.of(DOCUMENTS.TITLE, "Title").build(),
+                                        JooqFieldElement.of(DOCUMENTS.URL, "PDF").build()
                                 )).build()
                 )
                 .build();
@@ -258,8 +296,36 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         ))
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor"))
+                .routeActions(List.of(
+                        GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(c -> new Button("Global Action"))
+                                .handler((route, context) -> {
+                                    Notification.show("Global Action Clicked!");
+                                })
+                                .build()
+                ))
                 .child(projectForm)
                 .build());
+
+        routes.put("projects-calendar", JooqCalendarRoute.builder()
+                .dataStoreConfig(projectsConfig)
+                .iconFactory(CALENDAR::create)
+                .title("Projects Calendar")
+                .configuration(JooqCalendarConfiguration.builder()
+                        .titleField(PROJECTS.NAME)
+                        .startDateField(PROJECTS.START_DATE)
+                        .endDateField(PROJECTS.END_DATE)
+                        .descriptionField(PROJECTS.DESCRIPTION)
+                        .build())
+                .child(projectForm)
+                .build());
+
+        routes.put("custom-route", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .iconFactory(CODE::create)
+                .title("Custom View")
+                .componentClass(CustomView.class)
+                .build());
+
         routes.put("open-tasks", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreConfig(tasksConfig)
@@ -360,6 +426,17 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .writeRoles(List.of("admin"))
                 .child(videoForm)
+                .build());
+
+        routes.put("documents-grid", JooqGridRoute.builder()
+                .dataStoreConfig(documentsConfig)
+                .iconFactory(FILE::create)
+                .title("Documents")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(DOCUMENTS.TITLE)
+                        .build())
+                .writeRoles(List.of("admin"))
+                .child(documentForm)
                 .build());
 
         routes.put("submenu", JooqSubmenuRoute.builder()

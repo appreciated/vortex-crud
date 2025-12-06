@@ -47,6 +47,7 @@ public class JpaFieldAnnotationRegistryService {
         register(FileField.class);
         register(DateRangeField.class);
         register(DateTimeRangeField.class);
+        register(MarkDownField.class);
     }
 
     private void register(Class<? extends Annotation> annotation) {

@@ -1,10 +1,9 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,6 +20,19 @@ public class Project {
 
     @TextField
     private String description;
+
+    @MultiSelectValueField({"Software", "Hardware", "Consulting"})
+    private String tags;
+
+    @CheckboxField
+    private Boolean active;
+
+    @BigDecimalNumberField
+    private BigDecimal budget;
+
+    @MarkDownField
+    @Column(length = 5000)
+    private String richDescription;
 
     @DateField
     private LocalDate startDate;
@@ -57,6 +69,38 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public BigDecimal getBudget() {
+        return budget;
+    }
+
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
+    }
+
+    public String getRichDescription() {
+        return richDescription;
+    }
+
+    public void setRichDescription(String richDescription) {
+        this.richDescription = richDescription;
     }
 
     public LocalDate getStartDate() {

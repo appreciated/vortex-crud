@@ -199,3 +199,17 @@ VALUES (1, 2), -- "Database Setup"
 -- changeset jpa-sqlite-example-vortex-crud:12
 INSERT INTO videos (id, title, url)
 VALUES (1, 'Big Buck Bunny', './Big_Buck_Bunny_1080_10s_1MB.mp4');
+
+-- changeset jpa-sqlite-example-vortex-crud:13
+ALTER TABLE projects ADD COLUMN tags VARCHAR(255);
+ALTER TABLE projects ADD COLUMN active BOOLEAN;
+ALTER TABLE projects ADD COLUMN budget DECIMAL(10,2);
+ALTER TABLE projects ADD COLUMN rich_description TEXT;
+
+-- changeset jpa-sqlite-example-vortex-crud:14
+CREATE TABLE documents
+(
+    id          INTEGER PRIMARY KEY,
+    title       VARCHAR(255),
+    url         VARCHAR(255)
+);
