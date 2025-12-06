@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;

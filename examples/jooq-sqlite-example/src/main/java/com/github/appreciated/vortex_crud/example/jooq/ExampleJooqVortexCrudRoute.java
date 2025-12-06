@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
@@ -28,10 +28,10 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
     private final DSLContext dsl;
 
     public ExampleJooqVortexCrudRoute(
-            VortexCrudContext<TableRecord<?>, TableField<?, ?>, TableImpl<?>> context,
+            VortexCrudContextProvider contextProvider,
             DSLContext dsl
     ) {
-        super(context);
+        super(contextProvider);
         this.dsl = dsl;
     }
 

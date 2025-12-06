@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.core.context;
+package com.github.appreciated.vortex_crud.core.service;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;

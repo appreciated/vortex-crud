@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.Component;
 
 import java.util.Collection;
