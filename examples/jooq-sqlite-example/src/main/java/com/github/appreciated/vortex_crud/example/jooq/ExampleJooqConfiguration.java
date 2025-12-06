@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFac
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
+import com.github.appreciated.vortex_crud.example.jooq.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -23,6 +24,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -48,6 +50,36 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
     private final DSLContext dsl;
 
+    // Proxy fields for custom DataStore
+    @SuppressWarnings("unchecked")
+    private static final TableField<?, ?> NOTE_TITLE = (TableField<?, ?>) java.lang.reflect.Proxy.newProxyInstance(
+            ExampleJooqConfiguration.class.getClassLoader(),
+            new Class[]{TableField.class},
+            (proxy, method, args) -> {
+                if (method.getName().equals("getName")) return "title";
+                if (method.getName().equals("toString")) return "NoteTitle";
+                if (method.getName().equals("hashCode")) return 43;
+                if (method.getName().equals("equals")) return proxy == args[0];
+                return null;
+            }
+    );
+
+    @SuppressWarnings("unchecked")
+    private static final TableField<?, ?> NOTE_CONTENT = (TableField<?, ?>) java.lang.reflect.Proxy.newProxyInstance(
+            ExampleJooqConfiguration.class.getClassLoader(),
+            new Class[]{TableField.class},
+            (proxy, method, args) -> {
+                if (method.getName().equals("getName")) return "content";
+                if (method.getName().equals("toString")) return "NoteContent";
+                if (method.getName().equals("hashCode")) return 44;
+                if (method.getName().equals("equals")) return proxy == args[0];
+                return null;
+            }
+    );
+
+    private static final TableImpl<?> NOTES_KEY = new TableImpl<Record>("NOTES") {
+    };
+
     public ExampleJooqConfiguration(DSLContext dsl) {
         this.dsl = dsl;
     }
@@ -61,6 +93,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore imagesStore = new JooqDataStore(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore videosStore = new JooqDataStore(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        SimpleMapDataStore notesStore = new SimpleMapDataStore();
 
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance((VortexCrudDataStore) projectsStore)
@@ -80,6 +113,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 USERS.ID, JooqIdField.builder().build(),
                                 USERS.USERNAME, JooqEmailField.builder().build(),
                                 USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                USERS.FIRST_NAME, JooqTextField.builder().build(),
+                                USERS.LAST_NAME, JooqTextField.builder().build(),
                                 USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
                         ))
                         .build();
@@ -129,6 +164,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         VIDEOS.ID, JooqIdField.builder().build(),
                         VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(new LocalVideoResourceProvider()).build()).build()
+                ))
+                .build();
+
+        var notesConfig = DataStoreConfig.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .factory(NOTES_KEY)
+                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .fields(Map.of(
+                        NOTE_TITLE, JooqTextField.builder().build(),
+                        NOTE_CONTENT, JooqTextAreaField.builder().build()
                 ))
                 .build();
 
@@ -387,8 +431,31 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .titleField(USERS.USERNAME)
                         .children(List.of(
                                 JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                                JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
                                 JooqFieldElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
                         ))
+                        .build())
+                .build());
+
+        // Notes Route (Custom DataStore)
+        routes.put("notes", (RouteRenderer) GridRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .dataStoreConfig(notesConfig)
+                .iconFactory(NOTEBOOK::create)
+                .title("Notes (Custom DataStore)")
+                .configuration(GridItemRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .titleField(NOTE_TITLE)
+                        .descriptionField(NOTE_CONTENT)
+                        .build())
+                .child(FormRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(notesConfig)
+                        .formConfiguration(FormRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                .titleField(NOTE_TITLE)
+                                .children(List.of(
+                                        InternalFormElement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().field(NOTE_TITLE).label("Title").type(ViewFieldType.FIELD).build(),
+                                        InternalFormElement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().field(NOTE_CONTENT).label("Content").type(ViewFieldType.FIELD).build()
+                                ))
+                                .build())
                         .build())
                 .build());
 
@@ -411,8 +478,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .signUpView(SignUpView.class)
                         .username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build())
                         .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
-                        .signUpFields(List.of())
-                        .rolesField(null) //TODO
+                        .signUpFields(List.of(
+                                JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
+                        ))
+                        .rolesField(null) //TODO: Implement roles support for jOOQ
                         .build())
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECTS, TASKS, TASK_COMMENTS)).build())
