@@ -7,8 +7,4 @@ import org.springframework.test.context.jdbc.Sql;
 @SpringBootTest(classes = JpaFieldTypesTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 @Sql(scripts = "field_types_test.sql")
 public class JpaFieldTypesTest extends AbstractFieldTypesTest {
-    @Override
-    protected boolean supportsDateRangeFields() {
-        return true;
-    }
 }
