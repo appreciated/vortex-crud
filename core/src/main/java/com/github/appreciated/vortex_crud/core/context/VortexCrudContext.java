@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudPermissionResolutionService;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.VortexCrudListColumnCallbackRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,26 +20,26 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudPermissionResolutionService permissionResolutionService;
     private final TranslationService translationService;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry;
-    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker;
     private final VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy;
     private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
+    private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService;
+    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker;
 
     public VortexCrudContext(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             ReflectionService<FieldType> reflectionService,
             VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
             VortexCrudDataStoreUtilStrategy dataStoreUtil,
-            VortexCrudPermissionResolutionService permissionResolutionService,
             TranslationService translationService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry,
-            VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker,
             VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
-            ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy
+            ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
+            @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService,
+            @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker
     ) {
         this.configService = configService;
         this.reflectionService = reflectionService;
@@ -53,15 +54,47 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
     }
 
-    public VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService() { return configService; }
-    public ReflectionService<FieldType> reflectionService() { return reflectionService; }
-    public VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver() { return fieldNameResolver; }
-    public VortexCrudDataStoreUtilStrategy dataStoreUtil() { return dataStoreUtil; }
-    public VortexCrudPermissionResolutionService permissionResolutionService() { return permissionResolutionService; }
-    public TranslationService translationService() { return translationService; }
-    public FormCreator<ModelClass, FieldType, RepositoryType> formCreator() { return formCreator; }
-    public VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry() { return columnCallbackRegistry; }
-    public VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker() { return rbacPermissionChecker; }
-    public VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy() { return foreignKeyResolutionStrategy; }
-    public ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy() { return manyToManyPersistenceStrategy; }
+    public VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService() {
+        return configService;
+    }
+
+    public ReflectionService<FieldType> reflectionService() {
+        return reflectionService;
+    }
+
+    public VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver() {
+        return fieldNameResolver;
+    }
+
+    public VortexCrudDataStoreUtilStrategy dataStoreUtil() {
+        return dataStoreUtil;
+    }
+
+    public VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService() {
+        return permissionResolutionService;
+    }
+
+    public TranslationService translationService() {
+        return translationService;
+    }
+
+    public FormCreator<ModelClass, FieldType, RepositoryType> formCreator() {
+        return formCreator;
+    }
+
+    public VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry() {
+        return columnCallbackRegistry;
+    }
+
+    public VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker() {
+        return rbacPermissionChecker;
+    }
+
+    public VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy() {
+        return foreignKeyResolutionStrategy;
+    }
+
+    public ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy() {
+        return manyToManyPersistenceStrategy;
+    }
 }

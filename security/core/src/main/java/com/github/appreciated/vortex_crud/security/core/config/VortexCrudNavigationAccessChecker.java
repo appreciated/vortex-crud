@@ -32,7 +32,7 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
             @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService,
-            @Autowired(required = false) VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> defaultRouteConfig) {
+            VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> defaultRouteConfig) {
         this.configService = configService;
         this.permissionChecker = permissionChecker;
         this.resolutionService = resolutionService;
