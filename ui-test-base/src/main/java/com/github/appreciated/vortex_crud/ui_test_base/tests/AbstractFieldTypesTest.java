@@ -22,11 +22,45 @@ public abstract class AbstractFieldTypesTest extends BaseUITest {
         return false;
     }
 
+    protected boolean supportsAllFieldTypes() {
+        return false;
+    }
+
     @Test
     void testEntityLoadingAndFields() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Test Entity 1").click();
         waitForUrlToBe(getPath() + "/1");
+
+        if (supportsAllFieldTypes()) {
+             // CheckboxField
+             waitForAnyElementContainingText("Checkbox");
+             waitForElement(By.tagName("vaadin-checkbox"));
+             // DateField
+             waitForAnyElementContainingText("Date");
+             waitForElement(By.tagName("vaadin-date-picker"));
+             // DateTimePickerField
+             waitForAnyElementContainingText("DateTime");
+             waitForElement(By.tagName("vaadin-date-time-picker"));
+             // DoubleField (NumberField)
+             waitForAnyElementContainingText("Double");
+             waitForElement(By.tagName("vaadin-number-field"));
+             // EmailField
+             waitForAnyElementContainingText("Email");
+             waitForElement(By.tagName("vaadin-email-field"));
+             // FileField
+             waitForAnyElementContainingText("File");
+             waitForElement(By.tagName("vaadin-upload"));
+             // ImageField
+             waitForAnyElementContainingText("Image");
+             waitForElement(By.tagName("vaadin-upload"));
+             // IntegerField (NumberField)
+             waitForAnyElementContainingText("Integer");
+             waitForElement(By.tagName("vaadin-integer-field"));
+             // SelectField
+             waitForAnyElementContainingText("Select");
+             waitForElement(By.tagName("vaadin-select"));
+        }
 
         // Check MultiSelectValueField (CheckboxGroup)
         // Checkboxes "Tag 1" and "Tag 2" should be present and checked?

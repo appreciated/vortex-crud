@@ -11,4 +11,9 @@ public class JpaFieldTypesTest extends AbstractFieldTypesTest {
     protected boolean supportsDateRangeFields() {
         return true;
     }
+
+    @Override
+    protected boolean supportsAllFieldTypes() {
+        return true;
+    }
 }

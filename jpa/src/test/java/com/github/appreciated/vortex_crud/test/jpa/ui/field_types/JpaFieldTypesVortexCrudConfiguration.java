@@ -40,8 +40,13 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
         tagOptions.put("tag1", "Tag 1");
         tagOptions.put("tag2", "Tag 2");
 
+        LinkedHashMap<String, String> selectOptions = new LinkedHashMap<>();
+        selectOptions.put("option1", "Option 1");
+        selectOptions.put("option2", "Option 2");
+
         Map<String, LinkedHashMap<?, String>> selectsConfig = new HashMap<>();
         selectsConfig.put("tags", tagOptions);
+        selectsConfig.put("selectField", selectOptions);
 
         Selects selects = Selects.builder()
             .configs(selectsConfig)
@@ -67,7 +72,16 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
                     JpaFieldElement.builder("pdfDoc", "PDF").build(),
                     JpaFieldElement.builder("notes", "Notes").build(),
                     JpaFieldElement.builder("dateRange", "Date Range").build(),
-                    JpaFieldElement.builder("dateTimeRange", "DateTime Range").build()
+                    JpaFieldElement.builder("dateTimeRange", "DateTime Range").build(),
+                    JpaFieldElement.builder("checkboxField", "Checkbox").build(),
+                    JpaFieldElement.builder("dateField", "Date").build(),
+                    JpaFieldElement.builder("dateTimeField", "DateTime").build(),
+                    JpaFieldElement.builder("doubleField", "Double").build(),
+                    JpaFieldElement.builder("emailField", "Email").build(),
+                    JpaFieldElement.builder("fileField", "File").build(),
+                    JpaFieldElement.builder("imageField", "Image").build(),
+                    JpaFieldElement.builder("integerField", "Integer").build(),
+                    JpaFieldElement.builder("selectField", "Select").build()
                 ))
                 .build())
             .build();
