@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -49,7 +48,7 @@ public class JooqFieldTypesVortexCrudConfiguration
 
         JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance(store)
                 .fields(Map.of(
                         FIELD_TYPES_TEST.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

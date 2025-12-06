@@ -1,16 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_types;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
-import com.github.appreciated.vortex_crud.core.entity.DateRange;
-import com.github.appreciated.vortex_crud.core.entity.DateTimeRange;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateRangeField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimeRangeField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.MultiSelectValueField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.PdfField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextAreaField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
-import com.github.appreciated.vortex_crud.jpa.service.converter.DateRangeConverter;
-import com.github.appreciated.vortex_crud.jpa.service.converter.DateTimeRangeConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -41,16 +35,6 @@ public class JpaFieldTypesEntity {
     @Column(name = "notes", columnDefinition = "TEXT")
     @TextAreaField
     private String notes;
-
-    @Convert(converter = DateRangeConverter.class)
-    @Column(name = "date_range", columnDefinition = "TEXT")
-    @DateRangeField
-    private DateRange dateRange;
-
-    @Convert(converter = DateTimeRangeConverter.class)
-    @Column(name = "date_time_range", columnDefinition = "TEXT")
-    @DateTimeRangeField
-    private DateTimeRange dateTimeRange;
 
     public Long getId() {
         return id;
@@ -90,21 +74,5 @@ public class JpaFieldTypesEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public DateRange getDateRange() {
-        return dateRange;
-    }
-
-    public void setDateRange(DateRange dateRange) {
-        this.dateRange = dateRange;
-    }
-
-    public DateTimeRange getDateTimeRange() {
-        return dateTimeRange;
-    }
-
-    public void setDateTimeRange(DateTimeRange dateTimeRange) {
-        this.dateTimeRange = dateTimeRange;
     }
 }
