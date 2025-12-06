@@ -2,10 +2,10 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -18,21 +18,21 @@ public class Project {
     @TextField
     private String name;
 
-    @TextField
+    @MarkDownField
+    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @MultiSelectValueField({"Software", "Hardware", "Consulting"})
-    private String tags;
-
-    @CheckboxField
-    private Boolean active;
 
     @BigDecimalNumberField
     private BigDecimal budget;
 
-    @MarkDownField
-    @Column(length = 5000)
-    private String richDescription;
+    @MultiSelectValueField("project-tags")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "project_tags", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "tag")
+    private List<String> tags;
+
+    @CheckboxField
+    private Boolean active;
 
     @DateField
     private LocalDate startDate;
@@ -46,7 +46,6 @@ public class Project {
     @DateTimePickerField
     private LocalDateTime updatedAt;
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -71,11 +70,19 @@ public class Project {
         this.description = description;
     }
 
-    public String getTags() {
+    public BigDecimal getBudget() {
+        return budget;
+    }
+
+    public void setBudget(BigDecimal budget) {
+        this.budget = budget;
+    }
+
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -85,22 +92,6 @@ public class Project {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public BigDecimal getBudget() {
-        return budget;
-    }
-
-    public void setBudget(BigDecimal budget) {
-        this.budget = budget;
-    }
-
-    public String getRichDescription() {
-        return richDescription;
-    }
-
-    public void setRichDescription(String richDescription) {
-        this.richDescription = richDescription;
     }
 
     public LocalDate getStartDate() {
