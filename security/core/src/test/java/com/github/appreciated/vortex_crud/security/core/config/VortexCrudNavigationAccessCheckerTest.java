@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
+import com.github.appreciated.vortex_crud.core.config.VortexCrudDefaultRouteRedirectConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
@@ -27,6 +28,9 @@ class VortexCrudNavigationAccessCheckerTest {
     private VortexCrudPermissionResolutionService<String, String, String> resolutionService;
 
     @Mock
+    private VortexCrudDefaultRouteRedirectConfiguration<String, String, String> redirectConfiguration;
+
+    @Mock
     private Application<String, String, String> application;
 
     @Mock
@@ -46,7 +50,7 @@ class VortexCrudNavigationAccessCheckerTest {
         when(configService.configuration()).thenReturn(application);
         when(context.getLocation()).thenReturn(location);
 
-        accessChecker = new VortexCrudNavigationAccessChecker<>(configService, permissionChecker, resolutionService);
+        accessChecker = new VortexCrudNavigationAccessChecker<>(configService, permissionChecker, resolutionService, redirectConfiguration);
     }
 
     // ========== Public Routes Tests ==========
@@ -227,7 +231,7 @@ class VortexCrudNavigationAccessCheckerTest {
     @Test
     void testCheck_NullConfigService_AllowsAccess() {
         VortexCrudNavigationAccessChecker<String, String, String> checkerWithNullConfig =
-                new VortexCrudNavigationAccessChecker<>(null, permissionChecker, resolutionService);
+                new VortexCrudNavigationAccessChecker<>(null, permissionChecker, resolutionService, redirectConfiguration);
 
         when(location.getPath()).thenReturn("some-route");
 
