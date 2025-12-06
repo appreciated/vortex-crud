@@ -185,14 +185,14 @@ public class SecurityIntegrationTest extends BaseUITest {
         userDataStore.insertRecord(user);
     }
 
-    private void login(String username, String password) {
+    private void login(String username, String password, String targetUrl) {
         navigateTo("login");
         WebElement loginForm = waitForElement(By.tagName("vaadin-login-form"));
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].dispatchEvent(new CustomEvent('login', { detail: { username: arguments[1], password: arguments[2] } }));",
                 loginForm, username, password
         );
-        waitForUrlToBe("");
+        waitForUrlToBe(targetUrl);
     }
 
     @Test
@@ -204,10 +204,7 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @Test
     void testAdminAccess() {
-        login("admin", "password");
-        navigateTo("users-grid");
-
-        assertTrue(driver.getCurrentUrl().contains("users-grid"), "Admin should access users-grid");
+        login("admin", "password","users-grid");
 
         clickElement(waitForAnyElementContainingText("admin"));
         waitForElement(By.tagName("vaadin-form-layout"));
@@ -224,12 +221,9 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @Test
     void testUserAccess() {
-        login("user", "password");
-        navigateTo("users-grid");
+        login("user", "password", "users-grid");
 
-        assertTrue(driver.getCurrentUrl().contains("users-grid"), "User should access users-grid");
-
-        clickElement(waitForAnyElementContainingText("user"));
+        clickElement(waitForElementContainingText("h4","user"));
         waitForElement(By.tagName("vaadin-form-layout"));
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for USER");
@@ -243,7 +237,7 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @Test
     void testViewerAccess() {
-        login("viewer", "password");
+        login("viewer", "password","users-grid");
         navigateTo("users-grid");
 
         assertTrue(driver.getCurrentUrl().contains("users-grid"), "Viewer should access users-grid");
@@ -261,7 +255,7 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @Test
     void testGuestAccess() {
-        login("guest", "password");
+        login("guest", "password","users-grid");
         navigateTo("users-grid");
 
         String url = driver.getCurrentUrl();
