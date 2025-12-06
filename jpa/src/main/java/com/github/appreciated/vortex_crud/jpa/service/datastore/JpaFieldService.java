@@ -203,6 +203,11 @@ public class JpaFieldService {
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                     .required(required)
                                     .build()
+                    )).or(() -> getAnnotation(entityField, MarkDownField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.MarkDownField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
                     )).orElseThrow();
                 }));
         return collect;
