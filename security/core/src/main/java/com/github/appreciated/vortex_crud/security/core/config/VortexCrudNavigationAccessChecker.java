@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.security.core.config;
 
+import com.github.appreciated.vortex_crud.core.config.VortexCrudDefaultRouteRedirectConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -9,6 +10,8 @@ import com.vaadin.flow.server.auth.NavigationAccessChecker;
 import com.vaadin.flow.server.auth.NavigationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 /**
  * Custom access checker for Role-Based Access Control (RBAC) at the route level.
@@ -20,14 +23,20 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
     private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService;
+    private final VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> defaultRouteConfig;
+
+    // Cache for default route to avoid repeated lookups
+    private volatile RouteRenderer<ModelClass, FieldType, RepositoryType> cachedDefaultRoute;
 
     public VortexCrudNavigationAccessChecker(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
-            @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService) {
+            @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> resolutionService,
+            @Autowired(required = false) VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> defaultRouteConfig) {
         this.configService = configService;
         this.permissionChecker = permissionChecker;
         this.resolutionService = resolutionService;
+        this.defaultRouteConfig = defaultRouteConfig;
     }
 
     @Override
@@ -57,7 +66,14 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
             }
 
             // Resolve path to route using the resolution service
-            RouteRenderer<ModelClass, FieldType, RepositoryType> route = resolutionService.resolveRouteForPath(path);
+            RouteRenderer<ModelClass, FieldType, RepositoryType> route;
+
+            // Handle empty path (default route) with caching
+            if (Objects.equals(path, "")) {
+                route = defaultRouteConfig.getDefaultRouteEntry().getValue();
+            } else {
+                route = resolutionService.resolveRouteForPath(path);
+            }
 
             // If route is null, it's not managed by vortex-crud, allow it
             if (route == null) {

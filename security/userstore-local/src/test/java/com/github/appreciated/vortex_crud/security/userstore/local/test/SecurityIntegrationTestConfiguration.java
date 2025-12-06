@@ -73,6 +73,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
         LinkedHashMap<String, RouteRenderer<Object, String, String>> routes = new LinkedHashMap<>();
         routes.put("users-grid", GridRoute.<Object, String, String>builder()
                 .dataStoreConfig(userConfig)
+                .isDefaultRoute(true)
                 .title("route.users-grid")
                 .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
                         .titleField("username")

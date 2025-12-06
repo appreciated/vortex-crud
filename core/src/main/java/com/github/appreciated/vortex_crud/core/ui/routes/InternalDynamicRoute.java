@@ -1,13 +1,16 @@
 package com.github.appreciated.vortex_crud.core.ui.routes;
 
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
+import com.github.appreciated.vortex_crud.core.config.VortexCrudDefaultRouteRedirectConfiguration;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
-import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+
+import java.util.Objects;
 
 /**
  * A dynamic route component that renders different views based on the route path.
@@ -25,19 +28,29 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
+    private final VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
      * @param context The context containing services and configuration.
      */
-    public InternalDynamicRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+    public InternalDynamicRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration) {
         this.context = context;
+        this.configuration = configuration;
         setSizeFull();
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        if (Objects.equals(event.getLocation().getPath(), "")) {
+            String target = configuration.getDefaultRouteEntry().getKey();
+            if (target != null) {
+                event.forwardTo(target);
+                return;
+            }
+        }
+
         String path = event.getRouteParameters().get("path").orElse("");
         // Ensure path starts with / if it's not empty, to match route resolution expectations
         if (!path.isEmpty() && !path.startsWith("/")) {
