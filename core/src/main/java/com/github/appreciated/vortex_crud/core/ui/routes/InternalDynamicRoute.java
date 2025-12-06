@@ -4,7 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudDefaultRouteRedirectConfiguration;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -33,10 +34,10 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
     /**
      * Constructs a new {@code InternalDynamicRoute}.
      *
-     * @param context The context containing services and configuration.
+     * @param contextProvider The context provider containing services and configuration.
      */
-    public InternalDynamicRoute(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration) {
-        this.context = context;
+    public InternalDynamicRoute(VortexCrudContextProvider contextProvider, VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration) {
+        this.context = (VortexCrudContext<ModelClass, FieldType, RepositoryType>) contextProvider.getContext();
         this.configuration = configuration;
         setSizeFull();
     }

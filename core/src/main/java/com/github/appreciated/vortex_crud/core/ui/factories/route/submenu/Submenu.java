@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.submenu;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;

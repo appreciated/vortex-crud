@@ -3,7 +3,8 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -29,9 +30,10 @@ import java.util.List;
 public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     public SignUpView(
-            VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+            VortexCrudContextProvider contextProvider,
             PasswordEncoder passwordEncoder
     ) {
+        VortexCrudContext<ModelClass, FieldType, RepositoryType> context = (VortexCrudContext<ModelClass, FieldType, RepositoryType>) contextProvider.getContext();
         VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService = context.configService();
         FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();
         ReflectionService<FieldType> reflectionService = context.reflectionService();

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.item;
 
 import com.github.appreciated.vortex_crud.core.config.model.ItemFactory;
-import com.github.appreciated.vortex_crud.core.context.VortexCrudContext;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.ui.components.ImageDisplayComponent;
 import com.vaadin.flow.component.Text;

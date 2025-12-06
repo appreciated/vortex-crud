@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
@@ -31,7 +32,7 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormSlideRouteFactory<>();
 
     @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormSlideFactory<>();
 
     private boolean isHiddenInMenu;
 

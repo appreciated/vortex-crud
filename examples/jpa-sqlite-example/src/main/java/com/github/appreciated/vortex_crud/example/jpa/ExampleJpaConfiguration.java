@@ -7,11 +7,10 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.example.jpa.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jpa.entity.Status;
 import com.github.appreciated.vortex_crud.example.jpa.repository.*;
@@ -23,7 +22,10 @@ import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
+import com.github.appreciated.vortex_crud.example.jpa.view.CustomView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,6 @@ import java.util.Map;
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jpa.entity.Status.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
-import com.github.appreciated.vortex_crud.example.jpa.entity.*;
 
 @Service
 public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
@@ -47,6 +48,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
+    private final DocumentRepository documentRepository;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
@@ -70,6 +72,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
             TaskRepository taskRepository,
             UserRepository userRepository,
             VideoRepository videoRepository,
+            DocumentRepository documentRepository,
             JpaFieldAnnotationRegistryService annotationRegistryService,
             JpaFieldService fieldService
     ) {
@@ -79,6 +82,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.videoRepository = videoRepository;
+        this.documentRepository = documentRepository;
         this.annotationRegistryService = annotationRegistryService;
         this.fieldService = fieldService;
     }
@@ -96,6 +100,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var imageStore = createStore(imageRepository);
         var videoStore = createStore(videoRepository);
         var userStore = createStore(userRepository);
+        var documentStore = createStore(documentRepository);
         SimpleMapDataStore notesStore = new SimpleMapDataStore();
 
         // 2. Build map of Class -> DataStore
@@ -106,6 +111,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         storeMap.put(imageStore.getModelClass(), imageStore);
         storeMap.put(videoStore.getModelClass(), videoStore);
         storeMap.put(userStore.getModelClass(), userStore);
+        storeMap.put(documentStore.getModelClass(), documentStore);
 
         // 3. Build DataStoreConfigs
         var projectConfig = JpaDataStoreConfig.builder(projectRepository, projectStore).withServices(fieldService, storeMap).build();
@@ -114,6 +120,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore).withServices(fieldService, storeMap).build();
         var videoConfig = JpaDataStoreConfig.builder(videoRepository, videoStore).withServices(fieldService, storeMap).build();
         var userConfig = JpaDataStoreConfig.builder(userRepository, userStore).withServices(fieldService, storeMap).build();
+        var documentConfig = JpaDataStoreConfig.builder(documentRepository, documentStore).withServices(fieldService, storeMap).build();
 
         var notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
@@ -177,6 +184,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .children(List.of(
                                 JpaFieldElement.builder("name", "route.projects.labels.name").build(),
                                 JpaFieldElement.builder("description", "route.projects.labels.description").build(),
+                                JpaFieldElement.builder("budget", "Budget").build(),
+                                JpaFieldElement.builder("tags", "Tags").build(),
+                                JpaFieldElement.builder("active", "Active").build(),
                                 JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
                                 JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
                         ))
@@ -229,6 +239,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .descriptionField("description")
                         .build())
                 .writeRoles(List.of("admin", "manager"))
+                .routeActions(List.of(
+                        GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
+                                .componentFactory(() -> new Button("Global Action"))
+                                .handler((context) -> Notification.show("Global Action Clicked"))
+                                .build()
+                ))
                 .child(projectForm)
                 .build());
         routes.put("projects-list", JpaListRoute.builder()
@@ -401,11 +417,53 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .build())
                 .build());
 
+        routes.put("calendar", JpaCalendarRoute.builder()
+                .title("Calendar")
+                .iconFactory(CALENDAR::create)
+                .dataStoreConfig(projectConfig)
+                .configuration(JpaCalendarConfiguration.builder()
+                        .titleField("name")
+                        .startDateField("startDate")
+                        .endDateField("endDate")
+                        .descriptionField("description")
+                        .build())
+                .build());
+
+        routes.put("custom", CustomRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .title("Custom Route")
+                .iconFactory(CODE::create)
+                .componentClass(CustomView.class)
+                .build());
+
+        routes.put("documents", JpaGridRoute.builder()
+                .dataStoreConfig(documentConfig)
+                .iconFactory(FILE::create)
+                .title("Documents")
+                .configuration(JpaGridItemRendererConfiguration.builder()
+                        .titleField("title")
+                        .build())
+                .child(JpaFormRoute.builder()
+                        .dataStoreConfig(documentConfig)
+                        .formConfiguration(JpaFormRendererConfiguration.builder()
+                                .titleField("title")
+                                .children(List.of(
+                                        JpaFieldElement.builder("title", "Title").build(),
+                                        JpaFieldElement.builder("pdf", "PDF").build()
+                                ))
+                                .build())
+                        .build())
+                .build());
+
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
         taskStatuses.put(TODO, "selects.task-status.todo");
         taskStatuses.put(OPEN, "selects.task-status.open");
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
+
+        LinkedHashMap<String, String> projectTags = new LinkedHashMap<>();
+        projectTags.put("tag1", "Tag 1");
+        projectTags.put("tag2", "Tag 2");
+        projectTags.put("tag3", "Tag 3");
 
         return JpaApplication.builder()
                 .applicationName("application.name")
@@ -440,7 +498,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .routes(routes)
                 .versioning(JpaVersioning.builder().dataStores(List.of(projectRepository, taskRepository, taskCommentRepository)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
-                .selects(new Selects(Map.of("task-status", taskStatuses)))
+                .selects(new Selects(Map.of("task-status", taskStatuses, "project-tags", projectTags)))
                 .build();
     }
 }
