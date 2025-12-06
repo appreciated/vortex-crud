@@ -34,7 +34,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     private FieldType timestampField;
 
     /**
-     * Field containing the user name who triggered the notification (optional)
+     * Field containing the username who triggered the notification (optional)
      */
     private FieldType userNameField;
 

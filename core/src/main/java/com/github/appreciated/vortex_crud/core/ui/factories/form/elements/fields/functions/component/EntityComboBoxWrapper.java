@@ -50,7 +50,7 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         return comboBox;
     }
 
-    // Implementing getValue() to return the current Id
+    // Implementing getValue() to return the current ID
     @Override
     public Object getValue() {
         return currentValue;
@@ -61,7 +61,7 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         return comboBox.addValueChangeListener(listener);
     }
 
-    // Implementing setValue() to load an entity based on the Id
+    // Implementing setValue() to load an entity based on the ID
     @Override
     public void setValue(Object id) {
         if (id != null) {

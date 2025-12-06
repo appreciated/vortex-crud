@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.List;
 

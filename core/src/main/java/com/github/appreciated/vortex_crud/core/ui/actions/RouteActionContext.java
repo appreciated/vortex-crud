@@ -44,7 +44,7 @@ public class RouteActionContext<FieldType, ModelClass> implements Serializable {
     private final VortexCrudDataStore<FieldType, ModelClass> dataStore;
 
     /**
-     * The currently selected entities (may be empty)
+     * The currently selected entities (maybe empty)
      */
     private final List<ModelClass> selectedEntities;
 
