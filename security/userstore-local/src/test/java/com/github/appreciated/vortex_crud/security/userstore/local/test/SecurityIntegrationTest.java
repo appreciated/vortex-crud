@@ -206,7 +206,7 @@ public class SecurityIntegrationTest extends BaseUITest {
     void testAdminAccess() {
         login("admin", "password","users-grid");
 
-        clickElement(waitForAnyElementContainingText("admin"));
+        waitForAnyElementContainingText("admin").click();
         waitForElement(By.tagName("vaadin-form-layout"));
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for ADMIN");
@@ -223,7 +223,7 @@ public class SecurityIntegrationTest extends BaseUITest {
     void testUserAccess() {
         login("user", "password", "users-grid");
 
-        clickElement(waitForElementContainingText("h4","user"));
+        waitForElementContainingText("h4","user").click();
         waitForElement(By.tagName("vaadin-form-layout"));
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for USER");
@@ -242,7 +242,7 @@ public class SecurityIntegrationTest extends BaseUITest {
 
         assertTrue(driver.getCurrentUrl().contains("users-grid"), "Viewer should access users-grid");
 
-        clickElement(waitForAnyElementContainingText("viewer"));
+        waitForAnyElementContainingText("viewer").click();
         waitForElement(By.tagName("vaadin-form-layout"));
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for VIEWER");
@@ -280,10 +280,6 @@ public class SecurityIntegrationTest extends BaseUITest {
                 || pageSource.contains("NotFoundException") // If route hidden
                 || !pageSource.contains("vaadin-grid"); // Content check: Grid should not be visible
         assertTrue(denied, "Guest should be denied access to users-grid. Current URL: " + url);
-    }
-
-    private void clickElement(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
 
     private boolean isFieldVisible(String fieldName) {
