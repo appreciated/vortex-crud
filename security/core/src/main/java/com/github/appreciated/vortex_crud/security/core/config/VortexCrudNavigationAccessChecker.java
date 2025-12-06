@@ -11,6 +11,7 @@ import com.vaadin.flow.server.auth.NavigationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -43,6 +44,7 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
     public AccessCheckResult check(NavigationContext context) {
         try {
             String path = context.getLocation().getPath();
+            // System.err.println("Checking access for path: " + path);
 
             // Allow public routes (login, sign-up, access-denied)
             if (isPublicRoute(path)) {
@@ -70,13 +72,19 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
 
             // Handle empty path (default route) with caching
             if (Objects.equals(path, "")) {
-                route = defaultRouteConfig.getDefaultRouteEntry().getValue();
+                Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> defaultRouteEntry = defaultRouteConfig.getDefaultRouteEntry();
+                if (defaultRouteEntry != null) {
+                    route = defaultRouteEntry.getValue();
+                } else {
+                    return context.allow();
+                }
             } else {
                 route = resolutionService.resolveRouteForPath(path);
             }
 
             // If route is null, it's not managed by vortex-crud, allow it
             if (route == null) {
+                // System.err.println("Route not resolved for path: " + path);
                 return context.allow();
             }
 
@@ -85,6 +93,7 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
                 return context.allow();
             }
 
+            // System.err.println("Access denied for path: " + path);
             // User does not have permission to access this route
             return context.deny("Insufficient permissions");
         } catch (Exception e) {
