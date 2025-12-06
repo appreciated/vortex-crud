@@ -16,7 +16,7 @@ import java.util.Set;
  * the corresponding {@link VortexCrudFieldFactory} implementation that should
  * be used to render/configure that field.
  * <p>
- * Additionally exposes the complete set of supported annotations so other
+ * Additionally, exposes the complete set of supported annotations so other
  * services can quickly check for supported annotations on entity fields.
  */
 @Service
