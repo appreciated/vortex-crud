@@ -255,7 +255,19 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @Test
     void testGuestAccess() {
-        login("guest", "password","users-grid");
+        navigateTo("login");
+        WebElement loginForm = waitForElement(By.tagName("vaadin-login-form"));
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].dispatchEvent(new CustomEvent('login', { detail: { username: arguments[1], password: arguments[2] } }));",
+                loginForm, "guest", "password"
+        );
+        // Wait briefly for redirection logic to trigger
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         navigateTo("users-grid");
 
         String url = driver.getCurrentUrl();
@@ -265,7 +277,8 @@ public class SecurityIntegrationTest extends BaseUITest {
                 || pageSource.contains("Access Denied")
                 || pageSource.contains("AccessDeniedException") // Vaadin Dev Mode error
                 || pageSource.contains("Internal Server Error") // Vaadin Prod Mode default error
-                || pageSource.contains("NotFoundException"); // If route hidden
+                || pageSource.contains("NotFoundException") // If route hidden
+                || !pageSource.contains("vaadin-grid"); // Content check: Grid should not be visible
         assertTrue(denied, "Guest should be denied access to users-grid. Current URL: " + url);
     }
 

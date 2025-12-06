@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.TextFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EmailFieldFactory;
 import com.vaadin.flow.data.binder.Validator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * Thin Field type for TextFieldFactory.
+ * Thin Field type for EmailFieldFactory.
  */
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class EmailField<ModelClass, FieldType, RepositoryType> implements Field<
     List<String> writeRoles;
     List<String> readOnlyRoles;
     @Builder.Default
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new TextFieldFactory<>();
+    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new EmailFieldFactory<>();
 
     @Override
     public List<Validator<?>> validators() {

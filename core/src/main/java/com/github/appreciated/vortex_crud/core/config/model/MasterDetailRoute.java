@@ -53,4 +53,14 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @Override
+    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
+        if (formConfiguration != null) {
+            return formConfiguration;
+        }
+        if (child instanceof FormRouteProvider) {
+            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) child).formConfiguration();
+        }
+        return null;
+    }
 }
