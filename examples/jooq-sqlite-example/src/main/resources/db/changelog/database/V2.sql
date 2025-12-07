@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 -- changeset jooq-sqlite-example-vortex-crud:13
-ALTER TABLE projects ADD COLUMN budget DECIMAL(10, 2);
+ALTER TABLE projects ADD COLUMN budget NUMERIC(38, 2);
 ALTER TABLE projects ADD COLUMN active BOOLEAN;
 
 -- changeset jooq-sqlite-example-vortex-crud:14
