@@ -20,6 +20,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void serviceInit(ServiceInitEvent event) {
         var routes = configService.configuration().routes();
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();

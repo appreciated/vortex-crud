@@ -16,6 +16,7 @@ import static com.vaadin.flow.spring.security.VaadinSecurityConfigurer.vaadin;
 
 @Configuration
 @EnableWebSecurity
+@SuppressWarnings("deprecation")
 @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
 public class SecurityConfig {
 
