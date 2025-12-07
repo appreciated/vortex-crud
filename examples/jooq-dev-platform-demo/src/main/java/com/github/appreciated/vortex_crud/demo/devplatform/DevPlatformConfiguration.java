@@ -34,6 +34,8 @@ import java.util.Map;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
+import java.util.Collections;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Service
 public class DevPlatformConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -57,6 +59,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -66,6 +69,14 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var rolesConfig = JooqDataStoreConfig.of(ROLES)
+                .dataStoreInstance((VortexCrudDataStore) rolesStore)
+                .fields(Map.of(
+                        ROLES.ID, JooqIdField.builder().build(),
+                        ROLES.NAME, JooqTextField.builder().build()
+                ))
                 .build();
 
         var organizationConfig = JooqDataStoreConfig.of(ORGANIZATION)
@@ -306,8 +317,50 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .build();
 
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
+                .dataStoreConfig(usersConfig)
+                .title("route.users.title")
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(USERS.USERNAME)
+                        .children(List.of(
+                                JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
+                                JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
+                                JooqCollectionElement.of("route.users.labels.roles")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
+                                                .data(JooqCollectionConfiguration.of(rolesConfig)
+                                                        .manyToMany(new JooqManyToMany(
+                                                                USER_ROLES.USER_ID,
+                                                                USER_ROLES.ROLE_ID,
+                                                                ROLES.ID,
+                                                                USER_ROLES))
+                                                        .children(List.of(ROLES.NAME))
+                                                        .build())
+                                                .emptyMessage("route.users.labels.roles-empty")
+                                                .configuration(new CollectionConfig<TableField<?, ?>>(ROLES.NAME))
+                                                .build())
+                                        .build()
+                        ))
+                        .build())
+                .build();
+
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        routes.put("users", JooqListRoute.builder()
+                .dataStoreConfig(usersConfig)
+                .iconFactory(VaadinIcon.USER::create)
+                .title("route.users.title")
+                .configuration(JooqListItemRendererConfiguration.builder()
+                        .filterField(USERS.USERNAME)
+                        .children(List.of(
+                                JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
+                                JooqFieldElement.of(USERS.CREATED_AT, "route.users.labels.created_at").build()
+                        ))
+                        .build())
+                .writeRoles(List.of("admin"))
+                .child(userForm)
+                .build());
 
         routes.put("repositories", JooqGridRoute.builder()
                 .isDefaultRoute(true)
@@ -415,6 +468,18 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
                         .signUpFields(List.of())
                         .rolesField(null)
+                        .roleResolver((reflectionService, userEntity) -> {
+                            Object userId = reflectionService.getId(userEntity);
+                            if (userId == null) return Collections.emptyList();
+                            return dsl.select(ROLES.NAME)
+                                    .from(ROLES)
+                                    .join(USER_ROLES).on(USER_ROLES.ROLE_ID.eq(ROLES.ID))
+                                    .where(USER_ROLES.USER_ID.eq((Integer) userId))
+                                    .fetch(ROLES.NAME)
+                                    .stream()
+                                    .map(SimpleGrantedAuthority::new)
+                                    .toList();
+                        })
                         .build())
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(REPOSITORY, ISSUE, PULL_REQUEST, ORGANIZATION, MILESTONE)).build())
