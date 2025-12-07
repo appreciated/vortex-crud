@@ -34,6 +34,9 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
@@ -46,7 +49,11 @@ import static com.github.appreciated.vortex_crud.jooq.models.tables.Users.USERS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Videos.VIDEOS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Documents.DOCUMENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.ProjectTags.PROJECT_TAGS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.Roles.ROLES;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.UserRoles.USER_ROLES;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
+
+import com.github.appreciated.vortex_crud.example.jooq.JooqSimpleMapDataStore.NotesTable;
 
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -69,6 +76,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore documentsStore = new JooqDataStore(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore projectTagsStore = new JooqDataStore(PROJECT_TAGS.getRecordType(), dsl, new DataStoreHooks<>());
 
+        // Custom DataStore
+        JooqSimpleMapDataStore notesStore = new JooqSimpleMapDataStore(dsl);
+
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance((VortexCrudDataStore) projectsStore)
                 .fields(Map.of(
@@ -89,6 +99,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 USERS.ID, JooqIdField.builder().build(),
                                 USERS.USERNAME, JooqEmailField.builder().build(),
                                 USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                USERS.FIRST_NAME, JooqTextField.builder().build(),
+                                USERS.LAST_NAME, JooqTextField.builder().build(),
                                 USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
                         ))
                         .build();
@@ -157,6 +169,13 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECT_TAGS.TAG, JooqTextField.builder().build()
                 )).build();
 
+        var notesConfig = JooqDataStoreConfig.of(NotesTable.NOTES)
+                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .fields(Map.of(
+                        NotesTable.NOTES.TITLE, JooqTextField.builder().build(),
+                        NotesTable.NOTES.CONTENT, JooqTextAreaField.builder().build()
+                )).build();
+
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(tasksConfig)
                 .formConfiguration(JooqFormRendererConfiguration.builder()
@@ -198,7 +217,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                                         .children(List.of(TASKS.TITLE)).build()
                                                 )
                                                 .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                                .configuration(new CollectionConfig<TableField<?, ?>>(TASKS.TITLE)).build())
+                                                .configuration(new CollectionConfig<>(TASKS.TITLE)).build())
                                         .build())
                         )
                         .build())
@@ -332,15 +351,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .filterField(TASKS.TITLE)
                         .build())
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                .menuActions(List.of(
-                    DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreConfig(usersConfig)
-                        .labelField(USERS.USERNAME)
-                        .placeholder("Filter by user...")
-                        .label("Assigned User")
-                        .limit(50)
-                        .build()
-                ))
                 .child(taskForm)
                 .build());
         routes.put("done-tasks", JooqMasterDetailRoute.builder()
@@ -447,6 +457,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .titleField(USERS.USERNAME)
                         .children(List.of(
                                 JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                                JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
                                 JooqFieldElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
                         ))
                         .build())
@@ -461,6 +473,27 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .startDateField(PROJECTS.START_DATE)
                         .endDateField(PROJECTS.END_DATE)
                         .descriptionField(PROJECTS.DESCRIPTION)
+                        .build())
+                .build());
+
+        // Notes Custom Route
+        routes.put("notes", JooqGridRoute.builder()
+                .dataStoreConfig(notesConfig)
+                .iconFactory(NOTEBOOK::create)
+                .title("Notes (Custom DataStore)")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(NotesTable.NOTES.TITLE)
+                        .descriptionField(NotesTable.NOTES.CONTENT)
+                        .build())
+                .child(JooqFormRoute.builder()
+                        .dataStoreConfig(notesConfig)
+                        .formConfiguration(JooqFormRendererConfiguration.builder()
+                                .titleField(NotesTable.NOTES.TITLE)
+                                .children(List.of(
+                                        JooqFieldElement.of(NotesTable.NOTES.TITLE, "Title").build(),
+                                        JooqFieldElement.of(NotesTable.NOTES.CONTENT, "Content").build()
+                                ))
+                                .build())
                         .build())
                 .build());
 
@@ -486,22 +519,50 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
+        var iam = new LocalIdentityAndAccessManagement<TableRecord<?>, TableField<?, ?>, TableImpl<?>>() {
+            {
+                dataStoreConfig(usersConfig);
+                availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build());
+                defaultReadRoles(List.of("viewer"));
+                defaultWriteRoles(List.of("admin"));
+                signUpEnabled(true);
+                loginView(LoginView.class);
+                signUpView(SignUpView.class);
+                username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build());
+                password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build());
+                signUpFields(List.of(
+                     JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                     JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
+                ));
+                rolesField(null);
+            }
+            @Override
+            public List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<TableField<?, ?>> reflectionService, Object user) {
+                 return dsl.select(ROLES.NAME)
+                           .from(ROLES)
+                           .join(USER_ROLES)
+                           .on(USER_ROLES.ROLE_ID.eq(ROLES.ID))
+                           .where(USER_ROLES.USER_ID.eq(((TableRecord<?>)user).get(USERS.ID)))
+                           .fetchInto(String.class)
+                           .stream()
+                           .map(SimpleGrantedAuthority::new)
+                           .collect(Collectors.toList());
+            }
+        };
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
-                .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreConfig(usersConfig)
-                        .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
-                        .defaultReadRoles(List.of("viewer"))
-                        .defaultWriteRoles(List.of("admin"))
-                        .signUpEnabled(true)
-                        .loginView(LoginView.class)
-                        .signUpView(SignUpView.class)
-                        .username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build())
-                        .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
-                        .signUpFields(List.of())
-                        .rolesField(null) //TODO
-                        .build())
+                .identityAndAccessManagement(iam)
+                .menuActions(List.of(
+                        DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                .dataStoreConfig(usersConfig)
+                                .labelField(USERS.USERNAME)
+                                .placeholder("Filter by user...")
+                                .label("Assigned User")
+                                .limit(50)
+                                .build()
+                ))
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECTS, TASKS, TASK_COMMENTS)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
