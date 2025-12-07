@@ -92,7 +92,7 @@ Unlike **Vaadin Flow** (component framework):
 |------------|---------|---------|
 | **Java** | 21 | Language |
 | **Spring Boot** | 4.0.0 | DI and application framework |
-| **Vaadin Flow** | 25.0.0-beta8 | UI components |
+| **Vaadin Flow** | 25.0.0-beta9 | UI components |
 | **jOOQ** | 3.19.16/3.19.22 | Type-safe SQL (optional) |
 | **JPA/Hibernate** | 6.5.2.Final | ORM (optional) |
 | **SQLite** | 3.47.1.0 | Development database |
