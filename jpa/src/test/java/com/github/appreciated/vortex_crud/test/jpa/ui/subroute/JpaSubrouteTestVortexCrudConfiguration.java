@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -42,6 +43,17 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                         ))
                         .build();
 
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
+                .dataStoreConfig(taskConfig)
+                .formConfiguration(JpaFormRendererConfiguration.builder()
+                        .titleField("title")
+                        .children(List.of(
+                                JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
+                                JpaFieldElement.builder("url", "route.tasks.labels.image").build()
+                        ))
+                        .build())
+                .build();
+
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaSubmenuRoute.builder()
                 .dataStoreConfig(taskConfig)
@@ -53,6 +65,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                                 .configuration(JpaGridItemRendererConfiguration.builder()
                                         .titleField("title")
                                         .build())
+                                .child(taskForm)
                                 .build()
                 ))
                 .build());
