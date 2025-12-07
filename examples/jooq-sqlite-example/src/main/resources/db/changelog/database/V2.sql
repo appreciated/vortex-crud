@@ -3,6 +3,7 @@
 -- changeset jooq-sqlite-example-vortex-crud:13
 ALTER TABLE projects ADD COLUMN budget NUMERIC(38, 2);
 ALTER TABLE projects ADD COLUMN active BOOLEAN;
+ALTER TABLE projects ADD COLUMN tags_multi VARCHAR(1000);
 
 -- changeset jooq-sqlite-example-vortex-crud:14
 CREATE TABLE documents (
@@ -13,6 +14,7 @@ CREATE TABLE documents (
 
 -- changeset jooq-sqlite-example-vortex-crud:15
 CREATE TABLE project_tags (
+    id INTEGER PRIMARY KEY,
     project_id INTEGER NOT NULL,
     tag VARCHAR(255),
     FOREIGN KEY (project_id) REFERENCES projects(id)

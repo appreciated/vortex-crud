@@ -44,6 +44,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
     private final ImageRepository imageRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectTagRepository projectTagRepository;
     private final TaskCommentRepository taskCommentRepository;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
@@ -68,6 +69,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     public ExampleJpaConfiguration(
             ImageRepository imageRepository,
             ProjectRepository projectRepository,
+            ProjectTagRepository projectTagRepository,
             TaskCommentRepository taskCommentRepository,
             TaskRepository taskRepository,
             UserRepository userRepository,
@@ -78,6 +80,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     ) {
         this.imageRepository = imageRepository;
         this.projectRepository = projectRepository;
+        this.projectTagRepository = projectTagRepository;
         this.taskCommentRepository = taskCommentRepository;
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
@@ -95,6 +98,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         // 1. Create DataStores
         var projectStore = createStore(projectRepository);
+        var projectTagStore = createStore(projectTagRepository);
         var taskStore = createStore(taskRepository);
         var commentStore = createStore(taskCommentRepository);
         var imageStore = createStore(imageRepository);
@@ -106,6 +110,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         // 2. Build map of Class -> DataStore
         Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
         storeMap.put(projectStore.getModelClass(), projectStore);
+        storeMap.put(projectTagStore.getModelClass(), projectTagStore);
         storeMap.put(taskStore.getModelClass(), taskStore);
         storeMap.put(commentStore.getModelClass(), commentStore);
         storeMap.put(imageStore.getModelClass(), imageStore);
@@ -115,6 +120,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         // 3. Build DataStoreConfigs
         var projectConfig = JpaDataStoreConfig.builder(projectRepository, projectStore).withServices(fieldService, storeMap).build();
+        var projectTagConfig = JpaDataStoreConfig.builder(projectTagRepository, projectTagStore).withServices(fieldService, storeMap).build();
         var taskConfig = JpaDataStoreConfig.builder(taskRepository, taskStore).withServices(fieldService, storeMap).build();
         var commentConfig = JpaDataStoreConfig.builder(taskCommentRepository, commentStore).withServices(fieldService, storeMap).build();
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore).withServices(fieldService, storeMap).build();
@@ -185,7 +191,25 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 JpaFieldElement.builder("name", "route.projects.labels.name").build(),
                                 JpaFieldElement.builder("description", "route.projects.labels.description").build(),
                                 JpaFieldElement.builder("budget", "Budget").build(),
-                                JpaFieldElement.builder("tags", "Tags").build(),
+                                JpaFieldElement.builder("tagsMulti", "Tags (MultiSelect)").build(),
+                                JpaCollectionElement.builder("Tags (Collection)")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JpaCollection.builder(new FormDialogFactory<>())
+                                                .data(JpaCollectionConfiguration.builder(projectTagConfig)
+                                                        .oneToMany(new JpaOneToMany("project"))
+                                                        .children(List.of("tag"))
+                                                        .build())
+                                                .emptyMessage("No tags")
+                                                .child(JpaFormRoute.builder()
+                                                        .formConfiguration(JpaFormRendererConfiguration.builder()
+                                                                .titleField("tag")
+                                                                .children(List.of(
+                                                                        JpaFieldElement.builder("tag", "Tag").build()
+                                                                ))
+                                                                .build())
+                                                        .build())
+                                                .build())
+                                        .build(),
                                 JpaFieldElement.builder("active", "Active").build(),
                                 JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
                                 JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
