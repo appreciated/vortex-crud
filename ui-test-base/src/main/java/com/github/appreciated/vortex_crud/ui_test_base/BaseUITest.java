@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,7 +17,6 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
-    public static final int SECONDS = 5;
     @Value(value = "${local.server.port}")
     private int port;
 
@@ -44,7 +42,7 @@ public abstract class BaseUITest {
     }
 
     @BeforeEach
-    public void setupTest() throws IOException {
+    public void setupTest() {
         if (browser == null) {
             BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
             options.setHeadless(!disableHeadless);
@@ -55,10 +53,14 @@ public abstract class BaseUITest {
                 .setViewportSize(1920, 1080)
                 .setLocale("en-US"));
 
-        context.tracing().start();
+        context.tracing().start(new Tracing.StartOptions()
+                .setScreenshots(true)
+                .setSnapshots(true)
+                .setSources(true));
 
         page = context.newPage();
-        page.setDefaultTimeout(SECONDS * 1000);
+
+        page.setDefaultTimeout(5000);
     }
 
     /**
@@ -98,7 +100,7 @@ public abstract class BaseUITest {
     }
 
     protected void waitForUrlToBe(String path) {
-        page.waitForURL(getUrl(path), new Page.WaitForURLOptions().setTimeout(SECONDS * 1000));
+        page.waitForURL(getUrl(path));
     }
 
     /**
@@ -116,8 +118,7 @@ public abstract class BaseUITest {
     protected Locator waitForElementWithTagAndValue(String tagName, String value) {
         try {
             page.waitForFunction("([t, v]) => Array.from(document.querySelectorAll(t)).some(el => el.value && el.value.toString().startsWith(v))",
-                List.of(tagName, value),
-                new Page.WaitForFunctionOptions().setTimeout(SECONDS * 1000));
+                List.of(tagName, value));
         } catch (Exception e) {
              throw new RuntimeException("Timeout waiting for " + tagName + " with value " + value);
         }
@@ -134,23 +135,6 @@ public abstract class BaseUITest {
     protected Locator waitForAnyElementContainingTextWithAttribute(String path, String text, String attributeName) {
         String xpathPattern = "//%s[@%s]/*[contains(text(), '%s')]".formatted(path, attributeName, text);
         return waitForElement(xpathPattern);
-    }
-
-    protected Locator waitForElementWithTagAndInputValue(String tagName, String value) {
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < SECONDS * 1000) {
-            List<Locator> candidates = page.locator(tagName).locator("input").all();
-            for (Locator cand : candidates) {
-                if (cand.isVisible()) {
-                     String val = cand.inputValue();
-                     if (val != null && val.startsWith(value)) {
-                         return cand;
-                     }
-                }
-            }
-            page.waitForTimeout(100);
-        }
-        throw new RuntimeException("Timeout waiting for input inside " + tagName + " with value " + value);
     }
 
     protected boolean isDisplayedSafe(Locator element) {
