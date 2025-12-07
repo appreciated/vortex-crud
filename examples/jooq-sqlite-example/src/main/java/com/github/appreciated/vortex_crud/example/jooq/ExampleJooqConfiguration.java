@@ -86,6 +86,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                         PROJECTS.BUDGET, JooqBigDecimalField.builder().build(),
+                        PROJECTS.TAGS_MULTI, JooqMultiSelectValueField.builder().build(),
                         PROJECTS.ACTIVE, JooqCheckboxField.builder().build(),
                         PROJECTS.START_DATE, JooqDateField.builder().build(),
                         PROJECTS.END_DATE, JooqDateField.builder().build(),
@@ -165,7 +166,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var projectTagsConfig = JooqDataStoreConfig.of(PROJECT_TAGS)
                 .dataStoreInstance((VortexCrudDataStore) projectTagsStore)
                 .fields(Map.of(
-                        PROJECT_TAGS.PROJECT_ID, JooqIdField.builder().build(),
+                        PROJECT_TAGS.ID, JooqIdField.builder().build(),
+                        PROJECT_TAGS.PROJECT_ID, JooqIntegerField.builder().build(),
                         PROJECT_TAGS.TAG, JooqTextField.builder().build()
                 )).build();
 
@@ -231,8 +233,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                                 JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
                                 JooqFieldElement.of(PROJECTS.BUDGET, "Budget").build(),
+                                JooqFieldElement.of(PROJECTS.TAGS_MULTI, "Tags (MultiSelect)").build(),
                                 JooqFieldElement.of(PROJECTS.ACTIVE, "Active").build(),
-                                JooqCollectionElement.of("Tags")
+                                JooqCollectionElement.of("Tags (Collection)")
                                         .factory(new ListCollectionFactory<>())
                                         .configuration(JooqCollection.builder(new FormDialogFactory<>())
                                                 .data(JooqCollectionConfiguration.of(projectTagsConfig)

@@ -165,6 +165,12 @@
                                     <includeExpression>tasks.status</includeExpression>
                                     <includeTypes>VARCHAR</includeTypes>
                                 </forcedType>
+                                <forcedType>
+                                    <userType>java.util.Set</userType>
+                                    <converter>com.github.appreciated.vortex_crud.example.jooq.converter.TagsConverter</converter>
+                                    <includeExpression>projects.tags_multi</includeExpression>
+                                    <includeTypes>VARCHAR</includeTypes>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <target>

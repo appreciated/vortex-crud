@@ -66,14 +66,6 @@ CREATE TABLE videos
     url   VARCHAR
 );
 
--- changeset jooq-sqlite-example-test-project:6
-INSERT INTO users (id, username)
-VALUES (1, 'max@mustermann.de'),
-       (2, 'erika@musterfrau.de'),
-       (3, 'john@doe.com'),
-       (4, 'jane@doe.com');
-
-
 -- changeset jooq-sqlite-example-test-project:7
 INSERT INTO images (id, title, url)
 VALUES (1, 'Red', './red.png'),

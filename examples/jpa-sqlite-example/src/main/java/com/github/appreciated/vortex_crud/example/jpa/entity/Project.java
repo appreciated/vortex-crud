@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "projects")
@@ -26,10 +27,12 @@ public class Project {
     private BigDecimal budget;
 
     @MultiSelectValueField("project-tags")
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "project_tags", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "tag")
-    private List<String> tags;
+    @Column(name = "tags_multi")
+    @Convert(converter = com.github.appreciated.vortex_crud.example.jpa.converter.SetToStringConverter.class)
+    private Set<String> tagsMulti;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ProjectTag> projectTags;
 
     @CheckboxField
     private Boolean active;
@@ -78,12 +81,20 @@ public class Project {
         this.budget = budget;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Set<String> getTagsMulti() {
+        return tagsMulti;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTagsMulti(Set<String> tagsMulti) {
+        this.tagsMulti = tagsMulti;
+    }
+
+    public List<ProjectTag> getProjectTags() {
+        return projectTags;
+    }
+
+    public void setProjectTags(List<ProjectTag> projectTags) {
+        this.projectTags = projectTags;
     }
 
     public Boolean getActive() {
