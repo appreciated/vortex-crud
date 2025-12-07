@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -23,9 +22,10 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText(getExistingParentName());
+        Locator element = waitForAnyElementContainingText(getExistingParentName());
         // it should be inside a grid cell (like in validation test)
-        assertEquals("vaadin-grid-cell-content", element.getTagName());
+        String tagName = (String) element.evaluate("element => element.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -43,15 +43,13 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExistingParentName()).click();
         waitForUrlToBe(getPath() + "/1");
-        WebElement plusButton = waitForElements(By.tagName("vaadin-button")).stream()
-                .filter(button -> button.findElements(By.tagName("vaadin-icon")).stream()
-                        .anyMatch(icon -> "vaadin:plus".equals(icon.getAttribute("icon"))))
-                .findFirst()
-                .orElseThrow();
+
+        Locator plusButton = waitForElement("vaadin-button:has(vaadin-icon[icon='vaadin:plus'])");
         plusButton.click();
-        WebElement field = waitForElement(By.cssSelector("vaadin-dialog vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.sendKeys("Created Child");
+
+        Locator field = waitForElement("vaadin-dialog vaadin-text-field").locator("input");
+        field.fill("Created Child");
+
         waitForElementContainingText("vaadin-dialog//vaadin-button", "Save").click();
         waitForAnyElementContainingText("Created Child");
     }
@@ -61,10 +59,9 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExistingParentName()).click();
         waitForUrlToBe(getPath() + "/1");
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.clear();
-        field.sendKeys("Updated Parent");
+        Locator field = waitForElement("vaadin-text-field").locator("input");
+        field.fill("");
+        field.fill("Updated Parent");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Parent");
@@ -77,7 +74,7 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingParentName() + "')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingParentName() + "')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

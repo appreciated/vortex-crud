@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -25,27 +24,21 @@ public abstract class AbstractFieldTypesTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
 
         // Check MultiSelectValueField (CheckboxGroup)
-        // Checkboxes "Tag 1" and "Tag 2" should be present and checked?
-        // Vaadin CheckboxGroup renders vaadin-checkbox elements.
-        if (!driver.findElements(By.xpath("//*[contains(text(), 'Tags')]")).isEmpty()) {
-            List<WebElement> checkboxes = driver.findElements(By.tagName("vaadin-checkbox"));
+        if (page.locator("//*[contains(text(), 'Tags')]").count() > 0) {
+            List<Locator> checkboxes = page.locator("vaadin-checkbox").all();
             assertTrue(checkboxes.size() >= 2);
-            // We assume they are checked if loaded from DB, but verifying checked state on shadow dom might be tricky without access helpers.
-            // At least we verify presence of "Tag 1" text.
             waitForAnyElementContainingText("Tag 1");
             waitForAnyElementContainingText("Tag 2");
         }
 
         // Check PdfField
-        // Should have a thumbnail or upload component.
-        // Since we seeded 'test.pdf', and it might not exist on disk, the PDF field component structure may vary.
-        // Just verify that the PDF label/section is present in the form
-        // The PDF field should be labeled "PDF" according to the configuration
         waitForAnyElementContainingText("PDF");
 
         // Check Notes Field (which is TextAreaField in this test)
         // Should contain "## Header"
-        // Note: MarkDownField cannot be tested in JPA due to missing annotation support, so we fell back to TextAreaField.
-        waitForElementWithTagAndValue("vaadin-text-area", "## Header");
+        Locator textArea = waitForElement("vaadin-text-area");
+        // Check if value attribute is set on host or check internal textarea
+        String value = textArea.locator("textarea").inputValue();
+        assertTrue(value.contains("## Header"));
     }
 }

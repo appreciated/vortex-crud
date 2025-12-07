@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -35,9 +34,8 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();
-        WebElement field = waitForElement(By.xpath("(//vaadin-text-field)[2]"))
-                .findElement(By.tagName("input"));
-        field.sendKeys("Created Entry");
+        Locator field = waitForElement("xpath=(//vaadin-text-field)[2]").locator("input");
+        field.fill("Created Entry");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Created Entry");
@@ -48,10 +46,9 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExistingItemName()).click();
         waitForUrlToBe(getPath() + "/1");
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.clear();
-        field.sendKeys("Updated Entry");
+        Locator field = waitForElement("vaadin-text-field").locator("input");
+        field.fill("");
+        field.fill("Updated Entry");
         waitForAnyElementContainingText("Save").click();
         waitForAnyElementContainingText("Entry successfully saved");
     }
@@ -63,7 +60,7 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingItemName() + "')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

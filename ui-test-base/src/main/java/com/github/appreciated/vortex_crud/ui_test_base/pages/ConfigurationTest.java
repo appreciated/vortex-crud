@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.pages;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,8 +15,9 @@ public class ConfigurationTest extends BaseUITest {
     @Test
     void testConfigListingVisible() {
         navigateTo("configurations");
-        WebElement webElement = waitForAnyElementContainingText("max_connections");
-        assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
+        Locator webElement = waitForAnyElementContainingText("max_connections");
+        String tagName = (String) webElement.evaluate("element => element.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -36,9 +37,8 @@ public class ConfigurationTest extends BaseUITest {
         waitForUrlToBe("configurations/2");
 
         // Find the value field and clear it
-        WebElement valueField = waitForElementWithTagAndValue("vaadin-text-field", "30");
-        valueField.clear();
-        valueField.sendKeys("45");
+        Locator valueField = waitForElementWithTagAndValue("vaadin-text-field", "30");
+        valueField.fill("45");
 
         // Click save button
         waitForAnyElementContainingText("Save").click();

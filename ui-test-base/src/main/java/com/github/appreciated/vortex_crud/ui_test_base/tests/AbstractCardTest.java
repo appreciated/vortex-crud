@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -38,8 +36,8 @@ public abstract class AbstractCardTest extends BaseUITest {
     @Test
     void testCardListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText(getExpectedVisibleValue());
-        assertTrue(element.isDisplayed());
+        Locator element = waitForAnyElementContainingText(getExpectedVisibleValue());
+        assertTrue(element.isVisible());
     }
 
     @Test
@@ -57,24 +55,19 @@ public abstract class AbstractCardTest extends BaseUITest {
             return;
         }
         navigateTo(getPath());
-        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        filter.sendKeys(present);
-        filter.sendKeys(Keys.ENTER);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Locator filter = waitForElement("vaadin-text-field").locator("input");
+        filter.fill(present);
+        filter.press("Enter");
+        page.waitForTimeout(500);
         waitForAnyElementContainingText(present);
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
+        List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
                 .filter(this::isDisplayedSafe)
                 .toList();
         assertTrue(hidden.isEmpty());
-        filter.sendKeys(Keys.BACK_SPACE);
-        filter.sendKeys(Keys.BACK_SPACE);
-        filter.sendKeys(Keys.BACK_SPACE);
+        filter.press("Backspace");
+        filter.press("Backspace");
+        filter.press("Backspace");
         waitForAnyElementContainingText(absent);
     }
 
@@ -82,9 +75,8 @@ public abstract class AbstractCardTest extends BaseUITest {
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();
-        WebElement field = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.sendKeys("Created Entry");
+        Locator field = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
+        field.fill("Created Entry");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Created Entry");
@@ -95,10 +87,9 @@ public abstract class AbstractCardTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue()).click();
         waitForUrlToBe(getPath() + "/" + getDetailId());
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.clear();
-        field.sendKeys("Updated Entry");
+        Locator field = waitForElement("vaadin-text-field").locator("input");
+        field.fill("");
+        field.fill("Updated Entry");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Entry");
@@ -111,7 +102,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/" + getDetailId());
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 
@@ -119,7 +110,7 @@ public abstract class AbstractCardTest extends BaseUITest {
     void testImagesDisplayed() {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue());
-        WebElement img = waitForElement(By.tagName("img"));
-        assertTrue(img.isDisplayed());
+        Locator img = waitForElement("img");
+        assertTrue(img.isVisible());
     }
 }

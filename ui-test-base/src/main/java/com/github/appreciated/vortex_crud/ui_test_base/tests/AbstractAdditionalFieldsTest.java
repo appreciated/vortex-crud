@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -30,8 +29,9 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getAdditionalFieldsPath());
-        WebElement webElement = waitForAnyElementContainingText("Test Entity");
-        assertEquals("vaadin-grid-cell-content", webElement.getTagName());
+        Locator webElement = waitForAnyElementContainingText("Test Entity");
+        String tagName = (String) webElement.evaluate("element => element.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -41,13 +41,11 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         // Verify TextArea field loads
-        WebElement textAreaField = waitForElement(By.tagName("vaadin-text-area"))
-                .findElement(By.tagName("textarea"));
-        assertTrue(textAreaField.getAttribute("value").contains("This is a long description"));
+        Locator textAreaField = waitForElement("vaadin-text-area").locator("textarea");
+        assertTrue(textAreaField.inputValue().contains("This is a long description"));
 
         // Verify Password field exists (value should be masked)
-        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
-                .findElement(By.tagName("input"));
+        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
         assertEquals("password", passwordField.getAttribute("type"));
 
         // Note: BigDecimal field test skipped - field may not render depending on configuration
@@ -60,19 +58,16 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill in required fields
-        WebElement nameField = waitForElementContainingText("vaadin-text-field", "Name")
-                .findElement(By.tagName("input"));
-        nameField.sendKeys("TextArea Test");
+        Locator nameField = waitForElementContainingText("vaadin-text-field", "Name").locator("input");
+        nameField.fill("TextArea Test");
 
         // Fill in TextArea field
-        WebElement textAreaField = waitForElement(By.tagName("vaadin-text-area"))
-                .findElement(By.tagName("textarea"));
-        textAreaField.sendKeys("This is a multi-line\ntext area\nwith several lines");
+        Locator textAreaField = waitForElement("vaadin-text-area").locator("textarea");
+        textAreaField.fill("This is a multi-line\ntext area\nwith several lines");
 
         // Fill Password field
-        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
-                .findElement(By.tagName("input"));
-        passwordField.sendKeys("SecurePassword123");
+        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
+        passwordField.fill("SecurePassword123");
 
         // Save
         waitForAnyElementContainingText("Save").click();
@@ -88,17 +83,16 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Wait for and find password field
-        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
-                .findElement(By.tagName("input"));
+        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
 
         // Verify it's a password type input (masked)
         assertEquals("password", passwordField.getAttribute("type"));
 
         // Enter a password
-        passwordField.sendKeys("MySecretPassword");
+        passwordField.fill("MySecretPassword");
 
         // The value should be present but masked in the UI
-        assertEquals("MySecretPassword", passwordField.getAttribute("value"));
+        assertEquals("MySecretPassword", passwordField.inputValue());
     }
 
     @Test
@@ -106,13 +100,11 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         navigateTo(getAdditionalFieldsPath());
         waitForAnyElementContainingText("Create").click();
 
-        WebElement nameField = waitForElementContainingText("vaadin-text-field", "Name")
-                .findElement(By.tagName("input"));
-        nameField.sendKeys("Created Entity");
+        Locator nameField = waitForElementContainingText("vaadin-text-field", "Name").locator("input");
+        nameField.fill("Created Entity");
 
-        WebElement passwordField = waitForElement(By.tagName("vaadin-password-field"))
-                .findElement(By.tagName("input"));
-        passwordField.sendKeys("newpassword");
+        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
+        passwordField.fill("newpassword");
 
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getAdditionalFieldsPath());
@@ -125,10 +117,9 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Test Entity").click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
-        WebElement nameField = waitForElementContainingText("vaadin-text-field", "Name")
-                .findElement(By.tagName("input"));
-        nameField.clear();
-        nameField.sendKeys("Updated Entity");
+        Locator nameField = waitForElementContainingText("vaadin-text-field", "Name").locator("input");
+        nameField.fill("");
+        nameField.fill("Updated Entity");
 
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getAdditionalFieldsPath());
@@ -144,7 +135,7 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getAdditionalFieldsPath());
 
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Test Entity')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), 'Test Entity')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

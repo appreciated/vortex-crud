@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -30,8 +28,9 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testValidationListingVisible() {
         navigateTo(getValidationPath());
-        WebElement webElement = waitForAnyElementContainingText("Test Value");
-        assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
+        Locator webElement = waitForAnyElementContainingText("Test Value");
+        String tagName = (String) webElement.evaluate("element => element.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -47,7 +46,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-date-time-picker//vaadin-time-picker", "10:15");
         waitForElementWithTagAndValue("vaadin-select", "1");
         waitForElementWithTagAndValue("vaadin-checkbox", "on");
-        WebElement image = waitForElement(By.tagName("img"));
+        Locator image = waitForElement("img");
         assertTrue(image.getAttribute("src").contains("red.png"));
     }
 
@@ -60,23 +59,20 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Save").click();
 
         // Check for validation error message - look for the specific constraint violation message
-        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isDisplayed());
+        Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
+        assertTrue(errorMessage.isVisible());
 
         // Find the required field by label text instead of required attribute
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.sendKeys("New Test Value");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("New Test Value");
 
         // Fill email field (second text field based on HTML)
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("new@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("new@example.com");
 
         // Fill numeric field with Double value to avoid ClassCastException
-        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
-                .findElement(By.tagName("input"));
-        numericField.sendKeys("50.0");
+        Locator numericField = page.locator("vaadin-number-field input").first();
+        numericField.fill("50.0");
 
         // Try to save again
         waitForAnyElementContainingText("Save").click();
@@ -91,30 +87,26 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill the required field by finding the field with "Required" label
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.sendKeys("Email Test");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("Email Test");
 
         // Fill email field with invalid value (second text field based on HTML)
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("invalid-email");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("invalid-email");
 
         // Fill numeric field with valid Double value
-        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
-                .findElement(By.tagName("input"));
-        numericField.sendKeys("50.0");
+        Locator numericField = page.locator("vaadin-number-field input").first();
+        numericField.fill("50.0");
 
         // Try to save
         waitForAnyElementContainingText("Save").click();
 
         // Check for validation error message
-        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isDisplayed());
+        Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
+        assertTrue(errorMessage.isVisible());
 
         // Correct the email
-        emailField.clear();
-        emailField.sendKeys("valid@example.com");
+        emailField.fill("valid@example.com");
 
         // Try to save again
         waitForAnyElementContainingText("Save").click();
@@ -129,30 +121,26 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill required field
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.sendKeys("Numeric Test");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("Numeric Test");
 
         // Fill email field (second text field)
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("numeric@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("numeric@example.com");
 
         // Fill numeric field with invalid value (negative number)
-        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
-                .findElement(By.tagName("input"));
-        numericField.sendKeys("-5.0");
+        Locator numericField = page.locator("vaadin-number-field input").first();
+        numericField.fill("-5.0");
 
         // Try to save
         waitForAnyElementContainingText("Save").click();
 
         // Check for validation error message
-        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some field");
-        assertTrue(errorMessage.isDisplayed());
+        Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some field");
+        assertTrue(errorMessage.isVisible());
 
         // Correct the numeric value
-        numericField.clear();
-        numericField.sendKeys("25.0");
+        numericField.fill("25.0");
 
         // Try to save again
         waitForAnyElementContainingText("Save").click();
@@ -166,24 +154,20 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Create").click();
 
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.sendKeys("DateTime Test");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("DateTime Test");
 
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("datetime@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("datetime@example.com");
 
-        WebElement numericField = driver.findElement(By.tagName("vaadin-number-field"))
-                .findElement(By.tagName("input"));
-        numericField.sendKeys("10.0");
+        Locator numericField = page.locator("vaadin-number-field input").first();
+        numericField.fill("10.0");
 
-        WebElement dateTimeField = driver.findElement(By.tagName("vaadin-date-time-picker"))
-                .findElement(By.tagName("input"));
-        dateTimeField.sendKeys("2024-01-01T12:00");
-        dateTimeField.sendKeys(Keys.ESCAPE); // manual closing needed as the date time picker popup hides other elements
+        Locator dateTimeField = page.locator("vaadin-date-time-picker input").first();
+        dateTimeField.fill("2024-01-01T12:00");
+        dateTimeField.press("Escape"); // manual closing needed as the date time picker popup hides other elements
 
-        waitForElement(By.tagName("vaadin-checkbox")).click();
+        waitForElement("vaadin-checkbox").click();
 
         waitForAnyElementContainingText("Save").click();
 
@@ -195,9 +179,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Create").click();
 
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.sendKeys("Created Value");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("Created Value");
 
         waitForAnyElementContainingText("Save").click();
 
@@ -211,10 +194,8 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Test Value").click();
         waitForUrlToBe(getValidationPath() + "/1");
 
-        WebElement requiredField = waitForElementContainingText("vaadin-text-field", "Required")
-                .findElement(By.tagName("input"));
-        requiredField.clear();
-        requiredField.sendKeys("Updated Value");
+        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
+        requiredField.fill("Updated Value");
 
         waitForAnyElementContainingText("Save").click();
 
@@ -231,7 +212,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
 
         waitForUrlToBe(getValidationPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Test Value')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), 'Test Value')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

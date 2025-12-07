@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -23,8 +22,9 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
     @Test
     void testListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText(getExistingItemName());
-        assertEquals("vaadin-grid-cell-content", element.getTagName());
+        Locator element = waitForAnyElementContainingText(getExistingItemName());
+        String tagName = (String) element.evaluate("el => el.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -42,10 +42,9 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText("Item 2").click();
         waitForUrlToBe(getPath() + "/2");
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Item 3')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), 'Item 3')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
-        waitForElement(By.xpath("//vaadin-icon[@icon='vaadin:plus']/.."))
-                .click();
+        waitForElement("//vaadin-icon[@icon='vaadin:plus']/..").click();
         waitForAnyElementContainingText("Item 3").click();
         waitForAnyElementContainingText("Link").click();
         waitForAnyElementContainingText("Item 3");
@@ -56,10 +55,9 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExistingItemName()).click();
         waitForUrlToBe(getPath() + "/1");
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.clear();
-        field.sendKeys("Updated Item");
+        Locator field = waitForElement("vaadin-text-field").locator("input");
+        field.fill("");
+        field.fill("Updated Item");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Item");
@@ -72,7 +70,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExistingItemName() + "')]"));
+        List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
         assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
     }
 }

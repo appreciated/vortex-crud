@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,13 +38,12 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         // Attempt to save without filling required fields
         waitForAnyElementContainingText("Save").click();
 
-        WebElement errorMessage = waitForAnyElementContainingText("Entry could not be saved");
-        assertTrue(errorMessage.isDisplayed());
+        Locator errorMessage = waitForAnyElementContainingText("Entry could not be saved");
+        assertTrue(errorMessage.isVisible());
 
         // Fill required title field and save
-        WebElement titleField = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        titleField.sendKeys("New Image");
+        Locator titleField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
+        titleField.fill("New Image");
 
         waitForAnyElementContainingText("Save").click();
 
@@ -53,4 +51,3 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         waitForAnyElementContainingText("New Image");
     }
 }
-
