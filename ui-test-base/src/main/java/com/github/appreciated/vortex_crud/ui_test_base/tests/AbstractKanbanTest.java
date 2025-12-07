@@ -1,17 +1,15 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Base test for Kanban views.
@@ -46,10 +44,10 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         }
     }
 
-    private WebElement getGridForColumn(String title) {
-        WebElement header = waitForElement(By.xpath("//h4[contains(text(), '" + title + "')]"));
-        WebElement wrapper = header.findElement(By.xpath("../.."));
-        return wrapper.findElement(By.tagName("vaadin-grid"));
+    private Locator getGridForColumn(String title) {
+        Locator header = waitForElement("//h4[contains(text(), '" + title + "')]");
+        Locator wrapper = header.locator("xpath=../..");
+        return wrapper.locator("vaadin-grid");
     }
 
     @Test
@@ -60,68 +58,75 @@ public abstract class AbstractKanbanTest extends BaseUITest {
             return;
         }
         navigateTo(getPath());
-        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        filter.sendKeys(present);
+        Locator filter = waitForElement("vaadin-text-field").locator("input");
+        filter.fill(present);
         waitForElementWithTagAndValue("vaadin-text-field", present);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
+        page.waitForTimeout(500);
+
+        List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
-                .filter(this::isDisplayedSafe)
+                .filter(Locator::isVisible)
                 .toList();
         assertEquals(0, hidden.size());
+
         for (int i = 0; i < present.length(); i++) {
-            filter.sendKeys(Keys.BACK_SPACE);
+            filter.press("Backspace");
         }
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        page.waitForTimeout(500);
         waitForAnyElementContainingText(absent);
     }
 
     @Test
     void testDragAndDropUpdatesStatus() {
         navigateTo(getPath());
-        WebElement sourceGrid = getGridForColumn(getExpectedColumnTitles()[0]);
-        WebElement targetGrid = getGridForColumn(getExpectedColumnTitles()[1]);
-        WebElement sourceRow = sourceGrid.getShadowRoot().findElement(By.cssSelector("tbody tr"));
-        String taskText = sourceRow.getText();
-        WebElement targetBody = targetGrid.getShadowRoot().findElement(By.cssSelector("tbody"));
-        new Actions(driver).dragAndDrop(sourceRow, targetBody).perform();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        wait.until(d -> targetGrid.getShadowRoot()
-                .findElements(By.cssSelector("tbody tr"))
-                .stream()
-                .anyMatch(tr -> tr.getText().contains(taskText)));
+        Locator sourceGrid = getGridForColumn(getExpectedColumnTitles()[0]);
+        Locator targetGrid = getGridForColumn(getExpectedColumnTitles()[1]);
+
+        // Playwright pierces shadow DOM
+        Locator sourceRow = sourceGrid.locator("tbody tr").first();
+        String taskText = sourceRow.innerText();
+        Locator targetBody = targetGrid.locator("tbody");
+
+        sourceRow.dragTo(targetBody);
+
+        page.waitForTimeout(3000);
+
+        // Check if taskText is now in targetGrid
+        List<Locator> targetRows = targetGrid.locator("tbody tr").all();
+        boolean found = targetRows.stream().anyMatch(row -> row.innerText().contains(taskText));
+        // If not found immediately, we might need to wait.
+        // Better: use locator with text inside grid and waitFor
+        // targetGrid.locator("tbody tr", new Locator.LocatorOptions().setHasText(taskText)).waitFor();
+        // But taskText might be partial.
+        // Let's retry asserting or use expect logic if using expect library (not imported here).
+        // Standard JUnit assertion:
+        assertTrue(targetRows.stream().anyMatch(row -> row.innerText().contains(taskText)));
     }
 
     @Test
     void testDragAndDropReordersWithinColumn() {
         navigateTo(getPath());
-        WebElement grid = getGridForColumn(getExpectedColumnTitles()[0]);
-        WebElement firstRow = grid.getShadowRoot().findElement(By.cssSelector("tbody tr"));
-        String text = firstRow.getText();
-        WebElement body = grid.getShadowRoot().findElement(By.cssSelector("tbody"));
-        new Actions(driver).dragAndDrop(firstRow, body).perform();
-        wait.until(d -> {
-            var rows = grid.getShadowRoot().findElements(By.cssSelector("tbody tr"));
-            return !rows.isEmpty() && rows.get(rows.size() - 1).getText().contains(text);
-        });
-        driver.navigate().refresh();
-        WebElement refreshedGrid = getGridForColumn(getExpectedColumnTitles()[0]);
-        wait.until(d -> {
-            var rows = refreshedGrid.getShadowRoot().findElements(By.cssSelector("tbody tr"));
-            return !rows.isEmpty() && rows.get(rows.size() - 1).getText().contains(text);
-        });
+        Locator grid = getGridForColumn(getExpectedColumnTitles()[0]);
+        Locator firstRow = grid.locator("tbody tr").first();
+        String text = firstRow.innerText();
+        Locator body = grid.locator("tbody");
+
+        firstRow.dragTo(body);
+
+        // Wait for reorder
+        page.waitForTimeout(1000);
+
+        List<Locator> rows = grid.locator("tbody tr").all();
+        assertTrue(!rows.isEmpty() && rows.get(rows.size() - 1).innerText().contains(text));
+
+        page.reload();
+
+        Locator refreshedGrid = getGridForColumn(getExpectedColumnTitles()[0]);
+        // Wait for grid to load
+        refreshedGrid.waitFor();
+        page.waitForTimeout(1000);
+
+        List<Locator> refreshedRows = refreshedGrid.locator("tbody tr").all();
+        assertTrue(!refreshedRows.isEmpty() && refreshedRows.get(refreshedRows.size() - 1).innerText().contains(text));
     }
 }

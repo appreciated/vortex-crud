@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -31,8 +30,9 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormListingVisible() {
         navigateTo(getMultiFormPath());
-        WebElement webElement = waitForAnyElementContainingText("Max Mustermann");
-        assertEquals(webElement.getTagName(), "vaadin-grid-cell-content");
+        Locator webElement = waitForAnyElementContainingText("Max Mustermann");
+        String tagName = (String) webElement.evaluate("element => element.tagName.toLowerCase()");
+        assertEquals("vaadin-grid-cell-content", tagName);
     }
 
     @Test
@@ -46,7 +46,23 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-email-field", "profile@example.com");
 
         // Verify second form fields (Additional Details)
-        waitForElementWithTagAndValue("vaadin-text-area", "This is a profile description");
+        // Use Locator to check textarea value if needed, or helper
+        // BaseUITest.waitForElementWithTagAndValue uses starts-with(@value).
+        // For textarea in vaadin-text-area, value attribute might not be on host.
+        // Assuming helper works or fallback to check inputValue.
+        // Let's rely on helper if it works, or fix helper.
+        // But for safety I'll assume helper works or I fix it in BaseUITest if I find it broken.
+        // Wait, for AbstractFormSlideTest I changed helper to locator("textarea").inputValue().
+        // Here I am reusing waitForElementWithTagAndValue.
+        // I should check if waitForElementWithTagAndValue works for vaadin-text-area.
+        // vaadin-text-area usually reflects value to property, not attribute.
+        // I'll leave it for now, assuming logic is similar to selenium test which passed (maybe).
+        // Actually Selenium test used waitForElementWithTagAndValue("vaadin-text-area", ...).
+
+        // I'll use explicit check for textarea to be safe.
+        Locator textArea = waitForElement("vaadin-text-area").locator("textarea");
+        assertTrue(textArea.inputValue().contains("This is a profile description"));
+
         waitForElementWithTagAndValue("vaadin-integer-field", "25");
     }
 
@@ -59,18 +75,17 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Save").click();
 
         // Check for validation error message
-        WebElement errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isDisplayed());
+        Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
+        assertTrue(errorMessage.isVisible());
 
         // Fill required field from first form
-        List<WebElement> textFields = waitForElements(By.tagName("vaadin-text-field"));
-        WebElement nameField = textFields.get(0).findElement(By.tagName("input"));
-        nameField.sendKeys("New Profile");
+        List<Locator> textFields = waitForElements("vaadin-text-field");
+        Locator nameField = textFields.get(0).locator("input");
+        nameField.fill("New Profile");
 
         // Fill required email field
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("newprofile@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("newprofile@example.com");
 
         // Try to save again
         waitForAnyElementContainingText("Save").click();
@@ -85,21 +100,18 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill fields from first form (Basic Information)
-        WebElement nameField =  waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"));
-        nameField.sendKeys("Created Profile");
+        Locator nameField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
+        nameField.fill("Created Profile");
 
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("created@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("created@example.com");
 
         // Fill fields from second form (Additional Details)
-        WebElement descriptionField = driver.findElement(By.tagName("vaadin-text-area"))
-                .findElement(By.tagName("textarea"));
-        descriptionField.sendKeys("This is a created profile");
+        Locator descriptionField = page.locator("vaadin-text-area textarea").first();
+        descriptionField.fill("This is a created profile");
 
-        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
-                .findElement(By.tagName("input"));
-        ageField.sendKeys("30");
+        Locator ageField = page.locator("vaadin-integer-field input").first();
+        ageField.fill("30");
 
         waitForAnyElementContainingText("Save").click();
 
@@ -114,15 +126,14 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForUrlToBe(getMultiFormPath() + "/1");
 
         // Update field from first form
-        WebElement nameField = waitForElement(By.xpath("//vaadin-text-field")).findElement(By.tagName("input"));
-        nameField.clear();
-        nameField.sendKeys("Updated Profile");
+        Locator nameField = waitForElement("vaadin-text-field").locator("input");
+        nameField.fill("");
+        nameField.fill("Updated Profile");
 
         // Update field from second form
-        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
-                .findElement(By.tagName("input"));
-        ageField.clear();
-        ageField.sendKeys("35");
+        Locator ageField = page.locator("vaadin-integer-field input").first();
+        ageField.fill("");
+        ageField.fill("35");
 
         waitForAnyElementContainingText("Save").click();
 
@@ -139,8 +150,8 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
 
         waitForUrlToBe(getMultiFormPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), 'Max Mustermann')]"));
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        List<Locator> elements = page.locator("//*[contains(text(), 'Max Mustermann')]").all();
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 
     @Test
@@ -149,20 +160,17 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Create").click();
 
         // Fill all fields across both forms
-        WebElement nameField = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"));
-        nameField.sendKeys("Complete Profile");
+        Locator nameField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
+        nameField.fill("Complete Profile");
 
-        WebElement emailField = driver.findElement(By.tagName("vaadin-email-field"))
-                .findElement(By.tagName("input"));
-        emailField.sendKeys("complete@example.com");
+        Locator emailField = page.locator("vaadin-email-field input").first();
+        emailField.fill("complete@example.com");
 
-        WebElement descriptionField = driver.findElement(By.tagName("vaadin-text-area"))
-                .findElement(By.tagName("textarea"));
-        descriptionField.sendKeys("Complete profile description");
+        Locator descriptionField = page.locator("vaadin-text-area textarea").first();
+        descriptionField.fill("Complete profile description");
 
-        WebElement ageField = driver.findElement(By.tagName("vaadin-integer-field"))
-                .findElement(By.tagName("input"));
-        ageField.sendKeys("28");
+        Locator ageField = page.locator("vaadin-integer-field input").first();
+        ageField.fill("28");
 
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getMultiFormPath());
@@ -176,7 +184,8 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForElementWithTagAndValue("vaadin-email-field", "complete@example.com");
 
         // Verify second form data
-        waitForElementWithTagAndValue("vaadin-text-area", "Complete profile description");
+        Locator textArea = waitForElement("vaadin-text-area").locator("textarea");
+        assertTrue(textArea.inputValue().contains("Complete profile description"));
         waitForElementWithTagAndValue("vaadin-integer-field", "28");
     }
 }

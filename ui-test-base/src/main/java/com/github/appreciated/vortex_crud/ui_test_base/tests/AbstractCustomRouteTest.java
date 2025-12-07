@@ -1,9 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,7 +42,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo("");
 
         // Find and click the custom route menu item
-        WebElement menuItem = waitForAnyElementContainingText(getCustomRouteMenuLabel());
+        Locator menuItem = waitForAnyElementContainingText(getCustomRouteMenuLabel());
         menuItem.click();
 
         // Verify navigation to custom route
@@ -58,8 +57,8 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo(getCustomRoutePath());
 
         // Verify custom view content is visible
-        WebElement content = waitForAnyElementContainingText(getExpectedCustomViewContent());
-        assertTrue(content.isDisplayed());
+        Locator content = waitForAnyElementContainingText(getExpectedCustomViewContent());
+        assertTrue(content.isVisible());
     }
 
     /**
@@ -71,8 +70,8 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo(getCustomRoutePath());
 
         // Menu should be visible - check for app-layout or menu container
-        WebElement appLayout = waitForElement(By.tagName("vaadin-app-layout"));
-        assertTrue(appLayout.isDisplayed());
+        Locator appLayout = waitForElement("vaadin-app-layout");
+        assertTrue(appLayout.isVisible());
     }
 
     /**
@@ -86,8 +85,8 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         waitForUrlToBe(getCustomRoutePath());
 
         // Verify content is displayed
-        WebElement content = waitForAnyElementContainingText(getExpectedCustomViewContent());
-        assertTrue(content.isDisplayed());
+        Locator content = waitForAnyElementContainingText(getExpectedCustomViewContent());
+        assertTrue(content.isVisible());
     }
 
     /**
@@ -103,7 +102,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo("");
 
         // Menu should still be visible
-        WebElement appLayout = waitForElement(By.tagName("vaadin-app-layout"));
-        assertTrue(appLayout.isDisplayed());
+        Locator appLayout = waitForElement("vaadin-app-layout");
+        assertTrue(appLayout.isVisible());
     }
 }

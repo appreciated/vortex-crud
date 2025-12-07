@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
 
@@ -43,8 +41,9 @@ public abstract class AbstractGridTest extends BaseUITest {
     @Test
     void testGridListingVisible() {
         navigateTo(getPath());
-        WebElement element = waitForAnyElementContainingText(getExpectedVisibleValue());
-        assertEquals("h4", element.getTagName());
+        Locator element = waitForAnyElementContainingText(getExpectedVisibleValue());
+        String tagName = (String) element.evaluate("el => el.tagName.toLowerCase()");
+        assertEquals("h4", tagName);
     }
 
     @Test
@@ -62,28 +61,21 @@ public abstract class AbstractGridTest extends BaseUITest {
             return; // no filter configured
         }
         navigateTo(getPath());
-        WebElement filter = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        filter.sendKeys(present);
+        Locator filter = waitForElement("vaadin-text-field").locator("input");
+        filter.fill(present);
         waitForElementWithTagAndValue("vaadin-text-field", present);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        List<WebElement> hidden = driver.findElements(By.xpath("//*[contains(text(), '" + absent + "')]"))
+        page.waitForTimeout(500);
+
+        List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
-                .filter(this::isDisplayedSafe)
+                .filter(Locator::isVisible)
                 .toList();
         assertEquals(0, hidden.size());
+
         for (int i = 0; i < present.length(); i++) {
-            filter.sendKeys(Keys.BACK_SPACE);
+            filter.press("Backspace");
         }
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        page.waitForTimeout(500);
         waitForAnyElementContainingText(absent);
     }
 
@@ -91,17 +83,16 @@ public abstract class AbstractGridTest extends BaseUITest {
     void testImagesDisplayed() {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue());
-        WebElement img = waitForElement(By.tagName("img"));
-        assertTrue(img.isDisplayed());
+        Locator img = waitForElement("img");
+        assertTrue(img.isVisible());
     }
 
     @Test
     void testCreateEntry() {
         navigateTo(getPath());
         waitForAnyElementContainingText("Create").click();
-        WebElement field = waitForElement(By.xpath("//vaadin-dialog//vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.sendKeys("Created Entry");
+        Locator field = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
+        field.fill("Created Entry");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Created Entry");
@@ -112,10 +103,9 @@ public abstract class AbstractGridTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue()).click();
         waitForUrlToBe(getPath() + "/" + getDetailId());
-        WebElement field = waitForElement(By.tagName("vaadin-text-field"))
-                .findElement(By.tagName("input"));
-        field.clear();
-        field.sendKeys("Updated Entry");
+        Locator field = waitForElement("vaadin-text-field").locator("input");
+        field.fill("");
+        field.fill("Updated Entry");
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Entry");
@@ -128,7 +118,7 @@ public abstract class AbstractGridTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/" + getDetailId());
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + getExpectedVisibleValue() + "')]"));
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }

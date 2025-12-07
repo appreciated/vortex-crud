@@ -5,13 +5,10 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForei
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
+import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -70,17 +68,14 @@ public class SecurityIntegrationTest extends BaseUITest {
         roleIdCounter.set(1);
 
         // 2. Mock TranslationService
-        // Prevents UI crashes when components render titles/labels
         when(translationService.getTranslation(anyString(), any())).thenAnswer(inv -> inv.getArgument(0));
 
         // 3. Mock ReflectionService (CRITICAL)
-        // Used by LoginView and Grid to read field values from the generic entities
         when(reflectionService.getValue(any(), anyString())).thenAnswer(inv -> {
             Object entity = inv.getArgument(0);
             String fieldName = inv.getArgument(1);
             if (entity == null || fieldName == null) return null;
             try {
-                // Handle nested properties if necessary, or simple reflection
                 java.lang.reflect.Field field = entity.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
                 return field.get(entity);
@@ -98,35 +93,23 @@ public class SecurityIntegrationTest extends BaseUITest {
         when(userDataStore.getModelClass()).thenReturn((Class) TestUser.class);
         when(userDataStore.newInstance()).thenAnswer(inv -> new TestUser());
 
-        // 6. Mock User DataStore - COUNT (Used for Pagination)
+        // 6. Mock User DataStore - COUNT
         when(userDataStore.count()).thenAnswer(inv -> userStore.size());
         when(userDataStore.countWhereColumnLike(any(), anyString())).thenAnswer(inv -> userStore.size());
 
-        // 7. Mock User DataStore - READ OPERATIONS (Cover ALL variations)
-
-        // Basic Fetch
+        // 7. Mock User DataStore - READ OPERATIONS
         when(userDataStore.getRecordsFromTable(anyInt(), anyInt()))
                 .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // Login Fetch
         when(userDataStore.getRecordsFromTableWhereColumnEquals(anyString(), any(), anyInt(), anyInt()))
                 .thenAnswer(inv -> userStore.values().stream()
                         .filter(u -> matchesField(u, inv.getArgument(0), inv.getArgument(1)))
                         .toList());
-
-        // Ordered Fetch (Vaadin Grid often calls this by default)
         when(userDataStore.getRecordsFromTableWhereColumnEqualsOrdered(any(), any(), any(), anyInt(), anyInt()))
                 .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // Like/Filter Fetch (Default search behavior)
         when(userDataStore.getRecordsFromTableWhereColumnLike(any(), any(), anyInt(), anyInt()))
                 .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // In-List Fetch
         when(userDataStore.getRecordsFromTableWhereColumnIn(any(), any(), anyInt(), anyInt()))
                 .thenAnswer(inv -> new ArrayList<>(userStore.values()));
-
-        // ID Fetch
         when(userDataStore.getRecordById(any())).thenAnswer(inv -> {
             Object id = inv.getArgument(0);
             if (id instanceof String) {
@@ -145,7 +128,7 @@ public class SecurityIntegrationTest extends BaseUITest {
             return user.getId();
         });
 
-        // 9. Mock Role DataStore (Basic support)
+        // 9. Mock Role DataStore
         when(roleDataStore.insertRecord(any(TestRole.class))).thenAnswer(inv -> {
             TestRole role = inv.getArgument(0);
             if (role.getId() == null) {
@@ -187,19 +170,16 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     private void login(String username, String password, String targetUrl) {
         navigateTo("login");
-        WebElement loginForm = waitForElement(By.tagName("vaadin-login-form"));
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].dispatchEvent(new CustomEvent('login', { detail: { username: arguments[1], password: arguments[2] } }));",
-                loginForm, username, password
-        );
+        Locator loginForm = waitForElement("vaadin-login-form");
+        loginForm.evaluate("el => el.dispatchEvent(new CustomEvent('login', { detail: { username: '" + username + "', password: '" + password + "' } }))");
         waitForUrlToBe(targetUrl);
     }
 
     @Test
     void testUnauthenticatedAccess() {
-        driver.get("http://127.0.0.1:%s/users-grid".formatted(port));
-        wait.until(ExpectedConditions.urlContains("login"));
-        assertTrue(waitForElement(By.tagName("vaadin-login-form")).isDisplayed());
+        page.navigate("http://127.0.0.1:%s/users-grid".formatted(port));
+        page.waitForURL(Pattern.compile(".*login.*"));
+        assertTrue(waitForElement("vaadin-login-form").isVisible());
     }
 
     @Test
@@ -207,7 +187,7 @@ public class SecurityIntegrationTest extends BaseUITest {
         login("admin", "password","users-grid");
 
         waitForAnyElementContainingText("admin").click();
-        waitForElement(By.tagName("vaadin-form-layout"));
+        waitForElement("vaadin-form-layout");
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for ADMIN");
         assertFalse(isFieldReadOnly("publicField"), "Public field should be editable for ADMIN");
@@ -224,7 +204,7 @@ public class SecurityIntegrationTest extends BaseUITest {
         login("user", "password", "users-grid");
 
         waitForElementContainingText("h4","user").click();
-        waitForElement(By.tagName("vaadin-form-layout"));
+        waitForElement("vaadin-form-layout");
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for USER");
         assertFalse(isFieldReadOnly("publicField"), "Public field should be editable for USER");
@@ -240,10 +220,10 @@ public class SecurityIntegrationTest extends BaseUITest {
         login("viewer", "password","users-grid");
         navigateTo("users-grid");
 
-        assertTrue(driver.getCurrentUrl().contains("users-grid"), "Viewer should access users-grid");
+        assertTrue(page.url().contains("users-grid"), "Viewer should access users-grid");
 
         waitForAnyElementContainingText("viewer").click();
-        waitForElement(By.tagName("vaadin-form-layout"));
+        waitForElement("vaadin-form-layout");
 
         assertTrue(isFieldVisible("publicField"), "Public field should be visible for VIEWER");
         assertTrue(isFieldReadOnly("publicField"), "Public field should be read-only for VIEWER");
@@ -256,41 +236,35 @@ public class SecurityIntegrationTest extends BaseUITest {
     @Test
     void testGuestAccess() {
         navigateTo("login");
-        WebElement loginForm = waitForElement(By.tagName("vaadin-login-form"));
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].dispatchEvent(new CustomEvent('login', { detail: { username: arguments[1], password: arguments[2] } }));",
-                loginForm, "guest", "password"
-        );
+        Locator loginForm = waitForElement("vaadin-login-form");
+        loginForm.evaluate("el => el.dispatchEvent(new CustomEvent('login', { detail: { username: 'guest', password: 'password' } }))");
+
         // Wait briefly for redirection logic to trigger
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        page.waitForTimeout(1000);
 
         navigateTo("users-grid");
 
-        String url = driver.getCurrentUrl();
-        String pageSource = driver.getPageSource();
+        String url = page.url();
+        String pageSource = page.content();
         boolean denied = url.contains("access-denied")
                 || url.contains("login")
                 || pageSource.contains("Access Denied")
                 || pageSource.contains("AccessDeniedException") // Vaadin Dev Mode error
                 || pageSource.contains("Internal Server Error") // Vaadin Prod Mode default error
                 || pageSource.contains("NotFoundException") // If route hidden
-                || !pageSource.contains("vaadin-grid"); // Content check: Grid should not be visible
+                || page.locator("vaadin-grid").count() == 0; // Content check: Grid should not be visible
         assertTrue(denied, "Guest should be denied access to users-grid. Current URL: " + url);
     }
 
     private boolean isFieldVisible(String fieldName) {
         String label = getLabelForField(fieldName);
-        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), '" + label + "')]"));
-        return !elements.stream().filter(WebElement::isDisplayed).toList().isEmpty();
+        return page.locator("//*[contains(text(), '" + label + "')]").count() > 0;
     }
 
     private boolean isFieldReadOnly(String fieldName) {
         String label = getLabelForField(fieldName);
-        for (WebElement element : driver.findElements(By.xpath("//vaadin-text-field"))) {
+        List<Locator> elements = page.locator("vaadin-text-field").all();
+        for (Locator element : elements) {
              String elLabel = element.getAttribute("label");
              if (elLabel != null && elLabel.equals(label)) {
                  return element.getAttribute("readonly") != null;
