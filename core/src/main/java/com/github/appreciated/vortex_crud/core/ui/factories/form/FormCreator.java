@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
@@ -25,8 +24,8 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
-    public FormCreator(VortexCrudContextProvider contextProvider) {
-        this.permissionChecker = contextProvider.getContext().rbacPermissionChecker();
+    public FormCreator(@Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker) {
+        this.permissionChecker = permissionChecker;
     }
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
