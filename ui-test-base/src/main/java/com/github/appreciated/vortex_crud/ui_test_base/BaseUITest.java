@@ -2,9 +2,9 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,10 +14,11 @@ import java.util.List;
 /**
  * Base class for UI tests that provides common setup, teardown, and utility methods using Playwright.
  */
+@ExtendWith(PlaywrightTraceExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
-    public static final int SECONDS = 30;
+    public static final int SECONDS = 5;
     @Value(value = "${local.server.port}")
     private int port;
 
@@ -54,21 +55,10 @@ public abstract class BaseUITest {
                 .setViewportSize(1920, 1080)
                 .setLocale("en-US"));
 
-        // Start tracing
-        context.tracing().start(new Tracing.StartOptions()
-                .setScreenshots(true)
-                .setSnapshots(true)
-                .setSources(true));
+        context.tracing().start();
 
         page = context.newPage();
         page.setDefaultTimeout(SECONDS * 1000);
-    }
-
-    @AfterEach
-    public void tearDownTest() throws IOException {
-        if (context != null) {
-            context.close();
-        }
     }
 
     /**
