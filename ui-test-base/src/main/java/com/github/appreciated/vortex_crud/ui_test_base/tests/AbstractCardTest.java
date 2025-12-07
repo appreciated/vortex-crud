@@ -62,7 +62,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForAnyElementContainingText(present);
         List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
-                .filter(this::isDisplayedSafe)
+                .filter(Locator::isVisible)
                 .toList();
         assertTrue(hidden.isEmpty());
         filter.press("Backspace");
@@ -103,7 +103,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 
     @Test

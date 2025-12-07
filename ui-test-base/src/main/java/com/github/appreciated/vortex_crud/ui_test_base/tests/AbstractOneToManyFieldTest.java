@@ -75,6 +75,6 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingParentName() + "')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }

@@ -4,8 +4,6 @@ import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -135,7 +133,6 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getAdditionalFieldsPath());
 
-        List<Locator> elements = page.locator("//*[contains(text(), 'Test Entity')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(page.getByText("Test Entity").all().isEmpty());
     }
 }

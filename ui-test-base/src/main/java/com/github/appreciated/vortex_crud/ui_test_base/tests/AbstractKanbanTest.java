@@ -65,7 +65,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
 
         List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
-                .filter(this::isDisplayedSafe)
+                .filter(Locator::isVisible)
                 .toList();
         assertEquals(0, hidden.size());
 

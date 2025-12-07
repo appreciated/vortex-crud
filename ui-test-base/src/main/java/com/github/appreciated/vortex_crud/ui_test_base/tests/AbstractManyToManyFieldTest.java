@@ -43,7 +43,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Item 2").click();
         waitForUrlToBe(getPath() + "/2");
         List<Locator> elements = page.locator("//*[contains(text(), 'Item 3')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
         waitForElement("//vaadin-icon[@icon='vaadin:plus']/..").click();
         waitForAnyElementContainingText("Item 3").click();
         waitForAnyElementContainingText("Link").click();
@@ -71,6 +71,6 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }

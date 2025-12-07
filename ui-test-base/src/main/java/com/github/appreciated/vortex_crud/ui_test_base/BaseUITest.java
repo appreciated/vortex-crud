@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -135,31 +134,4 @@ public abstract class BaseUITest {
              .findFirst()
              .orElseThrow(() -> new RuntimeException("Element not found: " + tagName + " with value " + value));
     }
-
-    protected Locator waitForAnyElementContainingTextWithAttribute(String path, String text, String attributeName) {
-        String xpathPattern = "//%s[@%s]/*[contains(text(), '%s')]".formatted(path, attributeName, text);
-        return waitForElement(xpathPattern);
-    }
-
-    protected Locator waitForElementWithTagAndInputValue(String tagName, String value) {
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < SECONDS * 1000) {
-            List<Locator> candidates = page.locator(tagName).locator("input").all();
-            for (Locator cand : candidates) {
-                if (cand.isVisible()) {
-                     String val = cand.inputValue();
-                     if (val != null && val.startsWith(value)) {
-                         return cand;
-                     }
-                }
-            }
-            page.waitForTimeout(100);
-        }
-        throw new RuntimeException("Timeout waiting for input inside " + tagName + " with value " + value);
-    }
-
-    protected boolean isDisplayedSafe(Locator element) {
-        return element.isVisible();
-    }
-
 }

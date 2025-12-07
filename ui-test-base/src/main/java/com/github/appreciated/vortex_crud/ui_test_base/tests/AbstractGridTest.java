@@ -68,7 +68,7 @@ public abstract class AbstractGridTest extends BaseUITest {
 
         List<Locator> hidden = page.locator("//*[contains(text(), '" + absent + "')]").all()
                 .stream()
-                .filter(this::isDisplayedSafe)
+                .filter(Locator::isVisible)
                 .toList();
         assertEquals(0, hidden.size());
 
@@ -119,6 +119,6 @@ public abstract class AbstractGridTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
-        assertTrue(elements.stream().noneMatch(this::isDisplayedSafe));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }
