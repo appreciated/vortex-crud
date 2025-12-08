@@ -165,8 +165,15 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
         boolean hasFieldReadOnlyRoles = fieldReadOnlyRoles != null && !fieldReadOnlyRoles.isEmpty();
 
         if (!hasFieldWriteRoles && !hasFieldReadOnlyRoles) {
-            // No field-level permissions, check route permissions
-            return hasUserWriteAccessToRoute(route) ? FieldAccessLevel.WRITE : FieldAccessLevel.READ_ONLY;
+            // No field-level permissions, inherit from route permissions
+            if (hasUserWriteAccessToRoute(route)) {
+                return FieldAccessLevel.WRITE;
+            } else if (hasUserReadAccessToRoute(route)) {
+                // User has read-only access to route (but not write)
+                return FieldAccessLevel.READ_ONLY;
+            } else {
+                return FieldAccessLevel.NONE;
+            }
         }
 
         // Check if user has write access to the field

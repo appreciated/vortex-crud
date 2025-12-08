@@ -262,15 +262,20 @@ public class SecurityIntegrationTest extends BaseUITest {
     }
 
     private boolean isFieldReadOnly(String fieldName) {
-        String label = getLabelForField(fieldName);
-        List<Locator> elements = page.locator("vaadin-text-field").all();
-        for (Locator element : elements) {
-             String elLabel = element.getAttribute("label");
-             if (elLabel != null && elLabel.equals(label)) {
-                 return element.getAttribute("readonly") != null;
-             }
+        String labelText = getLabelForField(fieldName);
+        Locator label = page.locator("//label[contains(text(), '" + labelText + "')]");
+        if (label.count() == 0) {
+            return false;
         }
-        return false;
+        String targetId = label.first().getAttribute("for");
+        if (targetId == null || targetId.isEmpty()) {
+            return false;
+        }
+        Locator element = page.locator("#" + targetId);
+        if (element.count() == 0) {
+            return false;
+        }
+        return element.first().getAttribute("readonly") != null;
     }
 
     private String getLabelForField(String fieldName) {

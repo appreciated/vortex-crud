@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -51,16 +51,12 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factory();
                 Component component = factory.createComponent(dataStoreKey, fieldName, field, context);
 
-                // Apply RBAC field-level permissions
+                // Check RBAC permissions first but apply readonly AFTER binding
+                VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = null;
                 if (permissionChecker != null) {
-                    VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
+                    userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
                     if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
                         continue;
-                    } else if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
-                        // Make the field read-only if user only has read access
-                        if (component instanceof HasValue) {
-                            ((HasValue<?, ?>) component).setReadOnly(true);
-                        }
                     }
                 }
 
@@ -83,6 +79,13 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                         entity1 -> reflectionService.getValue(entity1, fieldName),
                         (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
                 );
+
+                // Apply RBAC field-level permissions AFTER binding (binding can reset readonly status)
+                if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
+                    if (component instanceof HasValue) {
+                        ((HasValue<?, ?>) component).setReadOnly(true);
+                    }
+                }
 
                 if (component instanceof HasSize) {
                     ((HasSize) component).setWidthFull();
