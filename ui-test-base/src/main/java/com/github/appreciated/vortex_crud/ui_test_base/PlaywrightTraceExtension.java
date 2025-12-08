@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 /**
  * JUnit 5 extension that captures a Playwright trace whenever a test fails,
@@ -21,16 +20,6 @@ public class PlaywrightTraceExtension implements TestWatcher {
         if (instance instanceof BaseUITest base) {
             try {
                 System.out.println("Test failed: " + context.getDisplayName());
-                if (base.getPage() != null) {
-                    try {
-                        String content = base.getPage().content();
-                        System.out.println("DEBUG: Page Content on Failure (truncated):");
-                        System.out.println(content.substring(0, Math.min(content.length(), 5000)));
-                    } catch (Exception e) {
-                        System.out.println("DEBUG: Could not get page content: " + e.getMessage());
-                    }
-                }
-
                 if (base.getContext() != null) {
                     Path directory = Paths.get("target", "traces");
                     Files.createDirectories(directory);
