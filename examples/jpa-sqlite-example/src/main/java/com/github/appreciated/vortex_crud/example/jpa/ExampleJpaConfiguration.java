@@ -306,17 +306,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreConfig(taskConfig)
                 .title("route.done-tasks.title")
-                .formConfiguration(JpaFormRendererConfiguration.builder()
+                .configuration(JpaGridItemRendererConfiguration.builder()
                         .titleField("title")
-                        .children(List.of(
-                                JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
-                                JpaFieldElement.builder("description", "route.tasks.labels.description").build(),
-                                JpaFieldElement.builder("status", "route.tasks.labels.status").build(),
-                                JpaFieldElement.builder("dueDate", "route.tasks.labels.due_date").build(),
-                                JpaFieldElement.builder("assignedTo", "route.tasks.labels.assigned_to").build(),
-                                build,
-                                build1
-                        ))
+                        .descriptionField("description")
                         .build())
                 .writeRoles(List.of("admin", "manager"))
                 .child(taskForm)
@@ -415,7 +407,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         .children(List.of(
                                 JpaFieldElement.builder("username", "route.profile.labels.username").build(),
                                 JpaFieldElement.builder("firstName", "route.profile.labels.first_name").build(),
-                                JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build()
+                                JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build(),
+                                JpaFieldElement.builder("createdAt", "route.profile.labels.created_at").build()
                         ))
                         .build())
                 .build());

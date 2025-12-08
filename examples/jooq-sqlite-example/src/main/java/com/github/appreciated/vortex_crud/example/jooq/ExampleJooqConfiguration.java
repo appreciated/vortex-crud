@@ -86,7 +86,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                         PROJECTS.BUDGET, JooqBigDecimalField.builder().build(),
-                        PROJECTS.TAGS_MULTI, JooqMultiSelectValueField.builder().build(),
+                        PROJECTS.TAGS_MULTI, JooqMultiSelectValueField.builder().values("project-tags").build(),
                         PROJECTS.ACTIVE, JooqCheckboxField.builder().build(),
                         PROJECTS.START_DATE, JooqDateField.builder().build(),
                         PROJECTS.END_DATE, JooqDateField.builder().build(),
@@ -522,6 +522,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(WORK_IN_PROGRESS, "selects.task-status.progress");
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
+        LinkedHashMap<String, String> projectTags = new LinkedHashMap<>();
+        projectTags.put("tag1", "Tag 1");
+        projectTags.put("tag2", "Tag 2");
+        projectTags.put("tag3", "Tag 3");
+
         var iam = new LocalIdentityAndAccessManagement<TableRecord<?>, TableField<?, ?>, TableImpl<?>>() {
             {
                 dataStoreConfig(usersConfig);
@@ -570,7 +575,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECTS, TASKS, TASK_COMMENTS)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(Selects.builder()
-                        .configs(Map.of("task-status", taskStatuses))
+                        .configs(Map.of("task-status", taskStatuses, "project-tags", projectTags))
                         .build())
                 .build();
     }
