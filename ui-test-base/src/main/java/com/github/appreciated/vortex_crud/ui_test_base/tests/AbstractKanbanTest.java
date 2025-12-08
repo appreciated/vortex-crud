@@ -79,43 +79,35 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     @Test
     void testDragAndDropUpdatesStatus() {
         navigateTo(getPath());
+
         Locator sourceGrid = getGridForColumn(getExpectedColumnTitles()[0]);
         Locator targetGrid = getGridForColumn(getExpectedColumnTitles()[1]);
 
-        // Playwright pierces shadow DOM
         Locator sourceRow = sourceGrid.locator("tbody#items tr").first();
         String taskText = sourceRow.innerText();
-        // Target the items tbody specifically, not the emptystatebody
         Locator targetBody = targetGrid.locator("tbody#items");
 
-        // Use force option to bypass element interception issues
+        // Use Playwright's drag and drop with force option to bypass element interception
         sourceRow.dragTo(targetBody, new Locator.DragToOptions().setForce(true));
 
         page.waitForTimeout(3000);
 
         // Check if taskText is now in targetGrid
         List<Locator> targetRows = targetGrid.locator("tbody#items tr").all();
-        boolean found = targetRows.stream().anyMatch(row -> row.innerText().contains(taskText));
-        // If not found immediately, we might need to wait.
-        // Better: use locator with text inside grid and waitFor
-        // targetGrid.locator("tbody tr", new Locator.LocatorOptions().setHasText(taskText)).waitFor();
-        // But taskText might be partial.
-        // Let's retry asserting or use expect logic if using expect library (not imported here).
-        // Standard JUnit assertion:
         assertTrue(targetRows.stream().anyMatch(row -> row.innerText().contains(taskText)));
     }
 
     @Test
     void testDragAndDropReordersWithinColumn() {
         navigateTo(getPath());
+
         Locator grid = getGridForColumn(getExpectedColumnTitles()[0]);
         Locator firstRow = grid.locator("tbody#items tr").first();
         String text = firstRow.innerText();
-        // Target the items tbody specifically, not the emptystatebody
-        Locator body = grid.locator("tbody#items");
+        Locator lastRow = grid.locator("tbody#items tr").last();
 
-        // Use force option to bypass element interception issues
-        firstRow.dragTo(body, new Locator.DragToOptions().setForce(true));
+        // Use Playwright's drag and drop with force option to bypass element interception
+        firstRow.dragTo(lastRow, new Locator.DragToOptions().setForce(true));
 
         // Wait for reorder
         page.waitForTimeout(1000);
