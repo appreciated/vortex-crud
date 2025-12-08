@@ -2,9 +2,11 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.EmailField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.PasswordField;
+import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,6 +28,10 @@ public class User {
 
     @TextField
     private String lastName;
+
+    @DateTimePickerField
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -81,5 +87,13 @@ public class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
