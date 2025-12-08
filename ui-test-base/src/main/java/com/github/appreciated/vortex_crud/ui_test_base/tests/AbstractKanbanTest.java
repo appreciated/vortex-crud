@@ -83,16 +83,18 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         Locator targetGrid = getGridForColumn(getExpectedColumnTitles()[1]);
 
         // Playwright pierces shadow DOM
-        Locator sourceRow = sourceGrid.locator("tbody tr").first();
+        Locator sourceRow = sourceGrid.locator("tbody#items tr").first();
         String taskText = sourceRow.innerText();
-        Locator targetBody = targetGrid.locator("tbody");
+        // Target the items tbody specifically, not the emptystatebody
+        Locator targetBody = targetGrid.locator("tbody#items");
 
-        sourceRow.dragTo(targetBody);
+        // Use force option to bypass element interception issues
+        sourceRow.dragTo(targetBody, new Locator.DragToOptions().setForce(true));
 
         page.waitForTimeout(3000);
 
         // Check if taskText is now in targetGrid
-        List<Locator> targetRows = targetGrid.locator("tbody tr").all();
+        List<Locator> targetRows = targetGrid.locator("tbody#items tr").all();
         boolean found = targetRows.stream().anyMatch(row -> row.innerText().contains(taskText));
         // If not found immediately, we might need to wait.
         // Better: use locator with text inside grid and waitFor
@@ -107,16 +109,18 @@ public abstract class AbstractKanbanTest extends BaseUITest {
     void testDragAndDropReordersWithinColumn() {
         navigateTo(getPath());
         Locator grid = getGridForColumn(getExpectedColumnTitles()[0]);
-        Locator firstRow = grid.locator("tbody tr").first();
+        Locator firstRow = grid.locator("tbody#items tr").first();
         String text = firstRow.innerText();
-        Locator body = grid.locator("tbody");
+        // Target the items tbody specifically, not the emptystatebody
+        Locator body = grid.locator("tbody#items");
 
-        firstRow.dragTo(body);
+        // Use force option to bypass element interception issues
+        firstRow.dragTo(body, new Locator.DragToOptions().setForce(true));
 
         // Wait for reorder
         page.waitForTimeout(1000);
 
-        List<Locator> rows = grid.locator("tbody tr").all();
+        List<Locator> rows = grid.locator("tbody#items tr").all();
         assertTrue(!rows.isEmpty() && rows.get(rows.size() - 1).innerText().contains(text));
 
         page.reload();
@@ -126,7 +130,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         refreshedGrid.waitFor();
         page.waitForTimeout(1000);
 
-        List<Locator> refreshedRows = refreshedGrid.locator("tbody tr").all();
+        List<Locator> refreshedRows = refreshedGrid.locator("tbody#items tr").all();
         assertTrue(!refreshedRows.isEmpty() && refreshedRows.get(refreshedRows.size() - 1).innerText().contains(text));
     }
 }

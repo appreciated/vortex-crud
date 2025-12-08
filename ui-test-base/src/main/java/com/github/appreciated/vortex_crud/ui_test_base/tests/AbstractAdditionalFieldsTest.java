@@ -133,6 +133,8 @@ public abstract class AbstractAdditionalFieldsTest extends BaseUITest {
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getAdditionalFieldsPath());
 
+        // Wait for the grid to refresh and the entity to disappear
+        waitForTextToDisappear("Test Entity");
         assertTrue(page.getByText("Test Entity").all().isEmpty());
     }
 }

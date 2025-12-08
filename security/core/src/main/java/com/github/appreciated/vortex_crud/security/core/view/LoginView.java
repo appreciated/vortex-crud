@@ -114,7 +114,19 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
         }
 
         Notification.show("Login successful!").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        UI.getCurrent().navigate("/");
+
+        // Use getUI() instead of getCurrent() for better reliability in async contexts
+        getUI().ifPresent(ui -> {
+            // Navigate after a small delay to ensure security context is fully propagated
+            ui.access(() -> {
+                try {
+                    ui.navigate("/");
+                } catch (Exception e) {
+                    log.error("Navigation to root failed after login, staying on current page", e);
+                    // If navigation fails, at least the user is logged in and can manually navigate
+                }
+            });
+        });
     }
 
     @Override

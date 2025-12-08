@@ -70,6 +70,9 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
+
+        // Wait for the grid to refresh and the entity to disappear
+        waitForTextToDisappear(getExistingItemName());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
         assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
