@@ -2,11 +2,11 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 /**
  * Base test for Master-Detail views.
@@ -22,6 +22,10 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
 
     protected String getExistingItemName() {
         return "Done Task A";
+    }
+
+    protected String getDeletedItemName() {
+        return "Done Task B";
     }
 
     @Test
@@ -60,7 +64,6 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
-        assertTrue(elements.stream().noneMatch(Locator::isVisible));
+        assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Done Task B"))).isHidden();
     }
 }
