@@ -29,8 +29,8 @@ jobs:
           cache: maven
       - name: Install Playwright browsers and dependencies
         run: |
-            mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install-deps" -B -pl ui-test-base
-            mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install" -B -pl ui-test-base
+            mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install-deps" --no-transfer-progress -B -pl ui-test-base
+            mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install" --no-transfer-progress -B -pl ui-test-base
       - name: Build with Maven
         run: mvn --no-transfer-progress -B package --file pom.xml
       - name: Upload Playwright Traces
