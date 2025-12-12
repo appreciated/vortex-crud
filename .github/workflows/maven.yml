@@ -27,6 +27,26 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Get Playwright version
+        id: playwright-version
+        run: |
+          PLAYWRIGHT_VERSION=$(grep -A 3 'com.microsoft.playwright' ui-test-base/pom.xml | grep '<version>' | head -1 | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | tr -d '[:space:]')
+          echo "version=$PLAYWRIGHT_VERSION" >> $GITHUB_OUTPUT
+          echo "Playwright version: $PLAYWRIGHT_VERSION"
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-browsers-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+      - name: Cache Playwright system dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            /var/cache/apt
+            /var/lib/apt/lists
+          key: playwright-deps-${{ runner.os }}-${{ hashFiles('ui-test-base/pom.xml') }}
+          restore-keys: |
+            playwright-deps-${{ runner.os }}-
       - name: Install Playwright browsers and dependencies
         run: |
             mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install-deps" --no-transfer-progress -B -pl ui-test-base
