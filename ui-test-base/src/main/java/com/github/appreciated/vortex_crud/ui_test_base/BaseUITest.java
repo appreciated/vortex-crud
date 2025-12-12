@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,27 @@ public abstract class BaseUITest {
     @BeforeAll
     public static void setupClass() {
         playwright = Playwright.create();
+    }
+
+    @AfterAll
+    public static void tearDownClass() {
+        if (browser != null) {
+            try {
+                browser.close();
+            } catch (Exception e) {
+                System.err.println("Error closing browser: " + e.getMessage());
+            }
+            browser = null;
+        }
+
+        if (playwright != null) {
+            try {
+                playwright.close();
+            } catch (Exception e) {
+                System.err.println("Error closing playwright: " + e.getMessage());
+            }
+            playwright = null;
+        }
     }
 
     @BeforeEach
