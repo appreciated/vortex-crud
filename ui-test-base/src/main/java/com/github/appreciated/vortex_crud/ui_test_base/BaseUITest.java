@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,8 +38,27 @@ public abstract class BaseUITest {
     }
 
     @BeforeEach
-    public void setupClass() {
+    public void setupTest() {
         playwright = Playwright.create();
+
+        if (browser == null) {
+            BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
+            options.setHeadless(!disableHeadless);
+            browser = playwright.chromium().launch(options);
+        }
+
+        context = browser.newContext(new Browser.NewContextOptions()
+                .setViewportSize(1920, 1080)
+                .setLocale("en-US"));
+
+        // Start tracing
+        context.tracing().start(new Tracing.StartOptions()
+                .setScreenshots(true)
+                .setSnapshots(true)
+                .setSources(true));
+
+        page = context.newPage();
+        page.setDefaultTimeout(SECONDS * 1000);
     }
 
     @AfterEach
@@ -62,28 +80,6 @@ public abstract class BaseUITest {
             }
             playwright = null;
         }
-    }
-
-    @BeforeEach
-    public void setupTest() throws IOException {
-        if (browser == null) {
-            BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
-            options.setHeadless(!disableHeadless);
-            browser = playwright.chromium().launch(options);
-        }
-
-        context = browser.newContext(new Browser.NewContextOptions()
-                .setViewportSize(1920, 1080)
-                .setLocale("en-US"));
-
-        // Start tracing
-        context.tracing().start(new Tracing.StartOptions()
-                .setScreenshots(true)
-                .setSnapshots(true)
-                .setSources(true));
-
-        page = context.newPage();
-        page.setDefaultTimeout(SECONDS * 1000);
     }
 
     /**
