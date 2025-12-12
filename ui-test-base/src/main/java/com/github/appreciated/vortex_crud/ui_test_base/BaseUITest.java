@@ -2,8 +2,7 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,8 @@ public abstract class BaseUITest {
     @Value(value = "${ui-test.disable-headless:false}")
     private boolean disableHeadless;
 
-    protected static Playwright playwright;
-    protected static Browser browser;
+    protected Playwright playwright;
+    protected Browser browser;
     protected BrowserContext context;
     protected Page page;
 
@@ -39,13 +38,13 @@ public abstract class BaseUITest {
         return context;
     }
 
-    @BeforeAll
-    public static void setupClass() {
+    @BeforeEach
+    public void setupClass() {
         playwright = Playwright.create();
     }
 
-    @AfterAll
-    public static void tearDownClass() {
+    @AfterEach
+    public void tearDownClass() {
         if (browser != null) {
             try {
                 browser.close();
