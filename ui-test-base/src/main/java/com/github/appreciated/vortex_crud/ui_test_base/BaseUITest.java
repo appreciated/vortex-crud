@@ -41,11 +41,9 @@ public abstract class BaseUITest {
     public void setupTest() {
         playwright = Playwright.create();
 
-        if (browser == null) {
-            BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
-            options.setHeadless(!disableHeadless);
-            browser = playwright.chromium().launch(options);
-        }
+        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
+        options.setHeadless(!disableHeadless);
+        browser = playwright.chromium().launch(options);
 
         context = browser.newContext(new Browser.NewContextOptions()
                 .setViewportSize(1920, 1080)
@@ -64,20 +62,12 @@ public abstract class BaseUITest {
     @AfterEach
     public void tearDownClass() {
         if (browser != null) {
-            try {
-                browser.close();
-            } catch (Exception e) {
-                System.err.println("Error closing browser: " + e.getMessage());
-            }
+            browser.close();
             browser = null;
         }
 
         if (playwright != null) {
-            try {
-                playwright.close();
-            } catch (Exception e) {
-                System.err.println("Error closing playwright: " + e.getMessage());
-            }
+            playwright.close();
             playwright = null;
         }
     }
