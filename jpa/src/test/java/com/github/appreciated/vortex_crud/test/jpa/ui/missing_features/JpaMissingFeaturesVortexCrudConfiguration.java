@@ -4,11 +4,14 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +20,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.vaadin.flow.component.icon.VaadinIcon.COG;
-import static com.vaadin.flow.component.icon.VaadinIcon.PRINT;
+import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Service
 public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaMissingFeaturesRepository repository;
+    private final JpaMissingFeaturesReferencedRepository referencedRepository;
     private JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
-    public JpaMissingFeaturesVortexCrudConfiguration(JpaMissingFeaturesRepository repository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {
+    public JpaMissingFeaturesVortexCrudConfiguration(JpaMissingFeaturesRepository repository, JpaMissingFeaturesReferencedRepository referencedRepository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {
         this.repository = repository;
+        this.referencedRepository = referencedRepository;
         this.annotationRegistryService = annotationRegistryService;
         this.fieldService = fieldService;
     }
@@ -47,11 +51,18 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .configs(selectsConfig)
             .build();
 
-
         var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
+        var referencedStore = new JpaRepositoryDataStore<>(referencedRepository, annotationRegistryService, new DataStoreHooks<>());
+
+        Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
+        storeMap.put(taskStore.getModelClass(), taskStore);
+        storeMap.put(referencedStore.getModelClass(), referencedStore);
 
         var taskConfig = JpaDataStoreConfig.builder(repository, taskStore)
+                .withServices(fieldService, storeMap)
+                .build();
+
+        var referencedConfig = JpaDataStoreConfig.builder(referencedRepository, referencedStore)
                 .withServices(fieldService, storeMap)
                 .build();
 
@@ -66,16 +77,19 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
                     JpaFieldElement.builder("tags", "Tags").build(),
                     JpaFieldElement.builder("pdfDoc", "PDF").build(),
                     JpaFieldElement.builder("notes", "Notes").build(),
-                    JpaFieldElement.builder("dateRange", "Date Range").build(),
-                    JpaFieldElement.builder("dateTimeRange", "DateTime Range").build()
+                    JpaFieldElement.builder("referencedEntity", "Referenced").build(),
+                    JpaFieldElement.builder("multiSelectEntities", "Multi Select").build(),
+                    JpaFieldElement.builder("markdownContent", "Markdown").build(),
+                    JpaFieldElement.builder("fileAttachment", "File").build(),
+                    JpaFieldElement.builder("price", "Price").build()
                 ))
                 .build())
             .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
 
-        // List Route with Global Action
-        routes.put("missing-features-test", JpaListRoute.builder()
+        // List Route with Global, Single, Multi and Menu Actions
+        routes.put("missing-features-test-new", JpaListRoute.builder()
             .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
@@ -88,7 +102,22 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .routeActions(List.of(
                  GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
-                    .handler(ctx -> {})
+                    .handler(ctx -> Notification.show("Global Action Executed"))
+                    .build(),
+                 SingleEntityRouteAction.<String, JpaRepository<?, ?>>builder()
+                    .componentFactory(() -> new Button("Single", PENCIL.create()))
+                    .handler(ctx -> Notification.show("Single Action Executed"))
+                    .build(),
+                 MultiEntityRouteAction.<String, JpaRepository<?, ?>>builder()
+                    .componentFactory(() -> new Button("Multi", TRASH.create()))
+                    .handler(ctx -> Notification.show("Multi Action Executed"))
+                    .build()
+            ))
+            .menuActions(List.of(
+                DataStoreDropdownMenuAction.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                    .dataStoreConfig(referencedConfig)
+                    .label("Referenced Filter")
+                    .labelField("name")
                     .build()
             ))
             .child(form)
@@ -103,11 +132,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
              .formConfiguration(JpaFormRendererConfiguration.builder()
                  .titleField("name")
                  .children(List.of(
-                     JpaFieldElement.builder("name", "Name").build(),
-                     JpaFieldElement.builder("tags", "Tags").build(),
-                     JpaFieldElement.builder("pdfDoc", "PDF").build(),
-                     JpaFieldElement.builder("dateRange", "Date Range").build(),
-                     JpaFieldElement.builder("dateTimeRange", "DateTime Range").build()
+                     JpaFieldElement.builder("name", "Name").build()
                  ))
                  .build())
              .build());
