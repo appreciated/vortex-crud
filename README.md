@@ -101,41 +101,68 @@ Kanban board with drag-and-drop support for workflow management.
 Split view with a master list on the left and detail panel on the right.
 <img width="600px" src="./img/screenshot-master-detail-view.png">
 
-### **Edit Data with a Form Route**
+### Form
 Standard form view for creating and editing entities.
 <img width="600px" src="./img/screenshot-form-view.png">
 
 ### Additional Route Types
 
 - **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
-- **Single Form Route**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured using `SingleFormRoute` model.
-- **Multi-Form Route**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
+- **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured using `SingleFormRoute` model.
+- **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
 - **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
 - **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
+- **Custom**: Enables the integration of fully custom Vaadin components/views into the routing system (configured via `CustomRoute` model)
+
+## <a name="ui-actions">UI Actions</a>
+A flexible action system to add interactivity to views:
+
+- **GlobalRouteAction**: Buttons placed at the top of a view (e.g., "Add New", "Export").
+- **SingleEntityRouteAction**: Actions available for individual items/rows (e.g., "Edit", "Delete", "View Details").
+- **MultiEntityRouteAction**: Bulk actions for selected groups of items (e.g., "Delete Selected").
+- **DataStoreDropdownMenuAction**: Dropdown menu actions for compact interfaces.
+
+## <a name="ui-components">UI Components & Factories</a>
+Reusable building blocks for a consistent user interface:
+
+- **Dialogs**: `FormDialogFactory`, `ConnectDialogFactory`, `VortexCrudDialogFactory` for consistent modal interactions.
+- **Layouts**: `DefaultRouterLayout` provides the standard application shell with navigation.
+- **Factories**: `CardFactory` renders entities as cards in List and Kanban views.
+- **Search & Filtering**: `GenericFilterableDataProvider` and `SearchField` components enable data exploration.
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
 <img width="600px" src="./img/screenshot-subroute-view.png">
 
 ## <a name="editing-data">Editing Data</a>
-### Input
-- **Inputs**:
-  - Text
-  - Date
-  - DateTime
-  - Image
-  - Video
-  - PDF
-  - File
-  - Number
-  - Select
-  - Checkbox
-  - MultiSelect (ComboBox and CheckboxGroup variants)
-  - MultiSelectValue (for enums and string values)
-  - TextArea
-  - Password
-  - Markdown (jOOQ only)
-- **Relationships**: One-to-One, Many-to-One, Many-to-Many
+
+### Input Types
+A rich set of fields for data input and display, handling various data types and relationships:
+
+- **Basic Input**: `TextField`, `TextAreaField`, `PasswordField`, `EmailField`.
+- **Numeric**: `IntegerField`, `DoubleField`, `BigDecimalField`.
+- **Boolean**: `CheckboxField`.
+- **Date & Time**: `DateField`, `DateTimePickerField`.
+- **Selection & Relationships**:
+    - `SelectField`: For static lists or Enum values.
+    - `MultiSelectField` / `MultiSelectValueField`: For selecting multiple values or relations.
+    - `ReferenceField`: For selecting a single related entity (Many-to-One).
+- **Rich Media & Files**:
+    - `ImageField`: For uploading and displaying images.
+    - `VideoField`: For uploading and playing videos.
+    - `PdfField`: For uploading and viewing PDF documents.
+    - `FileField`: For generic file upload and download.
+- **Rich Content**: `MarkDownField` for rich text editing.
+- **System**: `IdField` for handling entity identifiers.
+
+## <a name="configuration-models">Configuration & Data Models</a>
+Models that define the application's structure and behavior:
+
+- **DataStoreConfig**: The central configuration for mapping data to views.
+- **IdentityAndAccessManagement (IAM)**: Configuration for Role-Based Access Control (RBAC), defining Roles and permissions.
+- **Relationships**: Configuration support for OneToMany and ManyToMany relationships.
+- **Renderers**: specialized configurations for rendering lists and grids (`GridItemRendererConfiguration`, `ListItemRendererConfiguration`).
+- **Auditing & Versioning**: Configuration models for tracking changes (implementation depends on the backend).
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
@@ -492,6 +519,16 @@ The architecture of `vortex-crud` is modular and declarative, designed to stream
 A collection of central registries acts as the core for generating Vaadin components, including routes, forms, and data stores, all based on configuration metadata. This approach ensures flexibility, scalability, and seamless integration while allowing for easy customization of data handling, UI rendering, and complex entity management.
 
 While the `core` module handles the UI implementations and the generation of routes, the data store implementations are separated into the `jooq` and `jpa` modules for better modularity.
+
+## <a name="core-services">Core Services</a>
+The framework is powered by several core services:
+
+- **Dynamic Routing**: `DynamicRouteGenerator` automatically builds and registers Vaadin routes based on your configuration.
+- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, allowing the core UI to be backend-agnostic.
+- **Security**: `VortexCrudRbacPermissionChecker` ensures users only access routes and actions permitted by their roles.
+- **Internationalization**: `TranslationService` manages localization across the application.
+- **File Management**: `LocalFileResourceProvider` (and variants) handles the storage and retrieval of file assets.
+- **Context**: `VortexCrudContext` provides necessary services to stateless UI factories.
 
 ## Basic Principles
 At its core, `vortex-crud` relies on dependency injection, with the `VortexCrudConfigService` as the entry point. The implementation of this service is provided by the user. Based on the configuration defined in `VortexCrudConfigService`, the `DynamicRouteGenerator` automatically registers the necessary routes.
