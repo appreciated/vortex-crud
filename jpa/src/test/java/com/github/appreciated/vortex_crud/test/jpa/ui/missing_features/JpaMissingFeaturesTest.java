@@ -3,17 +3,8 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.missing_features;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {
-    "vaadin.productionMode=true",
-    "vaadin.launch-browser=false"
-})
 @Sql(scripts = "missing_features_test.sql")
 public class JpaMissingFeaturesTest extends BaseUITest {
 
