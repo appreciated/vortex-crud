@@ -21,8 +21,8 @@ public abstract class BaseUITest {
     @Value(value = "${local.server.port}")
     private int port;
 
-    @Value(value = "${ui-test.disable-headless:false}")
-    private boolean disableHeadless;
+    @Value(value = "${ui-test.headless:true}")
+    private boolean isHeadless;
 
     protected Playwright playwright;
     protected Browser browser;
@@ -42,7 +42,7 @@ public abstract class BaseUITest {
         playwright = Playwright.create();
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
-        options.setHeadless(!disableHeadless);
+        options.setHeadless(isHeadless);
         browser = playwright.chromium().launch(options);
 
         context = browser.newContext(new Browser.NewContextOptions()
