@@ -2,9 +2,11 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 /**
  * Base test for CustomRoute functionality.
@@ -42,8 +44,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo("");
 
         // Find and click the custom route menu item
-        Locator menuItem = waitForAnyElementContainingText(getCustomRouteMenuLabel());
-        menuItem.click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Custom Dashboard")).click();
 
         // Verify navigation to custom route
         waitForUrlToBe(getCustomRoutePath());
@@ -58,7 +59,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
 
         // Verify custom view content is visible
         Locator content = waitForAnyElementContainingText(getExpectedCustomViewContent());
-        assertTrue(content.isVisible());
+        assertThat(content).isVisible();
     }
 
     /**
@@ -71,7 +72,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
 
         // Menu should be visible - check for app-layout or menu container
         Locator appLayout = waitForElement("vaadin-app-layout");
-        assertTrue(appLayout.isVisible());
+        assertThat(appLayout).isVisible();
     }
 
     /**
@@ -86,7 +87,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
 
         // Verify content is displayed
         Locator content = waitForAnyElementContainingText(getExpectedCustomViewContent());
-        assertTrue(content.isVisible());
+        assertThat(content).isVisible();
     }
 
     /**
@@ -103,6 +104,6 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
 
         // Menu should still be visible
         Locator appLayout = waitForElement("vaadin-app-layout");
-        assertTrue(appLayout.isVisible());
+        assertThat(appLayout).isVisible();
     }
 }

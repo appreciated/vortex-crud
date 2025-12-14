@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,8 +20,8 @@ public abstract class BaseUITest {
     @Value(value = "${local.server.port}")
     private int port;
 
-    @Value(value = "${ui-test.disable-headless:false}")
-    private boolean disableHeadless;
+    @Value(value = "${ui-test.headless:true}")
+    private boolean isHeadless;
 
     protected Playwright playwright;
     protected Browser browser;
@@ -42,7 +41,7 @@ public abstract class BaseUITest {
         playwright = Playwright.create();
 
         BrowserType.LaunchOptions options = new BrowserType.LaunchOptions();
-        options.setHeadless(!disableHeadless);
+        options.setHeadless(isHeadless);
         browser = playwright.chromium().launch(options);
 
         context = browser.newContext(new Browser.NewContextOptions()
@@ -57,19 +56,6 @@ public abstract class BaseUITest {
 
         page = context.newPage();
         page.setDefaultTimeout(SECONDS * 1000);
-    }
-
-    @AfterEach
-    public void tearDownClass() {
-        if (browser != null) {
-            browser.close();
-            browser = null;
-        }
-
-        if (playwright != null) {
-            playwright.close();
-            playwright = null;
-        }
     }
 
     /**
@@ -99,8 +85,23 @@ public abstract class BaseUITest {
     }
 
     protected Locator waitForAnyElementContainingText(String text) {
-        // XPath approximation of original logic
-        return waitForElement("//*[contains(text(), '%s')]".formatted(text));
+        return page.getByText(text, new Page.GetByTextOptions().setExact(false));
+    }
+
+    protected Locator waitForAnyElementContainingText(String text, Page.GetByTextOptions options) {
+        return page.getByText(text, options);
+    }
+
+    /**
+     * Wait for a button with the given text.
+     * Uses Playwright's role selector to specifically target buttons.
+     *
+     * @param text the button text
+     * @return the button locator
+     */
+    protected Locator waitForButton(String text) {
+        return page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+            new Page.GetByRoleOptions().setName(text).setExact(false)).first();
     }
 
     protected Locator waitForElementContainingText(String xPath, String text) {
@@ -200,4 +201,5 @@ public abstract class BaseUITest {
             new Page.WaitForFunctionOptions().setTimeout(SECONDS * 1000)
         );
     }
+
 }
