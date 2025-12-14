@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourcePro
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class JpaMissingFeaturesEntity {
 
     @ManyToOne
     @JoinColumn(name = "referenced_id")
-    @ReferenceField
+    @ReferenceField(value = "name", fields = {"name"})
     private JpaMissingFeaturesReferencedEntity referencedEntity;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -45,7 +46,7 @@ public class JpaMissingFeaturesEntity {
         joinColumns = @JoinColumn(name = "test_id"),
         inverseJoinColumns = @JoinColumn(name = "referenced_id")
     )
-    @MultiSelectField
+    @MultiSelectField(value = "name", fields = {"name"})
     private Set<JpaMissingFeaturesReferencedEntity> multiSelectEntities;
 
     @Column(name = "markdown_content", columnDefinition = "TEXT")

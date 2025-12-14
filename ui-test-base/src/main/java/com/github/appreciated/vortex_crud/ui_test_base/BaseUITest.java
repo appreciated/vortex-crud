@@ -86,7 +86,7 @@ public abstract class BaseUITest {
 
     protected Locator waitForAnyElementContainingText(String text) {
         // XPath approximation of original logic
-        return waitForElement("//*[contains(text(), '%s')]".formatted(text));
+        return page.getByText(text);
     }
 
     protected Locator waitForElementContainingText(String xPath, String text) {
