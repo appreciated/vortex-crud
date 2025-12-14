@@ -251,3 +251,44 @@ CREATE TABLE calendar_events
     start_date  TIMESTAMP,
     end_date    TIMESTAMP
 );
+
+-- changeset Create missing_features_referenced:27
+CREATE TABLE missing_features_referenced
+(
+    id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+-- changeset Create missing_features_test:28
+CREATE TABLE missing_features_test
+(
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    name              VARCHAR(255) NOT NULL,
+    pdf_doc           VARCHAR(255),
+    notes             TEXT,
+    referenced_id     INTEGER,
+    markdown_content  TEXT,
+    file_attachment   VARCHAR(255),
+    price             DECIMAL(10, 2),
+    video_url         VARCHAR(255),
+    FOREIGN KEY (referenced_id) REFERENCES missing_features_referenced (id)
+);
+
+-- changeset Create missing_features_test_tags:29
+CREATE TABLE missing_features_test_tags
+(
+    entity_id INTEGER      NOT NULL,
+    tag_value VARCHAR(255) NOT NULL,
+    PRIMARY KEY (entity_id, tag_value),
+    FOREIGN KEY (entity_id) REFERENCES missing_features_test (id)
+);
+
+-- changeset Create missing_features_test_relations:30
+CREATE TABLE missing_features_test_relations
+(
+    test_id       INTEGER NOT NULL,
+    referenced_id INTEGER NOT NULL,
+    PRIMARY KEY (test_id, referenced_id),
+    FOREIGN KEY (test_id) REFERENCES missing_features_test (id),
+    FOREIGN KEY (referenced_id) REFERENCES missing_features_referenced (id)
+);
