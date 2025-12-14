@@ -81,7 +81,8 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
                     JpaFieldElement.builder("multiSelectEntities", "Multi Select").build(),
                     JpaFieldElement.builder("markdownContent", "Markdown").build(),
                     JpaFieldElement.builder("fileAttachment", "File").build(),
-                    JpaFieldElement.builder("price", "Price").build()
+                    JpaFieldElement.builder("price", "Price").build(),
+                    JpaFieldElement.builder("videoUrl", "Video").build()
                 ))
                 .build())
             .build();

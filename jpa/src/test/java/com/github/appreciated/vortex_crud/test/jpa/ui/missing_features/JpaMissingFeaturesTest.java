@@ -33,6 +33,10 @@ public class JpaMissingFeaturesTest extends BaseUITest {
 
         // BigDecimal - "99.99"
         waitForAnyElementContainingText("99.99");
+
+        // VideoField - "video.mp4" (checking for text presence as VideoField often renders the filename or placeholder)
+        // Adjust this if VideoField renders differently (e.g., checks <video> tag)
+        waitForAnyElementContainingText("video.mp4");
     }
 
     @Test
