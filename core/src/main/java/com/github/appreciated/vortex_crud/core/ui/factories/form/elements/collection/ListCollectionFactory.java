@@ -1,11 +1,11 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item.DefaultCollectionItem;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -92,7 +92,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
             List<FieldType> children = internalFormElement.configuration().data().children();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
-            remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
+            remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
             remove.addClickListener(event -> {
                 dataStore.deleteRecordById(dataStoreUtil.getId(record));
                 loadCollection(foreignKeyValue, internalFormElement, list, header, context);
@@ -120,7 +120,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());
-                remove.addThemeVariants(LUMO_TERTIARY_INLINE, LUMO_SMALL, LUMO_ERROR);
+                remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
                 remove.addClickListener(event -> {
                     dataStore.deleteRecordById(dataStoreUtil.getId(record));
                     loadCollection(foreignKeyValue, internalFormElement, list, header, context);
