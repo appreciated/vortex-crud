@@ -70,12 +70,37 @@ public class PlaywrightTraceExtension implements TestWatcher {
             } finally {
                 closeContext(base);
             }
+
+            // Clean up browser and playwright instances for successful tests too
+            if (base.browser != null) {
+                base.browser.close();
+                base.browser = null;
+            }
+
+            if (base.playwright != null) {
+                base.playwright.close();
+                base.playwright = null;
+            }
         }
     }
 
     @Override
     public void testAborted(ExtensionContext context, Throwable cause) {
-        closeContext((BaseUITest) context.getRequiredTestInstance());
+        Object instance = context.getRequiredTestInstance();
+        if (instance instanceof BaseUITest base) {
+            closeContext(base);
+
+            // Clean up browser and playwright instances for aborted tests too
+            if (base.browser != null) {
+                base.browser.close();
+                base.browser = null;
+            }
+
+            if (base.playwright != null) {
+                base.playwright.close();
+                base.playwright = null;
+            }
+        }
     }
 
     private void closeContext(BaseUITest base) {
