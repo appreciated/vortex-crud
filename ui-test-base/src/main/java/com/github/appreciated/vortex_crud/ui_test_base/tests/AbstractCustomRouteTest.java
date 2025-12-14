@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -42,8 +44,7 @@ public abstract class AbstractCustomRouteTest extends BaseUITest {
         navigateTo("");
 
         // Find and click the custom route menu item
-        Locator menuItem = waitForAnyElementContainingText(getCustomRouteMenuLabel());
-        menuItem.click();
+        page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Custom Dashboard")).click();
 
         // Verify navigation to custom route
         waitForUrlToBe(getCustomRoutePath());
