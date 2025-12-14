@@ -39,7 +39,18 @@ public class PlaywrightTraceExtension implements TestWatcher {
             } finally {
                 closeContext(base);
             }
+
+            if (base.browser != null) {
+                base.browser.close();
+                base.browser = null;
+            }
+
+            if (base.playwright != null) {
+                base.playwright.close();
+                base.playwright = null;
+            }
         }
+
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,19 +56,6 @@ public abstract class BaseUITest {
 
         page = context.newPage();
         page.setDefaultTimeout(SECONDS * 1000);
-    }
-
-    @AfterEach
-    public void tearDownClass() {
-        if (browser != null) {
-            browser.close();
-            browser = null;
-        }
-
-        if (playwright != null) {
-            playwright.close();
-            playwright = null;
-        }
     }
 
     /**
