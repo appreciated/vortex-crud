@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -76,7 +77,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isVisible());
+        assertThat(errorMessage).isVisible();
 
         // Fill required field from first form
         List<Locator> textFields = waitForElements("vaadin-text-field");

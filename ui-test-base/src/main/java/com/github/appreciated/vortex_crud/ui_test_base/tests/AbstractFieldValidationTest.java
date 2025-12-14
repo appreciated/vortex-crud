@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,7 +47,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         // For date-time-picker, just verify the component exists without checking shadow DOM value
         // This avoids complex shadow DOM value checking issues with Vaadin components
         Locator dateTimePicker = waitForElement("vaadin-date-time-picker");
-        assertTrue(dateTimePicker.isVisible());
+        assertThat(dateTimePicker).isVisible();
 
         waitForElementWithTagAndValue("vaadin-select", "1");
         waitForElementWithTagAndValue("vaadin-checkbox", "on");
@@ -64,7 +65,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
         // Check for validation error message - look for the specific constraint violation message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isVisible());
+        assertThat(errorMessage).isVisible();
 
         // Find the required field by label text instead of required attribute
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
@@ -107,7 +108,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
-        assertTrue(errorMessage.isVisible());
+        assertThat(errorMessage).isVisible();
 
         // Correct the email
         emailField.fill("valid@example.com");
@@ -141,7 +142,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some field");
-        assertTrue(errorMessage.isVisible());
+        assertThat(errorMessage).isVisible();
 
         // Correct the numeric value
         numericField.fill("25.0");

@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 /**
  * Simple tests for a slide-in form dialog that uses a {@code CardFactory}.
@@ -39,7 +39,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         waitForButton("Save").click();
 
         Locator errorMessage = waitForAnyElementContainingText("Entry could not be saved");
-        assertTrue(errorMessage.isVisible());
+        assertThat(errorMessage).isVisible();
 
         // Fill required title field and save
         Locator titleField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");

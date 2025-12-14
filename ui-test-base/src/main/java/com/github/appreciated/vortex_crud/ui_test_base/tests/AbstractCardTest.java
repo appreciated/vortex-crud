@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -37,7 +38,7 @@ public abstract class AbstractCardTest extends BaseUITest {
     void testCardListingVisible() {
         navigateTo(getPath());
         Locator element = waitForAnyElementContainingText(getExpectedVisibleValue());
-        assertTrue(element.isVisible());
+        assertThat(element).isVisible();
     }
 
     @Test
@@ -111,6 +112,6 @@ public abstract class AbstractCardTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue());
         Locator img = waitForElement("img");
-        assertTrue(img.isVisible());
+        assertThat(img).isVisible();
     }
 }

@@ -20,7 +20,7 @@ public abstract class BaseUITest {
     @Value(value = "${local.server.port}")
     private int port;
 
-    @Value(value = "${ui-test.headless:true}")
+    @Value(value = "${ui-test.headless:false}")
     private boolean isHeadless;
 
     protected Playwright playwright;
