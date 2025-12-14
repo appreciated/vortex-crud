@@ -69,10 +69,10 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormRequiredFieldValidation() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Try to save without filling required fields
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
@@ -88,7 +88,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         emailField.fill("newprofile@example.com");
 
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getMultiFormPath());
@@ -97,7 +97,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormCreateEntry() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Fill fields from first form (Basic Information)
         Locator nameField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
@@ -113,7 +113,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         Locator ageField = page.locator("vaadin-integer-field input").first();
         ageField.fill("30");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getMultiFormPath());
         waitForAnyElementContainingText("Created Profile");
@@ -135,7 +135,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         ageField.fill("");
         ageField.fill("35");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getMultiFormPath());
         waitForAnyElementContainingText("Updated Profile");
@@ -147,7 +147,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForAnyElementContainingText("Max Mustermann").click();
         waitForUrlToBe(getMultiFormPath() + "/1");
 
-        waitForAnyElementContainingText("Delete").click();
+        waitForButton("Delete").click();
 
         waitForUrlToBe(getMultiFormPath());
         List<Locator> elements = page.locator("//*[contains(text(), 'Max Mustermann')]").all();
@@ -157,7 +157,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
     @Test
     void testMultiFormFieldsAcrossForms() {
         navigateTo(getMultiFormPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Fill all fields across both forms
         Locator nameField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
@@ -172,7 +172,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         Locator ageField = page.locator("vaadin-integer-field input").first();
         ageField.fill("28");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
         waitForUrlToBe(getMultiFormPath());
 
         // Verify all data was saved

@@ -85,8 +85,23 @@ public abstract class BaseUITest {
     }
 
     protected Locator waitForAnyElementContainingText(String text) {
-        // XPath approximation of original logic
-        return page.getByText(text);
+        return page.getByText(text, new Page.GetByTextOptions().setExact(false));
+    }
+
+    protected Locator waitForAnyElementContainingText(String text, Page.GetByTextOptions options) {
+        return page.getByText(text, options);
+    }
+
+    /**
+     * Wait for a button with the given text.
+     * Uses Playwright's role selector to specifically target buttons.
+     *
+     * @param text the button text
+     * @return the button locator
+     */
+    protected Locator waitForButton(String text) {
+        return page.getByRole(com.microsoft.playwright.options.AriaRole.BUTTON,
+            new Page.GetByRoleOptions().setName(text).setExact(false)).first();
     }
 
     protected Locator waitForElementContainingText(String xPath, String text) {
@@ -186,4 +201,5 @@ public abstract class BaseUITest {
             new Page.WaitForFunctionOptions().setTimeout(SECONDS * 1000)
         );
     }
+
 }

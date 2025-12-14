@@ -57,10 +57,10 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testRequiredFieldValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Try to save without filling required fields
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Check for validation error message - look for the specific constraint violation message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
@@ -79,7 +79,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.fill("50.0");
 
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -88,7 +88,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testEmailValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Fill the required field by finding the field with "Required" label
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
@@ -103,7 +103,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.fill("50.0");
 
         // Try to save
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some fields");
@@ -113,7 +113,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         emailField.fill("valid@example.com");
 
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -122,7 +122,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testNumericValidation() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Fill required field
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
@@ -137,7 +137,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.fill("-5.0");
 
         // Try to save
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Check for validation error message
         Locator errorMessage = waitForAnyElementContainingText("Validation has failed for some field");
@@ -147,7 +147,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         numericField.fill("25.0");
 
         // Try to save again
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         // Should navigate back to list view if validation passes
         waitForUrlToBe(getValidationPath());
@@ -156,7 +156,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testDateTimeAndCheckboxInput() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
         requiredField.fill("DateTime Test");
@@ -173,7 +173,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
 
         waitForElement("vaadin-checkbox").click();
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getValidationPath());
     }
@@ -181,12 +181,12 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
     @Test
     void testCreateEntry() {
         navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
         requiredField.fill("Created Value");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getValidationPath());
         waitForAnyElementContainingText("Created Value");
@@ -201,7 +201,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
         requiredField.fill("Updated Value");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getValidationPath());
         waitForAnyElementContainingText("Updated Value");
@@ -213,7 +213,7 @@ public abstract class AbstractFieldValidationTest extends BaseUITest {
         waitForAnyElementContainingText("Test Value").click();
         waitForUrlToBe(getValidationPath() + "/1");
 
-        waitForAnyElementContainingText("Delete").click();
+        waitForButton("Delete").click();
 
         waitForUrlToBe(getValidationPath());
 

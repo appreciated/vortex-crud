@@ -74,10 +74,10 @@ public abstract class AbstractCardTest extends BaseUITest {
     @Test
     void testCreateEntry() {
         navigateTo(getPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
         Locator field = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
         field.fill("Created Entry");
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Created Entry");
     }
@@ -90,7 +90,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         Locator field = waitForElement("vaadin-text-field").locator("input");
         field.fill("");
         field.fill("Updated Entry");
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Entry");
     }
@@ -100,7 +100,7 @@ public abstract class AbstractCardTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExpectedVisibleValue()).click();
         waitForUrlToBe(getPath() + "/" + getDetailId());
-        waitForAnyElementContainingText("Delete").click();
+        waitForButton("Delete").click();
         waitForUrlToBe(getPath());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
         assertTrue(elements.stream().noneMatch(Locator::isVisible));

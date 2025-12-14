@@ -33,10 +33,10 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
     @Test
     void testRequiredFieldValidation() {
         navigateTo(getPath());
-        waitForAnyElementContainingText("Create").click();
+        waitForButton("Create").click();
 
         // Attempt to save without filling required fields
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         Locator errorMessage = waitForAnyElementContainingText("Entry could not be saved");
         assertTrue(errorMessage.isVisible());
@@ -45,7 +45,7 @@ public abstract class AbstractFormSlideTest extends BaseUITest {
         Locator titleField = waitForElement("//vaadin-dialog//vaadin-text-field").locator("input");
         titleField.fill("New Image");
 
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
 
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("New Image");

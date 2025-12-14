@@ -46,7 +46,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         assertTrue(elements.stream().noneMatch(Locator::isVisible));
         waitForElement("//vaadin-icon[@icon='vaadin:plus']/..").click();
         waitForAnyElementContainingText("Item 3").click();
-        waitForAnyElementContainingText("Link").click();
+        waitForButton("Link").click();
         waitForAnyElementContainingText("Item 3");
     }
 
@@ -58,7 +58,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         Locator field = waitForElement("vaadin-text-field").locator("input");
         field.fill("");
         field.fill("Updated Item");
-        waitForAnyElementContainingText("Save").click();
+        waitForButton("Save").click();
         waitForUrlToBe(getPath());
         waitForAnyElementContainingText("Updated Item");
     }
@@ -68,7 +68,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         navigateTo(getPath());
         waitForAnyElementContainingText(getExistingItemName()).click();
         waitForUrlToBe(getPath() + "/1");
-        waitForAnyElementContainingText("Delete").click();
+        waitForButton("Delete").click();
         waitForUrlToBe(getPath());
 
         // Wait for the grid to refresh and the entity to disappear
