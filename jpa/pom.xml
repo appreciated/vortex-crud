@@ -107,6 +107,12 @@
                     <execution>
                         <goals>
                             <goal>prepare-frontend</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build-frontend</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
                             <goal>build-frontend</goal>
                         </goals>
                     </execution>
