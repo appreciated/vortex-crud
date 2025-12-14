@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.missing_features;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalFileResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -60,6 +61,10 @@ public class JpaMissingFeaturesEntity {
     @Column(name = "price", precision = 10, scale = 2)
     @BigDecimalNumberField
     private BigDecimal price;
+
+    @Column(name = "video_url")
+    @VideoField(LocalVideoResourceProvider.class)
+    private String videoUrl;
 
     public Long getId() {
         return id;
@@ -139,5 +144,13 @@ public class JpaMissingFeaturesEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 }
