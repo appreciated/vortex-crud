@@ -51,22 +51,46 @@ public class JooqSimpleMapDataStore implements VortexCrudDataStore<TableField<?,
 
     @Override
     public List<TableRecord<?>> getRecordsFromTableWhereColumnEquals(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(record -> Objects.equals(record.get(filterField), filterValue))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TableRecord<?>> getRecordsFromTableWhereColumnEqualsOrdered(TableField<?, ?> filterField, Object filterValue, TableField<?, ?> orderField, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(record -> Objects.equals(record.get(filterField), filterValue))
+                .sorted((o1, o2) -> {
+                    Comparable v1 = (Comparable) o1.get(orderField);
+                    Comparable v2 = (Comparable) o2.get(orderField);
+                    if (v1 == null && v2 == null) return 0;
+                    if (v1 == null) return -1;
+                    if (v2 == null) return 1;
+                    return v1.compareTo(v2);
+                })
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TableRecord<?>> getRecordsFromTableWhereColumnIn(TableField<?, ?> filterField, List<String> filterValues, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(record -> filterValues.contains(String.valueOf(record.get(filterField))))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<TableRecord<?>> getRecordsFromTableWhereColumnLike(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(record -> record.get(filterField) != null && record.get(filterField).toString().contains(filterValue.toString()))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -95,6 +119,31 @@ public class JooqSimpleMapDataStore implements VortexCrudDataStore<TableField<?,
     @Override
     public int countWhereColumnLike(TableField<?, ?> filterField, String filterValue) {
         return store.size();
+    }
+
+    @Override
+    public int countWhereColumnEquals(TableField<?, ?> filterField, Object filterValue) {
+        return (int) store.values().stream()
+                .filter(record -> Objects.equals(record.get(filterField), filterValue))
+                .count();
+    }
+
+    @Override
+    public List<TableRecord<?>> getRecordsFromTableWhereColumnLikeAndColumnEquals(TableField<?, ?> searchField, Object searchValue, TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
+        return store.values().stream()
+                .filter(record -> record.get(searchField) != null && record.get(searchField).toString().contains(searchValue.toString()))
+                .filter(record -> Objects.equals(record.get(filterField), filterValue))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int countWhereColumnLikeAndColumnEquals(TableField<?, ?> searchField, String searchValue, TableField<?, ?> filterField, Object filterValue) {
+        return (int) store.values().stream()
+                .filter(record -> record.get(searchField) != null && record.get(searchField).toString().contains(searchValue))
+                .filter(record -> Objects.equals(record.get(filterField), filterValue))
+                .count();
     }
 
     @SuppressWarnings("unchecked")

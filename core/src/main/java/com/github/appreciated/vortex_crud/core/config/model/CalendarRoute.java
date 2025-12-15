@@ -52,4 +52,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    private DefaultFilter<FieldType> defaultFilter;
+
+    public DefaultFilter<FieldType> defaultFilter() { return defaultFilter; }
 }

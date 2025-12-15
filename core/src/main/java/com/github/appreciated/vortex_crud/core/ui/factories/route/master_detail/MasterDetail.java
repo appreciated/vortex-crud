@@ -178,7 +178,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.titleField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.titleField(), routeRenderer.defaultFilter()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

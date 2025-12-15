@@ -516,6 +516,23 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .child(documentForm)
                 .build());
 
+        routes.put("filtered-grid", JooqGridRoute.builder()
+                .dataStoreConfig(imagesConfig)
+                .iconFactory(FILTER::create)
+                .title("Filtered Grid")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .resourceProvider(new LocalImageResourceProvider())
+                        .build())
+                .defaultFilter(DefaultFilter.builder()
+                        .field(IMAGES.TITLE)
+                        .value("Red")
+                        .build())
+                .writeRoles(List.of("admin"))
+                .child(imageForm)
+                .build());
+
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
         taskStatuses.put(TODO, "selects.task-status.todo");
         taskStatuses.put(OPEN, "selects.task-status.open");

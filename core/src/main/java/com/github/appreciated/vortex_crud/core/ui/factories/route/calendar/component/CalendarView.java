@@ -64,7 +64,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeResolver = routeResolver;
         this.calendarConfiguration = (CalendarConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField(), routeRenderer.defaultFilter()).withConfigurableFilter();
 
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();

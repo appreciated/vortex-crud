@@ -49,4 +49,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    private DefaultFilter<FieldType> defaultFilter;
+
+    public DefaultFilter<FieldType> defaultFilter() { return defaultFilter; }
 }

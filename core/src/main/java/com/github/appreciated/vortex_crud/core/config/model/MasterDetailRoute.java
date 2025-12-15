@@ -53,6 +53,10 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    private DefaultFilter<FieldType> defaultFilter;
+
+    public DefaultFilter<FieldType> defaultFilter() { return defaultFilter; }
+
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         if (formConfiguration != null) {

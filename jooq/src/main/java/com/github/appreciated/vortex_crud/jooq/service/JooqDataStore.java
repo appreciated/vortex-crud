@@ -3,10 +3,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import jakarta.validation.constraints.NotNull;
-import org.jooq.DSLContext;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UpdatableRecord;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 
 import java.util.Collections;
@@ -91,7 +88,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
+                .where(((Field<Object>) filterField).eq(filterValue))
                 .limit(limit)
                 .offset(offset)
                 .fetchInto(record)
@@ -110,7 +107,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
+                .where(((Field<Object>) filterField).eq(filterValue))
                 .orderBy(orderField.asc())
                 .limit(limit)
                 .offset(offset)
@@ -183,6 +180,36 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         return dslContext.fetchCount(
                 getTable(),
                 DSL.field(filterField).like("%" + filterValue + "%")
+        );
+    }
+
+    @Override
+    public int countWhereColumnEquals(TableField<?, ?> filterField, Object filterValue) {
+        return dslContext.fetchCount(
+                getTable(),
+                ((Field<Object>) filterField).eq(filterValue)
+        );
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndColumnEquals(TableField<?, ?> searchField, Object searchValue, TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
+        return dslContext.select()
+                .from(getTable())
+                .where(DSL.field(searchField).like("%" + searchValue + "%")
+                        .and(((Field<Object>) filterField).eq(filterValue)))
+                .limit(limit)
+                .offset(offset)
+                .fetchInto(record)
+                .stream()
+                .toList();
+    }
+
+    @Override
+    public int countWhereColumnLikeAndColumnEquals(TableField<?, ?> searchField, String searchValue, TableField<?, ?> filterField, Object filterValue) {
+        return dslContext.fetchCount(
+                getTable(),
+                DSL.field(searchField).like("%" + searchValue + "%")
+                        .and(((Field<Object>) filterField).eq(filterValue))
         );
     }
 

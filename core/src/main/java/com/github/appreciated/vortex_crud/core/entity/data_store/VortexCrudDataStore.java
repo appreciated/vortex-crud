@@ -110,6 +110,39 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      */
     int countWhereColumnLike(FieldType filterField, String filterValue);
 
+    /**
+     * Counts the number of records in the data store where a column equals a value.
+     *
+     * @param filterField The field to filter on
+     * @param filterValue The value to filter by
+     * @return The number of records matching the criteria
+     */
+    int countWhereColumnEquals(FieldType filterField, Object filterValue);
+
+    /**
+     * Gets records from the data store where a column is like a value AND another column equals a value, with pagination.
+     *
+     * @param searchField The field to search (like)
+     * @param searchValue The value to search for
+     * @param filterField The field to filter (equals)
+     * @param filterValue The value to filter by
+     * @param offset      The offset for pagination
+     * @param limit       The limit for pagination
+     * @return A list of records matching the criteria
+     */
+    List<ModelClass> getRecordsFromTableWhereColumnLikeAndColumnEquals(FieldType searchField, Object searchValue, FieldType filterField, Object filterValue, int offset, int limit);
+
+    /**
+     * Counts the number of records in the data store where a column is like a value AND another column equals a value.
+     *
+     * @param searchField The field to search (like)
+     * @param searchValue The value to search for
+     * @param filterField The field to filter (equals)
+     * @param filterValue The value to filter by
+     * @return The number of records matching the criteria
+     */
+    int countWhereColumnLikeAndColumnEquals(FieldType searchField, String searchValue, FieldType filterField, Object filterValue);
+
     Class<ModelClass> getModelClass();
 
     void updateRecord(ModelClass entity);

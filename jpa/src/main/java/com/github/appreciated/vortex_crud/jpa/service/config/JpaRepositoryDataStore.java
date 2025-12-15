@@ -353,6 +353,88 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         return (int) repository.count(example);
     }
 
+    @Override
+    public int countWhereColumnEquals(String filterField, Object filterValue) {
+        Example<ModelClass> example = getExample(
+                filterField,
+                filterValue,
+                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
+        );
+        return (int) repository.count(example);
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndColumnEquals(String searchField, Object searchValue, String filterField, Object filterValue, int offset, int limit) {
+        // Create an example probe with both search and filter values
+        ModelClass probe = newInstance();
+        try {
+            java.lang.reflect.Field searchF = fields.get(searchField);
+            if (searchF != null) {
+                searchF.setAccessible(true);
+                if (searchValue != null) {
+                    searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
+                }
+            }
+
+            java.lang.reflect.Field filterF = fields.get(filterField);
+            if (filterF != null) {
+                filterF.setAccessible(true);
+                if (filterValue != null) {
+                    filterF.set(probe, convertToFieldType(filterValue, filterF.getType()));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Error setting fields for example", e);
+        }
+
+        // Configure matcher:
+        // - searchField should be CONTAINING (like)
+        // - filterField should be EXACT (equals)
+        // - default matchingAll() (AND condition)
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withIgnoreCase()
+                .withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher(filterField, ExampleMatcher.GenericPropertyMatchers.exact());
+
+        Example<ModelClass> example = Example.of(probe, matcher);
+
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
+                .getContent();
+    }
+
+    @Override
+    public int countWhereColumnLikeAndColumnEquals(String searchField, String searchValue, String filterField, Object filterValue) {
+        ModelClass probe = newInstance();
+        try {
+            java.lang.reflect.Field searchF = fields.get(searchField);
+            if (searchF != null) {
+                searchF.setAccessible(true);
+                if (searchValue != null) {
+                    searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
+                }
+            }
+
+            java.lang.reflect.Field filterF = fields.get(filterField);
+            if (filterF != null) {
+                filterF.setAccessible(true);
+                if (filterValue != null) {
+                    filterF.set(probe, convertToFieldType(filterValue, filterF.getType()));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Error setting fields for example", e);
+        }
+
+        ExampleMatcher matcher = ExampleMatcher.matchingAll()
+                .withIgnoreCase()
+                .withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains())
+                .withMatcher(filterField, ExampleMatcher.GenericPropertyMatchers.exact());
+
+        Example<ModelClass> example = Example.of(probe, matcher);
+
+        return (int) repository.count(example);
+    }
+
     public Collection<java.lang.reflect.Field> getFields() {
         return fields.values();
     }
