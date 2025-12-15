@@ -40,6 +40,17 @@ public interface VortexCrudRbacPermissionChecker<ModelClass, FieldType, Reposito
      */
     boolean hasUserWriteAccessToRoute(AccessControlled resource);
 
+    /**
+     * Checks if the current user can write to the resource in a specific context.
+     *
+     * @param resource The access-controlled resource to check
+     * @param context The context entity
+     * @return true if the user has WRITE access, false otherwise
+     */
+    default boolean hasUserWriteAccessToRoute(AccessControlled resource, Object context) {
+        return hasUserWriteAccessToRoute(resource);
+    }
+
     boolean hasUserReadAccessToRoute(AccessControlled resource);
 
     FieldAccessLevel getUserFieldAccess(AccessControlled resource, Field<ModelClass, FieldType, RepositoryType> field);

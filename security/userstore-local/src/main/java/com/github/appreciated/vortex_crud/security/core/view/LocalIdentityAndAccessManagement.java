@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.Roles;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
+import com.github.appreciated.vortex_crud.security.core.strategy.RoleResolutionStrategy;
 import com.vaadin.flow.component.Component;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +14,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
     private FieldType rolesField;
+    private RoleResolutionStrategy<FieldType> roleResolutionStrategy;
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
     private Class<? extends Component> loginView;
     private Class<? extends Component> signUpView;
@@ -49,6 +55,25 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
             return Collections.emptyList();
         }
         return value.stream().map(VortexCrudRoleProvider::getRole).map(SimpleGrantedAuthority::new).toList();
+    }
+
+    @Override
+    public List<? extends Serializable> resolveRolesForTarget(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+        List<SimpleGrantedAuthority> globalRoles = resolveRolesForEntity(reflectionService, userEntity);
+        if (roleResolutionStrategy == null) {
+            return globalRoles;
+        }
+        Collection<? extends GrantedAuthority> contextRoles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, targetEntity);
+
+        if (contextRoles.isEmpty()) {
+            return globalRoles;
+        }
+
+        List<SimpleGrantedAuthority> combined = new ArrayList<>(globalRoles);
+        for (GrantedAuthority ga : contextRoles) {
+            combined.add(new SimpleGrantedAuthority(ga.getAuthority()));
+        }
+        return combined;
     }
 
     @Override

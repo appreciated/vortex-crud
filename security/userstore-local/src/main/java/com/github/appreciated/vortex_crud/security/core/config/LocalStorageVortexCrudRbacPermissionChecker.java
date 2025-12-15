@@ -7,11 +7,14 @@ import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermission
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.service.LocalStorageUserContextService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Component for checking Role-Based Access Control (RBAC) permissions.
@@ -61,8 +64,26 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
         return userContextService.currentUserRoles();
     }
 
+    private Set<String> getCurrentUserRoles(Object context) {
+        if (context == null) {
+            return getCurrentUserRoles();
+        }
+        Object userEntity = userContextService.currentUserEntity();
+        if (userEntity == null) {
+            return Collections.emptySet();
+        }
+        return userContextService.resolveRolesForTarget(userEntity, context).stream()
+                .map(SimpleGrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+    }
+
     @Override
     public boolean hasUserWriteAccessToRoute(AccessControlled resource) {
+        return hasUserWriteAccessToRoute(resource, null);
+    }
+
+    @Override
+    public boolean hasUserWriteAccessToRoute(AccessControlled resource, Object context) {
         if (resource == null) {
             return false;
         }
@@ -85,8 +106,8 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
             return false;
         }
 
-        // Get current user's roles
-        Set<String> userRoles = getCurrentUserRoles();
+        // Get current user's roles (with context)
+        Set<String> userRoles = getCurrentUserRoles(context);
         if (userRoles.isEmpty()) {
             return false;
         }
@@ -126,7 +147,7 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
             return false;
         }
 
-        // Get current user's roles
+        // Get current user's roles (Global)
         Set<String> userRoles = getCurrentUserRoles();
         if (userRoles.isEmpty()) {
             return false;
@@ -150,7 +171,7 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
             return FieldAccessLevel.NONE;
         }
 
-        // Get current user's roles
+        // Get current user's roles (Global)
         Set<String> userRoles = getCurrentUserRoles();
         if (userRoles.isEmpty()) {
             return FieldAccessLevel.NONE;
