@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -103,6 +104,9 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/" + getDetailId());
         waitForButton("Delete").click();
         waitForUrlToBe(getPath());
+
+        List<Locator> visibleElements = page.locator("//*[contains(text(), '" + getFilterValueAbsent() + "')]").all();
+        visibleElements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
         assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
