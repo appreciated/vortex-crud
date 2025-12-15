@@ -37,4 +37,17 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
     List<String> defaultWriteRoles();
 
     List<? extends Serializable> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity);
+
+    /**
+     * Resolves roles for a specific target entity (context).
+     * By default delegates to global role resolution.
+     *
+     * @param reflectionService the reflection service
+     * @param userEntity the user entity
+     * @param targetEntity the target entity (context)
+     * @return list of roles/authorities
+     */
+    default List<? extends Serializable> resolveRolesForTarget(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+        return resolveRolesForEntity(reflectionService, userEntity);
+    }
 }

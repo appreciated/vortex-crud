@@ -66,6 +66,34 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
     }
 
     /**
+     * Resolves roles for a given user entity and target entity (context).
+     *
+     * @param userEntity The user entity
+     * @param targetEntity The target entity
+     * @return List of granted authorities for the user in context
+     */
+    public List<SimpleGrantedAuthority> resolveRolesForTarget(Object userEntity, Object targetEntity) {
+        if (userEntity == null) {
+            return Collections.emptyList();
+        }
+
+        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
+        if (iam == null) {
+            return Collections.emptyList();
+        }
+
+        List<? extends java.io.Serializable> roles = iam.resolveRolesForTarget(reflectionService, userEntity, targetEntity);
+        if (roles == null) {
+            return Collections.emptyList();
+        }
+
+        return roles.stream()
+                .filter(r -> r instanceof SimpleGrantedAuthority)
+                .map(r -> (SimpleGrantedAuthority) r)
+                .toList();
+    }
+
+    /**
      * Gets the current authenticated user entity from the data store.
      *
      * @return The current user entity, or null if not authenticated

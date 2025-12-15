@@ -15,8 +15,12 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestStat
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.security.core.strategy.ClassBasedRoleResolutionStrategy;
+import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
+import com.github.appreciated.vortex_crud.security.core.strategy.RoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -57,6 +61,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore organizationMemberStore = new JooqDataStore(ORGANIZATION_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore repositoryCollaboratorStore = new JooqDataStore(REPOSITORY_COLLABORATOR.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -66,6 +72,26 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var organizationMemberConfig = JooqDataStoreConfig.of(ORGANIZATION_MEMBER)
+                .dataStoreInstance((VortexCrudDataStore) organizationMemberStore)
+                .fields(Map.of(
+                        ORGANIZATION_MEMBER.ID, JooqIdField.builder().build(),
+                        ORGANIZATION_MEMBER.ORGANIZATION_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) organizationStore).field(ORGANIZATION_MEMBER.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build(),
+                        ORGANIZATION_MEMBER.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(ORGANIZATION_MEMBER.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        ORGANIZATION_MEMBER.ROLE, JooqSelectField.builder().values("organization-roles").build(),
+                        ORGANIZATION_MEMBER.JOINED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var repositoryCollaboratorConfig = JooqDataStoreConfig.of(REPOSITORY_COLLABORATOR)
+                .dataStoreInstance((VortexCrudDataStore) repositoryCollaboratorStore)
+                .fields(Map.of(
+                        REPOSITORY_COLLABORATOR.ID, JooqIdField.builder().build(),
+                        REPOSITORY_COLLABORATOR.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(REPOSITORY_COLLABORATOR.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        REPOSITORY_COLLABORATOR.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(REPOSITORY_COLLABORATOR.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        REPOSITORY_COLLABORATOR.PERMISSION, JooqSelectField.builder().values("repository-permissions").build(),
+                        REPOSITORY_COLLABORATOR.INVITED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         var organizationConfig = JooqDataStoreConfig.of(ORGANIZATION)
@@ -274,7 +300,25 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(REPOSITORY.DEFAULT_BRANCH, "route.repositories.labels.default_branch").build(),
                                 JooqFieldElement.of(REPOSITORY.LANGUAGE, "route.repositories.labels.language").build(),
                                 JooqFieldElement.of(REPOSITORY.TOPICS, "route.repositories.labels.topics").build(),
-                                JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build()))
+                                JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build(),
+                                JooqCollectionElement.of("route.repositories.labels.collaborators")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                                .data(JooqCollectionConfiguration.of(repositoryCollaboratorConfig)
+                                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.REPOSITORY_ID))
+                                                        .children(List.of(REPOSITORY_COLLABORATOR.USER_ID, REPOSITORY_COLLABORATOR.PERMISSION))
+                                                        .build())
+                                                .child(JooqFormRoute.builder()
+                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
+                                                         .titleField(REPOSITORY_COLLABORATOR.USER_ID)
+                                                         .children(List.of(
+                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.USER_ID, "route.repository_collaborators.labels.user").build(),
+                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
+                                                         ))
+                                                         .build())
+                                                     .build())
+                                                .build())
+                                        .build()))
                         .build())
                 .build();
 
@@ -288,7 +332,72 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 JooqFieldElement.of(ORGANIZATION.NAME, "route.organizations.labels.name").build(),
                                 JooqFieldElement.of(ORGANIZATION.DISPLAY_NAME, "route.organizations.labels.display_name").build(),
                                 JooqFieldElement.of(ORGANIZATION.DESCRIPTION, "route.organizations.labels.description").build(),
-                                JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build()))
+                                JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build(),
+                                JooqCollectionElement.of("route.organizations.labels.members")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                                .data(JooqCollectionConfiguration.of(organizationMemberConfig)
+                                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.ORGANIZATION_ID))
+                                                        .children(List.of(ORGANIZATION_MEMBER.USER_ID, ORGANIZATION_MEMBER.ROLE))
+                                                        .build())
+                                                .child(JooqFormRoute.builder()
+                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
+                                                         .titleField(ORGANIZATION_MEMBER.USER_ID)
+                                                         .children(List.of(
+                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.USER_ID, "route.organization_members.labels.user").build(),
+                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
+                                                         ))
+                                                         .build())
+                                                     .build())
+                                                .build())
+                                        .build()))
+                        .build())
+                .build();
+
+        // User Form Configuration
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
+                .dataStoreConfig(usersConfig)
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(USERS.USERNAME)
+                        .children(List.of(
+                                JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
+                                JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
+                                JooqCollectionElement.of("route.users.labels.repositories")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                                .data(JooqCollectionConfiguration.of(repositoryCollaboratorConfig)
+                                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.USER_ID))
+                                                        .children(List.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, REPOSITORY_COLLABORATOR.PERMISSION))
+                                                        .build())
+                                                .child(JooqFormRoute.builder()
+                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
+                                                         .titleField(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
+                                                         .children(List.of(
+                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, "route.repository_collaborators.labels.repository").build(),
+                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
+                                                         ))
+                                                         .build())
+                                                     .build())
+                                                .build())
+                                        .build(),
+                                JooqCollectionElement.of("route.users.labels.organizations")
+                                        .factory(new ListCollectionFactory<>())
+                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                                .data(JooqCollectionConfiguration.of(organizationMemberConfig)
+                                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.USER_ID))
+                                                        .children(List.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, ORGANIZATION_MEMBER.ROLE))
+                                                        .build())
+                                                .child(JooqFormRoute.builder()
+                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
+                                                         .titleField(ORGANIZATION_MEMBER.ORGANIZATION_ID)
+                                                         .children(List.of(
+                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, "route.organization_members.labels.organization").build(),
+                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
+                                                         ))
+                                                         .build())
+                                                     .build())
+                                                .build())
+                                        .build()))
                         .build())
                 .build();
 
@@ -318,7 +427,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .titleField(REPOSITORY.NAME)
                         .descriptionField(REPOSITORY.DESCRIPTION)
                         .build())
-                .writeRoles(List.of("admin", "developer"))
+                .writeRoles(List.of("admin", "write")) // Repo permission values
                 .child(repositoryForm)
                 .build());
 
@@ -360,7 +469,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .titleField(ORGANIZATION.NAME)
                         .descriptionField(ORGANIZATION.DESCRIPTION)
                         .build())
-                .writeRoles(List.of("admin"))
+                .writeRoles(List.of("admin", "owner")) // Org role values
                 .child(organizationForm)
                 .build());
 
@@ -377,6 +486,17 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .build())
                 .writeRoles(List.of("admin", "developer"))
                 .child(milestoneForm)
+                .build());
+
+        routes.put("users", JooqGridRoute.builder()
+                .dataStoreConfig(usersConfig)
+                .iconFactory(VaadinIcon.USERS::create)
+                .title("route.users.title")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(USERS.USERNAME)
+                        .build())
+                .writeRoles(List.of("admin"))
+                .child(userForm)
                 .build());
 
         // Select Options
@@ -400,11 +520,39 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         priorities.put(Priority.HIGH, "selects.priority.high");
         priorities.put(Priority.CRITICAL, "selects.priority.critical");
 
+        LinkedHashMap<String, String> repositoryPermissions = new LinkedHashMap<>();
+        repositoryPermissions.put("admin", "selects.repository-permissions.admin");
+        repositoryPermissions.put("write", "selects.repository-permissions.write");
+        repositoryPermissions.put("read", "selects.repository-permissions.read");
+
+        LinkedHashMap<String, String> organizationRoles = new LinkedHashMap<>();
+        organizationRoles.put("owner", "selects.organization-roles.owner");
+        organizationRoles.put("admin", "selects.organization-roles.admin");
+        organizationRoles.put("member", "selects.organization-roles.member");
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("dev_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
+                        .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(Map.of(
+                                REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                        (VortexCrudDataStore) repositoryCollaboratorStore,
+                                        REPOSITORY_COLLABORATOR.USER_ID,
+                                        REPOSITORY_COLLABORATOR.REPOSITORY_ID,
+                                        REPOSITORY_COLLABORATOR.PERMISSION,
+                                        USERS.ID,
+                                        REPOSITORY.ID
+                                ),
+                                ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                        (VortexCrudDataStore) organizationMemberStore,
+                                        ORGANIZATION_MEMBER.USER_ID,
+                                        ORGANIZATION_MEMBER.ORGANIZATION_ID,
+                                        ORGANIZATION_MEMBER.ROLE,
+                                        USERS.ID,
+                                        ORGANIZATION.ID
+                                )
+                        )))
                         .availableRoles(Roles.builder().roles(List.of("admin", "developer", "contributor", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "developer"))
@@ -424,7 +572,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "repository-visibility", repositoryVisibilities,
                                 "issue-state", issueStates,
                                 "pull-request-state", pullRequestStates,
-                                "priority", priorities))
+                                "priority", priorities,
+                                "repository-permissions", repositoryPermissions,
+                                "organization-roles", organizationRoles))
                         .build())
                 .build();
     }
