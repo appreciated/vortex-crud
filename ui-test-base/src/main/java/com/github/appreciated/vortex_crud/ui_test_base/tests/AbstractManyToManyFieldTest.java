@@ -2,12 +2,12 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractManyToManyFieldTest extends BaseUITest {
 
@@ -43,7 +43,7 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         waitForAnyElementContainingText("Item 2").click();
         waitForUrlToBe(getPath() + "/2");
         List<Locator> elements = page.locator("//*[contains(text(), 'Item 3')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
         waitForElement("//vaadin-icon[@icon='vaadin:plus']/..").click();
         waitForAnyElementContainingText("Item 3").click();
         waitForButton("Link").click();
@@ -74,6 +74,6 @@ public abstract class AbstractManyToManyFieldTest extends BaseUITest {
         // Wait for the grid to refresh and the entity to disappear
         waitForTextToDisappear(getExistingItemName());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingItemName() + "')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }

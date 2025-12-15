@@ -2,12 +2,12 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractOneToManyFieldTest extends BaseUITest {
 
@@ -78,6 +78,6 @@ public abstract class AbstractOneToManyFieldTest extends BaseUITest {
         // Wait for the grid to refresh and the entity to disappear
         waitForTextToDisappear(getExistingParentName());
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExistingParentName() + "')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }

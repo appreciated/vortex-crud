@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -153,7 +152,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
 
         waitForUrlToBe(getMultiFormPath());
         List<Locator> elements = page.locator("//*[contains(text(), 'Max Mustermann')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 
     @Test
