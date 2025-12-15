@@ -9,6 +9,7 @@ import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Base test for grid based project listings. Concrete implementations
@@ -119,7 +120,9 @@ public abstract class AbstractGridTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/" + getDetailId());
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
+        List<Locator> visibleElements = page.locator("//*[contains(text(), '" + getFilterValueAbsent() + "')]").all();
+        visibleElements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 }
