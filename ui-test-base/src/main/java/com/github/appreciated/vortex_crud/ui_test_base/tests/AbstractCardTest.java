@@ -104,8 +104,11 @@ public abstract class AbstractCardTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/" + getDetailId());
         waitForButton("Delete").click();
         waitForUrlToBe(getPath());
+
+        List<Locator> visibleElements = page.locator("//*[contains(text(), '" + getFilterValueAbsent() + "')]").all();
+        visibleElements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
-        elements.forEach(locator -> locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE)));
+        assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
 
     @Test
