@@ -25,21 +25,22 @@ To keep route configuration lean and type-safe, renderer-specific models now imp
    - **[Editing Data](#editing-data)**
       - **[Input Types](#input-types)**
       - **[Relationships](#relationships)**
-3. **[Getting Started](#getting-started)**
+3. **[Code Examples](#code-examples)**
+4. **[Getting Started](#getting-started)**
    - **[Terminology](#terminology)**
    - **[Configuration with jOOQ](#configuration-with-jooq)**
    - **[Configuration with JPA](#configuration-with-jpa)**
-4. **[Database Modeling](#database-modeling)**
+5. **[Database Modeling](#database-modeling)**
    - **[System-Defined Tables](#system-defined-tables)**
    - **[Example User-Defined Tables](#example-user-defined-tables)**
-5. **[Architecture](#architecture)**
+6. **[Architecture](#architecture)**
    - **[Basic Principles](#basic-principles)**
    - **[Relationship Between Routes and Forms](#relationship-routes-forms)**
    - **[Data Handling](#data-handling)**
    - **[Data Access](#data-access)**
-6. **[Roadmap](#roadmap)**
-7. **[Contributing](#contributing)**
-8. **[Further Development](#further-development)**
+7. **[Roadmap](#roadmap)**
+8. **[Contributing](#contributing)**
+9. **[Further Development](#further-development)**
 
 # <a name="introduction">Introduction</a>
 ## <a name="inspiration">Inspiration</a>
@@ -163,6 +164,38 @@ Models that define the application's structure and behavior:
 - **Relationships**: Configuration support for OneToMany and ManyToMany relationships.
 - **Renderers**: specialized configurations for rendering lists and grids (`GridItemRendererConfiguration`, `ListItemRendererConfiguration`).
 - **Auditing & Versioning**: Configuration models for tracking changes (implementation depends on the backend).
+
+# <a name="code-examples">Code Examples</a>
+
+The repository includes several example applications located in the `examples/` directory to help you get started and understand different aspects of the framework.
+
+## Feature Showcases
+Comprehensive examples demonstrating all available field types, route renderers, and configuration options.
+
+- **[jOOQ SQLite Example](examples/jooq-sqlite-example)** (`examples/jooq-sqlite-example`)
+  The primary reference implementation for jOOQ integration. It provides a complete overview of the framework's capabilities, including:
+  - **All Field Types**: From basic text/numbers to rich media (Image, Video, PDF) and collections.
+  - **All Route Types**: Grid, List, Kanban, Master-Detail, Calendar, Form Slide, Submenus, and Custom routes.
+  - **Advanced Features**: Many-to-Many relationships, Security (RBAC, Login/Signup), Auditing, Versioning, and Custom DataStores.
+
+- **[JPA SQLite Example](examples/jpa-sqlite-example)** (`examples/jpa-sqlite-example`)
+  The counterpart to the jOOQ example, demonstrating the same comprehensive feature set using JPA. It highlights:
+  - **Annotation-Based Configuration**: Defining field types directly on Entity classes.
+  - **JPA Repositories**: Using Spring Data JPA repositories as DataStores.
+  - **Entity Relationships**: Handling JPA associations in the UI.
+
+## Domain-Specific Demos
+Real-world scenarios showcasing how to build specific types of applications.
+
+- **[Project Management Demo](examples/jooq-project-management-demo)** (`examples/jooq-project-management-demo`)
+  A project management tool featuring Projects, Tasks, Milestones, and Labels. It demonstrates a **Custom Field System** where users can dynamically define new fields for entities, stored as JSON.
+
+- **[Developer Platform Demo](examples/jooq-dev-platform-demo)** (`examples/jooq-dev-platform-demo`)
+  A platform similar to GitHub/GitLab, managing Repositories, Issues, Pull Requests, and Organizations. Like the Project Management demo, it utilizes the custom field system for extensibility.
+
+- **[Resource Planner Demo](examples/jooq-ressource-planner-demo)** (`examples/jooq-ressource-planner-demo`)
+  An application for scheduling appointments and managing resources.
+  - **Key Features**: Calendar views, availability checking using **DataStore Hooks**, and management of Rooms, Staff, and Appointment Types.
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
