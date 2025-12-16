@@ -1,8 +1,12 @@
 package com.github.appreciated.vortex_crud.example.jpa.custom;
 
+import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -129,14 +133,14 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
     }
 
     @Override
-    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+    public int countWhereFiltersEqual(java.util.List<RouteFilter<String>> filters) {
         return (int) store.values().stream()
                 .filter(note -> matchesFilters(note, filters))
                 .count();
     }
 
     @Override
-    public List<Note> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+    public List<Note> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<String>> filters, int offset, int limit) {
         return store.values().stream()
                 .filter(note -> matchesFilters(note, filters))
                 .skip(offset)
@@ -145,7 +149,7 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
     }
 
     @Override
-    public List<Note> getRecordsFromTableWhereColumnLikeAndFiltersEqual(String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+    public List<Note> getRecordsFromTableWhereColumnLikeAndFiltersEqual(String searchField, Object searchValue, java.util.List<RouteFilter<String>> filters, int offset, int limit) {
         return store.values().stream()
                 .filter(note -> String.valueOf(getFieldValue(note, searchField)).contains(searchValue.toString()))
                 .filter(note -> matchesFilters(note, filters))
@@ -155,18 +159,18 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
     }
 
     @Override
-    public int countWhereColumnLikeAndFiltersEqual(String searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+    public int countWhereColumnLikeAndFiltersEqual(String searchField, String searchValue, java.util.List<RouteFilter<String>> filters) {
         return (int) store.values().stream()
                 .filter(note -> String.valueOf(getFieldValue(note, searchField)).contains(searchValue))
                 .filter(note -> matchesFilters(note, filters))
                 .count();
     }
 
-    private boolean matchesFilters(Note note, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+    private boolean matchesFilters(Note note, java.util.List<RouteFilter<String>> filters) {
         if (filters == null || filters.isEmpty()) {
             return true;
         }
-        for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String> filter : filters) {
+        for (RouteFilter<String> filter : filters) {
             if (!Objects.equals(getFieldValue(note, filter.field()), filter.value())) {
                 return false;
             }

@@ -2,10 +2,10 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 
@@ -38,7 +38,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
                 routeRenderer.configuration();
 
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration != null ? gridOrListConfiguration.filterField() : null, routeRenderer.defaultFilters()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration != null ? gridOrListConfiguration.filterField() : null, routeRenderer.filters()).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 

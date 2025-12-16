@@ -1,20 +1,20 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.component;
 
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.CalendarConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
-import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -64,7 +64,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeResolver = routeResolver;
         this.calendarConfiguration = (CalendarConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField(), routeRenderer.defaultFilters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField(), routeRenderer.filters()).withConfigurableFilter();
 
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();

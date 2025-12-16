@@ -39,7 +39,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions();
 
-    default java.util.List<DefaultFilter<FieldType>> defaultFilters() {
+    default java.util.List<RouteFilter<FieldType>> filters() {
         return java.util.Collections.emptyList();
     }
 

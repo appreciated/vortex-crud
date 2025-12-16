@@ -3,14 +3,17 @@ package com.github.appreciated.vortex_crud.example.jooq;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
-import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.example.jooq.JooqSimpleMapDataStore.NotesTable;
+import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -18,42 +21,38 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
-import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.Documents.DOCUMENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Images.IMAGES;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.ProjectTags.PROJECT_TAGS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Projects.PROJECTS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.Roles.ROLES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskComments.TASK_COMMENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.TaskHasTask.TASK_HAS_TASK;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Tasks.TASKS;
+import static com.github.appreciated.vortex_crud.jooq.models.tables.UserRoles.USER_ROLES;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Users.USERS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.Videos.VIDEOS;
-import static com.github.appreciated.vortex_crud.jooq.models.tables.Documents.DOCUMENTS;
-import static com.github.appreciated.vortex_crud.jooq.models.tables.ProjectTags.PROJECT_TAGS;
-import static com.github.appreciated.vortex_crud.jooq.models.tables.Roles.ROLES;
-import static com.github.appreciated.vortex_crud.jooq.models.tables.UserRoles.USER_ROLES;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
-
-import com.github.appreciated.vortex_crud.example.jooq.JooqSimpleMapDataStore.NotesTable;
 
 @Service
 public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
@@ -525,7 +524,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .imageField(IMAGES.URL)
                         .resourceProvider(new LocalImageResourceProvider())
                         .build())
-                .defaultFilter(DefaultFilter.builder()
+                .filter(RouteFilter.builder()
                         .field(IMAGES.TITLE)
                         .value("Red")
                         .build())

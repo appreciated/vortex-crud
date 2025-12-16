@@ -3,11 +3,11 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -119,14 +119,14 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.defaultFilters(), offset, limit);
+                        if (config.filters() != null && !config.filters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                         }
                     } else {
-                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters(), offset, limit);
+                        if (config.filters() != null && !config.filters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.filters(), offset, limit);
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
                         }
@@ -145,14 +145,14 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int count;
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
-                            count = dataStore.countWhereFiltersEqual(config.defaultFilters());
+                        if (config.filters() != null && !config.filters().isEmpty()) {
+                            count = dataStore.countWhereFiltersEqual(config.filters());
                         } else {
                             count = dataStore.count();
                         }
                     } else {
-                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
-                            count = dataStore.countWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters());
+                        if (config.filters() != null && !config.filters().isEmpty()) {
+                            count = dataStore.countWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.filters());
                         } else {
                             count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
                         }

@@ -4,12 +4,12 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
@@ -77,7 +77,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
         this.itemFactory = kanbanConfigurationConfig.factory();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField(), routeRenderer.defaultFilters());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField(), routeRenderer.filters());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
             Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfigurationConfig,

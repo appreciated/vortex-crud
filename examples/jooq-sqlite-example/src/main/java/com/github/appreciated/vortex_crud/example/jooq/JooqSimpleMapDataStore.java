@@ -1,11 +1,17 @@
 package com.github.appreciated.vortex_crud.example.jooq;
 
+import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.TableField;
+import org.jooq.TableRecord;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -122,14 +128,14 @@ public class JooqSimpleMapDataStore implements VortexCrudDataStore<TableField<?,
     }
 
     @Override
-    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters) {
+    public int countWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters) {
         return (int) store.values().stream()
                 .filter(record -> matchesFilters(record, filters))
                 .count();
     }
 
     @Override
-    public List<TableRecord<?>> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters, int offset, int limit) {
+    public List<TableRecord<?>> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
         return store.values().stream()
                 .filter(record -> matchesFilters(record, filters))
                 .skip(offset)
@@ -138,7 +144,7 @@ public class JooqSimpleMapDataStore implements VortexCrudDataStore<TableField<?,
     }
 
     @Override
-    public List<TableRecord<?>> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters, int offset, int limit) {
+    public List<TableRecord<?>> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, Object searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
         return store.values().stream()
                 .filter(record -> record.get(searchField) != null && record.get(searchField).toString().contains(searchValue.toString()))
                 .filter(record -> matchesFilters(record, filters))
@@ -148,18 +154,18 @@ public class JooqSimpleMapDataStore implements VortexCrudDataStore<TableField<?,
     }
 
     @Override
-    public int countWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters) {
+    public int countWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, String searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters) {
         return (int) store.values().stream()
                 .filter(record -> record.get(searchField) != null && record.get(searchField).toString().contains(searchValue))
                 .filter(record -> matchesFilters(record, filters))
                 .count();
     }
 
-    private boolean matchesFilters(TableRecord<?> record, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters) {
+    private boolean matchesFilters(TableRecord<?> record, java.util.List<RouteFilter<TableField<?, ?>>> filters) {
         if (filters == null || filters.isEmpty()) {
             return true;
         }
-        for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>> filter : filters) {
+        for (RouteFilter<TableField<?, ?>> filter : filters) {
             if (!Objects.equals(record.get(filter.field()), filter.value())) {
                 return false;
             }

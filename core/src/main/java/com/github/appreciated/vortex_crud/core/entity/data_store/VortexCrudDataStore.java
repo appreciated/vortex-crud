@@ -1,5 +1,7 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
+import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
+
 import java.util.List;
 
 /**
@@ -116,7 +118,7 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @param filters The filters to apply (AND logic)
      * @return The number of records matching the criteria
      */
-    int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters);
+    int countWhereFiltersEqual(java.util.List<RouteFilter<FieldType>> filters);
 
     /**
      * Gets records from the data store where filters match, with pagination.
@@ -126,7 +128,7 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @param limit   The limit for pagination
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<FieldType>> filters, int offset, int limit);
 
     /**
      * Gets records from the data store where a column is like a value AND filters match, with pagination.
@@ -138,7 +140,7 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @param limit       The limit for pagination
      * @return A list of records matching the criteria
      */
-    List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(FieldType searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters, int offset, int limit);
+    List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(FieldType searchField, Object searchValue, java.util.List<RouteFilter<FieldType>> filters, int offset, int limit);
 
     /**
      * Counts the number of records in the data store where a column is like a value AND filters match.
@@ -148,7 +150,7 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @param filters     The filters to apply (AND logic)
      * @return The number of records matching the criteria
      */
-    int countWhereColumnLikeAndFiltersEqual(FieldType searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters);
+    int countWhereColumnLikeAndFiltersEqual(FieldType searchField, String searchValue, java.util.List<RouteFilter<FieldType>> filters);
 
     Class<ModelClass> getModelClass();
 

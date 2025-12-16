@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DefaultFilter<FieldType> {
+public class RouteFilter<FieldType> {
     private FieldType field;
     private Object value;
 }

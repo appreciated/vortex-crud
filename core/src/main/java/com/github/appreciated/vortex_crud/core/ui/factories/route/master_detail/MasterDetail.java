@@ -1,22 +1,22 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail;
 
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
-import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
@@ -178,7 +178,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.titleField(), routeRenderer.defaultFilters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.titleField(), routeRenderer.filters()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

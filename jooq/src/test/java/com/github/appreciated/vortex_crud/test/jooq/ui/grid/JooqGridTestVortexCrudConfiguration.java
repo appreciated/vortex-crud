@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.grid;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
-import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -82,11 +79,11 @@ public class JooqGridTestVortexCrudConfiguration
                         .imageField(GRID_IMAGES.URL)
                         .resourceProvider(new LocalImageResourceProvider())
                         .build())
-                .defaultFilter(com.github.appreciated.vortex_crud.core.config.model.DefaultFilter.<TableField<?, ?>>builder()
+                .filter(RouteFilter.<TableField<?, ?>>builder()
                         .field(GRID_IMAGES.TITLE)
                         .value("ItemOne")
                         .build())
-                .defaultFilter(com.github.appreciated.vortex_crud.core.config.model.DefaultFilter.<TableField<?, ?>>builder()
+                .filter(RouteFilter.<TableField<?, ?>>builder()
                         .field(GRID_IMAGES.URL)
                         .value("./red.png")
                         .build())
