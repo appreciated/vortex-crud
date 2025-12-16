@@ -47,22 +47,56 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
 
     @Override
     public List<Note> getRecordsFromTableWhereColumnEquals(String filterField, Object filterValue, int offset, int limit) {
-        return getRecordsFromTable(offset, limit); // Simplified - no filtering
+        return store.values().stream()
+                .filter(note -> Objects.equals(getFieldValue(note, filterField), filterValue))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Note> getRecordsFromTableWhereColumnEqualsOrdered(String filterField, Object filterValue, String orderField, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(note -> Objects.equals(getFieldValue(note, filterField), filterValue))
+                .sorted((o1, o2) -> {
+                    Comparable v1 = (Comparable) getFieldValue(o1, orderField);
+                    Comparable v2 = (Comparable) getFieldValue(o2, orderField);
+                    if (v1 == null && v2 == null) return 0;
+                    if (v1 == null) return -1;
+                    if (v2 == null) return 1;
+                    return v1.compareTo(v2);
+                })
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    private Object getFieldValue(Note note, String fieldName) {
+        try {
+            java.lang.reflect.Field field = Note.class.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(note);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<Note> getRecordsFromTableWhereColumnIn(String filterField, List<String> filterValues, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(note -> filterValues.contains(String.valueOf(getFieldValue(note, filterField))))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Note> getRecordsFromTableWhereColumnLike(String filterField, Object filterValue, int offset, int limit) {
-        return getRecordsFromTable(offset, limit);
+        return store.values().stream()
+                .filter(note -> String.valueOf(getFieldValue(note, filterField)).contains(filterValue.toString()))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,7 +123,55 @@ public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMap
 
     @Override
     public int countWhereColumnLike(String filterField, String filterValue) {
-        return store.size();
+        return (int) store.values().stream()
+                .filter(note -> String.valueOf(getFieldValue(note, filterField)).contains(filterValue))
+                .count();
+    }
+
+    @Override
+    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        return (int) store.values().stream()
+                .filter(note -> matchesFilters(note, filters))
+                .count();
+    }
+
+    @Override
+    public List<Note> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+        return store.values().stream()
+                .filter(note -> matchesFilters(note, filters))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Note> getRecordsFromTableWhereColumnLikeAndFiltersEqual(String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+        return store.values().stream()
+                .filter(note -> String.valueOf(getFieldValue(note, searchField)).contains(searchValue.toString()))
+                .filter(note -> matchesFilters(note, filters))
+                .skip(offset)
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public int countWhereColumnLikeAndFiltersEqual(String searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        return (int) store.values().stream()
+                .filter(note -> String.valueOf(getFieldValue(note, searchField)).contains(searchValue))
+                .filter(note -> matchesFilters(note, filters))
+                .count();
+    }
+
+    private boolean matchesFilters(Note note, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        if (filters == null || filters.isEmpty()) {
+            return true;
+        }
+        for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String> filter : filters) {
+            if (!Objects.equals(getFieldValue(note, filter.field()), filter.value())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

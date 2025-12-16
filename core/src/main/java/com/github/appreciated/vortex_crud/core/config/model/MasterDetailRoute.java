@@ -53,6 +53,11 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @lombok.Singular
+    private List<DefaultFilter<FieldType>> defaultFilters;
+
+    public List<DefaultFilter<FieldType>> defaultFilters() { return defaultFilters; }
+
     @Override
     public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
         if (formConfiguration != null) {

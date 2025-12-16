@@ -49,6 +49,9 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @lombok.Singular
+    private List<DefaultFilter<FieldType>> defaultFilters;
+
     public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
     public String title() { return title; }
     public boolean isDefaultRoute() { return isDefaultRoute; }
@@ -62,4 +65,5 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     public RouteRenderer<ModelClass, FieldType, RepositoryType> child() { return child; }
     public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
     public List<RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
+    public List<DefaultFilter<FieldType>> defaultFilters() { return defaultFilters; }
 }

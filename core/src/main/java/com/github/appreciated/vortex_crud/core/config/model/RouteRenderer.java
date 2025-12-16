@@ -39,6 +39,10 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions();
 
+    default java.util.List<DefaultFilter<FieldType>> defaultFilters() {
+        return java.util.Collections.emptyList();
+    }
+
     /**
      * List of custom route actions with full access to data store and selected entities.
      * These actions will be rendered in the route header and automatically

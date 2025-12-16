@@ -49,4 +49,8 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @lombok.Singular
+    private List<DefaultFilter<FieldType>> defaultFilters;
+
+    public List<DefaultFilter<FieldType>> defaultFilters() { return defaultFilters; }
 }

@@ -52,4 +52,8 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @lombok.Singular
+    private List<DefaultFilter<FieldType>> defaultFilters;
+
+    public List<DefaultFilter<FieldType>> defaultFilters() { return defaultFilters; }
 }

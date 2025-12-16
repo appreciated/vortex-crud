@@ -5,5 +5,39 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql(scripts = "grid_test.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class JooqGridTest extends AbstractGridTest {
+    @Override
+    protected boolean hasDefaultFilter() {
+        return true;
+    }
+
+    @Override
+    protected String getDefaultFilterPath() {
+        return "filtered-grid";
+    }
+
+    @Override
+    protected String getDefaultFilterVisibleValue() {
+        return "ItemOne";
+    }
+
+    @Override
+    protected String getDefaultFilterHiddenValue() {
+        return "ItemTwo";
+    }
+
+    @Override
+    protected String getExpectedVisibleValue() {
+        return "ItemOne";
+    }
+
+    @Override
+    protected String getFilterValuePresent() {
+        return "ItemOne";
+    }
+
+    @Override
+    protected String getFilterValueAbsent() {
+        return "ItemTwo";
+    }
 }
 

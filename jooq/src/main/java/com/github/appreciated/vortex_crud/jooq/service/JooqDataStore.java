@@ -3,10 +3,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import jakarta.validation.constraints.NotNull;
-import org.jooq.DSLContext;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.UpdatableRecord;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 
 import java.util.Collections;
@@ -91,7 +88,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
+                .where(((Field<Object>) filterField).eq(filterValue))
                 .limit(limit)
                 .offset(offset)
                 .fetchInto(record)
@@ -110,7 +107,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((TableField<?, String>) filterField).eq(filterValue.toString()))
+                .where(((Field<Object>) filterField).eq(filterValue))
                 .orderBy(orderField.asc())
                 .limit(limit)
                 .offset(offset)
@@ -183,6 +180,67 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
         return dslContext.fetchCount(
                 getTable(),
                 DSL.field(filterField).like("%" + filterValue + "%")
+        );
+    }
+
+    @Override
+    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters) {
+        org.jooq.Condition condition = DSL.trueCondition();
+        if (filters != null) {
+            for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>> filter : filters) {
+                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+            }
+        }
+        return dslContext.fetchCount(getTable(), condition);
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters, int offset, int limit) {
+        org.jooq.Condition condition = DSL.trueCondition();
+        if (filters != null) {
+            for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>> filter : filters) {
+                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+            }
+        }
+        return dslContext.select()
+                .from(getTable())
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetchInto(record)
+                .stream()
+                .toList();
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters, int offset, int limit) {
+        org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
+        if (filters != null) {
+            for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>> filter : filters) {
+                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+            }
+        }
+        return dslContext.select()
+                .from(getTable())
+                .where(condition)
+                .limit(limit)
+                .offset(offset)
+                .fetchInto(record)
+                .stream()
+                .toList();
+    }
+
+    @Override
+    public int countWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>>> filters) {
+        org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
+        if (filters != null) {
+            for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<TableField<?, ?>> filter : filters) {
+                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+            }
+        }
+        return dslContext.fetchCount(
+                getTable(),
+                condition
         );
     }
 

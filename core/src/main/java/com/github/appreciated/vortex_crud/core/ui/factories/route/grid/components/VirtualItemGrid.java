@@ -39,6 +39,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
+    private final RouteRenderer<ModelClass, FieldType, RepositoryType> config;
     private int minWidth = 250;  // Minimum width in pixels
     private int maxWidth = 350;  // Maximum width in pixels
     private int currentNumberOfColumns = -1;
@@ -48,6 +49,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                            RouteRenderer<ModelClass, FieldType, RepositoryType> config,
                            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
+        this.config = config;
         this.pathVariables = routeResolver;
         this.context = context;
         this.fieldNameResolver = context.fieldNameResolver();
@@ -61,13 +63,14 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
+                var ui = event.getUI();
                 new Thread(() -> {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    event.getUI().access(this::onBrowserWindowResize);
+                    ui.access(this::onBrowserWindowResize);
                 }).start();
             }
         });
@@ -116,9 +119,17 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.defaultFilters(), offset, limit);
+                        } else {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
+                        }
                     } else {
-                        items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters(), offset, limit);
+                        } else {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
+                        }
                     }
 
                     List<EntityItemList<ModelClass>> wrappers = new ArrayList<>();
@@ -134,9 +145,17 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int count;
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        count = dataStore.count();
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            count = dataStore.countWhereFiltersEqual(config.defaultFilters());
+                        } else {
+                            count = dataStore.count();
+                        }
                     } else {
-                        count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            count = dataStore.countWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters());
+                        } else {
+                            count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
+                        }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);
                 }

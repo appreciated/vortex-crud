@@ -353,6 +353,66 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
         return (int) repository.count(example);
     }
 
+    @Override
+    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), null, null, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
+        return (int) repository.count(example);
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), null, null, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit)).getContent();
+    }
+
+    @Override
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), searchField, searchValue, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit)).getContent();
+    }
+
+    @Override
+    public int countWhereColumnLikeAndFiltersEqual(String searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), searchField, searchValue, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
+        return (int) repository.count(example);
+    }
+
+    private ExampleMatcher configureProbeAndMatcher(ModelClass probe, ExampleMatcher matcher, String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        try {
+            if (searchField != null) {
+                java.lang.reflect.Field searchF = fields.get(searchField);
+                if (searchF != null) {
+                    searchF.setAccessible(true);
+                    if (searchValue != null) {
+                        searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
+                        matcher = matcher.withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains());
+                    }
+                }
+            }
+            if (filters != null) {
+                for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String> filter : filters) {
+                    java.lang.reflect.Field field = fields.get(filter.field());
+                    if (field != null) {
+                        field.setAccessible(true);
+                        field.set(probe, convertToFieldType(filter.value(), field.getType()));
+                        matcher = matcher.withMatcher(filter.field(), ExampleMatcher.GenericPropertyMatchers.exact());
+                    }
+                }
+            }
+            return matcher;
+        } catch (Exception e) {
+            throw new RuntimeException("Error configuring probe", e);
+        }
+    }
+
     public Collection<java.lang.reflect.Field> getFields() {
         return fields.values();
     }

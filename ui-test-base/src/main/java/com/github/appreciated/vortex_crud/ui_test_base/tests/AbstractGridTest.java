@@ -125,4 +125,36 @@ public abstract class AbstractGridTest extends BaseUITest {
         List<Locator> elements = page.locator("//*[contains(text(), '" + getExpectedVisibleValue() + "')]").all();
         assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
+
+    @Test
+    void testDefaultFilter() {
+        if (!hasDefaultFilter()) {
+            return;
+        }
+        navigateTo(getDefaultFilterPath());
+        Locator element = waitForAnyElementContainingText(getDefaultFilterVisibleValue());
+        assertThat(element).isVisible();
+
+        List<Locator> hidden = page.locator("//*[contains(text(), '" + getDefaultFilterHiddenValue() + "')]").all()
+                .stream()
+                .filter(Locator::isVisible)
+                .toList();
+        assertEquals(0, hidden.size());
+    }
+
+    protected boolean hasDefaultFilter() {
+        return false;
+    }
+
+    protected String getDefaultFilterPath() {
+        return null;
+    }
+
+    protected String getDefaultFilterVisibleValue() {
+        return null;
+    }
+
+    protected String getDefaultFilterHiddenValue() {
+        return null;
+    }
 }

@@ -74,6 +74,25 @@ public class JooqGridTestVortexCrudConfiguration
                 .child(imageForm)
                 .build());
 
+        routes.put("filtered-grid", JooqGridRoute.builder()
+                .dataStoreConfig(config)
+                .title("Filtered Grid")
+                .configuration(JooqGridItemRendererConfiguration.builder()
+                        .titleField(GRID_IMAGES.TITLE)
+                        .imageField(GRID_IMAGES.URL)
+                        .resourceProvider(new LocalImageResourceProvider())
+                        .build())
+                .defaultFilter(com.github.appreciated.vortex_crud.core.config.model.DefaultFilter.<TableField<?, ?>>builder()
+                        .field(GRID_IMAGES.TITLE)
+                        .value("ItemOne")
+                        .build())
+                .defaultFilter(com.github.appreciated.vortex_crud.core.config.model.DefaultFilter.<TableField<?, ?>>builder()
+                        .field(GRID_IMAGES.URL)
+                        .value("./red.png")
+                        .build())
+                .child(imageForm)
+                .build());
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")

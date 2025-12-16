@@ -110,6 +110,46 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      */
     int countWhereColumnLike(FieldType filterField, String filterValue);
 
+    /**
+     * Counts the number of records in the data store where filters match.
+     *
+     * @param filters The filters to apply (AND logic)
+     * @return The number of records matching the criteria
+     */
+    int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters);
+
+    /**
+     * Gets records from the data store where filters match, with pagination.
+     *
+     * @param filters The filters to apply (AND logic)
+     * @param offset  The offset for pagination
+     * @param limit   The limit for pagination
+     * @return A list of records matching the criteria
+     */
+    List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters, int offset, int limit);
+
+    /**
+     * Gets records from the data store where a column is like a value AND filters match, with pagination.
+     *
+     * @param searchField The field to search (like)
+     * @param searchValue The value to search for
+     * @param filters     The filters to apply (AND logic)
+     * @param offset      The offset for pagination
+     * @param limit       The limit for pagination
+     * @return A list of records matching the criteria
+     */
+    List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(FieldType searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters, int offset, int limit);
+
+    /**
+     * Counts the number of records in the data store where a column is like a value AND filters match.
+     *
+     * @param searchField The field to search (like)
+     * @param searchValue The value to search for
+     * @param filters     The filters to apply (AND logic)
+     * @return The number of records matching the criteria
+     */
+    int countWhereColumnLikeAndFiltersEqual(FieldType searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<FieldType>> filters);
+
     Class<ModelClass> getModelClass();
 
     void updateRecord(ModelClass entity);
