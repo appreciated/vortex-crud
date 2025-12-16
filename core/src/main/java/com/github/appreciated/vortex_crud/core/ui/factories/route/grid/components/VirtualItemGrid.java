@@ -119,14 +119,14 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.defaultFilter() != null) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnEquals(config.defaultFilter().field(), config.defaultFilter().value(), offset, limit);
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.defaultFilters(), offset, limit);
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                         }
                     } else {
-                        if (config.defaultFilter() != null) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndColumnEquals(itemRendererConfiguration.titleField(), filterText, config.defaultFilter().field(), config.defaultFilter().value(), offset, limit);
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters(), offset, limit);
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
                         }
@@ -145,14 +145,14 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int count;
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.defaultFilter() != null) {
-                            count = dataStore.countWhereColumnEquals(config.defaultFilter().field(), config.defaultFilter().value());
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            count = dataStore.countWhereFiltersEqual(config.defaultFilters());
                         } else {
                             count = dataStore.count();
                         }
                     } else {
-                        if (config.defaultFilter() != null) {
-                            count = dataStore.countWhereColumnLikeAndColumnEquals(itemRendererConfiguration.titleField(), filterText, config.defaultFilter().field(), config.defaultFilter().value());
+                        if (config.defaultFilters() != null && !config.defaultFilters().isEmpty()) {
+                            count = dataStore.countWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.defaultFilters());
                         } else {
                             count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
                         }

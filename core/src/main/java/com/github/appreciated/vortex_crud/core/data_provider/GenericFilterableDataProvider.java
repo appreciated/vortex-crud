@@ -18,38 +18,38 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
     /**
      * Creates a new instance of {@code GenericFilterableDataProvider}.
      *
-     * @param dataStore     The data store to fetch data from.
-     * @param filterField   The field to apply filtering on. If null, no filtering is applied.
-     * @param defaultFilter The default filter to apply.
+     * @param dataStore      The data store to fetch data from.
+     * @param filterField    The field to apply filtering on. If null, no filtering is applied.
+     * @param defaultFilters The default filters to apply.
      */
-    public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, DefaultFilter<FieldType> defaultFilter) {
+    public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<DefaultFilter<FieldType>> defaultFilters) {
         super(
-                query -> fetchFromDataStore(dataStore, filterField, defaultFilter, query),
-                query -> countFromDataStore(dataStore, filterField, defaultFilter, query)
+                query -> fetchFromDataStore(dataStore, filterField, defaultFilters, query),
+                query -> countFromDataStore(dataStore, filterField, defaultFilters, query)
         );
     }
 
-    private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, DefaultFilter<FieldType> defaultFilter, Query<Object, String> query) {
+    private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<DefaultFilter<FieldType>> defaultFilters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && defaultFilter == null) {
+        if ((filterText.isEmpty() || filterField == null) && (defaultFilters == null || defaultFilters.isEmpty())) {
             return dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((filterText.isEmpty() || filterField == null) && defaultFilter != null) {
-            return dataStore.getRecordsFromTableWhereColumnEquals(defaultFilter.field(), defaultFilter.value(), query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((!filterText.isEmpty() && filterField != null) && defaultFilter != null) {
-            return dataStore.getRecordsFromTableWhereColumnLikeAndColumnEquals(filterField, filterText, defaultFilter.field(), defaultFilter.value(), query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+        } else if ((filterText.isEmpty() || filterField == null) && defaultFilters != null && !defaultFilters.isEmpty()) {
+            return dataStore.getRecordsFromTableWhereFiltersEqual(defaultFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+        } else if ((!filterText.isEmpty() && filterField != null) && defaultFilters != null && !defaultFilters.isEmpty()) {
+            return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, defaultFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         } else {
             return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         }
     }
 
-    private static <FieldType> int countFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, DefaultFilter<FieldType> defaultFilter, Query<Object, String> query) {
+    private static <FieldType> int countFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<DefaultFilter<FieldType>> defaultFilters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && defaultFilter == null) {
+        if ((filterText.isEmpty() || filterField == null) && (defaultFilters == null || defaultFilters.isEmpty())) {
             return dataStore.count();
-        } else if ((filterText.isEmpty() || filterField == null) && defaultFilter != null) {
-            return dataStore.countWhereColumnEquals(defaultFilter.field(), defaultFilter.value());
-        } else if ((!filterText.isEmpty() && filterField != null) && defaultFilter != null) {
-            return dataStore.countWhereColumnLikeAndColumnEquals(filterField, filterText, defaultFilter.field(), defaultFilter.value());
+        } else if ((filterText.isEmpty() || filterField == null) && defaultFilters != null && !defaultFilters.isEmpty()) {
+            return dataStore.countWhereFiltersEqual(defaultFilters);
+        } else if ((!filterText.isEmpty() && filterField != null) && defaultFilters != null && !defaultFilters.isEmpty()) {
+            return dataStore.countWhereColumnLikeAndFiltersEqual(filterField, filterText, defaultFilters);
         } else {
             return dataStore.countWhereColumnLike(filterField, filterText);
         }

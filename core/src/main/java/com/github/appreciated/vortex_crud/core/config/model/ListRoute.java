@@ -51,7 +51,8 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    private DefaultFilter<FieldType> defaultFilter;
+    @lombok.Singular
+    private List<DefaultFilter<FieldType>> defaultFilters;
 
     public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
     public String title() { return title; }
@@ -67,5 +68,5 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns() { return columns; }
     public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
     public List<RouteAction<FieldType, ModelClass>> routeActions() { return routeActions; }
-    public DefaultFilter<FieldType> defaultFilter() { return defaultFilter; }
+    public List<DefaultFilter<FieldType>> defaultFilters() { return defaultFilters; }
 }

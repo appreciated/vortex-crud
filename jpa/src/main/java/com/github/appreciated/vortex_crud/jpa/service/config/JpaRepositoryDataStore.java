@@ -354,85 +354,63 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
     }
 
     @Override
-    public int countWhereColumnEquals(String filterField, Object filterValue) {
-        Example<ModelClass> example = getExample(
-                filterField,
-                filterValue,
-                ExampleMatcher.matchingAny().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
-        );
+    public int countWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), null, null, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
         return (int) repository.count(example);
     }
 
     @Override
-    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndColumnEquals(String searchField, Object searchValue, String filterField, Object filterValue, int offset, int limit) {
-        // Create an example probe with both search and filter values
+    public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
         ModelClass probe = newInstance();
-        try {
-            java.lang.reflect.Field searchF = fields.get(searchField);
-            if (searchF != null) {
-                searchF.setAccessible(true);
-                if (searchValue != null) {
-                    searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
-                }
-            }
-
-            java.lang.reflect.Field filterF = fields.get(filterField);
-            if (filterF != null) {
-                filterF.setAccessible(true);
-                if (filterValue != null) {
-                    filterF.set(probe, convertToFieldType(filterValue, filterF.getType()));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error setting fields for example", e);
-        }
-
-        // Configure matcher:
-        // - searchField should be CONTAINING (like)
-        // - filterField should be EXACT (equals)
-        // - default matchingAll() (AND condition)
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withIgnoreCase()
-                .withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher(filterField, ExampleMatcher.GenericPropertyMatchers.exact());
-
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), null, null, filters);
         Example<ModelClass> example = Example.of(probe, matcher);
-
-        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit))
-                .getContent();
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit)).getContent();
     }
 
     @Override
-    public int countWhereColumnLikeAndColumnEquals(String searchField, String searchValue, String filterField, Object filterValue) {
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters, int offset, int limit) {
         ModelClass probe = newInstance();
-        try {
-            java.lang.reflect.Field searchF = fields.get(searchField);
-            if (searchF != null) {
-                searchF.setAccessible(true);
-                if (searchValue != null) {
-                    searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
-                }
-            }
-
-            java.lang.reflect.Field filterF = fields.get(filterField);
-            if (filterF != null) {
-                filterF.setAccessible(true);
-                if (filterValue != null) {
-                    filterF.set(probe, convertToFieldType(filterValue, filterF.getType()));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error setting fields for example", e);
-        }
-
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withIgnoreCase()
-                .withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher(filterField, ExampleMatcher.GenericPropertyMatchers.exact());
-
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), searchField, searchValue, filters);
         Example<ModelClass> example = Example.of(probe, matcher);
+        return repository.findAll(example, Pageable.ofSize(limit).withPage(offset / limit)).getContent();
+    }
 
+    @Override
+    public int countWhereColumnLikeAndFiltersEqual(String searchField, String searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        ModelClass probe = newInstance();
+        ExampleMatcher matcher = configureProbeAndMatcher(probe, ExampleMatcher.matchingAll().withIgnoreCase(), searchField, searchValue, filters);
+        Example<ModelClass> example = Example.of(probe, matcher);
         return (int) repository.count(example);
+    }
+
+    private ExampleMatcher configureProbeAndMatcher(ModelClass probe, ExampleMatcher matcher, String searchField, Object searchValue, java.util.List<com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String>> filters) {
+        try {
+            if (searchField != null) {
+                java.lang.reflect.Field searchF = fields.get(searchField);
+                if (searchF != null) {
+                    searchF.setAccessible(true);
+                    if (searchValue != null) {
+                        searchF.set(probe, convertToFieldType(searchValue, searchF.getType()));
+                        matcher = matcher.withMatcher(searchField, ExampleMatcher.GenericPropertyMatchers.contains());
+                    }
+                }
+            }
+            if (filters != null) {
+                for (com.github.appreciated.vortex_crud.core.config.model.DefaultFilter<String> filter : filters) {
+                    java.lang.reflect.Field field = fields.get(filter.field());
+                    if (field != null) {
+                        field.setAccessible(true);
+                        field.set(probe, convertToFieldType(filter.value(), field.getType()));
+                        matcher = matcher.withMatcher(filter.field(), ExampleMatcher.GenericPropertyMatchers.exact());
+                    }
+                }
+            }
+            return matcher;
+        } catch (Exception e) {
+            throw new RuntimeException("Error configuring probe", e);
+        }
     }
 
     public Collection<java.lang.reflect.Field> getFields() {

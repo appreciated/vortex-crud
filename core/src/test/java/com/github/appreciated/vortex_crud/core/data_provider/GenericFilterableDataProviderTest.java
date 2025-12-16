@@ -28,7 +28,7 @@ class GenericFilterableDataProviderTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        dataProvider = new GenericFilterableDataProvider<>(dataStore, filterField, null);
+        dataProvider = new GenericFilterableDataProvider<>(dataStore, filterField, java.util.Collections.emptyList());
     }
 
     @Test

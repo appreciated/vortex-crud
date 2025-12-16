@@ -86,6 +86,10 @@ public class JooqGridTestVortexCrudConfiguration
                         .field(GRID_IMAGES.TITLE)
                         .value("ItemOne")
                         .build())
+                .defaultFilter(com.github.appreciated.vortex_crud.core.config.model.DefaultFilter.<TableField<?, ?>>builder()
+                        .field(GRID_IMAGES.URL)
+                        .value("./red.png")
+                        .build())
                 .child(imageForm)
                 .build());
 
