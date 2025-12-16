@@ -78,7 +78,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         horizontalLayout.setWidthFull();
         horizontalLayout.setAlignItems(CENTER);
         horizontalLayout.setJustifyContentMode(BETWEEN);
-        horizontalLayout.setPadding(true);
+        horizontalLayout.setPadding(false);
         addToNavbar(horizontalLayout);
 
     }
