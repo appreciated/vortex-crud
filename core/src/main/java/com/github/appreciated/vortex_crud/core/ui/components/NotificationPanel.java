@@ -174,6 +174,7 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
     private List<?> queryNotifications(boolean unreadOnly) {
         List<?> notifications;
         int limit = configuration.limit();
+        FieldType timestampField = configuration.timestampField();
 
         // If we need to filter by read status
         if (unreadOnly && configuration.readStatusField() != null) {
@@ -181,33 +182,63 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
             if (configuration.filterField() != null && configuration.filterValue() != null) {
                 // We need to filter by both read status and custom filter
                 // Since we can't easily do compound queries, we'll query by filter and filter in memory
-                notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.filterField(),
-                    configuration.filterValue(),
-                    0,
-                    limit * 2  // Get more than needed to account for filtering
-                );
+                if (timestampField != null) {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
+                            configuration.filterField(),
+                            configuration.filterValue(),
+                            timestampField,
+                            0,
+                            limit * 2
+                    );
+                } else {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
+                            configuration.filterField(),
+                            configuration.filterValue(),
+                            0,
+                            limit * 2
+                    );
+                }
 
                 // Filter for unread in memory
                 notifications = filterUnreadInMemory(notifications);
             } else {
                 // Query only by read status
-                notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.readStatusField(),
-                    configuration.readStatusValueForUnread(),
-                    0,
-                    limit
-                );
+                if (timestampField != null) {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
+                            configuration.readStatusField(),
+                            configuration.readStatusValueForUnread(),
+                            timestampField,
+                            0,
+                            limit
+                    );
+                } else {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
+                            configuration.readStatusField(),
+                            configuration.readStatusValueForUnread(),
+                            0,
+                            limit
+                    );
+                }
             }
         } else {
             // Query all notifications
             if (configuration.filterField() != null && configuration.filterValue() != null) {
-                notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                    configuration.filterField(),
-                    configuration.filterValue(),
-                    0,
-                    limit
-                );
+                if (timestampField != null) {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
+                            configuration.filterField(),
+                            configuration.filterValue(),
+                            timestampField,
+                            0,
+                            limit
+                    );
+                } else {
+                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
+                            configuration.filterField(),
+                            configuration.filterValue(),
+                            0,
+                            limit
+                    );
+                }
             } else {
                 notifications = dataStore.getRecordsFromTable(0, limit);
             }
@@ -322,8 +353,13 @@ public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Di
 
             // Mark each as read
             for (Object notification : unreadNotifications) {
-                // Set read status to opposite of unread value (typically true if unread is false)
-                Object readValue = !configuration.readStatusValueForUnread().equals(Boolean.FALSE);
+                // Set read status
+                Object readValue = configuration.readStatusValueForRead();
+                if (readValue == null) {
+                    // Fallback to boolean logic if read value not configured
+                    // If unread is false, read is true. If unread is true, read is false.
+                    readValue = configuration.readStatusValueForUnread().equals(Boolean.FALSE);
+                }
                 reflectionService.setValue(notification, configuration.readStatusField(), readValue);
 
                 // Update in database

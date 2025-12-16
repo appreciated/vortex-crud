@@ -56,6 +56,13 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     private Object readStatusValueForUnread = false;
 
     /**
+     * The value that indicates a notification is read (typically true)
+     * Default: true
+     */
+    @Builder.Default
+    private Object readStatusValueForRead = true;
+
+    /**
      * Maximum number of notifications to display in each tab (unread/all)
      * Default: 20
      */
@@ -123,6 +130,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     public FieldType userAvatarField() { return userAvatarField; }
     public FieldType readStatusField() { return readStatusField; }
     public Object readStatusValueForUnread() { return readStatusValueForUnread; }
+    public Object readStatusValueForRead() { return readStatusValueForRead; }
     public int limit() { return limit; }
     public FieldType filterField() { return filterField; }
     public Object filterValue() { return filterValue; }
