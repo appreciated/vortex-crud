@@ -1,0 +1,76 @@
+package com.github.appreciated.vortex_crud.test.jooq.ui.id_field;
+
+import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import org.jooq.DSLContext;
+import org.jooq.TableField;
+import org.jooq.TableRecord;
+import org.jooq.impl.TableImpl;
+import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.FIELD_TYPES_TEST;
+
+@Service
+public class JooqIdFieldTestVortexCrudConfiguration
+        implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+
+    private final DSLContext dsl;
+
+    public JooqIdFieldTestVortexCrudConfiguration(DSLContext dsl) {
+        this.dsl = dsl;
+    }
+
+    @Override
+    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
+                .dataStoreInstance(store)
+                .fields(Map.of(
+                        FIELD_TYPES_TEST.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
+                ))
+                .build();
+
+        // Form Route with ID field
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
+            .dataStoreConfig(config)
+            .title("Form")
+            .formConfiguration(JooqFormRendererConfiguration.builder()
+                .titleField(FIELD_TYPES_TEST.NAME)
+                .children(List.of(
+                    JooqFieldElement.of(FIELD_TYPES_TEST.ID, "ID").build(),
+                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                ))
+                .build())
+            .build();
+
+        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+
+        // List Route
+        routes.put("id-test-list", JooqListRoute.builder()
+            .dataStoreConfig(config)
+            .title("List")
+            .configuration(JooqListItemRendererConfiguration.builder()
+                 .filterField(FIELD_TYPES_TEST.NAME)
+                 .children(List.of(
+                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                 ))
+                 .build())
+            .child(form)
+            .build());
+
+        return JooqApplication.builder()
+            .applicationName("application.name")
+            .i18nBundlePrefix("ui_test_i18n")
+            .routes(routes)
+            .build();
+    }
+}
