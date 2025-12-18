@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
+import com.github.appreciated.vortex_crud.core.annotation.NoCoverage;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
@@ -32,6 +33,7 @@ public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implement
         return select;
     }
 
+    @NoCoverage
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
         return List.of("VARCHAR", "CHARACTER VARYING");

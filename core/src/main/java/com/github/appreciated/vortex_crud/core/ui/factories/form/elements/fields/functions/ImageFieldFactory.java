@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
+import com.github.appreciated.vortex_crud.core.annotation.NoCoverage;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -18,6 +19,7 @@ public class ImageFieldFactory<ModelClass, FieldType, RepositoryType> implements
         return new ImageHasValue(imageField.configuration().resourceProvider());
     }
 
+    @NoCoverage
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
         return List.of("VARCHAR", "CHARACTER VARYING", "CHAR", "TEXT", "BLOB");

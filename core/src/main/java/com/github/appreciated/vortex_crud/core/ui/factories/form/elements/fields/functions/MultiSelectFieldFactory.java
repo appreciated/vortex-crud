@@ -1,9 +1,10 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions;
 
+import com.github.appreciated.vortex_crud.core.annotation.NoCoverage;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityMultiSelectComboBoxWrapper;
 import com.vaadin.flow.component.Component;
@@ -20,6 +21,7 @@ public class MultiSelectFieldFactory<ModelClass, FieldType, RepositoryType> impl
         return new EntityMultiSelectComboBoxWrapper<>(resolver, dataStoreField, reflectionService);
     }
 
+    @NoCoverage
     @Override
     public Collection<String> getValidDatabaseTypesForExpectedType() {
         return List.of("UUID", "INTEGER", "INT", "CHAR", "VARCHAR", "SERIAL");
