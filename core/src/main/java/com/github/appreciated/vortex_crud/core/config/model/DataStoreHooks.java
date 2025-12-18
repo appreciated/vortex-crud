@@ -1,6 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Accessors;
 
@@ -15,19 +18,22 @@ import java.util.List;
  */
 @Accessors(fluent = true)
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DataStoreHooks<ModelClass> {
     @Singular
-    private final List<DataStoreHook<ModelClass>> beforeCreates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeCreates = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> afterCreates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterCreates = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> beforeUpdates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeUpdates = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> afterUpdates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterUpdates = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> beforeDeletes = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeDeletes = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> afterDeletes = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterDeletes = new ArrayList<>();
     @Singular
-    private final List<DataStoreHook<ModelClass>> afterReads = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterReads = new ArrayList<>();
 }

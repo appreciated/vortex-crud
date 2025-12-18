@@ -20,6 +20,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -108,5 +109,49 @@ class JooqDataStoreTest {
 
         TestTableRecord fetched = dataStore.getRecordById(id);
         assertNull(fetched);
+    }
+
+    @Test
+    void testHooks() {
+        AtomicBoolean beforeCreate = new AtomicBoolean(false);
+        AtomicBoolean afterCreate = new AtomicBoolean(false);
+        AtomicBoolean beforeUpdate = new AtomicBoolean(false);
+        AtomicBoolean afterUpdate = new AtomicBoolean(false);
+        AtomicBoolean beforeDelete = new AtomicBoolean(false);
+        AtomicBoolean afterDelete = new AtomicBoolean(false);
+
+        DataStoreHooks<TestTableRecord> hooks = DataStoreHooks.<TestTableRecord>builder()
+                .beforeCreate(r -> beforeCreate.set(true))
+                .afterCreate(r -> afterCreate.set(true))
+                .beforeUpdate(r -> beforeUpdate.set(true))
+                .afterUpdate(r -> afterUpdate.set(true))
+                .beforeDelete(r -> beforeDelete.set(true))
+                .afterDelete(r -> afterDelete.set(true))
+                .build();
+
+        JooqDataStore<TestTableRecord> hookedStore = new JooqDataStore<>(TestTableRecord.class, dslContext, hooks);
+
+        // Test Create
+        TestTableRecord record = hookedStore.newInstance();
+        record.setName("HookTest");
+        record.setAge(10);
+        Object id = hookedStore.insertRecord(record);
+
+        assertTrue(beforeCreate.get(), "beforeCreate hook not called");
+        assertTrue(afterCreate.get(), "afterCreate hook not called");
+
+        // Test Update
+        TestTableRecord update = hookedStore.getRecordById(id);
+        update.setAge(11);
+        hookedStore.updateRecordById(update);
+
+        assertTrue(beforeUpdate.get(), "beforeUpdate hook not called");
+        assertTrue(afterUpdate.get(), "afterUpdate hook not called");
+
+        // Test Delete
+        hookedStore.deleteRecordById(id);
+
+        assertTrue(beforeDelete.get(), "beforeDelete hook not called");
+        assertTrue(afterDelete.get(), "afterDelete hook not called");
     }
 }

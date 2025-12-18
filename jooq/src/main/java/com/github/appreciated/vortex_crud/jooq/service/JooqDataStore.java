@@ -152,7 +152,9 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     public void updateRecordById(ModelClass entity) {
+        hooks.beforeUpdates().forEach(hook -> hook.execute(entity));
         dslContext.executeUpdate(entity);
+        hooks.afterUpdates().forEach(hook -> hook.execute(entity));
     }
 
     @Override
