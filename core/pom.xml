@@ -24,28 +24,10 @@
 
     <repositories>
         <repository>
-            <id>vaadin-prereleases</id>
-            <url>
-                https://maven.vaadin.com/vaadin-prereleases/
-            </url>
-        </repository>
-        <repository>
             <id>Vaadin Directory</id>
             <url>https://maven.vaadin.com/vaadin-addons</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>
-                https://maven.vaadin.com/vaadin-prereleases/
-            </url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -81,7 +63,7 @@
         <dependency>
             <groupId>org.vaadin.stefan</groupId>
             <artifactId>fullcalendar2</artifactId>
-            <version>7.0.0-alpha1</version>
+            <version>7.0.0-alpha2</version>
         </dependency>
         <dependency>
             <groupId>org.parttio</groupId>
