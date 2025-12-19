@@ -1,7 +1,7 @@
 -- Seed data for jOOQ additional fields password test
-DROP TABLE IF EXISTS additional_fields_test;
+DROP TABLE IF EXISTS password_test;
 
-CREATE TABLE additional_fields_test
+CREATE TABLE password_test
 (
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -11,5 +11,5 @@ CREATE TABLE additional_fields_test
     video_url   VARCHAR(255)
 );
 
-INSERT INTO additional_fields_test (id, name, description, password, price, video_url)
+INSERT INTO password_test (id, name, description, password, price, video_url)
 VALUES (1, 'Password Test Entity', 'This is a test entity for password field testing.', 'testPassword123', 99.99, NULL);
