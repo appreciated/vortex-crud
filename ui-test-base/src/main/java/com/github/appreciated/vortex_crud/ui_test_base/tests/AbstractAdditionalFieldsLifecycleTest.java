@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Test;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -14,10 +16,19 @@ public abstract class AbstractAdditionalFieldsLifecycleTest extends BaseUITest {
         return "additional-fields-test";
     }
 
+    /**
+     * Override this method to provide the expected entity name from test data.
+     * Default is "Lifecycle Test Entity".
+     */
+    protected String getExpectedEntityName() {
+        return "Lifecycle Test Entity";
+    }
+
     @Test
     void testListingVisible() {
         navigateTo(getAdditionalFieldsPath());
-        Locator webElement = waitForAnyElementContainingText("Test Entity");
+        Locator webElement = page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first();
+        webElement.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         String tagName = (String) webElement.evaluate("element => element.tagName.toLowerCase()");
         assertEquals("vaadin-grid-cell-content", tagName);
     }
@@ -25,7 +36,7 @@ public abstract class AbstractAdditionalFieldsLifecycleTest extends BaseUITest {
     @Test
     void testEntityLoading() {
         navigateTo(getAdditionalFieldsPath());
-        waitForAnyElementContainingText("Test Entity").click();
+        page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first().click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         // This test only verifies that navigation to detail view works
@@ -52,7 +63,7 @@ public abstract class AbstractAdditionalFieldsLifecycleTest extends BaseUITest {
     @Test
     void testUpdateEntry() {
         navigateTo(getAdditionalFieldsPath());
-        waitForAnyElementContainingText("Test Entity").click();
+        page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first().click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         Locator nameField = waitForElementContainingText("vaadin-text-field", "Name").locator("input");
@@ -67,14 +78,14 @@ public abstract class AbstractAdditionalFieldsLifecycleTest extends BaseUITest {
     @Test
     void testDeleteEntry() {
         navigateTo(getAdditionalFieldsPath());
-        waitForAnyElementContainingText("Test Entity").click();
+        page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first().click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getAdditionalFieldsPath());
 
         // Wait for the grid to refresh and the entity to disappear
-        waitForTextToDisappear("Test Entity");
-        assertTrue(page.getByText("Test Entity").all().isEmpty());
+        waitForTextToDisappear(getExpectedEntityName());
+        assertTrue(page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).all().isEmpty());
     }
 }

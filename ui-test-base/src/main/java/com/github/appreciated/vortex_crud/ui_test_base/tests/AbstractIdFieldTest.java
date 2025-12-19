@@ -28,7 +28,7 @@ public abstract class AbstractIdFieldTest extends BaseUITest {
     @Test
     void testIdFieldIsReadOnly() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getItemName()).click();
+        page.getByText(getItemName(), new Page.GetByTextOptions().setExact(true)).first().click();
 
         // Wait for form to load
         waitForElement("vaadin-form-layout");

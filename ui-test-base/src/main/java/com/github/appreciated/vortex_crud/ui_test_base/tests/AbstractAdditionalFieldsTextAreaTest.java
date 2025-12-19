@@ -2,9 +2,9 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 import org.junit.jupiter.api.Test;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractAdditionalFieldsTextAreaTest extends BaseUITest {
@@ -13,10 +13,18 @@ public abstract class AbstractAdditionalFieldsTextAreaTest extends BaseUITest {
         return "additional-fields-test";
     }
 
+    /**
+     * Override this method to provide the expected entity name from test data.
+     * Default is "TextArea Test Entity".
+     */
+    protected String getExpectedEntityName() {
+        return "TextArea Test Entity";
+    }
+
     @Test
     void testTextAreaLoading() {
         navigateTo(getAdditionalFieldsPath());
-        waitForAnyElementContainingText("Test Entity").click();
+        page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first().click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         // Verify TextArea field loads

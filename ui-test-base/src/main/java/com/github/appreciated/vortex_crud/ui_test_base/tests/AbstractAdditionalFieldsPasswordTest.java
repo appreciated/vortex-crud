@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,10 +13,18 @@ public abstract class AbstractAdditionalFieldsPasswordTest extends BaseUITest {
         return "additional-fields-test";
     }
 
+    /**
+     * Override this method to provide the expected entity name from test data.
+     * Default is "Password Test Entity".
+     */
+    protected String getExpectedEntityName() {
+        return "Password Test Entity";
+    }
+
     @Test
     void testPasswordLoading() {
         navigateTo(getAdditionalFieldsPath());
-        waitForAnyElementContainingText("Test Entity").click();
+        page.getByText(getExpectedEntityName(), new Page.GetByTextOptions().setExact(true)).first().click();
         waitForUrlToBe(getAdditionalFieldsPath() + "/1");
 
         // Verify Password field exists (value should be masked)
