@@ -4,6 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "additional_fields_test")
-public class JpaAdditionalFieldsEntity extends JpaAdditionalFieldsBaseEntity {
+@Table(name = "textarea_test")
+public class JpaTextAreaTestEntity extends JpaAdditionalFieldsBaseEntity {
 }

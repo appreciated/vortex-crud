@@ -20,21 +20,38 @@ import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaAdditionalFieldsRepository additionalFieldsRepository;
+    private final JpaLifecycleTestRepository lifecycleTestRepository;
+    private final JpaPasswordTestRepository passwordTestRepository;
+    private final JpaTextAreaTestRepository textAreaTestRepository;
     private final JpaFieldService fieldService;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
 
-    public JpaAdditionalFieldsVortexCrudConfiguration(JpaAdditionalFieldsRepository additionalFieldsRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
+    public JpaAdditionalFieldsVortexCrudConfiguration(
+            JpaAdditionalFieldsRepository additionalFieldsRepository,
+            JpaLifecycleTestRepository lifecycleTestRepository,
+            JpaPasswordTestRepository passwordTestRepository,
+            JpaTextAreaTestRepository textAreaTestRepository,
+            JpaFieldService fieldService,
+            JpaFieldAnnotationRegistryService annotationRegistryService) {
         this.additionalFieldsRepository = additionalFieldsRepository;
+        this.lifecycleTestRepository = lifecycleTestRepository;
+        this.passwordTestRepository = passwordTestRepository;
+        this.textAreaTestRepository = textAreaTestRepository;
         this.fieldService = fieldService;
         this.annotationRegistryService = annotationRegistryService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(additionalFieldsRepository, annotationRegistryService, new DataStoreHooks<>());
+        JpaRepository<?, ?> activeRepository = findActiveRepository();
+        return createApplicationForRepository(activeRepository);
+    }
+
+    private <T> Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createApplicationForRepository(JpaRepository<T, ?> repository) {
+        var store = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
-        var config = JpaDataStoreConfig.builder(additionalFieldsRepository, store)
+        var config = JpaDataStoreConfig.builder(repository, store)
                 .withServices(fieldService, storeMap)
                 .build();
 
@@ -75,6 +92,22 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();
+    }
+
+    private JpaRepository<?, ?> findActiveRepository() {
+        JpaRepository<?, ?>[] repositories = {lifecycleTestRepository, passwordTestRepository, textAreaTestRepository, additionalFieldsRepository};
+
+        for (JpaRepository<?, ?> repository : repositories) {
+            try {
+                if (repository.count() > 0) {
+                    return repository;
+                }
+            } catch (Exception e) {
+                // Table might not exist yet or other issue, continue
+            }
+        }
+
+        return additionalFieldsRepository;
     }
 
 }
