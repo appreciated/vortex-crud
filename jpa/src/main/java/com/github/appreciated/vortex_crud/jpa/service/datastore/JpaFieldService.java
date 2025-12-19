@@ -1,21 +1,21 @@
 package com.github.appreciated.vortex_crud.jpa.service.datastore;
 
-import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.PdfFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.FileFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.PdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.VideoFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.fields.BigDecimalField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.DoubleField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.IntegerField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaImageFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaVideoFieldRendererConfiguration;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaPdfFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFileFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaImageFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaPdfFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaVideoFieldRendererConfiguration;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -175,6 +175,16 @@ public class JpaFieldService {
                                     .build()
                     )).or(() -> getAnnotation(entityField, IdField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.IdField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
+                    )).or(() -> getAnnotation(entityField, NumericIdField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField
+                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                                    .required(required)
+                                    .build()
+                    )).or(() -> getAnnotation(entityField, StringIdField.class).map(ann ->
+                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.StringIdField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                     .required(required)
                                     .build()
