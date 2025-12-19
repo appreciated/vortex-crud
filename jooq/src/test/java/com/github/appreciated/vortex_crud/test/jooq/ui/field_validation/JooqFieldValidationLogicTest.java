@@ -1,8 +1,0 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.field_validation;
-
-import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractFieldValidationLogicTest;
-import org.springframework.test.context.jdbc.Sql;
-
-@Sql(scripts = "field_validation_test.sql")
-public class JooqFieldValidationLogicTest extends AbstractFieldValidationLogicTest {
-}

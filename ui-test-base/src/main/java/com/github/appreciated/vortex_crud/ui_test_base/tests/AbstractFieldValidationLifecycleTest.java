@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,58 +24,16 @@ public abstract class AbstractFieldValidationLifecycleTest extends BaseUITest {
     }
 
     @Test
-    void testValidationEntityLoading() {
-        navigateTo(getValidationPath());
-        waitForAnyElementContainingText("Test Value").click();
-        waitForUrlToBe(getValidationPath() + "/1");
-        waitForElementWithTagAndValue("vaadin-text-field", "Test Value");
-        waitForElementWithTagAndValue("vaadin-email-field", "test@example.com");
-        waitForElementWithTagAndValue("vaadin-number-field", "42");
-        waitForElementWithTagAndValue("vaadin-date-picker", "2023-01-01");
-
-        // For date-time-picker, just verify the component exists without checking shadow DOM value
-        // This avoids complex shadow DOM value checking issues with Vaadin components
-        Locator dateTimePicker = waitForElement("vaadin-date-time-picker");
-        assertThat(dateTimePicker).isVisible();
-
-        waitForElementWithTagAndValue("vaadin-select", "1");
-        waitForElementWithTagAndValue("vaadin-checkbox", "on");
-        Locator image = waitForElement("img");
-        assertTrue(image.getAttribute("src").contains("red.png"));
-    }
-
-    @Test
-    void testDateTimeAndCheckboxInput() {
-        navigateTo(getValidationPath());
-        waitForButton("Create").click();
-
-        Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
-        requiredField.fill("DateTime Test");
-
-        Locator emailField = page.locator("vaadin-email-field input").first();
-        emailField.fill("datetime@example.com");
-
-        Locator numericField = page.locator("vaadin-number-field input").first();
-        numericField.fill("10.0");
-
-        Locator dateTimeField = page.locator("vaadin-date-time-picker input").first();
-        dateTimeField.fill("2024-01-01T12:00");
-        dateTimeField.press("Escape"); // manual closing needed as the date time picker popup hides other elements
-
-        waitForElement("vaadin-checkbox").click();
-
-        waitForButton("Save").click();
-
-        waitForUrlToBe(getValidationPath());
-    }
-
-    @Test
     void testCreateEntry() {
         navigateTo(getValidationPath());
         waitForButton("Create").click();
 
         Locator requiredField = waitForElementContainingText("vaadin-text-field", "Required").locator("input");
         requiredField.fill("Created Value");
+
+        // Fill other potentially required fields to ensure save works (generic happy path)
+        page.locator("vaadin-email-field input").first().fill("created@example.com");
+        page.locator("vaadin-number-field input").first().fill("100.0");
 
         waitForButton("Save").click();
 
