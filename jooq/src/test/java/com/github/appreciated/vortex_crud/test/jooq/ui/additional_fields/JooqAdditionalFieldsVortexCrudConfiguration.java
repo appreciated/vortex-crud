@@ -17,7 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.ADDITIONAL_FIELDS_TEST;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 
 @Service
@@ -32,16 +32,19 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(ADDITIONAL_FIELDS_TEST.getRecordType(), dsl, new DataStoreHooks<>());
-        var config = JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
+        // Determine which table to use by checking which one exists and has data
+        TableImpl<?> activeTable = findActiveTable();
+
+        JooqDataStore store = new JooqDataStore(activeTable.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(activeTable)
                         .dataStoreInstance(store)
                         .fields(Map.of(
-                                ADDITIONAL_FIELDS_TEST.ID, JooqNumericIdField.builder().build(),
-                                ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
-                                ADDITIONAL_FIELDS_TEST.DESCRIPTION, JooqTextAreaField.builder().build(),
-                                ADDITIONAL_FIELDS_TEST.PASSWORD, JooqPasswordField.builder().build(),
-                                ADDITIONAL_FIELDS_TEST.PRICE, JooqBigDecimalField.builder().build(),
-                                ADDITIONAL_FIELDS_TEST.VIDEO_URL, JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                (TableField<?, ?>) activeTable.field("id"), JooqNumericIdField.builder().build(),
+                                (TableField<?, ?>) activeTable.field("name"), JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
+                                (TableField<?, ?>) activeTable.field("description"), JooqTextAreaField.builder().build(),
+                                (TableField<?, ?>) activeTable.field("password"), JooqPasswordField.builder().build(),
+                                (TableField<?, ?>) activeTable.field("price"), JooqBigDecimalField.builder().build(),
+                                (TableField<?, ?>) activeTable.field("video_url"), JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .resourceProvider(new LocalVideoResourceProvider())
                                         .build()).build()
                         )).build();
@@ -50,13 +53,13 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.additional-fields.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(ADDITIONAL_FIELDS_TEST.NAME)
+                        .titleField((TableField<?, ?>) activeTable.field("name"))
                         .children(List.of(
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.NAME, "additional-fields.labels.name").build(),
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.DESCRIPTION, "additional-fields.labels.description").build(),
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.PASSWORD, "additional-fields.labels.password").build(),
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.PRICE, "additional-fields.labels.price").build(),
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.VIDEO_URL, "additional-fields.labels.video").build()
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("name"), "additional-fields.labels.name").build(),
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("description"), "additional-fields.labels.description").build(),
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("password"), "additional-fields.labels.password").build(),
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("price"), "additional-fields.labels.price").build(),
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("video_url"), "additional-fields.labels.video").build()
                         ))
                         .build())
                 .build();
@@ -67,10 +70,10 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .iconFactory(COG::create)
                 .title("route.additional-fields.title-list")
                 .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(ADDITIONAL_FIELDS_TEST.NAME)
+                        .filterField((TableField<?, ?>) activeTable.field("name"))
                         .children(List.of(
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.NAME, "additional-fields.labels.name").build(),
-                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.DESCRIPTION, "additional-fields.labels.description").build()
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("name"), "additional-fields.labels.name").build(),
+                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("description"), "additional-fields.labels.description").build()
                         ))
                         .build())
                 .child(additionalFieldsForm)
@@ -81,5 +84,24 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();
+    }
+
+    private TableImpl<?> findActiveTable() {
+        // Check each possible test table and return the first one that has data
+        TableImpl<?>[] tables = {LIFECYLE_TEST, PASSWORD_TEST, TEXTAREA_TEST, ADDITIONAL_FIELDS_TEST};
+
+        for (TableImpl<?> table : tables) {
+            try {
+                int count = dsl.selectCount().from(table).fetchOne(0, int.class);
+                if (count > 0) {
+                    return table;
+                }
+            } catch (Exception e) {
+                // Table doesn't exist, continue to next
+            }
+        }
+
+        // Default to ADDITIONAL_FIELDS_TEST if no table has data yet
+        return ADDITIONAL_FIELDS_TEST;
     }
 }
