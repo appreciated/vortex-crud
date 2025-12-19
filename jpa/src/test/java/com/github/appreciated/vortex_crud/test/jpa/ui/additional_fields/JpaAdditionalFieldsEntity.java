@@ -13,6 +13,7 @@ public class JpaAdditionalFieldsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NumericIdField
     private Long id;
 
     @NotBlank(message = "Name is required")

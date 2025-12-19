@@ -36,7 +36,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
                         .dataStoreInstance(store)
                         .fields(Map.of(
-                                ADDITIONAL_FIELDS_TEST.ID, JooqIdField.builder().build(),
+                                ADDITIONAL_FIELDS_TEST.ID, JooqNumericIdField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
                                 ADDITIONAL_FIELDS_TEST.DESCRIPTION, JooqTextAreaField.builder().build(),
                                 ADDITIONAL_FIELDS_TEST.PASSWORD, JooqPasswordField.builder().build(),
