@@ -34,7 +34,7 @@ public abstract class AbstractIdFieldTest extends BaseUITest {
         waitForElement("vaadin-form-layout");
 
         // Find the ID field by its label
-        Locator idField = page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("!{ID}!"));
+        Locator idField = page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("ID"));
 
         // Ensure ID field exists
         assertThat(idField).isVisible();
