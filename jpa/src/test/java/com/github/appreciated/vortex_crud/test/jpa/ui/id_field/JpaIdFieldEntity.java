@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.id_field;
 
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 public class JpaIdFieldEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @IdField
     private Long id;
 
     @NotBlank

@@ -33,7 +33,7 @@ public abstract class AbstractIdFieldTest extends BaseUITest {
         waitForElement("vaadin-form-layout");
 
         // Find the ID field by its label
-        Locator idField = page.locator("vaadin-text-field").filter(new Locator.FilterOptions().setHasText("ID")).first();
+        Locator idField = page.locator("vaadin-text-field").filter(new Locator.FilterOptions().setHasText("!{ID}!")).locator("vaadin-input-container");
 
         // Ensure ID field exists
         assertThat(idField).isVisible();
