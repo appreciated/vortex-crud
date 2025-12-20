@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractLifecycleTest extends BaseUITest {
 
     public String getAdditionalFieldsPath() {
-        return "additional-fields-test";
+        return "lifecycle-test";
     }
 
     /**

@@ -53,7 +53,6 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
             }
 
             LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-            routes.put("additional-fields-test", createAdditionalFieldsRoute());
             routes.put("lifecycle-test", createLifecycleTestRoute());
             routes.put("password-test", createPasswordTestRoute());
             routes.put("textarea-test", createTextAreaTestRoute());
@@ -65,46 +64,6 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .build();
 
             return cachedApplication;
-        }
-
-        private RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createAdditionalFieldsRoute() {
-            var store = new JpaRepositoryDataStore<>(additionalFieldsRepository, annotationRegistryService, new DataStoreHooks<>());
-            Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
-
-            var config = JpaDataStoreConfig.builder(additionalFieldsRepository, store)
-                    .withServices(fieldService, storeMap)
-                    .build();
-
-            FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalFieldsForm = JpaFormRoute.builder()
-                    .dataStoreConfig(config)
-                    .title("route.additional-fields.title")
-                    .formConfiguration(JpaFormRendererConfiguration.builder()
-                            .titleField("name")
-                            .children(List.of(
-                                    JpaFieldElement.builder("name", "additional-fields.labels.name").build(),
-                                    JpaFieldElement.builder("description", "additional-fields.labels.description").build(),
-                                    JpaFieldElement.builder("password", "additional-fields.labels.password").build(),
-                                    JpaFieldElement.builder("price", "additional-fields.labels.price").build(),
-                                    JpaFieldElement.builder("videoUrl", "additional-fields.labels.video").build()
-                            ))
-                            .build())
-                    .build();
-
-            RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listConfig = JpaListItemRendererConfiguration.builder()
-                    .filterField("name")
-                    .children(List.of(
-                            JpaFieldElement.builder("name", "additional-fields.labels.name").build(),
-                            JpaFieldElement.builder("description", "additional-fields.labels.description").build()
-                    ))
-                    .build();
-
-            return ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                    .dataStoreConfig(config)
-                    .iconFactory(COG::create)
-                    .title("route.additional-fields.title-list")
-                    .configuration(listConfig)
-                    .child(additionalFieldsForm)
-                    .build();
         }
 
         private RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createLifecycleTestRoute() {
