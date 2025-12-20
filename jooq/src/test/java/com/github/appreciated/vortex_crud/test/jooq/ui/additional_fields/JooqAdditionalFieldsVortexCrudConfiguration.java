@@ -23,7 +23,6 @@ import static com.github.appreciated.vortex_crud.jooq.models.Tables.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 
 @Service
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JooqAdditionalFieldsVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
