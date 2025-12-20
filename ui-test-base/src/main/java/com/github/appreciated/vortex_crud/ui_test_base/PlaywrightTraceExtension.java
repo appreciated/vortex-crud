@@ -3,6 +3,8 @@ package com.github.appreciated.vortex_crud.ui_test_base;
 import com.microsoft.playwright.Tracing;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,12 +16,14 @@ import java.nio.file.Paths;
  */
 public class PlaywrightTraceExtension implements TestWatcher {
 
+    private final Logger logger = LoggerFactory.getLogger(PlaywrightTraceExtension.class);
+
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
         Object instance = context.getRequiredTestInstance();
         if (instance instanceof BaseUITest base) {
             try {
-                System.out.println("Test failed: " + context.getDisplayName());
+                logger.error("Test failed: " + context.getDisplayName());
                 if (base.getContext() != null) {
                     Path directory = Paths.get("target", "traces");
                     Files.createDirectories(directory);
@@ -29,9 +33,9 @@ public class PlaywrightTraceExtension implements TestWatcher {
                     try {
                         base.getContext().tracing().stop(new Tracing.StopOptions()
                                 .setPath(tracePath));
-                        System.out.println("Trace saved to " + tracePath.toAbsolutePath());
+                        logger.error("Trace saved to " + tracePath.toAbsolutePath());
                     } catch (Exception e) {
-                        System.out.println("Failed to stop tracing/save trace: " + e.getMessage());
+                        logger.error("Failed to stop tracing/save trace: ", e);
                     }
                 }
             } catch (Exception e) {
