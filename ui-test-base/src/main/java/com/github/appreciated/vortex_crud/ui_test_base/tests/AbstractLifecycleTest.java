@@ -52,9 +52,6 @@ public abstract class AbstractLifecycleTest extends BaseUITest {
         Locator nameField = waitForElementContainingText("vaadin-text-field", "Name").locator("input");
         nameField.fill("Created Entity");
 
-        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
-        passwordField.fill("newpassword");
-
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getAdditionalFieldsPath());
         waitForAnyElementContainingText("Created Entity");
