@@ -10,7 +10,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class AbstractAdditionalFieldsLifecycleTest extends BaseUITest {
+public abstract class AbstractLifecycleTest extends BaseUITest {
 
     public String getAdditionalFieldsPath() {
         return "additional-fields-test";

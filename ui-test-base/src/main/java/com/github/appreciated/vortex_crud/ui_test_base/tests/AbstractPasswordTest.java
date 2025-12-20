@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public abstract class AbstractAdditionalFieldsPasswordTest extends BaseUITest {
+public abstract class AbstractPasswordTest extends BaseUITest {
 
     public String getAdditionalFieldsPath() {
         return "password-test";

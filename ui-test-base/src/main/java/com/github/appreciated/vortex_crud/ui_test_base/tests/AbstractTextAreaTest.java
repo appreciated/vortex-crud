@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public abstract class AbstractAdditionalFieldsTextAreaTest extends BaseUITest {
+public abstract class AbstractTextAreaTest extends BaseUITest {
 
     public String getAdditionalFieldsPath() {
         return "textarea-test";
