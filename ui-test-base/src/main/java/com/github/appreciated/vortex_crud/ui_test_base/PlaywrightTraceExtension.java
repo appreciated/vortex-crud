@@ -23,11 +23,13 @@ public class PlaywrightTraceExtension implements TestWatcher {
         Object instance = context.getRequiredTestInstance();
         if (instance instanceof BaseUITest base) {
             try {
-                logger.error("Test failed: " + context.getDisplayName());
+                String className = context.getRequiredTestClass().getSimpleName();
+                String methodName = context.getDisplayName().replaceAll("[()\\s]", "_");
+                logger.error("Test failed: " + className + "#" + methodName);
                 if (base.getContext() != null) {
                     Path directory = Paths.get("target", "traces");
                     Files.createDirectories(directory);
-                    String safeName = context.getDisplayName().replaceAll("[()\\s]", "_");
+                    String safeName = className + "#" + methodName;
                     Path tracePath = directory.resolve(safeName + ".zip");
 
                     try {
