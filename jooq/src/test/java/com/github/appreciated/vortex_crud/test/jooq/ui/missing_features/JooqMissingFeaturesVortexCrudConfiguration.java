@@ -58,7 +58,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
         var referencedConfig = JooqDataStoreConfig.of(MISSING_FEATURES_REFERENCED)
                 .dataStoreInstance(referencedStore)
                 .fields(Map.of(
-                        MISSING_FEATURES_REFERENCED.ID, JooqIdField.builder().build(),
+                        MISSING_FEATURES_REFERENCED.ID, JooqNumericIdField.builder().build(),
                         MISSING_FEATURES_REFERENCED.NAME, JooqTextField.builder().build()
                 )).build();
 
@@ -67,7 +67,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
         var taskConfig = JooqDataStoreConfig.of(MISSING_FEATURES_TEST)
                 .dataStoreInstance(taskStore)
                 .fields(Map.ofEntries(
-                        Map.entry(MISSING_FEATURES_TEST.ID, JooqIdField.builder().build()),
+                        Map.entry(MISSING_FEATURES_TEST.ID, JooqNumericIdField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.NAME, JooqTextField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.PDF_DOC, JooqFileField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.NOTES, JooqTextAreaField.builder().build()),

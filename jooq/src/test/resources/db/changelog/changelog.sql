@@ -292,3 +292,36 @@ CREATE TABLE missing_features_test_relations
     FOREIGN KEY (test_id) REFERENCES missing_features_test (id),
     FOREIGN KEY (referenced_id) REFERENCES missing_features_referenced (id)
 );
+
+-- changeset Create lifecyle_test:31
+CREATE TABLE lifecyle_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    password    VARCHAR(255),
+    price       DECIMAL(10, 2),
+    video_url   VARCHAR(255)
+);
+
+-- changeset Create password_test:32
+CREATE TABLE password_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    password    VARCHAR(255),
+    price       DECIMAL(10, 2),
+    video_url   VARCHAR(255)
+);
+
+-- changeset Create textarea_test:33
+CREATE TABLE textarea_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    description TEXT,
+    password    VARCHAR(255),
+    price       DECIMAL(10, 2),
+    video_url   VARCHAR(255)
+);

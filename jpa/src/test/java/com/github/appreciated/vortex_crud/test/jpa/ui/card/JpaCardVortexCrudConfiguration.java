@@ -1,8 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.card;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
@@ -33,7 +34,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
         var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService, new DataStoreHooks<>());
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore)
                         .fields(Map.of(
-                                "id", IdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
+                                "id", NumericIdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(new LocalImageResourceProvider()).build()).build()
                         ))

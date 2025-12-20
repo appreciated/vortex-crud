@@ -34,7 +34,7 @@ public class JooqCalendarTestVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(CALENDAR_EVENTS)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                CALENDAR_EVENTS.ID, JooqIdField.builder().build(),
+                                CALENDAR_EVENTS.ID, JooqNumericIdField.builder().build(),
                                 CALENDAR_EVENTS.TITLE, JooqTextField.builder().build(),
                                 CALENDAR_EVENTS.START_DATE, JooqDateTimePickerField.builder().build(),
                                 CALENDAR_EVENTS.END_DATE, JooqDateTimePickerField.builder().build()

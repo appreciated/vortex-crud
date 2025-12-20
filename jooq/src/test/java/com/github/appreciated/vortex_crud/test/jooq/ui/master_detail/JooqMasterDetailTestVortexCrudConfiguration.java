@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
@@ -35,7 +35,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         var config = JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                MASTER_DETAIL_TASKS.ID, JooqIdField.builder().build(),
+                                MASTER_DETAIL_TASKS.ID, JooqNumericIdField.builder().build(),
                                 MASTER_DETAIL_TASKS.TITLE, JooqTextField.builder().build(),
                                 MASTER_DETAIL_TASKS.DESCRIPTION, JooqTextField.builder().build()
                         ))

@@ -1,8 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.grid;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
@@ -37,7 +38,7 @@ public class JooqGridTestVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(GRID_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                GRID_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                GRID_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()

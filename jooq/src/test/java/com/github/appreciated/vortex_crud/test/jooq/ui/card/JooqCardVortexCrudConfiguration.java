@@ -4,8 +4,9 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
@@ -40,7 +41,7 @@ public class JooqCardVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(CARD_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                CARD_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                CARD_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 CARD_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()

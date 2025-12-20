@@ -31,7 +31,8 @@ public class JpaFieldAnnotationRegistryService {
         register(DateField.class);
         register(DateTimePickerField.class);
         register(DoubleNumberField.class);
-        register(IdField.class);
+        register(NumericIdField.class);
+        register(StringIdField.class);
         register(ImageField.class);
         register(IntegerNumberField.class);
         register(ReferenceField.class);

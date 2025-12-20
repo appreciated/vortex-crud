@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.subroute;
 
-import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
+
+import com.github.appreciated.vortex_crud.jpa.service.annoations.NumericIdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
@@ -10,7 +11,7 @@ public class JpaSubrouteTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @IdField
+    @NumericIdField
     private Integer id;
 
     @TextField

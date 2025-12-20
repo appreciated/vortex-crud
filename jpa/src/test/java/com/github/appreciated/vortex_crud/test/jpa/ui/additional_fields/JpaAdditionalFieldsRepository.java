@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JpaAdditionalFieldsRepository extends JpaRepository<JpaAdditionalFieldsEntity, Long> {
+public interface JpaAdditionalFieldsRepository extends JpaRepository<JpaLifecycleTestEntity, Long> {
 }

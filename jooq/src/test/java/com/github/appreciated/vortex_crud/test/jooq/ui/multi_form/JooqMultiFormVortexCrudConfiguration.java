@@ -36,7 +36,7 @@ public class JooqMultiFormVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(MULTI_FORM_TEST)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                MULTI_FORM_TEST.ID, JooqIdField.builder().build(),
+                                MULTI_FORM_TEST.ID, JooqNumericIdField.builder().build(),
                                 MULTI_FORM_TEST.PROFILE_NAME, JooqTextField.builder()
                                         .required(true)
                                         .validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255)))

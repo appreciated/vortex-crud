@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceP
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -39,7 +40,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
         var config = JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                FROM_SLIDE_IMAGES.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                FROM_SLIDE_IMAGES.ID, JooqNumericIdField.builder().build(),
                                 FROM_SLIDE_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().required(true).build(),
                                 FROM_SLIDE_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                         .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()

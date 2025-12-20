@@ -59,7 +59,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         var usersConfig = JooqDataStoreConfig.of(USERS)
                 .dataStoreInstance((VortexCrudDataStore) usersStore)
                 .fields(Map.of(
-                        USERS.ID, JooqIdField.builder().build(),
+                        USERS.ID, JooqNumericIdField.builder().build(),
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
@@ -68,7 +68,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         var roomConfig = JooqDataStoreConfig.of(ROOM)
                 .dataStoreInstance((VortexCrudDataStore) roomStore)
                 .fields(Map.of(
-                        ROOM.ID, JooqIdField.builder().build(),
+                        ROOM.ID, JooqNumericIdField.builder().build(),
                         ROOM.NAME, JooqTextField.builder().required(true).build(),
                         ROOM.CAPACITY, JooqIntegerField.builder().build(),
                         ROOM.DESCRIPTION, JooqTextAreaField.builder().build(),
@@ -78,7 +78,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         var personConfig = JooqDataStoreConfig.of(PERSON)
                 .dataStoreInstance((VortexCrudDataStore) personStore)
                 .fields(Map.of(
-                        PERSON.ID, JooqIdField.builder().build(),
+                        PERSON.ID, JooqNumericIdField.builder().build(),
                         PERSON.NAME, JooqTextField.builder().required(true).build(),
                         PERSON.EMAIL, JooqEmailField.builder().build(),
                         PERSON.TITLE, JooqTextField.builder().build(),
@@ -88,7 +88,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         var typeConfig = JooqDataStoreConfig.of(APPOINTMENT_TYPE)
                 .dataStoreInstance((VortexCrudDataStore) typeStore)
                 .fields(Map.of(
-                        APPOINTMENT_TYPE.ID, JooqIdField.builder().build(),
+                        APPOINTMENT_TYPE.ID, JooqNumericIdField.builder().build(),
                         APPOINTMENT_TYPE.NAME, JooqTextField.builder().required(true).build(),
                         APPOINTMENT_TYPE.DESCRIPTION, JooqTextAreaField.builder().build(),
                         APPOINTMENT_TYPE.DURATION_MINUTES, JooqIntegerField.builder().build(),
@@ -100,7 +100,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         var appointmentConfig = JooqDataStoreConfig.of(APPOINTMENT)
                 .dataStoreInstance((VortexCrudDataStore) appointmentStore)
                 .fields(Map.ofEntries(
-                        Map.entry(APPOINTMENT.ID, JooqIdField.builder().build()),
+                        Map.entry(APPOINTMENT.ID, JooqNumericIdField.builder().build()),
                         Map.entry(APPOINTMENT.START_TIME, JooqDateTimePickerField.builder().required(true).build()),
                         Map.entry(APPOINTMENT.END_TIME, JooqDateTimePickerField.builder().required(true).build()),
                         Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).filterField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),

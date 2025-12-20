@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class JooqVortexCrudConfigService implements VortexCrudConfigService<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
-    private final Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration;
+    private final VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configurationProvider;
 
     @Autowired
     public JooqVortexCrudConfigService(VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configurationProvider) {
-        configuration = configurationProvider.get();
+        this.configurationProvider = configurationProvider;
     }
 
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
-        return configuration;
+        return configurationProvider.get();
     }
 
     public String applicationName() {
-        return configuration.applicationName();
+        return configurationProvider.get().applicationName();
     }
 }

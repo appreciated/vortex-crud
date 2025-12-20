@@ -1,7 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.single_form_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -51,7 +52,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
                 .dataStoreInstance((VortexCrudDataStore) store)
                 .fields(Map.of(
-                        SINGLE_FORM_ROUTE_TEST.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
