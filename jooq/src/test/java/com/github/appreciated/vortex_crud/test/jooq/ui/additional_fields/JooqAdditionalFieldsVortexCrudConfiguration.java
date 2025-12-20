@@ -11,6 +11,8 @@ import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -21,6 +23,7 @@ import static com.github.appreciated.vortex_crud.jooq.models.Tables.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.COG;
 
 @Service
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class JooqAdditionalFieldsVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 

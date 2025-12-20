@@ -16,11 +16,11 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "vaadin.productionMode=true")
 public abstract class BaseUITest {
 
-    public static final int SECONDS = 30;
+    public static final int SECONDS = 10;
     @Value(value = "${local.server.port}")
     private int port;
 
-    @Value(value = "${ui-test.headless:true}")
+    @Value(value = "${ui-test.headless:false}")
     private boolean isHeadless;
 
     protected Playwright playwright;
