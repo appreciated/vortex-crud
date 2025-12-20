@@ -173,11 +173,6 @@ public class JpaFieldService {
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                     .required(required)
                                     .build()
-                    )).or(() -> getAnnotation(entityField, IdField.class).map(ann ->
-                            (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.IdField
-                                    .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                                    .required(required)
-                                    .build()
                     )).or(() -> getAnnotation(entityField, NumericIdField.class).map(ann ->
                             (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField
                                     .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
