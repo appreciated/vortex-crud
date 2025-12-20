@@ -1,7 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.id_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -34,7 +35,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(
-                        FIELD_TYPES_TEST.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        FIELD_TYPES_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
                 .build();

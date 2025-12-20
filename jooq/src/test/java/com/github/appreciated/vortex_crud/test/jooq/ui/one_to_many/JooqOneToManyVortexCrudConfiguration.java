@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.one_to_many;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -41,7 +41,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         var parentConfig = JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
                         .dataStoreInstance((VortexCrudDataStore) parentStore)
                         .fields(Map.of(
-                                ONE_TO_MANY_PARENT.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                ONE_TO_MANY_PARENT.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 ONE_TO_MANY_PARENT.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build();
 
@@ -49,7 +49,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         var childConfig = JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
                         .dataStoreInstance((VortexCrudDataStore) childStore)
                         .fields(Map.of(
-                                ONE_TO_MANY_CHILD.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                ONE_TO_MANY_CHILD.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 ONE_TO_MANY_CHILD.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build();
 

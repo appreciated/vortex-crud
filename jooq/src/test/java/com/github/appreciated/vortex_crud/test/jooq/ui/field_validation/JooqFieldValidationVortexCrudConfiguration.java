@@ -39,7 +39,7 @@ public class JooqFieldValidationVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(VALIDATION_TEST)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                VALIDATION_TEST.ID, JooqIdField.builder().build(),
+                                VALIDATION_TEST.ID, JooqNumericIdField.builder().build(),
                                 VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                                 VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validators(List.of(new DoubleRangeValidator("Value must be at least 1.0", 1.0, Double.MAX_VALUE))).build(),

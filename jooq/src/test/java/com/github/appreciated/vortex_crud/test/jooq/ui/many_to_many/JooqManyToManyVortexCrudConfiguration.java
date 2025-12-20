@@ -12,7 +12,7 @@ import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelat
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -41,7 +41,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
         var config = JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                MANY_TO_MANY_ITEM.ID, JooqIdField.builder().build(),
+                                MANY_TO_MANY_ITEM.ID, JooqNumericIdField.builder().build(),
                                 MANY_TO_MANY_ITEM.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build())
                         ).build();
 

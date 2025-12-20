@@ -1,7 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.kanban;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
+import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -36,7 +37,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
         var config = JooqDataStoreConfig.of(KANBAN_TASKS)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                KANBAN_TASKS.ID, IdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                                KANBAN_TASKS.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 KANBAN_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 KANBAN_TASKS.STATUS, SelectField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().values("enum-options").build()
                         ))

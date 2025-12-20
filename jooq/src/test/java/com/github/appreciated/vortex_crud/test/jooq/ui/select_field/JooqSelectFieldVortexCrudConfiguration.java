@@ -1,11 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.select_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.IdField;
+
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqSelectField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import org.jooq.DSLContext;
@@ -48,7 +48,7 @@ public class JooqSelectFieldVortexCrudConfiguration
         var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(
-                        FIELD_TYPES_TEST.ID, JooqIdField.builder().build(),
+                        FIELD_TYPES_TEST.ID, JooqNumericIdField.builder().build(),
                         FIELD_TYPES_TEST.NAME, JooqSelectField.builder().values("name-options").build(),
                         FIELD_TYPES_TEST.NOTES, JooqTextField.builder().build() // Just to fill required fields if any
                 ))
