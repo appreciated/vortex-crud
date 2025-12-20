@@ -195,7 +195,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                             .titleField("name")
                             .children(List.of(
                                     JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
-                                    JpaFieldElement.builder("content", "textarea-test.labels.content").build()
+                                    JpaFieldElement.builder("description", "textarea-test.labels.content").build()
                             ))
                             .build())
                     .build();
@@ -204,7 +204,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .filterField("name")
                     .children(List.of(
                             JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
-                            JpaFieldElement.builder("content", "textarea-test.labels.content").build()
+                            JpaFieldElement.builder("description", "textarea-test.labels.content").build()
                     ))
                     .build();
 
