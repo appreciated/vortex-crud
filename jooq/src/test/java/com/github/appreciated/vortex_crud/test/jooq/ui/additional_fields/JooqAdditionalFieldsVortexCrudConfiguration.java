@@ -28,6 +28,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     private final DSLContext dsl;
+    private Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> cachedApplication;
 
     public JooqAdditionalFieldsVortexCrudConfiguration(DSLContext dsl) {
         this.dsl = dsl;
@@ -35,76 +36,185 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        // Determine which table to use by checking which one exists and has data
-        TableImpl<?> activeTable = findActiveTable();
+        if (cachedApplication != null) {
+            return cachedApplication;
+        }
 
-        JooqDataStore store = new JooqDataStore(activeTable.getRecordType(), dsl, new DataStoreHooks<>());
-        var config = JooqDataStoreConfig.of(activeTable)
-                        .dataStoreInstance(store)
-                        .fields(Map.of(
-                                (TableField<?, ?>) activeTable.field("id"), JooqNumericIdField.builder().build(),
-                                (TableField<?, ?>) activeTable.field("name"), JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
-                                (TableField<?, ?>) activeTable.field("description"), JooqTextAreaField.builder().build(),
-                                (TableField<?, ?>) activeTable.field("password"), JooqPasswordField.builder().build(),
-                                (TableField<?, ?>) activeTable.field("price"), JooqBigDecimalField.builder().build(),
-                                (TableField<?, ?>) activeTable.field("video_url"), JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalVideoResourceProvider())
-                                        .build()).build()
-                        )).build();
+        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        routes.put("additional-fields-test", createAdditionalFieldsRoute());
+        routes.put("lifecycle-test", createLifecycleTestRoute());
+        routes.put("password-test", createPasswordTestRoute());
+        routes.put("textarea-test", createTextAreaTestRoute());
+
+        cachedApplication = JooqApplication.builder()
+                .applicationName("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .build();
+
+        return cachedApplication;
+    }
+
+    private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createAdditionalFieldsRoute() {
+        JooqDataStore store = new JooqDataStore(ADDITIONAL_FIELDS_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(ADDITIONAL_FIELDS_TEST)
+                .dataStoreInstance(store)
+                .fields(Map.of(
+                        ADDITIONAL_FIELDS_TEST.ID, JooqNumericIdField.builder().build(),
+                        ADDITIONAL_FIELDS_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
+                        ADDITIONAL_FIELDS_TEST.DESCRIPTION, JooqTextAreaField.builder().build(),
+                        ADDITIONAL_FIELDS_TEST.PASSWORD, JooqPasswordField.builder().build(),
+                        ADDITIONAL_FIELDS_TEST.PRICE, JooqBigDecimalField.builder().build(),
+                        ADDITIONAL_FIELDS_TEST.VIDEO_URL, JooqVideoField.builder().configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                .resourceProvider(new LocalVideoResourceProvider())
+                                .build()).build()
+                )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalFieldsForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.additional-fields.title")
                 .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField((TableField<?, ?>) activeTable.field("name"))
+                        .titleField(ADDITIONAL_FIELDS_TEST.NAME)
                         .children(List.of(
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("name"), "additional-fields.labels.name").build(),
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("description"), "additional-fields.labels.description").build(),
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("password"), "additional-fields.labels.password").build(),
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("price"), "additional-fields.labels.price").build(),
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("video_url"), "additional-fields.labels.video").build()
+                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.NAME, "additional-fields.labels.name").build(),
+                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.DESCRIPTION, "additional-fields.labels.description").build(),
+                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.PASSWORD, "additional-fields.labels.password").build(),
+                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.PRICE, "additional-fields.labels.price").build(),
+                                JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.VIDEO_URL, "additional-fields.labels.video").build()
                         ))
                         .build())
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        routes.put("additional-fields-test", JooqListRoute.builder()
+        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
+                .filterField(ADDITIONAL_FIELDS_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.NAME, "additional-fields.labels.name").build(),
+                        JooqFieldElement.of(ADDITIONAL_FIELDS_TEST.DESCRIPTION, "additional-fields.labels.description").build()
+                ))
+                .build();
+
+        return ListRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.additional-fields.title-list")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField((TableField<?, ?>) activeTable.field("name"))
-                        .children(List.of(
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("name"), "additional-fields.labels.name").build(),
-                                JooqFieldElement.of((TableField<?, ?>) activeTable.field("description"), "additional-fields.labels.description").build()
-                        ))
-                        .build())
+                .configuration(listConfig)
                 .child(additionalFieldsForm)
-                .build());
-
-        return JooqApplication.builder()
-                .applicationName("application.name")
-                .i18nBundlePrefix("ui_test_i18n")
-                .routes(routes)
                 .build();
     }
 
-    private TableImpl<?> findActiveTable() {
-        // Check each possible test table and return the first one that has data
-        TableImpl<?>[] tables = {LIFECYLE_TEST, PASSWORD_TEST, TEXTAREA_TEST, ADDITIONAL_FIELDS_TEST};
+    private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createLifecycleTestRoute() {
+        JooqDataStore store = new JooqDataStore(LIFECYLE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(LIFECYLE_TEST)
+                .dataStoreInstance(store)
+                .fields(Map.of(
+                        LIFECYLE_TEST.ID, JooqNumericIdField.builder().build(),
+                        LIFECYLE_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
+                        LIFECYLE_TEST.DESCRIPTION, JooqTextAreaField.builder().build()
+                )).build();
 
-        for (TableImpl<?> table : tables) {
-            try {
-                int count = dsl.selectCount().from(table).fetchOne(0, int.class);
-                if (count > 0) {
-                    return table;
-                }
-            } catch (Exception e) {
-                // Table doesn't exist, continue to next
-            }
-        }
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> lifecycleForm = JooqFormRoute.builder()
+                .dataStoreConfig(config)
+                .title("route.lifecycle-test.title")
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(LIFECYLE_TEST.NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
+                                JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
+                        ))
+                        .build())
+                .build();
 
-        // Default to ADDITIONAL_FIELDS_TEST if no table has data yet
-        return ADDITIONAL_FIELDS_TEST;
+        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
+                .filterField(LIFECYLE_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
+                        JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
+                ))
+                .build();
+
+        return ListRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .dataStoreConfig(config)
+                .iconFactory(COG::create)
+                .title("route.lifecycle-test.title-list")
+                .configuration(listConfig)
+                .child(lifecycleForm)
+                .build();
+    }
+
+    private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createPasswordTestRoute() {
+        JooqDataStore store = new JooqDataStore(PASSWORD_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(PASSWORD_TEST)
+                .dataStoreInstance(store)
+                .fields(Map.of(
+                        PASSWORD_TEST.ID, JooqNumericIdField.builder().build(),
+                        PASSWORD_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
+                        PASSWORD_TEST.PASSWORD, JooqPasswordField.builder().build()
+                )).build();
+
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> passwordForm = JooqFormRoute.builder()
+                .dataStoreConfig(config)
+                .title("route.password-test.title")
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(PASSWORD_TEST.NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
+                                JooqFieldElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
+                        ))
+                        .build())
+                .build();
+
+        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
+                .filterField(PASSWORD_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
+                ))
+                .build();
+
+        return ListRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .dataStoreConfig(config)
+                .iconFactory(COG::create)
+                .title("route.password-test.title-list")
+                .configuration(listConfig)
+                .child(passwordForm)
+                .build();
+    }
+
+    private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createTextAreaTestRoute() {
+        JooqDataStore store = new JooqDataStore(TEXTAREA_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(TEXTAREA_TEST)
+                .dataStoreInstance(store)
+                .fields(Map.of(
+                        TEXTAREA_TEST.ID, JooqNumericIdField.builder().build(),
+                        TEXTAREA_TEST.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Invalid length", 0, 255))).build(),
+                        TEXTAREA_TEST.DESCRIPTION, JooqTextAreaField.builder().build()
+                )).build();
+
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> textAreaForm = JooqFormRoute.builder()
+                .dataStoreConfig(config)
+                .title("route.textarea-test.title")
+                .formConfiguration(JooqFormRendererConfiguration.builder()
+                        .titleField(TEXTAREA_TEST.NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
+                                JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
+                        ))
+                        .build())
+                .build();
+
+        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
+                .filterField(TEXTAREA_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
+                        JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
+                ))
+                .build();
+
+        return ListRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .dataStoreConfig(config)
+                .iconFactory(COG::create)
+                .title("route.textarea-test.title-list")
+                .configuration(listConfig)
+                .child(textAreaForm)
+                .build();
     }
 }
