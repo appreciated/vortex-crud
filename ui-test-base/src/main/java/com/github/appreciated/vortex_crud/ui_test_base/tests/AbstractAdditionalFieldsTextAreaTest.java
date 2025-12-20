@@ -45,10 +45,6 @@ public abstract class AbstractAdditionalFieldsTextAreaTest extends BaseUITest {
         Locator textAreaField = waitForElement("vaadin-text-area").locator("textarea");
         textAreaField.fill("This is a multi-line\ntext area\nwith several lines");
 
-        // Fill Password field
-        Locator passwordField = waitForElement("vaadin-password-field").locator("input");
-        passwordField.fill("SecurePassword123");
-
         // Save
         waitForAnyElementContainingText("Save").click();
         waitForUrlToBe(getAdditionalFieldsPath());
