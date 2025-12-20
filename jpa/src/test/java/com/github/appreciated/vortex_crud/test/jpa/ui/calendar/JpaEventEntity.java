@@ -1,7 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.calendar;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.IdField;
+
+import com.github.appreciated.vortex_crud.jpa.service.annoations.NumericIdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 
@@ -13,7 +14,7 @@ public class JpaEventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @IdField
+    @NumericIdField
     private Long id;
 
     @TextField
