@@ -68,7 +68,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var usersConfig = JooqDataStoreConfig.of(USERS)
                 .dataStoreInstance((VortexCrudDataStore) usersStore)
                 .fields(Map.of(
-                        USERS.ID, JooqIdField.builder().build(),
+                        USERS.ID, JooqNumericIdField.builder().build(),
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
@@ -77,7 +77,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var organizationMemberConfig = JooqDataStoreConfig.of(ORGANIZATION_MEMBER)
                 .dataStoreInstance((VortexCrudDataStore) organizationMemberStore)
                 .fields(Map.of(
-                        ORGANIZATION_MEMBER.ID, JooqIdField.builder().build(),
+                        ORGANIZATION_MEMBER.ID, JooqNumericIdField.builder().build(),
                         ORGANIZATION_MEMBER.ORGANIZATION_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) organizationStore).field(ORGANIZATION_MEMBER.ORGANIZATION_ID).filterField(ORGANIZATION.NAME).children(List.of(ORGANIZATION.NAME)).build(),
                         ORGANIZATION_MEMBER.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(ORGANIZATION_MEMBER.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         ORGANIZATION_MEMBER.ROLE, JooqSelectField.builder().values("organization-roles").build(),
@@ -87,7 +87,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var repositoryCollaboratorConfig = JooqDataStoreConfig.of(REPOSITORY_COLLABORATOR)
                 .dataStoreInstance((VortexCrudDataStore) repositoryCollaboratorStore)
                 .fields(Map.of(
-                        REPOSITORY_COLLABORATOR.ID, JooqIdField.builder().build(),
+                        REPOSITORY_COLLABORATOR.ID, JooqNumericIdField.builder().build(),
                         REPOSITORY_COLLABORATOR.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(REPOSITORY_COLLABORATOR.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
                         REPOSITORY_COLLABORATOR.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(REPOSITORY_COLLABORATOR.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         REPOSITORY_COLLABORATOR.PERMISSION, JooqSelectField.builder().values("repository-permissions").build(),
@@ -97,7 +97,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var organizationConfig = JooqDataStoreConfig.of(ORGANIZATION)
                 .dataStoreInstance((VortexCrudDataStore) organizationStore)
                 .fields(Map.of(
-                        ORGANIZATION.ID, JooqIdField.builder().build(),
+                        ORGANIZATION.ID, JooqNumericIdField.builder().build(),
                         ORGANIZATION.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
                         ORGANIZATION.DISPLAY_NAME, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build(),
                         ORGANIZATION.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
@@ -110,7 +110,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var repositoryConfig = JooqDataStoreConfig.of(REPOSITORY)
                 .dataStoreInstance((VortexCrudDataStore) repositoryStore)
                 .fields(Map.ofEntries(
-                        Map.entry(REPOSITORY.ID, JooqIdField.builder().build()),
+                        Map.entry(REPOSITORY.ID, JooqNumericIdField.builder().build()),
                         Map.entry(REPOSITORY.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
                         Map.entry(REPOSITORY.SLUG, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
                         Map.entry(REPOSITORY.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
@@ -132,7 +132,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
                 .dataStoreInstance((VortexCrudDataStore) milestoneStore)
                 .fields(Map.of(
-                        MILESTONE.ID, JooqIdField.builder().build(),
+                        MILESTONE.ID, JooqNumericIdField.builder().build(),
                         MILESTONE.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(MILESTONE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
                         MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
                         MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
@@ -146,7 +146,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var issueConfig = JooqDataStoreConfig.of(ISSUE)
                 .dataStoreInstance((VortexCrudDataStore) issueStore)
                 .fields(Map.ofEntries(
-                        Map.entry(ISSUE.ID, JooqIdField.builder().build()),
+                        Map.entry(ISSUE.ID, JooqNumericIdField.builder().build()),
                         Map.entry(ISSUE.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(ISSUE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
                         Map.entry(ISSUE.ISSUE_NUMBER, JooqIntegerField.builder().required(true).build()),
                         Map.entry(ISSUE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
@@ -166,7 +166,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var pullRequestConfig = JooqDataStoreConfig.of(PULL_REQUEST)
                 .dataStoreInstance((VortexCrudDataStore) pullRequestStore)
                 .fields(Map.ofEntries(
-                        Map.entry(PULL_REQUEST.ID, JooqIdField.builder().build()),
+                        Map.entry(PULL_REQUEST.ID, JooqNumericIdField.builder().build()),
                         Map.entry(PULL_REQUEST.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(PULL_REQUEST.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build()),
                         Map.entry(PULL_REQUEST.PR_NUMBER, JooqIntegerField.builder().required(true).build()),
                         Map.entry(PULL_REQUEST.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
@@ -188,7 +188,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var labelConfig = JooqDataStoreConfig.of(LABEL)
                 .dataStoreInstance((VortexCrudDataStore) labelStore)
                 .fields(Map.of(
-                        LABEL.ID, JooqIdField.builder().build(),
+                        LABEL.ID, JooqNumericIdField.builder().build(),
                         LABEL.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(LABEL.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
                         LABEL.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
                         LABEL.COLOR, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
@@ -199,7 +199,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var commentConfig = JooqDataStoreConfig.of(COMMENT)
                 .dataStoreInstance((VortexCrudDataStore) commentStore)
                 .fields(Map.of(
-                        COMMENT.ID, JooqIdField.builder().build(),
+                        COMMENT.ID, JooqNumericIdField.builder().build(),
                         COMMENT.ENTITY_TYPE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
                         COMMENT.ENTITY_ID, JooqIntegerField.builder().required(true).build(),
                         COMMENT.AUTHOR_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(COMMENT.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
@@ -211,7 +211,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var issueLabelConfig = JooqDataStoreConfig.of(ISSUE_LABEL)
                 .dataStoreInstance((VortexCrudDataStore) issueLabelStore)
                 .fields(Map.of(
-                        ISSUE_LABEL.ID, JooqIdField.builder().build(),
+                        ISSUE_LABEL.ID, JooqNumericIdField.builder().build(),
                         ISSUE_LABEL.ISSUE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) issueStore).field(ISSUE_LABEL.ISSUE_ID).filterField(ISSUE.TITLE).children(List.of(ISSUE.TITLE)).build(),
                         ISSUE_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(ISSUE_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
                 .build();
@@ -219,7 +219,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         var pullRequestLabelConfig = JooqDataStoreConfig.of(PULL_REQUEST_LABEL)
                 .dataStoreInstance((VortexCrudDataStore) pullRequestLabelStore)
                 .fields(Map.of(
-                        PULL_REQUEST_LABEL.ID, JooqIdField.builder().build(),
+                        PULL_REQUEST_LABEL.ID, JooqNumericIdField.builder().build(),
                         PULL_REQUEST_LABEL.PULL_REQUEST_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) pullRequestStore).field(PULL_REQUEST_LABEL.PULL_REQUEST_ID).filterField(PULL_REQUEST.TITLE).children(List.of(PULL_REQUEST.TITLE)).build(),
                         PULL_REQUEST_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(PULL_REQUEST_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
                 .build();

@@ -62,7 +62,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var usersConfig = JooqDataStoreConfig.of(USERS)
                 .dataStoreInstance((VortexCrudDataStore) usersStore)
                 .fields(Map.of(
-                        USERS.ID, JooqIdField.builder().build(),
+                        USERS.ID, JooqNumericIdField.builder().build(),
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
@@ -71,7 +71,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var projectMemberConfig = JooqDataStoreConfig.of(PROJECT_MEMBER)
                 .dataStoreInstance((VortexCrudDataStore) projectMemberStore)
                 .fields(Map.of(
-                        PROJECT_MEMBER.ID, JooqIdField.builder().build(),
+                        PROJECT_MEMBER.ID, JooqNumericIdField.builder().build(),
                         PROJECT_MEMBER.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(PROJECT_MEMBER.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
                         PROJECT_MEMBER.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(PROJECT_MEMBER.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         PROJECT_MEMBER.ROLE, JooqSelectField.builder().values("project-roles").build(),
@@ -81,7 +81,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var projectConfig = JooqDataStoreConfig.of(PROJECT)
                 .dataStoreInstance((VortexCrudDataStore) projectStore)
                 .fields(Map.ofEntries(
-                        Map.entry(PROJECT.ID, JooqIdField.builder().build()),
+                        Map.entry(PROJECT.ID, JooqNumericIdField.builder().build()),
                         Map.entry(PROJECT.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
                         Map.entry(PROJECT.CODE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build()),
                         Map.entry(PROJECT.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build()),
@@ -101,7 +101,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
                 .dataStoreInstance((VortexCrudDataStore) milestoneStore)
                 .fields(Map.of(
-                        MILESTONE.ID, JooqIdField.builder().build(),
+                        MILESTONE.ID, JooqNumericIdField.builder().build(),
                         MILESTONE.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(MILESTONE.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
                         MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
                         MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
@@ -116,7 +116,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var taskConfig = JooqDataStoreConfig.of(TASK)
                 .dataStoreInstance((VortexCrudDataStore) taskStore)
                 .fields(Map.ofEntries(
-                        Map.entry(TASK.ID, JooqIdField.builder().build()),
+                        Map.entry(TASK.ID, JooqNumericIdField.builder().build()),
                         Map.entry(TASK.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(TASK.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
                         Map.entry(TASK.MILESTONE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) milestoneStore).field(TASK.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
                         Map.entry(TASK.PARENT_TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK.PARENT_TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build()),
@@ -138,7 +138,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var labelConfig = JooqDataStoreConfig.of(LABEL)
                 .dataStoreInstance((VortexCrudDataStore) labelStore)
                 .fields(Map.of(
-                        LABEL.ID, JooqIdField.builder().build(),
+                        LABEL.ID, JooqNumericIdField.builder().build(),
                         LABEL.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
                         LABEL.COLOR, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 20 characters", 0, 20))).build(),
                         LABEL.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
@@ -148,7 +148,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var taskCommentConfig = JooqDataStoreConfig.of(TASK_COMMENT)
                 .dataStoreInstance((VortexCrudDataStore) taskCommentStore)
                 .fields(Map.of(
-                        TASK_COMMENT.ID, JooqIdField.builder().build(),
+                        TASK_COMMENT.ID, JooqNumericIdField.builder().build(),
                         TASK_COMMENT.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK_COMMENT.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
                         TASK_COMMENT.AUTHOR_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(TASK_COMMENT.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         TASK_COMMENT.CONTENT, JooqTextAreaField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build(),
@@ -158,7 +158,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         var taskLabelConfig = JooqDataStoreConfig.of(TASK_LABEL)
                 .dataStoreInstance((VortexCrudDataStore) taskLabelStore)
                 .fields(Map.of(
-                        TASK_LABEL.ID, JooqIdField.builder().build(),
+                        TASK_LABEL.ID, JooqNumericIdField.builder().build(),
                         TASK_LABEL.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK_LABEL.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
                         TASK_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(TASK_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
                 .build();

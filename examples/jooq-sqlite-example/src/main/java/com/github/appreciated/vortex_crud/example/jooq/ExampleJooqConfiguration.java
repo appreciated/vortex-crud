@@ -81,7 +81,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance((VortexCrudDataStore) projectsStore)
                 .fields(Map.of(
-                        PROJECTS.ID, JooqIdField.builder().build(),
+                        PROJECTS.ID, JooqNumericIdField.builder().build(),
                         PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
                         PROJECTS.BUDGET, JooqBigDecimalField.builder().build(),
@@ -96,7 +96,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var usersConfig = JooqDataStoreConfig.of(USERS)
                         .dataStoreInstance((VortexCrudDataStore) usersStore)
                         .fields(Map.of(
-                                USERS.ID, JooqIdField.builder().build(),
+                                USERS.ID, JooqNumericIdField.builder().build(),
                                 USERS.USERNAME, JooqEmailField.builder().build(),
                                 USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                                 USERS.FIRST_NAME, JooqTextField.builder().build(),
@@ -108,7 +108,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var tasksConfig = JooqDataStoreConfig.of(TASKS)
                 .dataStoreInstance((VortexCrudDataStore) tasksStore)
                 .fields(Map.of(
-                        TASKS.ID, JooqIdField.builder().build(),
+                        TASKS.ID, JooqNumericIdField.builder().build(),
                         TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
@@ -122,14 +122,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var taskHasTaskConfig = JooqDataStoreConfig.of(TASK_HAS_TASK)
                 .dataStoreInstance((VortexCrudDataStore) taskHasTaskStore)
                 .fields(Map.of(
-                        TASK_HAS_TASK.TASK_ID, JooqIdField.builder().build(),
-                        TASK_HAS_TASK.RELATED_TASK_ID, JooqIdField.builder().build()))
+                        TASK_HAS_TASK.TASK_ID, JooqNumericIdField.builder().build(),
+                        TASK_HAS_TASK.RELATED_TASK_ID, JooqNumericIdField.builder().build()))
                 .build();
 
         var commentsConfig = JooqDataStoreConfig.of(TASK_COMMENTS)
                 .dataStoreInstance((VortexCrudDataStore) commentsStore)
                 .fields(Map.of(
-                        TASK_COMMENTS.ID, JooqIdField.builder().build(),
+                        TASK_COMMENTS.ID, JooqNumericIdField.builder().build(),
                         TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
                         TASK_COMMENTS.USER_ID, JooqDoubleField.builder().build(),
                         TASK_COMMENTS.CREATED_AT, JooqDateTimePickerField.builder().build()))
@@ -138,7 +138,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var imagesConfig = JooqDataStoreConfig.of(IMAGES)
                 .dataStoreInstance((VortexCrudDataStore) imagesStore)
                 .fields(Map.of(
-                        IMAGES.ID, JooqIdField.builder().build(),
+                        IMAGES.ID, JooqNumericIdField.builder().build(),
                         IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         IMAGES.URL, JooqImageField.builder().configuration(JooqImageFieldRendererConfiguration.builder().resourceProvider(new LocalImageResourceProvider()).build()).build()
                 ))
@@ -147,7 +147,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var videosConfig = JooqDataStoreConfig.of(VIDEOS)
                 .dataStoreInstance((VortexCrudDataStore) videosStore)
                 .fields(Map.of(
-                        VIDEOS.ID, JooqIdField.builder().build(),
+                        VIDEOS.ID, JooqNumericIdField.builder().build(),
                         VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         VIDEOS.URL, JooqVideoField.builder().configuration(JooqVideoFieldRendererConfiguration.builder().resourceProvider(new LocalVideoResourceProvider()).build()).build()
                 ))
@@ -156,7 +156,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var documentsConfig = JooqDataStoreConfig.of(DOCUMENTS)
                 .dataStoreInstance((VortexCrudDataStore) documentsStore)
                 .fields(Map.of(
-                        DOCUMENTS.ID, JooqIdField.builder().build(),
+                        DOCUMENTS.ID, JooqNumericIdField.builder().build(),
                         DOCUMENTS.TITLE, JooqTextField.builder().required(true).build(),
                         DOCUMENTS.PDF, JooqPdfField.builder().configuration(JooqPdfFieldRendererConfiguration.builder().resourceProvider(new LocalPdfResourceProvider()).build()).build()
                 ))
@@ -165,7 +165,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var projectTagsConfig = JooqDataStoreConfig.of(PROJECT_TAGS)
                 .dataStoreInstance((VortexCrudDataStore) projectTagsStore)
                 .fields(Map.of(
-                        PROJECT_TAGS.ID, JooqIdField.builder().build(),
+                        PROJECT_TAGS.ID, JooqNumericIdField.builder().build(),
                         PROJECT_TAGS.PROJECT_ID, JooqIntegerField.builder().build(),
                         PROJECT_TAGS.TAG, JooqTextField.builder().build()
                 )).build();
