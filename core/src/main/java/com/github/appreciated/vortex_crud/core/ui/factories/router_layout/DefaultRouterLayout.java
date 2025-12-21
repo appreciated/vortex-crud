@@ -63,7 +63,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationConfig =
                 configService.configuration().notificationPanelConfiguration();
         if (notificationConfig != null) {
-            NotificationPanel<ModelClass, FieldType, RepositoryType> notificationPanel =
+            NotificationPanel<ModelClass, FieldType> notificationPanel =
                     new NotificationPanel<>(notificationConfig, reflectionService);
             actionButtons.add(notificationPanel);
         }
