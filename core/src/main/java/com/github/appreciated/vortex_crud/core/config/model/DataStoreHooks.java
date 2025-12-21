@@ -19,21 +19,30 @@ import java.util.List;
 @Accessors(fluent = true)
 @Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class DataStoreHooks<ModelClass> {
     @Singular
-    private List<DataStoreHook<ModelClass>> beforeCreates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeCreates;
     @Singular
-    private List<DataStoreHook<ModelClass>> afterCreates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterCreates;
     @Singular
-    private List<DataStoreHook<ModelClass>> beforeUpdates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeUpdates;
     @Singular
-    private List<DataStoreHook<ModelClass>> afterUpdates = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterUpdates;
     @Singular
-    private List<DataStoreHook<ModelClass>> beforeDeletes = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> beforeDeletes;
     @Singular
-    private List<DataStoreHook<ModelClass>> afterDeletes = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterDeletes;
     @Singular
-    private List<DataStoreHook<ModelClass>> afterReads = new ArrayList<>();
+    private List<DataStoreHook<ModelClass>> afterReads;
+
+    public DataStoreHooks() {
+        this.beforeCreates = new ArrayList<>();
+        this.afterCreates = new ArrayList<>();
+        this.beforeUpdates = new ArrayList<>();
+        this.afterUpdates = new ArrayList<>();
+        this.beforeDeletes = new ArrayList<>();
+        this.afterDeletes = new ArrayList<>();
+        this.afterReads = new ArrayList<>();
+    }
 }
