@@ -26,8 +26,9 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
 
         // 3. Verify Tabs are present (Unread and All)
         // Tab names are localized, but typically "Unread" and "All".
-        // The implementation uses keys "notification.panel.unread" and "notification.panel.all".
-        // We can assume default English text "Unread" and "All".
+        // The implementation uses keys "notifications.unread" and "notifications.all" by default.
+        // In ui_test_i18n, we might need to check the actual translated text.
+        // We can use a more robust locator if text varies.
         assertThat(popover.locator("vaadin-tab >> text=Unread")).isVisible();
         assertThat(popover.locator("vaadin-tab >> text=All")).isVisible();
 

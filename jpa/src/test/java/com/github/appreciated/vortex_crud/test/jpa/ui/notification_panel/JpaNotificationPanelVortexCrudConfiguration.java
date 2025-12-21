@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.notification_panel;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
@@ -10,11 +11,12 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.test.jpa.ui.notification_panel.JpaNotificationRepository;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridItemRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -49,10 +51,20 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                         .readStatusValueForRead(true)
                         .build();
 
+        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        routes.put("notifications", JpaGridRoute.builder()
+                .dataStoreConfig(notificationConfig)
+                .title("Notifications")
+                .isDefaultRoute(true)
+                .configuration(JpaGridItemRendererConfiguration.builder()
+                        .titleField("message")
+                        .build())
+                .build());
+
         return JpaApplication.builder()
                 .applicationName("Notification Test App")
                 .i18nBundlePrefix("ui_test_i18n")
-                .routes(Collections.emptyMap())
+                .routes(routes)
                 .notificationPanelConfiguration(notificationPanelConfig)
                 .build();
     }
