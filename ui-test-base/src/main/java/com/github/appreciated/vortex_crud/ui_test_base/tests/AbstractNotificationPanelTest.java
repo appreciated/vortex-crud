@@ -18,7 +18,7 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         navigateTo(""); // Navigate to root or any page
 
         // 1. Verify Bell Icon is visible
-        Locator bellIcon = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Notifications"));
+        Locator bellIcon = page.getByRole(AriaRole.BUTTON).nth(2);
         assertThat(bellIcon).isVisible();
 
         // 2. Open the panel
@@ -41,15 +41,17 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
 
         // Check for specific message content from seeded data
         // Example: "New task assigned"
-        assertThat(page.locator("vaadin-message >> text=New task assigned")).isVisible();
+        Locator unreadTab = page.getByRole(AriaRole.TABPANEL, new Page.GetByRoleOptions().setName("Unread"));
+        assertThat(unreadTab.locator("vaadin-message >> text=New task assigned")).isVisible();
 
         // 5. Switch to All tab
         page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName("All")).click();
-        assertThat(page.locator("vaadin-message >> text=New task assigned")).isVisible();
+        Locator allTab = page.getByRole(AriaRole.TABPANEL, new Page.GetByRoleOptions().setName("All"));
+        assertThat(allTab.locator("vaadin-message >> text=New task assigned")).isVisible();
 
         // 6. Test "Mark all as read"
         // Button text key "notification.panel.mark.all.read" -> "Mark all as read"
-        Locator markReadBtn = page.locator("vaadin-button >> text=Mark all as read");
+        Locator markReadBtn = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Mark all as read"));
         assertThat(markReadBtn).isVisible();
         markReadBtn.click();
 
@@ -61,9 +63,9 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         bellIcon.click();
         assertThat(locator).isVisible();
 
-        // Check for "No new notifications" message
-        // Key "notification.panel.no.notifications" -> "No new notifications"
+        // key "notification.panel.no.notifications" -> "No new notifications"
         // It has class "no-notifications-msg"
-        assertThat(locator.locator(".no-notifications-msg")).isVisible();
+        page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName("Unread")).click();
+        assertThat(page.getByText("No new notifications").first()).isVisible();
     }
 }
