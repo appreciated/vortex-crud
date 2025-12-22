@@ -63,6 +63,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
 
         return JpaApplication.builder()
                 .applicationName("Calendar Test")
+                .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();
     }
