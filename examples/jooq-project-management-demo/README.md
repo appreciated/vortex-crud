@@ -47,4 +47,21 @@ Access: http://localhost:8081
 3. Implement `CustomFieldService.java` for dynamic field handling
 4. Add UI components for custom field management
 
+## Missing Features in Core
+
+The following features are currently missing in the Vortex CRUD core but would greatly benefit this demo:
+
+- **Hierarchical/Tree View**: Support for TreeGrid or recursive views to visualize Tasks and Subtasks nested structure.
+- **Gantt Chart**: A dedicated Gantt chart component for visualizing project timelines and dependencies.
+- **Rich Comment Component**: A specialized timeline/chat UI component for comments, replacing the basic list view.
+
+## Missing Demo Features
+
+Features that would be expected in a full implementation:
+
+- **Time Tracking**: Logging actual hours spent vs estimated.
+- **File Attachments**: Uploading documents to tasks and projects.
+- **Workflow Transitions**: Enforcing state changes (e.g., Todo -> In Progress -> Done).
+- **Project Dashboard**: Visualizations like Burn-down charts and velocity tracking.
+
 See [DEMO_OVERVIEW.md](../DEMO_OVERVIEW.md) for architecture details.

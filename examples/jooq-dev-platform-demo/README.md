@@ -49,4 +49,21 @@ Access: http://localhost:8082
 3. Implement `CustomFieldService.java` for dynamic field handling
 4. Add UI components for custom field management
 
+## Missing Features in Core
+
+The following features are currently missing in the Vortex CRUD core but would greatly benefit this demo:
+
+- **Native Custom Fields Support**: First-class support for defining and rendering dynamic fields (EAV or JSON-based) without custom implementation overhead.
+- **Auto-Enum Mapping**: Automatic generation of Select options from Java Enums or jOOQ Enum types.
+- **Simplified RBAC**: More concise configuration for Role Resolution Strategies, inferring relationships from DataStore configuration.
+
+## Missing Demo Features
+
+Features that would be expected in a full implementation:
+
+- **"Star" & "Watch" Actions**: Ability to favorite repositories and subscribe to notifications.
+- **Activity Dashboard**: A feed showing recent commits, issues, and comments.
+- **Git Integration**: Actual interface with Git repositories for code browsing and diffs.
+- **Wiki**: Documentation pages for repositories.
+
 See [DEMO_OVERVIEW.md](../DEMO_OVERVIEW.md) for architecture details.
