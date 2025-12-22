@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data

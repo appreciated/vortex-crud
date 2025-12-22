@@ -39,18 +39,18 @@ public abstract class AbstractCalendarTest extends BaseUITest {
     @Test
     void testCalendarVisible() {
         navigateTo(getPath());
-        waitForElement("fc-full-calendar");
+        waitForElement(".fc-view");
     }
 
     @Test
     void testCalendarEventsVisible() {
         navigateTo(getPath());
-        waitForElement("fc-full-calendar");
+        waitForElement(".fc-view");
         // Wait for calendar to render
         page.waitForTimeout(1000);
         // Check if there are events rendered in the calendar
         // Playwright locators pierce shadow DOM by default
-        List<Locator> events = page.locator("fc-full-calendar .fc-event").all();
+        List<Locator> events = page.locator(".fc-view .fc-event").all();
         assertTrue(events.size() > 0, "Calendar should have at least one event");
     }
 
@@ -90,10 +90,10 @@ public abstract class AbstractCalendarTest extends BaseUITest {
     @Test
     void testEventClickOpensDialog() {
         navigateTo(getPath());
-        waitForElement("fc-full-calendar");
+        waitForElement(".fc-view");
         page.waitForTimeout(1000);
 
-        List<Locator> events = page.locator("fc-full-calendar .fc-event").all();
+        List<Locator> events = page.locator(".fc-view .fc-event").all();
         if (!events.isEmpty()) {
             events.get(0).click();
             page.waitForTimeout(500);

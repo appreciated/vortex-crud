@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
-
 import com.github.appreciated.vortex_crud.jpa.service.annoations.ImageField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.NumericIdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;

@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar;
 
+import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
-import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.component.CalendarView;
 import com.vaadin.flow.component.Component;
@@ -21,13 +21,7 @@ public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements V
 
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new CalendarView<>(
-                routeRenderer.dataStoreConfig().factory(),
-                routeRenderer,
-                context,
-                routeResolver,
-                detailRouteSetting
-        );
+        return new CalendarView<>(routeRenderer, context, routeResolver, detailRouteSetting);
     }
 
     @Override

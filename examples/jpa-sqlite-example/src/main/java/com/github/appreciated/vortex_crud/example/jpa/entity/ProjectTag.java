@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
-import jakarta.persistence.*;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "project_tags")

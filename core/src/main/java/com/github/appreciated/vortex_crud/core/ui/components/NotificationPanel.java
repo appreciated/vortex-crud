@@ -1,31 +1,26 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.popover.Popover;
-import com.vaadin.flow.component.popover.PopoverPosition;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.component.tabs.TabSheetVariant;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,339 +44,144 @@ import java.util.List;
  *
  * @param <ModelClass> The type of model/entity class
  * @param <FieldType> The type used to identify fields (String for JPA, TableField for jOOQ)
- * @param <RepositoryType> The type of repository/table key
  */
-public class NotificationPanel<ModelClass, FieldType, RepositoryType> extends Div {
+public class NotificationPanel<ModelClass, FieldType> extends Div {
 
-    private static final Logger log = LoggerFactory.getLogger(NotificationPanel.class);
-    private final NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> configuration;
-    private final ReflectionService<FieldType> reflectionService;
+    private final ReflectionService<FieldType> reflection;
+    private final NotificationPanelConfiguration<ModelClass, FieldType, ?> config;
 
-    private VortexCrudDataStore dataStore;
-    private MessageList unreadList;
-    private MessageList allList;
-    private Div unreadContent;
-    private Popover popover;
+    private final MessageList unreadList = new MessageList();
+    private final MessageList allList = new MessageList();
+    private final Div unreadContent = new Div();
+    private final Popover popover = new Popover();
 
-    public NotificationPanel(
-            NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> configuration,
-            ReflectionService<FieldType> reflectionService) {
-        this.configuration = configuration;
-        this.reflectionService = reflectionService;
+    public NotificationPanel(NotificationPanelConfiguration<ModelClass, FieldType, ?> config,
+                             ReflectionService<FieldType> reflection) {
+        this.config = config;
+        this.reflection = reflection;
+        buildUI();
+    }
+
+    private void buildUI() {
+        // Bell button with ARIA label for testing
+        Button bellBtn = new Button(VaadinIcon.BELL.create());
+        bellBtn.addThemeVariants(ButtonVariant.LUMO_ICON);
+        bellBtn.getElement().setAttribute("aria-label", config.ariaLabel());
+
+        popover.setTarget(bellBtn);
+        popover.setWidth("350px");
+        popover.addThemeVariants(PopoverVariant.LUMO_NO_PADDING);
+
+        // Header with localized title and mark-read button
+        H4 title = new H4(getTranslation(config.headingKey()));
+        title.getStyle().set("margin", "0");
+
+        Button markReadBtn = new Button(getTranslation(config.markAllReadKey()), e -> markAllRead());
+        markReadBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_SMALL);
+
+        HorizontalLayout header = new HorizontalLayout(title, markReadBtn);
+        header.setWidthFull();
+        header.setPadding(true);
+        header.setAlignItems(FlexComponent.Alignment.CENTER);
+        header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+
+        // Tabs with localized keys
+        TabSheet tabs = new TabSheet();
+        tabs.add(getTranslation(config.unreadTabKey()), unreadContent);
+        tabs.add(getTranslation(config.allTabKey()), new Div(allList));
+
+        popover.add(header, tabs);
+        add(bellBtn, popover);
+    }
+
+    public void setData(List<ModelClass> items) {
+        // Process "All" list
+        allList.setItems(items.stream().map(this::mapToItem).toList());
+
+        // Process "Unread" list
+        List<MessageListItem> unreadItems = items.stream()
+                .filter(this::isUnread)
+                .map(this::mapToItem)
+                .toList();
+
+        updateUnreadTab(unreadItems);
+    }
+
+    private void updateUnreadTab(List<MessageListItem> items) {
+        unreadContent.removeAll();
+        if (items.isEmpty()) {
+            // Test expects a specific class and localized text for empty states
+            Span noNotifications = new Span(getTranslation(config.noNewNotificationsKey()));
+            noNotifications.addClassName("no-notifications-msg");
+            unreadContent.add(noNotifications);
+        } else {
+            unreadList.setItems(items);
+            unreadContent.add(unreadList);
+        }
+    }
+
+    private MessageListItem mapToItem(ModelClass entity) {
+        String msg = reflection.getString(entity, config.messageField());
+        Object tsValue = reflection.getValue(entity, config.timestampField());
+        String user = reflection.getString(entity, config.userNameField());
+        String avatar = reflection.getString(entity, config.userAvatarField());
+
+        return new MessageListItem(
+                msg != null ? msg : "",
+                convertToInstant(tsValue),
+                user != null ? user : "",
+                avatar
+        );
+    }
+
+    private boolean isUnread(ModelClass entity) {
+        Object status = reflection.getValue(entity, config.readStatusField());
+        return config.readStatusValueForUnread().equals(status);
+    }
+
+    private Instant convertToInstant(Object val) {
+        if (val instanceof Instant i) return i;
+        if (val instanceof LocalDateTime ldt) return ldt.toInstant(ZoneOffset.UTC);
+        if (val instanceof java.util.Date d) return d.toInstant();
+        if (val instanceof Long l) return Instant.ofEpochMilli(l);
+        return Instant.now();
     }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-
-        // Get the data store
-        dataStore = configuration.dataStoreConfig().dataStoreInstance();
-
-        // Build the UI
-        buildUI();
-
-        // Load notifications
-        loadNotifications();
+        refresh();
     }
 
-    private void buildUI() {
-        // Bell icon button
-        Button button = new Button(VaadinIcon.BELL.create());
-        button.addThemeVariants(ButtonVariant.LUMO_ICON);
-        button.setAriaLabel(configuration.ariaLabel());
-
-        // Popover
-        popover = new Popover();
-        popover.setTarget(button);
-        popover.setWidth("300px");
-        popover.addThemeVariants(PopoverVariant.LUMO_NO_PADDING);
-        popover.setPosition(PopoverPosition.BOTTOM);
-        popover.setModal(true);
-        popover.setAriaLabelledBy("notifications-heading");
-
-        // Message lists
-        unreadList = new MessageList();
-        allList = new MessageList();
-
-        // Tab sheet
-        TabSheet tabSheet = new TabSheet();
-        tabSheet.addThemeVariants(TabSheetVariant.LUMO_TABS_SMALL, TabSheetVariant.LUMO_NO_PADDING);
-        tabSheet.addClassName("notifications");
-
-        unreadContent = new Div();
-        unreadContent.add(unreadList);
-
-        tabSheet.add(getTranslation(configuration.unreadTabKey()), unreadContent);
-        tabSheet.add(getTranslation(configuration.allTabKey()), new Div(allList));
-
-        // Header
-        H4 heading = new H4(getTranslation(configuration.headingKey()));
-        heading.setId("notifications-heading");
-        heading.getStyle().set("margin", "0");
-
-        // Mark all read button
-        Button markRead = new Button(getTranslation(configuration.markAllReadKey()), e -> markAllAsRead());
-        markRead.getStyle().set("margin", "0 0 0 auto");
-        markRead.addThemeVariants(ButtonVariant.LUMO_SMALL);
-
-        HorizontalLayout layout = new HorizontalLayout(heading, markRead);
-        layout.setSpacing(false);
-        layout.setAlignItems(FlexComponent.Alignment.CENTER);
-        layout.getStyle().set("padding", "var(--lumo-space-m) var(--lumo-space-m) var(--lumo-space-xs)");
-
-        popover.add(layout, tabSheet);
-
-        add(button, popover);
-    }
-
-    private void loadNotifications() {
-        if (dataStore == null) {
-            return;
-        }
-
-        try {
-            // Query notifications
-            List<?> allNotifications = queryNotifications(false);
-            List<?> unreadNotifications = queryNotifications(true);
-
-            // Convert to MessageListItems
-            List<MessageListItem> allItems = convertToMessageItems(allNotifications);
-            List<MessageListItem> unreadItems = convertToMessageItems(unreadNotifications);
-
-            // Update UI
-            UI ui = getUI().orElse(null);
-            if (ui != null) {
-                ui.access(() -> {
-                    allList.setItems(allItems);
-
-                    if (unreadItems.isEmpty()) {
-                        unreadContent.removeAll();
-                        Div noNotifications = new Div(getTranslation(configuration.noNewNotificationsKey()));
-                        noNotifications.addClassName("no-notifications-msg");
-                        unreadContent.add(noNotifications);
-                    } else {
-                        unreadContent.removeAll();
-                        unreadContent.add(unreadList);
-                        unreadList.setItems(unreadItems);
-                    }
-                });
-            }
-        } catch (Exception e) {
-            log.error("Error loading notifications", e);
-        }
-    }
-
-    private List<?> queryNotifications(boolean unreadOnly) {
-        List<?> notifications;
-        int limit = configuration.limit();
-        FieldType timestampField = configuration.timestampField();
-
-        // If we need to filter by read status
-        if (unreadOnly && configuration.readStatusField() != null) {
-            // Query unread notifications
-            if (configuration.filterField() != null && configuration.filterValue() != null) {
-                // We need to filter by both read status and custom filter
-                // Since we can't easily do compound queries, we'll query by filter and filter in memory
-                if (timestampField != null) {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                            configuration.filterField(),
-                            configuration.filterValue(),
-                            timestampField,
-                            0,
-                            limit * 2
-                    );
-                } else {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                            configuration.filterField(),
-                            configuration.filterValue(),
-                            0,
-                            limit * 2
-                    );
-                }
-
-                // Filter for unread in memory
-                notifications = filterUnreadInMemory(notifications);
-            } else {
-                // Query only by read status
-                if (timestampField != null) {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                            configuration.readStatusField(),
-                            configuration.readStatusValueForUnread(),
-                            timestampField,
-                            0,
-                            limit
-                    );
-                } else {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                            configuration.readStatusField(),
-                            configuration.readStatusValueForUnread(),
-                            0,
-                            limit
-                    );
-                }
-            }
-        } else {
-            // Query all notifications
-            if (configuration.filterField() != null && configuration.filterValue() != null) {
-                if (timestampField != null) {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                            configuration.filterField(),
-                            configuration.filterValue(),
-                            timestampField,
-                            0,
-                            limit
-                    );
-                } else {
-                    notifications = dataStore.getRecordsFromTableWhereColumnEquals(
-                            configuration.filterField(),
-                            configuration.filterValue(),
-                            0,
-                            limit
-                    );
-                }
-            } else {
-                notifications = dataStore.getRecordsFromTable(0, limit);
-            }
-        }
-
-        // Limit the results
-        if (notifications != null && notifications.size() > limit) {
-            notifications = notifications.subList(0, limit);
-        }
-
-        return notifications != null ? notifications : new ArrayList<>();
-    }
-
-    private List<?> filterUnreadInMemory(List<?> notifications) {
-        if (notifications == null || configuration.readStatusField() == null) {
-            return notifications;
-        }
-
-        List<Object> unread = new ArrayList<>();
-        for (Object notification : notifications) {
-            Object readStatus = reflectionService.getValue(notification, configuration.readStatusField());
-            if (configuration.readStatusValueForUnread().equals(readStatus)) {
-                unread.add(notification);
-            }
-        }
-        return unread;
-    }
-
-    private List<MessageListItem> convertToMessageItems(List<?> notifications) {
-        List<MessageListItem> items = new ArrayList<>();
-
-        for (Object notification : notifications) {
-            try {
-                // Extract message
-                String message = "";
-                if (configuration.messageField() != null) {
-                    message = reflectionService.getString(notification, configuration.messageField());
-                    if (message == null) {
-                        message = "";
-                    }
-                }
-
-                // Extract timestamp
-                Instant timestamp = Instant.now();
-                if (configuration.timestampField() != null) {
-                    Object timestampValue = reflectionService.getValue(notification, configuration.timestampField());
-                    timestamp = convertToInstant(timestampValue);
-                }
-
-                // Extract user name
-                String userName = "";
-                if (configuration.userNameField() != null) {
-                    userName = reflectionService.getString(notification, configuration.userNameField());
-                    if (userName == null) {
-                        userName = "";
-                    }
-                }
-
-                // Extract avatar URL
-                String avatarUrl = null;
-                if (configuration.userAvatarField() != null) {
-                    avatarUrl = reflectionService.getString(notification, configuration.userAvatarField());
-                }
-
-                // Create message item
-                MessageListItem item = new MessageListItem(message, timestamp, userName, avatarUrl);
-                items.add(item);
-            } catch (Exception e) {
-                log.error("Error converting notification to message item", e);
-            }
-        }
-
-        return items;
-    }
-
-    private Instant convertToInstant(Object timestampValue) {
-        if (timestampValue == null) {
-            return Instant.now();
-        }
-
-        if (timestampValue instanceof Instant) {
-            return (Instant) timestampValue;
-        }
-
-        if (timestampValue instanceof LocalDateTime) {
-            return ((LocalDateTime) timestampValue).toInstant(ZoneOffset.UTC);
-        }
-
-        if (timestampValue instanceof java.sql.Timestamp) {
-            return ((java.sql.Timestamp) timestampValue).toInstant();
-        }
-
-        if (timestampValue instanceof java.util.Date) {
-            return ((java.util.Date) timestampValue).toInstant();
-        }
-
-        if (timestampValue instanceof Long) {
-            return Instant.ofEpochMilli((Long) timestampValue);
-        }
-
-        return Instant.now();
-    }
-
-    private void markAllAsRead() {
-        if (dataStore == null || configuration.readStatusField() == null) {
-            return;
-        }
-
-        try {
-            // Query unread notifications
-            List<?> unreadNotifications = queryNotifications(true);
-
-            // Mark each as read
-            for (Object notification : unreadNotifications) {
-                // Set read status
-                Object readValue = configuration.readStatusValueForRead();
-                if (readValue == null) {
-                    // Fallback to boolean logic if read value not configured
-                    // If unread is false, read is true. If unread is true, read is false.
-                    readValue = configuration.readStatusValueForUnread().equals(Boolean.FALSE);
-                }
-                reflectionService.setValue(notification, configuration.readStatusField(), readValue);
-
-                // Update in database
-                dataStore.updateRecordById(notification);
-            }
-
-            // Refresh the UI
-            loadNotifications();
-
-            // Close the popover
-            if (popover != null) {
-                popover.close();
-            }
-        } catch (Exception e) {
-            log.error("Error marking notifications as read", e);
-        }
-    }
-
-    /**
-     * Refresh the notification list from the data store
-     */
     public void refresh() {
-        loadNotifications();
+        var dataStore = config.dataStoreConfig().dataStoreInstance();
+        if (dataStore != null) {
+            List<ModelClass> items = dataStore.getRecordsFromTable(0, config.limit());
+            setData(items != null ? items : List.of());
+        }
+    }
+
+    private void markAllRead() {
+        var dataStore = config.dataStoreConfig().dataStoreInstance();
+        if (dataStore == null || config.readStatusField() == null) return;
+
+        try {
+            List<ModelClass> items = dataStore.getRecordsFromTable(0, config.limit());
+            if (items == null) return;
+
+            Object readValue = config.readStatusValueForRead();
+
+            for (ModelClass entity : items) {
+                if (isUnread(entity)) {
+                    reflection.setValue(entity, config.readStatusField(), readValue);
+                    dataStore.updateRecordById(entity);
+                }
+            }
+
+            refresh();
+            popover.close(); // Closes as expected by test step 6
+        } catch (Exception e) {
+            LoggerFactory.getLogger(getClass()).error("Error marking notifications as read", e);
+        }
     }
 }

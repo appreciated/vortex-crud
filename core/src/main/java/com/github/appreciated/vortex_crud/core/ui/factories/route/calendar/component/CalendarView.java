@@ -8,28 +8,32 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleC
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.InMemoryDataProvider;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.shared.Registration;
+import lombok.NonNull;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
+import org.vaadin.stefan.fullcalendar.dataprovider.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class CalendarView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
@@ -37,19 +41,17 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
 
-    private ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
+    private final ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
     private final FullCalendar calendar;
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
     private final Map<String, Entry> entryMap = new HashMap<>();
+    private final InMemoryEntryProvider<Entry> inMemoryData;
 
-    public CalendarView(RepositoryType dataStoreIdentifier,
-                        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+    public CalendarView(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                         DetailRouteSetting detailRouteSetting
@@ -57,8 +59,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeRenderer = routeRenderer;
         this.context = context;
         this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
-        this.fieldNameResolver = context.fieldNameResolver();
-        this.formCreator = context.formCreator();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
@@ -69,6 +69,8 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();
         calendar.setSizeFull();
+        inMemoryData = new InMemoryEntryProvider<>();
+        calendar.setEntryProvider(inMemoryData);
 
         // Add click listeners
         calendar.addEntryClickedListener(event -> {
@@ -110,9 +112,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void refreshCalendar() {
-        // Clear entry tracking maps
-        entryToEntityMap.clear();
-        entryMap.clear();
+        inMemoryData.removeAllEntries();
 
         // Fetch all entities and create entries
         Query<Object, Void> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
@@ -121,8 +121,11 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
             if (entry != null) {
                 entryToEntityMap.put(entry.getId(), entity);
                 entryMap.put(entry.getId(), entry);
+                // Add entry to calendar
+                inMemoryData.addEntries(entry);
             }
         });
+        inMemoryData.refreshAll();
     }
 
     private Entry createEntryFromEntity(Object entity) {

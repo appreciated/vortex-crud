@@ -197,13 +197,6 @@
                                     <includeExpression>.*\.priority</includeExpression>
                                     <includeTypes>VARCHAR</includeTypes>
                                 </forcedType>
-                                <!-- Sprint Status Enum -->
-                                <forcedType>
-                                    <userType>com.github.appreciated.vortex_crud.demo.projectmanagement.enums.SprintStatus</userType>
-                                    <converter>org.jooq.impl.EnumConverter</converter>
-                                    <includeExpression>sprint.status</includeExpression>
-                                    <includeTypes>VARCHAR</includeTypes>
-                                </forcedType>
                             </forcedTypes>
                         </database>
                         <target>

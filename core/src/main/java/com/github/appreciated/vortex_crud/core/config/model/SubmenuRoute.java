@@ -51,17 +51,4 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() {
         return null;
     }
-
-    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
-    public String title() { return title; }
-    public boolean isDefaultRoute() { return isDefaultRoute; }
-    public VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory() { return factory; }
-    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() { return dialogFactory; }
-    public boolean isHiddenInMenu() { return isHiddenInMenu; }
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() { return configuration; }
-    public SerializableSupplier<Component> iconFactory() { return iconFactory; }
-    public List<String> writeRoles() { return writeRoles; }
-    public List<String> readOnlyRoles() { return readOnlyRoles; }
-    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap() { return childrenMap; }
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
 }

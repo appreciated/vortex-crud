@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
