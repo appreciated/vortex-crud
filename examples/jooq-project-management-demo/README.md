@@ -42,10 +42,8 @@ Access: http://localhost:8081
 
 ## Next Steps
 
-1. Implement `ProjectManagementConfiguration.java` (Vortex CRUD config provider)
-2. Configure routes (Projects, Tasks, Milestones)
-3. Implement `CustomFieldService.java` for dynamic field handling
-4. Add UI components for custom field management
+1. Implement `CustomFieldService.java` for dynamic field handling
+2. Add UI components for custom field management
 
 ## Missing Features in Core
 
@@ -55,7 +53,7 @@ The following features are currently missing in the Vortex CRUD core but would g
 - **Gantt Chart**: A dedicated Gantt chart component for visualizing project timelines and dependencies.
 - **Rich Comment Component**: A specialized timeline/chat UI component for comments, replacing the basic list view.
 
-## Missing Demo Features
+## High Priority Tasks
 
 Features that would be expected in a full implementation:
 
@@ -63,5 +61,7 @@ Features that would be expected in a full implementation:
 - **File Attachments**: Uploading documents to tasks and projects.
 - **Workflow Transitions**: Enforcing state changes (e.g., Todo -> In Progress -> Done).
 - **Project Dashboard**: Visualizations like Burn-down charts and velocity tracking.
+- **Subtasks UI**: Support for parent/child task selection and visualization.
+- **Rich Text Descriptions**: Markdown support for task descriptions.
 
 See [DEMO_OVERVIEW.md](../DEMO_OVERVIEW.md) for architecture details.

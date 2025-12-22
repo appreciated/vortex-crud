@@ -44,10 +44,8 @@ Access: http://localhost:8082
 
 ## Next Steps
 
-1. Implement `DevPlatformConfiguration.java` (Vortex CRUD config provider)
-2. Configure routes (Repositories, Issues, PRs)
-3. Implement `CustomFieldService.java` for dynamic field handling
-4. Add UI components for custom field management
+1. Implement `CustomFieldService.java` for dynamic field handling
+2. Add UI components for custom field management
 
 ## Missing Features in Core
 
@@ -57,7 +55,7 @@ The following features are currently missing in the Vortex CRUD core but would g
 - **Auto-Enum Mapping**: Automatic generation of Select options from Java Enums or jOOQ Enum types.
 - **Simplified RBAC**: More concise configuration for Role Resolution Strategies, inferring relationships from DataStore configuration.
 
-## Missing Demo Features
+## High Priority Tasks
 
 Features that would be expected in a full implementation:
 
@@ -65,5 +63,6 @@ Features that would be expected in a full implementation:
 - **Activity Dashboard**: A feed showing recent commits, issues, and comments.
 - **Git Integration**: Actual interface with Git repositories for code browsing and diffs.
 - **Wiki**: Documentation pages for repositories.
+- **Notifications**: A system to notify users of mention or updates.
 
 See [DEMO_OVERVIEW.md](../DEMO_OVERVIEW.md) for architecture details.
