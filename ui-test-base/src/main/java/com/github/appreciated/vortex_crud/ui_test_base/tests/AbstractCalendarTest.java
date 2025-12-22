@@ -90,10 +90,10 @@ public abstract class AbstractCalendarTest extends BaseUITest {
     @Test
     void testEventClickOpensDialog() {
         navigateTo(getPath());
-        waitForElement("fc-full-calendar");
+        waitForElement(".fc-view");
         page.waitForTimeout(1000);
 
-        List<Locator> events = page.locator("fc-full-calendar .fc-event").all();
+        List<Locator> events = page.locator(".fc-view .fc-event").all();
         if (!events.isEmpty()) {
             events.get(0).click();
             page.waitForTimeout(500);

@@ -114,6 +114,9 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         entryToEntityMap.clear();
         entryMap.clear();
 
+        // Remove all existing entries from the calendar
+        calendar.getEntryProvider().asInMemory().removeAllEntries();
+
         // Fetch all entities and create entries
         Query<Object, Void> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
         dataProvider.fetch(query).forEach(entity -> {
@@ -121,6 +124,8 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
             if (entry != null) {
                 entryToEntityMap.put(entry.getId(), entity);
                 entryMap.put(entry.getId(), entry);
+                // Add entry to calendar
+                calendar.getEntryProvider().asInMemory().addEntries(entry);
             }
         });
     }
