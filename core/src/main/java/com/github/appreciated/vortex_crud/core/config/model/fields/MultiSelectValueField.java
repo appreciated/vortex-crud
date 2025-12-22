@@ -27,31 +27,5 @@ public class MultiSelectValueField<ModelClass, FieldType, RepositoryType> implem
     List<String> readOnlyRoles;
     @Builder.Default
     VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MultiSelectValueFieldFactory<>();
-
     String values;
-
-    @Override
-    public List<Validator<?>> validators() {
-        return validators;
-    }
-
-    @Override
-    public boolean required() {
-        return required;
-    }
-
-    @Override
-    public List<String> writeRoles() {
-        return writeRoles;
-    }
-
-    @Override
-    public List<String> readOnlyRoles() {
-        return readOnlyRoles;
-    }
-
-    @Override
-    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
-        return factory;
-    }
 }

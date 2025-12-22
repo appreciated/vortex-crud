@@ -46,29 +46,4 @@ public class FileField<ModelClass, FieldType, RepositoryType> implements Field<M
     private FieldType filterField;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    @Override
-    public List<Validator<?>> validators() {
-        return validators;
-    }
-
-    @Override
-    public boolean required() {
-        return required;
-    }
-
-    @Override
-    public List<String> writeRoles() {
-        return writeRoles;
-    }
-
-    @Override
-    public List<String> readOnlyRoles() {
-        return readOnlyRoles;
-    }
-
-    @Override
-    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
-        return factory;
-    }
 }
