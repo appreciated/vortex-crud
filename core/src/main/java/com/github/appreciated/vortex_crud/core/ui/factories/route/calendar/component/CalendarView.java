@@ -18,16 +18,22 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
+import com.vaadin.flow.data.provider.InMemoryDataProvider;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.shared.Registration;
+import lombok.NonNull;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
+import org.vaadin.stefan.fullcalendar.dataprovider.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class CalendarView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
@@ -43,6 +49,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final FullCalendar calendar;
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
     private final Map<String, Entry> entryMap = new HashMap<>();
+    private final InMemoryEntryProvider<Entry> inMemoryData;
 
     public CalendarView(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
@@ -62,6 +69,8 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();
         calendar.setSizeFull();
+        inMemoryData = new InMemoryEntryProvider<>();
+        calendar.setEntryProvider(inMemoryData);
 
         // Add click listeners
         calendar.addEntryClickedListener(event -> {
@@ -103,12 +112,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void refreshCalendar() {
-        // Clear entry tracking maps
-        entryToEntityMap.clear();
-        entryMap.clear();
-
-        // Remove all existing entries from the calendar
-        calendar.getEntryProvider().asInMemory().removeAllEntries();
+        inMemoryData.removeAllEntries();
 
         // Fetch all entities and create entries
         Query<Object, Void> query = new Query<>(0, 10000, Collections.emptyList(), null, null);
@@ -118,9 +122,10 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                 entryToEntityMap.put(entry.getId(), entity);
                 entryMap.put(entry.getId(), entry);
                 // Add entry to calendar
-                calendar.getEntryProvider().asInMemory().addEntries(entry);
+                inMemoryData.addEntries(entry);
             }
         });
+        inMemoryData.refreshAll();
     }
 
     private Entry createEntryFromEntity(Object entity) {
