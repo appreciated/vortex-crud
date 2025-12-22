@@ -52,16 +52,17 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                         JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
                         JooqCollectionElement.of("relations.labels.related")
                                 .factory(new ListCollectionFactory())
-                                .dialogFactory(new ConnectDialogFactory())
-                                .dataStoreConfig(config)
-                                .manyToMany(new JooqManyToMany(
-                                        ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
-                                        ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
-                                        MANY_TO_MANY_ITEM.ID,
-                                        ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
-                                .children(List.of(MANY_TO_MANY_ITEM.NAME))
-                                .emptyMessage("relations.related.empty")
-                                .label(MANY_TO_MANY_ITEM.NAME.getName())
+                                .configuration(JooqCollection.builder(new ConnectDialogFactory())
+                                        .dataStoreConfig(config)
+                                        .manyToMany(new JooqManyToMany(
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
+                                                MANY_TO_MANY_ITEM.ID,
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
+                                        .children(List.of(MANY_TO_MANY_ITEM.NAME))
+                                        .emptyMessage("relations.related.empty")
+                                        .titleField(MANY_TO_MANY_ITEM.NAME)
+                                        .build())
                                 .build()
                 ))
                 .build();
