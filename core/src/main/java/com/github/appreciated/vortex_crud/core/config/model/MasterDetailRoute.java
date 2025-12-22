@@ -83,4 +83,28 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         return itemFactory;
     }
 
+    @Override
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() {
+        // Delegate to child's children if this route doesn't have its own children defined
+        if (children != null) {
+            return children;
+        }
+        if (child instanceof FormRouteProvider) {
+            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) child).children();
+        }
+        return java.util.Collections.emptyList();
+    }
+
+    @Override
+    public FieldType titleField() {
+        // Delegate to child's titleField if this route doesn't have its own defined
+        if (titleField != null) {
+            return titleField;
+        }
+        if (child != null) {
+            return child.titleField();
+        }
+        return null;
+    }
+
 }
