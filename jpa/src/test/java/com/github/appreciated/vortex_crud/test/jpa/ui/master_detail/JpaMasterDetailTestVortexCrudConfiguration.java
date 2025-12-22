@@ -62,7 +62,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .title("route.done-tasks.title")
                 .titleField("title")
                 .descriptionField("status")
-                .child(taskForm)
+                .form(taskForm)
                 .build());
 
         return JpaApplication.builder()

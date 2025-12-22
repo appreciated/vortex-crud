@@ -76,7 +76,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                         JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),
                         JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
                 ))
-                .child(validationForm)
+                .form(validationForm)
                 .build());
 
         LinkedHashMap<JooqFieldValidationTestEnum, String> enumOptions = new LinkedHashMap<>();

@@ -63,7 +63,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         this.pathVariables = routeResolver;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
         this.itemFactory = routeRenderer.itemFactory();
-        assert routeRenderer.child() != null;
+        assert routeRenderer.form() != null;
 
         detailContainer = new VerticalLayout();
         detailContainer.setPadding(false);
@@ -128,8 +128,8 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private void setDetail(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver, boolean creation) {
         detailContainer.removeAll();
         if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
-            RouteRenderer<ModelClass, FieldType, RepositoryType> child = routeRenderer.child();
-            Component component = child.factory().renderRoute(
+            RouteRenderer<ModelClass, FieldType, RepositoryType> form = routeRenderer.form();
+            Component component = form.factory().renderRoute(
                     context,
                     creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,

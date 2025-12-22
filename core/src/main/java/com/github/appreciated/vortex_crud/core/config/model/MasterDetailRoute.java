@@ -63,7 +63,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
@@ -74,8 +74,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     public List<RouteFilter<FieldType>> filters() { return routeFilters; }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
-        return child;
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
+        return form;
     }
 
     @Override
@@ -85,24 +85,24 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     @Override
     public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() {
-        // Delegate to child's children if this route doesn't have its own children defined
+        // Delegate to form's children if this route doesn't have its own children defined
         if (children != null) {
             return children;
         }
-        if (child instanceof FormRouteProvider) {
-            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) child).children();
+        if (form instanceof FormRouteProvider) {
+            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) form).children();
         }
         return java.util.Collections.emptyList();
     }
 
     @Override
     public FieldType titleField() {
-        // Delegate to child's titleField if this route doesn't have its own defined
+        // Delegate to form's titleField if this route doesn't have its own defined
         if (titleField != null) {
             return titleField;
         }
-        if (child != null) {
-            return child.titleField();
+        if (form != null) {
+            return form.titleField();
         }
         return null;
     }

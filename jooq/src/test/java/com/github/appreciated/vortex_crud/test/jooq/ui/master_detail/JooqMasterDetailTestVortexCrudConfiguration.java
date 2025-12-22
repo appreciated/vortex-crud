@@ -61,7 +61,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .title("route.done-tasks.title")
                 .titleField(MASTER_DETAIL_TASKS.TITLE)
                 .descriptionField(MASTER_DETAIL_TASKS.STATUS)
-                .child(taskForm)
+                .form(taskForm)
                 .build());
 
         return JooqApplication.builder()

@@ -62,7 +62,7 @@ public class JooqGridTestVortexCrudConfiguration
                 .titleField(GRID_IMAGES.TITLE)
                 .imageField(GRID_IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         routes.put("filtered-grid", JooqGridRoute.builder()
@@ -79,7 +79,7 @@ public class JooqGridTestVortexCrudConfiguration
                         .field(GRID_IMAGES.URL)
                         .value("./red.png")
                         .build())
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JooqApplication.builder()

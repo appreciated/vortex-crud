@@ -66,7 +66,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .columnField(KANBAN_TASKS.STATUS)
                 .rowIndexField(KANBAN_TASKS.ROW_INDEX)
                 .filterField(KANBAN_TASKS.TITLE)
-                .child(taskForm)
+                .form(taskForm)
                 .build()
         );
 

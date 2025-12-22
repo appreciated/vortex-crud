@@ -56,7 +56,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                                 .dataStoreConfig(config)
                                 .title("route.open-tasks.title")
                                 .titleField(SUBROUTE_TASKS.TITLE)
-                                .child(taskForm)
+                                .form(taskForm)
                                 .build()
                 ))
                 .build());

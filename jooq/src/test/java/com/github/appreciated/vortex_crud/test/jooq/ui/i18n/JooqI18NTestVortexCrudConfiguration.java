@@ -67,7 +67,7 @@ public class JooqI18NTestVortexCrudConfiguration
                         JooqFieldElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
                         JooqFieldElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
                 ))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JooqApplication.builder()

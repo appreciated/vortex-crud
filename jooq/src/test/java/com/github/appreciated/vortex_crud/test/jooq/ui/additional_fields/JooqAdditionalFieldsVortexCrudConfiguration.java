@@ -86,7 +86,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                         JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
                         JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
                 ))
-                .child(lifecycleForm)
+                .form(lifecycleForm)
                 .build();
     }
 
@@ -118,7 +118,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .children(List.of(
                         JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
                 ))
-                .child(passwordForm)
+                .form(passwordForm)
                 .build();
     }
 
@@ -151,7 +151,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                         JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
                         JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
                 ))
-                .child(textAreaForm)
+                .form(textAreaForm)
                 .build();
     }
 }
