@@ -7,12 +7,5 @@ package com.github.appreciated.vortex_crud.core.config.model;
  */
 public interface FormRouteProvider<ModelClass, FieldType, RepositoryType> extends RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
-    /**
-     * Gets the form renderer configuration for this route.
-     *
-     * @return the form renderer configuration
-     */
-    FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration();
-
     boolean isDeleteButtonHidden();
 }

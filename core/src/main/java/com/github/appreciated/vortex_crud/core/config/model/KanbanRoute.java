@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.vaadin.flow.component.Component;
@@ -35,7 +38,44 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    @Builder.Default
+    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    private FieldType columnField;
+
+    private FieldType rowIndexField;
+
+    public FieldType columnField() {
+        return columnField;
+    }
+
+    public FieldType rowIndexField() {
+        return rowIndexField;
+    }
+
+    @Override
+    public FieldType filterField() {
+        return filterField;
+    }
+
+    @Override
+    public VortexCrudItemFactory<FieldType> itemFactory() {
+        return itemFactory;
+    }
 
     private SerializableSupplier<Component> iconFactory;
 

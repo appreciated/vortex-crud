@@ -55,19 +55,17 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
         RepositoryType dataStoreKey = tables.factory();
 
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-
         com.vaadin.flow.component.Component formContent;
 
         // Handle multi-form vs single-form configurations differently
-        if (configuration instanceof MultiFormRendererConfiguration) {
-            MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> multiFormConfig =
-                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) configuration;
+        if (formRouteRenderer instanceof MultiFormRoute) {
+            MultiFormRoute<ModelClass, FieldType, RepositoryType> multiFormRoute =
+                (MultiFormRoute<ModelClass, FieldType, RepositoryType>) formRouteRenderer;
 
             com.vaadin.flow.component.html.Div formsContainer = new com.vaadin.flow.component.html.Div();
 
             // Create a separate FormLayout for each form in the multi-form configuration
-            for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> childForm : multiFormConfig.forms()) {
+            for (RouteRenderer<ModelClass, FieldType, RepositoryType> childForm : multiFormRoute.forms()) {
                 FormLayout childFormLayout = new FormLayout();
                 childFormLayout.setMaxWidth("1000px");
                 childFormLayout.setResponsiveSteps(
@@ -80,7 +78,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
         } else {
             // Single form configuration
             FormLayout layout = new FormLayout();
-            formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, configuration.children(), recordById, context, tables, binder, layout);
+            formCreator.bindAndAddToLayout(dataStoreKey, formRouteRenderer, formRouteRenderer.children(), recordById, context, tables, binder, layout);
             formContent = layout;
         }
 

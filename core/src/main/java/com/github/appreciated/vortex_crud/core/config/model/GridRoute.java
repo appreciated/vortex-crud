@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.grid.GridRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -35,7 +38,24 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    @Builder.Default
+    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    @Override
 
     private SerializableSupplier<Component> iconFactory;
 

@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -61,8 +60,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
 
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration = formRouteRenderer.configuration();
-        formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, configuration.children(), recordById,
+        formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, formRouteRenderer.children(), recordById,
                 context, tables, binder, layout);
 
         dialog.add(layout);

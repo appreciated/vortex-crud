@@ -41,9 +41,8 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     ) {
         assert routeResolver.getRouteForIndex(currentPathIndex) instanceof FormRouteProvider<ModelClass, FieldType, RepositoryType>;
         FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
-        FormRendererConfiguration<ModelClass, FieldType, RepositoryType> form = routeProvider.formConfiguration();
         assert detailRouteSetting != null;
-        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider, form);
+        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
@@ -52,8 +51,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                                   boolean isHeaderHidden,
                                   boolean creationMode,
                                   boolean isDeleteButtonHidden,
-                                  RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                                  RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> formRouteRendererConfiguration) {
+                                  RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -70,7 +68,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         if (!creationMode) {
             binder.bindReadOnly(
                     titleComponent,
-                    entity1 -> prefix + reflectionService.getString(entity1, formRouteRendererConfiguration.titleField())
+                    entity1 -> prefix + reflectionService.getString(entity1, routeRenderer.titleField())
             );
         } else {
             titleComponent.setText(titleComponent.getTranslation("button.create.title"));
@@ -105,7 +103,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        formCreator.bindAndAddToLayout(table, routeRenderer, formRouteRendererConfiguration.children(), entity, context, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.children(), entity, context, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

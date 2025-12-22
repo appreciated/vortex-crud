@@ -39,7 +39,7 @@ import static com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.
 public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
-    private final KanbanConfiguration<ModelClass, FieldType, RepositoryType> kanbanConfigurationConfig;
+    private final KanbanRoute<ModelClass, FieldType, RepositoryType> kanbanRoute;
     private final ComponentRenderer<Component, Object> itemRenderer;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
@@ -72,15 +72,15 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
         Selects selects = context.configService().configuration().selects();
         DataStoreConfig<ModelClass, FieldType, RepositoryType> config = routeRenderer.dataStoreConfig();
-        this.kanbanConfigurationConfig = (KanbanConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
-        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanConfigurationConfig.columnField());
+        this.kanbanRoute = (KanbanRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanRoute.columnField());
 
-        this.itemFactory = kanbanConfigurationConfig.factory();
+        this.itemFactory = kanbanRoute.itemFactory();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanConfigurationConfig.filterField(), routeRenderer.filters());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanRoute.filterField(), routeRenderer.filters());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
-            Div cardWrapper = new Div(itemFactory.renderItem(kanbanConfigurationConfig,
+            Div cardWrapper = new Div(itemFactory.renderItem(routeRenderer,
                     entity,
                     null,
                     context));
@@ -92,6 +92,8 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             return cardWrapper;
         });
 
+        // Assuming SelectField has a values() method or similar that was accessible directly.
+        // If SelectField was refactored, verify its method name.
         Object selectName = ((SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField).values();
         Map<?, String> selectConfig = selects.configs().get(selectName);
 
@@ -226,16 +228,16 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                             Query<Object, String> baseQuery = new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null));
                             java.util.stream.Stream<Object> stream = dataProvider.fetch(baseQuery)
                                     .filter(item -> Objects.equals(
-                                            reflectionService.getValue(item, kanbanConfigurationConfig.columnField()),
+                                            reflectionService.getValue(item, kanbanRoute.columnField()),
                                             columnDatabaseValue));
-                            if (kanbanConfigurationConfig.rowIndexField() != null) {
-                                stream = stream.sorted(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanConfigurationConfig.rowIndexField())));
+                            if (kanbanRoute.rowIndexField() != null) {
+                                stream = stream.sorted(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanRoute.rowIndexField())));
                             }
                             return stream.skip(query.getOffset()).limit(query.getLimit());
                         },
                         query -> (int) dataProvider.fetch(new Query<>(0, 1000, Collections.emptyList(), null, query.getFilter().orElse(null)))
                                 .filter(item -> Objects.equals(
-                                        reflectionService.getValue(item, kanbanConfigurationConfig.columnField()),
+                                        reflectionService.getValue(item, kanbanRoute.columnField()),
                                         columnDatabaseValue))
                                 .count()
                 ).withConfigurableFilter();
@@ -265,17 +267,17 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             }
 
             // Store original column value
-            Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanConfigurationConfig.columnField());
+            Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanRoute.columnField());
 
             // Update column value
-            reflectionService.setValue(draggedItem, kanbanConfigurationConfig.columnField(), columnDatabaseValue);
+            reflectionService.setValue(draggedItem, kanbanRoute.columnField(), columnDatabaseValue);
 
-            if (kanbanConfigurationConfig.rowIndexField() != null) {
+            if (kanbanRoute.rowIndexField() != null) {
                 // Get fresh items in target column
                 List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                        kanbanConfigurationConfig.columnField(),
+                        kanbanRoute.columnField(),
                         columnDatabaseValue,
-                        kanbanConfigurationConfig.rowIndexField(),
+                        kanbanRoute.rowIndexField(),
                         0,
                         1000
                 );
@@ -286,33 +288,33 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     // Dropping at the end
                     Integer lastPosition = targetColumnItems.isEmpty() ? null :
                             (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
-                                    kanbanConfigurationConfig.rowIndexField());
+                                    kanbanRoute.rowIndexField());
                     newPosition = generateKeyBetween(lastPosition, null);
                 } else {
                     Object targetItem = event.getDropTargetItem().get();
                     Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
-                            kanbanConfigurationConfig.rowIndexField());
+                            kanbanRoute.rowIndexField());
 
                     if (event.getDropLocation() == GridDropLocation.BELOW) {
                         // Find next item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
                                 (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
-                                        kanbanConfigurationConfig.rowIndexField()) : null;
+                                        kanbanRoute.rowIndexField()) : null;
                         newPosition = generateKeyBetween(targetPosition, nextPosition);
                     } else {
                         // Find previous item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer prevPosition = (targetIndex > 0) ?
                                 (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
-                                        kanbanConfigurationConfig.rowIndexField()) : null;
+                                        kanbanRoute.rowIndexField()) : null;
                         newPosition = generateKeyBetween(prevPosition, targetPosition);
                     }
                 }
 
                 // Update the dragged item with new position
                 try {
-                    reflectionService.setValue(draggedItem, kanbanConfigurationConfig.rowIndexField(), newPosition);
+                    reflectionService.setValue(draggedItem, kanbanRoute.rowIndexField(), newPosition);
                 } catch (Exception e) {
                     // Ignore exception if setting row index fails
                 }

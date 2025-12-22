@@ -24,7 +24,11 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
     private final Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routeConfigs;
 
     @Getter
-    Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> defaultRouteEntry;
+    private Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> defaultRouteEntry;
+
+    public Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> getDefaultRouteEntry() {
+        return defaultRouteEntry;
+    }
 
     public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
         this.routeConfigs = configService.configuration().routes();

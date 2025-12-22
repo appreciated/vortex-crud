@@ -35,8 +35,6 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
-
     private SerializableSupplier<Component> iconFactory;
 
     private Class<? extends Component> componentClass;

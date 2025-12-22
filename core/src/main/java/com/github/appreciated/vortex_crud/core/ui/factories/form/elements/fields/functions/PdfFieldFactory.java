@@ -16,7 +16,7 @@ public class PdfFieldFactory<ModelClass, FieldType, RepositoryType> implements V
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         PdfField<ModelClass, FieldType, RepositoryType> pdfField = (PdfField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new PdfHasValue(pdfField.configuration().resourceProvider());
+        return new PdfHasValue(pdfField.resourceProvider());
     }
 
     @NoCoverage

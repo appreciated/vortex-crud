@@ -16,7 +16,7 @@ public class VideoFieldFactory<ModelClass, FieldType, RepositoryType> implements
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         VideoField<ModelClass, FieldType, RepositoryType> videoField = (VideoField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new VideoHasValue(videoField.configuration().resourceProvider());
+        return new VideoHasValue(videoField.resourceProvider());
     }
 
     @NoCoverage

@@ -5,7 +5,6 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
@@ -60,13 +59,12 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
-        MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration =
-                (MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
+
         if (!creationMode) {
             // Use titleField from multi-form config, or fall back to first form's titleField
-            FieldType titleField = formConfiguration.titleField();
-            if (titleField == null && !formConfiguration.forms().isEmpty()) {
-                titleField = formConfiguration.forms().get(0).titleField();
+            FieldType titleField = routeRenderer.titleField();
+            if (titleField == null && !routeRenderer.forms().isEmpty()) {
+                titleField = routeRenderer.forms().get(0).titleField();
             }
             if (titleField != null) {
                 FieldType finalTitleField = titleField;
@@ -93,7 +91,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         }
 
         Div Forms = new Div();
-        for (RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> child : formConfiguration.forms()) {
+        for (com.github.appreciated.vortex_crud.core.config.model.RouteRenderer<ModelClass, FieldType, RepositoryType> child : routeRenderer.forms()) {
             com.vaadin.flow.component.formlayout.FormLayout childFormLayout = new com.vaadin.flow.component.formlayout.FormLayout();
             childFormLayout.setMaxWidth("1000px");
             childFormLayout.setResponsiveSteps(new com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep("250px", 2, com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition.TOP));
