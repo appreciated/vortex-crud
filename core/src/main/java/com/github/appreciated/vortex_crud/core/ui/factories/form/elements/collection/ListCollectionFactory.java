@@ -115,7 +115,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, list, header, context));
-            RouteRenderer<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.configuration().child();
+            RouteRenderer<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.configuration().form();
             for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : childRoute.children()) {
                 String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));
@@ -147,7 +147,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 entityId,
                 foreignKeyValue,
                 referenceField,
-                collectionData.child(),
+                collectionData.form(),
                 collectionData,
                 collectionData.dataStoreInstance(),
                 context,

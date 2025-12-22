@@ -130,7 +130,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
                     .labelField("name")
                     .build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         // Single Form Route

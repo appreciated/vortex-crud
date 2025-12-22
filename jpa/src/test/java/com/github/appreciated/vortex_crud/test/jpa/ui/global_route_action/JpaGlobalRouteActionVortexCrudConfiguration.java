@@ -93,7 +93,7 @@ public class JpaGlobalRouteActionVortexCrudConfiguration implements VortexCrudCo
                     .handler(ctx -> {})
                     .build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         return JpaApplication.builder()

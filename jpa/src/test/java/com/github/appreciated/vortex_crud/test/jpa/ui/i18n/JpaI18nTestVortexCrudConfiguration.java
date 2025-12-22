@@ -63,7 +63,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                         JpaFieldElement.builder("url", "route.projects.labels.description").build(),
                         JpaFieldElement.builder("title", "route.projects.labels.name").build()
                 ))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JpaApplication.builder()

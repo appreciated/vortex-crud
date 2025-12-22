@@ -69,14 +69,12 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                         JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
                         JooqCollectionElement.of("relations.labels.children")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                        .dataStoreConfig(childConfig)
-                                        .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
-                                        .children(List.of(ONE_TO_MANY_CHILD.NAME))
-                                        .emptyMessage("relations.children.empty")
-                                        .child(childForm)
-                                        .build()
-                                )
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(childConfig)
+                                .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
+                                .children(List.of(ONE_TO_MANY_CHILD.NAME))
+                                .emptyMessage("relations.children.empty")
+                                .form(childForm)
                                 .build()
                 ))
                 .build();
@@ -90,7 +88,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .children(List.of(
                         JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
                 ))
-                .child(parentForm)
+                .form(parentForm)
                 .build());
 
         return JooqApplication.builder()

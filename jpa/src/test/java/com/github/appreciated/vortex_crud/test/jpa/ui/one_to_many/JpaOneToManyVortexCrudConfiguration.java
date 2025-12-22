@@ -74,13 +74,12 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                         JpaFieldElement.builder("name", "relations.labels.name").build(),
                         JpaCollectionElement.builder("relations.labels.children")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JpaCollection.builder(new FormDialogFactory<>())
-                                        .dataStoreConfig(childConfig)
-                                        .oneToMany(new JpaOneToMany("parent"))
-                                        .children(List.of("name"))
-                                        .emptyMessage("relations.children.empty")
-                                        .child(childForm)
-                                        .build())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(childConfig)
+                                .oneToMany(new JpaOneToMany("parent"))
+                                .children(List.of("name"))
+                                .emptyMessage("relations.children.empty")
+                                .form(childForm)
                                 .build()
                 ))
                 .build();
@@ -94,7 +93,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .children(List.of(
                         JpaFieldElement.builder("name", "relations.labels.name").build()
                 ))
-                .child(parentForm)
+                .form(parentForm)
                 .build());
 
         return JpaApplication.builder()

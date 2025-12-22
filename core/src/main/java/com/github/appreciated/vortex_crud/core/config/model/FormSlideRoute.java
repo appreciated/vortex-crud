@@ -60,7 +60,11 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
+        return form;
+    }
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 

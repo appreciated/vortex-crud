@@ -100,7 +100,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                             JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
                             JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
                     ))
-                    .child(lifecycleForm)
+                    .form(lifecycleForm)
                     .build();
         }
 
@@ -130,7 +130,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .children(List.of(
                             JpaFieldElement.builder("name", "password-test.labels.name").build()
                     ))
-                    .child(passwordForm)
+                    .form(passwordForm)
                     .build();
         }
 
@@ -161,7 +161,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                             JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
                             JpaFieldElement.builder("description", "textarea-test.labels.content").build()
                     ))
-                    .child(textAreaForm)
+                    .form(textAreaForm)
                     .build();
         }
     }

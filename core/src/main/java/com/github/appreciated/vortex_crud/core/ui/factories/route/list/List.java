@@ -70,12 +70,12 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     }
 
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, VortexCrudDataStore<FieldType, ModelClass> dataStore) {
-        if (routeRenderer.child() != null && routeRenderer.child().dialogFactory() != null) {
-             Dialog dialog = routeRenderer.child().dialogFactory().create(
+        if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
+             Dialog dialog = routeRenderer.form().dialogFactory().create(
                 null,
                 null,
                 null,
-                routeRenderer.child(),
+                routeRenderer.form(),
                 null,
                 dataStore,
                 context,

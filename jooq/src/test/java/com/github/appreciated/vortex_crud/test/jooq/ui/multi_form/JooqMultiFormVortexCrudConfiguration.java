@@ -95,7 +95,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 .children(List.of(
                         JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
                 ))
-                .child(multiFormRoute)
+                .form(multiFormRoute)
                 .build());
 
         return JooqApplication.builder()

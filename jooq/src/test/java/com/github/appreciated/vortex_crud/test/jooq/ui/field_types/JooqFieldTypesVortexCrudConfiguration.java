@@ -85,7 +85,7 @@ public class JooqFieldTypesVortexCrudConfiguration
             .children(List.of(
                   JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         return JooqApplication.builder()

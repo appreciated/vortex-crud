@@ -75,7 +75,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                         JpaFieldElement.builder("requiredField", "route.projects.labels.name").build(),
                         JpaFieldElement.builder("emailField", "route.projects.labels.description").build()
                 ))
-                .child(validationForm)
+                .form(validationForm)
                 .build());
 
         LinkedHashMap<JpaFieldValidationEnum, String> enumOptions = new LinkedHashMap<>();

@@ -64,7 +64,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
             .children(List.of(
                   JpaFieldElement.builder("name", "Name").build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         return JpaApplication.builder()

@@ -93,7 +93,7 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
                     .handler(ctx -> {})
                     .build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         return JpaApplication.builder()
