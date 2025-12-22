@@ -61,7 +61,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .titleField("title")
                 .imageField("url")
                 .resourceProvider(new LocalImageResourceProvider())
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JpaApplication.builder()

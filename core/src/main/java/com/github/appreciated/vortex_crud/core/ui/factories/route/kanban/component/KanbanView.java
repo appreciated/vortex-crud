@@ -158,12 +158,12 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                             VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                             Object entity) {
         // Navigate to the entity URL
-        if (routeRenderer.child() != null && routeRenderer.child().dialogFactory() != null) {
-            Dialog dialog = routeRenderer.child().dialogFactory().create(
+        if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
+            Dialog dialog = routeRenderer.form().dialogFactory().create(
                     context.dataStoreUtil().getId(entity),
                     null,
                     null,
-                    routeRenderer.child(),
+                    routeRenderer.form(),
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,
@@ -357,12 +357,12 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         // create call:
         // create(null, null, null, ...)
 
-        if (routeRenderer.child() != null && routeRenderer.child().dialogFactory() != null) {
-            Dialog dialog = routeRenderer.child().dialogFactory().create(
+        if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
+            Dialog dialog = routeRenderer.form().dialogFactory().create(
                     null,
                     null,
                     null,
-                    routeRenderer.child(),
+                    routeRenderer.form(),
                     null,
                     dataStore,
                     context,

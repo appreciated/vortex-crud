@@ -63,7 +63,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                 .titleField(FROM_SLIDE_IMAGES.TITLE)
                 .imageField(FROM_SLIDE_IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .child(formSlideDialog)
+                .form(formSlideDialog)
                 .build());
 
         return JooqApplication.builder()

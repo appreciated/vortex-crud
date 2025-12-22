@@ -66,7 +66,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                                 .dataStoreConfig(taskConfig)
                                 .title("route.open-tasks.title")
                                 .titleField("title")
-                                .child(taskForm)
+                                .form(taskForm)
                                 .build()
                 ))
                 .build());

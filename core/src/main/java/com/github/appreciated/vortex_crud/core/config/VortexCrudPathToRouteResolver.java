@@ -68,10 +68,10 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
             multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
             buildRouteMapForPathSection(sectionIndex + 1, multi.childrenMap());
         } else if (currentRouteRenderer instanceof RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> single &&
-                   single.child() != null) {
+                   single.form() != null) {
             // For single child routes, create a map with the child as a wildcard (null key)
             Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> singleChildMap = new HashMap<>();
-            singleChildMap.put(null, single.child());
+            singleChildMap.put(null, single.form());
             buildRouteMapForPathSection(sectionIndex + 1, singleChildMap);
         } else {
             // If no children, continue to the next segment

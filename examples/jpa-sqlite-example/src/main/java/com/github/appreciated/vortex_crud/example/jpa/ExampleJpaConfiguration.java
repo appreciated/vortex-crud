@@ -139,29 +139,27 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
                 .factory(new ListCollectionFactory<>())
-                .configuration(JpaCollection.builder(new FormDialogFactory<>())
-                        .dataStoreConfig(commentConfig)
-                        .oneToMany(new JpaOneToMany("task"))
-                        .children(List.of("commentText"))
-                        .emptyMessage("route.tasks.labels.comments-empty-message")
-                        .child(JpaFormRoute.builder()
-                                .titleField("name")
-                                .children(List.of(
-                                        JpaFieldElement.builder("commentText", "route.tasks.labels.comment").build()
-                                ))
-                                .build())
+                .dialogFactory(new FormDialogFactory<>())
+                .dataStoreConfig(commentConfig)
+                .oneToMany(new JpaOneToMany("task"))
+                .children(List.of("commentText"))
+                .emptyMessage("route.tasks.labels.comments-empty-message")
+                .form(JpaFormRoute.builder()
+                        .titleField("name")
+                        .children(List.of(
+                                JpaFieldElement.builder("commentText", "route.tasks.labels.comment").build()
+                        ))
                         .build())
                 .build();
 
         InternalFormElement build1 = JpaCollectionElement.builder("route.tasks.labels.related-tasks")
                 .factory(new ListCollectionFactory<>())
-                .configuration(JpaCollection.builder(new ConnectDialogFactory<>())
-                        .dataStoreConfig(taskConfig)
-                        .manyToMany(new JpaManyToMany(taskRepository, "relatedTasks"))
-                        .children(List.of("title"))
-                        .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                        .titleField("title")
-                        .build())
+                .dialogFactory(new ConnectDialogFactory<>())
+                .dataStoreConfig(taskConfig)
+                .manyToMany(new JpaManyToMany(taskRepository, "relatedTasks"))
+                .children(List.of("title"))
+                .emptyMessage("route.tasks.labels.related-tasks-empty-message")
+                .titleField("title")
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
@@ -189,17 +187,16 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         JpaFieldElement.builder("tagsMulti", "Tags (MultiSelect)").build(),
                         JpaCollectionElement.builder("Tags (Collection)")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JpaCollection.builder(new FormDialogFactory<>())
-                                        .dataStoreConfig(projectTagConfig)
-                                        .oneToMany(new JpaOneToMany("project"))
-                                        .children(List.of("tag"))
-                                        .emptyMessage("No tags")
-                                        .child(JpaFormRoute.builder()
-                                                .titleField("tag")
-                                                .children(List.of(
-                                                        JpaFieldElement.builder("tag", "Tag").build()
-                                                ))
-                                                .build())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(projectTagConfig)
+                                .oneToMany(new JpaOneToMany("project"))
+                                .children(List.of("tag"))
+                                .emptyMessage("No tags")
+                                .form(JpaFormRoute.builder()
+                                        .titleField("tag")
+                                        .children(List.of(
+                                                JpaFieldElement.builder("tag", "Tag").build()
+                                        ))
                                         .build())
                                 .build(),
                         JpaFieldElement.builder("active", "Active").build(),
@@ -253,7 +250,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .handler((context) -> Notification.show("Global Action Clicked"))
                                 .build()
                 ))
-                .child(projectForm)
+                .form(projectForm)
                 .build());
         routes.put("projects-list", JpaListRoute.builder()
                 .dataStoreConfig(projectConfig)
@@ -268,7 +265,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
                 ))
                 .writeRoles(List.of("admin", "manager", "editor"))
-                .child(projectForm)
+                .form(projectForm)
                 .build());
         routes.put("open-tasks", JpaKanbanRoute.builder()
                 .iconFactory(TASKS::create)
@@ -280,7 +277,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .rowIndexField("rowIndex")
                 .filterField("title")
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                .child(taskForm)
+                .form(taskForm)
                 .build());
         routes.put("done-tasks", JpaMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
@@ -289,7 +286,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .titleField("title")
                 .descriptionField("description")
                 .writeRoles(List.of("admin", "manager"))
-                .child(taskForm)
+                .form(taskForm)
                 .build());
         routes.put("images-grid", JpaGridRoute.builder()
                 .dataStoreConfig(imageConfig)
@@ -299,7 +296,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .imageField("url")
                 .resourceProvider(new LocalImageResourceProvider())
                 .writeRoles(List.of("admin"))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
         routes.put("images-list", JpaListRoute.builder()
                 .dataStoreConfig(imageConfig)
@@ -312,7 +309,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         JpaFieldElement.builder("title", "route.images.labels.title").build()
                 ))
                 .writeRoles(List.of("admin"))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         routes.put("images-slide", JpaGridRoute.builder()
@@ -323,7 +320,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .imageField("url")
                 .resourceProvider(new LocalImageResourceProvider())
                 .writeRoles(List.of("admin"))
-                .child(imageSlideForm)
+                .form(imageSlideForm)
                 .build());
 
         routes.put("videos-grid", JpaGridRoute.builder()
@@ -332,7 +329,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .title("route.videos.title-cards")
                 .titleField("title")
                 .writeRoles(List.of("admin"))
-                .child(videoForm)
+                .form(videoForm)
                 .build());
 
         routes.put("videos-list", JpaListRoute.builder()
@@ -346,7 +343,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         JpaFieldElement.builder("url", "route.videos.labels.video").build()
                 ))
                 .writeRoles(List.of("admin"))
-                .child(videoForm)
+                .form(videoForm)
                 .build());
 
         routes.put("submenu", JpaSubmenuRoute.builder()
@@ -386,7 +383,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .title("Notes (Custom DataStore)")
                 .titleField("title")
                 .descriptionField("content")
-                .child(JpaFormRoute.builder()
+                .form(JpaFormRoute.builder()
                         .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .children(List.of(
@@ -417,7 +414,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(FILE::create)
                 .title("Documents")
                 .titleField("title")
-                .child(JpaFormRoute.builder()
+                .form(JpaFormRoute.builder()
                         .dataStoreConfig(documentConfig)
                         .titleField("title")
                         .children(List.of(

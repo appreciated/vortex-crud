@@ -84,7 +84,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .children(List.of(
                         JpaFieldElement.builder("profileName", "relations.labels.name").build()
                 ))
-                .child(multiFormRoute)
+                .form(multiFormRoute)
                 .build());
 
         return JpaApplication.builder()

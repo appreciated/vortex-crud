@@ -204,12 +204,12 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     private void openDialog(Object entity) {
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> singleChildRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
-        if (singleChildRenderer.child() != null && singleChildRenderer.child().dialogFactory() != null) {
-            Dialog dialog = singleChildRenderer.child().dialogFactory().create(
+        if (singleChildRenderer.form() != null && singleChildRenderer.form().dialogFactory() != null) {
+            Dialog dialog = singleChildRenderer.form().dialogFactory().create(
                     dataStoreUtil.getId(entity),
                     null,
                     null,
-                    singleChildRenderer.child(),
+                    singleChildRenderer.form(),
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,
@@ -249,12 +249,12 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> singleChildRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
-        if (singleChildRenderer.child() != null && singleChildRenderer.child().dialogFactory() != null) {
-            Dialog dialog = singleChildRenderer.child().dialogFactory().create(
+        if (singleChildRenderer.form() != null && singleChildRenderer.form().dialogFactory() != null) {
+            Dialog dialog = singleChildRenderer.form().dialogFactory().create(
                     null,
                     null,
                     null,
-                    singleChildRenderer.child(),
+                    singleChildRenderer.form(),
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,

@@ -97,7 +97,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
                     .handler(ctx -> {})
                     .build()
             ))
-            .child(form)
+            .form(form)
             .build());
 
         return JooqApplication.builder()

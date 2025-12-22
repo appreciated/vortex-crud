@@ -73,12 +73,12 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        VortexCrudDataStore<FieldType, ModelClass> dataStore) {
 
-        if (routeRenderer.child() != null && routeRenderer.child().dialogFactory() != null) {
-            Dialog dialog = routeRenderer.child().dialogFactory().create(
+        if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
+            Dialog dialog = routeRenderer.form().dialogFactory().create(
                     null,
                     null,
                     null,
-                    routeRenderer.child(),
+                    routeRenderer.form(),
                     null,
                     dataStore,
                     context,

@@ -64,7 +64,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                 .titleField("title")
                 .imageField("url")
                 .resourceProvider(new LocalImageResourceProvider())
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JpaApplication.builder()

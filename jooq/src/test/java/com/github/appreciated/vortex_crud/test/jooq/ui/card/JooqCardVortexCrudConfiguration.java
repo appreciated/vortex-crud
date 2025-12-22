@@ -64,7 +64,7 @@ public class JooqCardVortexCrudConfiguration
                 .titleField(CARD_IMAGES.TITLE)
                 .imageField(CARD_IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         return JooqApplication.builder()

@@ -135,17 +135,16 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                         JooqCollectionElement.of("route.persons.labels.services")
                                 .factory(new ListCollectionFactory())
-                                .configuration(JooqCollection.builder(new ConnectDialogFactory())
-                                        .dataStoreConfig(typeConfig)
-                                        .manyToMany(new JooqManyToMany(
-                                                PERSON_APPOINTMENT_TYPE.PERSON_ID,
-                                                PERSON_APPOINTMENT_TYPE.APPOINTMENT_TYPE_ID,
-                                                APPOINTMENT_TYPE.ID,
-                                                PERSON_APPOINTMENT_TYPE))
-                                        .children(List.of(APPOINTMENT_TYPE.NAME, APPOINTMENT_TYPE.DURATION_MINUTES))
-                                        .emptyMessage("route.persons.labels.services-empty")
-                                        .titleField(APPOINTMENT_TYPE.NAME)
-                                        .build())
+                                .dialogFactory(new ConnectDialogFactory())
+                                .dataStoreConfig(typeConfig)
+                                .manyToMany(new JooqManyToMany(
+                                        PERSON_APPOINTMENT_TYPE.PERSON_ID,
+                                        PERSON_APPOINTMENT_TYPE.APPOINTMENT_TYPE_ID,
+                                        APPOINTMENT_TYPE.ID,
+                                        PERSON_APPOINTMENT_TYPE))
+                                .children(List.of(APPOINTMENT_TYPE.NAME, APPOINTMENT_TYPE.DURATION_MINUTES))
+                                .emptyMessage("route.persons.labels.services-empty")
+                                .titleField(APPOINTMENT_TYPE.NAME)
                                 .build()))
                 .build();
 
@@ -186,7 +185,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .titleField(APPOINTMENT.CUSTOMER_NAME)
                 .startDateField(APPOINTMENT.START_TIME)
                 .endDateField(APPOINTMENT.END_TIME)
-                .child(appointmentForm)
+                .form(appointmentForm)
                 .build());
 
         routes.put("rooms", JooqGridRoute.builder()
@@ -194,7 +193,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.HOME::create)
                 .title("route.rooms.title")
                 .titleField(ROOM.NAME)
-                .child(roomForm)
+                .form(roomForm)
                 .build());
 
         routes.put("persons", JooqGridRoute.builder()
@@ -202,7 +201,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.USER::create)
                 .title("route.persons.title")
                 .titleField(PERSON.NAME)
-                .child(personForm)
+                .form(personForm)
                 .build());
 
         routes.put("types", JooqGridRoute.builder()
@@ -210,7 +209,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.LIST::create)
                 .title("route.types.title")
                 .titleField(APPOINTMENT_TYPE.NAME)
-                .child(typeForm)
+                .form(typeForm)
                 .build());
 
         return JooqApplication.builder()

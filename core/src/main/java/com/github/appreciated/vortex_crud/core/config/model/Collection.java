@@ -23,7 +23,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
 
     private String emptyMessage;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private FieldType titleField;
 
@@ -47,8 +47,8 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
         return emptyMessage;
     }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
-        return child;
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
+        return form;
     }
 
     @Override
