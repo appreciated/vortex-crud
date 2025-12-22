@@ -47,10 +47,8 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(KANBAN_TASKS.TITLE)
-                        .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
-                        .build())
+                .titleField(KANBAN_TASKS.TITLE)
+                .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();
@@ -63,13 +61,11 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreConfig(config)
                 .title("route.open-tasks.title")
-                .configuration(JooqKanbanConfiguration.builder()
-                        .titleField(KANBAN_TASKS.TITLE)
-                        .descriptionField(KANBAN_TASKS.DESCRIPTION)
-                        .columnField(KANBAN_TASKS.STATUS)
-                        .rowIndexField(KANBAN_TASKS.ROW_INDEX)
-                        .filterField(KANBAN_TASKS.TITLE)
-                        .build())
+                .titleField(KANBAN_TASKS.TITLE)
+                .descriptionField(KANBAN_TASKS.DESCRIPTION)
+                .columnField(KANBAN_TASKS.STATUS)
+                .rowIndexField(KANBAN_TASKS.ROW_INDEX)
+                .filterField(KANBAN_TASKS.TITLE)
                 .child(taskForm)
                 .build()
         );

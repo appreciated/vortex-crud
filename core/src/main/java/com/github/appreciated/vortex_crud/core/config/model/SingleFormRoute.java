@@ -1,8 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -43,7 +45,21 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private final boolean isDeleteButtonHidden = true;
 
-    private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
+    private VortexCrudItemFactory<FieldType> itemFactory;
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -51,7 +67,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private List<String> readOnlyRoles;
 
-    private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+    // private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private FieldType entityFilterField;
 
@@ -60,13 +76,16 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
      */
     private SerializableSupplier<Object> entityFilterValueProvider;
 
+    public FieldType entityFilterField() {
+        return entityFilterField;
+    }
+
+    public SerializableSupplier<Object> entityFilterValueProvider() {
+        return entityFilterValueProvider;
+    }
+
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
-        return formConfiguration;
-    }
 
 }

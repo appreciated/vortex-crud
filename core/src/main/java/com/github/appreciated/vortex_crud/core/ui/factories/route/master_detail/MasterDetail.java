@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail
 
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
@@ -32,7 +31,6 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLayout {
 
-    private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
     private VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final VortexCrudItemFactory<FieldType> itemFactory;
@@ -64,8 +62,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
         this.pathVariables = routeResolver;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
-        this.itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
-        this.itemFactory = itemRendererConfiguration.factory();
+        this.itemFactory = routeRenderer.itemFactory();
         assert routeRenderer.child() != null;
 
         detailContainer = new VerticalLayout();
@@ -161,7 +158,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
     public void initVirtualList() {
         this.virtualList.setRenderer(new ComponentRenderer<>(item -> {
-            Component component = itemFactory.renderItem(itemRendererConfiguration,
+            Component component = itemFactory.renderItem(routeRenderer,
                     item,
                     null,
                     context);
@@ -178,7 +175,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
             return div;
         }));
 
-        dataProvider = new GenericFilterableDataProvider<>(dataStore, itemRendererConfiguration.titleField(), routeRenderer.filters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(dataStore, routeRenderer.titleField(), routeRenderer.filters()).withConfigurableFilter();
         this.virtualList.setDataProvider(dataProvider);
     }
 

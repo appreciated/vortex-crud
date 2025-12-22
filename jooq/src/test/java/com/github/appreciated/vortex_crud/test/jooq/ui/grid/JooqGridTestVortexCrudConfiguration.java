@@ -40,9 +40,7 @@ public class JooqGridTestVortexCrudConfiguration
                                 GRID_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                                .resourceProvider(new LocalImageResourceProvider())
-                                                .build())
+                                        .resourceProvider(new LocalImageResourceProvider())
                                         .build()
                         ))
                         .build();
@@ -50,35 +48,29 @@ public class JooqGridTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(GRID_IMAGES.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
-                                JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
-                        ))
-                        .build())
+                .titleField(GRID_IMAGES.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images-grid", JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.images-cards")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(GRID_IMAGES.TITLE)
-                        .imageField(GRID_IMAGES.URL)
-                        .resourceProvider(new LocalImageResourceProvider())
-                        .build())
+                .titleField(GRID_IMAGES.TITLE)
+                .imageField(GRID_IMAGES.URL)
+                .resourceProvider(new LocalImageResourceProvider())
                 .child(imageForm)
                 .build());
 
         routes.put("filtered-grid", JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Filtered Grid")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(GRID_IMAGES.TITLE)
-                        .imageField(GRID_IMAGES.URL)
-                        .resourceProvider(new LocalImageResourceProvider())
-                        .build())
+                .titleField(GRID_IMAGES.TITLE)
+                .imageField(GRID_IMAGES.URL)
+                .resourceProvider(new LocalImageResourceProvider())
                 .filter(RouteFilter.<TableField<?, ?>>builder()
                         .field(GRID_IMAGES.TITLE)
                         .value("ItemOne")

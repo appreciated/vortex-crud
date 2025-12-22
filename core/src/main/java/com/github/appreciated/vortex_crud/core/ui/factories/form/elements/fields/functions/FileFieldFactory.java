@@ -16,7 +16,7 @@ public class FileFieldFactory<ModelClass, FieldType, RepositoryType> implements 
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         FileField<ModelClass, FieldType, RepositoryType> fileField = (FileField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new FileHasValue(fileField.configuration().resourceProvider());
+        return new FileHasValue(fileField.resourceProvider());
     }
 
     @NoCoverage

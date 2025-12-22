@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.one_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -53,36 +54,31 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                                 ONE_TO_MANY_CHILD.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
                 .dataStoreConfig(childConfig)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(ONE_TO_MANY_CHILD.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
-                        ))
-                        .build())
+                .titleField(ONE_TO_MANY_CHILD.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
+                ))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
                 .dataStoreConfig(parentConfig)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(ONE_TO_MANY_PARENT.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
-                                JooqCollectionElement.of("relations.labels.children")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(childConfig)
-                                                        .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
-                                                        .children(List.of(ONE_TO_MANY_CHILD.NAME))
-                                                        .build())
-                                                .emptyMessage("relations.children.empty")
-                                                .child(childForm)
-                                                .build()
-                                        )
+                .titleField(ONE_TO_MANY_PARENT.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
+                        JooqCollectionElement.of("relations.labels.children")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(childConfig)
+                                        .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
+                                        .children(List.of(ONE_TO_MANY_CHILD.NAME))
+                                        .emptyMessage("relations.children.empty")
+                                        .child(childForm)
                                         .build()
-                        ))
-                        .build())
+                                )
+                                .build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -90,12 +86,10 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(ONE_TO_MANY_PARENT.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
-                        ))
-                        .build())
+                .filterField(ONE_TO_MANY_PARENT.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
+                ))
                 .child(parentForm)
                 .build());
 

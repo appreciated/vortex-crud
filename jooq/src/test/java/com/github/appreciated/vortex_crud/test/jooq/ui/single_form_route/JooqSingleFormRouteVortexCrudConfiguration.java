@@ -54,9 +54,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
                         SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalPdfResourceProvider())
-                                        .build())
+                                .resourceProvider(new LocalPdfResourceProvider())
                                 .build(),
                         SINGLE_FORM_ROUTE_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
@@ -70,13 +68,11 @@ public class JooqSingleFormRouteVortexCrudConfiguration
              .title("Single Form")
              .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
              .entityFilterValueProvider(() -> 1)
-             .formConfiguration(JooqFormRendererConfiguration.builder()
-                 .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
-                 .children(List.of(
-                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
-                     JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
-                 ))
-                 .build())
+             .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
+             .children(List.of(
+                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
+                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
+             ))
              .build());
 
         return JooqApplication.builder()

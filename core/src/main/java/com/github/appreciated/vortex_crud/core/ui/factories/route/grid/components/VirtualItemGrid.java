@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.components;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.GridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -37,7 +36,6 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
-    private final GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> itemRendererConfiguration;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> config;
     private int minWidth = 250;  // Minimum width in pixels
@@ -57,9 +55,8 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.dataStoreUtil = context.dataStoreUtil();
 
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreConfig().dataStoreInstance();
-        itemRendererConfiguration = (GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType>) config.configuration();
 
-        this.itemFactory = itemRendererConfiguration.factory();
+        this.itemFactory = config.itemFactory();
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {
@@ -84,7 +81,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
             wrapper.getStyle().set("margin-bottom", "var(--vaadin-gap-s)");
             List<ModelClass> list = item.list();
             for (ModelClass entity : list) {
-                Component component = itemFactory.renderItem(itemRendererConfiguration,
+                Component component = itemFactory.renderItem(config,
                         entity,
                         maxWidth,
                         context);
@@ -126,9 +123,9 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.filters(), offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
                         } else {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(itemRendererConfiguration.titleField(), filterText, offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
                         }
                     }
 
@@ -152,9 +149,9 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereColumnLikeAndFiltersEqual(itemRendererConfiguration.titleField(), filterText, config.filters());
+                            count = dataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
                         } else {
-                            count = dataStore.countWhereColumnLike(itemRendererConfiguration.titleField(), filterText);
+                            count = dataStore.countWhereColumnLike(config.titleField(), filterText);
                         }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);

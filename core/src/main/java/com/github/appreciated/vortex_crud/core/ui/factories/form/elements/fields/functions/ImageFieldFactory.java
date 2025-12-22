@@ -16,7 +16,7 @@ public class ImageFieldFactory<ModelClass, FieldType, RepositoryType> implements
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        return new ImageHasValue(imageField.configuration().resourceProvider());
+        return new ImageHasValue(imageField.resourceProvider());
     }
 
     @NoCoverage

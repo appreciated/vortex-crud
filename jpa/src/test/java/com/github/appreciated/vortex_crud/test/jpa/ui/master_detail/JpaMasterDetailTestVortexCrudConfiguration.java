@@ -9,7 +9,11 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaMasterDetailRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +48,11 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.projects.title-cards")
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("title")
-                        .children(List.of(
-                                JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
-                                JpaFieldElement.builder("description", "route.tasks.labels.description").build()
-                        ))
-                        .build())
+                .titleField("title")
+                .children(List.of(
+                        JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
+                        JpaFieldElement.builder("description", "route.tasks.labels.description").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
@@ -58,10 +60,8 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreConfig(taskConfig)
                 .title("route.done-tasks.title")
-                .configuration(JpaGridItemRendererConfiguration.builder()
-                        .titleField("title")
-                        .descriptionField("status")
-                        .build())
+                .titleField("title")
+                .descriptionField("status")
                 .child(taskForm)
                 .build());
 

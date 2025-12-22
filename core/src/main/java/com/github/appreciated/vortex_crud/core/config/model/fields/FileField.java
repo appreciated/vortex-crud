@@ -1,9 +1,11 @@
 package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.FileFieldRendererConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.FileFieldFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.vaadin.flow.data.binder.Validator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +31,21 @@ public class FileField<ModelClass, FieldType, RepositoryType> implements Field<M
     @Builder.Default
     VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new FileFieldFactory<>();
 
-    FileFieldRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    private VortexCrudItemFactory<FieldType> itemFactory;
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     @Override
     public List<Validator<?>> validators() {

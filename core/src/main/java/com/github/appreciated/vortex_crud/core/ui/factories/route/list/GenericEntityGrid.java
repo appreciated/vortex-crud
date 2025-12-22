@@ -34,16 +34,12 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
-        @SuppressWarnings("unchecked")
-        RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> gridOrListConfiguration =
-                routeRenderer.configuration();
-
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, gridOrListConfiguration != null ? gridOrListConfiguration.filterField() : null, routeRenderer.filters()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, routeRenderer.filterField(), routeRenderer.filters()).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : gridOrListConfiguration.children()) {
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : routeRenderer.children()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
             context.columnCallbackRegistry().getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);

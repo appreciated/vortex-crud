@@ -73,9 +73,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                         Map.entry(MISSING_FEATURES_TEST.FILE_ATTACHMENT, JooqFileField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.PRICE, JooqBigDecimalField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.VIDEO_URL, JooqVideoField.builder()
-                                .configuration(VideoFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalVideoResourceProvider())
-                                        .build())
+                                .resourceProvider(new LocalVideoResourceProvider())
                                 .build()),
                         // ReferenceField
                         Map.entry(MISSING_FEATURES_TEST.REFERENCED_ID, JooqReferenceField.builder()
@@ -89,35 +87,32 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(taskConfig)
             .title("route.missing.title")
-            .formConfiguration(JooqFormRendererConfiguration.builder()
-                .titleField(MISSING_FEATURES_TEST.NAME)
-                .children(List.of(
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.PDF_DOC, "PDF").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.NOTES, "Notes").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.REFERENCED_ID, "Referenced").build(),
-                    // Multi Select (ManyToMany)
-                    JooqCollectionElement.of("Multi Select")
-                        .factory(new ListCollectionFactory())
-                        .configuration(JooqCollection.builder(new ConnectDialogFactory())
-                            .data(JooqCollectionConfiguration.of(referencedConfig)
-                                .manyToMany(new JooqManyToMany<>(
-                                    MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
-                                    MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
-                                    MISSING_FEATURES_REFERENCED.ID,
-                                    MISSING_FEATURES_TEST_RELATIONS
-                                ))
-                                .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
-                                .build())
-                            .configuration(new CollectionConfig<>(MISSING_FEATURES_REFERENCED.NAME))
-                            .build())
-                        .build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.FILE_ATTACHMENT, "File").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.PRICE, "Price").build(),
-                    JooqFieldElement.of(MISSING_FEATURES_TEST.VIDEO_URL, "Video").build()
-                ))
-                .build())
+            .titleField(MISSING_FEATURES_TEST.NAME)
+            .children(List.of(
+                JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.PDF_DOC, "PDF").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.NOTES, "Notes").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.REFERENCED_ID, "Referenced").build(),
+                // Multi Select (ManyToMany)
+                JooqCollectionElement.of("Multi Select")
+                    .factory(new ListCollectionFactory())
+                    .configuration(JooqCollection.builder(new ConnectDialogFactory())
+                        .dataStoreConfig(referencedConfig)
+                        .manyToMany(new JooqManyToMany<>(
+                            MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
+                            MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
+                            MISSING_FEATURES_REFERENCED.ID,
+                            MISSING_FEATURES_TEST_RELATIONS
+                        ))
+                        .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
+                        .label(MISSING_FEATURES_REFERENCED.NAME.getName())
+                        .build())
+                    .build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.FILE_ATTACHMENT, "File").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.PRICE, "Price").build(),
+                JooqFieldElement.of(MISSING_FEATURES_TEST.VIDEO_URL, "Video").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -127,12 +122,10 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .configuration(JooqListItemRendererConfiguration.builder()
-                 .filterField(MISSING_FEATURES_TEST.NAME)
-                 .children(List.of(
-                      JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+            .filterField(MISSING_FEATURES_TEST.NAME)
+            .children(List.of(
+                  JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
+            ))
             .routeActions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
@@ -163,12 +156,10 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
              .title("Single Form")
              .entityFilterField(MISSING_FEATURES_TEST.ID)
              .entityFilterValueProvider(() -> 1)
-             .formConfiguration(JooqFormRendererConfiguration.builder()
-                 .titleField(MISSING_FEATURES_TEST.NAME)
-                 .children(List.of(
-                     JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+             .titleField(MISSING_FEATURES_TEST.NAME)
+             .children(List.of(
+                 JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
+             ))
              .build());
 
         return JooqApplication.builder()

@@ -35,8 +35,6 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;

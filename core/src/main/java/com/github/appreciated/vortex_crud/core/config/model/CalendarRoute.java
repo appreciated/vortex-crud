@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.menu.MenuActionComponentFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
@@ -36,7 +39,30 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private boolean isHiddenInMenu;
 
-    private RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    @Builder.Default
+    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType startDateField;
+
+    private FieldType endDateField;
+
+    private FieldType allDayField;
+
+    private FieldType colorField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;
 

@@ -1,6 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -66,17 +70,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> lifecycleForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.lifecycle-test.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(LIFECYLE_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
-                                JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
-                        ))
-                        .build())
-                .build();
-
-        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
-                .filterField(LIFECYLE_TEST.NAME)
+                .titleField(LIFECYLE_TEST.NAME)
                 .children(List.of(
                         JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
                         JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
@@ -87,7 +81,11 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.lifecycle-test.title-list")
-                .configuration(listConfig)
+                .filterField(LIFECYLE_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(LIFECYLE_TEST.NAME, "lifecycle-test.labels.name").build(),
+                        JooqFieldElement.of(LIFECYLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
+                ))
                 .child(lifecycleForm)
                 .build();
     }
@@ -105,19 +103,10 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> passwordForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.password-test.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(PASSWORD_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
-                                JooqFieldElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
-                        ))
-                        .build())
-                .build();
-
-        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
-                .filterField(PASSWORD_TEST.NAME)
+                .titleField(PASSWORD_TEST.NAME)
                 .children(List.of(
-                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
+                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
+                        JooqFieldElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
                 ))
                 .build();
 
@@ -125,7 +114,10 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.password-test.title-list")
-                .configuration(listConfig)
+                .filterField(PASSWORD_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
+                ))
                 .child(passwordForm)
                 .build();
     }
@@ -143,17 +135,7 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> textAreaForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.textarea-test.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(TEXTAREA_TEST.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
-                                JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
-                        ))
-                        .build())
-                .build();
-
-        RouteRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> listConfig = JooqListItemRendererConfiguration.builder()
-                .filterField(TEXTAREA_TEST.NAME)
+                .titleField(TEXTAREA_TEST.NAME)
                 .children(List.of(
                         JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
                         JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
@@ -164,7 +146,11 @@ public class JooqAdditionalFieldsVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.textarea-test.title-list")
-                .configuration(listConfig)
+                .filterField(TEXTAREA_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
+                        JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
+                ))
                 .child(textAreaForm)
                 .build();
     }

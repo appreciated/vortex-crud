@@ -47,13 +47,11 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(MASTER_DETAIL_TASKS.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
-                                JooqFieldElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
-                        ))
-                        .build())
+                .titleField(MASTER_DETAIL_TASKS.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
+                        JooqFieldElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -61,10 +59,8 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreConfig(config)
                 .title("route.done-tasks.title")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(MASTER_DETAIL_TASKS.TITLE)
-                        .descriptionField(MASTER_DETAIL_TASKS.STATUS)
-                        .build())
+                .titleField(MASTER_DETAIL_TASKS.TITLE)
+                .descriptionField(MASTER_DETAIL_TASKS.STATUS)
                 .child(taskForm)
                 .build());
 

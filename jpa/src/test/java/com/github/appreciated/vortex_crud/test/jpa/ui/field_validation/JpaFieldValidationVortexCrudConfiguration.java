@@ -1,12 +1,20 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.*;
+import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION1;
+import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION2;
+import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION3;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Service
@@ -42,34 +52,29 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("requiredField")
-                        .children(List.of(
-                                JpaFieldElement.builder("requiredField", "validation.fields.required").build(),
-                                JpaFieldElement.builder("emailField", "validation.fields.email").build(),
-                                JpaFieldElement.builder("numericField", "validation.fields.numeric").build(),
-                                JpaFieldElement.builder("dateField", "validation.fields.date").build(),
-                                JpaFieldElement.builder("dateTimeField", "validation.fields.datetime").build(),
-                                JpaFieldElement.builder("checkboxField", "validation.fields.checkbox").build(),
-                                JpaFieldElement.builder("enumField", "validation.fields.enum").build(),
-                                JpaFieldElement.builder("imageField", "validation.fields.image").build()
-                        ))
-                        .build())
+                .titleField("requiredField")
+                .children(List.of(
+                        JpaFieldElement.builder("requiredField", "validation.fields.required").build(),
+                        JpaFieldElement.builder("emailField", "validation.fields.email").build(),
+                        JpaFieldElement.builder("numericField", "validation.fields.numeric").build(),
+                        JpaFieldElement.builder("dateField", "validation.fields.date").build(),
+                        JpaFieldElement.builder("dateTimeField", "validation.fields.datetime").build(),
+                        JpaFieldElement.builder("checkboxField", "validation.fields.checkbox").build(),
+                        JpaFieldElement.builder("enumField", "validation.fields.enum").build(),
+                        JpaFieldElement.builder("imageField", "validation.fields.image").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
-        RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaListItemRendererConfiguration.builder()
+        routes.put("field-validation-test", JpaListRoute.builder()
+                .dataStoreConfig(config)
+                .iconFactory(FACTORY::create)
+                .title("route.projects.title-list")
                 .filterField("requiredField")
                 .children(List.of(
                         JpaFieldElement.builder("requiredField", "route.projects.labels.name").build(),
                         JpaFieldElement.builder("emailField", "route.projects.labels.description").build()
                 ))
-                .build();
-        routes.put("field-validation-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .dataStoreConfig(config)
-                .iconFactory(FACTORY::create)
-                .title("route.projects.title-list")
-                .configuration(build)
                 .child(validationForm)
                 .build());
 

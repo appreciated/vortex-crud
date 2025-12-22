@@ -1,7 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -35,9 +38,22 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private boolean isHiddenInMenu;
 
-    private GridItemRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    @Builder.Default
+    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
-    private FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration;
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private final boolean isDeleteButtonHidden = false;
 
@@ -58,14 +74,13 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     public List<RouteFilter<FieldType>> filters() { return routeFilters; }
 
-    @Override
-    public FormRendererConfiguration<ModelClass, FieldType, RepositoryType> formConfiguration() {
-        if (formConfiguration != null) {
-            return formConfiguration;
-        }
-        if (child instanceof FormRouteProvider) {
-            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) child).formConfiguration();
-        }
-        return null;
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
+        return child;
     }
+
+    @Override
+    public VortexCrudItemFactory<FieldType> itemFactory() {
+        return itemFactory;
+    }
+
 }

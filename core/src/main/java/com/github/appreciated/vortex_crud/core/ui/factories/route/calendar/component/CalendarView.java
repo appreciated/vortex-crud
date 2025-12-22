@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.comp
 
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.CalendarConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.CalendarRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
@@ -18,26 +18,21 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
-import com.vaadin.flow.data.provider.InMemoryDataProvider;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.provider.Query;
-import com.vaadin.flow.shared.Registration;
-import lombok.NonNull;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
-import org.vaadin.stefan.fullcalendar.dataprovider.*;
+import org.vaadin.stefan.fullcalendar.dataprovider.InMemoryEntryProvider;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class CalendarView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
-    private final CalendarConfiguration<ModelClass, FieldType, RepositoryType> calendarConfiguration;
+    private final CalendarRoute<ModelClass, FieldType, RepositoryType> calendarRoute;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
@@ -62,9 +57,9 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
-        this.calendarConfiguration = (CalendarConfiguration<ModelClass, FieldType, RepositoryType>) routeRenderer.configuration();
+        this.calendarRoute = (CalendarRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarConfiguration.filterField(), routeRenderer.filters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarRoute.filterField(), routeRenderer.filters()).withConfigurableFilter();
 
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();
@@ -129,12 +124,12 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private Entry createEntryFromEntity(Object entity) {
-        if (calendarConfiguration.titleField() == null || calendarConfiguration.startDateField() == null) {
+        if (calendarRoute.titleField() == null || calendarRoute.startDateField() == null) {
             return null;
         }
 
-        Object titleValue = reflectionService.getValue(entity, calendarConfiguration.titleField());
-        Object startValue = reflectionService.getValue(entity, calendarConfiguration.startDateField());
+        Object titleValue = reflectionService.getValue(entity, calendarRoute.titleField());
+        Object startValue = reflectionService.getValue(entity, calendarRoute.startDateField());
 
         if (titleValue == null || startValue == null) {
             return null;
@@ -152,8 +147,8 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         entry.setStart(start);
 
         // Set end date if available
-        if (calendarConfiguration.endDateField() != null) {
-            Object endValue = reflectionService.getValue(entity, calendarConfiguration.endDateField());
+        if (calendarRoute.endDateField() != null) {
+            Object endValue = reflectionService.getValue(entity, calendarRoute.endDateField());
             if (endValue != null) {
                 Instant end = convertToInstant(endValue);
                 if (end != null) {
@@ -163,24 +158,24 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         }
 
         // Set all day if available
-        if (calendarConfiguration.allDayField() != null) {
-            Object allDayValue = reflectionService.getValue(entity, calendarConfiguration.allDayField());
+        if (calendarRoute.allDayField() != null) {
+            Object allDayValue = reflectionService.getValue(entity, calendarRoute.allDayField());
             if (allDayValue instanceof Boolean) {
                 entry.setAllDay((Boolean) allDayValue);
             }
         }
 
         // Set color if available
-        if (calendarConfiguration.colorField() != null) {
-            Object colorValue = reflectionService.getValue(entity, calendarConfiguration.colorField());
+        if (calendarRoute.colorField() != null) {
+            Object colorValue = reflectionService.getValue(entity, calendarRoute.colorField());
             if (colorValue != null) {
                 entry.setColor(colorValue.toString());
             }
         }
 
         // Set description if available
-        if (calendarConfiguration.descriptionField() != null) {
-            Object descValue = reflectionService.getValue(entity, calendarConfiguration.descriptionField());
+        if (calendarRoute.descriptionField() != null) {
+            Object descValue = reflectionService.getValue(entity, calendarRoute.descriptionField());
             if (descValue != null) {
                 entry.setDescription(descValue.toString());
             }

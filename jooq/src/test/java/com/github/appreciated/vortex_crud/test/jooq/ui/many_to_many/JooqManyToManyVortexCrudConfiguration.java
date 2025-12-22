@@ -47,26 +47,23 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(MANY_TO_MANY_ITEM.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
-                                JooqCollectionElement.of("relations.labels.related").factory(new ListCollectionFactory())
-                                        .configuration(JooqCollection.builder(new ConnectDialogFactory())
-                                                .data(JooqCollectionConfiguration.of(config)
-                                                        .manyToMany(new JooqManyToMany(
-                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
-                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
-                                                                MANY_TO_MANY_ITEM.ID,
-                                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
-                                                        .children(List.of(MANY_TO_MANY_ITEM.NAME))
-                                                        .build())
-                                                .emptyMessage("relations.related.empty")
-                                                .configuration(new com.github.appreciated.vortex_crud.core.config.model.CollectionConfig(MANY_TO_MANY_ITEM.NAME))
-                                                .build())
-                                        .build()
-                        ))
-                        .build())
+                .titleField(MANY_TO_MANY_ITEM.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
+                        JooqCollectionElement.of("relations.labels.related").factory(new ListCollectionFactory())
+                                .configuration(JooqCollection.builder(new ConnectDialogFactory())
+                                        .dataStoreConfig(config)
+                                        .manyToMany(new JooqManyToMany(
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
+                                                MANY_TO_MANY_ITEM.ID,
+                                                ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
+                                        .children(List.of(MANY_TO_MANY_ITEM.NAME))
+                                        .emptyMessage("relations.related.empty")
+                                        .label(MANY_TO_MANY_ITEM.NAME.getName())
+                                        .build())
+                                .build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -74,12 +71,10 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(MANY_TO_MANY_ITEM.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build()
-                        ))
-                        .build())
+                .filterField(MANY_TO_MANY_ITEM.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build()
+                ))
                 .child(itemForm)
                 .build());
 

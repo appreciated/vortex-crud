@@ -20,12 +20,12 @@ public class DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType
     public void addColumn(Grid<Object> grid, InternalFormElement<ModelClass, FieldType, RepositoryType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         if (dataStoreField instanceof ImageField<?, ?, ?>) {
             ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-            if (imageField.configuration() == null) {
-                throw new IllegalArgumentException("The image field '" + field.field() + "' does not provide a imageFieldConfiguration");
+            if (imageField.resourceProvider() == null) {
+                throw new IllegalArgumentException("The image field '" + field.field() + "' does not provide a resourceProvider");
             }
             grid.addComponentColumn(entity -> {
                         String string = reflectionService.getString(entity, field.field());
-                        ImageDisplayComponent image = new ImageDisplayComponent(imageField.configuration().resourceProvider());
+                        ImageDisplayComponent image = new ImageDisplayComponent(imageField.resourceProvider());
                         image.setImageSource(string);
                         image.setWidth(30, Unit.PIXELS);
                         image.setHeight(30, Unit.PIXELS);

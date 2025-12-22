@@ -1,6 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.missing_features;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
@@ -9,7 +14,12 @@ import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteActio
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSingleFormRoute;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,7 +30,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.vaadin.flow.component.icon.VaadinIcon.*;
+import static com.vaadin.flow.component.icon.VaadinIcon.COG;
+import static com.vaadin.flow.component.icon.VaadinIcon.PENCIL;
+import static com.vaadin.flow.component.icon.VaadinIcon.PRINT;
+import static com.vaadin.flow.component.icon.VaadinIcon.TRASH;
 
 @Service
 public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
@@ -70,21 +83,19 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
             .dataStoreConfig(taskConfig)
             .title("route.missing.title")
-            .formConfiguration(JpaFormRendererConfiguration.builder()
-                .titleField("name")
-                .children(List.of(
-                    JpaFieldElement.builder("name", "Name").build(),
-                    JpaFieldElement.builder("tags", "Tags").build(),
-                    JpaFieldElement.builder("pdfDoc", "PDF").build(),
-                    JpaFieldElement.builder("notes", "Notes").build(),
-                    JpaFieldElement.builder("referencedEntity", "Referenced").build(),
-                    JpaFieldElement.builder("multiSelectEntities", "Multi Select").build(),
-                    JpaFieldElement.builder("markdownContent", "Markdown").build(),
-                    JpaFieldElement.builder("fileAttachment", "File").build(),
-                    JpaFieldElement.builder("price", "Price").build(),
-                    JpaFieldElement.builder("videoUrl", "Video").build()
-                ))
-                .build())
+            .titleField("name")
+            .children(List.of(
+                JpaFieldElement.builder("name", "Name").build(),
+                JpaFieldElement.builder("tags", "Tags").build(),
+                JpaFieldElement.builder("pdfDoc", "PDF").build(),
+                JpaFieldElement.builder("notes", "Notes").build(),
+                JpaFieldElement.builder("referencedEntity", "Referenced").build(),
+                JpaFieldElement.builder("multiSelectEntities", "Multi Select").build(),
+                JpaFieldElement.builder("markdownContent", "Markdown").build(),
+                JpaFieldElement.builder("fileAttachment", "File").build(),
+                JpaFieldElement.builder("price", "Price").build(),
+                JpaFieldElement.builder("videoUrl", "Video").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
@@ -94,12 +105,10 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .configuration(JpaListItemRendererConfiguration.builder()
-                 .filterField("name")
-                 .children(List.of(
-                      JpaFieldElement.builder("name", "Name").build()
-                 ))
-                 .build())
+            .filterField("name")
+            .children(List.of(
+                  JpaFieldElement.builder("name", "Name").build()
+            ))
             .routeActions(List.of(
                  GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
@@ -130,12 +139,10 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
              .title("Single Form")
              .entityFilterField("id")
              .entityFilterValueProvider(() -> 1L)
-             .formConfiguration(JpaFormRendererConfiguration.builder()
-                 .titleField("name")
-                 .children(List.of(
-                     JpaFieldElement.builder("name", "Name").build()
-                 ))
-                 .build())
+             .titleField("name")
+             .children(List.of(
+                 JpaFieldElement.builder("name", "Name").build()
+             ))
              .build());
 
         return JpaApplication.builder()

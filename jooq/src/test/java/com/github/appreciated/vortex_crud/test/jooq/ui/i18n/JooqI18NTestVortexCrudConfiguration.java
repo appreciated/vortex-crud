@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
-import com.github.appreciated.vortex_crud.core.config.model.ImageFieldRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
@@ -43,9 +42,7 @@ public class JooqI18NTestVortexCrudConfiguration
                                 I18N_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 I18N_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 I18N_IMAGES.URL, ImageField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                                .resourceProvider(new LocalImageResourceProvider())
-                                                .build())
+                                        .resourceProvider(new LocalImageResourceProvider())
                                         .build()
                         ))
                         .build();
@@ -53,27 +50,23 @@ public class JooqI18NTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(I18N_IMAGES.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),
-                                JooqFieldElement.of(I18N_IMAGES.URL, "route.images.labels.image").build()
-                        ))
-                        .build())
+                .titleField(I18N_IMAGES.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFieldElement.of(I18N_IMAGES.URL, "route.images.labels.image").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("images-list", JooqListRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.images-list")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .inlineEdit(true)
-                        .filterField(I18N_IMAGES.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
-                                JooqFieldElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
-                        ))
-                        .build())
+                .inlineEdit(true)
+                .filterField(I18N_IMAGES.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
+                        JooqFieldElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
+                ))
                 .child(imageForm)
                 .build());
 

@@ -57,15 +57,13 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
         FormRoute<Object, String, String> userForm = FormRoute.<Object, String, String>builder()
                 .dataStoreConfig(userConfig)
                 .title("route.users.title")
-                .formConfiguration(FormRendererConfiguration.<Object, String, String>builder()
-                        .titleField("username")
-                        .children(List.of(
-                                InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
-                                InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
-                                InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
-                                InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
-                        ))
-                        .build())
+                .titleField("username")
+                .children(List.of(
+                        InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
+                        InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
+                        InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
+                        InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
+                ))
                 .writeRoles(List.of("ADMIN", "USER"))
                 .readOnlyRoles(List.of("VIEWER"))
                 .build();
@@ -75,10 +73,8 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .dataStoreConfig(userConfig)
                 .isDefaultRoute(true)
                 .title("route.users-grid")
-                .configuration(GridItemRendererConfiguration.<Object, String, String>builder()
-                        .titleField("username")
-                        .factory(new CardFactory())
-                        .build())
+                .titleField("username")
+                .itemFactory(new CardFactory())
                 .child(userForm)
                 .writeRoles(List.of("ADMIN", "USER"))
                 .readOnlyRoles(List.of("VIEWER"))

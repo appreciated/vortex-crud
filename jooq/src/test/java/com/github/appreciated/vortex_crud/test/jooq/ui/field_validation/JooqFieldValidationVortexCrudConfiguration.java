@@ -47,27 +47,23 @@ public class JooqFieldValidationVortexCrudConfiguration
                                 VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
                                 VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
                                 VALIDATION_TEST.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
-                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().configuration(ImageFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalImageResourceProvider())
-                                        .build()).build()
+                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().resourceProvider(new LocalImageResourceProvider()).build()
                         )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(VALIDATION_TEST.REQUIRED_FIELD)
-                        .children(List.of(
-                                JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.DATE_FIELD, "validation.fields.date").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.DATETIME_FIELD, "validation.fields.datetime").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.CHECKBOX_FIELD, "validation.fields.checkbox").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.IMAGE_FIELD, "validation.fields.image").build()
-                        ))
-                        .build())
+                .titleField(VALIDATION_TEST.REQUIRED_FIELD)
+                .children(List.of(
+                        JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.DATE_FIELD, "validation.fields.date").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.DATETIME_FIELD, "validation.fields.datetime").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.CHECKBOX_FIELD, "validation.fields.checkbox").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.IMAGE_FIELD, "validation.fields.image").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -75,13 +71,11 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(VALIDATION_TEST.REQUIRED_FIELD)
-                        .children(List.of(
-                                JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),
-                                JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
-                        ))
-                        .build())
+                .filterField(VALIDATION_TEST.REQUIRED_FIELD)
+                .children(List.of(
+                        JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),
+                        JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
+                ))
                 .child(validationForm)
                 .build());
 

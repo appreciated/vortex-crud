@@ -1,6 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.global_route_action;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
@@ -58,9 +62,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
                         GLOBAL_ROUTE_ACTION_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         GLOBAL_ROUTE_ACTION_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalPdfResourceProvider())
-                                        .build())
+                                .resourceProvider(new LocalPdfResourceProvider())
                                 .build(),
                         GLOBAL_ROUTE_ACTION_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
@@ -70,14 +72,12 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("route.missing.title")
-            .formConfiguration(JooqFormRendererConfiguration.builder()
-                .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-                .children(List.of(
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
-                    JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
-                ))
-                .build())
+            .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
+            .children(List.of(
+                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
+                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
+                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -87,12 +87,10 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .dataStoreConfig(config)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .configuration(JooqListItemRendererConfiguration.builder()
-                 .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-                 .children(List.of(
-                      JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+            .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
+            .children(List.of(
+                  JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
+            ))
             .routeActions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableImpl<?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))

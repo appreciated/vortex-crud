@@ -1,8 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -38,7 +40,27 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private final boolean isDeleteButtonHidden = false;
 
-    private MultiFormRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration;
+    private VortexCrudItemFactory<FieldType> itemFactory;
+
+    private FieldType titleField;
+
+    private FieldType descriptionField;
+
+    private FieldType imageField;
+
+    private VortexCrudResourceProvider resourceProvider;
+
+    private boolean inlineEdit;
+
+    private FieldType filterField;
+
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+
+    private List<RouteRenderer<ModelClass, FieldType, RepositoryType>> forms;
+
+    public List<RouteRenderer<ModelClass, FieldType, RepositoryType>> forms() {
+        return forms;
+    }
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -46,18 +68,14 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private List<String> readOnlyRoles;
 
-    private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+    // Duplicated children field removed/handled above.
+    // private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     /**
      * List of menu actions for adding custom components to the menu.
      * This can include dropdowns, filters, action buttons, etc.
      */
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
-        return configuration;
-    }
 
     /**
      * List of custom route actions with full access to data store and selected entities.

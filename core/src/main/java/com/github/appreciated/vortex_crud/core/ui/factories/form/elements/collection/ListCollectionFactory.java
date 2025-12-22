@@ -56,7 +56,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
 
         list.removeAll();
         list.add(header);
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration().data();
+        Collection<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration();
 
         VortexCrudDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
 
@@ -64,9 +64,9 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
                 (java.util.Collection<Object>) data.oneToMany().getData(foreignKeyValue, dataStore, data);
 
-        if (internalFormElement.configuration().data().oneToMany() != null) {
+        if (internalFormElement.configuration().oneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, list, header, records, dataStore, context);
-        } else if (internalFormElement.configuration().data().manyToMany() != null) {
+        } else if (internalFormElement.configuration().manyToMany() != null) {
             addManyToManyItems(foreignKeyValue, internalFormElement, list, header, records, dataStore, context);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);
@@ -89,7 +89,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, list, header, context));
-            List<FieldType> children = internalFormElement.configuration().data().children();
+            List<FieldType> children = internalFormElement.configuration().children();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
@@ -115,8 +115,8 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, list, header, context));
-            RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> form = internalFormElement.configuration().child().configuration();
-            for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : form.children()) {
+            RouteRenderer<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.configuration().child();
+            for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : childRoute.children()) {
                 String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());
@@ -138,7 +138,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                             HorizontalLayout header,
                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.configuration();
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.data();
+        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData;
         FieldType referenceField = (data.manyToMany() != null) ?
                 data.manyToMany().associativeSourceIdField() :
                 data.oneToMany().getReferenceField(data);
@@ -148,8 +148,8 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 foreignKeyValue,
                 referenceField,
                 collectionData.child(),
-                collectionData.data(),
-                collectionData.data().dataStoreInstance(),
+                collectionData,
+                collectionData.dataStoreInstance(),
                 context,
                 () -> loadCollection(foreignKeyValue, internalFormElement, list, header, context),
                 () -> {
