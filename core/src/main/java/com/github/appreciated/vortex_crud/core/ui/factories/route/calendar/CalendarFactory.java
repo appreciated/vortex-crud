@@ -21,13 +21,7 @@ public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements V
 
         RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
 
-        return new CalendarView<>(
-                routeRenderer.dataStoreConfig().factory(),
-                routeRenderer,
-                context,
-                routeResolver,
-                detailRouteSetting
-        );
+        return new CalendarView<>(routeRenderer, context, routeResolver, detailRouteSetting);
     }
 
     @Override

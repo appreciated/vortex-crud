@@ -8,13 +8,11 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleC
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.components.SearchField;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -37,8 +35,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
@@ -48,8 +44,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
     private final Map<String, Entry> entryMap = new HashMap<>();
 
-    public CalendarView(RepositoryType dataStoreIdentifier,
-                        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+    public CalendarView(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                         VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
                         DetailRouteSetting detailRouteSetting
@@ -57,8 +52,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeRenderer = routeRenderer;
         this.context = context;
         this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
-        this.fieldNameResolver = context.fieldNameResolver();
-        this.formCreator = context.formCreator();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
