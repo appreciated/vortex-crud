@@ -6,7 +6,10 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +52,10 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("Select Field Test")
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("name")
-                        .children(List.of(
-                                JpaFieldElement.builder("name", "Name Select").build()
-                        ))
-                        .build())
+                .titleField("name")
+                .children(List.of(
+                        JpaFieldElement.builder("name", "Name Select").build()
+                ))
                 .build();
 
         // List Route
@@ -62,12 +63,10 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
         routes.put("select-field-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
                 .title("Select Field List")
-                .configuration(JpaListItemRendererConfiguration.builder()
-                        .filterField("name")
-                        .children(List.of(
-                                JpaFieldElement.builder("name", "Name").build()
-                        ))
-                        .build())
+                .filterField("name")
+                .children(List.of(
+                        JpaFieldElement.builder("name", "Name").build()
+                ))
                 .child(form)
                 .build());
 
