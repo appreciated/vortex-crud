@@ -35,36 +35,8 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
 
     private List<FieldType> children;
 
-    public String label() {
-        return label;
-    }
-
-    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory() {
-        return factory;
-    }
-
-    public String emptyMessage() {
-        return emptyMessage;
-    }
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
-
     @Override
     public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
-    }
-
-    public OneToMany<ModelClass, FieldType, RepositoryType> oneToMany() {
-        return oneToMany;
-    }
-
-    public ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany() {
-        return manyToMany;
-    }
-
-    public List<FieldType> children() {
-        return children;
     }
 }

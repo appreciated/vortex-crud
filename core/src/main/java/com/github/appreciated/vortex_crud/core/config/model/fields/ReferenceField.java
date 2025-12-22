@@ -33,41 +33,4 @@ public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Fi
     private FieldType filterField;
     private List<FieldType> children;
     private VortexCrudDataStore<FieldType, ?> dataStore;
-
-    @Override
-    public List<Validator<?>> validators() {
-        return validators;
-    }
-
-    @Override
-    public boolean required() {
-        return required;
-    }
-
-    @Override
-    public List<String> writeRoles() {
-        return writeRoles;
-    }
-
-    @Override
-    public List<String> readOnlyRoles() {
-        return readOnlyRoles;
-    }
-
-    @Override
-    public VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory() {
-        return factory;
-    }
-
-    public FieldType filterField() {
-        return filterField;
-    }
-
-    public List<FieldType> children() {
-        return children;
-    }
-
-    public VortexCrudDataStore<FieldType, ?> dataStore() {
-        return dataStore;
-    }
 }

@@ -54,36 +54,4 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
             this.span = span;
         }
     }
-
-    public FieldType field() {
-        return field;
-    }
-
-    public VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory() {
-        return factory;
-    }
-
-    public boolean readOnly() {
-        return readOnly;
-    }
-
-    public List<String> readOnlyForRoles() {
-        return readOnlyForRoles;
-    }
-
-    public String label() {
-        return label;
-    }
-
-    public ViewFieldType type() {
-        return type;
-    }
-
-    public int span() {
-        return span;
-    }
-
-    public Collection<ModelClass, FieldType, RepositoryType> configuration() {
-        return configuration;
-    }
 }

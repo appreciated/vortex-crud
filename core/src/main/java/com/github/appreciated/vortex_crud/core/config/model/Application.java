@@ -43,15 +43,4 @@ public class Application<ModelClass, FieldType, RepositoryType> {
      * When provided, a notification bell icon will be displayed in the application header.
      */
     private NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration;
-
-    public String applicationName() { return applicationName; }
-    public String i18nBundlePrefix() { return i18nBundlePrefix; }
-    public IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement() { return identityAndAccessManagement; }
-    public Selects selects() { return selects; }
-    public Versioning<RepositoryType> versioning() { return versioning; }
-    public Auditing auditing() { return auditing; }
-    public Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes() { return routes; }
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> defaultMenuActions() { return defaultMenuActions; }
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() { return menuActions; }
-    public NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration() { return notificationPanelConfiguration; }
 }

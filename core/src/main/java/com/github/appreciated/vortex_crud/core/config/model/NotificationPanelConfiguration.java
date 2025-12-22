@@ -122,22 +122,4 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      */
     @Builder.Default
     private String ariaLabel = "Notifications";
-
-    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() { return dataStoreConfig; }
-    public FieldType messageField() { return messageField; }
-    public FieldType timestampField() { return timestampField; }
-    public FieldType userNameField() { return userNameField; }
-    public FieldType userAvatarField() { return userAvatarField; }
-    public FieldType readStatusField() { return readStatusField; }
-    public Object readStatusValueForUnread() { return readStatusValueForUnread; }
-    public Object readStatusValueForRead() { return readStatusValueForRead; }
-    public int limit() { return limit; }
-    public FieldType filterField() { return filterField; }
-    public Object filterValue() { return filterValue; }
-    public String headingKey() { return headingKey; }
-    public String unreadTabKey() { return unreadTabKey; }
-    public String allTabKey() { return allTabKey; }
-    public String markAllReadKey() { return markAllReadKey; }
-    public String noNewNotificationsKey() { return noNewNotificationsKey; }
-    public String ariaLabel() { return ariaLabel; }
 }

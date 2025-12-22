@@ -59,24 +59,6 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private FieldType rowIndexField;
 
-    public FieldType columnField() {
-        return columnField;
-    }
-
-    public FieldType rowIndexField() {
-        return rowIndexField;
-    }
-
-    @Override
-    public FieldType filterField() {
-        return filterField;
-    }
-
-    @Override
-    public VortexCrudItemFactory<FieldType> itemFactory() {
-        return itemFactory;
-    }
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;
