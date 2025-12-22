@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<FieldType, ModelClass, RepositoryType> {
+public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
 
     private String label;
 
@@ -56,11 +56,11 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
         return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
     }
 
-    public OneToMany<FieldType, ModelClass, RepositoryType> oneToMany() {
+    public OneToMany<ModelClass, FieldType, RepositoryType> oneToMany() {
         return oneToMany;
     }
 
-    public ManyToMany<FieldType, ModelClass, RepositoryType> manyToMany() {
+    public ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany() {
         return manyToMany;
     }
 

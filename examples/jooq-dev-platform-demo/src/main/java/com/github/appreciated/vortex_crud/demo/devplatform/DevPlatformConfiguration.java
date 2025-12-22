@@ -224,192 +224,166 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         // Issue Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
                 .dataStoreConfig(issueConfig)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(ISSUE.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(ISSUE.TITLE, "route.issues.labels.title").build(),
-                                JooqFieldElement.of(ISSUE.DESCRIPTION, "route.issues.labels.description").build(),
-                                JooqFieldElement.of(ISSUE.STATE, "route.issues.labels.state").build(),
-                                JooqFieldElement.of(ISSUE.ISSUE_TYPE, "route.issues.labels.type").build(),
-                                JooqFieldElement.of(ISSUE.PRIORITY, "route.issues.labels.priority").build(),
-                                JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
-                                JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
-                                JooqCollectionElement.of("route.issues.labels.labels")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(labelConfig)
-                                                        .manyToMany(new JooqManyToMany(
-                                                                ISSUE_LABEL.ISSUE_ID,
-                                                                ISSUE_LABEL.LABEL_ID,
-                                                                LABEL.ID,
-                                                                ISSUE_LABEL))
-                                                        .children(List.of(LABEL.NAME, LABEL.COLOR))
-                                                        .build())
-                                                .emptyMessage("route.issues.labels.labels-empty-message")
-                                                .configuration(new CollectionConfig<TableField<?, ?>>(LABEL.NAME))
-                                                .build())
-                                        .build()))
-                        .build())
+                .titleField(ISSUE.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(ISSUE.TITLE, "route.issues.labels.title").build(),
+                        JooqFieldElement.of(ISSUE.DESCRIPTION, "route.issues.labels.description").build(),
+                        JooqFieldElement.of(ISSUE.STATE, "route.issues.labels.state").build(),
+                        JooqFieldElement.of(ISSUE.ISSUE_TYPE, "route.issues.labels.type").build(),
+                        JooqFieldElement.of(ISSUE.PRIORITY, "route.issues.labels.priority").build(),
+                        JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
+                        JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
+                        JooqCollectionElement.of("route.issues.labels.labels")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
+                                        .dataStoreConfig(labelConfig)
+                                        .manyToMany(new JooqManyToMany(
+                                                ISSUE_LABEL.ISSUE_ID,
+                                                ISSUE_LABEL.LABEL_ID,
+                                                LABEL.ID,
+                                                ISSUE_LABEL))
+                                        .children(List.of(LABEL.NAME, LABEL.COLOR))
+                                        .emptyMessage("route.issues.labels.labels-empty-message")
+                                        .titleField(LABEL.NAME)
+                                        .build())
+                                .build()))
                 .build();
 
         // Pull Request Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
                 .dataStoreConfig(pullRequestConfig)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(PULL_REQUEST.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                                JooqFieldElement.of(PULL_REQUEST.DESCRIPTION, "route.pull_requests.labels.description").build(),
-                                JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                                JooqFieldElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                                JooqFieldElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build(),
-                                JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
-                                JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
-                                JooqCollectionElement.of("route.pull_requests.labels.labels")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(labelConfig)
-                                                        .manyToMany(new JooqManyToMany(
-                                                                PULL_REQUEST_LABEL.PULL_REQUEST_ID,
-                                                                PULL_REQUEST_LABEL.LABEL_ID,
-                                                                LABEL.ID,
-                                                                PULL_REQUEST_LABEL))
-                                                        .children(List.of(LABEL.NAME, LABEL.COLOR))
-                                                        .build())
-                                                .emptyMessage("route.pull_requests.labels.labels-empty-message")
-                                                .configuration(new CollectionConfig<TableField<?, ?>>(LABEL.NAME))
-                                                .build())
-                                        .build()))
-                        .build())
+                .titleField(PULL_REQUEST.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
+                        JooqFieldElement.of(PULL_REQUEST.DESCRIPTION, "route.pull_requests.labels.description").build(),
+                        JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
+                        JooqFieldElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
+                        JooqFieldElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build(),
+                        JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
+                        JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
+                        JooqCollectionElement.of("route.pull_requests.labels.labels")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
+                                        .dataStoreConfig(labelConfig)
+                                        .manyToMany(new JooqManyToMany(
+                                                PULL_REQUEST_LABEL.PULL_REQUEST_ID,
+                                                PULL_REQUEST_LABEL.LABEL_ID,
+                                                LABEL.ID,
+                                                PULL_REQUEST_LABEL))
+                                        .children(List.of(LABEL.NAME, LABEL.COLOR))
+                                        .emptyMessage("route.pull_requests.labels.labels-empty-message")
+                                        .titleField(LABEL.NAME)
+                                        .build())
+                                .build()))
                 .build();
 
         // Repository Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> repositoryForm = JooqFormRoute.builder()
                 .dataStoreConfig(repositoryConfig)
                 .title("route.repositories.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(REPOSITORY.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(REPOSITORY.NAME, "route.repositories.labels.name").build(),
-                                JooqFieldElement.of(REPOSITORY.SLUG, "route.repositories.labels.slug").build(),
-                                JooqFieldElement.of(REPOSITORY.DESCRIPTION, "route.repositories.labels.description").build(),
-                                JooqFieldElement.of(REPOSITORY.VISIBILITY, "route.repositories.labels.visibility").build(),
-                                JooqFieldElement.of(REPOSITORY.DEFAULT_BRANCH, "route.repositories.labels.default_branch").build(),
-                                JooqFieldElement.of(REPOSITORY.LANGUAGE, "route.repositories.labels.language").build(),
-                                JooqFieldElement.of(REPOSITORY.TOPICS, "route.repositories.labels.topics").build(),
-                                JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build(),
-                                JooqCollectionElement.of("route.repositories.labels.collaborators")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(repositoryCollaboratorConfig)
-                                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.REPOSITORY_ID))
-                                                        .children(List.of(REPOSITORY_COLLABORATOR.USER_ID, REPOSITORY_COLLABORATOR.PERMISSION))
-                                                        .build())
-                                                .child(JooqFormRoute.builder()
-                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
-                                                         .titleField(REPOSITORY_COLLABORATOR.USER_ID)
-                                                         .children(List.of(
-                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.USER_ID, "route.repository_collaborators.labels.user").build(),
-                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
-                                                         ))
-                                                         .build())
-                                                     .build())
+                .titleField(REPOSITORY.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(REPOSITORY.NAME, "route.repositories.labels.name").build(),
+                        JooqFieldElement.of(REPOSITORY.SLUG, "route.repositories.labels.slug").build(),
+                        JooqFieldElement.of(REPOSITORY.DESCRIPTION, "route.repositories.labels.description").build(),
+                        JooqFieldElement.of(REPOSITORY.VISIBILITY, "route.repositories.labels.visibility").build(),
+                        JooqFieldElement.of(REPOSITORY.DEFAULT_BRANCH, "route.repositories.labels.default_branch").build(),
+                        JooqFieldElement.of(REPOSITORY.LANGUAGE, "route.repositories.labels.language").build(),
+                        JooqFieldElement.of(REPOSITORY.TOPICS, "route.repositories.labels.topics").build(),
+                        JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build(),
+                        JooqCollectionElement.of("route.repositories.labels.collaborators")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(repositoryCollaboratorConfig)
+                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.REPOSITORY_ID))
+                                        .children(List.of(REPOSITORY_COLLABORATOR.USER_ID, REPOSITORY_COLLABORATOR.PERMISSION))
+                                        .child(JooqFormRoute.builder()
+                                                .titleField(REPOSITORY_COLLABORATOR.USER_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(REPOSITORY_COLLABORATOR.USER_ID, "route.repository_collaborators.labels.user").build(),
+                                                        JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
+                                                ))
                                                 .build())
-                                        .build()))
-                        .build())
+                                        .build())
+                                .build()))
                 .build();
 
         // Organization Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> organizationForm = JooqFormRoute.builder()
                 .dataStoreConfig(organizationConfig)
                 .title("route.organizations.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(ORGANIZATION.NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(ORGANIZATION.NAME, "route.organizations.labels.name").build(),
-                                JooqFieldElement.of(ORGANIZATION.DISPLAY_NAME, "route.organizations.labels.display_name").build(),
-                                JooqFieldElement.of(ORGANIZATION.DESCRIPTION, "route.organizations.labels.description").build(),
-                                JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build(),
-                                JooqCollectionElement.of("route.organizations.labels.members")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(organizationMemberConfig)
-                                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.ORGANIZATION_ID))
-                                                        .children(List.of(ORGANIZATION_MEMBER.USER_ID, ORGANIZATION_MEMBER.ROLE))
-                                                        .build())
-                                                .child(JooqFormRoute.builder()
-                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
-                                                         .titleField(ORGANIZATION_MEMBER.USER_ID)
-                                                         .children(List.of(
-                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.USER_ID, "route.organization_members.labels.user").build(),
-                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
-                                                         ))
-                                                         .build())
-                                                     .build())
+                .titleField(ORGANIZATION.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ORGANIZATION.NAME, "route.organizations.labels.name").build(),
+                        JooqFieldElement.of(ORGANIZATION.DISPLAY_NAME, "route.organizations.labels.display_name").build(),
+                        JooqFieldElement.of(ORGANIZATION.DESCRIPTION, "route.organizations.labels.description").build(),
+                        JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build(),
+                        JooqCollectionElement.of("route.organizations.labels.members")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(organizationMemberConfig)
+                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.ORGANIZATION_ID))
+                                        .children(List.of(ORGANIZATION_MEMBER.USER_ID, ORGANIZATION_MEMBER.ROLE))
+                                        .child(JooqFormRoute.builder()
+                                                .titleField(ORGANIZATION_MEMBER.USER_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(ORGANIZATION_MEMBER.USER_ID, "route.organization_members.labels.user").build(),
+                                                        JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
+                                                ))
                                                 .build())
-                                        .build()))
-                        .build())
+                                        .build())
+                                .build()))
                 .build();
 
         // User Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
                 .dataStoreConfig(usersConfig)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(USERS.USERNAME)
-                        .children(List.of(
-                                JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
-                                JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
-                                JooqCollectionElement.of("route.users.labels.repositories")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(repositoryCollaboratorConfig)
-                                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.USER_ID))
-                                                        .children(List.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, REPOSITORY_COLLABORATOR.PERMISSION))
-                                                        .build())
-                                                .child(JooqFormRoute.builder()
-                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
-                                                         .titleField(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
-                                                         .children(List.of(
-                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, "route.repository_collaborators.labels.repository").build(),
-                                                             JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
-                                                         ))
-                                                         .build())
-                                                     .build())
+                .titleField(USERS.USERNAME)
+                .children(List.of(
+                        JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
+                        JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
+                        JooqCollectionElement.of("route.users.labels.repositories")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(repositoryCollaboratorConfig)
+                                        .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.USER_ID))
+                                        .children(List.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, REPOSITORY_COLLABORATOR.PERMISSION))
+                                        .child(JooqFormRoute.builder()
+                                                .titleField(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, "route.repository_collaborators.labels.repository").build(),
+                                                        JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
+                                                ))
                                                 .build())
-                                        .build(),
-                                JooqCollectionElement.of("route.users.labels.organizations")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                                .data(JooqCollectionConfiguration.of(organizationMemberConfig)
-                                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.USER_ID))
-                                                        .children(List.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, ORGANIZATION_MEMBER.ROLE))
-                                                        .build())
-                                                .child(JooqFormRoute.builder()
-                                                     .formConfiguration(JooqFormRendererConfiguration.builder()
-                                                         .titleField(ORGANIZATION_MEMBER.ORGANIZATION_ID)
-                                                         .children(List.of(
-                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, "route.organization_members.labels.organization").build(),
-                                                             JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
-                                                         ))
-                                                         .build())
-                                                     .build())
+                                        .build())
+                                .build(),
+                        JooqCollectionElement.of("route.users.labels.organizations")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(organizationMemberConfig)
+                                        .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.USER_ID))
+                                        .children(List.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, ORGANIZATION_MEMBER.ROLE))
+                                        .child(JooqFormRoute.builder()
+                                                .titleField(ORGANIZATION_MEMBER.ORGANIZATION_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, "route.organization_members.labels.organization").build(),
+                                                        JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
+                                                ))
                                                 .build())
-                                        .build()))
-                        .build())
+                                        .build())
+                                .build()))
                 .build();
 
         // Milestone Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> milestoneForm = JooqFormRoute.builder()
                 .dataStoreConfig(milestoneConfig)
                 .title("route.milestones.title")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(MILESTONE.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
-                                JooqFieldElement.of(MILESTONE.DESCRIPTION, "route.milestones.labels.description").build(),
-                                JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
-                                JooqFieldElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
-                        .build())
+                .titleField(MILESTONE.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFieldElement.of(MILESTONE.DESCRIPTION, "route.milestones.labels.description").build(),
+                        JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
+                        JooqFieldElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
                 .build();
 
         // Routes Configuration
@@ -420,10 +394,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(repositoryConfig)
                 .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(REPOSITORY.NAME)
-                        .descriptionField(REPOSITORY.DESCRIPTION)
-                        .build())
+                .titleField(REPOSITORY.NAME)
+                .descriptionField(REPOSITORY.DESCRIPTION)
                 .writeRoles(List.of("admin", "write")) // Repo permission values
                 .child(repositoryForm)
                 .build());
@@ -432,12 +404,10 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.BUG::create)
                 .dataStoreConfig(issueConfig)
                 .title("route.issues.title")
-                .configuration(JooqKanbanConfiguration.builder()
-                        .titleField(ISSUE.TITLE)
-                        .descriptionField(ISSUE.DESCRIPTION)
-                        .columnField(ISSUE.STATE)
-                        .filterField(ISSUE.TITLE)
-                        .build())
+                .titleField(ISSUE.TITLE)
+                .descriptionField(ISSUE.DESCRIPTION)
+                .columnField(ISSUE.STATE)
+                .filterField(ISSUE.TITLE)
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .child(issueForm)
                 .build());
@@ -446,14 +416,12 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(pullRequestConfig)
                 .iconFactory(VaadinIcon.COMPILE::create)
                 .title("route.pull_requests.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(PULL_REQUEST.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                                JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                                JooqFieldElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                                JooqFieldElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build()))
-                        .build())
+                .filterField(PULL_REQUEST.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
+                        JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
+                        JooqFieldElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
+                        JooqFieldElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build()))
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .child(pullRequestForm)
                 .build());
@@ -462,10 +430,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(organizationConfig)
                 .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.organizations.title")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(ORGANIZATION.NAME)
-                        .descriptionField(ORGANIZATION.DESCRIPTION)
-                        .build())
+                .titleField(ORGANIZATION.NAME)
+                .descriptionField(ORGANIZATION.DESCRIPTION)
                 .writeRoles(List.of("admin", "owner")) // Org role values
                 .child(organizationForm)
                 .build());
@@ -474,13 +440,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(milestoneConfig)
                 .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
-                .configuration(JooqListItemRendererConfiguration.builder()
-                        .filterField(MILESTONE.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
-                                JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
-                                JooqFieldElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
-                        .build())
+                .filterField(MILESTONE.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
+                        JooqFieldElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
                 .writeRoles(List.of("admin", "developer"))
                 .child(milestoneForm)
                 .build());
@@ -489,9 +453,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(usersConfig)
                 .iconFactory(VaadinIcon.USERS::create)
                 .title("route.users.title")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(USERS.USERNAME)
-                        .build())
+                .titleField(USERS.USERNAME)
                 .writeRoles(List.of("admin"))
                 .child(userForm)
                 .build());
