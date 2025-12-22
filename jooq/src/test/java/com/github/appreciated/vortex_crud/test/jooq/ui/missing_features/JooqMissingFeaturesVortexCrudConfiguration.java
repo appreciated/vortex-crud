@@ -12,6 +12,7 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import org.jooq.DSLContext;
@@ -97,16 +98,15 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                 JooqCollectionElement.of("Multi Select")
                     .factory(new ListCollectionFactory())
                     .configuration(JooqCollection.builder(new ConnectDialogFactory())
-                        .data(JooqCollectionConfiguration.of(referencedConfig)
-                            .manyToMany(new JooqManyToMany<>(
-                                MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
-                                MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
-                                MISSING_FEATURES_REFERENCED.ID,
-                                MISSING_FEATURES_TEST_RELATIONS
-                            ))
-                            .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
-                            .build())
-                        .configuration(new CollectionConfig<>(MISSING_FEATURES_REFERENCED.NAME))
+                        .dataStoreConfig(referencedConfig)
+                        .manyToMany(new JooqManyToMany<>(
+                            MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
+                            MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
+                            MISSING_FEATURES_REFERENCED.ID,
+                            MISSING_FEATURES_TEST_RELATIONS
+                        ))
+                        .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
+                        .titleField(MISSING_FEATURES_REFERENCED.NAME)
                         .build())
                     .build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),

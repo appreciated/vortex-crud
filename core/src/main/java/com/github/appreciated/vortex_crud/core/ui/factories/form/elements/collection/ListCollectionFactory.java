@@ -89,7 +89,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(foreignKeyValue, foreignKeyValue, internalFormElement, list, header, context));
-            List<FieldType> children = internalFormElement.configuration().data().children();
+            List<FieldType> children = internalFormElement.configuration().children();
             children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
             Button remove = new Button(VaadinIcon.TRASH.create());
             remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
@@ -138,7 +138,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                             HorizontalLayout header,
                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         Collection<ModelClass, FieldType, RepositoryType> collectionData = internalFormElement.configuration();
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData.data();
+        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = collectionData;
         FieldType referenceField = (data.manyToMany() != null) ?
                 data.manyToMany().associativeSourceIdField() :
                 data.oneToMany().getReferenceField(data);
@@ -148,8 +148,8 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 foreignKeyValue,
                 referenceField,
                 collectionData.child(),
-                collectionData.data(),
-                collectionData.data().dataStoreInstance(),
+                collectionData,
+                collectionData.dataStoreInstance(),
                 context,
                 () -> loadCollection(foreignKeyValue, internalFormElement, list, header, context),
                 () -> {
