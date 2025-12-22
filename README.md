@@ -472,85 +472,309 @@ CREATE TABLE task_comments (...);
 
 # <a name="roadmap">Roadmap</a>
 
-### Security & Authentication
-- **Enhanced Authentication Options**: Integration with [Keycloak](https://github.com/keycloak/keycloak) / OAuth2
-- **Permission inheritance and role hierarchies**
+## 🎯 High Priority Features
 
-### High priority
-- **Custom Repository Support**: Allow adding custom repositories f.e. create an example where access to a local directory is given
-- Notifications
+### Bulk Operations & Multi-Select Actions
+**Status**: Planned | **Impact**: High | **Effort**: Medium
 
-### Developer Experience
-- **Simplified Configuration DSL**: Reduce verbosity and nesting in configuration
-  - Add shorthand methods for common patterns (e.g., `.quickForm("entity", "field1", "field2")`)
-  - Provide sensible defaults to minimize required configuration
-  - Create configuration templates for common use cases (user management, blog, e-commerce)
-- **Enhanced Documentation**:
-  - Interactive tutorial with step-by-step examples
-  - Video tutorials for common scenarios
-  - Architecture decision records (ADRs) explaining design choices
-  - Keep code examples synchronized with actual implementation (automated tests for README examples)
-- **Improved Error Messages**: Context-aware error messages with suggestions for fixes
-- **Configuration Validation**: Validate configuration at startup with clear error reporting
-  - Detect missing required fields
-  - Warn about performance anti-patterns
-  - Suggest optimizations
+The most requested feature for production CRUD applications:
+- Multi-select checkboxes in Grid/List views
+- Batch actions (delete, update fields, assign categories, etc.)
+- Declarative bulk action configuration
+- Confirmation dialogs for destructive operations
+- Progress indicators for long-running bulk operations
 
-### Framework Flexibility
-- **Enhanced Hook System**: Extend existing lifecycle hooks
-  - Add validation hooks with custom validation logic
-  - Add data transformation hooks
-  - Improve hook documentation and examples
+**Value**: Every production application needs this. Enables efficient data management workflows.
 
-### API & Integration
-- **REST API Generation**: Auto-generate REST endpoints for data stores
-  - OpenAPI/Swagger documentation
-  - Configurable endpoint exposure (select which entities to expose)
-  - JWT authentication for API access
-  - Rate limiting and security controls
-- **GraphQL API Support**: Optional GraphQL endpoint generation
-- **Webhook Support**: Trigger external systems on entity changes
-- **Export/Import**: Bulk data export and import (CSV, JSON, Excel)
+### Export Features
+**Status**: Planned | **Impact**: High | **Effort**: Medium
+
+Essential for business applications:
+- Export current view to CSV, Excel, PDF
+- Respect active filters and sorting
+- Custom column selection
+- Template-based PDF reports
+- Scheduled exports
+- Email export results
+
+**Value**: Critical business requirement. Enables reporting and data sharing.
+
+### Advanced Filter Builder UI
+**Status**: Planned | **Impact**: High | **Effort**: Medium
+
+Power user feature for complex data queries:
+- Visual filter builder with AND/OR conditions
+- Field-specific operators (contains, starts with, between, in, etc.)
+- Save and load filter presets
+- Shareable filter URLs
+- Quick filters for common queries
+- Filter templates
+
+**Value**: Dramatically improves usability for data-heavy applications.
+
+### Inline Grid Editing
+**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+
+Modern UX improvement for quick edits:
+- Double-click cell to edit in place
+- Field-specific inline editors
+- Client-side and server-side validation
+- Batch save changes
+- Keyboard navigation (Tab, Enter, Escape)
+- Undo/redo support
+
+**Value**: Reduces friction for common editing tasks. Expected in modern applications.
+
+## 🚀 New Route Types
+
+### TreeRoute (Hierarchical Data)
+**Status**: Planned | **Impact**: High | **Effort**: Medium
+
+For displaying hierarchical relationships:
+- Tree/accordion views for parent-child data
+- Expandable/collapsable nodes
+- Drag-and-drop reordering
+- Inline node editing
+- Breadcrumb navigation
+
+**Use Cases**: Organization charts, category trees, file systems, comment threads, menu structures
+
+### Dashboard Route
+**Status**: Planned | **Impact**: High | **Effort**: High
+
+Configurable analytics and overview pages:
+- Widget-based layout system
+- Metric cards (counts, sums, averages)
+- Chart widgets (bar, line, pie, etc.)
+- Recent activity feeds
+- Quick action buttons
+- Responsive grid layout
+
+**Value**: High visibility feature. Great for demos and marketing.
+
+### Report Route
+**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+
+Dedicated reporting interface:
+- Parameter-based report generation
+- Template-based layouts
+- Export to multiple formats
+- Scheduled report generation
+- Report history and versioning
+
+## 🔧 Enhanced Features
+
+### Import Features
+**Status**: Planned | **Impact**: High | **Effort**: High
+
+Complement to export functionality:
+- Bulk import from CSV, Excel, JSON
+- Field mapping UI
+- Validation and error reporting
+- Preview before commit
+- Conflict resolution strategies
+- Import templates
 
 ### Enhanced Validation
-- **Extended Validation Features**: Build on existing field validation
-  - Cross-field validation
-  - Async validation (e.g., uniqueness checks)
-  - Entity-level validation: Business rule validation across multiple fields
+- **Cross-field validation**: Validate relationships between fields
+- **Async validation**: Server-side uniqueness checks, external API validation
+- **Conditional validation**: Rules that change based on other field values
+- **Custom validation messages**: i18n-aware error messages
+- **Field dependency chains**: Automatically validate dependent fields
 
-### Additional UI Components
-- **Additional Form Controls**: Radio Button Groups, Color Pickers, File Upload (multi-file), Image collections, Slider controls
-- **Additional Routes**:
-  - **Map Route**: Geographic data visualization
-  - **Chart/Dashboard Route**: Analytics and reporting dashboards
-  - **Generic Block Route**: Flexible block-based layouts
-- **Additional Fields**: Date range, Time range, Duration, Rich text editor, Code editor, Rating fields, Markdown (JPA support)
-- **Alternative Collection Editing**: Spreadsheet-style editing, Bulk editing, Drag-and-drop reordering
+### Additional Field Types
+- **TimeField**: Time-only picker (without date)
+- **DurationField**: Time period input (hours, minutes, seconds)
+- **CurrencyField**: Monetary values with currency symbols
+- **PhoneField**: Phone number validation and formatting
+- **URLField**: URL validation with link preview
+- **ColorField**: Color picker for theme/branding
+- **JSONField**: Raw JSON editing with syntax highlighting
+- **CodeField**: Code editor with syntax highlighting
+- **RatingField**: Star ratings, thumbs up/down
+- **SliderField**: Numeric range selection
 
-### Advanced Features
-- **Entity Versioning**: Track entity history (configuration structure defined, implementation pending)
-- **Entity Auditing**: Comprehensive audit logging (configuration structure defined, implementation pending)
-- **Prefiltered Routes**: Define routes that show filtered subsets of data
-- **Route Filters**: Advanced filtering for all route types (especially kanban)
-- **Full-Text Search**: Integrate search engines (Elasticsearch, PostgreSQL full-text)
-- **Soft Delete**: Configurable soft delete with trash/restore functionality
+### Collection Editing Enhancements
+- **Spreadsheet-style editing**: Excel-like interface for collections
+- **Drag-and-drop reordering**: Visual reordering of collection items
+- **Bulk collection operations**: Add/remove/update multiple items at once
+- **Collection filtering**: Filter items within collections
+- **Collection sorting**: Custom sort orders
 
-### Performance & Optimization
-- **Database Index Recommendations**: Analyze queries and suggest indexes
-- **Query Optimization**: Automatic N+1 query detection and optimization
-- **Caching Layer**: Configurable caching for read-heavy applications
-- **Lazy Loading**: Optimize large forms with lazy-loaded sections
+## 🔐 Security & Authentication
 
-### UI/UX Improvements
-- **Theme System**: Comprehensive theming and white-labeling support
-- **Responsive Design**: Improved mobile and tablet experiences
-- **Keyboard Navigation**: Enhanced keyboard shortcuts and navigation
+### Enhanced Authentication Options
+- Integration with [Keycloak](https://github.com/keycloak/keycloak)
+- OAuth2 / OpenID Connect support
+- SAML 2.0 support
+- Multi-factor authentication (MFA)
+- Social login providers
 
-### Starter Templates
-  - Blog/CMS
-  - E-commerce admin
-  - User management system
-  - Project management tool
+### Advanced Authorization
+- **Permission inheritance**: Hierarchical role structures
+- **Field-level permissions**: Show/hide/read-only fields based on roles
+- **Row-level security**: Filter data based on user context
+- **Dynamic permissions**: Rules evaluated at runtime
+- **Audit trail**: Track who accessed/modified what data
+
+## 🔌 API & Integration
+
+### REST API Generation
+**Status**: Planned | **Impact**: High | **Effort**: High
+
+Auto-generate REST endpoints from data stores:
+- OpenAPI/Swagger documentation
+- Configurable endpoint exposure
+- JWT authentication
+- Rate limiting and throttling
+- API versioning
+- CORS configuration
+- Request/response transformers
+
+### GraphQL API Support
+**Status**: Planned | **Impact**: Medium | **Effort**: High
+
+Optional GraphQL endpoint generation:
+- Schema generation from data stores
+- Query and mutation resolvers
+- Filtering and pagination
+- Real-time subscriptions
+- GraphQL Playground integration
+
+### Webhook Support
+**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+
+Trigger external systems on entity changes:
+- Configurable webhook endpoints
+- Event filtering (create, update, delete)
+- Retry logic and dead letter queues
+- Signature verification
+- Webhook testing tools
+
+## 📊 Advanced Features
+
+### Entity Versioning
+**Status**: Configuration defined, implementation pending
+
+Track complete entity history:
+- Automatic version snapshots on changes
+- Version comparison UI
+- Rollback to previous versions
+- Version metadata (timestamp, user, comment)
+
+### Full Audit Logging
+**Status**: Configuration structure defined, implementation pending
+
+Comprehensive change tracking:
+- Who changed what and when
+- Before/after value comparison
+- Audit log UI for administrators
+- Configurable retention policies
+- Export audit logs
+
+### Soft Delete
+**Status**: Planned
+
+Recoverable deletion:
+- Mark records as deleted instead of removing
+- Trash/restore functionality
+- Auto-purge after retention period
+- Filter to show/hide deleted records
+
+### Prefiltered Routes
+**Status**: Planned
+
+Routes that show filtered data subsets:
+- "My Tasks", "Overdue Projects", etc.
+- Declarative filter configuration
+- Count badges for filtered views
+- Combined with role-based access
+
+## ⚡ Performance & Optimization
+
+### Query Optimization
+- **N+1 detection**: Automatic detection and warnings
+- **Eager/lazy loading**: Configurable fetch strategies
+- **Query result caching**: Configurable cache layers
+- **Database index recommendations**: Analyze and suggest indexes
+- **Pagination optimization**: Efficient large dataset handling
+
+### Lazy Loading UI
+- Lazy-loaded form sections (tabs, accordions)
+- Virtual scrolling for large lists
+- Progressive image loading
+- Code splitting for routes
+
+## 🎨 UI/UX Improvements
+
+### Theme System
+- Comprehensive theming support
+- White-labeling capabilities
+- Custom CSS variable sets
+- Theme preview/switcher
+- Dark mode support
+
+### Responsive Design
+- Mobile-optimized layouts
+- Tablet-specific views
+- Touch-friendly controls
+- Responsive form layouts
+- Mobile navigation patterns
+
+### Accessibility
+- WCAG 2.1 AA compliance
+- Screen reader optimization
+- Keyboard navigation
+- High contrast themes
+- Focus management
+
+## 📖 Developer Experience
+
+### Simplified Configuration DSL
+- Shorthand methods for common patterns
+- Sensible defaults to minimize configuration
+- Configuration templates (user management, blog, e-commerce)
+- Fluent API improvements
+
+### Enhanced Documentation
+- Interactive tutorials
+- Video walkthroughs
+- Architecture decision records (ADRs)
+- Live examples in documentation
+- Configuration cookbook
+
+### Developer Tools
+- Configuration validation at startup
+- Clear error messages with fix suggestions
+- Performance monitoring dashboard
+- Debug mode with detailed logging
+- Configuration diff tool
+
+## 🎁 Starter Templates
+
+Production-ready application templates:
+- **Blog/CMS**: Content management with categories, tags, comments
+- **E-commerce Admin**: Products, orders, inventory management
+- **User Management System**: Organizations, teams, permissions
+- **Project Management**: Tasks, milestones, time tracking
+- **CRM**: Contacts, leads, opportunities, activities
+- **Help Desk**: Tickets, SLA tracking, knowledge base
+
+## 📝 Other Enhancements
+
+### Custom Repository Support
+Allow custom data sources beyond databases:
+- File system access
+- External API integration
+- In-memory data stores
+- Hybrid data sources
+
+### Notifications
+- In-app notification system
+- Email notifications
+- Push notifications
+- Notification preferences per user
+- Notification templates
 
 # <a name="architecture">Architecture</a>
 The architecture of `vortex-crud` is modular and declarative, designed to streamline CRUD application development with minimal coding effort. Built on Vaadin Flow, it automatically generates routes and manages entities and their relationships using jOOQ or JPA.
