@@ -282,7 +282,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
                 Integer newPosition;
 
-                if (!event.getDropTargetItem().isPresent()) {
+                if (event.getDropTargetItem().isEmpty()) {
                     // Dropping at the end
                     Integer lastPosition = targetColumnItems.isEmpty() ? null :
                             (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
