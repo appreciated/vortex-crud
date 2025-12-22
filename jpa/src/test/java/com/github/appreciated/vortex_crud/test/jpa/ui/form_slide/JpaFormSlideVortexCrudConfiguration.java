@@ -4,15 +4,12 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
-
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;

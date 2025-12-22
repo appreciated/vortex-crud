@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.notification_panel;
 
-import com.github.appreciated.vortex_crud.test.jpa.ui.notification_panel.JpaNotificationPanelVortexCrudConfiguration;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import org.springframework.boot.SpringApplication;

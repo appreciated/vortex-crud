@@ -6,9 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.IssueState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestState;
@@ -20,7 +18,6 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.strategy.ClassBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
-import com.github.appreciated.vortex_crud.security.core.strategy.RoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;

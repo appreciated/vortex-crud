@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
-import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.Test;
 
 public abstract class AbstractCheckboxFieldTest extends BaseUITest {

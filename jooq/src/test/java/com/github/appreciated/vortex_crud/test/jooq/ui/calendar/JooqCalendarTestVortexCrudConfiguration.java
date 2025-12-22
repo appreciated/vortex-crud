@@ -1,11 +1,15 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.calendar;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqDateTimePickerField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;

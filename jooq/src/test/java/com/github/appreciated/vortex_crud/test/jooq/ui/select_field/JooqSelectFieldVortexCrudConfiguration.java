@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.select_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;

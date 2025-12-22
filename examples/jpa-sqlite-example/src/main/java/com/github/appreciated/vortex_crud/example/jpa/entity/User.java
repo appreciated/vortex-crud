@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jpa.entity;
 
+import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.EmailField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.PasswordField;
-import com.github.appreciated.vortex_crud.jpa.service.annoations.DateTimePickerField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
 

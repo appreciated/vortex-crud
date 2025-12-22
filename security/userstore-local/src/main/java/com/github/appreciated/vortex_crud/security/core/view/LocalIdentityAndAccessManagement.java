@@ -8,11 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
 import com.github.appreciated.vortex_crud.security.core.strategy.RoleResolutionStrategy;
 import com.vaadin.flow.component.Component;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Singular;
 import lombok.experimental.Accessors;
 

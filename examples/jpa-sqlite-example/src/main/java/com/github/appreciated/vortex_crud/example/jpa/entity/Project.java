@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.example.jpa.entity;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

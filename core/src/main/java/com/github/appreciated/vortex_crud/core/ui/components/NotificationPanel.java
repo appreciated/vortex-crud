@@ -13,11 +13,9 @@ import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.popover.Popover;
 import com.vaadin.flow.component.popover.PopoverVariant;
 import com.vaadin.flow.component.tabs.TabSheet;
-import com.vaadin.flow.server.Mode;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;

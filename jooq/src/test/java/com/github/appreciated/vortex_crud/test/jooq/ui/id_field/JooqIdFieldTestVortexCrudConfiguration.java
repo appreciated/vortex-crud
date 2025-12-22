@@ -1,7 +1,9 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.id_field;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
-
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
