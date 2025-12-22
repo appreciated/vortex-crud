@@ -55,8 +55,6 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    @Override
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;

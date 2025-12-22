@@ -9,35 +9,12 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-@Accessors(fluent = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-public class CollectionConfiguration<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass> {
 
-    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
+public interface CollectionConfiguration<ModelClass, FieldType, RepositoryType> extends HasDataStore<FieldType, ModelClass> {
 
-    @Override
-    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
-        return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
-    }
+    public OneToMany<ModelClass, FieldType, RepositoryType> oneToMany();
 
-    private OneToMany<ModelClass, FieldType, RepositoryType> oneToMany;
+    public ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany();
 
-    private ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany;
-
-    private List<FieldType> children;
-
-    public OneToMany<ModelClass, FieldType, RepositoryType> oneToMany() {
-        return oneToMany;
-    }
-
-    public ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany() {
-        return manyToMany;
-    }
-
-    public List<FieldType> children() {
-        return children;
-    }
+    public List<FieldType> children();
 }

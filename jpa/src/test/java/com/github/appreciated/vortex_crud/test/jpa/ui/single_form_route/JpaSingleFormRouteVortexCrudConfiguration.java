@@ -9,7 +9,11 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSingleFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -61,14 +65,12 @@ public class JpaSingleFormRouteVortexCrudConfiguration implements VortexCrudConf
              .title("Single Form")
              .entityFilterField("id")
              .entityFilterValueProvider(() -> 1L)
-             .formConfiguration(JpaFormRendererConfiguration.builder()
-                 .titleField("name")
-                 .children(List.of(
-                     JpaFieldElement.builder("name", "Name").build(),
-                     JpaFieldElement.builder("tags", "Tags").build(),
-                     JpaFieldElement.builder("pdfDoc", "PDF").build()
-                 ))
-                 .build())
+             .titleField("name")
+             .children(List.of(
+                 JpaFieldElement.builder("name", "Name").build(),
+                 JpaFieldElement.builder("tags", "Tags").build(),
+                 JpaFieldElement.builder("pdfDoc", "PDF").build()
+             ))
              .build());
 
         return JpaApplication.builder()

@@ -57,12 +57,10 @@ public class JooqSelectFieldVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("Select Field Test")
-            .formConfiguration(JooqFormRendererConfiguration.builder()
-                .titleField(FIELD_TYPES_TEST.NAME)
-                .children(List.of(
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name Select").build()
-                ))
-                .build())
+            .titleField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name Select").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -71,12 +69,10 @@ public class JooqSelectFieldVortexCrudConfiguration
         routes.put("select-field-test", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("Select Field List")
-            .configuration(JooqListItemRendererConfiguration.builder()
-                 .filterField(FIELD_TYPES_TEST.NAME)
-                 .children(List.of(
-                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+            .filterField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+            ))
             .child(form)
             .build());
 

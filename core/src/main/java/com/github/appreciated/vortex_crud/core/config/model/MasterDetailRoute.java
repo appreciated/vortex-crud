@@ -83,8 +83,4 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         return itemFactory;
     }
 
-    @Override
-    public RouteRendererConfiguration<ModelClass, FieldType, RepositoryType> configuration() {
-        return null;
-    }
 }

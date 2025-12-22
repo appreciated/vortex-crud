@@ -1,11 +1,19 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.multi_form;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqEmailField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqIntegerField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextAreaField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
@@ -50,8 +58,8 @@ public class JooqMultiFormVortexCrudConfiguration
                         )).build();
 
         // Individual form configurations for multi-form rendering
-        FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> basicInfoForm =
-                JooqFormRendererConfiguration.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> basicInfoForm =
+                JooqFormRoute.builder()
                         .titleField(MULTI_FORM_TEST.PROFILE_NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
@@ -59,8 +67,8 @@ public class JooqMultiFormVortexCrudConfiguration
                         ))
                         .build();
 
-        FormRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalDetailsForm =
-                JooqFormRendererConfiguration.builder()
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalDetailsForm =
+                JooqFormRoute.builder()
                         .titleField(MULTI_FORM_TEST.DESCRIPTION)
                         .children(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
@@ -73,9 +81,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 MultiFormRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(config)
                         .title("route.multi_form.title")
-                        .configuration(MultiFormRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                .forms(List.of(basicInfoForm, additionalDetailsForm))
-                                .build())
+                        .forms(List.of(basicInfoForm, additionalDetailsForm))
                         .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -85,12 +91,10 @@ public class JooqMultiFormVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .configuration(ListItemRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .filterField(MULTI_FORM_TEST.PROFILE_NAME)
-                        .children(List.of(
-                                JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
-                        ))
-                        .build())
+                .filterField(MULTI_FORM_TEST.PROFILE_NAME)
+                .children(List.of(
+                        JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
+                ))
                 .child(multiFormRoute)
                 .build());
 

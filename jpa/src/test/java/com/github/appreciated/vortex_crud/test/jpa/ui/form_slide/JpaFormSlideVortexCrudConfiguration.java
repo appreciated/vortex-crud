@@ -12,7 +12,11 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormSlideRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -38,31 +42,28 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         .fields(Map.of(
                                 "id", NumericIdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                                 "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
-                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().configuration(JpaImageFieldRendererConfiguration.builder().resourceProvider(new LocalImageResourceProvider()).build()).build()
+                                "url", ImageField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().resourceProvider(new LocalImageResourceProvider()).build()
                         ))
                         .build();
 
         RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
-                .configuration(JpaFormRendererConfiguration.builder().factory(new CardFactory<>())
-                        .titleField("title")
-                        .children(List.of(
-                                JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                                JpaFieldElement.builder("url", "route.images.labels.image").build()
-                        ))
-                        .build())
+                .itemFactory(new CardFactory<>())
+                .titleField("title")
+                .children(List.of(
+                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
+                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("images", JpaGridRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.images-cards")
-                .configuration(JpaGridItemRendererConfiguration.builder()
-                        .titleField("title")
-                        .imageField("url")
-                        .resourceProvider(new LocalImageResourceProvider())
-                        .build())
+                .titleField("title")
+                .imageField("url")
+                .resourceProvider(new LocalImageResourceProvider())
                 .child(imageForm)
                 .build());
 

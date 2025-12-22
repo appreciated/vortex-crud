@@ -12,7 +12,13 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistry
 import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollection;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollectionElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -57,31 +63,26 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> childForm = JpaFormRoute.builder()
                 .dataStoreConfig(childConfig)
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("name")
-                        .children(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
-                        .build())
+                .titleField("name")
+                .children(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
                 .build();
 
         FormRoute parentForm = JpaFormRoute.builder()
                 .dataStoreConfig(parentConfig)
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("name")
-                        .children(List.of(
-                                JpaFieldElement.builder("name", "relations.labels.name").build(),
-                                JpaCollectionElement.builder("relations.labels.children")
-                                        .factory(new ListCollectionFactory<>())
-                                        .configuration(JpaCollection.builder(new FormDialogFactory<>())
-                                                .data(JpaCollectionConfiguration.builder(childConfig)
-                                                        .oneToMany(new JpaOneToMany("parent"))
-                                                        .children(List.of("name"))
-                                                        .build())
-                                                .emptyMessage("relations.children.empty")
-                                                .child(childForm)
-                                                .build())
-                                        .build()
-                        ))
-                        .build())
+                .titleField("name")
+                .children(List.of(
+                        JpaFieldElement.builder("name", "relations.labels.name").build(),
+                        JpaCollectionElement.builder("relations.labels.children")
+                                .factory(new ListCollectionFactory<>())
+                                .configuration(JpaCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(childConfig)
+                                        .oneToMany(new JpaOneToMany("parent"))
+                                        .children(List.of("name"))
+                                        .emptyMessage("relations.children.empty")
+                                        .child(childForm)
+                                        .build())
+                                .build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
@@ -89,12 +90,10 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
-                .configuration(JpaListItemRendererConfiguration.builder()
-                        .filterField("name")
-                        .children(List.of(
-                                JpaFieldElement.builder("name", "relations.labels.name").build()
-                        ))
-                        .build())
+                .filterField("name")
+                .children(List.of(
+                        JpaFieldElement.builder("name", "relations.labels.name").build()
+                ))
                 .child(parentForm)
                 .build());
 

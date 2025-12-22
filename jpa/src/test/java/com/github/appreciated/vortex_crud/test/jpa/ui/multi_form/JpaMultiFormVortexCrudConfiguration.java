@@ -1,6 +1,11 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.multi_form;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
+import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
@@ -9,7 +14,7 @@ import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRendererConfiguration;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +47,8 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .build();
 
         // Individual form configurations for multi-form rendering
-        FormRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> basicInfoForm =
-                JpaFormRendererConfiguration.builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> basicInfoForm =
+                JpaFormRoute.builder()
                         .titleField("profileName")
                         .children(List.of(
                                 JpaFieldElement.builder("profileName", "multi_form.fields.profile_name").build(),
@@ -51,8 +56,8 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                         ))
                         .build();
 
-        FormRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalDetailsForm =
-                JpaFormRendererConfiguration.builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalDetailsForm =
+                JpaFormRoute.builder()
                         .titleField("description")
                         .children(List.of(
                                 JpaFieldElement.builder("description", "multi_form.fields.description").build(),
@@ -65,9 +70,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 MultiFormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                         .dataStoreConfig(multiFormConfig)
                         .title("route.multi_form.title")
-                        .configuration(MultiFormRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                                .forms(List.of(basicInfoForm, additionalDetailsForm))
-                                .build())
+                        .forms(List.of(basicInfoForm, additionalDetailsForm))
                         .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
@@ -77,12 +80,10 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(multiFormConfig)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .configuration(ListItemRendererConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                        .filterField("profileName")
-                        .children(List.of(
-                                JpaFieldElement.builder("profileName", "relations.labels.name").build()
-                        ))
-                        .build())
+                .filterField("profileName")
+                .children(List.of(
+                        JpaFieldElement.builder("profileName", "relations.labels.name").build()
+                ))
                 .child(multiFormRoute)
                 .build());
 

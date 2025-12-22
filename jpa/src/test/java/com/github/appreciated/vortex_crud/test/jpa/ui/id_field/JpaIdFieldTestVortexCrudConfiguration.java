@@ -9,7 +9,11 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -43,13 +47,11 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
             .dataStoreConfig(config)
             .title("Form")
-            .formConfiguration(JpaFormRendererConfiguration.builder()
-                .titleField("name")
-                .children(List.of(
-                    JpaFieldElement.builder("id", "ID").build(),
-                    JpaFieldElement.builder("name", "Name").build()
-                ))
-                .build())
+            .titleField("name")
+            .children(List.of(
+                JpaFieldElement.builder("id", "ID").build(),
+                JpaFieldElement.builder("name", "Name").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
@@ -58,12 +60,10 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
         routes.put("id-test-list", JpaListRoute.builder()
             .dataStoreConfig(config)
             .title("List")
-            .configuration(JpaListItemRendererConfiguration.builder()
-                 .filterField("name")
-                 .children(List.of(
-                      JpaFieldElement.builder("name", "Name").build()
-                 ))
-                 .build())
+            .filterField("name")
+            .children(List.of(
+                  JpaFieldElement.builder("name", "Name").build()
+            ))
             .child(form)
             .build());
 

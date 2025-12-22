@@ -56,7 +56,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
 
         list.removeAll();
         list.add(header);
-        CollectionConfiguration<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration().data();
+        Collection<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration();
 
         VortexCrudDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
 
@@ -64,9 +64,9 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
                 (java.util.Collection<Object>) data.oneToMany().getData(foreignKeyValue, dataStore, data);
 
-        if (internalFormElement.configuration().data().oneToMany() != null) {
+        if (internalFormElement.configuration().oneToMany() != null) {
             addOneToManyItems(foreignKeyValue, internalFormElement, list, header, records, dataStore, context);
-        } else if (internalFormElement.configuration().data().manyToMany() != null) {
+        } else if (internalFormElement.configuration().manyToMany() != null) {
             addManyToManyItems(foreignKeyValue, internalFormElement, list, header, records, dataStore, context);
         } else {
             throw new IllegalArgumentException("No collection found for " + foreignKeyValue);

@@ -1,12 +1,19 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -77,17 +84,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
             FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> lifecycleForm = JpaFormRoute.builder()
                     .dataStoreConfig(config)
                     .title("route.lifecycle-test.title")
-                    .formConfiguration(JpaFormRendererConfiguration.builder()
-                            .titleField("name")
-                            .children(List.of(
-                                    JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
-                                    JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
-                            ))
-                            .build())
-                    .build();
-
-            RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listConfig = JpaListItemRendererConfiguration.builder()
-                    .filterField("name")
+                    .titleField("name")
                     .children(List.of(
                             JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
                             JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
@@ -98,7 +95,11 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .dataStoreConfig(config)
                     .iconFactory(COG::create)
                     .title("route.lifecycle-test.title-list")
-                    .configuration(listConfig)
+                    .filterField("name")
+                    .children(List.of(
+                            JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
+                            JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
+                    ))
                     .child(lifecycleForm)
                     .build();
         }
@@ -114,19 +115,10 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
             FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> passwordForm = JpaFormRoute.builder()
                     .dataStoreConfig(config)
                     .title("route.password-test.title")
-                    .formConfiguration(JpaFormRendererConfiguration.builder()
-                            .titleField("name")
-                            .children(List.of(
-                                    JpaFieldElement.builder("name", "password-test.labels.name").build(),
-                                    JpaFieldElement.builder("password", "password-test.labels.password").build()
-                            ))
-                            .build())
-                    .build();
-
-            RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listConfig = JpaListItemRendererConfiguration.builder()
-                    .filterField("name")
+                    .titleField("name")
                     .children(List.of(
-                            JpaFieldElement.builder("name", "password-test.labels.name").build()
+                            JpaFieldElement.builder("name", "password-test.labels.name").build(),
+                            JpaFieldElement.builder("password", "password-test.labels.password").build()
                     ))
                     .build();
 
@@ -134,7 +126,10 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .dataStoreConfig(config)
                     .iconFactory(COG::create)
                     .title("route.password-test.title-list")
-                    .configuration(listConfig)
+                    .filterField("name")
+                    .children(List.of(
+                            JpaFieldElement.builder("name", "password-test.labels.name").build()
+                    ))
                     .child(passwordForm)
                     .build();
         }
@@ -150,17 +145,7 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
             FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> textAreaForm = JpaFormRoute.builder()
                     .dataStoreConfig(config)
                     .title("route.textarea-test.title")
-                    .formConfiguration(JpaFormRendererConfiguration.builder()
-                            .titleField("name")
-                            .children(List.of(
-                                    JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
-                                    JpaFieldElement.builder("description", "textarea-test.labels.content").build()
-                            ))
-                            .build())
-                    .build();
-
-            RouteRendererConfiguration<JpaRepository<?, ?>, String, JpaRepository<?, ?>> listConfig = JpaListItemRendererConfiguration.builder()
-                    .filterField("name")
+                    .titleField("name")
                     .children(List.of(
                             JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
                             JpaFieldElement.builder("description", "textarea-test.labels.content").build()
@@ -171,7 +156,11 @@ public class JpaAdditionalFieldsVortexCrudConfiguration implements VortexCrudCon
                     .dataStoreConfig(config)
                     .iconFactory(COG::create)
                     .title("route.textarea-test.title-list")
-                    .configuration(listConfig)
+                    .filterField("name")
+                    .children(List.of(
+                            JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
+                            JpaFieldElement.builder("description", "textarea-test.labels.content").build()
+                    ))
                     .child(textAreaForm)
                     .build();
         }

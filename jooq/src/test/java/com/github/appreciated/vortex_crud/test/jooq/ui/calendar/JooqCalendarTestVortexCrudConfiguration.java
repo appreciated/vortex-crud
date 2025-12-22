@@ -48,26 +48,22 @@ public class JooqCalendarTestVortexCrudConfiguration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> eventForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("Event")
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(CALENDAR_EVENTS.TITLE)
-                        .children(List.of(
-                                JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "Title").build(),
-                                JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "Start").build(),
-                                JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "End").build()
-                        ))
-                        .build())
+                .titleField(CALENDAR_EVENTS.TITLE)
+                .children(List.of(
+                        JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "Title").build(),
+                        JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "Start").build(),
+                        JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "End").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
         routes.put("calendar", JooqCalendarRoute.builder()
                 .dataStoreConfig(config)
                 .title("Calendar")
-                .configuration(JooqCalendarConfiguration.builder()
-                        .titleField(CALENDAR_EVENTS.TITLE)
-                        .startDateField(CALENDAR_EVENTS.START_DATE)
-                        .endDateField(CALENDAR_EVENTS.END_DATE)
-                        .filterField(CALENDAR_EVENTS.TITLE)
-                        .build())
+                .titleField(CALENDAR_EVENTS.TITLE)
+                .startDateField(CALENDAR_EVENTS.START_DATE)
+                .endDateField(CALENDAR_EVENTS.END_DATE)
+                .filterField(CALENDAR_EVENTS.TITLE)
                 .child(eventForm)
                 .build());
 

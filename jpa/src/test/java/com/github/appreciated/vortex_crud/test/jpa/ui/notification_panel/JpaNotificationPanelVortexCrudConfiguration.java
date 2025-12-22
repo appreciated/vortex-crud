@@ -11,7 +11,6 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridItemRendererConfiguration;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -56,9 +55,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                 .dataStoreConfig(notificationConfig)
                 .title("Notifications")
                 .isDefaultRoute(true)
-                .configuration(JpaGridItemRendererConfiguration.builder()
-                        .titleField("message")
-                        .build())
+                .titleField("message")
                 .build());
 
         return JpaApplication.builder()

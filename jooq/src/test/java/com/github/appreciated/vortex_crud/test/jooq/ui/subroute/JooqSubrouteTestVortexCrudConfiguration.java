@@ -1,8 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -41,16 +43,11 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
-                .formConfiguration(JooqFormRendererConfiguration.builder()
-                        .titleField(SUBROUTE_TASKS.TITLE)
-                        .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
-                        .build())
+                .titleField(SUBROUTE_TASKS.TITLE)
+                .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
-        GridItemRendererConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> build = JooqGridItemRendererConfiguration.builder()
-                .titleField(SUBROUTE_TASKS.TITLE)
-                .build();
         routes.put("tasks", JooqSubmenuRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.tasks.title")
@@ -58,7 +55,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                         "open", JooqMasterDetailRoute.builder()
                                 .dataStoreConfig(config)
                                 .title("route.open-tasks.title")
-                                .configuration(build)
+                                .titleField(SUBROUTE_TASKS.TITLE)
                                 .child(taskForm)
                                 .build()
                 ))

@@ -64,8 +64,6 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
-    @Override
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;

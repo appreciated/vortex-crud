@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.MultiFormRendererConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;

@@ -46,13 +46,11 @@ public class JooqIdFieldTestVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("Form")
-            .formConfiguration(JooqFormRendererConfiguration.builder()
-                .titleField(FIELD_TYPES_TEST.NAME)
-                .children(List.of(
-                    JooqFieldElement.of(FIELD_TYPES_TEST.ID, "ID").build(),
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
-                ))
-                .build())
+            .titleField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                JooqFieldElement.of(FIELD_TYPES_TEST.ID, "ID").build(),
+                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -61,12 +59,10 @@ public class JooqIdFieldTestVortexCrudConfiguration
         routes.put("id-test-list", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("List")
-            .configuration(JooqListItemRendererConfiguration.builder()
-                 .filterField(FIELD_TYPES_TEST.NAME)
-                 .children(List.of(
-                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+            .filterField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+             ))
             .child(form)
             .build());
 

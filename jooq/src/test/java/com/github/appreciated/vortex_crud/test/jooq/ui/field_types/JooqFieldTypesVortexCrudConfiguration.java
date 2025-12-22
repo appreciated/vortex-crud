@@ -1,6 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.field_types;
 
-import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
@@ -53,9 +57,7 @@ public class JooqFieldTypesVortexCrudConfiguration
                         FIELD_TYPES_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         FIELD_TYPES_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                .configuration(PdfFieldRendererConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                        .resourceProvider(new LocalPdfResourceProvider())
-                                        .build())
+                                .resourceProvider(new LocalPdfResourceProvider())
                                 .build(),
                         FIELD_TYPES_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
@@ -65,14 +67,12 @@ public class JooqFieldTypesVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("route.missing.title")
-            .formConfiguration(JooqFormRendererConfiguration.builder()
-                .titleField(FIELD_TYPES_TEST.NAME)
-                .children(List.of(
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
-                    JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
-                    JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
-                ))
-                .build())
+            .titleField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
+                JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
+                JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
+            ))
             .build();
 
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
@@ -81,12 +81,10 @@ public class JooqFieldTypesVortexCrudConfiguration
         routes.put("missing-features-test", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.missing.list")
-            .configuration(JooqListItemRendererConfiguration.builder()
-                 .filterField(FIELD_TYPES_TEST.NAME)
-                 .children(List.of(
-                      JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
-                 ))
-                 .build())
+            .filterField(FIELD_TYPES_TEST.NAME)
+            .children(List.of(
+                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+            ))
             .child(form)
             .build());
 

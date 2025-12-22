@@ -8,7 +8,10 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCalendarRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,26 +44,22 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> eventForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
                 .title("Event")
-                .formConfiguration(JpaFormRendererConfiguration.builder()
-                        .titleField("title")
-                        .children(List.of(
-                                JpaFieldElement.builder("title", "Title").build(),
-                                JpaFieldElement.builder("startDate", "Start").build(),
-                                JpaFieldElement.builder("endDate", "End").build()
-                        ))
-                        .build())
+                .titleField("title")
+                .children(List.of(
+                        JpaFieldElement.builder("title", "Title").build(),
+                        JpaFieldElement.builder("startDate", "Start").build(),
+                        JpaFieldElement.builder("endDate", "End").build()
+                ))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
         routes.put("calendar", JpaCalendarRoute.builder()
                 .dataStoreConfig(config)
                 .title("Calendar")
-                .configuration(JpaCalendarConfiguration.builder()
-                        .titleField("title")
-                        .startDateField("startDate")
-                        .endDateField("endDate")
-                        .filterField("title")
-                        .build())
+                .titleField("title")
+                .startDateField("startDate")
+                .endDateField("endDate")
+                .filterField("title")
                 .child(eventForm)
                 .build());
 

@@ -67,8 +67,6 @@ public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements Ro
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @Override
-
-    @Override
     public boolean isDeleteButtonHidden() {
         return false;
     }
