@@ -83,7 +83,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 

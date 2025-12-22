@@ -61,7 +61,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns;
 
