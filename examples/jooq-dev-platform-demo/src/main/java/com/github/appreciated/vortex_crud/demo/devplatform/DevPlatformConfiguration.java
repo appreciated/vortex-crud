@@ -233,19 +233,18 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(ISSUE.PRIORITY, "route.issues.labels.priority").build(),
                         JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
                         JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
-                        JooqCollectionElement.of("route.issues.labels.labels")
+                        JooqCollectionElement.builder("route.issues.labels.labels")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
-                                        .dataStoreConfig(labelConfig)
-                                        .manyToMany(new JooqManyToMany(
-                                                ISSUE_LABEL.ISSUE_ID,
-                                                ISSUE_LABEL.LABEL_ID,
-                                                LABEL.ID,
-                                                ISSUE_LABEL))
-                                        .children(List.of(LABEL.NAME, LABEL.COLOR))
-                                        .emptyMessage("route.issues.labels.labels-empty-message")
-                                        .titleField(LABEL.NAME)
-                                        .build())
+                                .dialogFactory(new ConnectDialogFactory<>())
+                                .dataStoreConfig(labelConfig)
+                                .manyToMany(new JooqManyToMany(
+                                        ISSUE_LABEL.ISSUE_ID,
+                                        ISSUE_LABEL.LABEL_ID,
+                                        LABEL.ID,
+                                        ISSUE_LABEL))
+                                .children(List.of(LABEL.NAME, LABEL.COLOR))
+                                .emptyMessage("route.issues.labels.labels-empty-message")
+                                .titleField(LABEL.NAME)
                                 .build()))
                 .build();
 

@@ -63,7 +63,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
@@ -74,8 +74,13 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     public List<RouteFilter<FieldType>> filters() { return routeFilters; }
 
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
+        return form;
+    }
+
+    @Override
     public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
-        return child;
+        return form;
     }
 
     @Override
@@ -89,8 +94,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         if (children != null) {
             return children;
         }
-        if (child instanceof FormRouteProvider) {
-            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) child).children();
+        if (form instanceof FormRouteProvider) {
+            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) form).children();
         }
         return java.util.Collections.emptyList();
     }
@@ -101,8 +106,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         if (titleField != null) {
             return titleField;
         }
-        if (child != null) {
-            return child.titleField();
+        if (form != null) {
+            return form.titleField();
         }
         return null;
     }

@@ -61,7 +61,12 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+
+    @Override
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
+        return form;
+    }
 
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 

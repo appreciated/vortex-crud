@@ -186,34 +186,32 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
                         JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
                         JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
-                        JooqCollectionElement.of("route.tasks.labels.comments")
+                        JooqCollectionElement.builder("route.tasks.labels.comments")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                        .dataStoreConfig(commentsConfig)
-                                        .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
-                                        .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
-                                        .emptyMessage("route.tasks.labels.comments-empty-message")
-                                        .child(JooqFormRoute.builder()
-                                                .titleField(TASK_COMMENTS.COMMENT_TEXT)
-                                                .children(List.of(
-                                                        JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
-                                                ))
-                                                .build()
-                                        ).build()
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(commentsConfig)
+                                .oneToMany(new JooqOneToMany(TASK_COMMENTS.TASK_ID))
+                                .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
+                                .emptyMessage("route.tasks.labels.comments-empty-message")
+                                .form(JooqFormRoute.builder()
+                                        .titleField(TASK_COMMENTS.COMMENT_TEXT)
+                                        .children(List.of(
+                                                JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
+                                        ))
+                                        .build()
                                 ).build(),
-                        JooqCollectionElement.of("route.tasks.labels.related-tasks")
+                        JooqCollectionElement.builder("route.tasks.labels.related-tasks")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JooqCollection.builder(new ConnectDialogFactory<>())
-                                        .dataStoreConfig(tasksConfig)
-                                        .manyToMany(new JooqManyToMany(
-                                                TASK_HAS_TASK.TASK_ID,
-                                                TASK_HAS_TASK.RELATED_TASK_ID,
-                                                TASKS.ID,
-                                                TASK_HAS_TASK))
-                                        .children(List.of(TASKS.TITLE))
-                                        .emptyMessage("route.tasks.labels.related-tasks-empty-message")
-                                        .titleField(TASKS.TITLE)
-                                        .build())
+                                .dialogFactory(new ConnectDialogFactory<>())
+                                .dataStoreConfig(tasksConfig)
+                                .manyToMany(new JooqManyToMany(
+                                        TASK_HAS_TASK.TASK_ID,
+                                        TASK_HAS_TASK.RELATED_TASK_ID,
+                                        TASKS.ID,
+                                        TASK_HAS_TASK))
+                                .children(List.of(TASKS.TITLE))
+                                .emptyMessage("route.tasks.labels.related-tasks-empty-message")
+                                .titleField(TASKS.TITLE)
                                 .build())
                 )
                 .build();
@@ -228,17 +226,16 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(PROJECTS.BUDGET, "Budget").build(),
                         JooqFieldElement.of(PROJECTS.TAGS_MULTI, "Tags (MultiSelect)").build(),
                         JooqFieldElement.of(PROJECTS.ACTIVE, "Active").build(),
-                        JooqCollectionElement.of("Tags (Collection)")
+                        JooqCollectionElement.builder("Tags (Collection)")
                                 .factory(new ListCollectionFactory<>())
-                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
-                                        .dataStoreConfig(projectTagsConfig)
-                                        .oneToMany(new JooqOneToMany(PROJECT_TAGS.PROJECT_ID))
-                                        .children(List.of(PROJECT_TAGS.TAG))
-                                        .emptyMessage("No tags")
-                                        .child(JooqFormRoute.builder()
-                                                .titleField(PROJECT_TAGS.TAG)
-                                                .children(List.of(JooqFieldElement.of(PROJECT_TAGS.TAG, "Tag").build()))
-                                                .build())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(projectTagsConfig)
+                                .oneToMany(new JooqOneToMany(PROJECT_TAGS.PROJECT_ID))
+                                .children(List.of(PROJECT_TAGS.TAG))
+                                .emptyMessage("No tags")
+                                .form(JooqFormRoute.builder()
+                                        .titleField(PROJECT_TAGS.TAG)
+                                        .children(List.of(JooqFieldElement.of(PROJECT_TAGS.TAG, "Tag").build()))
                                         .build())
                                 .build(),
                         JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
@@ -302,7 +299,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .handler((context) -> Notification.show("Global Action Clicked"))
                                 .build()
                 ))
-                .child(projectForm)
+                .form(projectForm)
                 .build());
         routes.put("projects-list", JooqListRoute.builder()
                 .dataStoreConfig(projectsConfig)
@@ -316,7 +313,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
                 ))
                 .writeRoles(List.of("admin", "manager", "editor"))
-                .child(projectForm)
+                .form(projectForm)
                 .build());
         routes.put("open-tasks", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
@@ -328,7 +325,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .rowIndexField(TASKS.ROW_INDEX)
                 .filterField(TASKS.TITLE)
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                .child(taskForm)
+                .form(taskForm)
                 .build());
         routes.put("done-tasks", JooqMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
@@ -337,7 +334,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField(TASKS.TITLE)
                 .descriptionField(TASKS.DESCRIPTION)
                 .writeRoles(List.of("admin", "manager"))
-                .child(taskForm)
+                .form(taskForm)
                 .build());
         routes.put("images-grid", JooqGridRoute.builder()
                 .dataStoreConfig(imagesConfig)
@@ -347,7 +344,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
                 .writeRoles(List.of("admin"))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
         routes.put("images-list", JooqListRoute.builder()
                 .dataStoreConfig(imagesConfig)
@@ -360,7 +357,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build()
                 ))
                 .writeRoles(List.of("admin"))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         routes.put("images-slide", JooqGridRoute.builder()
@@ -371,7 +368,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
                 .writeRoles(List.of("admin"))
-                .child(imageSlideForm)
+                .form(imageSlideForm)
                 .build());
 
         routes.put("videos-grid", JooqGridRoute.builder()
@@ -380,7 +377,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .title("route.videos.title-cards")
                 .titleField(VIDEOS.TITLE)
                 .writeRoles(List.of("admin"))
-                .child(videoForm)
+                .form(videoForm)
                 .build());
 
         routes.put("videos-list", JooqListRoute.builder()
@@ -394,7 +391,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(VIDEOS.URL, "route.videos.labels.video").build()
                 ))
                 .writeRoles(List.of("admin"))
-                .child(videoForm)
+                .form(videoForm)
                 .build());
 
         routes.put("submenu", JooqSubmenuRoute.builder()
@@ -444,7 +441,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .title("Notes (Custom DataStore)")
                 .titleField(NotesTable.NOTES.TITLE)
                 .descriptionField(NotesTable.NOTES.CONTENT)
-                .child(JooqFormRoute.builder()
+                .form(JooqFormRoute.builder()
                         .dataStoreConfig(notesConfig)
                         .titleField(NotesTable.NOTES.TITLE)
                         .children(List.of(
@@ -465,7 +462,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(FILE::create)
                 .title("Documents")
                 .titleField(DOCUMENTS.TITLE)
-                .child(documentForm)
+                .form(documentForm)
                 .build());
 
         routes.put("filtered-grid", JooqGridRoute.builder()
@@ -480,7 +477,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .value("Red")
                         .build())
                 .writeRoles(List.of("admin"))
-                .child(imageForm)
+                .form(imageForm)
                 .build());
 
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();

@@ -70,7 +70,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> child;
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
@@ -82,4 +82,9 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     private List<RouteFilter<FieldType>> routeFilters;
 
     public List<RouteFilter<FieldType>> filters() { return routeFilters; }
+
+    @Override
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> child() {
+        return form;
+    }
 }
