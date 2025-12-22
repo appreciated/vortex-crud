@@ -39,7 +39,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
 
-    private ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
+    private final ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
     private final FullCalendar calendar;
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
     private final Map<String, Entry> entryMap = new HashMap<>();

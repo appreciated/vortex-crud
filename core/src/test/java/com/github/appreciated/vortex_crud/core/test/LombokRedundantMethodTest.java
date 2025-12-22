@@ -16,6 +16,7 @@ import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class LombokRedundantMethodTest {
                     try {
                         checkSource(Files.readString(path), path.toString(), failures);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LoggerFactory.getLogger(LombokRedundantMethodTest.class).error(e.getMessage(), e);
                     }
                 });
         }
