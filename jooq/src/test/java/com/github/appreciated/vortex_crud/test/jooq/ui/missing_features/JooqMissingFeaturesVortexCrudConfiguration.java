@@ -97,16 +97,15 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                 JooqCollectionElement.of("Multi Select")
                     .factory(new ListCollectionFactory())
                     .configuration(JooqCollection.builder(new ConnectDialogFactory())
-                        .data(JooqCollectionConfiguration.of(referencedConfig)
-                            .manyToMany(new JooqManyToMany<>(
-                                MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
-                                MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
-                                MISSING_FEATURES_REFERENCED.ID,
-                                MISSING_FEATURES_TEST_RELATIONS
-                            ))
-                            .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
-                            .build())
-                        .configuration(new CollectionConfig<>(MISSING_FEATURES_REFERENCED.NAME))
+                        .dataStoreConfig(referencedConfig)
+                        .manyToMany(new JooqManyToMany<>(
+                            MISSING_FEATURES_TEST_RELATIONS.TEST_ID,
+                            MISSING_FEATURES_TEST_RELATIONS.REFERENCED_ID,
+                            MISSING_FEATURES_REFERENCED.ID,
+                            MISSING_FEATURES_TEST_RELATIONS
+                        ))
+                        .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
+                        .label(MISSING_FEATURES_REFERENCED.NAME.getName())
                         .build())
                     .build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),

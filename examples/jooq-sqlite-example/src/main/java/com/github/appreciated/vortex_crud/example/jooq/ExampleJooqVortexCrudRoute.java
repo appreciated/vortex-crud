@@ -53,23 +53,19 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
                 .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
-                .configuration(JooqGridItemRendererConfiguration.builder()
-                        .titleField(PROJECTS.NAME)
-                        .descriptionField(PROJECTS.DESCRIPTION)
-                        .build())
+                .titleField(PROJECTS.NAME)
+                .descriptionField(PROJECTS.DESCRIPTION)
                 .writeRoles(List.of("manager", "admin"))
                 .child(JooqFormRoute.builder()
                         .dataStoreConfig(projectsConfig)
                         .title("route.projects.title-cards")
-                        .formConfiguration(JooqFormRendererConfiguration.builder()
-                                .titleField(PROJECTS.NAME)
-                                .children(List.of(
-                                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
-                                ))
-                                .build())
+                        .titleField(PROJECTS.NAME)
+                        .children(List.of(
+                                JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                                JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                                JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                        ))
                         .build())
                 .build();
     }
