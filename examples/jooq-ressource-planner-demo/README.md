@@ -21,7 +21,7 @@ The following features are currently missing in the Vortex CRUD core but would g
 - **Structured Validation from Hooks**: Better mechanism to propagate validation errors from DataStore hooks (e.g., availability checks) to specific form fields in the UI.
 - **Field Dependency/Calculation**: Native support for auto-calculating field values (e.g., updating 'End Time' automatically based on 'Start Time' and selected 'Service Duration').
 
-## Missing Demo Features
+## High Priority Tasks
 
 Features that would be expected in a full implementation:
 
@@ -29,6 +29,7 @@ Features that would be expected in a full implementation:
 - **Email Notifications**: Confirmation and reminder emails for appointments.
 - **Drag-and-Drop Rescheduling**: Full interaction support on the calendar.
 - **Working Hours**: Defining availability windows for Persons/Rooms.
+- **Customer Database**: Management of customer entities.
 
 ## Technology
 
