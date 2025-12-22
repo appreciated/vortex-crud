@@ -178,16 +178,17 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(PROJECT.COLOR, "route.projects.labels.color").build(),
                         JooqCollectionElement.of("route.projects.labels.members")
                                 .factory(new ListCollectionFactory<>())
-                                .dialogFactory(new FormDialogFactory<>())
-                                .dataStoreConfig(projectMemberConfig)
-                                .oneToMany(new JooqOneToMany(PROJECT_MEMBER.PROJECT_ID))
-                                .children(List.of(PROJECT_MEMBER.USER_ID, PROJECT_MEMBER.ROLE))
-                                .form(JooqFormRoute.builder()
-                                        .titleField(PROJECT_MEMBER.USER_ID)
-                                        .children(List.of(
-                                                JooqFieldElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
-                                                JooqFieldElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
-                                        ))
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(projectMemberConfig)
+                                        .oneToMany(new JooqOneToMany(PROJECT_MEMBER.PROJECT_ID))
+                                        .children(List.of(PROJECT_MEMBER.USER_ID, PROJECT_MEMBER.ROLE))
+                                        .form(JooqFormRoute.builder()
+                                                .titleField(PROJECT_MEMBER.USER_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
+                                                        JooqFieldElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
+                                                ))
+                                                .build())
                                         .build())
                                 .build()))
                 .build();
@@ -201,16 +202,17 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
                         JooqCollectionElement.of("route.users.labels.projects")
                                 .factory(new ListCollectionFactory<>())
-                                .dialogFactory(new FormDialogFactory<>())
-                                .dataStoreConfig(projectMemberConfig)
-                                .oneToMany(new JooqOneToMany(PROJECT_MEMBER.USER_ID))
-                                .children(List.of(PROJECT_MEMBER.PROJECT_ID, PROJECT_MEMBER.ROLE))
-                                .form(JooqFormRoute.builder()
-                                        .titleField(PROJECT_MEMBER.PROJECT_ID)
-                                        .children(List.of(
-                                                JooqFieldElement.of(PROJECT_MEMBER.PROJECT_ID, "route.project_members.labels.project").build(),
-                                                JooqFieldElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
-                                        ))
+                                .configuration(JooqCollection.builder(new FormDialogFactory<>())
+                                        .dataStoreConfig(projectMemberConfig)
+                                        .oneToMany(new JooqOneToMany(PROJECT_MEMBER.USER_ID))
+                                        .children(List.of(PROJECT_MEMBER.PROJECT_ID, PROJECT_MEMBER.ROLE))
+                                        .form(JooqFormRoute.builder()
+                                                .titleField(PROJECT_MEMBER.PROJECT_ID)
+                                                .children(List.of(
+                                                        JooqFieldElement.of(PROJECT_MEMBER.PROJECT_ID, "route.project_members.labels.project").build(),
+                                                        JooqFieldElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
+                                                ))
+                                                .build())
                                         .build())
                                 .build()))
                 .build();
