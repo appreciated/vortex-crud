@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields;
+package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields.password;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @Push
-public class JooqAdditionalFieldsTestApplication implements AppShellConfigurator {
+public class JpaPasswordTestApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {
-        SpringApplication.run(JooqAdditionalFieldsTestApplication.class, args);
+        SpringApplication.run(JpaPasswordTestApplication.class, args);
     }
 
 }
