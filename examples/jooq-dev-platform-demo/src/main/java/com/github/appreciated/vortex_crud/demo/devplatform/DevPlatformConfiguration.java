@@ -1,9 +1,10 @@
 package com.github.appreciated.vortex_crud.demo.devplatform;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
+import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -11,6 +12,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.IssueState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
+import com.github.appreciated.vortex_crud.demo.devplatform.view.DashboardView;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -21,14 +23,19 @@ import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleRe
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
+import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,18 +53,73 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
     }
 
     @Override
-    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+    public com.github.appreciated.vortex_crud.core.config.model.Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
-        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore notificationStore = new JooqDataStore(NOTIFICATION.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore issueStore = new JooqDataStore(ISSUE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore pullRequestStore = new JooqDataStore(PULL_REQUEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore repositoryStarStore = new JooqDataStore(REPOSITORY_STAR.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore wikiPageStore = new JooqDataStore(WIKI_PAGE.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore gitCommitStore = new JooqDataStore(GIT_COMMIT.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore gitBranchStore = new JooqDataStore(GIT_BRANCH.getRecordType(), dsl, new DataStoreHooks<>());
+
+        // Notification Hooks
+        DataStoreHooks<TableRecord<?>> issueHooks = DataStoreHooks.<TableRecord<?>>builder()
+                .afterCreate(record -> {
+                    try {
+                        String title = (String) record.get(ISSUE.TITLE);
+                        Integer repoId = (Integer) record.get(ISSUE.REPOSITORY_ID);
+                        var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
+                        if (repo != null) {
+                            Integer ownerId = repo.getOwnerId();
+                            if (ownerId != null) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(ownerId);
+                                notif.setTitle("New Issue: " + title);
+                                notif.setMessage("In repository " + repo.getName());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now().toString());
+                                notif.store();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .build();
+
+        DataStoreHooks<TableRecord<?>> prHooks = DataStoreHooks.<TableRecord<?>>builder()
+                .afterCreate(record -> {
+                    try {
+                        String title = (String) record.get(PULL_REQUEST.TITLE);
+                        Integer repoId = (Integer) record.get(PULL_REQUEST.REPOSITORY_ID);
+                        var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
+                        if (repo != null) {
+                            Integer ownerId = repo.getOwnerId();
+                            if (ownerId != null) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(ownerId);
+                                notif.setTitle("New PR: " + title);
+                                notif.setMessage("In repository " + repo.getName());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now().toString());
+                                notif.store();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .build();
+
+        JooqDataStore issueStore = new JooqDataStore(ISSUE.getRecordType(), dsl, issueHooks);
+        JooqDataStore pullRequestStore = new JooqDataStore(PULL_REQUEST.getRecordType(), dsl, prHooks);
+        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore commentStore = new JooqDataStore(COMMENT.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore organizationMemberStore = new JooqDataStore(ORGANIZATION_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore repositoryCollaboratorStore = new JooqDataStore(REPOSITORY_COLLABORATOR.getRecordType(), dsl, new DataStoreHooks<>());
 
@@ -69,6 +131,47 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance((VortexCrudDataStore) notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.LINK, JooqTextField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var wikiPageConfig = JooqDataStoreConfig.of(WIKI_PAGE)
+                .dataStoreInstance((VortexCrudDataStore) wikiPageStore)
+                .fields(Map.of(
+                        WIKI_PAGE.ID, JooqNumericIdField.builder().build(),
+                        WIKI_PAGE.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(WIKI_PAGE.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        WIKI_PAGE.TITLE, JooqTextField.builder().required(true).build(),
+                        WIKI_PAGE.CONTENT, JooqMarkDownField.builder().build(),
+                        WIKI_PAGE.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var gitCommitConfig = JooqDataStoreConfig.of(GIT_COMMIT)
+                .dataStoreInstance((VortexCrudDataStore) gitCommitStore)
+                .fields(Map.of(
+                        GIT_COMMIT.ID, JooqNumericIdField.builder().build(),
+                        GIT_COMMIT.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(GIT_COMMIT.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        GIT_COMMIT.HASH, JooqTextField.builder().build(),
+                        GIT_COMMIT.MESSAGE, JooqTextAreaField.builder().build(),
+                        GIT_COMMIT.AUTHOR_NAME, JooqTextField.builder().build(),
+                        GIT_COMMIT.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var gitBranchConfig = JooqDataStoreConfig.of(GIT_BRANCH)
+                .dataStoreInstance((VortexCrudDataStore) gitBranchStore)
+                .fields(Map.of(
+                        GIT_BRANCH.ID, JooqNumericIdField.builder().build(),
+                        GIT_BRANCH.REPOSITORY_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) repositoryStore).field(GIT_BRANCH.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
+                        GIT_BRANCH.NAME, JooqTextField.builder().build(),
+                        GIT_BRANCH.HEAD_COMMIT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) gitCommitStore).field(GIT_BRANCH.HEAD_COMMIT_ID).filterField(GIT_COMMIT.HASH).children(List.of(GIT_COMMIT.HASH)).build()))
                 .build();
 
         var organizationMemberConfig = JooqDataStoreConfig.of(ORGANIZATION_MEMBER)
@@ -302,6 +405,49 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
                                         ))
                                         .build())
+                                .build(),
+                        JooqCollectionElement.of("route.wiki.title")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(wikiPageConfig)
+                                .oneToMany(new JooqOneToMany(WIKI_PAGE.REPOSITORY_ID))
+                                .children(List.of(WIKI_PAGE.TITLE, WIKI_PAGE.CREATED_AT))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(WIKI_PAGE.TITLE)
+                                        .children(List.of(
+                                                JooqFieldElement.of(WIKI_PAGE.TITLE, "route.wiki.labels.title").build(),
+                                                JooqFieldElement.of(WIKI_PAGE.CONTENT, "route.wiki.labels.content").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollectionElement.of("route.commits.title")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(gitCommitConfig)
+                                .oneToMany(new JooqOneToMany(GIT_COMMIT.REPOSITORY_ID))
+                                .children(List.of(GIT_COMMIT.HASH, GIT_COMMIT.MESSAGE, GIT_COMMIT.AUTHOR_NAME, GIT_COMMIT.CREATED_AT))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(GIT_COMMIT.HASH)
+                                        .children(List.of(
+                                                JooqFieldElement.of(GIT_COMMIT.HASH, "route.commits.labels.hash").build(),
+                                                JooqFieldElement.of(GIT_COMMIT.MESSAGE, "route.commits.labels.message").build(),
+                                                JooqFieldElement.of(GIT_COMMIT.AUTHOR_NAME, "route.commits.labels.author").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollectionElement.of("route.branches.title")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(gitBranchConfig)
+                                .oneToMany(new JooqOneToMany(GIT_BRANCH.REPOSITORY_ID))
+                                .children(List.of(GIT_BRANCH.NAME))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(GIT_BRANCH.NAME)
+                                        .children(List.of(
+                                                JooqFieldElement.of(GIT_BRANCH.NAME, "route.branches.labels.name").build(),
+                                                JooqFieldElement.of(GIT_BRANCH.HEAD_COMMIT_ID, "route.branches.labels.head_commit").build()
+                                        ))
+                                        .build())
                                 .build()))
                 .build();
 
@@ -383,8 +529,14 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
 
-        routes.put("repositories", JooqGridRoute.builder()
+        routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.dashboard.title")
                 .isDefaultRoute(true)
+                .componentClass(DashboardView.class)
+                .build());
+
+        routes.put("repositories", JooqGridRoute.builder()
+                .isDefaultRoute(false)
                 .dataStoreConfig(repositoryConfig)
                 .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")
@@ -392,6 +544,40 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .descriptionField(REPOSITORY.DESCRIPTION)
                 .writeRoles(List.of("admin", "write")) // Repo permission values
                 .form(repositoryForm)
+                .routeActions(Collections.singletonList(
+                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(() -> new Button(VaadinIcon.STAR.create()))
+                                .handler(context -> {
+                                    TableRecord<?> repo = context.getFirstSelectedEntity();
+                                    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                                    var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                                    if (!users.isEmpty()) {
+                                        var user = (TableRecord<?>) users.get(0);
+                                        Integer userId = (Integer) user.get(USERS.ID);
+                                        Integer repoId = (Integer) repo.get(REPOSITORY.ID);
+
+                                        var existingStar = dsl.selectFrom(REPOSITORY_STAR)
+                                             .where(REPOSITORY_STAR.USER_ID.eq(userId))
+                                             .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
+                                             .fetchOne();
+
+                                        if (existingStar != null) {
+                                            existingStar.delete();
+                                            Integer count = (Integer)repo.get(REPOSITORY.STAR_COUNT);
+                                            repo.set(REPOSITORY.STAR_COUNT, count != null ? count - 1 : 0);
+                                        } else {
+                                            var newStar = dsl.newRecord(REPOSITORY_STAR);
+                                            newStar.set(REPOSITORY_STAR.USER_ID, userId);
+                                            newStar.set(REPOSITORY_STAR.REPOSITORY_ID, repoId);
+                                            newStar.store();
+                                            Integer count = (Integer)repo.get(REPOSITORY.STAR_COUNT);
+                                            repo.set(REPOSITORY.STAR_COUNT, count != null ? count + 1 : 1);
+                                        }
+                                        repositoryStore.updateRecordById((UpdatableRecord)repo);
+                                    }
+                                })
+                                .build()
+                ))
                 .build());
 
         routes.put("issues", JooqKanbanRoute.builder()
@@ -518,7 +704,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .rolesField(null)
                         .build())
                 .routes(routes)
-                .versioning(JooqVersioning.builder().dataStores(List.of(REPOSITORY, ISSUE, PULL_REQUEST, ORGANIZATION, MILESTONE)).build())
+                .versioning(JooqVersioning.builder().dataStores(List.of(REPOSITORY, ISSUE, PULL_REQUEST, ORGANIZATION, MILESTONE, WIKI_PAGE)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(Selects.builder()
                         .configs(Map.of(
@@ -528,6 +714,14 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "priority", priorities,
                                 "repository-permissions", repositoryPermissions,
                                 "organization-roles", organizationRoles))
+                        .build())
+                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(notificationConfig)
+                        .timestampField((TableField)NOTIFICATION.CREATED_AT)
+                        .messageField((TableField)NOTIFICATION.MESSAGE)
+                        .readStatusField((TableField)NOTIFICATION.IS_READ)
+                        .readStatusValueForRead(1)
+                        .readStatusValueForUnread(0)
                         .build())
                 .build();
     }
