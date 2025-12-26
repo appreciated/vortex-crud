@@ -1,13 +1,14 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.single_component.single_component_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jpa.service.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
-import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSingleComponentRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import java.util.LinkedHashMap;
 
 @Service
 public class JpaSingleComponentRouteVortexCrudConfiguration
-        implements VortexCrudConfigurationProvider<Object, String, JpaRepository<?, ?>> {
+        implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaSingleComponentRouteRepository repository;
     private final JpaFieldAnnotationRegistryService registry;
@@ -29,11 +30,11 @@ public class JpaSingleComponentRouteVortexCrudConfiguration
     }
 
     @Override
-    public Application<Object, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(repository, registry);
+    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+        var store = new JpaRepositoryDataStore<>(repository, registry, new DataStoreHooks<>());
         var config = JpaDataStoreConfig.builder(repository, store).build();
 
-        LinkedHashMap<String, RouteRenderer<Object, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
 
         // Single Component Route
         routes.put("single-component-test", JpaSingleComponentRoute.builder()
