@@ -30,7 +30,7 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
 
     FieldType rolesField();
 
-    List<String> availableRoles();
+    Roles availableRoles();
 
     List<String> defaultReadRoles();
 

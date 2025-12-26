@@ -441,7 +441,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .identityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .dataStoreConfig(userConfig)
-                                .availableRoles(List.of("admin", "viewer", "guest"))
+                                .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
                                 .defaultReadRoles(List.of("viewer"))
                                 .defaultWriteRoles(List.of("admin"))
                                 .signUpEnabled(true)

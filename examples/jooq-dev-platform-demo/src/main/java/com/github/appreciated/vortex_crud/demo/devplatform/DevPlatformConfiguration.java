@@ -692,7 +692,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         ORGANIZATION.ID
                                 )
                         )))
-                        .availableRoles(List.of("admin", "developer", "contributor", "viewer"))
+                        .availableRoles(Roles.builder().roles(List.of("admin", "developer", "contributor", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "developer"))
                         .signUpEnabled(true)

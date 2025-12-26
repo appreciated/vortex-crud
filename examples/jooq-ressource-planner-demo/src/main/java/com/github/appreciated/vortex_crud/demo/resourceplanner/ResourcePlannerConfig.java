@@ -279,7 +279,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .i18nBundlePrefix("rp_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
-                        .availableRoles(List.of("admin", "user"))
+                        .availableRoles(com.github.appreciated.vortex_crud.core.config.model.Roles.builder().roles(List.of("admin", "user")).build())
                         .defaultReadRoles(List.of("user"))
                         .defaultWriteRoles(List.of("admin"))
                         .signUpEnabled(true)

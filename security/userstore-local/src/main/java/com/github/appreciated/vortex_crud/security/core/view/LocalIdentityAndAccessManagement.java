@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
+import com.github.appreciated.vortex_crud.core.config.model.Roles;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
 import com.github.appreciated.vortex_crud.security.core.strategy.RoleResolutionStrategy;
@@ -34,7 +35,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
     private Class<? extends Component> loginView;
     private Class<? extends Component> signUpView;
-    private List<String> availableRoles;
+    private Roles availableRoles;
     private List<String> defaultReadRoles;
     private List<String> defaultWriteRoles;
     private boolean signUpEnabled;
