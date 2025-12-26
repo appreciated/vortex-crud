@@ -4,9 +4,11 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSingleComponentRoute;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Service
 public class JpaSingleComponentRouteVortexCrudConfiguration
@@ -22,17 +25,24 @@ public class JpaSingleComponentRouteVortexCrudConfiguration
 
     private final JpaSingleComponentRouteRepository repository;
     private final JpaFieldAnnotationRegistryService registry;
+    private final JpaFieldService fieldService;
 
     public JpaSingleComponentRouteVortexCrudConfiguration(JpaSingleComponentRouteRepository repository,
-                                                          JpaFieldAnnotationRegistryService registry) {
+                                                          JpaFieldAnnotationRegistryService registry,
+                                                          JpaFieldService fieldService) {
         this.repository = repository;
         this.registry = registry;
+        this.fieldService = fieldService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var store = new JpaRepositoryDataStore<>(repository, registry, new DataStoreHooks<>());
-        var config = JpaDataStoreConfig.builder(repository, store).build();
+        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
+
+        var config = JpaDataStoreConfig.builder(repository, store)
+                .withServices(fieldService, storeMap)
+                .build();
 
         LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
 
