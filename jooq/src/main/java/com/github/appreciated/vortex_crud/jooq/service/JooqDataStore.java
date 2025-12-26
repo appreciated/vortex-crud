@@ -83,6 +83,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnEquals(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
         if (filterValue == null) {
             return Collections.emptyList();
@@ -98,6 +99,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(TableField<?, ?> filterField,
                                                                         Object filterValue,
                                                                         TableField<?, ?> orderField,
@@ -142,10 +144,11 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ModelClass getRecordById(Object id) {
         return dslContext.select()
                 .from(getTable())
-                .where(DSL.field("id").eq(id))
+                .where(((Field<Object>) getPrimaryKeyField()).eq(id))
                 .fetchOptionalInto(record)
                 .orElse(null);
     }
@@ -158,6 +161,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void deleteRecordById(Object id) {
         // Fetch the entity before deletion for hooks
         ModelClass entity = getRecordById(id);
@@ -165,7 +169,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
             // Execute before delete hooks
             hooks.beforeDeletes().forEach(hook -> hook.execute(entity));
             dslContext.deleteFrom(getTable())
-                    .where(DSL.field("id").eq(id))
+                    .where(((Field<Object>) getPrimaryKeyField()).eq(id))
                     .execute();
 
             // Execute after delete hooks
@@ -187,6 +191,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public int countWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
@@ -198,6 +203,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
@@ -216,6 +222,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, Object searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
@@ -234,6 +241,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public int countWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, String searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
@@ -251,6 +259,15 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     private Table<?> getTable() {
         ModelClass modelInstance = newInstance();
         return modelInstance.getTable();
+    }
+
+    private TableField<?, ?> getPrimaryKeyField() {
+        Table<?> table = getTable();
+        UniqueKey<?> pk = table.getPrimaryKey();
+        if (pk == null || pk.getFields().isEmpty()) {
+            throw new IllegalStateException("Table " + table.getName() + " does not have a primary key defined.");
+        }
+        return pk.getFields().get(0);
     }
 
 }
