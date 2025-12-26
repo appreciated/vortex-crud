@@ -11,9 +11,9 @@ A simplified project management platform demo built with Vortex CRUD and jOOQ, s
 - **Comments**: Basic collaboration
 - **Custom Fields**: User-defined fields with JSON storage
 
-## Database Schema (8 tables)
+## Database Schema (10 tables)
 
-Core tables: `custom_field_definition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`
+Core tables: `custom_field_definition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`, `time_entry`, `attachment`
 
 ## Custom Fields System
 
@@ -57,9 +57,6 @@ The following features are currently missing in the Vortex CRUD core but would g
 
 Features that would be expected in a full implementation:
 
-- **Time Tracking**: Logging actual hours spent vs estimated.
-- **File Attachments**: Uploading documents to tasks and projects.
-- **Workflow Transitions**: Enforcing state changes (e.g., Todo -> In Progress -> Done).
 - **Project Dashboard**: Visualizations like Burn-down charts and velocity tracking.
 - **Subtasks UI**: Support for parent/child task selection and visualization.
 - **Rich Text Descriptions**: Markdown support for task descriptions.

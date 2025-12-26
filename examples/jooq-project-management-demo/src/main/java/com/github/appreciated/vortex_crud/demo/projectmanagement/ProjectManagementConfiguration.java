@@ -3,7 +3,9 @@ package com.github.appreciated.vortex_crud.demo.projectmanagement;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalFileResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -20,6 +22,8 @@ import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleRe
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
@@ -55,6 +59,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore taskLabelStore = new JooqDataStore(TASK_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore projectMemberStore = new JooqDataStore(PROJECT_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore timeEntryStore = new JooqDataStore(TIME_ENTRY.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore attachmentStore = new JooqDataStore(ATTACHMENT.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -120,7 +126,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(TASK.PARENT_TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK.PARENT_TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build()),
                         Map.entry(TASK.TASK_NUMBER, JooqIntegerField.builder().required(true).build()),
                         Map.entry(TASK.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
-                        Map.entry(TASK.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
+                        Map.entry(TASK.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 2000 characters", 0, 2000))).build()),
                         Map.entry(TASK.TASK_TYPE, JooqSelectField.builder().values("task-type").build()),
                         Map.entry(TASK.STATUS, JooqSelectField.builder().values("task-status").build()),
                         Map.entry(TASK.PRIORITY, JooqSelectField.builder().values("priority").build()),
@@ -159,6 +165,29 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         TASK_LABEL.ID, JooqNumericIdField.builder().build(),
                         TASK_LABEL.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK_LABEL.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
                         TASK_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) labelStore).field(TASK_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
+                .build();
+
+        var timeEntryConfig = JooqDataStoreConfig.of(TIME_ENTRY)
+                .dataStoreInstance((VortexCrudDataStore) timeEntryStore)
+                .fields(Map.of(
+                        TIME_ENTRY.ID, JooqNumericIdField.builder().build(),
+                        TIME_ENTRY.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TIME_ENTRY.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
+                        TIME_ENTRY.USER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(TIME_ENTRY.USER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        TIME_ENTRY.HOURS_SPENT, JooqDoubleField.builder().required(true).build(),
+                        TIME_ENTRY.DESCRIPTION, JooqTextAreaField.builder().build(),
+                        TIME_ENTRY.ENTRY_DATE, JooqDateField.builder().required(true).build(),
+                        TIME_ENTRY.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var attachmentConfig = JooqDataStoreConfig.of(ATTACHMENT)
+                .dataStoreInstance((VortexCrudDataStore) attachmentStore)
+                .fields(Map.of(
+                        ATTACHMENT.ID, JooqNumericIdField.builder().build(),
+                        ATTACHMENT.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(ATTACHMENT.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
+                        ATTACHMENT.UPLOADER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(ATTACHMENT.UPLOADER_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        ATTACHMENT.NAME, JooqTextField.builder().required(true).build(),
+                        ATTACHMENT.PATH, JooqFileField.builder().resourceProvider(new LocalFileResourceProvider("attachments")).required(true).build(),
+                        ATTACHMENT.UPLOADED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         // Project Form Configuration
@@ -219,6 +248,43 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .titleField(TASK.TITLE)
+                .routeActions(List.of(
+                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(() -> {
+                                    Button button = new Button("Start Progress");
+                                    button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                                    return button;
+                                })
+                                .handler(context -> {
+                                    TableRecord<?> record = context.getFirstSelectedEntity();
+                                    record.set((TableField) TASK.STATUS, "in_progress");
+                                    context.dataStore().updateRecord(record);
+                                    context.refreshCallback().run();
+                                })
+                                .build(),
+                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(() -> new Button("Review"))
+                                .handler(context -> {
+                                    TableRecord<?> record = context.getFirstSelectedEntity();
+                                    record.set((TableField) TASK.STATUS, "in_review");
+                                    context.dataStore().updateRecord(record);
+                                    context.refreshCallback().run();
+                                })
+                                .build(),
+                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(() -> {
+                                    Button button = new Button("Done");
+                                    button.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                                    return button;
+                                })
+                                .handler(context -> {
+                                    TableRecord<?> record = context.getFirstSelectedEntity();
+                                    record.set((TableField) TASK.STATUS, "done");
+                                    context.dataStore().updateRecord(record);
+                                    context.refreshCallback().run();
+                                })
+                                .build()
+                ))
                 .children(List.of(
                         JooqFieldElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
                         JooqFieldElement.of(TASK.DESCRIPTION, "route.tasks.labels.description").build(),
@@ -228,6 +294,54 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(TASK.ASSIGNEE_ID, "route.tasks.labels.assignee").build(),
                         JooqFieldElement.of(TASK.ESTIMATED_HOURS, "route.tasks.labels.estimated_hours").build(),
                         JooqFieldElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build(),
+                        JooqFieldElement.of(TASK.PARENT_TASK_ID, "route.tasks.labels.parent_task").build(),
+                        JooqCollectionElement.of("route.tasks.labels.subtasks")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(taskConfig)
+                                .oneToMany(new JooqOneToMany(TASK.PARENT_TASK_ID))
+                                .children(List.of(TASK.TASK_NUMBER, TASK.TITLE, TASK.STATUS))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(TASK.TITLE)
+                                        .children(List.of(
+                                                JooqFieldElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
+                                                JooqFieldElement.of(TASK.DESCRIPTION, "route.tasks.labels.description").build(),
+                                                JooqFieldElement.of(TASK.ASSIGNEE_ID, "route.tasks.labels.assignee").build(),
+                                                JooqFieldElement.of(TASK.STATUS, "route.tasks.labels.status").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollectionElement.of("route.tasks.labels.time_entries")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(timeEntryConfig)
+                                .oneToMany(new JooqOneToMany(TIME_ENTRY.TASK_ID))
+                                .children(List.of(TIME_ENTRY.USER_ID, TIME_ENTRY.HOURS_SPENT, TIME_ENTRY.ENTRY_DATE))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(TIME_ENTRY.HOURS_SPENT)
+                                        .children(List.of(
+                                                JooqFieldElement.of(TIME_ENTRY.HOURS_SPENT, "route.time_entries.labels.hours").build(),
+                                                JooqFieldElement.of(TIME_ENTRY.DESCRIPTION, "route.time_entries.labels.description").build(),
+                                                JooqFieldElement.of(TIME_ENTRY.ENTRY_DATE, "route.time_entries.labels.date").build(),
+                                                JooqFieldElement.of(TIME_ENTRY.USER_ID, "route.time_entries.labels.user").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollectionElement.of("route.tasks.labels.attachments")
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(attachmentConfig)
+                                .oneToMany(new JooqOneToMany(ATTACHMENT.TASK_ID))
+                                .children(List.of(ATTACHMENT.NAME, ATTACHMENT.UPLOADED_AT))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(ATTACHMENT.NAME)
+                                        .children(List.of(
+                                                JooqFieldElement.of(ATTACHMENT.NAME, "route.attachments.labels.name").build(),
+                                                JooqFieldElement.of(ATTACHMENT.PATH, "route.attachments.labels.file").build(),
+                                                JooqFieldElement.of(ATTACHMENT.UPLOADER_ID, "route.project_members.labels.user").build()
+                                        ))
+                                        .build())
+                                .build(),
                         JooqCollectionElement.of("route.tasks.labels.comments")
                                 .factory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -362,7 +476,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 USERS.ID,
                                 PROJECT.ID
                         ))
-                        .availableRoles(Roles.builder().roles(List.of("admin", "manager", "developer", "viewer")).build())
+                        .availableRoles(com.github.appreciated.vortex_crud.core.config.model.Roles.builder().roles(List.of("admin", "manager", "developer", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "manager"))
                         .signUpEnabled(true)
