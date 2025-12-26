@@ -19,6 +19,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemF
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -123,11 +124,39 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         setPrimaryStyle("flex", "1 0 400px");
         setSecondaryStyle("flex", "1 1 100%");
         addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
+
+        getElement().getClassList().add("vortex-responsive-master-detail");
+        String css = " @media (max-width: 800px) {\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"master\"] > [slot=\"primary\"] {\n" +
+                "        flex: 1 1 100% !important;\n" +
+                "        width: 100% !important;\n" +
+                "        min-width: 100% !important;\n" +
+                "        display: flex !important;\n" +
+                "    }\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"master\"] > [slot=\"secondary\"] {\n" +
+                "        display: none !important;\n" +
+                "    }\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] > [slot=\"primary\"] {\n" +
+                "        display: none !important;\n" +
+                "    }\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] > [slot=\"secondary\"] {\n" +
+                "        flex: 1 1 100% !important;\n" +
+                "        width: 100% !important;\n" +
+                "        min-width: 100% !important;\n" +
+                "        display: flex !important;\n" +
+                "    }\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail::part(splitter) {\n" +
+                "        display: none !important;\n" +
+                "    }\n" +
+                "}";
+        getElement().appendChild(new Element("style").setText(css));
     }
 
     private void setDetail(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver, boolean creation) {
         detailContainer.removeAll();
-        if (!routeResolver.isLastIndex(currentPathIndex) || creation) {
+        boolean showDetail = !routeResolver.isLastIndex(currentPathIndex) || creation;
+        getElement().setAttribute("state", showDetail ? "detail" : "master");
+        if (showDetail) {
             RouteRenderer<ModelClass, FieldType, RepositoryType> form = routeRenderer.form();
             Component component = form.factory().renderRoute(
                     context,
