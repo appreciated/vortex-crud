@@ -40,102 +40,160 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                    Binder<Object> binder,
                                    FormLayout form) {
         Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
-        ReflectionService<FieldType> reflectionService = context.reflectionService();
 
-        // Iterate over the fields defined in the configuration
         for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
-            if (element.type() != ViewFieldType.COLLECTION) {
-                FieldType fieldName = element.field();
-                Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
-                if (field == null) {
-                    throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
-                }
-
-                VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factory();
-                Component component = factory.createComponent(dataStoreKey, fieldName, field, context);
-
-                // Check RBAC permissions first but apply readonly AFTER binding
-                VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = null;
-                if (permissionChecker != null) {
-                    userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
-                    if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
-                        continue;
-                    }
-                }
-
-                // Handle NumericIdTextField with converter
-                if (component instanceof NumericIdTextField) {
-                    Binder.BindingBuilder<Object, String> builder = binder.forField((HasValue<?, String>) component);
-
-                    Converter<String, Object> numericConverter = new Converter<String, Object>() {
-                        @Override
-                        public Result<Object> convertToModel(String value, com.vaadin.flow.data.binder.ValueContext context) {
-                            // Read-only field, conversion to model not needed
-                            return Result.ok(value);
-                        }
-
-                        @Override
-                        public String convertToPresentation(Object value, com.vaadin.flow.data.binder.ValueContext context) {
-                            return value == null ? "" : value.toString();
-                        }
-                    };
-
-                    builder.withConverter(numericConverter).bind(
-                            entity1 -> reflectionService.getValue(entity1, fieldName),
-                            (entity1, o) -> {} // Read-only, no need to set
-                    );
-                } else {
-                    // Standard binding for other components
-                    Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
-
-                    if (fieldName instanceof String propertyName) {
-                        builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
-                    }
-                    if (field.required() && component instanceof HasValue) {
-                        builder = builder.asRequired();
-                    }
-
-                    // Apply custom validators if present
-                    if (field.validators() != null && !field.validators().isEmpty()) {
-                        for (Validator<?> validator : field.validators()) {
-                            builder = builder.withValidator((Validator<Object>) validator);
-                        }
-                    }
-
-                    builder.bind(
-                            entity1 -> reflectionService.getValue(entity1, fieldName),
-                            (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
-                    );
-                }
-
-                // Apply RBAC field-level permissions AFTER binding (binding can reset readonly status)
-                if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
-                    if (component instanceof HasValue) {
-                        ((HasValue<?, ?>) component).setReadOnly(true);
-                    }
-                }
-
-                if (component instanceof HasSize) {
-                    ((HasSize) component).setWidthFull();
-                }
-                if (component instanceof HasLabel) {
-                    ((HasLabel) component).setLabel(component.getTranslation(element.label()));
-                    form.add(component);
-                    form.setColspan(component, element.span());
-                } else {
-                    FormLayout.FormItem formItem = form.addFormItem(component, component.getTranslation(element.label()));
-                    form.setColspan(formItem, element.span());
-                }
+            if (element.type() == ViewFieldType.COLLECTION) {
+                addCollectionToForm(element, entity, routeRenderer, context, form);
             } else {
-                Component collection = element.factory().createCollection(
-                        reflectionService.getId(entity),
-                        routeRenderer,
-                        element,
-                        context
-                );
-                form.add(collection);
-                form.setColspan(collection, element.span());
+                processField(element, dataStoreKey, routeRenderer, fieldsConfig, entity, context, binder, form);
             }
+        }
+    }
+
+    private void addCollectionToForm(InternalFormElement<ModelClass, FieldType, RepositoryType> element,
+                                     Object entity,
+                                     RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                                     VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                     FormLayout form) {
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
+        Component collection = element.factory().createCollection(
+                reflectionService.getId(entity),
+                routeRenderer,
+                element,
+                context
+        );
+        form.add(collection);
+        form.setColspan(collection, element.span());
+    }
+
+    private void processField(InternalFormElement<ModelClass, FieldType, RepositoryType> element,
+                              RepositoryType dataStoreKey,
+                              RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                              Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig,
+                              Object entity,
+                              VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                              Binder<Object> binder,
+                              FormLayout form) {
+        FieldType fieldName = element.field();
+        Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
+        if (field == null) {
+            throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
+        }
+
+        VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = getFieldAccessLevel(routeRenderer, field);
+        if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
+            return;
+        }
+
+        VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factory();
+        Component component = factory.createComponent(dataStoreKey, fieldName, field, context);
+
+        bindField(component, fieldName, field, entity, context, binder);
+
+        applyFieldAccessLevel(component, userFieldAccess);
+        configureComponentSize(component);
+        addComponentToForm(component, element, form);
+    }
+
+    private VortexCrudRbacPermissionChecker.FieldAccessLevel getFieldAccessLevel(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                                                                                 Field<ModelClass, FieldType, RepositoryType> field) {
+        if (permissionChecker != null) {
+            return permissionChecker.getUserFieldAccess(routeRenderer, field);
+        }
+        return null;
+    }
+
+    private void bindField(Component component,
+                           FieldType fieldName,
+                           Field<ModelClass, FieldType, RepositoryType> field,
+                           Object entity,
+                           VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                           Binder<Object> binder) {
+        if (component instanceof NumericIdTextField) {
+            bindNumericIdTextField((NumericIdTextField) component, fieldName, context, binder);
+        } else {
+            bindStandardField(component, fieldName, field, entity, context, binder);
+        }
+    }
+
+    private void bindNumericIdTextField(NumericIdTextField component,
+                                        FieldType fieldName,
+                                        VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                        Binder<Object> binder) {
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
+        Binder.BindingBuilder<Object, String> builder = binder.forField(component);
+
+        Converter<String, Object> numericConverter = new Converter<String, Object>() {
+            @Override
+            public Result<Object> convertToModel(String value, com.vaadin.flow.data.binder.ValueContext context) {
+                return Result.ok(value);
+            }
+
+            @Override
+            public String convertToPresentation(Object value, com.vaadin.flow.data.binder.ValueContext context) {
+                return value == null ? "" : value.toString();
+            }
+        };
+
+        builder.withConverter(numericConverter).bind(
+                entity1 -> reflectionService.getValue(entity1, fieldName),
+                (entity1, o) -> {} // Read-only
+        );
+    }
+
+    private void bindStandardField(Component component,
+                                   FieldType fieldName,
+                                   Field<ModelClass, FieldType, RepositoryType> field,
+                                   Object entity,
+                                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                                   Binder<Object> binder) {
+        ReflectionService<FieldType> reflectionService = context.reflectionService();
+        Binder.BindingBuilder<Object, Object> builder = (Binder.BindingBuilder<Object, Object>) binder.forField((HasValue<?, ?>) component);
+
+        if (fieldName instanceof String propertyName) {
+            builder = builder.withValidator(new BeanValidator(entity.getClass(), propertyName));
+        }
+        if (field.required() && component instanceof HasValue) {
+            builder = builder.asRequired();
+        }
+
+        if (field.validators() != null && !field.validators().isEmpty()) {
+            for (Validator<?> validator : field.validators()) {
+                builder = builder.withValidator((Validator<Object>) validator);
+            }
+        }
+
+        builder.bind(
+                entity1 -> reflectionService.getValue(entity1, fieldName),
+                (entity1, o) -> reflectionService.setValue(entity1, fieldName, o)
+        );
+    }
+
+    private void applyFieldAccessLevel(Component component, VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess) {
+        if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.READ_ONLY) {
+            if (component instanceof HasValue) {
+                ((HasValue<?, ?>) component).setReadOnly(true);
+            }
+        }
+    }
+
+    private void configureComponentSize(Component component) {
+        if (component instanceof HasSize) {
+            ((HasSize) component).setWidthFull();
+        }
+    }
+
+    private void addComponentToForm(Component component,
+                                    InternalFormElement<ModelClass, FieldType, RepositoryType> element,
+                                    FormLayout form) {
+        String translation = component.getTranslation(element.label());
+        if (component instanceof HasLabel) {
+            ((HasLabel) component).setLabel(translation);
+            form.add(component);
+            form.setColspan(component, element.span());
+        } else {
+            FormLayout.FormItem formItem = form.addFormItem(component, translation);
+            form.setColspan(formItem, element.span());
         }
     }
 }

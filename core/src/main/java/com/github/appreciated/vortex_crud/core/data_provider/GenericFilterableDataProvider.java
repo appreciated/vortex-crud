@@ -31,27 +31,35 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
 
     private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> routeFilters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
-            return dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((filterText.isEmpty() || filterField == null) && routeFilters != null && !routeFilters.isEmpty()) {
-            return dataStore.getRecordsFromTableWhereFiltersEqual(routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((!filterText.isEmpty() && filterField != null) && routeFilters != null && !routeFilters.isEmpty()) {
-            return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+        boolean hasFilterText = !filterText.isEmpty() && filterField != null;
+        boolean hasRouteFilters = routeFilters != null && !routeFilters.isEmpty();
+        int offset = query.getOffset();
+        int limit = query.getLimit();
+
+        if (hasFilterText && hasRouteFilters) {
+            return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters, offset, limit).stream().map(obj -> (Object) obj);
+        } else if (hasFilterText) {
+            return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, offset, limit).stream().map(obj -> (Object) obj);
+        } else if (hasRouteFilters) {
+            return dataStore.getRecordsFromTableWhereFiltersEqual(routeFilters, offset, limit).stream().map(obj -> (Object) obj);
         } else {
-            return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+            return dataStore.getRecordsFromTable(offset, limit).stream().map(obj -> (Object) obj);
         }
     }
 
     private static <FieldType> int countFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> routeFilters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
-            return dataStore.count();
-        } else if ((filterText.isEmpty() || filterField == null) && routeFilters != null && !routeFilters.isEmpty()) {
-            return dataStore.countWhereFiltersEqual(routeFilters);
-        } else if ((!filterText.isEmpty() && filterField != null) && routeFilters != null && !routeFilters.isEmpty()) {
+        boolean hasFilterText = !filterText.isEmpty() && filterField != null;
+        boolean hasRouteFilters = routeFilters != null && !routeFilters.isEmpty();
+
+        if (hasFilterText && hasRouteFilters) {
             return dataStore.countWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters);
-        } else {
+        } else if (hasFilterText) {
             return dataStore.countWhereColumnLike(filterField, filterText);
+        } else if (hasRouteFilters) {
+            return dataStore.countWhereFiltersEqual(routeFilters);
+        } else {
+            return dataStore.count();
         }
     }
 }

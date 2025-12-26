@@ -77,7 +77,12 @@ public class TranslationService implements I18NProvider {
      * @return A list of parsed {@link Locale} objects.
      */
     private List<Locale> parseAvailableLocales(Resource resource) {
-        List<Locale> detectedLocales = new ArrayList<>();
+        String filename = resource.getFilename();
+        if (filename == null) {
+            LoggerFactory.getLogger(TranslationService.class)
+                    .warn("Resource filename is null for resource: " + resource);
+            return Collections.emptyList();
+        }
 
         String prefix = i18nBundlePrefix;
         int index = prefix.lastIndexOf('/');
@@ -85,23 +90,19 @@ public class TranslationService implements I18NProvider {
             prefix = prefix.substring(index + 1);
         }
 
-        Pattern pattern = Pattern.compile(prefix + "_([a-z]{2})(_[A-Z]{2})?\\.properties");
+        // Simplify pattern: prefix + underscore + language + optional (underscore + country) + .properties
+        String regex = Pattern.quote(prefix) + "_([a-z]{2})(?:_([A-Z]{2}))?\\.properties";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(filename);
 
-        String filename = resource.getFilename();
-        if (filename != null) {
-            Matcher matcher = pattern.matcher(filename);
-            if (matcher.matches()) {
-                String language = matcher.group(1);
-                String country = matcher.group(2) != null ? matcher.group(2).substring(1) : "";
-                Locale locale = country.isEmpty() ? Locale.of(language) : Locale.of(language, country);
-                detectedLocales.add(locale);
-            }
-        } else {
-            LoggerFactory.getLogger(TranslationService.class)
-                    .warn("Resource filename is null for resource: " + resource);
+        if (matcher.matches()) {
+            String language = matcher.group(1);
+            String country = matcher.group(2);
+            Locale locale = (country == null) ? Locale.of(language) : Locale.of(language, country);
+            return Collections.singletonList(locale);
         }
 
-        return detectedLocales;
+        return Collections.emptyList();
     }
 
     /**
