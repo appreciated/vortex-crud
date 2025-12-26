@@ -148,6 +148,9 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                 "    vaadin-split-layout.vortex-responsive-master-detail::part(splitter) {\n" +
                 "        display: none !important;\n" +
                 "    }\n" +
+                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] .mobile-back-button {\n" +
+                "        display: inline-flex !important;\n" +
+                "    }\n" +
                 "}";
         getElement().appendChild(new Element("style").setText(css));
     }
