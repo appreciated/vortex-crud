@@ -476,7 +476,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 USERS.ID,
                                 PROJECT.ID
                         ))
-                        .availableRoles(com.github.appreciated.vortex_crud.core.config.model.Roles.builder().roles(List.of("admin", "manager", "developer", "viewer")).build())
+                        .availableRoles(List.of("admin", "manager", "developer", "viewer"))
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "manager"))
                         .signUpEnabled(true)

@@ -494,7 +494,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         var iam = new LocalIdentityAndAccessManagement<TableRecord<?>, TableField<?, ?>, TableImpl<?>>() {
             {
                 dataStoreConfig(usersConfig);
-                availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build());
+                availableRoles(List.of("admin", "viewer", "guest"));
                 defaultReadRoles(List.of("viewer"));
                 defaultWriteRoles(List.of("admin"));
                 signUpEnabled(true);

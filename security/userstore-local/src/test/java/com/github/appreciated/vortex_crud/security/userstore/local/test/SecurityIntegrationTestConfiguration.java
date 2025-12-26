@@ -89,7 +89,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                         .username(InternalFormElement.<Object, String, String>builder().field("username").build())
                         .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").build())
                         .rolesField("roles")
-                        .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
+                        .availableRoles(List.of("ADMIN", "USER", "VIEWER"))
                         .loginView(LoginView.class)
                         .signUpView(SignUpView.class)
                         .signUpEnabled(true)
