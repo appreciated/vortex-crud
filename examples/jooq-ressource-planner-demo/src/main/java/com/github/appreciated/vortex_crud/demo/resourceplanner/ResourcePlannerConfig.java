@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.demo.resourceplanner;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -21,6 +22,8 @@ import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,7 +36,9 @@ import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Table
 @Service
 public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private static final Logger log = LoggerFactory.getLogger(ResourcePlannerConfig.class);
     private final DSLContext dsl;
+    private JooqDataStore appointmentStore;
 
     public ResourcePlannerConfig(DSLContext dsl) {
         this.dsl = dsl;
@@ -45,13 +50,16 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         DataStoreHooks<AppointmentRecord> appointmentHooks = new DataStoreHooks<>();
         appointmentHooks.beforeCreates().add(this::availabilityCheck);
         appointmentHooks.beforeUpdates().add(this::availabilityCheck);
+        appointmentHooks.afterCreates().add(this::onAppointmentCreated);
+        appointmentHooks.afterUpdates().add(this::sendEmailNotification);
 
         // Data Stores
         JooqDataStore roomStore = new JooqDataStore(ROOM.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore personStore = new JooqDataStore(PERSON.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore typeStore = new JooqDataStore(APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore personTypeStore = new JooqDataStore(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore appointmentStore = new JooqDataStore(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
+        JooqDataStore customerStore = new JooqDataStore(CUSTOMER.getRecordType(), dsl, new DataStoreHooks<>());
+        this.appointmentStore = new JooqDataStore(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
@@ -84,6 +92,17 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         PERSON.IS_ACTIVE, JooqCheckboxField.builder().build()))
                 .build();
 
+        var customerConfig = JooqDataStoreConfig.of(CUSTOMER)
+                .dataStoreInstance((VortexCrudDataStore) customerStore)
+                .fields(Map.of(
+                        CUSTOMER.ID, JooqNumericIdField.builder().build(),
+                        CUSTOMER.NAME, JooqTextField.builder().required(true).build(),
+                        CUSTOMER.EMAIL, JooqEmailField.builder().build(),
+                        CUSTOMER.PHONE, JooqTextField.builder().build(),
+                        CUSTOMER.NOTES, JooqTextAreaField.builder().build(),
+                        CUSTOMER.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
         var typeConfig = JooqDataStoreConfig.of(APPOINTMENT_TYPE)
                 .dataStoreInstance((VortexCrudDataStore) typeStore)
                 .fields(Map.of(
@@ -105,9 +124,12 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).filterField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),
                         Map.entry(APPOINTMENT.ROOM_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) roomStore).field(APPOINTMENT.ROOM_ID).filterField(ROOM.NAME).children(List.of(ROOM.NAME)).build()),
                         Map.entry(APPOINTMENT.PERSON_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) personStore).field(APPOINTMENT.PERSON_ID).filterField(PERSON.NAME).children(List.of(PERSON.NAME)).build()),
-                        Map.entry(APPOINTMENT.CUSTOMER_NAME, JooqTextField.builder().build()),
-                        Map.entry(APPOINTMENT.CUSTOMER_EMAIL, JooqTextField.builder().build()),
+                        Map.entry(APPOINTMENT.CUSTOMER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) customerStore).field(APPOINTMENT.CUSTOMER_ID).filterField(CUSTOMER.NAME).children(List.of(CUSTOMER.NAME)).build()),
                         Map.entry(APPOINTMENT.STATUS, JooqTextField.builder().build()),
+                        Map.entry(APPOINTMENT.RECURRENCE_FREQUENCY, JooqSelectField.builder().values("recurrence-frequency").build()),
+                        Map.entry(APPOINTMENT.RECURRENCE_INTERVAL, JooqIntegerField.builder().build()),
+                        Map.entry(APPOINTMENT.RECURRENCE_END_DATE, JooqDateTimePickerField.builder().build()),
+                        Map.entry(APPOINTMENT.RECURRENCE_GROUP_ID, JooqIntegerField.builder().build()),
                         Map.entry(APPOINTMENT.CREATED_AT, JooqDateTimePickerField.builder().build())
                 ))
                 .build();
@@ -148,6 +170,18 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> customerForm = JooqFormRoute.builder()
+                .dataStoreConfig(customerConfig)
+                .title("route.customers.title")
+                .titleField(CUSTOMER.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
+                        JooqFieldElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
+                        JooqFieldElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
+                        JooqFieldElement.of(CUSTOMER.NOTES, "route.customers.labels.notes").build(),
+                        JooqFieldElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
+                .build();
+
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> typeForm = JooqFormRoute.builder()
                 .dataStoreConfig(typeConfig)
                 .title("route.types.title")
@@ -163,15 +197,19 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> appointmentForm = JooqFormRoute.builder()
                 .dataStoreConfig(appointmentConfig)
                 .title("route.appointments.title")
-                .titleField(APPOINTMENT.CUSTOMER_NAME)
+                .titleField(APPOINTMENT.START_TIME)
                 .children(List.of(
                         JooqFieldElement.of(APPOINTMENT.START_TIME, "route.appointments.labels.start").build(),
                         JooqFieldElement.of(APPOINTMENT.END_TIME, "route.appointments.labels.end").build(),
                         JooqFieldElement.of(APPOINTMENT.APPOINTMENT_TYPE_ID, "route.appointments.labels.type").build(),
                         JooqFieldElement.of(APPOINTMENT.ROOM_ID, "route.appointments.labels.room").build(),
                         JooqFieldElement.of(APPOINTMENT.PERSON_ID, "route.appointments.labels.person").build(),
-                        JooqFieldElement.of(APPOINTMENT.CUSTOMER_NAME, "route.appointments.labels.customer").build(),
-                        JooqFieldElement.of(APPOINTMENT.STATUS, "route.appointments.labels.status").build()))
+                        JooqFieldElement.of(APPOINTMENT.CUSTOMER_ID, "route.appointments.labels.customer_id").build(),
+                        JooqFieldElement.of(APPOINTMENT.STATUS, "route.appointments.labels.status").build(),
+                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_FREQUENCY, "route.appointments.labels.recurrence_frequency").build(),
+                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_INTERVAL, "route.appointments.labels.recurrence_interval").build(),
+                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build()
+                ))
                 .build();
 
         // Routes
@@ -182,9 +220,18 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .dataStoreConfig(appointmentConfig)
                 .iconFactory(VaadinIcon.CALENDAR::create)
                 .title("route.appointments.title")
-                .titleField(APPOINTMENT.CUSTOMER_NAME)
+                .titleField(APPOINTMENT.START_TIME)
                 .startDateField(APPOINTMENT.START_TIME)
                 .endDateField(APPOINTMENT.END_TIME)
+                .form(appointmentForm)
+                .build());
+
+        routes.put("resource-board", JooqKanbanRoute.builder()
+                .dataStoreConfig(appointmentConfig)
+                .iconFactory(VaadinIcon.DASHBOARD::create)
+                .title("route.kanban.title")
+                .titleField(APPOINTMENT.START_TIME)
+                .columnField(APPOINTMENT.ROOM_ID)
                 .form(appointmentForm)
                 .build());
 
@@ -204,6 +251,14 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .form(personForm)
                 .build());
 
+        routes.put("customers", JooqGridRoute.builder()
+                .dataStoreConfig(customerConfig)
+                .iconFactory(VaadinIcon.USERS::create)
+                .title("route.customers.title")
+                .titleField(CUSTOMER.NAME)
+                .form(customerForm)
+                .build());
+
         routes.put("types", JooqGridRoute.builder()
                 .dataStoreConfig(typeConfig)
                 .iconFactory(VaadinIcon.LIST::create)
@@ -211,6 +266,13 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .titleField(APPOINTMENT_TYPE.NAME)
                 .form(typeForm)
                 .build());
+
+        LinkedHashMap<String, String> recurrenceFrequencies = new LinkedHashMap<>();
+        recurrenceFrequencies.put("NONE", "None");
+        recurrenceFrequencies.put("DAILY", "Daily");
+        recurrenceFrequencies.put("WEEKLY", "Weekly");
+        recurrenceFrequencies.put("MONTHLY", "Monthly");
+        recurrenceFrequencies.put("YEARLY", "Yearly");
 
         return JooqApplication.builder()
                 .applicationName("application.name")
@@ -229,6 +291,9 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         .rolesField(null)
                         .build())
                 .routes(routes)
+                .selects(Selects.builder()
+                        .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
+                        .build())
                 .build();
     }
 
@@ -239,10 +304,10 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
 
         LocalDateTime start = record.getStartTime();
         LocalDateTime end = record.getEndTime();
-        Integer id = record.getId(); // Might be null for create
+        Integer id = record.getId();
 
         if (start == null || end == null) {
-            return; // Let validation handle this
+            return;
         }
 
         // Room Check
@@ -271,6 +336,81 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
             if (personBusy) {
                 throw new RuntimeException("Person is not available for the selected time.");
             }
+        }
+    }
+
+    private void onAppointmentCreated(AppointmentRecord record) {
+        processRecurrence(record);
+        sendEmailNotification(record);
+    }
+
+    private void processRecurrence(AppointmentRecord record) {
+        String freq = record.getRecurrenceFrequency();
+        if (freq == null || "NONE".equals(freq) || record.getRecurrenceGroupId() != null) {
+            return;
+        }
+
+        LocalDateTime endDate = record.getRecurrenceEndDate();
+        if (endDate == null) {
+            return;
+        }
+
+        int interval = record.getRecurrenceInterval() != null ? record.getRecurrenceInterval() : 1;
+        LocalDateTime currentStart = record.getStartTime();
+        LocalDateTime currentEnd = record.getEndTime();
+
+        Integer groupId = record.getId();
+        dsl.update(APPOINTMENT)
+           .set(APPOINTMENT.RECURRENCE_GROUP_ID, groupId)
+           .where(APPOINTMENT.ID.eq(groupId))
+           .execute();
+
+        LocalDateTime nextStart = nextDate(currentStart, freq, interval);
+        LocalDateTime nextEnd = nextDate(currentEnd, freq, interval);
+
+        while (nextStart.isBefore(endDate)) {
+            AppointmentRecord newRecord = dsl.newRecord(APPOINTMENT);
+            newRecord.from(record);
+            newRecord.setId(null);
+            newRecord.setStartTime(nextStart);
+            newRecord.setEndTime(nextEnd);
+            newRecord.setRecurrenceGroupId(groupId);
+            newRecord.setRecurrenceFrequency("NONE");
+
+            try {
+                appointmentStore.insertRecord(newRecord);
+            } catch (RuntimeException e) {
+                log.warn("Could not create recurring appointment for {}: {}", nextStart, e.getMessage());
+                break;
+            }
+
+            nextStart = nextDate(nextStart, freq, interval);
+            nextEnd = nextDate(nextEnd, freq, interval);
+        }
+    }
+
+    private LocalDateTime nextDate(LocalDateTime date, String freq, int interval) {
+        switch (freq) {
+            case "DAILY": return date.plusDays(interval);
+            case "WEEKLY": return date.plusWeeks(interval);
+            case "MONTHLY": return date.plusMonths(interval);
+            case "YEARLY": return date.plusYears(interval);
+            default: return date;
+        }
+    }
+
+    private void sendEmailNotification(AppointmentRecord record) {
+        Integer customerId = record.getCustomerId();
+        if (customerId == null) return;
+
+        String email = dsl.select(CUSTOMER.EMAIL)
+                .from(CUSTOMER)
+                .where(CUSTOMER.ID.eq(customerId))
+                .fetchOneInto(String.class);
+
+        if (email != null && !email.isBlank()) {
+            log.info("📧 EMAIL NOTIFICATION: To: {}, Subject: Appointment Update, Body: Your appointment on {} is {}.",
+                    email, record.getStartTime(), record.getStatus());
         }
     }
 }
