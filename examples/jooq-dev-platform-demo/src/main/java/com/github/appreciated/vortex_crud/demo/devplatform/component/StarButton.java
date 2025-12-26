@@ -9,6 +9,7 @@ import org.jooq.TableRecord;
 import org.jooq.UpdatableRecord;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ public class StarButton extends CustomField<Integer> {
     private final JooqDataStore userStore;
     private final Button button = new Button();
     private Integer repoId;
+    private Integer userId;
 
     public StarButton(JooqDataStore starStore, JooqDataStore userStore) {
         this.starStore = starStore;
@@ -38,6 +40,23 @@ public class StarButton extends CustomField<Integer> {
         updateState();
     }
 
+    private Integer getUserId() {
+        if (userId != null) {
+            return userId;
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (username == null || "anonymousUser".equals(username)) {
+            return null;
+        }
+        // Find user ID
+        List<TableRecord<?>> users = userStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+        if (users.isEmpty()) {
+            return null;
+        }
+        userId = (Integer) users.get(0).get(USERS.ID);
+        return userId;
+    }
+
     private void updateState() {
         if (repoId == null) {
             button.setVisible(false);
@@ -45,22 +64,17 @@ public class StarButton extends CustomField<Integer> {
         }
         button.setVisible(true);
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (username == null || "anonymousUser".equals(username)) {
+        Integer currentUserId = getUserId();
+        if (currentUserId == null) {
             button.setEnabled(false);
             return;
         }
+        button.setEnabled(true);
 
-        // Find user ID
-        List<TableRecord<?>> users = userStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
-        if (users.isEmpty()) {
-            button.setEnabled(false);
-            return;
-        }
-        Integer userId = (Integer) users.get(0).get(USERS.ID);
-
-        List<TableRecord<?>> stars = starStore.getRecordsFromTableWhereColumnEquals(REPOSITORY_STAR.USER_ID, userId, 0, 1000);
-        boolean isStarred = stars.stream().anyMatch(r -> repoId.equals(r.get(REPOSITORY_STAR.REPOSITORY_ID)));
+        boolean isStarred = starStore.countWhereFiltersEqual(List.of(
+                new RouteFilter<>((TableField<?, ?>) REPOSITORY_STAR.USER_ID, currentUserId),
+                new RouteFilter<>((TableField<?, ?>) REPOSITORY_STAR.REPOSITORY_ID, repoId)
+        )) > 0;
 
         if (isStarred) {
             button.setIcon(VaadinIcon.STAR.create());
@@ -75,19 +89,19 @@ public class StarButton extends CustomField<Integer> {
     private void toggleStar() {
         if (repoId == null) return;
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<TableRecord<?>> users = userStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
-        if (users.isEmpty()) return;
-        Integer userId = (Integer) users.get(0).get(USERS.ID);
+        Integer currentUserId = getUserId();
+        if (currentUserId == null) return;
 
-        List<TableRecord<?>> stars = starStore.getRecordsFromTableWhereColumnEquals(REPOSITORY_STAR.USER_ID, userId, 0, 1000);
-        Optional<TableRecord<?>> star = stars.stream().filter(r -> repoId.equals(r.get(REPOSITORY_STAR.REPOSITORY_ID))).findFirst();
+        List<TableRecord<?>> stars = starStore.getRecordsFromTableWhereFiltersEqual(List.of(
+                new RouteFilter<>((TableField<?, ?>) REPOSITORY_STAR.USER_ID, currentUserId),
+                new RouteFilter<>((TableField<?, ?>) REPOSITORY_STAR.REPOSITORY_ID, repoId)
+        ), 0, 1);
 
-        if (star.isPresent()) {
-            starStore.deleteRecord((UpdatableRecord) star.get());
+        if (!stars.isEmpty()) {
+            starStore.deleteRecord((UpdatableRecord) stars.get(0));
         } else {
             TableRecord<?> newStar = starStore.newInstance();
-            newStar.set((TableField) REPOSITORY_STAR.USER_ID, userId);
+            newStar.set((TableField) REPOSITORY_STAR.USER_ID, currentUserId);
             newStar.set((TableField) REPOSITORY_STAR.REPOSITORY_ID, repoId);
             starStore.insertRecord((UpdatableRecord) newStar);
         }

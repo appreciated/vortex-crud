@@ -641,7 +641,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(notificationConfig)
                         .timestampField((TableField<?, ?>) NOTIFICATION.CREATED_AT)
-                        .messageField((TableField<?, ?>) NOTIFICATION.TITLE)
+                        .messageField((TableField<?, ?>) NOTIFICATION.MESSAGE)
                         .readStatusField((TableField<?, ?>) NOTIFICATION.IS_READ)
                         .readStatusValueForRead(1)
                         .readStatusValueForUnread(0)

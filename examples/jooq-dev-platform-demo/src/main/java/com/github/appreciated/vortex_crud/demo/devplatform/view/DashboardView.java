@@ -49,7 +49,7 @@ public class DashboardView extends VerticalLayout {
         TableRecord<?> user = users.get(0);
         Object userId = user.get(USERS.ID);
 
-        add(new H2("Dashboard"));
+        add(new H2("Dashboard: " + username));
 
         // Assigned Issues
         var issueRoute = application.routes().get("issues");
