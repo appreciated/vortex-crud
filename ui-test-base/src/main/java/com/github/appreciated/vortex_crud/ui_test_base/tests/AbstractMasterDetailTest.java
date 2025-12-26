@@ -64,7 +64,6 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
         waitForUrlToBe(getPath() + "/2");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        navigateTo(getPath());
         assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName(getDeletedItemName()))).isHidden();
     }
 }
