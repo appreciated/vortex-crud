@@ -4,5 +4,5 @@ import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractSelectField
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql("field_validation_test.sql")
-public class JooqSelectFieldTest extends AbstractSelectFieldTest {
+public class JooqSelectFieldValidationTest extends AbstractSelectFieldTest {
 }

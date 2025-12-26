@@ -69,6 +69,7 @@ public class JooqCalendarTestVortexCrudConfiguration
 
         return JooqApplication.builder()
                 .applicationName("Calendar Test")
+                .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();
     }
