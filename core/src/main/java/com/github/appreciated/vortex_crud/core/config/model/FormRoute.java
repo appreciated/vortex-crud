@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
@@ -24,6 +25,11 @@ import java.util.List;
 @Getter
 public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
+    public enum FormPresentationMode {
+        DIALOG,
+        SLIDE
+    }
+
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private String title;
@@ -33,8 +39,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
 
-    @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
     private boolean isHiddenInMenu;
 
@@ -65,4 +70,17 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
+
+    @Builder.Default
+    private FormPresentationMode presentationMode = FormPresentationMode.DIALOG;
+
+    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() {
+        if (dialogFactory != null) {
+            return dialogFactory;
+        }
+        if (presentationMode == FormPresentationMode.SLIDE) {
+            return new FormSlideFactory<>();
+        }
+        return new FormDialogFactory<>();
+    }
 }
