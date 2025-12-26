@@ -111,10 +111,16 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <includes>
+                                <include>com/github/appreciated/vortex_crud/core/**</include>
+                                <include>com/github/appreciated/vortex_crud/jpa/**</include>
+                            </includes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
