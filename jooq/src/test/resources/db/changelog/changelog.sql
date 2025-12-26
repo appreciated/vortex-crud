@@ -293,8 +293,8 @@ CREATE TABLE missing_features_test_relations
     FOREIGN KEY (referenced_id) REFERENCES missing_features_referenced (id)
 );
 
--- changeset Create lifecyle_test:31
-CREATE TABLE lifecyle_test
+-- changeset Create lifecycle_test:31
+CREATE TABLE lifecycle_test
 (
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,

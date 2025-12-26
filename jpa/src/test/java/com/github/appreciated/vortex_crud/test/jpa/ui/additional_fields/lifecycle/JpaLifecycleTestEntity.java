@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields;
+package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields.lifecycle;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "password_test")
-public class JpaPasswordTestEntity {
+@Table(name = "lifecycle_test")
+public class JpaLifecycleTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class JpaPasswordTestEntity {
     private String videoUrl;
 
     // Default constructor
-    public JpaPasswordTestEntity() {
+    public JpaLifecycleTestEntity() {
     }
 
     // Getters and setters

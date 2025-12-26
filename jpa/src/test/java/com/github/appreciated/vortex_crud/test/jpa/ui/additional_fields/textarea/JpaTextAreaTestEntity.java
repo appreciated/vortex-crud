@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields;
+package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields.textarea;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
@@ -8,8 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "lifecycle_test")
-public class JpaLifecycleTestEntity {
+@Table(name = "textarea_test")
+public class JpaTextAreaTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class JpaLifecycleTestEntity {
     private String videoUrl;
 
     // Default constructor
-    public JpaLifecycleTestEntity() {
+    public JpaTextAreaTestEntity() {
     }
 
     // Getters and setters
