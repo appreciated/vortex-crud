@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.SINGLE_FORM_ROUTE_TEST;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.SINGLE_FORM_ROUTE_MISSING_TEST;
 
 @Service
 public class JooqSingleFormRouteVortexCrudConfiguration
@@ -47,16 +47,16 @@ public class JooqSingleFormRouteVortexCrudConfiguration
             .configs(selectsConfig)
             .build();
 
-        JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
-        var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
+        JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_MISSING_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_MISSING_TEST)
                 .dataStoreInstance((VortexCrudDataStore) store)
                 .fields(Map.of(
-                        SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                        SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                        SINGLE_FORM_ROUTE_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        SINGLE_FORM_ROUTE_MISSING_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        SINGLE_FORM_ROUTE_MISSING_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        SINGLE_FORM_ROUTE_MISSING_TEST.PDF_DOC, PdfField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .resourceProvider(new LocalPdfResourceProvider())
                                 .build(),
-                        SINGLE_FORM_ROUTE_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
+                        SINGLE_FORM_ROUTE_MISSING_TEST.NOTES, TextAreaField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
                 .build();
 
@@ -66,12 +66,12 @@ public class JooqSingleFormRouteVortexCrudConfiguration
         routes.put("single-form-test", JooqSingleFormRoute.builder()
              .dataStoreConfig(config)
              .title("Single Form")
-             .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
+             .entityFilterField(SINGLE_FORM_ROUTE_MISSING_TEST.ID)
              .entityFilterValueProvider(() -> 1)
-             .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
+             .titleField(SINGLE_FORM_ROUTE_MISSING_TEST.NAME)
              .children(List.of(
-                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
-                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
+                 JooqFieldElement.of(SINGLE_FORM_ROUTE_MISSING_TEST.NAME, "Name").build(),
+                 JooqFieldElement.of(SINGLE_FORM_ROUTE_MISSING_TEST.PDF_DOC, "PDF").build()
              ))
              .build());
 

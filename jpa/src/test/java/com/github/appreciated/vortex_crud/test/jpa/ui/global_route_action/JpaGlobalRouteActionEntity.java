@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
-@Table(name = "missing_features_test")
+@Table(name = "global_route_action_test")
 public class JpaGlobalRouteActionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

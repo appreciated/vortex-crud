@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.SINGLE_FORM_ROUTE_TEST;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.SINGLE_COMPONENT_ROUTE_TEST;
 
 @Service
 public class JooqSingleComponentRouteVortexCrudConfiguration
@@ -35,13 +35,13 @@ public class JooqSingleComponentRouteVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
-        var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
+        JooqDataStore store = new JooqDataStore(SINGLE_COMPONENT_ROUTE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var config = JooqDataStoreConfig.of(SINGLE_COMPONENT_ROUTE_TEST)
                 .dataStoreInstance((VortexCrudDataStore) store)
                 .fields(Map.of(
-                        SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                        SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                        SINGLE_FORM_ROUTE_TEST.NOTES, MarkDownField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
+                        SINGLE_COMPONENT_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        SINGLE_COMPONENT_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        SINGLE_COMPONENT_ROUTE_TEST.NOTES, MarkDownField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
                 .build();
 
@@ -51,9 +51,9 @@ public class JooqSingleComponentRouteVortexCrudConfiguration
         routes.put("single-component-test", JooqSingleComponentRoute.builder()
              .dataStoreConfig(config)
              .title("Single Component")
-             .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
+             .entityFilterField(SINGLE_COMPONENT_ROUTE_TEST.ID)
              .entityFilterValueProvider(() -> 1)
-             .field(SINGLE_FORM_ROUTE_TEST.NOTES) // This is the single component field
+             .field(SINGLE_COMPONENT_ROUTE_TEST.NOTES) // This is the single component field
              .build());
 
         return JooqApplication.builder()

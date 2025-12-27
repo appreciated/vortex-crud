@@ -1,0 +1,10 @@
+package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.number_field;
+
+import com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.number_field.JpaNumberFieldEntity;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface JpaNumberFieldRepository extends JpaRepository<JpaNumberFieldEntity, Long> {
+}

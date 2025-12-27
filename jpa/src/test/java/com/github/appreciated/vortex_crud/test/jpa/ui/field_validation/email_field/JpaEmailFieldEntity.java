@@ -1,8 +1,9 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
+package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.email_field;
 
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
+import com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -11,8 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "validation_test")
-public class JpaFieldValidationEntity {
+@Table(name = "email_field_validation_test")
+public class JpaEmailFieldEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +56,7 @@ public class JpaFieldValidationEntity {
     private Boolean checkboxField;
 
     // Default constructor
-    public JpaFieldValidationEntity() {
+    public JpaEmailFieldEntity() {
     }
 
     // Getters and setters

@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
+package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.select_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum;
 
 import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION1;
 import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION2;
@@ -28,13 +29,13 @@ import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.Jp
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
 @Service
-public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final JpaFieldValidationRepository validationEntityRepository;
+    private final JpaSelectFieldRepository validationEntityRepository;
     private final JpaFieldService fieldService;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
 
-    public JpaFieldValidationVortexCrudConfiguration(JpaFieldValidationRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
+    public JpaSelectFieldVortexCrudConfiguration(JpaSelectFieldRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
         this.validationEntityRepository = validationEntityRepository;
         this.fieldService = fieldService;
         this.annotationRegistryService = annotationRegistryService;

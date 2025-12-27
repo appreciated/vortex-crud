@@ -325,3 +325,197 @@ CREATE TABLE textarea_test
     price       DECIMAL(10, 2),
     video_url   VARCHAR(255)
 );
+
+-- changeset Create text_field_validation_test:34
+CREATE TABLE text_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create email_field_validation_test:35
+CREATE TABLE email_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create number_field_validation_test:36
+CREATE TABLE number_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create date_field_validation_test:37
+CREATE TABLE date_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create datetime_field_validation_test:38
+CREATE TABLE datetime_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create select_field_validation_test:39
+CREATE TABLE select_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create checkbox_field_validation_test:40
+CREATE TABLE checkbox_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create image_field_validation_test:41
+CREATE TABLE image_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create field_types_full_test:42
+CREATE TABLE field_types_full_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create field_types_full_test_tags:43
+CREATE TABLE field_types_full_test_tags
+(
+    entity_id   INTEGER NOT NULL,
+    tag_value   VARCHAR(255)
+);
+
+-- changeset Create single_form_route_missing_test:44
+CREATE TABLE single_form_route_missing_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create single_form_route_missing_test_tags:45
+CREATE TABLE single_form_route_missing_test_tags
+(
+    entity_id   INTEGER NOT NULL,
+    tag_value   VARCHAR(255)
+);
+
+-- changeset Create id_field_test:46
+CREATE TABLE id_field_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create select_field_test:47
+CREATE TABLE select_field_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create single_component_route_test:48
+CREATE TABLE single_component_route_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create lifecycle_validation_test:49
+CREATE TABLE lifecycle_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
