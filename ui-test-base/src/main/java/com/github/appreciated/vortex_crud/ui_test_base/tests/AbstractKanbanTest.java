@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Mouse;
 import com.microsoft.playwright.options.BoundingBox;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
