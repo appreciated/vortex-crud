@@ -21,14 +21,14 @@ public class JooqDataStoreConfig {
         private final TableImpl<R> table;
         private final DSLContext dsl;
         private DataStoreHooks<R> hooks = new DataStoreHooks<>();
-        private Map<TableField<?, ?>, Field<R, TableField<?, ?>, TableImpl<?>>> fields;
+        private Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields;
 
         public Builder(TableImpl<R> table, DSLContext dsl) {
             this.table = table;
             this.dsl = dsl;
         }
 
-        public Builder<R> fields(Map<TableField<?, ?>, Field<R, TableField<?, ?>, TableImpl<?>>> fields) {
+        public Builder<R> fields(Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields) {
             this.fields = fields;
             return this;
         }
@@ -39,9 +39,9 @@ public class JooqDataStoreConfig {
         }
 
         @SuppressWarnings("unchecked")
-        public DataStoreConfig<R, TableField<?, ?>, TableImpl<?>> build() {
+        public DataStoreConfig<R, TableField<R, ?>, TableImpl<?>> build() {
             JooqDataStore<R> store = new JooqDataStore<>((Class<R>) table.getRecordType(), dsl, hooks);
-            return DataStoreConfig.<R, TableField<?, ?>, TableImpl<?>>builder()
+            return DataStoreConfig.<R, TableField<R, ?>, TableImpl<?>>builder()
                     .factory(table)
                     .dataStoreInstance(store)
                     .fields(fields)
@@ -49,7 +49,7 @@ public class JooqDataStoreConfig {
         }
     }
 
-    // Legacy support if needed, but we are refactoring.
+    // Legacy support restored for compatibility with examples
     public static DataStoreConfig.DataStoreConfigBuilder<org.jooq.TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableImpl<?> factory) {
          return DataStoreConfig.<org.jooq.TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .factory(factory);

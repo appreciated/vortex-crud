@@ -12,7 +12,6 @@ import jakarta.annotation.Nullable;
 public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    @SuppressWarnings("unchecked")
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
