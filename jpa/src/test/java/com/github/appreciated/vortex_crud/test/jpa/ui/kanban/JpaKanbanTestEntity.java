@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
 
+import com.github.appreciated.vortex_crud.jpa.service.annoations.IntegerNumberField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.NumericIdField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.SelectField;
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
@@ -18,10 +19,14 @@ public class JpaKanbanTestEntity {
     @TextField
     private String title;
 
+    @TextField
+    private String description;
+
     @SelectField("enum-options")
     private String status;
 
     @Column(name = "row_index")
+    @IntegerNumberField
     private Integer rowIndex;
 
     public Integer getId() {
@@ -54,5 +59,13 @@ public class JpaKanbanTestEntity {
 
     public void setRowIndex(Integer rowIndex) {
         this.rowIndex = rowIndex;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
