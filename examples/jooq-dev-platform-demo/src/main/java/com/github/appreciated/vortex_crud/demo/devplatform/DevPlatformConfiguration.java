@@ -69,10 +69,20 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                     try {
                         String title = (String) record.get(ISSUE.TITLE);
                         Integer repoId = (Integer) record.get(ISSUE.REPOSITORY_ID);
+                        Integer assigneeId = (Integer) record.get(ISSUE.ASSIGNEE_ID);
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
                         if (repo != null) {
+                            if (assigneeId != null) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(assigneeId);
+                                notif.setTitle("Assigned to Issue: " + title);
+                                notif.setMessage("In repository " + repo.getName());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now().toString());
+                                notif.store();
+                            }
                             Integer ownerId = repo.getOwnerId();
-                            if (ownerId != null) {
+                            if (ownerId != null && !ownerId.equals(assigneeId)) {
                                 var notif = dsl.newRecord(NOTIFICATION);
                                 notif.setUserId(ownerId);
                                 notif.setTitle("New Issue: " + title);
@@ -93,10 +103,20 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                     try {
                         String title = (String) record.get(PULL_REQUEST.TITLE);
                         Integer repoId = (Integer) record.get(PULL_REQUEST.REPOSITORY_ID);
+                        Integer assigneeId = (Integer) record.get(PULL_REQUEST.ASSIGNEE_ID);
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
                         if (repo != null) {
+                            if (assigneeId != null) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(assigneeId);
+                                notif.setTitle("Assigned to PR: " + title);
+                                notif.setMessage("In repository " + repo.getName());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now().toString());
+                                notif.store();
+                            }
                             Integer ownerId = repo.getOwnerId();
-                            if (ownerId != null) {
+                            if (ownerId != null && !ownerId.equals(assigneeId)) {
                                 var notif = dsl.newRecord(NOTIFICATION);
                                 notif.setUserId(ownerId);
                                 notif.setTitle("New PR: " + title);
