@@ -4,9 +4,9 @@ import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import org.junit.jupiter.api.Test;
 
 /**
- * Base test for SubmenuRoute navigation.
+ * Base test for subroute navigation.
  */
-public abstract class AbstractSubmenuRouteTest extends BaseUITest {
+public abstract class AbstractSubrouteTest extends BaseUITest {
 
     protected String getParentPath() {
         return "tasks";

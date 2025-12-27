@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.submenu_route;
+package com.github.appreciated.vortex_crud.test.jpa.ui.subroute;
 
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.NumericIdField;

@@ -60,10 +60,10 @@ public abstract class AbstractMasterDetailTest extends BaseUITest {
     @Test
     void testDeleteEntry() {
         navigateTo(getPath());
-        waitForAnyElementContainingText(getDeletedItemName()).click();
-        waitForUrlToBe(getPath() + "/2");
+        waitForAnyElementContainingText(getExistingItemName()).click();
+        waitForUrlToBe(getPath() + "/1");
         waitForAnyElementContainingText("Delete").click();
         waitForUrlToBe(getPath());
-        assertThat(page.locator("vaadin-virtual-list").getByRole(AriaRole.HEADING, new Locator.GetByRoleOptions().setName(getDeletedItemName()))).isHidden();
+        assertThat(page.getByRole(AriaRole.HEADING, new Page.GetByRoleOptions().setName("Done Task B"))).isHidden();
     }
 }

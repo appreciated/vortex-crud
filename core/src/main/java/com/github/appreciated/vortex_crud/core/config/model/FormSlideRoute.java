@@ -2,11 +2,11 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormSlideRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class FormSlideRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
@@ -31,14 +31,12 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private boolean isDefaultRoute;
 
     @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormSlideRouteFactory<>();
 
     @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormSlideFactory<>();
 
     private boolean isHiddenInMenu;
-
-    private final boolean isDeleteButtonHidden = false;
 
     private VortexCrudItemFactory<FieldType> itemFactory;
 
@@ -62,7 +60,18 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private List<String> readOnlyRoles;
 
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+
+    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
+        return form;
+    }
+
     private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
+
+    @Override
+    public boolean isDeleteButtonHidden() {
+        return false;
+    }
 }

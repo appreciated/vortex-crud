@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.form_slide;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
@@ -46,7 +46,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         ))
                         .build();
 
-        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
+        RouteRendererSingleChild<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .itemFactory(new CardFactory<>())

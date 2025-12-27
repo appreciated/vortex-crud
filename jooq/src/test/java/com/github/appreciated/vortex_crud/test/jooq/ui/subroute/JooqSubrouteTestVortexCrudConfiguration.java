@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jooq.ui.submenu_route;
+package com.github.appreciated.vortex_crud.test.jooq.ui.subroute;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;

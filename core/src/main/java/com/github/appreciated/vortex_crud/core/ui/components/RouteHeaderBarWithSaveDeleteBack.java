@@ -31,18 +31,11 @@ public class RouteHeaderBarWithSaveDeleteBack extends HorizontalLayout {
                                             ComponentEventListener<ClickEvent<Button>> onBack,
                                             Component titleComponent) {
 
-        if (onBack != null) {
+        if (!isWrapped && onBack != null) {
             Button back = new Button(VaadinIcon.ANGLE_LEFT.create(), onBack);
-            back.addClassName("route-back-button");
             back.getStyle().set("font-size", "1.6em")
                     .set("border-radius", "100%")
                     .set("box-sizing", "content-box");
-
-            if (isWrapped) {
-                back.getStyle().set("display", "none");
-                back.addClassName("mobile-back-button");
-            }
-
             add(back);
         }
 

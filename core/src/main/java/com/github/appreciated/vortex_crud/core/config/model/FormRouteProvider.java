@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.core.config.model;
 
 /**
  * Interface for routes that provide form rendering functionality.
- * Interface implemented by route types that provide form configuration, such as FormRoute
- * and MasterDetailRoute.
+ * Implemented by routes that need to render forms, such as FormRoute,
+ * MasterDetailRoute, and FormSlideRoute.
  */
 public interface FormRouteProvider<ModelClass, FieldType, RepositoryType> extends RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
