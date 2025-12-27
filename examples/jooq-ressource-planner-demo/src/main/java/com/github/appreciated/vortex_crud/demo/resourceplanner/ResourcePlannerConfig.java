@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.AppointmentRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
@@ -146,6 +147,23 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(ROOM.IS_ACTIVE, "route.rooms.labels.active").build()))
                 .build();
 
+        // Room Detail (for Resource View)
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> roomDetailForm = JooqFormRoute.builder()
+                .dataStoreConfig(roomConfig)
+                .title("route.rooms.title")
+                .titleField(ROOM.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
+                        JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
+                        JooqCollectionElement.of("route.rooms.labels.appointments")
+                                .factory(new ListCollectionFactory())
+                                .dataStoreConfig(appointmentConfig)
+                                .oneToMany(new JooqOneToMany(APPOINTMENT.ROOM_ID))
+                                .children(List.of(APPOINTMENT.START_TIME, APPOINTMENT.END_TIME, APPOINTMENT.STATUS))
+                                .titleField(APPOINTMENT.START_TIME)
+                                .build()))
+                .build();
+
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> personForm = JooqFormRoute.builder()
                 .dataStoreConfig(personConfig)
                 .title("route.persons.title")
@@ -233,6 +251,14 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .titleField(APPOINTMENT.START_TIME)
                 .columnField(APPOINTMENT.ROOM_ID)
                 .form(appointmentForm)
+                .build());
+
+        routes.put("resource-view", JooqMasterDetailRoute.builder()
+                .dataStoreConfig(roomConfig)
+                .iconFactory(VaadinIcon.BUILDING::create)
+                .title("route.resource_view.title")
+                .titleField(ROOM.NAME)
+                .form(roomDetailForm) // This form contains the collection element for appointments
                 .build());
 
         routes.put("rooms", JooqGridRoute.builder()
