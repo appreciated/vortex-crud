@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.subroute;
+package com.github.appreciated.vortex_crud.test.jpa.ui.submenu_route;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

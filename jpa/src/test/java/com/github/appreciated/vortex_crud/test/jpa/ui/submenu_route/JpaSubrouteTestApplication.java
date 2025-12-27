@@ -1,4 +1,4 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.subroute;
+package com.github.appreciated.vortex_crud.test.jpa.ui.submenu_route;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
