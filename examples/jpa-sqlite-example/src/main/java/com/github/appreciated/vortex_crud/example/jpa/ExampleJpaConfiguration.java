@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jpa;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -95,7 +94,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     }
 
     @Override
-    public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
+    public com.github.appreciated.vortex_crud.core.config.model.Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         // 1. Create DataStores
         var projectStore = createStore(projectRepository);
         var projectTagStore = createStore(projectTagRepository);
@@ -215,7 +214,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 ))
                 .build();
 
-        FormSlideRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
