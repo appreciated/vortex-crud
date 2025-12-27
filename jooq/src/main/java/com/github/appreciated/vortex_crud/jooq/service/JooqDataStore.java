@@ -14,7 +14,7 @@ import java.util.List;
  * Service for managing dynamic entities using an EntityManager.
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
-public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements VortexCrudDataStore<TableField<?, ?>, ModelClass> {
+public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> implements VortexCrudDataStore<TableField<ModelClass, ?>, ModelClass> {
 
     private final DSLContext dslContext;
     private final Class<ModelClass> record;
@@ -84,7 +84,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ModelClass> getRecordsFromTableWhereColumnEquals(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
+    public List<ModelClass> getRecordsFromTableWhereColumnEquals(TableField<ModelClass, ?> filterField, Object filterValue, int offset, int limit) {
         if (filterValue == null) {
             return Collections.emptyList();
         }
@@ -100,9 +100,9 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(TableField<?, ?> filterField,
+    public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(TableField<ModelClass, ?> filterField,
                                                                         Object filterValue,
-                                                                        TableField<?, ?> orderField,
+                                                                        TableField<ModelClass, ?> orderField,
                                                                         int offset,
                                                                         int limit) {
         if (filterValue == null) {
@@ -120,10 +120,11 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
-    public List<ModelClass> getRecordsFromTableWhereColumnIn(TableField<?, ?> filterField, List<String> filterValues, int offset, int limit) {
+    @SuppressWarnings("unchecked")
+    public List<ModelClass> getRecordsFromTableWhereColumnIn(TableField<ModelClass, ?> filterField, List<String> filterValues, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
-                .where(filterField.in(filterValues))
+                .where(((Field<String>)filterField).in(filterValues))
                 .limit(limit)
                 .offset(offset)
                 .fetchInto(record)
@@ -132,7 +133,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
-    public List<ModelClass> getRecordsFromTableWhereColumnLike(TableField<?, ?> filterField, Object filterValue, int offset, int limit) {
+    public List<ModelClass> getRecordsFromTableWhereColumnLike(TableField<ModelClass, ?> filterField, Object filterValue, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
                 .where(filterField.like("%" + filterValue + "%"))
@@ -183,7 +184,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @Override
-    public int countWhereColumnLike(TableField<?, ?> filterField, String filterValue) {
+    public int countWhereColumnLike(TableField<ModelClass, ?> filterField, String filterValue) {
         return dslContext.fetchCount(
                 getTable(),
                 DSL.field(filterField).like("%" + filterValue + "%")
@@ -192,10 +193,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public int countWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters) {
+    public int countWhereFiltersEqual(java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
-            for (RouteFilter<TableField<?, ?>> filter : filters) {
+            for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
                 condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
             }
         }
@@ -204,10 +205,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
+    public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
-            for (RouteFilter<TableField<?, ?>> filter : filters) {
+            for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
                 condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
             }
         }
@@ -223,10 +224,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, Object searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters, int offset, int limit) {
+    public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<ModelClass, ?> searchField, Object searchValue, java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
-            for (RouteFilter<TableField<?, ?>> filter : filters) {
+            for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
                 condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
             }
         }
@@ -242,10 +243,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
 
     @Override
     @SuppressWarnings("unchecked")
-    public int countWhereColumnLikeAndFiltersEqual(TableField<?, ?> searchField, String searchValue, java.util.List<RouteFilter<TableField<?, ?>>> filters) {
+    public int countWhereColumnLikeAndFiltersEqual(TableField<ModelClass, ?> searchField, String searchValue, java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
-            for (RouteFilter<TableField<?, ?>> filter : filters) {
+            for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
                 condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
             }
         }
@@ -256,9 +257,9 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<?>> implements Vor
     }
 
     @NotNull
-    private Table<?> getTable() {
+    private Table<ModelClass> getTable() {
         ModelClass modelInstance = newInstance();
-        return modelInstance.getTable();
+        return (Table<ModelClass>) modelInstance.getTable();
     }
 
     private TableField<?, ?> getPrimaryKeyField() {

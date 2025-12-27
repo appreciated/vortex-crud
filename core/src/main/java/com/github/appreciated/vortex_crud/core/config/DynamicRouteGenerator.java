@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config;
 
+import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.CustomRoute;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -20,9 +21,12 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void serviceInit(ServiceInitEvent event) {
-        var routes = configService.configuration().routes();
+        processConfiguration(configService.configuration());
+    }
+
+    private <ModelClass, FieldType, RepositoryType> void processConfiguration(Application<ModelClass, FieldType, RepositoryType> application) {
+        var routes = application.routes();
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
 
         routes.forEach((path, routeRenderer) -> {
@@ -35,7 +39,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
             }
         });
 
-        IdentityAndAccessManagement<?, ?, ?> userManagement = configService.configuration().identityAndAccessManagement();
+        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement = application.identityAndAccessManagement();
         if (userManagement != null) {
             configuration.setRoute("login", userManagement.loginView());
             configuration.setRoute("sign-up", userManagement.signUpView());
