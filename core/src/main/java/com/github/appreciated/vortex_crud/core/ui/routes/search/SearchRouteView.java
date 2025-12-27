@@ -3,12 +3,16 @@ package com.github.appreciated.vortex_crud.core.ui.routes.search;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Location;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLink;
@@ -16,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
@@ -23,6 +28,7 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout resultsContainer;
+    private final TextField searchField;
 
     public SearchRouteView(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer) {
         this.context = context;
@@ -34,7 +40,7 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
 
         add(new H2(routeRenderer.title()));
 
-        TextField searchField = new TextField();
+        searchField = new TextField();
         searchField.setPlaceholder("Search...");
         searchField.setWidthFull();
         searchField.setClearButtonVisible(true);
@@ -47,10 +53,37 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
         add(searchField, resultsContainer);
     }
 
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        checkForQueryParameter();
+    }
+
+    private void checkForQueryParameter() {
+        UI ui = UI.getCurrent();
+        if (ui != null && ui.getInternals().getLastHandledLocation() != null) {
+            Location location = ui.getInternals().getLastHandledLocation();
+            QueryParameters queryParameters = location.getQueryParameters();
+            Map<String, List<String>> parameters = queryParameters.getParameters();
+            if (parameters.containsKey("q")) {
+                String query = parameters.get("q").get(0);
+                if (query != null && !query.isEmpty()) {
+                    searchField.setValue(query);
+                    performSearch(query);
+                }
+            }
+        }
+    }
+
     private void performSearch(String searchValue) {
         resultsContainer.removeAll();
         if (searchValue == null || searchValue.isBlank()) {
             return;
+        }
+
+        // Update URL to include query parameter so it's shareable/bookmarkable
+        if (UI.getCurrent() != null) {
+             UI.getCurrent().getPage().getHistory().replaceState(null, "?q=" + searchValue);
         }
 
         Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = context.configService().configuration().routes();

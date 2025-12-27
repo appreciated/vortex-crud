@@ -2,22 +2,29 @@ package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
+import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.NotificationPanel;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.server.VaadinServletRequest;
+import jakarta.annotation.Nullable;
 
 import java.util.Map;
 
@@ -29,14 +36,17 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudLogoutService logoutService;
     private final ReflectionService<FieldType> reflectionService;
+    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
     public DefaultRouterLayout(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudLogoutService logoutService,
-            ReflectionService<FieldType> reflectionService) {
+            ReflectionService<FieldType> reflectionService,
+            @Nullable VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker) {
         this.configService = configService;
         this.logoutService = logoutService;
         this.reflectionService = reflectionService;
+        this.permissionChecker = permissionChecker;
     }
 
     @Override
@@ -58,6 +68,9 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         // Create action buttons layout
         HorizontalLayout actionButtons = new HorizontalLayout();
         actionButtons.setAlignItems(CENTER);
+
+        // Add Global Search if configured
+        addGlobalSearch(actionButtons);
 
         // Add notification panel if configured
         NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationConfig =
@@ -81,6 +94,34 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         horizontalLayout.setPadding(false);
         addToNavbar(horizontalLayout);
 
+    }
+
+    private void addGlobalSearch(HorizontalLayout actionButtons) {
+        configService.configuration().routes().entrySet().stream()
+                .filter(entry -> entry.getValue() instanceof SearchRoute)
+                .findFirst()
+                .ifPresent(entry -> {
+                    RouteRenderer<ModelClass, FieldType, RepositoryType> searchRoute = entry.getValue();
+                    String path = entry.getKey();
+
+                    if (permissionChecker == null || permissionChecker.hasUserReadAccessToRoute(searchRoute)) {
+                        TextField globalSearch = new TextField();
+                        globalSearch.setPlaceholder("Search...");
+                        globalSearch.setPrefixComponent(VaadinIcon.SEARCH.create());
+                        globalSearch.addKeyPressListener(Key.ENTER, event -> {
+                            String query = globalSearch.getValue();
+                            if (query != null && !query.isBlank()) {
+                                // Navigate to search route with query param
+                                UI.getCurrent().navigate(
+                                    com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.class,
+                                    new com.vaadin.flow.router.RouteParameters("path", path),
+                                    QueryParameters.of("q", query)
+                                );
+                            }
+                        });
+                        actionButtons.add(globalSearch);
+                    }
+                });
     }
 
     private SideNav getSideNav() {
