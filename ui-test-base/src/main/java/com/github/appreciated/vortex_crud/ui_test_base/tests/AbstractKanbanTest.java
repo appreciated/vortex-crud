@@ -117,7 +117,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         page.waitForTimeout(1000);
 
         List<Locator> rows = grid.locator("tbody#items tr").all();
-        assertTrue(!rows.isEmpty() && getTaskTitle(grid, rows.get(rows.size() - 1)).contains(text));
+        assertTrue(!rows.isEmpty() && getTaskTitle(grid, rows.getLast()).contains(text));
 
         page.reload();
 
@@ -127,7 +127,7 @@ public abstract class AbstractKanbanTest extends BaseUITest {
         page.waitForTimeout(1000);
 
         List<Locator> refreshedRows = refreshedGrid.locator("tbody#items tr").all();
-        assertTrue(!refreshedRows.isEmpty() && getTaskTitle(refreshedGrid, refreshedRows.get(refreshedRows.size() - 1)).contains(text));
+        assertTrue(!refreshedRows.isEmpty() && getTaskTitle(refreshedGrid, refreshedRows.getLast()).contains(text));
     }
 
     @Test
