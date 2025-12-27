@@ -3,29 +3,33 @@ package com.github.appreciated.vortex_crud.core.ui.factories.router_layout;
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
+import com.github.appreciated.vortex_crud.core.config.model.SearchResult;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
+import com.github.appreciated.vortex_crud.core.service.GlobalSearchService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.NotificationPanel;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.QueryParameters;
+import com.vaadin.flow.data.provider.CallbackDataProvider;
+import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
@@ -37,16 +41,19 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
     private final VortexCrudLogoutService logoutService;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
+    private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
 
     public DefaultRouterLayout(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudLogoutService logoutService,
             ReflectionService<FieldType> reflectionService,
-            @Nullable VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker) {
+            @Nullable VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
+            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService) {
         this.configService = configService;
         this.logoutService = logoutService;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
+        this.globalSearchService = globalSearchService;
     }
 
     @Override
@@ -102,23 +109,43 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                 .findFirst()
                 .ifPresent(entry -> {
                     RouteRenderer<ModelClass, FieldType, RepositoryType> searchRoute = entry.getValue();
-                    String path = entry.getKey();
 
                     if (permissionChecker == null || permissionChecker.hasUserReadAccessToRoute(searchRoute)) {
-                        TextField globalSearch = new TextField();
+                        ComboBox<SearchResult> globalSearch = new ComboBox<>();
                         globalSearch.setPlaceholder("Search...");
                         globalSearch.setPrefixComponent(VaadinIcon.SEARCH.create());
-                        globalSearch.addKeyPressListener(Key.ENTER, event -> {
-                            String query = globalSearch.getValue();
-                            if (query != null && !query.isBlank()) {
-                                // Navigate to search route with query param
+                        globalSearch.setClearButtonVisible(true);
+
+                        // Set Item Label Generator for selected value display
+                        globalSearch.setItemLabelGenerator(result -> result.title() + " (" + result.routeTitle() + ")");
+
+                        // Set Renderer for dropdown items (show Visual Path)
+                        globalSearch.setRenderer(new TextRenderer<>(result -> result.routeTitle() + " > " + result.title()));
+
+                        globalSearch.setItems(query -> {
+                            String filter = query.getFilter().orElse("");
+                            if (filter.isBlank()) {
+                                return java.util.stream.Stream.empty();
+                            }
+                            return globalSearchService.search(filter).stream();
+                        });
+
+                        globalSearch.addValueChangeListener(event -> {
+                            SearchResult result = event.getValue();
+                            if (result != null) {
+                                String fullPath = result.routePath() + "/" + result.id().toString();
+                                if (fullPath.startsWith("/")) {
+                                    fullPath = fullPath.substring(1);
+                                }
                                 UI.getCurrent().navigate(
                                     com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.class,
-                                    new com.vaadin.flow.router.RouteParameters("path", path),
-                                    QueryParameters.of("q", query)
+                                    new RouteParameters("path", fullPath)
                                 );
+                                // Clear selection so it can be used again
+                                globalSearch.clear();
                             }
                         });
+
                         actionButtons.add(globalSearch);
                     }
                 });

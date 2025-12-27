@@ -24,6 +24,7 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     private final ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy;
     private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker;
+    private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
 
     public VortexCrudContext(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -36,7 +37,8 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
             VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy,
             ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
             @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService,
-            @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker
+            @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker,
+            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService
     ) {
         this.configService = configService;
         this.reflectionService = reflectionService;
@@ -49,6 +51,7 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         this.rbacPermissionChecker = rbacPermissionChecker;
         this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
+        this.globalSearchService = globalSearchService;
     }
 
     public VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService() {
@@ -93,5 +96,9 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
 
     public ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy() {
         return manyToManyPersistenceStrategy;
+    }
+
+    public GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService() {
+        return globalSearchService;
     }
 }

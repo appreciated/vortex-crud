@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.routes.search;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.config.model.SearchResult;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
@@ -86,100 +85,57 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
              UI.getCurrent().getPage().getHistory().replaceState(null, "?q=" + searchValue);
         }
 
-        Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = context.configService().configuration().routes();
+        List<SearchResult> results = context.globalSearchService().search(searchValue);
 
-        routes.forEach((path, route) -> {
-            if (route.dataStoreConfig() != null && route.filterField() != null) {
-                // Check if user has permission to read this route
-                if (context.rbacPermissionChecker() != null && !context.rbacPermissionChecker().hasUserReadAccessToRoute(route)) {
-                    return;
-                }
-
-                // The cast here is safe in the context of the configured application,
-                // assuming the data store matches the application's generics.
-                // However, mixed generics in a single application are not fully type-safe.
-                @SuppressWarnings("unchecked")
-                VortexCrudDataStore<FieldType, ModelClass> dataStore = (VortexCrudDataStore<FieldType, ModelClass>) route.dataStoreConfig().dataStoreInstance();
-
-                if (dataStore != null) {
-                    try {
-                        List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(
-                                route.filterField(),
-                                searchValue,
-                                route.filters(),
-                                0,
-                                5 // Limit results per domain
-                        );
-
-                        if (!results.isEmpty()) {
-                            resultsContainer.add(createRouteResults(path, route, results));
-                        }
-                    } catch (Exception e) {
-                        log.error("Error performing search for route: " + route.title(), e);
-                    }
-                }
-            }
-        });
-
-        if (resultsContainer.getComponentCount() == 0) {
+        if (results.isEmpty()) {
             resultsContainer.add(new Span("No results found."));
-        }
-    }
+        } else {
+            // Group results by route title for display
+            // This requires a bit of logic to recreate the visual structure
+            // Or just iterate and check if title changed?
+            // The service returns a flat list.
+            // Let's group them.
 
-    private VerticalLayout createRouteResults(String routePath, RouteRenderer<ModelClass, FieldType, RepositoryType> route, List<ModelClass> results) {
-        VerticalLayout routeLayout = new VerticalLayout();
-        routeLayout.setPadding(false);
-        routeLayout.setSpacing(false);
+            String currentRouteTitle = null;
+            VerticalLayout currentRouteLayout = null;
 
-        H4 routeTitle = new H4(route.title());
-        routeLayout.add(routeTitle);
-
-        for (ModelClass result : results) {
-            String recordTitle = getRecordTitle(route, result);
-            Object recordId = getRecordId(result);
-
-            if (recordId != null) {
-                String fullPath = routePath + "/" + recordId.toString();
-                // Ensure no leading slash if routePath already has one or if we are building a relative path
-                if (fullPath.startsWith("/")) {
-                    fullPath = fullPath.substring(1);
+            for (SearchResult result : results) {
+                if (!result.routeTitle().equals(currentRouteTitle)) {
+                    currentRouteTitle = result.routeTitle();
+                    currentRouteLayout = new VerticalLayout();
+                    currentRouteLayout.setPadding(false);
+                    currentRouteLayout.setSpacing(false);
+                    currentRouteLayout.add(new H4(currentRouteTitle));
+                    resultsContainer.add(currentRouteLayout);
                 }
 
-                RouteParameters routeParameters = new RouteParameters("path", fullPath);
-
-                RouterLink link = new RouterLink();
-                link.setRoute(com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.class, routeParameters);
-                link.setText(recordTitle);
-
-                // Visual Path: Route Title > Record Title
-                Span visualPath = new Span(route.title() + " > " + recordTitle);
-                visualPath.getStyle().set("font-size", "0.8em").set("color", "gray");
-
-                VerticalLayout itemLayout = new VerticalLayout(link, visualPath);
-                itemLayout.setPadding(false);
-                itemLayout.setSpacing(false);
-                routeLayout.add(itemLayout);
+                if (currentRouteLayout != null) {
+                    currentRouteLayout.add(createResultItem(result));
+                }
             }
         }
-        return routeLayout;
     }
 
-    private String getRecordTitle(RouteRenderer<ModelClass, FieldType, RepositoryType> route, ModelClass result) {
-        FieldType titleField = route.titleField();
-        if (titleField != null) {
-            Object value = context.reflectionService().getValue(result, titleField);
-            if (value != null) {
-                return value.toString();
-            }
+    private VerticalLayout createResultItem(SearchResult result) {
+        String fullPath = result.routePath() + "/" + result.id().toString();
+        // Ensure no leading slash if routePath already has one or if we are building a relative path
+        if (fullPath.startsWith("/")) {
+            fullPath = fullPath.substring(1);
         }
-        return "Item " + getRecordId(result);
-    }
 
-    private Object getRecordId(ModelClass result) {
-        try {
-            return context.reflectionService().getId(result);
-        } catch (Exception e) {
-            return null;
-        }
+        RouteParameters routeParameters = new RouteParameters("path", fullPath);
+
+        RouterLink link = new RouterLink();
+        link.setRoute(com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.class, routeParameters);
+        link.setText(result.title());
+
+        // Visual Path: Route Title > Record Title
+        Span visualPath = new Span(result.routeTitle() + " > " + result.title());
+        visualPath.getStyle().set("font-size", "0.8em").set("color", "gray");
+
+        VerticalLayout itemLayout = new VerticalLayout(link, visualPath);
+        itemLayout.setPadding(false);
+        itemLayout.setSpacing(false);
+        return itemLayout;
     }
 }
