@@ -57,6 +57,11 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
 
         routes.forEach((path, route) -> {
             if (route.dataStoreConfig() != null && route.filterField() != null) {
+                // Check if user has permission to read this route
+                if (context.rbacPermissionChecker() != null && !context.rbacPermissionChecker().hasUserReadAccessToRoute(route)) {
+                    return;
+                }
+
                 // The cast here is safe in the context of the configured application,
                 // assuming the data store matches the application's generics.
                 // However, mixed generics in a single application are not fully type-safe.
