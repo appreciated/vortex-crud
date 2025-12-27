@@ -17,15 +17,15 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
     private final FormBuilder<ModelClass, FieldType, RepositoryType> formBuilder;
     private final DataBinder<ModelClass, FieldType, RepositoryType> dataBinder;
-    private final SecurityEnforcer<ModelClass, FieldType, RepositoryType> securityEnforcer;
+    private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
 
     @Autowired
     public FormCreator(FormBuilder<ModelClass, FieldType, RepositoryType> formBuilder,
                        DataBinder<ModelClass, FieldType, RepositoryType> dataBinder,
-                       SecurityEnforcer<ModelClass, FieldType, RepositoryType> securityEnforcer) {
+                       @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker) {
         this.formBuilder = formBuilder;
         this.dataBinder = dataBinder;
-        this.securityEnforcer = securityEnforcer;
+        this.permissionChecker = permissionChecker;
     }
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
@@ -48,9 +48,12 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 // Check RBAC permissions first
-                VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = securityEnforcer.checkAccess(routeRenderer, field);
-                if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
-                    continue;
+                VortexCrudRbacPermissionChecker.FieldAccessLevel userFieldAccess = null;
+                if (permissionChecker != null) {
+                    userFieldAccess = permissionChecker.getUserFieldAccess(routeRenderer, field);
+                    if (userFieldAccess == VortexCrudRbacPermissionChecker.FieldAccessLevel.NONE) {
+                        continue;
+                    }
                 }
 
                 Component component = formBuilder.createComponent(dataStoreKey, fieldName, field, context);
@@ -58,7 +61,9 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 dataBinder.bindComponent(component, fieldName, field, entity, binder, context.reflectionService());
 
                 // Apply RBAC field-level permissions AFTER binding
-                securityEnforcer.applyReadOnly(component, userFieldAccess);
+                if (permissionChecker != null && userFieldAccess != null) {
+                    permissionChecker.applySecurityToComponent(component, userFieldAccess);
+                }
 
                 formBuilder.addComponentToForm(component, element, form);
             } else {
