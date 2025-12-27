@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.core.security;
 
 import com.github.appreciated.vortex_crud.core.config.model.AccessControlled;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasValue;
 
 /**
  * Interface for checking Role-Based Access Control (RBAC) permissions.
@@ -54,4 +56,18 @@ public interface VortexCrudRbacPermissionChecker<ModelClass, FieldType, Reposito
     boolean hasUserReadAccessToRoute(AccessControlled resource);
 
     FieldAccessLevel getUserFieldAccess(AccessControlled resource, Field<ModelClass, FieldType, RepositoryType> field);
+
+    /**
+     * Applies security settings to a UI component based on the access level.
+     *
+     * @param component   The component to secure
+     * @param accessLevel The access level to apply
+     */
+    default void applySecurityToComponent(Component component, FieldAccessLevel accessLevel) {
+        if (accessLevel == FieldAccessLevel.READ_ONLY) {
+            if (component instanceof HasValue) {
+                ((HasValue<?, ?>) component).setReadOnly(true);
+            }
+        }
+    }
 }
