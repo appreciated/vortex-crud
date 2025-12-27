@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
-@Table(name = "missing_features_test")
+@Table(name = "missing_features_test_main")
 public class JpaMissingFeaturesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class JpaMissingFeaturesEntity {
     private String name;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "missing_features_test_tags", joinColumns = @JoinColumn(name = "entity_id"))
+    @CollectionTable(name = "missing_features_test_main_tags", joinColumns = @JoinColumn(name = "entity_id"))
     @Column(name = "tag_value")
     @MultiSelectValueField("tags")
     private Set<String> tags;
@@ -43,7 +43,7 @@ public class JpaMissingFeaturesEntity {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "missing_features_test_relations",
+        name = "missing_features_test_main_relations",
         joinColumns = @JoinColumn(name = "test_id"),
         inverseJoinColumns = @JoinColumn(name = "referenced_id")
     )

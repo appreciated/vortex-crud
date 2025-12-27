@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "single_form_route_test")
+@Table(name = "single_component_route_test")
 public class JpaSingleComponentRouteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -11,6 +11,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         "spring.jpa.hibernate.ddl-auto=create-drop"
 })
 @ActiveProfiles("test")
-@Sql(scripts = "classpath:single_form_route_test.sql")
+@Sql(scripts = "single_component_route_test.sql")
 public class JpaSingleComponentRouteTest extends AbstractSingleComponentRouteTest {
 }

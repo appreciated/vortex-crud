@@ -23,6 +23,142 @@ CREATE TABLE validation_test
     PRIMARY KEY (id)
 );
 
+-- changeset Create text_field_validation_test:2a
+CREATE TABLE text_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create email_field_validation_test:2b
+CREATE TABLE email_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create number_field_validation_test:2c
+CREATE TABLE number_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create date_field_validation_test:2d
+CREATE TABLE date_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create datetime_field_validation_test:2e
+CREATE TABLE datetime_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create select_field_validation_test:2f
+CREATE TABLE select_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create checkbox_field_validation_test:2g
+CREATE TABLE checkbox_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create image_field_validation_test:2h
+CREATE TABLE image_field_validation_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create validation_lifecycle_test:2i
+CREATE TABLE validation_lifecycle_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+
 -- changeset Create many_to_many_item:3
 CREATE TABLE many_to_many_item
 (
