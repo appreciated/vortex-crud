@@ -91,22 +91,18 @@
                 <version>0.8.14</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>report</id>
-                        <phase>prepare-package</phase>
+                        <id>report-aggregate</id>
+                        <phase>verify</phase>
                         <goals>
+                            <goal>report-aggregate</goal>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <includes>
-                                <include>com/github/appreciated/vortex_crud/core/**</include>
-                                <include>com/github/appreciated/vortex_crud/jpa/**</include>
-                            </includes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
