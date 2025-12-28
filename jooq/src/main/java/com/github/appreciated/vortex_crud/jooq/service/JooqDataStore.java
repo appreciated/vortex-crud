@@ -83,14 +83,13 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnEquals(TableField<ModelClass, ?> filterField, Object filterValue, int offset, int limit) {
         if (filterValue == null) {
             return Collections.emptyList();
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((Field<Object>) filterField).eq(filterValue))
+                .where(safeEq(filterField, filterValue))
                 .limit(limit)
                 .offset(offset)
                 .fetchInto(record)
@@ -99,7 +98,6 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnEqualsOrdered(TableField<ModelClass, ?> filterField,
                                                                         Object filterValue,
                                                                         TableField<ModelClass, ?> orderField,
@@ -110,7 +108,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
         }
         return dslContext.select()
                 .from(getTable())
-                .where(((Field<Object>) filterField).eq(filterValue))
+                .where(safeEq(filterField, filterValue))
                 .orderBy(orderField.asc())
                 .limit(limit)
                 .offset(offset)
@@ -120,11 +118,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnIn(TableField<ModelClass, ?> filterField, List<String> filterValues, int offset, int limit) {
         return dslContext.select()
                 .from(getTable())
-                .where(((Field<String>)filterField).in(filterValues))
+                .where(safeIn(filterField, filterValues))
                 .limit(limit)
                 .offset(offset)
                 .fetchInto(record)
@@ -145,11 +142,10 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ModelClass getRecordById(Object id) {
         return dslContext.select()
                 .from(getTable())
-                .where(((Field<Object>) getPrimaryKeyField()).eq(id))
+                .where(safeEq(getPrimaryKeyField(), id))
                 .fetchOptionalInto(record)
                 .orElse(null);
     }
@@ -162,7 +158,6 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void deleteRecordById(Object id) {
         // Fetch the entity before deletion for hooks
         ModelClass entity = getRecordById(id);
@@ -170,7 +165,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
             // Execute before delete hooks
             hooks.beforeDeletes().forEach(hook -> hook.execute(entity));
             dslContext.deleteFrom(getTable())
-                    .where(((Field<Object>) getPrimaryKeyField()).eq(id))
+                    .where(safeEq(getPrimaryKeyField(), id))
                     .execute();
 
             // Execute after delete hooks
@@ -192,24 +187,22 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public int countWhereFiltersEqual(java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
             for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
-                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+                condition = condition.and(safeEq(filter.field(), filter.value()));
             }
         }
         return dslContext.fetchCount(getTable(), condition);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereFiltersEqual(java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.trueCondition();
         if (filters != null) {
             for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
-                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+                condition = condition.and(safeEq(filter.field(), filter.value()));
             }
         }
         return dslContext.select()
@@ -223,12 +216,11 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ModelClass> getRecordsFromTableWhereColumnLikeAndFiltersEqual(TableField<ModelClass, ?> searchField, Object searchValue, java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters, int offset, int limit) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
             for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
-                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+                condition = condition.and(safeEq(filter.field(), filter.value()));
             }
         }
         return dslContext.select()
@@ -242,12 +234,11 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public int countWhereColumnLikeAndFiltersEqual(TableField<ModelClass, ?> searchField, String searchValue, java.util.List<RouteFilter<TableField<ModelClass, ?>>> filters) {
         org.jooq.Condition condition = DSL.field(searchField).like("%" + searchValue + "%");
         if (filters != null) {
             for (RouteFilter<TableField<ModelClass, ?>> filter : filters) {
-                condition = condition.and(((Field<Object>) filter.field()).eq(filter.value()));
+                condition = condition.and(safeEq(filter.field(), filter.value()));
             }
         }
         return dslContext.fetchCount(
@@ -269,6 +260,22 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
             throw new IllegalStateException("Table " + table.getName() + " does not have a primary key defined.");
         }
         return pk.getFields().get(0);
+    }
+
+    private org.jooq.Condition safeEq(TableField<?, ?> field, Object value) {
+        return safeEqHelper(field, value);
+    }
+
+    private <T> org.jooq.Condition safeEqHelper(TableField<?, T> field, Object value) {
+        return field.eq(field.getDataType().convert(value));
+    }
+
+    private org.jooq.Condition safeIn(TableField<?, ?> field, List<String> values) {
+        return safeInHelper(field, values);
+    }
+
+    private <T> org.jooq.Condition safeInHelper(TableField<?, T> field, List<String> values) {
+        return field.in(values.stream().map(v -> field.getDataType().convert(v)).toList());
     }
 
 }

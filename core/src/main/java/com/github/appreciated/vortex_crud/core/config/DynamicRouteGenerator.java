@@ -25,6 +25,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
         processConfiguration(configService.configuration());
     }
 
+    @SuppressWarnings("unchecked")
     private <ModelClass, FieldType, RepositoryType> void processConfiguration(Application<ModelClass, FieldType, RepositoryType> application) {
         var routes = application.routes();
         RouteConfiguration configuration = RouteConfiguration.forApplicationScope();
