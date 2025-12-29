@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationPr
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.*;
+import com.github.appreciated.vortex_crud.demo.resourceplanner.service.AppointmentBusinessService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -22,11 +23,8 @@ import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,22 +34,22 @@ import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Table
 @Service
 public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
-    private static final Logger log = LoggerFactory.getLogger(ResourcePlannerConfig.class);
     private final DSLContext dsl;
-    private JooqDataStore<AppointmentRecord> appointmentStore;
+    private final AppointmentBusinessService appointmentBusinessService;
 
-    public ResourcePlannerConfig(DSLContext dsl) {
+    public ResourcePlannerConfig(DSLContext dsl, AppointmentBusinessService appointmentBusinessService) {
         this.dsl = dsl;
+        this.appointmentBusinessService = appointmentBusinessService;
     }
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Hooks
         DataStoreHooks<AppointmentRecord> appointmentHooks = new DataStoreHooks<>();
-        appointmentHooks.beforeCreates().add(this::availabilityCheck);
-        appointmentHooks.beforeUpdates().add(this::availabilityCheck);
-        appointmentHooks.afterCreates().add(this::onAppointmentCreated);
-        appointmentHooks.afterUpdates().add(this::sendEmailNotification);
+        appointmentHooks.beforeCreates().add(appointmentBusinessService::availabilityCheck);
+        appointmentHooks.beforeUpdates().add(appointmentBusinessService::availabilityCheck);
+        appointmentHooks.afterCreates().add(appointmentBusinessService::onAppointmentCreated);
+        appointmentHooks.afterUpdates().add(appointmentBusinessService::sendEmailNotification);
 
         // Data Stores
         JooqDataStore<RoomRecord> roomStore = new JooqDataStore<>(ROOM.getRecordType(), dsl, new DataStoreHooks<>());
@@ -60,7 +58,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<PersonAppointmentTypeRecord> personTypeStore = new JooqDataStore<>(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
         //TODO UNUSED
         JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl, new DataStoreHooks<>());
-        this.appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
+        JooqDataStore<AppointmentRecord> appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
+        appointmentBusinessService.setAppointmentStore(appointmentStore);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
@@ -321,122 +320,5 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
                         .build())
                 .build();
-    }
-
-    private void availabilityCheck(AppointmentRecord record) {
-        if (record.getStatus() != null && record.getStatus().equals("CANCELLED")) {
-            return;
-        }
-
-        LocalDateTime start = record.getStartTime();
-        LocalDateTime end = record.getEndTime();
-        Integer id = record.getId();
-
-        if (start == null || end == null) {
-            return;
-        }
-
-        // Room Check
-        if (record.getRoomId() != null) {
-            boolean roomBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
-                    .where(APPOINTMENT.ROOM_ID.eq(record.getRoomId()))
-                    .and(APPOINTMENT.START_TIME.lessThan(end))
-                    .and(APPOINTMENT.END_TIME.greaterThan(start))
-                    .and(APPOINTMENT.STATUS.ne("CANCELLED"))
-                    .and(id != null ? APPOINTMENT.ID.ne(id) : org.jooq.impl.DSL.noCondition())
-            );
-            if (roomBusy) {
-                throw new RuntimeException("Room is not available for the selected time.");
-            }
-        }
-
-        // Person Check
-        if (record.getPersonId() != null) {
-            boolean personBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
-                    .where(APPOINTMENT.PERSON_ID.eq(record.getPersonId()))
-                    .and(APPOINTMENT.START_TIME.lessThan(end))
-                    .and(APPOINTMENT.END_TIME.greaterThan(start))
-                    .and(APPOINTMENT.STATUS.ne("CANCELLED"))
-                    .and(id != null ? APPOINTMENT.ID.ne(id) : org.jooq.impl.DSL.noCondition())
-            );
-            if (personBusy) {
-                throw new RuntimeException("Person is not available for the selected time.");
-            }
-        }
-    }
-
-    private void onAppointmentCreated(AppointmentRecord record) {
-        processRecurrence(record);
-        sendEmailNotification(record);
-    }
-
-    private void processRecurrence(AppointmentRecord record) {
-        String freq = record.getRecurrenceFrequency();
-        if (freq == null || "NONE".equals(freq) || record.getRecurrenceGroupId() != null) {
-            return;
-        }
-
-        LocalDateTime endDate = record.getRecurrenceEndDate();
-        if (endDate == null) {
-            return;
-        }
-
-        int interval = record.getRecurrenceInterval() != null ? record.getRecurrenceInterval() : 1;
-        LocalDateTime currentStart = record.getStartTime();
-        LocalDateTime currentEnd = record.getEndTime();
-
-        Integer groupId = record.getId();
-        dsl.update(APPOINTMENT)
-           .set(APPOINTMENT.RECURRENCE_GROUP_ID, groupId)
-           .where(APPOINTMENT.ID.eq(groupId))
-           .execute();
-
-        LocalDateTime nextStart = nextDate(currentStart, freq, interval);
-        LocalDateTime nextEnd = nextDate(currentEnd, freq, interval);
-
-        while (nextStart.isBefore(endDate)) {
-            AppointmentRecord newRecord = dsl.newRecord(APPOINTMENT);
-            newRecord.from(record);
-            newRecord.setId(null);
-            newRecord.setStartTime(nextStart);
-            newRecord.setEndTime(nextEnd);
-            newRecord.setRecurrenceGroupId(groupId);
-            newRecord.setRecurrenceFrequency("NONE");
-
-            try {
-                appointmentStore.insertRecord(newRecord);
-            } catch (RuntimeException e) {
-                log.warn("Could not create recurring appointment for {}: {}", nextStart, e.getMessage());
-                break;
-            }
-
-            nextStart = nextDate(nextStart, freq, interval);
-            nextEnd = nextDate(nextEnd, freq, interval);
-        }
-    }
-
-    private LocalDateTime nextDate(LocalDateTime date, String freq, int interval) {
-        switch (freq) {
-            case "DAILY": return date.plusDays(interval);
-            case "WEEKLY": return date.plusWeeks(interval);
-            case "MONTHLY": return date.plusMonths(interval);
-            case "YEARLY": return date.plusYears(interval);
-            default: return date;
-        }
-    }
-
-    private void sendEmailNotification(AppointmentRecord record) {
-        Integer customerId = record.getCustomerId();
-        if (customerId == null) return;
-
-        String email = dsl.select(CUSTOMER.EMAIL)
-                .from(CUSTOMER)
-                .where(CUSTOMER.ID.eq(customerId))
-                .fetchOneInto(String.class);
-
-        if (email != null && !email.isBlank()) {
-            log.info("📧 EMAIL NOTIFICATION: To: {}, Subject: Appointment Update, Body: Your appointment on {} is {}.",
-                    email, record.getStartTime(), record.getStatus());
-        }
     }
 }
