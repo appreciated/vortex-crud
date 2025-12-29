@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.data_provider;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.vaadin.flow.data.provider.Query;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,9 @@ import static org.mockito.Mockito.when;
 
 class GenericFilterableDataProviderTest {
 
+    // Using QueryDataStore mock because tests exercise filtering logic
     @Mock
-    private VortexCrudDataStore<String, Object> dataStore;
+    private VortexCrudQueryDataStore<String, Object> dataStore;
 
     private GenericFilterableDataProvider<String> dataProvider;
     private final String filterField = "name";

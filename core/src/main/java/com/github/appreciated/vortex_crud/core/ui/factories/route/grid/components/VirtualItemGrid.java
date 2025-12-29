@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -20,6 +21,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -115,17 +117,36 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     List<ModelClass> items;
 
                     String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
+
+                    if (dataStore instanceof VortexCrudQueryDataStore) {
+                         VortexCrudQueryDataStore<FieldType, ?> queryDataStore = (VortexCrudQueryDataStore<FieldType, ?>) dataStore;
+                         if (filterText.isEmpty()) {
+                             if (config.filters() != null && !config.filters().isEmpty()) {
+                                 items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
+                             } else {
+                                 items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
+                             }
+                         } else {
+                             if (config.filters() != null && !config.filters().isEmpty()) {
+                                 items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
+                             } else {
+                                 items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
+                             }
+                         }
+                    } else {
+                        // Fallback for simple data stores: list only, no filtering
+                        if (!filterText.isEmpty() || (config.filters() != null && !config.filters().isEmpty())) {
+                             // Can't filter on server, return empty or implement in-memory filtering (expensive)
+                             // For now return paginated items, ignoring filter (or should we return empty?)
+                             // Let's assume simple stores don't support search if they don't implement Query interface.
+                             if (!filterText.isEmpty()) {
+                                 // Return empty list if search text is present but not supported
+                                 items = Collections.emptyList();
+                             } else {
+                                 items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
+                             }
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
-                        }
-                    } else {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
-                        } else {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
                         }
                     }
 
@@ -141,17 +162,28 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 query -> {
                     int count;
                     String filterText = query.getFilter().orElse("");
-                    if (filterText.isEmpty()) {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereFiltersEqual(config.filters());
+
+                    if (dataStore instanceof VortexCrudQueryDataStore) {
+                         VortexCrudQueryDataStore<FieldType, ?> queryDataStore = (VortexCrudQueryDataStore<FieldType, ?>) dataStore;
+                         if (filterText.isEmpty()) {
+                             if (config.filters() != null && !config.filters().isEmpty()) {
+                                 count = queryDataStore.countWhereFiltersEqual(config.filters());
+                             } else {
+                                 count = dataStore.count();
+                             }
+                         } else {
+                             if (config.filters() != null && !config.filters().isEmpty()) {
+                                 count = queryDataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
+                             } else {
+                                 count = queryDataStore.countWhereColumnLike(config.titleField(), filterText);
+                             }
+                         }
+                    } else {
+                        // Fallback
+                        if (!filterText.isEmpty()) {
+                            count = 0;
                         } else {
                             count = dataStore.count();
-                        }
-                    } else {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
-                        } else {
-                            count = dataStore.countWhereColumnLike(config.titleField(), filterText);
                         }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);

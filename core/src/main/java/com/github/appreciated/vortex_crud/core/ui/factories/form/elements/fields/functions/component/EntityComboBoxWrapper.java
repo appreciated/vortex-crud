@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
@@ -29,8 +30,21 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
+                (filterValue, i, i1) -> {
+                    if (dataStore instanceof VortexCrudQueryDataStore) {
+                        return ((VortexCrudQueryDataStore<FieldType, ?>) dataStore).getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream().map(o -> (Object)o);
+                    } else {
+                        // Fallback: list all
+                        return dataStore.getRecordsFromTable(i, i1).stream().map(o -> (Object)o);
+                    }
+                },
+                filterValue -> {
+                    if (dataStore instanceof VortexCrudQueryDataStore) {
+                        return ((VortexCrudQueryDataStore<FieldType, ?>) dataStore).countWhereColumnLike(refField.filterField(), filterValue);
+                    } else {
+                        return dataStore.count();
+                    }
+                }
         );
 
         comboBox.setItemLabelGenerator(item -> refField.children().stream()

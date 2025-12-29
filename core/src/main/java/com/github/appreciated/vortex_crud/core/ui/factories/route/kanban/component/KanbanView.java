@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -274,13 +275,24 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
             if (kanbanRoute.rowIndexField() != null) {
                 // Get fresh items in target column
-                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                        kanbanRoute.columnField(),
-                        columnDatabaseValue,
-                        kanbanRoute.rowIndexField(),
-                        0,
-                        1000
-                );
+                List<Object> targetColumnItems;
+
+                if (dataStore instanceof VortexCrudQueryDataStore) {
+                    targetColumnItems = ((VortexCrudQueryDataStore<FieldType, Object>)dataStore).getRecordsFromTableWhereColumnEqualsOrdered(
+                            kanbanRoute.columnField(),
+                            columnDatabaseValue,
+                            kanbanRoute.rowIndexField(),
+                            0,
+                            1000
+                    );
+                } else {
+                     // Fallback if not queryable: list all and filter/sort in memory (inefficient but works for simple stores)
+                     // Or throw unsupported exception.
+                     // Here we try memory filtering
+                     targetColumnItems = new ArrayList<>(dataStore.getRecordsFromTable(0, 1000));
+                     targetColumnItems.removeIf(item -> !Objects.equals(reflectionService.getValue(item, kanbanRoute.columnField()), columnDatabaseValue));
+                     targetColumnItems.sort(Comparator.comparing(o -> (Comparable) reflectionService.getValue(o, kanbanRoute.rowIndexField())));
+                }
 
                 Integer newPosition;
 

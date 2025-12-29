@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -23,6 +24,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
+
+import java.util.Collections;
 
 /**
  * Default implementation of the {@link VortexCrudRouteFactory} interface.
@@ -88,8 +91,20 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             FieldType filterField = singleFormRoute.entityFilterField();
             Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
-            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
+            java.util.List<ModelClass> results;
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                results = ((VortexCrudQueryDataStore<FieldType, ModelClass>)dataStore).getRecordsFromTableWhereColumnEquals(
                 filterField, filterValue, 0, 1);
+            } else {
+                // Fallback for simple data store without query capabilities
+                if (filterField == null) {
+                    // Assuming no filter means "get the single record this store manages"
+                    results = dataStore.getRecordsFromTable(0, 1);
+                } else {
+                    // Cannot filter safely, return empty to trigger exception
+                    results = Collections.emptyList();
+                }
+            }
 
             if (results.isEmpty()) {
                 throw new IllegalStateException(
