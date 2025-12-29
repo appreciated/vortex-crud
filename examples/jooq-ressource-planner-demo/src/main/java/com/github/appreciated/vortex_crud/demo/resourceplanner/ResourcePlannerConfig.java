@@ -143,7 +143,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         EMAIL_TEMPLATES.ID, JooqNumericIdField.builder().build(),
                         EMAIL_TEMPLATES.NAME, JooqTextField.builder().required(true).build(),
                         EMAIL_TEMPLATES.SUBJECT, JooqTextField.builder().build(),
-                        EMAIL_TEMPLATES.BODY, JooqTextAreaField.builder().build()))
+                        EMAIL_TEMPLATES.BODY, JooqMarkDownField.builder().build()))
                 .build();
 
         var settingsConfig = JooqDataStoreConfig.of(SETTINGS)
