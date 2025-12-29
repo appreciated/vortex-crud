@@ -4,11 +4,10 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.AppointmentRecord;
+import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -39,7 +38,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
 
     private static final Logger log = LoggerFactory.getLogger(ResourcePlannerConfig.class);
     private final DSLContext dsl;
-    private JooqDataStore appointmentStore;
+    private JooqDataStore<AppointmentRecord> appointmentStore;
 
     public ResourcePlannerConfig(DSLContext dsl) {
         this.dsl = dsl;
@@ -55,17 +54,18 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         appointmentHooks.afterUpdates().add(this::sendEmailNotification);
 
         // Data Stores
-        JooqDataStore roomStore = new JooqDataStore(ROOM.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore personStore = new JooqDataStore(PERSON.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore typeStore = new JooqDataStore(APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore personTypeStore = new JooqDataStore(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore customerStore = new JooqDataStore(CUSTOMER.getRecordType(), dsl, new DataStoreHooks<>());
-        this.appointmentStore = new JooqDataStore(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<RoomRecord> roomStore = new JooqDataStore<>(ROOM.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<PersonRecord> personStore = new JooqDataStore<>(PERSON.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<AppointmentTypeRecord> typeStore = new JooqDataStore<>(APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<PersonAppointmentTypeRecord> personTypeStore = new JooqDataStore<>(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
+        //TODO UNUSED
+        JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl, new DataStoreHooks<>());
+        this.appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
-                .dataStoreInstance((VortexCrudDataStore) usersStore)
+                .dataStoreInstance(usersStore)
                 .fields(Map.of(
                         USERS.ID, JooqNumericIdField.builder().build(),
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
@@ -74,7 +74,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         var roomConfig = JooqDataStoreConfig.of(ROOM)
-                .dataStoreInstance((VortexCrudDataStore) roomStore)
+                .dataStoreInstance(roomStore)
                 .fields(Map.of(
                         ROOM.ID, JooqNumericIdField.builder().build(),
                         ROOM.NAME, JooqTextField.builder().required(true).build(),
@@ -84,7 +84,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         var personConfig = JooqDataStoreConfig.of(PERSON)
-                .dataStoreInstance((VortexCrudDataStore) personStore)
+                .dataStoreInstance(personStore)
                 .fields(Map.of(
                         PERSON.ID, JooqNumericIdField.builder().build(),
                         PERSON.NAME, JooqTextField.builder().required(true).build(),
@@ -94,7 +94,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         var customerConfig = JooqDataStoreConfig.of(CUSTOMER)
-                .dataStoreInstance((VortexCrudDataStore) customerStore)
+                .dataStoreInstance(customerStore)
                 .fields(Map.of(
                         CUSTOMER.ID, JooqNumericIdField.builder().build(),
                         CUSTOMER.NAME, JooqTextField.builder().required(true).build(),
@@ -105,7 +105,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         var typeConfig = JooqDataStoreConfig.of(APPOINTMENT_TYPE)
-                .dataStoreInstance((VortexCrudDataStore) typeStore)
+                .dataStoreInstance(typeStore)
                 .fields(Map.of(
                         APPOINTMENT_TYPE.ID, JooqNumericIdField.builder().build(),
                         APPOINTMENT_TYPE.NAME, JooqTextField.builder().required(true).build(),
@@ -117,15 +117,15 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         var appointmentConfig = JooqDataStoreConfig.of(APPOINTMENT)
-                .dataStoreInstance((VortexCrudDataStore) appointmentStore)
+                .dataStoreInstance(appointmentStore)
                 .fields(Map.ofEntries(
                         Map.entry(APPOINTMENT.ID, JooqNumericIdField.builder().build()),
                         Map.entry(APPOINTMENT.START_TIME, JooqDateTimePickerField.builder().required(true).build()),
                         Map.entry(APPOINTMENT.END_TIME, JooqDateTimePickerField.builder().required(true).build()),
-                        Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).filterField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),
-                        Map.entry(APPOINTMENT.ROOM_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) roomStore).field(APPOINTMENT.ROOM_ID).filterField(ROOM.NAME).children(List.of(ROOM.NAME)).build()),
-                        Map.entry(APPOINTMENT.PERSON_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) personStore).field(APPOINTMENT.PERSON_ID).filterField(PERSON.NAME).children(List.of(PERSON.NAME)).build()),
-                        Map.entry(APPOINTMENT.CUSTOMER_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) customerStore).field(APPOINTMENT.CUSTOMER_ID).filterField(CUSTOMER.NAME).children(List.of(CUSTOMER.NAME)).build()),
+                        Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore(typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).filterField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),
+                        Map.entry(APPOINTMENT.ROOM_ID, JooqReferenceField.builder().dataStore(roomStore).field(APPOINTMENT.ROOM_ID).filterField(ROOM.NAME).children(List.of(ROOM.NAME)).build()),
+                        Map.entry(APPOINTMENT.PERSON_ID, JooqReferenceField.builder().dataStore(personStore).field(APPOINTMENT.PERSON_ID).filterField(PERSON.NAME).children(List.of(PERSON.NAME)).build()),
+                        Map.entry(APPOINTMENT.CUSTOMER_ID, JooqReferenceField.builder().dataStore(customerStore).field(APPOINTMENT.CUSTOMER_ID).filterField(CUSTOMER.NAME).children(List.of(CUSTOMER.NAME)).build()),
                         Map.entry(APPOINTMENT.STATUS, JooqTextField.builder().build()),
                         Map.entry(APPOINTMENT.RECURRENCE_FREQUENCY, JooqSelectField.builder().values("recurrence-frequency").build()),
                         Map.entry(APPOINTMENT.RECURRENCE_INTERVAL, JooqIntegerField.builder().build()),
@@ -174,10 +174,10 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
                         JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                         JooqCollectionElement.of("route.persons.labels.services")
-                                .factory(new ListCollectionFactory())
-                                .dialogFactory(new ConnectDialogFactory())
+                                .factory(new ListCollectionFactory<>())
+                                .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(typeConfig)
-                                .manyToMany(new JooqManyToMany(
+                                .manyToMany(new JooqManyToMany<>(
                                         PERSON_APPOINTMENT_TYPE.PERSON_ID,
                                         PERSON_APPOINTMENT_TYPE.APPOINTMENT_TYPE_ID,
                                         APPOINTMENT_TYPE.ID,
@@ -258,7 +258,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.resource_view.title")
                 .titleField(ROOM.NAME)
-                .form(roomDetailForm) // This form contains the collection element for appointments
+                .form(roomDetailForm)
                 .build());
 
         routes.put("rooms", JooqGridRoute.builder()
