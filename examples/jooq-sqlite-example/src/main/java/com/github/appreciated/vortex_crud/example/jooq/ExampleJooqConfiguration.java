@@ -79,7 +79,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqSimpleMapDataStore notesStore = new JooqSimpleMapDataStore(dsl);
 
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
-                .dataStoreInstance((VortexCrudDataStore) projectsStore)
+                .dataStoreInstance(projectsStore)
                 .fields(Map.of(
                         PROJECTS.ID, JooqNumericIdField.builder().build(),
                         PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
@@ -94,7 +94,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var usersConfig = JooqDataStoreConfig.of(USERS)
-                        .dataStoreInstance((VortexCrudDataStore) usersStore)
+                        .dataStoreInstance(usersStore)
                         .fields(Map.of(
                                 USERS.ID, JooqNumericIdField.builder().build(),
                                 USERS.USERNAME, JooqEmailField.builder().build(),
@@ -106,12 +106,12 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .build();
 
         var tasksConfig = JooqDataStoreConfig.of(TASKS)
-                .dataStoreInstance((VortexCrudDataStore) tasksStore)
+                .dataStoreInstance(tasksStore)
                 .fields(Map.of(
                         TASKS.ID, JooqNumericIdField.builder().build(),
                         TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore((VortexCrudDataStore) usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                         TASKS.DUE_DATE, JooqDateField.builder().build(),
                         TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
@@ -120,14 +120,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var taskHasTaskConfig = JooqDataStoreConfig.of(TASK_HAS_TASK)
-                .dataStoreInstance((VortexCrudDataStore) taskHasTaskStore)
+                .dataStoreInstance(taskHasTaskStore)
                 .fields(Map.of(
                         TASK_HAS_TASK.TASK_ID, JooqNumericIdField.builder().build(),
                         TASK_HAS_TASK.RELATED_TASK_ID, JooqNumericIdField.builder().build()))
                 .build();
 
         var commentsConfig = JooqDataStoreConfig.of(TASK_COMMENTS)
-                .dataStoreInstance((VortexCrudDataStore) commentsStore)
+                .dataStoreInstance(commentsStore)
                 .fields(Map.of(
                         TASK_COMMENTS.ID, JooqNumericIdField.builder().build(),
                         TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
@@ -136,7 +136,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var imagesConfig = JooqDataStoreConfig.of(IMAGES)
-                .dataStoreInstance((VortexCrudDataStore) imagesStore)
+                .dataStoreInstance(imagesStore)
                 .fields(Map.of(
                         IMAGES.ID, JooqNumericIdField.builder().build(),
                         IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
@@ -145,7 +145,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var videosConfig = JooqDataStoreConfig.of(VIDEOS)
-                .dataStoreInstance((VortexCrudDataStore) videosStore)
+                .dataStoreInstance(videosStore)
                 .fields(Map.of(
                         VIDEOS.ID, JooqNumericIdField.builder().build(),
                         VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
@@ -154,7 +154,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var documentsConfig = JooqDataStoreConfig.of(DOCUMENTS)
-                .dataStoreInstance((VortexCrudDataStore) documentsStore)
+                .dataStoreInstance(documentsStore)
                 .fields(Map.of(
                         DOCUMENTS.ID, JooqNumericIdField.builder().build(),
                         DOCUMENTS.TITLE, JooqTextField.builder().required(true).build(),
@@ -163,7 +163,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var projectTagsConfig = JooqDataStoreConfig.of(PROJECT_TAGS)
-                .dataStoreInstance((VortexCrudDataStore) projectTagsStore)
+                .dataStoreInstance(projectTagsStore)
                 .fields(Map.of(
                         PROJECT_TAGS.ID, JooqNumericIdField.builder().build(),
                         PROJECT_TAGS.PROJECT_ID, JooqIntegerField.builder().build(),
@@ -171,7 +171,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 )).build();
 
         var notesConfig = JooqDataStoreConfig.of(NotesTable.NOTES)
-                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .dataStoreInstance(notesStore)
                 .fields(Map.of(
                         NotesTable.NOTES.TITLE, JooqTextField.builder().build(),
                         NotesTable.NOTES.CONTENT, JooqTextAreaField.builder().build()
@@ -472,7 +472,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField(IMAGES.TITLE)
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .filter(RouteFilter.builder()
+                .filter(RouteFilter.<TableField<?, ?>>builder()
                         .field(IMAGES.TITLE)
                         .value("Red")
                         .build())
