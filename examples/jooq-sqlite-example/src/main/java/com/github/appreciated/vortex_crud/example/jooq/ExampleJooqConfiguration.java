@@ -177,7 +177,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         // Using DataStoreConfig with String field names (same pattern as JPA!)
         var notesConfig = DataStoreConfig.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                 .factory(notesStore)  // Use the datastore instance itself as the key!
-                .dataStoreInstance((VortexCrudDataStore<String, SimpleMapDataStore.Note>) notesStore)
+                .dataStoreInstance(notesStore)
                 .fields(Map.of(
                         "title", TextField.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder().build(),
                         "content", TextAreaField.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder().build()
