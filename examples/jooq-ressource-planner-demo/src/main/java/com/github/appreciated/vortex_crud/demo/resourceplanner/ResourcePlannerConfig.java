@@ -61,6 +61,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<AppointmentRecord> appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
         appointmentBusinessService.setAppointmentStore(appointmentStore);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -130,8 +132,31 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         Map.entry(APPOINTMENT.RECURRENCE_INTERVAL, JooqIntegerField.builder().build()),
                         Map.entry(APPOINTMENT.RECURRENCE_END_DATE, JooqDateTimePickerField.builder().build()),
                         Map.entry(APPOINTMENT.RECURRENCE_GROUP_ID, JooqIntegerField.builder().build()),
-                        Map.entry(APPOINTMENT.CREATED_AT, JooqDateTimePickerField.builder().build())
+                        Map.entry(APPOINTMENT.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(APPOINTMENT.USER_AGREEMENT_ACCEPTED, JooqCheckboxField.builder().validators(List.of(new com.vaadin.flow.data.validator.RangeValidator<Boolean>("Must be accepted", java.util.Comparator.naturalOrder(), true, true))).build())
                 ))
+                .build();
+
+        var emailTemplatesConfig = JooqDataStoreConfig.of(EMAIL_TEMPLATES)
+                .dataStoreInstance(emailTemplatesStore)
+                .fields(Map.of(
+                        EMAIL_TEMPLATES.ID, JooqNumericIdField.builder().build(),
+                        EMAIL_TEMPLATES.NAME, JooqTextField.builder().required(true).build(),
+                        EMAIL_TEMPLATES.SUBJECT, JooqTextField.builder().build(),
+                        EMAIL_TEMPLATES.BODY, JooqMarkDownField.builder().build()))
+                .build();
+
+        var settingsConfig = JooqDataStoreConfig.of(SETTINGS)
+                .dataStoreInstance(settingsStore)
+                .fields(Map.of(
+                        SETTINGS.ID, JooqNumericIdField.builder().build(),
+                        SETTINGS.USER_AGREEMENT_TEXT, JooqTextAreaField.builder().build(),
+                        SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, JooqReferenceField.builder()
+                                .dataStore(emailTemplatesStore)
+                                .field(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID)
+                                .filterField(EMAIL_TEMPLATES.NAME)
+                                .children(List.of(EMAIL_TEMPLATES.NAME, EMAIL_TEMPLATES.SUBJECT))
+                                .build()))
                 .build();
 
         // Forms
@@ -225,8 +250,19 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(APPOINTMENT.STATUS, "route.appointments.labels.status").build(),
                         JooqFieldElement.of(APPOINTMENT.RECURRENCE_FREQUENCY, "route.appointments.labels.recurrence_frequency").build(),
                         JooqFieldElement.of(APPOINTMENT.RECURRENCE_INTERVAL, "route.appointments.labels.recurrence_interval").build(),
-                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build()
+                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build(),
+                        JooqFieldElement.of(APPOINTMENT.USER_AGREEMENT_ACCEPTED, "route.appointments.labels.user_agreement_accepted").build()
                 ))
+                .build();
+
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> emailTemplatesForm = JooqFormRoute.builder()
+                .dataStoreConfig(emailTemplatesConfig)
+                .title("route.email_templates.title")
+                .titleField(EMAIL_TEMPLATES.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(EMAIL_TEMPLATES.NAME, "route.email_templates.labels.name").build(),
+                        JooqFieldElement.of(EMAIL_TEMPLATES.SUBJECT, "route.email_templates.labels.subject").build(),
+                        JooqFieldElement.of(EMAIL_TEMPLATES.BODY, "route.email_templates.labels.body").build()))
                 .build();
 
         // Routes
@@ -290,6 +326,24 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .title("route.types.title")
                 .titleField(APPOINTMENT_TYPE.NAME)
                 .form(typeForm)
+                .build());
+
+        routes.put("email-templates", JooqGridRoute.builder()
+                .dataStoreConfig(emailTemplatesConfig)
+                .iconFactory(VaadinIcon.ENVELOPE::create)
+                .title("route.email_templates.title")
+                .titleField(EMAIL_TEMPLATES.NAME)
+                .form(emailTemplatesForm)
+                .build());
+
+        routes.put("settings", JooqSingleFormRoute.builder()
+                .dataStoreConfig(settingsConfig)
+                .iconFactory(VaadinIcon.COG::create)
+                .title("route.settings.title")
+                .titleField(SETTINGS.ID)
+                .children(List.of(
+                        JooqFieldElement.of(SETTINGS.USER_AGREEMENT_TEXT, "route.settings.labels.user_agreement_text").build(),
+                        JooqFieldElement.of(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, "route.settings.labels.default_email_template").build()))
                 .build());
 
         LinkedHashMap<String, String> recurrenceFrequencies = new LinkedHashMap<>();
