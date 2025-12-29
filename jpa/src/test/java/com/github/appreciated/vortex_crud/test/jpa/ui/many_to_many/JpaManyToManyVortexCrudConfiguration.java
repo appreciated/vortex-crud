@@ -66,7 +66,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("many-to-many-test", JpaListRoute.builder()
                 .dataStoreConfig(itemConfig)
                 .iconFactory(FACTORY::create)

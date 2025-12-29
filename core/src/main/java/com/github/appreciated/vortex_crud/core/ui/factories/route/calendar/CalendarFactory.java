@@ -15,10 +15,9 @@ public class CalendarFactory<ModelClass, FieldType, RepositoryType> implements V
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting) {
-
-        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         return new CalendarView<>(routeRenderer, context, routeResolver, detailRouteSetting);
     }

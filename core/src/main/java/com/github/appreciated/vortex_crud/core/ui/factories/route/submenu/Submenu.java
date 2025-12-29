@@ -28,7 +28,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     private final VerticalLayout routeListLayout = new VerticalLayout();
     private final VerticalLayout detailLayout = new VerticalLayout();
     private final RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> routeRenderer;
-    private VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
+    private VortexCrudPathToRouteResolver pathVariables;
     private final Integer currentPathIndex;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
@@ -36,7 +36,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     private Component active;
 
     public Submenu(Integer currentPathIndex,
-                   VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                    VortexCrudPathToRouteResolver routeResolver,
                    VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.currentPathIndex = currentPathIndex;
@@ -81,15 +81,15 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
     }
 
-    private static <ModelClass, FieldType, RepositoryType> boolean hasActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
+    private static <ModelClass, FieldType, RepositoryType> boolean hasActiveSubroute(Integer currentPathIndex,  VortexCrudPathToRouteResolver routeResolver) {
         return routeResolver.hasPathForIndex(currentPathIndex + 1);
     }
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> getActiveSubroute(Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
+    private RouteRenderer<ModelClass, FieldType, RepositoryType> getActiveSubroute(Integer currentPathIndex,  VortexCrudPathToRouteResolver routeResolver) {
         return routeRenderer.childrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
-    private void initializeRouteList(Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> childRoutes, Integer currentPathIndex, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
+    private void initializeRouteList(Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> childRoutes, Integer currentPathIndex,  VortexCrudPathToRouteResolver routeResolver) {
         childRoutes.forEach((key, value) -> {
             Card routeButton = new Card();
             routeButton.addClassNames("master");
@@ -111,7 +111,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
 
             routeButton.getElement().addEventListener("click", event -> getUI().ifPresent(ui -> {
                 String pathForEntity = pathVariables.buildPathUpToIndex(this.currentPathIndex, key);
-                pathVariables = new VortexCrudPathToRouteResolver<>(pathForEntity, configService.configuration().routes(), dataStoreUtil);
+                pathVariables = new VortexCrudPathToRouteResolver(pathForEntity, configService.configuration().routes(), dataStoreUtil);
                 ui.getPage().getHistory().pushState(null, pathForEntity);
                 if (active != null) {
                     active.removeClassName("active");
@@ -124,7 +124,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         });
     }
 
-    private void showRouteDetail(RouteRenderer<ModelClass, FieldType, RepositoryType> subRouteRenderer, VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver) {
+    private void showRouteDetail(RouteRenderer<ModelClass, FieldType, RepositoryType> subRouteRenderer,  VortexCrudPathToRouteResolver routeResolver) {
         if (!routeResolver.isLastIndex(currentPathIndex)) {
 
             detailLayout.removeAll();

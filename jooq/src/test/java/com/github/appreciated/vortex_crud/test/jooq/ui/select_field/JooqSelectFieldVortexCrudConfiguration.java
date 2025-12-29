@@ -63,7 +63,7 @@ public class JooqSelectFieldVortexCrudConfiguration
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route
         routes.put("select-field-test", JooqListRoute.builder()

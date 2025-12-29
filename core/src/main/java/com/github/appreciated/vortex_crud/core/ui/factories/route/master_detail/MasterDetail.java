@@ -32,7 +32,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 
 public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLayout {
 
-    private VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
+    private  VortexCrudPathToRouteResolver pathVariables;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final VirtualList<Object> virtualList = new VirtualList<>();
@@ -49,7 +49,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
 
     @SuppressWarnings("unchecked")
     public MasterDetail(Integer currentPathIndex,
-                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                         VortexCrudPathToRouteResolver routeResolver,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.currentPathIndex = currentPathIndex;
@@ -155,7 +155,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         getElement().appendChild(new Element("style").setText(css));
     }
 
-    private void setDetail(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver, boolean creation) {
+    private void setDetail( VortexCrudPathToRouteResolver routeResolver, boolean creation) {
         detailContainer.removeAll();
         boolean showDetail = !routeResolver.isLastIndex(currentPathIndex) || creation;
         getElement().setAttribute("state", showDetail ? "detail" : "master");
@@ -179,7 +179,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private void onItemClick(Object entity) {
         getUI().ifPresent(ui -> {
             String pathForEntity = pathVariables.getPathForEntity(currentPathIndex, entity);
-            pathVariables = new VortexCrudPathToRouteResolver<>(
+            pathVariables = new VortexCrudPathToRouteResolver(
                     pathForEntity,
                     configService.configuration().routes(),
                     dataStoreUtil);

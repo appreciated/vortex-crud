@@ -38,7 +38,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
+    private final VortexCrudPathToRouteResolver routeResolver;
 
     private final ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
     private final FullCalendar calendar;
@@ -48,10 +48,10 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     public CalendarView(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                        VortexCrudPathToRouteResolver routeResolver,
                         DetailRouteSetting detailRouteSetting
     ) {
-        this.routeRenderer = routeRenderer;
+        this.routeRenderer = (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
         this.context = context;
         this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
         this.reflectionService = context.reflectionService();
@@ -59,7 +59,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeResolver = routeResolver;
         this.calendarRoute = (CalendarRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarRoute.filterField(), routeRenderer.filters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<FieldType>(this.dataStore, calendarRoute.filterField(), routeRenderer.filters()).withConfigurableFilter();
 
         // Create the FullCalendar instance
         calendar = FullCalendarBuilder.create().build();

@@ -73,7 +73,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                         .forms(List.of(basicInfoForm, additionalDetailsForm))
                         .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // Use multi-form route for create/edit
         routes.put("multi-form-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()

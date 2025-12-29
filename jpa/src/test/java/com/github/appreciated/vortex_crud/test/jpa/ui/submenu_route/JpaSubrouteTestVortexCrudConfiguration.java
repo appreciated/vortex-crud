@@ -57,7 +57,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaSubmenuRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.tasks.title")

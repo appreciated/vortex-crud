@@ -47,7 +47,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                 .children(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqSubmenuRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.tasks.title")

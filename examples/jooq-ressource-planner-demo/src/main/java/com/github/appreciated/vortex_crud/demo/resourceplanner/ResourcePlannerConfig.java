@@ -266,7 +266,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         // Routes
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         routes.put("appointments", JooqCalendarRoute.builder()
                 .isDefaultRoute(true)

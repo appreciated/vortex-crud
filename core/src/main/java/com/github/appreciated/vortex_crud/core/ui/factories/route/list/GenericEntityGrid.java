@@ -19,30 +19,32 @@ import java.util.Map;
 
 public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Grid<Object> {
 
-    private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
+    private final  VortexCrudPathToRouteResolver routeResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
-    public GenericEntityGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                             RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+    public GenericEntityGrid( VortexCrudPathToRouteResolver routeResolver,
+                             RouteRenderer<?, ?, ?> routeRenderer,
                              VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.routeResolver = routeResolver;
         this.dataStoreUtil = context.dataStoreUtil();
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        RouteRenderer<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
+                (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = typedRouteRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
         VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, routeRenderer.filterField(), routeRenderer.filters()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, typedRouteRenderer.filterField(), typedRouteRenderer.filters()).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : routeRenderer.children()) {
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : typedRouteRenderer.children()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
-            context.columnCallbackRegistry().getCallback(routeRenderer).addColumn(this, field, table, dataStoreField);
+            context.columnCallbackRegistry().getCallback(typedRouteRenderer).addColumn(this, field, table, dataStoreField);
         }
 
         setDataProvider(dataProvider);

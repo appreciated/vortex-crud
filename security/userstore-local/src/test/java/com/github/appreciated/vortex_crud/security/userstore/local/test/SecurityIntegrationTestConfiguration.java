@@ -68,7 +68,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .readOnlyRoles(List.of("VIEWER"))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<Object, String, String>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("users-grid", GridRoute.<Object, String, String>builder()
                 .dataStoreConfig(userConfig)
                 .isDefaultRoute(true)

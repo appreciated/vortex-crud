@@ -120,7 +120,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route with Global, Single, Multi and Menu Actions
         routes.put("missing-features-test-new", JooqListRoute.builder()

@@ -75,7 +75,7 @@ public class JooqFieldTypesVortexCrudConfiguration
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route
         routes.put("missing-features-test", JooqListRoute.builder()

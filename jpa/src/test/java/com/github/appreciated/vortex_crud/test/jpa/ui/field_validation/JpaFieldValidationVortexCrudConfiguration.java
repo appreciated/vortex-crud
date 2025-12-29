@@ -65,7 +65,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("field-validation-test", JpaListRoute.builder()
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)

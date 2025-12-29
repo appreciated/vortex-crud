@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.security.core.config;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudDefaultRouteRedirectConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -107,7 +108,7 @@ class VortexCrudNavigationAccessCheckerTest {
     @Test
     void testCheck_UserNotAuthenticated_DeniesAccess() {
         when(location.getPath()).thenReturn("projects");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(false);
 
         accessChecker.check(context);
@@ -122,7 +123,7 @@ class VortexCrudNavigationAccessCheckerTest {
     @Test
     void testCheck_RouteNotFoundInConfig_AllowsAccess() {
         when(location.getPath()).thenReturn("non-vortex-route");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath("non-vortex-route")).thenReturn(null);
 
@@ -136,10 +137,10 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_UserHasReadAccess_AllowsAccess() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
 
         when(location.getPath()).thenReturn("projects");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath("projects")).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(true);
@@ -152,10 +153,10 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_UserHasNoAccess_DeniesAccess() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
 
         when(location.getPath()).thenReturn("admin-panel");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath("admin-panel")).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(false);
@@ -170,11 +171,11 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_NestedRoute_UsesResolutionService() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
         String nestedPath = "projects-cards/123";
 
         when(location.getPath()).thenReturn(nestedPath);
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath(nestedPath)).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(true);
@@ -187,11 +188,11 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_DeeplyNestedRoute_UsesResolutionService() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
         String deepNestedPath = "submenu/project-form/456/details";
 
         when(location.getPath()).thenReturn(deepNestedPath);
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath(deepNestedPath)).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(true);
@@ -207,7 +208,7 @@ class VortexCrudNavigationAccessCheckerTest {
     @Test
     void testCheck_EmptyPath_HandlesProperly() {
         when(location.getPath()).thenReturn("");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath("")).thenReturn(null);
 
@@ -219,7 +220,7 @@ class VortexCrudNavigationAccessCheckerTest {
     @Test
     void testCheck_RootPath_HandlesProperly() {
         when(location.getPath()).thenReturn("/");
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath("/")).thenReturn(null);
 
@@ -254,11 +255,11 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_FullAuthenticatedFlow_WithAccess() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
         String path = "projects-cards/123";
 
         when(location.getPath()).thenReturn(path);
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath(path)).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(true);
@@ -274,11 +275,11 @@ class VortexCrudNavigationAccessCheckerTest {
 
     @Test
     void testCheck_FullAuthenticatedFlow_WithoutAccess() {
-        RouteRenderer<String, String, String> route = mock(RouteRenderer.class);
+        RouteRenderer route = mock(RouteRenderer.class);
         String path = "admin-panel";
 
         when(location.getPath()).thenReturn(path);
-        when(application.identityAndAccessManagement()).thenReturn(mock(com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement.class));
+        when(application.identityAndAccessManagement()).thenReturn(mock(IdentityAndAccessManagement.class));
         when(permissionChecker.isAuthenticated()).thenReturn(true);
         when(resolutionService.resolveRouteForPath(path)).thenReturn(route);
         when(permissionChecker.hasUserReadAccessToRoute(route)).thenReturn(false);

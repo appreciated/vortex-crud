@@ -53,7 +53,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("images-list", JpaListRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.images-list")

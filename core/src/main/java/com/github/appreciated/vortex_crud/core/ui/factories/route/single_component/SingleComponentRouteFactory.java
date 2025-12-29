@@ -37,7 +37,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         SingleComponentRoute<ModelClass, FieldType, RepositoryType> route = (SingleComponentRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);

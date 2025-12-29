@@ -547,7 +547,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         // Routes Configuration
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.dashboard.title")

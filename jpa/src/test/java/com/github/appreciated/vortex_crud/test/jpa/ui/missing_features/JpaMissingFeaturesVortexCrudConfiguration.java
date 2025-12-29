@@ -98,7 +98,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route with Global, Single, Multi and Menu Actions
         routes.put("missing-features-test-new", JpaListRoute.builder()

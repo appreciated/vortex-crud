@@ -57,7 +57,7 @@ public class JooqCardVortexCrudConfiguration
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("images-grid", JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.images-cards")

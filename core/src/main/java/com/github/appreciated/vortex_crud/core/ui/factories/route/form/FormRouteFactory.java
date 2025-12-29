@@ -36,17 +36,21 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof FormRouteProvider<ModelClass, FieldType, RepositoryType>;
-        FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider = (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        @SuppressWarnings("unchecked")
+        FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider =
+                (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        @SuppressWarnings("unchecked")
+        VortexCrudPathToRouteResolver typedRouteResolver = routeResolver;
+
         assert detailRouteSetting != null;
-        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
+        return getForm(context, typedRouteResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                                  VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                                  VortexCrudPathToRouteResolver routeResolver,
                                   boolean isWrapped,
                                   boolean isHeaderHidden,
                                   boolean creationMode,

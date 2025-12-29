@@ -81,7 +81,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route with Global Action
         routes.put("missing-features-test", JooqListRoute.builder()

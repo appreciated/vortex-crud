@@ -31,7 +31,7 @@ import java.util.List;
 public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends VirtualList<EntityItemList<ModelClass>> {
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
-    private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathVariables;
+    private final  VortexCrudPathToRouteResolver pathVariables;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
@@ -43,20 +43,22 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private int currentNumberOfColumns = -1;
 
     @SuppressWarnings("unchecked")
-    public VirtualItemGrid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                           RouteRenderer<ModelClass, FieldType, RepositoryType> config,
+    public VirtualItemGrid( VortexCrudPathToRouteResolver routeResolver,
+                           RouteRenderer<?, ?, ?> config,
                            VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
-        this.config = config;
+        RouteRenderer<ModelClass, FieldType, RepositoryType> typedConfig =
+                (RouteRenderer<ModelClass, FieldType, RepositoryType>) config;
+        this.config = typedConfig;
         this.pathVariables = routeResolver;
         this.context = context;
         this.fieldNameResolver = context.fieldNameResolver();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
 
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) config.dataStoreConfig().dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
 
-        this.itemFactory = config.itemFactory();
+        this.itemFactory = typedConfig.itemFactory();
         setSizeFull();
         this.addAttachListener(event -> {
             if (event.isInitialAttach()) {

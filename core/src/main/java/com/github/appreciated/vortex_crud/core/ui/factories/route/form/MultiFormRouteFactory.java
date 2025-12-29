@@ -31,17 +31,21 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+             VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        assert routeResolver.getRouteForIndex(currentPathIndex) instanceof MultiFormRoute<ModelClass,FieldType,RepositoryType>;
-        MultiFormRoute<ModelClass, FieldType, RepositoryType> routeProvider = (MultiFormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        @SuppressWarnings("unchecked")
+        MultiFormRoute<ModelClass, FieldType, RepositoryType> routeProvider =
+                (MultiFormRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        @SuppressWarnings("unchecked")
+        VortexCrudPathToRouteResolver typedRouteResolver = routeResolver;
+
         assert detailRouteSetting != null;
-        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), false, routeProvider);
+        return getForm(context, typedRouteResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), false, routeProvider);
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                                  VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                                   VortexCrudPathToRouteResolver routeResolver,
                                   boolean isWrapped,
                                   boolean isHeaderHidden,
                                   boolean creationMode,

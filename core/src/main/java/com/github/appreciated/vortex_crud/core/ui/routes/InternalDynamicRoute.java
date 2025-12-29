@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
+    private final VortexCrudContext context;
     private final VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration;
 
     /**
@@ -37,7 +37,7 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
      * @param contextProvider The context provider containing services and configuration.
      */
     public InternalDynamicRoute(VortexCrudContextProvider contextProvider, VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> configuration) {
-        this.context = (VortexCrudContext<ModelClass, FieldType, RepositoryType>) contextProvider.getContext();
+        this.context = contextProvider.getContext();
         this.configuration = configuration;
         setSizeFull();
     }
@@ -58,12 +58,12 @@ public class InternalDynamicRoute<ModelClass, FieldType, RepositoryType> extends
             path = "/" + path;
         }
         removeAll();
-        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
+         VortexCrudPathToRouteResolver pathRoutes = new VortexCrudPathToRouteResolver(
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
                 context.configService().configuration().routes(),
                 context.dataStoreUtil()
         );
-        RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
+        RouteRenderer<?, ?, ?> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
         Component component = currentRouteRenderer.factory()
                 .renderRoute(context, currentIndex, pathRoutes, new DetailRouteSetting(false, false, false));

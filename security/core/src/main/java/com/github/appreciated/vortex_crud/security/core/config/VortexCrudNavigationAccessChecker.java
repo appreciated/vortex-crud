@@ -68,11 +68,11 @@ class VortexCrudNavigationAccessChecker<ModelClass, FieldType, RepositoryType> i
             }
 
             // Resolve path to route using the resolution service
-            RouteRenderer<ModelClass, FieldType, RepositoryType> route;
+            RouteRenderer route;
 
             // Handle empty path (default route) with caching
             if (Objects.equals(path, "")) {
-                Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> defaultRouteEntry = defaultRouteConfig.getDefaultRouteEntry();
+                Map.Entry<String, RouteRenderer> defaultRouteEntry = defaultRouteConfig.getDefaultRouteEntry();
                 if (defaultRouteEntry != null) {
                     route = defaultRouteEntry.getValue();
                 } else {

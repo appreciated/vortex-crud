@@ -54,7 +54,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("tasks", JooqMasterDetailRoute.builder()
                 .iconFactory(CHECK_CIRCLE::create)
                 .dataStoreConfig(config)

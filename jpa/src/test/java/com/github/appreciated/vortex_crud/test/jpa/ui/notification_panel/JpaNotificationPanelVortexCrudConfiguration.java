@@ -50,7 +50,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                         .readStatusValueForRead(true)
                         .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("notifications", JpaGridRoute.builder()
                 .dataStoreConfig(notificationConfig)
                 .title("Notifications")

@@ -56,7 +56,7 @@ public class JooqCalendarTestVortexCrudConfiguration
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("calendar", JooqCalendarRoute.builder()
                 .dataStoreConfig(config)
                 .title("Calendar")

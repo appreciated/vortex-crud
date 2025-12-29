@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.models.tables.LifecycleTest;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.LifecycleTestRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
@@ -42,7 +44,7 @@ public class JooqLifecycleVortexCrudConfiguration
             return cachedApplication;
         }
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("lifecycle-test", createLifecycleTestRoute());
 
         cachedApplication = JooqApplication.builder()
@@ -55,7 +57,7 @@ public class JooqLifecycleVortexCrudConfiguration
     }
 
     private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createLifecycleTestRoute() {
-        JooqDataStore store = new JooqDataStore(LIFECYCLE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<LifecycleTestRecord> store = new JooqDataStore<>(LIFECYCLE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(LIFECYCLE_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(

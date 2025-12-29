@@ -383,7 +383,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         // Routes Configuration
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         routes.put("projects", JooqGridRoute.builder()
                 .isDefaultRoute(true)

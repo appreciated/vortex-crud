@@ -42,7 +42,7 @@ public class JooqTextAreaVortexCrudConfiguration
             return cachedApplication;
         }
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("textarea-test", createTextAreaTestRoute());
 
         cachedApplication = JooqApplication.builder()

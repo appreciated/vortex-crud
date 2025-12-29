@@ -79,7 +79,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("one-to-many-test", JooqListRoute.builder()
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)
