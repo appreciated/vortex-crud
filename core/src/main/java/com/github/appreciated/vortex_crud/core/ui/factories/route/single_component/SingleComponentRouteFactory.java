@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMen
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.SingleComponentRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.DataStoreDropdownMenuActionComponent;
@@ -28,6 +29,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -72,7 +74,29 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
             FieldType filterField = route.entityFilterField();
             Object filterValue = route.entityFilterValueProvider().get();
-            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
+            java.util.List<ModelClass> results;
+
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                results = ((VortexCrudQueryDataStore<FieldType, ModelClass>)dataStore).getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
+            } else {
+                 results = new ArrayList<>();
+                 if (filterField != null && filterValue != null) {
+                     List<ModelClass> all = dataStore.getRecordsFromTable(0, 100);
+                     for (ModelClass item : all) {
+                         try {
+                             Object val = context.reflectionService().getValue(item, filterField);
+                             if (val != null && val.equals(filterValue)) {
+                                 results.add(item);
+                                 break;
+                             }
+                         } catch (Exception e) {
+                             log.warn("Error reading filter field", e);
+                         }
+                     }
+                 }
+            }
+
+
             if (results.isEmpty()) {
                 try {
                     entity = dataStore.newInstance();

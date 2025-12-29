@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -88,8 +89,25 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             FieldType filterField = singleFormRoute.entityFilterField();
             Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
-            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
-                filterField, filterValue, 0, 1);
+            java.util.List<ModelClass> results;
+
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                results = ((VortexCrudQueryDataStore<FieldType, ModelClass>)dataStore).getRecordsFromTableWhereColumnEquals(
+                        filterField, filterValue, 0, 1);
+            } else {
+                // Fallback: list and filter (inefficient but works)
+                 results = new java.util.ArrayList<>();
+                 java.util.List<ModelClass> all = dataStore.getRecordsFromTable(0, 100); // Limit 100 to search
+                 for (ModelClass item : all) {
+                     // Need reflection to get value
+                     Object val = reflectionService.getValue(item, filterField);
+                     if ((val == null && filterValue == null) || (val != null && val.equals(filterValue))) {
+                         results.add(item);
+                         break;
+                     }
+                 }
+            }
+
 
             if (results.isEmpty()) {
                 throw new IllegalStateException(

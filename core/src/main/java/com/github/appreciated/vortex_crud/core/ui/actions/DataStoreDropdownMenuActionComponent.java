@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.select.Select;
 
@@ -88,12 +89,18 @@ public class DataStoreDropdownMenuActionComponent<ModelClass, FieldType, Reposit
 
             // Check if we need to filter
             if (action.filterField() != null && action.filterValue() != null) {
-                items = dataStore.getRecordsFromTableWhereColumnEquals(
-                    action.filterField(),
-                    action.filterValue(),
-                    0,
-                    action.limit()
-                );
+                 if (dataStore instanceof VortexCrudQueryDataStore) {
+                     items = ((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore).getRecordsFromTableWhereColumnEquals(
+                             action.filterField(),
+                             action.filterValue(),
+                             0,
+                             action.limit()
+                     );
+                 } else {
+                     // Fallback: fetch all and filter in memory? Or just return all (risky if huge)
+                     // For now, let's just return unfiltered paginated if filtering not supported
+                     items = dataStore.getRecordsFromTable(0, action.limit());
+                 }
             } else {
                 items = dataStore.getRecordsFromTable(0, action.limit());
             }

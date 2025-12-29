@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.jpa.service.config;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import jakarta.persistence.Id;
 import org.springframework.data.domain.*;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
 
-public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<String, ModelClass> {
+public class JpaRepositoryDataStore<ModelClass> implements VortexCrudQueryDataStore<String, ModelClass> {
 
     private final JpaRepository<ModelClass, Object> repository;
     private final Class<ModelClass> repositoryModelClass;

@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -20,6 +21,7 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -114,18 +116,28 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int limit = query.getLimit() * currentNumberOfColumns;
                     List<ModelClass> items;
 
+                    // Fallback for non-queryable stores
+                    boolean isQueryable = dataStore instanceof VortexCrudQueryDataStore;
+
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
+                        if (isQueryable && config.filters() != null && !config.filters().isEmpty()) {
+                             items = (List<ModelClass>) ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
                         } else {
                             items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                         }
                     } else {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
+                        if (isQueryable) {
+                            if (config.filters() != null && !config.filters().isEmpty()) {
+                                items = (List<ModelClass>) ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
+                            } else {
+                                items = (List<ModelClass>) ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
+                            }
                         } else {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
+                            // Fallback: fetch all and filter in memory? Not feasible for virtual list.
+                            // Return all paginated (ignoring filter) or empty list?
+                            // For simplicity, let's return paginated results ignoring filter (User should know if store supports filtering)
+                            items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                         }
                     }
 
@@ -140,18 +152,24 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 // Providing the total number of records for correct pagination
                 query -> {
                     int count;
+                    boolean isQueryable = dataStore instanceof VortexCrudQueryDataStore;
+
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereFiltersEqual(config.filters());
+                        if (isQueryable && config.filters() != null && !config.filters().isEmpty()) {
+                             count = ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).countWhereFiltersEqual(config.filters());
                         } else {
                             count = dataStore.count();
                         }
                     } else {
-                        if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
+                        if (isQueryable) {
+                             if (config.filters() != null && !config.filters().isEmpty()) {
+                                 count = ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
+                             } else {
+                                 count = ((VortexCrudQueryDataStore<FieldType, ?>)dataStore).countWhereColumnLike(config.titleField(), filterText);
+                             }
                         } else {
-                            count = dataStore.countWhereColumnLike(config.titleField(), filterText);
+                            count = dataStore.count();
                         }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);

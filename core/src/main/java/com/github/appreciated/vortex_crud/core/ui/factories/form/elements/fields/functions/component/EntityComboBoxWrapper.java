@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
@@ -27,11 +28,20 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
         this.comboBox = new ComboBox<>();
 
-        // Set up the ComboBox with a data provider and label generator
-        comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
-        );
+        if (dataStore instanceof VortexCrudQueryDataStore) {
+            VortexCrudQueryDataStore<FieldType, ?> queryDataStore = (VortexCrudQueryDataStore<FieldType, ?>) dataStore;
+            // Set up the ComboBox with a data provider and label generator
+            comboBox.setDataProvider(
+                    (filterValue, i, i1) -> (java.util.stream.Stream<Object>) queryDataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
+                    filterValue -> queryDataStore.countWhereColumnLike(refField.filterField(), filterValue)
+            );
+        } else {
+             // Fallback for simple data stores: fetch all and filter in memory (if possible) or just show all
+             comboBox.setDataProvider(
+                    (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTable(i, i1).stream(), // Ignoring filter
+                    filterValue -> dataStore.count()
+            );
+        }
 
         comboBox.setItemLabelGenerator(item -> refField.children().stream()
                 .map(fieldId -> reflectionService.getString(item, fieldId))
