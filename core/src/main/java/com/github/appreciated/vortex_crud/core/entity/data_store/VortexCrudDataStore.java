@@ -5,29 +5,14 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
 import java.util.List;
 
 /**
- * Interface for data store operations.
- * Uses reflection to work with model classes directly instead of Object.
+ * Extended interface for data store operations with advanced query capabilities.
+ * Extends VortexCrudBaseDataStore with filtering, searching, and ordering features.
+ * Use this for database-backed implementations (JPA, jOOQ) that support complex queries.
  *
- * @param <FieldType> The type used to identify fields in the data store
+ * @param <FieldType>  The type used to identify fields in the data store (e.g., TableField, String)
+ * @param <ModelClass> The type of entity this data store manages
  */
-public interface VortexCrudDataStore<FieldType, ModelClass> {
-
-    /**
-     * Inserts a record into the data store.
-     *
-     * @param entity The entity to insert
-     * @return The ID of the inserted record
-     */
-    Object insertRecord(ModelClass entity);
-
-    /**
-     * Gets records from the data store with pagination.
-     *
-     * @param offset The offset for pagination
-     * @param limit  The limit for pagination
-     * @return A list of records
-     */
-    List<ModelClass> getRecordsFromTable(int offset, int limit);
+public interface VortexCrudDataStore<FieldType, ModelClass> extends VortexCrudBaseDataStore<ModelClass> {
 
     /**
      * Gets records from the data store where a column equals a value, with pagination.
@@ -74,34 +59,6 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      */
     List<ModelClass> getRecordsFromTableWhereColumnLike(FieldType filterField, Object filterValue, int offset, int limit);
 
-    /**
-     * Gets a record by ID.
-     *
-     * @param id The ID of the record to retrieve
-     * @return The record with the specified ID
-     */
-    ModelClass getRecordById(Object id);
-
-    /**
-     * Updates a record by ID.
-     *
-     * @param entity The entity with updated values
-     */
-    void updateRecordById(ModelClass entity);
-
-    /**
-     * Deletes a record by ID.
-     *
-     * @param id The ID of the record to delete
-     */
-    void deleteRecordById(Object id);
-
-    /**
-     * Counts the number of records in the data store.
-     *
-     * @return The number of records
-     */
-    int count();
 
     /**
      * Counts the number of records in the data store where a column is like a value.
@@ -151,12 +108,4 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
      * @return The number of records matching the criteria
      */
     int countWhereColumnLikeAndFiltersEqual(FieldType searchField, String searchValue, java.util.List<RouteFilter<FieldType>> filters);
-
-    Class<ModelClass> getModelClass();
-
-    void updateRecord(ModelClass entity);
-
-    void deleteRecord(ModelClass entity);
-
-    ModelClass newInstance();
 }

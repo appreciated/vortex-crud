@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
+import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
@@ -12,8 +14,9 @@ import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
-import com.github.appreciated.vortex_crud.example.jooq.JooqSimpleMapDataStore.NotesTable;
+import com.github.appreciated.vortex_crud.example.jooq.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -65,18 +68,18 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore projectsStore = new JooqDataStore(PROJECTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore tasksStore = new JooqDataStore(TASKS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore taskHasTaskStore = new JooqDataStore(TASK_HAS_TASK.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore commentsStore = new JooqDataStore(TASK_COMMENTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore imagesStore = new JooqDataStore(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore videosStore = new JooqDataStore(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore documentsStore = new JooqDataStore(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore projectTagsStore = new JooqDataStore(PROJECT_TAGS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<ProjectsRecord> projectsStore = new JooqDataStore<>(PROJECTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<TasksRecord> tasksStore = new JooqDataStore<>(TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<TaskHasTaskRecord> taskHasTaskStore = new JooqDataStore<>(TASK_HAS_TASK.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<TaskCommentsRecord> commentsStore = new JooqDataStore<>(TASK_COMMENTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<ImagesRecord> imagesStore = new JooqDataStore<>(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<VideosRecord> videosStore = new JooqDataStore<>(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Custom DataStore
-        JooqSimpleMapDataStore notesStore = new JooqSimpleMapDataStore(dsl);
+        SimpleMapDataStore notesStore = new SimpleMapDataStore();
 
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance(projectsStore)
@@ -170,12 +173,16 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         PROJECT_TAGS.TAG, JooqTextField.builder().build()
                 )).build();
 
-        var notesConfig = JooqDataStoreConfig.of(NotesTable.NOTES)
-                .dataStoreInstance(notesStore)
+        // Custom in-memory data store configuration
+        // Using DataStoreConfig with String field names (same pattern as JPA!)
+        var notesConfig = DataStoreConfig.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                .factory(notesStore)  // Use the datastore instance itself as the key!
+                .dataStoreInstance((VortexCrudDataStore<String, SimpleMapDataStore.Note>) notesStore)
                 .fields(Map.of(
-                        NotesTable.NOTES.TITLE, JooqTextField.builder().build(),
-                        NotesTable.NOTES.CONTENT, JooqTextAreaField.builder().build()
-                )).build();
+                        "title", TextField.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder().build(),
+                        "content", TextAreaField.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder().build()
+                ))
+                .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(tasksConfig)
@@ -284,7 +291,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        // Routes map can accept any RouteRenderer type (jOOQ, JPA, or custom)
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqGridRoute.builder()
                 .isDefaultRoute(true)
                 .dataStoreConfig(projectsConfig)
@@ -434,19 +442,26 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .descriptionField(PROJECTS.DESCRIPTION)
                 .build());
 
-        // Notes Custom Route
-        routes.put("notes", JooqGridRoute.builder()
+        // Custom in-memory data store route
+        // Uses String field names (simple and framework-agnostic!)
+        routes.put("notes", GridRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                 .dataStoreConfig(notesConfig)
                 .iconFactory(NOTEBOOK::create)
                 .title("Notes (Custom DataStore)")
-                .titleField(NotesTable.NOTES.TITLE)
-                .descriptionField(NotesTable.NOTES.CONTENT)
-                .form(JooqFormRoute.builder()
+                .titleField("title")
+                .descriptionField("content")
+                .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                         .dataStoreConfig(notesConfig)
-                        .titleField(NotesTable.NOTES.TITLE)
+                        .titleField("title")
                         .children(List.of(
-                                JooqFieldElement.of(NotesTable.NOTES.TITLE, "Title").build(),
-                                JooqFieldElement.of(NotesTable.NOTES.CONTENT, "Content").build()
+                                InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                        .field("title")
+                                        .label("Title")
+                                        .build(),
+                                InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                        .field("content")
+                                        .label("Content")
+                                        .build()
                         ))
                         .build())
                 .build());
