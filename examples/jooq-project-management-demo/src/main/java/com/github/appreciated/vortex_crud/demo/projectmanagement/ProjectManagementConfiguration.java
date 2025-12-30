@@ -18,6 +18,7 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.security.core.strategy.ClassBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
@@ -58,6 +59,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore taskCommentStore = new JooqDataStore(TASK_COMMENT.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore taskLabelStore = new JooqDataStore(TASK_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore projectMemberStore = new JooqDataStore(PROJECT_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore timeEntryStore = new JooqDataStore(TIME_ENTRY.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore attachmentStore = new JooqDataStore(ATTACHMENT.getRecordType(), dsl, new DataStoreHooks<>());
@@ -212,6 +215,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(PROJECT_MEMBER.PROJECT_ID))
                                 .children(List.of(PROJECT_MEMBER.USER_ID, PROJECT_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(projectMemberConfig)
                                         .titleField(PROJECT_MEMBER.USER_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
@@ -235,6 +239,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(PROJECT_MEMBER.USER_ID))
                                 .children(List.of(PROJECT_MEMBER.PROJECT_ID, PROJECT_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(projectMemberConfig)
                                         .titleField(PROJECT_MEMBER.PROJECT_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(PROJECT_MEMBER.PROJECT_ID, "route.project_members.labels.project").build(),
@@ -302,6 +307,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(TASK.PARENT_TASK_ID))
                                 .children(List.of(TASK.TASK_NUMBER, TASK.TITLE, TASK.STATUS))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(taskConfig)
                                         .titleField(TASK.TITLE)
                                         .children(List.of(
                                                 JooqFieldElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
@@ -318,6 +324,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(TIME_ENTRY.TASK_ID))
                                 .children(List.of(TIME_ENTRY.USER_ID, TIME_ENTRY.HOURS_SPENT, TIME_ENTRY.ENTRY_DATE))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(timeEntryConfig)
                                         .titleField(TIME_ENTRY.HOURS_SPENT)
                                         .children(List.of(
                                                 JooqFieldElement.of(TIME_ENTRY.HOURS_SPENT, "route.time_entries.labels.hours").build(),
@@ -334,6 +341,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(ATTACHMENT.TASK_ID))
                                 .children(List.of(ATTACHMENT.NAME, ATTACHMENT.UPLOADED_AT))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(attachmentConfig)
                                         .titleField(ATTACHMENT.NAME)
                                         .children(List.of(
                                                 JooqFieldElement.of(ATTACHMENT.NAME, "route.attachments.labels.name").build(),
@@ -350,6 +358,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .children(List.of(TASK_COMMENT.CONTENT, TASK_COMMENT.CREATED_AT))
                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(taskCommentConfig)
                                         .titleField(TASK_COMMENT.CONTENT)
                                         .children(List.of(
                                                 JooqFieldElement.of(TASK_COMMENT.CONTENT, "route.tasks.labels.comment").build()))
@@ -468,13 +477,26 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .i18nBundlePrefix("pm_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
-                        .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<>(
-                                (VortexCrudDataStore) projectMemberStore,
-                                PROJECT_MEMBER.USER_ID,
-                                PROJECT_MEMBER.PROJECT_ID,
-                                PROJECT_MEMBER.ROLE,
-                                USERS.ID,
-                                PROJECT.ID
+                        .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
+                                Map.of(
+                                        PROJECT.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                                projectMemberStore,
+                                                PROJECT_MEMBER.USER_ID,
+                                                PROJECT_MEMBER.PROJECT_ID,
+                                                PROJECT_MEMBER.ROLE,
+                                                USERS.ID,
+                                                PROJECT.ID
+                                        )
+                                ),
+                                // Global role strategy
+                                new JoinTableRoleResolutionStrategy<>(
+                                        (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
+                                        (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                        USER_ROLES.USER_ID,
+                                        USER_ROLES.ROLE_ID,
+                                        ROLES.NAME,
+                                        USERS.ID
+                                )
                         ))
                         .availableRoles(com.github.appreciated.vortex_crud.core.config.model.Roles.builder().roles(List.of("admin", "manager", "developer", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))

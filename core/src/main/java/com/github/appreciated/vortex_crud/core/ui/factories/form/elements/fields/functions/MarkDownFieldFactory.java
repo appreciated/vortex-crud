@@ -5,11 +5,13 @@ import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import org.vaadin.hugerte.HugeRte;
 
 import java.util.Collection;
 import java.util.List;
 
+@NpmPackage(value = "hugerte", version = "1.0.9")
 public class MarkDownFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
