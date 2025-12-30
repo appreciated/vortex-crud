@@ -367,7 +367,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         .username(JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build())
                         .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
                         .signUpFields(List.of())
-                        .rolesField(null)
                         .build())
                 .routes(routes)
                 .selects(Selects.builder()

@@ -3,7 +3,6 @@ package com.github.appreciated.vortex_crud.demo.devplatform;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
@@ -56,6 +55,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
     public com.github.appreciated.vortex_crud.core.config.model.Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
         JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore notificationStore = new JooqDataStore(NOTIFICATION.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore repositoryStarStore = new JooqDataStore(REPOSITORY_STAR.getRecordType(), dsl, new DataStoreHooks<>());
@@ -577,9 +578,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         Integer repoId = repo.get(REPOSITORY.ID);
 
                                         var existingStar = dsl.selectFrom(REPOSITORY_STAR)
-                                             .where(REPOSITORY_STAR.USER_ID.eq(userId))
-                                             .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
-                                             .fetchOne();
+                                                .where(REPOSITORY_STAR.USER_ID.eq(userId))
+                                                .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
+                                                .fetchOne();
 
                                         if (existingStar != null) {
                                             existingStar.delete();
@@ -593,7 +594,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                             Integer count = repo.get(REPOSITORY.STAR_COUNT);
                                             repo.set(REPOSITORY.STAR_COUNT, count != null ? count + 1 : 1);
                                         }
-                                        repositoryStore.updateRecordById((UpdatableRecord)repo);
+                                        repositoryStore.updateRecordById((UpdatableRecord) repo);
                                     }
                                 })
                                 .build()
@@ -694,24 +695,35 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .i18nBundlePrefix("dev_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
-                        .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(Map.of(
-                                REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<>(
-                                        repositoryCollaboratorStore,
-                                        REPOSITORY_COLLABORATOR.USER_ID,
-                                        REPOSITORY_COLLABORATOR.REPOSITORY_ID,
-                                        REPOSITORY_COLLABORATOR.PERMISSION,
-                                        USERS.ID,
-                                        REPOSITORY.ID
+                        .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
+                                Map.of(
+                                        REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                                repositoryCollaboratorStore,
+                                                REPOSITORY_COLLABORATOR.USER_ID,
+                                                REPOSITORY_COLLABORATOR.REPOSITORY_ID,
+                                                REPOSITORY_COLLABORATOR.PERMISSION,
+                                                USERS.ID,
+                                                REPOSITORY.ID
+                                        ),
+                                        ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                                organizationMemberStore,
+                                                ORGANIZATION_MEMBER.USER_ID,
+                                                ORGANIZATION_MEMBER.ORGANIZATION_ID,
+                                                ORGANIZATION_MEMBER.ROLE,
+                                                USERS.ID,
+                                                ORGANIZATION.ID
+                                        )
                                 ),
-                                ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<>(
-                                        organizationMemberStore,
-                                        ORGANIZATION_MEMBER.USER_ID,
-                                        ORGANIZATION_MEMBER.ORGANIZATION_ID,
-                                        ORGANIZATION_MEMBER.ROLE,
-                                        USERS.ID,
-                                        ORGANIZATION.ID
+                                // Global role strategy
+                                new JoinTableRoleResolutionStrategy<>(
+                                        (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
+                                        (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                        USER_ROLES.USER_ID,
+                                        USER_ROLES.ROLE_ID,
+                                        ROLES.NAME,
+                                        USERS.ID
                                 )
-                        )))
+                        ))
                         .availableRoles(Roles.builder().roles(List.of("admin", "developer", "contributor", "viewer")).build())
                         .defaultReadRoles(List.of("viewer"))
                         .defaultWriteRoles(List.of("admin", "developer"))
@@ -721,7 +733,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .username(JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build())
                         .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
                         .signUpFields(List.of())
-                        .rolesField((TableField) USERS.field("roles"))
                         .build())
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(REPOSITORY, ISSUE, PULL_REQUEST, ORGANIZATION, MILESTONE, WIKI_PAGE)).build())

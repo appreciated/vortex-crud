@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
+import com.github.appreciated.vortex_crud.security.core.strategy.FieldBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -88,7 +89,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                         .dataStoreConfig(userConfig)
                         .username(InternalFormElement.<Object, String, String>builder().field("username").build())
                         .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").build())
-                        .rolesField("roles")
+                        .roleResolutionStrategy(new FieldBasedRoleResolutionStrategy<>("roles"))
                         .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
                         .loginView(LoginView.class)
                         .signUpView(SignUpView.class)

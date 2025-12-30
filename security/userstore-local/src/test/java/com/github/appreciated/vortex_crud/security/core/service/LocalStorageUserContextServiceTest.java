@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -88,8 +89,12 @@ class LocalStorageUserContextServiceTest {
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.rolesField()).thenReturn(rolesField);
-        when(reflectionService.getValue(userEntity, rolesField)).thenReturn(roles);
+
+        List<SimpleGrantedAuthority> expectedRoles = List.of(
+                new SimpleGrantedAuthority("ROLE_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_USER")
+        );
+        when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn((List) expectedRoles);
 
         // Execute
         List<SimpleGrantedAuthority> result = userContextService.resolveRolesForEntity(userEntity);
@@ -123,36 +128,34 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    void testResolveRolesForEntity_WithNullRolesField() {
+    void testResolveRolesForEntity_WithNoRoles() {
         // Setup
         Object userEntity = new Object();
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.rolesField()).thenReturn(null);
+        when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn(Collections.emptyList());
 
         // Execute
         List<SimpleGrantedAuthority> result = userContextService.resolveRolesForEntity(userEntity);
 
         // Verify
-        assertTrue(result.isEmpty(), "Should return empty list when roles field is null");
+        assertTrue(result.isEmpty(), "Should return empty list when no roles are resolved");
     }
 
     @Test
-    void testResolveRolesForEntity_WithNullRolesValue() {
+    void testResolveRolesForEntity_WithEmptyRolesList() {
         // Setup
         Object userEntity = new Object();
-        String rolesField = "roles";
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
-        when(identityAndAccessManagement.rolesField()).thenReturn(rolesField);
-        when(reflectionService.getValue(userEntity, rolesField)).thenReturn(null);
+        when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn(Collections.emptyList());
 
         // Execute
         List<SimpleGrantedAuthority> result = userContextService.resolveRolesForEntity(userEntity);
 
         // Verify
-        assertTrue(result.isEmpty(), "Should return empty list when roles value is null");
+        assertTrue(result.isEmpty(), "Should return empty list when resolved roles list is empty");
     }
 
     // ========== currentUserEntity() Tests ==========
@@ -300,26 +303,21 @@ class LocalStorageUserContextServiceTest {
 
         // Setup user entity with roles
         Object userEntity = new Object();
-        String rolesField = "roles";
         String usernameField = "username";
 
-        VortexCrudRoleProvider role1 = mock(VortexCrudRoleProvider.class);
-        when(role1.getRole()).thenReturn("ROLE_ADMIN");
-
-        VortexCrudRoleProvider role2 = mock(VortexCrudRoleProvider.class);
-        when(role2.getRole()).thenReturn("ROLE_USER");
-
-        List<VortexCrudRoleProvider> roles = List.of(role1, role2);
+        List<SimpleGrantedAuthority> expectedRoles = List.of(
+                new SimpleGrantedAuthority("ROLE_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_USER")
+        );
 
         when(configService.configuration()).thenReturn(application);
         when(application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
         when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
-        when(identityAndAccessManagement.rolesField()).thenReturn(rolesField);
         when(dataStore.getRecordsFromTableWhereColumnEquals(eq(usernameField), eq("testuser"), eq(0), eq(1)))
                 .thenReturn(List.of(userEntity));
-        when(reflectionService.getValue(userEntity, rolesField)).thenReturn(roles);
+        when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn((List) expectedRoles);
 
         // Execute
         Set<String> result = userContextService.currentUserRoles();

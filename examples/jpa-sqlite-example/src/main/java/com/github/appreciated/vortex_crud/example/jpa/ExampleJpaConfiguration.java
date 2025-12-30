@@ -20,6 +20,7 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
+import com.github.appreciated.vortex_crud.security.core.strategy.FieldBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -440,6 +441,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .identityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .dataStoreConfig(userConfig)
+                                .roleResolutionStrategy(new FieldBasedRoleResolutionStrategy<>("roles"))
                                 .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
                                 .defaultReadRoles(List.of("viewer"))
                                 .defaultWriteRoles(List.of("admin"))
@@ -452,7 +454,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                         JpaFieldElement.builder("firstName", "route.projects.labels.end_date").build(),
                                         JpaFieldElement.builder("lastName", "route.projects.labels.end_date").build()
                                 ))
-                                .rolesField("roles")
                                 .build()
                 )
                 .menuActions(List.of(

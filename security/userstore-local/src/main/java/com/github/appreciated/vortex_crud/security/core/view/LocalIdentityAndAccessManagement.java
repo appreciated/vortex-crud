@@ -30,7 +30,6 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
-    private FieldType rolesField;
     private RoleResolutionStrategy<FieldType> roleResolutionStrategy;
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
     private Class<? extends Component> loginView;
@@ -43,30 +42,41 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
 
     @Override
     public List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<FieldType> reflectionService, Object userEntity) {
-        if (userEntity == null || rolesField == null) {
+        if (roleResolutionStrategy == null) {
             return Collections.emptyList();
         }
-        List<VortexCrudRoleProvider> value = (List<VortexCrudRoleProvider>) reflectionService.getValue(userEntity, rolesField);
-        if (value == null) {
-            return Collections.emptyList();
-        }
-        return value.stream().map(VortexCrudRoleProvider::getRole).map(SimpleGrantedAuthority::new).toList();
+        // Pass null as targetEntity to get global roles only
+        Collection<? extends GrantedAuthority> roles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, null);
+        return roles.stream()
+                .map(ga -> new SimpleGrantedAuthority(ga.getAuthority()))
+                .toList();
     }
 
     @Override
     public List<? extends Serializable> resolveRolesForTarget(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
-        List<SimpleGrantedAuthority> globalRoles = resolveRolesForEntity(reflectionService, userEntity);
         if (roleResolutionStrategy == null) {
-            return globalRoles;
-        }
-        Collection<? extends GrantedAuthority> contextRoles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, targetEntity);
-
-        if (contextRoles.isEmpty()) {
-            return globalRoles;
+            return Collections.emptyList();
         }
 
-        List<SimpleGrantedAuthority> combined = new ArrayList<>(globalRoles);
-        for (GrantedAuthority ga : contextRoles) {
+        // Get global roles (targetEntity = null)
+        Collection<? extends GrantedAuthority> globalRoles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, null);
+
+        // If no targetEntity provided, return global roles only
+        if (targetEntity == null) {
+            return globalRoles.stream()
+                    .map(ga -> new SimpleGrantedAuthority(ga.getAuthority()))
+                    .toList();
+        }
+
+        // Get entity-specific roles (with targetEntity)
+        Collection<? extends GrantedAuthority> entityRoles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, targetEntity);
+
+        // Combine global and entity-specific roles
+        List<SimpleGrantedAuthority> combined = new ArrayList<>();
+        for (GrantedAuthority ga : globalRoles) {
+            combined.add(new SimpleGrantedAuthority(ga.getAuthority()));
+        }
+        for (GrantedAuthority ga : entityRoles) {
             combined.add(new SimpleGrantedAuthority(ga.getAuthority()));
         }
         return combined;

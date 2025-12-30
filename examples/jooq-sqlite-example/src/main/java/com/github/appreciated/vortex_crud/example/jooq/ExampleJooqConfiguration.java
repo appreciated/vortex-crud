@@ -4,8 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
@@ -22,6 +20,7 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -34,13 +33,11 @@ import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.example.jooq.Status.*;
@@ -77,6 +74,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
         JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
 
         // Custom DataStore
         SimpleMapDataStore notesStore = new SimpleMapDataStore();
@@ -97,16 +96,16 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         var usersConfig = JooqDataStoreConfig.of(USERS)
-                        .dataStoreInstance(usersStore)
-                        .fields(Map.of(
-                                USERS.ID, JooqNumericIdField.builder().build(),
-                                USERS.USERNAME, JooqEmailField.builder().build(),
-                                USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                USERS.FIRST_NAME, JooqTextField.builder().build(),
-                                USERS.LAST_NAME, JooqTextField.builder().build(),
-                                USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
-                        ))
-                        .build();
+                .dataStoreInstance(usersStore)
+                .fields(Map.of(
+                        USERS.ID, JooqNumericIdField.builder().build(),
+                        USERS.USERNAME, JooqEmailField.builder().build(),
+                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                        USERS.FIRST_NAME, JooqTextField.builder().build(),
+                        USERS.LAST_NAME, JooqTextField.builder().build(),
+                        USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
+                ))
+                .build();
 
         var tasksConfig = JooqDataStoreConfig.of(TASKS)
                 .dataStoreInstance(tasksStore)
@@ -506,41 +505,35 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         projectTags.put("tag2", "Tag 2");
         projectTags.put("tag3", "Tag 3");
 
-        var iam = new LocalIdentityAndAccessManagement<TableRecord<?>, TableField<?, ?>, TableImpl<?>>() {
-            {
-                dataStoreConfig(usersConfig);
-                availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build());
-                defaultReadRoles(List.of("viewer"));
-                defaultWriteRoles(List.of("admin"));
-                signUpEnabled(true);
-                loginView(LoginView.class);
-                signUpView(SignUpView.class);
-                username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build());
-                password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build());
-                signUpFields(List.of(
-                     JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
-                     JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
-                ));
-                rolesField(null);
-            }
-            @Override
-            public List<SimpleGrantedAuthority> resolveRolesForEntity(ReflectionService<TableField<?, ?>> reflectionService, Object user) {
-                 return dsl.select(ROLES.NAME)
-                           .from(ROLES)
-                           .join(USER_ROLES)
-                           .on(USER_ROLES.ROLE_ID.eq(ROLES.ID))
-                           .where(USER_ROLES.USER_ID.eq(((TableRecord<?>)user).get(USERS.ID)))
-                           .fetchInto(String.class)
-                           .stream()
-                           .map(SimpleGrantedAuthority::new)
-                           .collect(Collectors.toList());
-            }
-        };
 
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
-                .identityAndAccessManagement(iam)
+                .identityAndAccessManagement(
+                        LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                                .dataStoreConfig(usersConfig)
+                                .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                        userRolesStore,
+                                        rolesStore,
+                                        USER_ROLES.USER_ID,
+                                        USER_ROLES.ROLE_ID,
+                                        ROLES.NAME,
+                                        USERS.ID
+                                ))
+                                .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
+                                .defaultReadRoles(List.of("viewer"))
+                                .defaultWriteRoles(List.of("admin"))
+                                .signUpEnabled(true)
+                                .loginView(LoginView.class)
+                                .signUpView(SignUpView.class)
+                                .username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build())
+                                .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
+                                .signUpFields(List.of(
+                                        JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                        JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
+                                ))
+                                .build()
+                )
                 .menuActions(List.of(
                         DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .dataStoreConfig(usersConfig)

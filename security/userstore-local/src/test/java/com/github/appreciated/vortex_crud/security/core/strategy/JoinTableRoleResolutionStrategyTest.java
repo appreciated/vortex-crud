@@ -25,7 +25,7 @@ class JoinTableRoleResolutionStrategyTest {
     @Mock
     private ReflectionService<String> reflectionService;
 
-    private JoinTableRoleResolutionStrategy<String, Object> strategy;
+    private JoinTableRoleResolutionStrategy<String> strategy;
 
     private final String USER_REF_FIELD = "userRef";
     private final String TARGET_REF_FIELD = "targetRef";
