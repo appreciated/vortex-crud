@@ -1,19 +1,19 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @Builder
 @Getter
-public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
+public class InternalFormElement<ModelClass, FieldType, RepositoryType> implements I18nKeyProvider {
 
     private FieldType field;
 
@@ -23,7 +23,6 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     private List<String> readOnlyForRoles;
 
-    @I18nKey
     private String label;
 
     private ViewFieldType type;
@@ -39,7 +38,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
                                String label,
                                ViewFieldType type,
                                int span,
-                               Collection<ModelClass, FieldType, RepositoryType> configuration) {
+                               com.github.appreciated.vortex_crud.core.config.model.Collection<ModelClass, FieldType, RepositoryType> configuration) {
         this.field = field;
         this.factory = factory;
         this.readOnly = readOnly;
@@ -55,5 +54,13 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
         } else {
             this.span = span;
         }
+    }
+
+    @Override
+    public java.util.Collection<String> getI18nKeys() {
+        List<String> keys = new ArrayList<>();
+        if (label != null) keys.add(label);
+        if (configuration != null) keys.addAll(configuration.getI18nKeys());
+        return keys;
     }
 }

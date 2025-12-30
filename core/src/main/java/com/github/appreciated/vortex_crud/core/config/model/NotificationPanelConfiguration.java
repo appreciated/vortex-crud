@@ -1,11 +1,14 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Configuration for a notification panel that displays notifications from a custom data store.
@@ -17,7 +20,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> {
+public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> implements I18nKeyProvider {
 
     /**
      * The data store config containing notification data
@@ -87,7 +90,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.heading"
      */
     @Builder.Default
-    @I18nKey
     private String headingKey = "notifications.heading";
 
     /**
@@ -95,7 +97,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.unread"
      */
     @Builder.Default
-    @I18nKey
     private String unreadTabKey = "notifications.unread";
 
     /**
@@ -103,7 +104,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.all"
      */
     @Builder.Default
-    @I18nKey
     private String allTabKey = "notifications.all";
 
     /**
@@ -111,7 +111,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.mark_all_read"
      */
     @Builder.Default
-    @I18nKey
     private String markAllReadKey = "notifications.mark_all_read";
 
     /**
@@ -119,7 +118,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.no_new"
      */
     @Builder.Default
-    @I18nKey
     private String noNewNotificationsKey = "notifications.no_new";
 
     /**
@@ -127,6 +125,17 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "Notifications"
      */
     @Builder.Default
-    @I18nKey
     private String ariaLabel = "Notifications";
+
+    @Override
+    public Collection<String> getI18nKeys() {
+        List<String> keys = new ArrayList<>();
+        if (headingKey != null) keys.add(headingKey);
+        if (unreadTabKey != null) keys.add(unreadTabKey);
+        if (allTabKey != null) keys.add(allTabKey);
+        if (markAllReadKey != null) keys.add(markAllReadKey);
+        if (noNewNotificationsKey != null) keys.add(noNewNotificationsKey);
+        if (ariaLabel != null) keys.add(ariaLabel);
+        return keys;
+    }
 }

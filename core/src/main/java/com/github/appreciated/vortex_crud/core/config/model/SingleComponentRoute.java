@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.single_component.SingleComponentRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -22,7 +21,6 @@ public class SingleComponentRoute<ModelClass, FieldType, RepositoryType> impleme
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
-    @I18nKey
     private String title;
 
     private boolean isDefaultRoute;

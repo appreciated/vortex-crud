@@ -1,6 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import lombok.AllArgsConstructor;
@@ -9,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Accessors(fluent = true)
@@ -16,14 +16,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
+public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType>, I18nKeyProvider {
 
-    @I18nKey
     private String label;
 
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory;
 
-    @I18nKey
     private String emptyMessage;
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
@@ -41,5 +39,16 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
     @Override
     public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
+    }
+
+    @Override
+    public java.util.Collection<String> getI18nKeys() {
+        java.util.List<String> keys = new ArrayList<>();
+        if (label != null) keys.add(label);
+        if (emptyMessage != null) keys.add(emptyMessage);
+        if (form instanceof I18nKeyProvider) {
+            keys.addAll(((I18nKeyProvider) form).getI18nKeys());
+        }
+        return keys;
     }
 }

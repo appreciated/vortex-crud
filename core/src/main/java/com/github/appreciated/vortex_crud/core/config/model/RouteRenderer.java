@@ -9,13 +9,14 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Base interface for all route renderers. Child navigation specifics are defined in specialized sub-interfaces.
  */
-public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType> {
+public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType>, I18nKeyProvider {
 
     DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
 
@@ -85,5 +86,18 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
      */
     default List<RouteAction<FieldType, ModelClass>> routeActions() {
         return null;
+    }
+
+    @Override
+    default java.util.Collection<String> getI18nKeys() {
+        List<String> keys = new ArrayList<>();
+        if (title() != null) keys.add(title());
+        if (menuActions() != null) {
+            menuActions().forEach(action -> keys.addAll(action.getI18nKeys()));
+        }
+        if (children() != null) {
+            children().forEach(child -> keys.addAll(child.getI18nKeys()));
+        }
+        return keys;
     }
 }

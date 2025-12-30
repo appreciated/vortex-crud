@@ -1,12 +1,13 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +16,8 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class Application<ModelClass, FieldType, RepositoryType> {
+public class Application<ModelClass, FieldType, RepositoryType> implements I18nKeyProvider {
 
-    @I18nKey
     private String applicationName;
 
     private String i18nBundlePrefix;
@@ -45,4 +45,16 @@ public class Application<ModelClass, FieldType, RepositoryType> {
      * When provided, a notification bell icon will be displayed in the application header.
      */
     private NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration;
+
+    @Override
+    public Collection<String> getI18nKeys() {
+        List<String> keys = new ArrayList<>();
+        if (applicationName != null) keys.add(applicationName);
+        if (selects != null) keys.addAll(selects.getI18nKeys());
+        if (notificationPanelConfiguration != null) keys.addAll(notificationPanelConfiguration.getI18nKeys());
+        if (defaultMenuActions != null) defaultMenuActions.forEach(a -> keys.addAll(a.getI18nKeys()));
+        if (menuActions != null) menuActions.forEach(a -> keys.addAll(a.getI18nKeys()));
+        if (routes != null) routes.values().forEach(r -> keys.addAll(r.getI18nKeys()));
+        return keys;
+    }
 }

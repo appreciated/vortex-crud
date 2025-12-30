@@ -1,11 +1,14 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Configuration model for a data store dropdown menu action.
@@ -19,7 +22,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> {
+public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> implements I18nKeyProvider {
 
     /**
      * The data store config to use for fetching data
@@ -51,7 +54,6 @@ public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> 
     /**
      * Placeholder text for the dropdown when no item is selected
      */
-    @I18nKey
     private String placeholder;
 
     /**
@@ -69,6 +71,13 @@ public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> 
     /**
      * Label for the dropdown field
      */
-    @I18nKey
     private String label;
+
+    @Override
+    public Collection<String> getI18nKeys() {
+        List<String> keys = new ArrayList<>();
+        if (label != null) keys.add(label);
+        if (placeholder != null) keys.add(placeholder);
+        return keys;
+    }
 }
