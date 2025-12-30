@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class Application<ModelClass, FieldType, RepositoryType> implements I18nVisitable {
+public class Application<ModelClass, FieldType, RepositoryType> {
 
     @I18nKey
     private String applicationName;
@@ -47,41 +45,4 @@ public class Application<ModelClass, FieldType, RepositoryType> implements I18nV
      * When provided, a notification bell icon will be displayed in the application header.
      */
     private NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration;
-
-    @Override
-    public void accept(I18nConfigurationVisitor visitor) {
-        visitor.visit(this);
-
-        if (routes != null) {
-            routes.values().forEach(route -> {
-                if (route instanceof I18nVisitable) {
-                    ((I18nVisitable) route).accept(visitor);
-                } else {
-                    visitor.visit(route);
-                }
-            });
-        }
-
-        if (identityAndAccessManagement != null) {
-            visitor.visit(identityAndAccessManagement);
-        }
-        if (selects != null) {
-            visitor.visit(selects);
-        }
-        if (versioning != null) {
-            visitor.visit(versioning);
-        }
-        if (auditing != null) {
-            visitor.visit(auditing);
-        }
-        if (defaultMenuActions != null) {
-            defaultMenuActions.forEach(visitor::visit);
-        }
-        if (menuActions != null) {
-            menuActions.forEach(visitor::visit);
-        }
-        if (notificationPanelConfiguration != null) {
-            visitor.visit(notificationPanelConfiguration);
-        }
-    }
 }

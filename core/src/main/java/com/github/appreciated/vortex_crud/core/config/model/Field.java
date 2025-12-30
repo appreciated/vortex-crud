@@ -1,13 +1,11 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.vaadin.flow.data.binder.Validator;
 
 import java.util.List;
 
-public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled, I18nVisitable {
+public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled {
     VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory();
 
     /**
@@ -19,9 +17,4 @@ public interface Field<ModelClass, FieldType, RepositoryType> extends AccessCont
     List<Validator<?>> validators();
 
     boolean required();
-
-    @Override
-    default void accept(I18nConfigurationVisitor visitor) {
-        visitor.visit(this);
-    }
 }

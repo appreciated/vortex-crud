@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType>, I18nVisitable {
+public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
 
     @I18nKey
     private String label;
@@ -43,16 +41,5 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
     @Override
     public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
-    }
-
-    @Override
-    public void accept(I18nConfigurationVisitor visitor) {
-        visitor.visit(this);
-        if (form != null) {
-            form.accept(visitor);
-        }
-        if (dataStoreConfig != null) {
-            dataStoreConfig.accept(visitor);
-        }
     }
 }

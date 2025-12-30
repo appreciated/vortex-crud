@@ -1,7 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass>, I18nVisitable {
+public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass> {
 
     private RepositoryType factory;
     private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
@@ -25,12 +23,4 @@ public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements H
 
     @Builder.Default
     private DataStoreHooks<?> hooks = new DataStoreHooks<>();
-
-    @Override
-    public void accept(I18nConfigurationVisitor visitor) {
-        visitor.visit(this);
-        if (fields != null) {
-            fields.values().forEach(field -> field.accept(visitor));
-        }
-    }
 }

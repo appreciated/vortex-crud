@@ -1,7 +1,5 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
@@ -17,7 +15,7 @@ import java.util.List;
 /**
  * Base interface for all route renderers. Child navigation specifics are defined in specialized sub-interfaces.
  */
-public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType>, I18nVisitable {
+public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType> {
 
     DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
 
@@ -87,22 +85,5 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
      */
     default List<RouteAction<FieldType, ModelClass>> routeActions() {
         return null;
-    }
-
-    @Override
-    default void accept(I18nConfigurationVisitor visitor) {
-        visitor.visit(this);
-        if (dataStoreConfig() != null) {
-            dataStoreConfig().accept(visitor);
-        }
-        if (children() != null) {
-            children().forEach(child -> child.accept(visitor));
-        }
-        if (menuActions() != null) {
-            menuActions().forEach(visitor::visit);
-        }
-        if (routeActions() != null) {
-             routeActions().forEach(visitor::visit);
-        }
     }
 }
