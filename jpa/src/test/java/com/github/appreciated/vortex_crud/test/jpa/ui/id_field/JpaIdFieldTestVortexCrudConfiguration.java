@@ -46,11 +46,11 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
             .dataStoreConfig(config)
-            .title("Form")
+            .title("route.id-field.title")
             .titleField("name")
             .children(List.of(
-                JpaFieldElement.builder("id", "ID").build(),
-                JpaFieldElement.builder("name", "Name").build()
+                JpaFieldElement.builder("id", "id-field.labels.id").build(),
+                JpaFieldElement.builder("name", "id-field.labels.name").build()
             ))
             .build();
 
@@ -59,10 +59,10 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
         // List Route
         routes.put("id-test-list", JpaListRoute.builder()
             .dataStoreConfig(config)
-            .title("List")
+            .title("route.id-field.title-list")
             .filterField("name")
             .children(List.of(
-                  JpaFieldElement.builder("name", "Name").build()
+                  JpaFieldElement.builder("name", "id-field.labels.name").build()
             ))
             .form(form)
             .build());
