@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.service.validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.I18nKeyCollector;
+import com.github.appreciated.vortex_crud.core.config.model.ResolvedI18nKey;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +16,13 @@ public class ConfigurationI18nValidator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationI18nValidator.class);
     private final TranslationService translationService;
-    private final I18nKeyResolver keyResolver;
 
     public ConfigurationI18nValidator(TranslationService translationService) {
         this.translationService = translationService;
-        this.keyResolver = new I18nKeyResolver();
     }
 
     public <ModelClass, FieldType, RepositoryType> void validate(Application<ModelClass, FieldType, RepositoryType> application) {
-        LOGGER.info("Starting i18n configuration validation (Resolver-based)...");
+        LOGGER.info("Starting i18n configuration validation (Collector-based)...");
 
         List<Locale> locales = translationService.getProvidedLocales();
         if (locales.isEmpty()) {
@@ -30,9 +30,10 @@ public class ConfigurationI18nValidator {
             return;
         }
 
-        List<I18nKeyResolver.ResolvedI18nKey> keys = keyResolver.resolveKeys(application);
+        // Use the collector interface to get keys
+        List<ResolvedI18nKey> keys = application.collectI18nKeys();
 
-        for (I18nKeyResolver.ResolvedI18nKey entry : keys) {
+        for (ResolvedI18nKey entry : keys) {
             validateKey(entry.key(), locales, entry.context());
         }
 
