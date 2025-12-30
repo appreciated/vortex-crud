@@ -7,7 +7,7 @@ import com.vaadin.flow.component.Component;
 import java.io.Serializable;
 import java.util.List;
 
-public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> extends HasDataStore<FieldType, ModelClass> {
+public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> extends HasDataStore<FieldType, ModelClass>, I18nKeyCollector {
 
     DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
 
