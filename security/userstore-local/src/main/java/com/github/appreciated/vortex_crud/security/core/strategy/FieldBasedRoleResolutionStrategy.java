@@ -29,10 +29,18 @@ public class FieldBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
         }
 
         try {
-            List<VortexCrudRoleProvider> roles = (List<VortexCrudRoleProvider>) reflectionService.getValue(userEntity, rolesField);
-            if (roles == null) {
+            Object value = reflectionService.getValue(userEntity, rolesField);
+            if (value == null) {
                 return Collections.emptyList();
             }
+
+            // Check if the value is actually a List before casting
+            if (!(value instanceof List)) {
+                return Collections.emptyList();
+            }
+
+            @SuppressWarnings("unchecked")
+            List<VortexCrudRoleProvider> roles = (List<VortexCrudRoleProvider>) value;
 
             return roles.stream()
                     .map(VortexCrudRoleProvider::getRole)
