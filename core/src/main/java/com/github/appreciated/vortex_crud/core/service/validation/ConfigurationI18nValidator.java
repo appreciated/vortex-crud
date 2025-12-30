@@ -42,34 +42,62 @@ public class ConfigurationI18nValidator {
         visited.add(target);
 
         ReflectionUtils.doWithFields(target.getClass(), field -> {
-            ReflectionUtils.makeAccessible(field);
-            Object value = field.get(target);
-
-            if (value == null) {
+            // Skip fields from JDK classes to avoid InaccessibleObjectException with Java modules
+            if (!isApplicationField(field)) {
                 return;
             }
 
-            if (field.isAnnotationPresent(I18nKey.class)) {
-                validateValue(value, locales, field.getName(), target.getClass().getSimpleName());
-            }
+            try {
+                ReflectionUtils.makeAccessible(field);
+                Object value = field.get(target);
 
-            // Recursion logic
-            if (value instanceof Collection<?>) {
-                for (Object item : (Collection<?>) value) {
-                     validateObject(item, visited, locales);
+                if (value == null) {
+                    return;
                 }
-            } else if (value instanceof Map<?, ?>) {
-                for (Object item : ((Map<?, ?>) value).values()) {
-                    validateObject(item, visited, locales);
+
+                if (field.isAnnotationPresent(I18nKey.class)) {
+                    validateValue(value, locales, field.getName(), target.getClass().getSimpleName());
                 }
-            } else if (isComplexObject(value)) {
-                validateObject(value, visited, locales);
+
+                // Recursion logic
+                if (value instanceof Collection<?>) {
+                    for (Object item : (Collection<?>) value) {
+                         validateObject(item, visited, locales);
+                    }
+                } else if (value instanceof Map<?, ?>) {
+                    for (Object item : ((Map<?, ?>) value).values()) {
+                        validateObject(item, visited, locales);
+                    }
+                } else if (isComplexObject(value)) {
+                    validateObject(value, visited, locales);
+                }
+            } catch (IllegalAccessException | IllegalArgumentException e) {
+                // Skip fields that cannot be accessed due to module restrictions
+                LOGGER.debug("Skipping inaccessible field: {}.{}", target.getClass().getName(), field.getName());
             }
         });
     }
 
+    private boolean isApplicationField(Field field) {
+        // Only process fields from our application package or standard annotations
+        Class<?> declaringClass = field.getDeclaringClass();
+        String packageName = declaringClass.getPackage() != null ? declaringClass.getPackage().getName() : "";
+
+        // Allow fields from our application package
+        if (packageName.startsWith("com.github.appreciated")) {
+            return true;
+        }
+
+        // Skip all JDK and third-party library fields
+        return false;
+    }
+
     private boolean isComplexObject(Object value) {
-        String packageName = value.getClass().getPackage().getName();
+        Package pkg = value.getClass().getPackage();
+        if (pkg == null) {
+            return false;
+        }
+        String packageName = pkg.getName();
         return packageName.startsWith("com.github.appreciated");
     }
 
