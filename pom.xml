@@ -44,6 +44,7 @@
         <module>examples</module>
         <module>ui-test-base</module>
         <module>security</module>
+        <module>report-aggregate</module>
     </modules>
     <build>
         <plugins>
