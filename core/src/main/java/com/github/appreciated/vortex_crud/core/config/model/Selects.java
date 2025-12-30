@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Selects {
+public class Selects implements I18nKeyCollector {
     @I18nKey
     private Map<String, LinkedHashMap<?, String>> configs;
 }

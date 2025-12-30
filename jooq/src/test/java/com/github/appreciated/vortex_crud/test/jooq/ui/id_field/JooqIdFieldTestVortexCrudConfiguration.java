@@ -45,11 +45,11 @@ public class JooqIdFieldTestVortexCrudConfiguration
         // Form Route with ID field
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
-            .title("Form")
+            .title("route.id-field.title")
             .titleField(FIELD_TYPES_TEST.NAME)
             .children(List.of(
-                JooqFieldElement.of(FIELD_TYPES_TEST.ID, "ID").build(),
-                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                JooqFieldElement.of(FIELD_TYPES_TEST.ID, "id-field.labels.id").build(),
+                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
             ))
             .build();
 
@@ -58,10 +58,10 @@ public class JooqIdFieldTestVortexCrudConfiguration
         // List Route
         routes.put("id-test-list", JooqListRoute.builder()
             .dataStoreConfig(config)
-            .title("List")
+            .title("route.id-field.title-list")
             .filterField(FIELD_TYPES_TEST.NAME)
             .children(List.of(
-                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
              ))
             .form(form)
             .build());

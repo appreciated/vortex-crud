@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class Application<ModelClass, FieldType, RepositoryType> {
+public class Application<ModelClass, FieldType, RepositoryType> implements I18nKeyCollector {
 
     @I18nKey
     private String applicationName;

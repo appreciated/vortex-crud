@@ -47,12 +47,12 @@ public class JooqCalendarTestVortexCrudConfiguration
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> eventForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
-                .title("Event")
+                .title("route.calendar-test.event")
                 .titleField(CALENDAR_EVENTS.TITLE)
                 .children(List.of(
-                        JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "Title").build(),
-                        JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "Start").build(),
-                        JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "End").build()
+                        JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "calendar-test.labels.title").build(),
+                        JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "calendar-test.labels.start").build(),
+                        JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "calendar-test.labels.end").build()
                 ))
                 .build();
 
@@ -68,7 +68,7 @@ public class JooqCalendarTestVortexCrudConfiguration
                 .build());
 
         return JooqApplication.builder()
-                .applicationName("Calendar Test")
+                .applicationName("application.name.calendar-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();

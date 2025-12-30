@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
-public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
+public class InternalFormElement<ModelClass, FieldType, RepositoryType> implements I18nKeyCollector {
 
     private FieldType field;
 

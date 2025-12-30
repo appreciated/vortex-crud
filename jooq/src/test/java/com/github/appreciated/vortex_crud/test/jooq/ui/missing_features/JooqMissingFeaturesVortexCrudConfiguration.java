@@ -148,7 +148,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .menuActions(List.of(
                 DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                     .dataStoreConfig(referencedConfig)
-                    .label("Referenced Filter")
+                    .label("missing-features.menu.referenced-filter")
                     .labelField(MISSING_FEATURES_REFERENCED.NAME)
                     .build()
             ))

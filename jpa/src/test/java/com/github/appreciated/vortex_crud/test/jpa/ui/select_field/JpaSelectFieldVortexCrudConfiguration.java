@@ -45,16 +45,16 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
 
         // Define select options
         LinkedHashMap<String, String> options = new LinkedHashMap<>();
-        options.put("Option 1", "Option 1 Label");
-        options.put("Option 2", "Option 2 Label");
+        options.put("Option 1", "select-field.option1.label");
+        options.put("Option 2", "select-field.option2.label");
 
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
                 .dataStoreConfig(config)
-                .title("Select Field Test")
+                .title("route.select-field.title")
                 .titleField("name")
                 .children(List.of(
-                        JpaFieldElement.builder("name", "Name Select").build()
+                        JpaFieldElement.builder("name", "select-field.labels.name").build()
                 ))
                 .build();
 
@@ -62,10 +62,10 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("select-field-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
-                .title("Select Field List")
+                .title("route.select-field.title-list")
                 .filterField("name")
                 .children(List.of(
-                        JpaFieldElement.builder("name", "Name").build()
+                        JpaFieldElement.builder("name", "select-field.labels.name").build()
                 ))
                 .form(form)
                 .build());

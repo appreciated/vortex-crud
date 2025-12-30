@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> {
+public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> implements I18nKeyCollector {
 
     /**
      * The data store config containing notification data

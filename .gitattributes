@@ -1,0 +1,2 @@
+# Ensure .properties files are treated as UTF-8
+*.properties text eol=lf encoding=UTF-8
