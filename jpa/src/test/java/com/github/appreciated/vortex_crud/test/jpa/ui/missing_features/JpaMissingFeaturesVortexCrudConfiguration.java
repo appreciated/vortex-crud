@@ -126,7 +126,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .menuActions(List.of(
                 DataStoreDropdownMenuAction.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                     .dataStoreConfig(referencedConfig)
-                    .label("Referenced Filter")
+                    .label("missing-features.menu.referenced-filter")
                     .labelField("name")
                     .build()
             ))

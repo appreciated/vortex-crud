@@ -22,8 +22,6 @@ public class ConfigurationI18nValidator {
     }
 
     public <ModelClass, FieldType, RepositoryType> void validate(Application<ModelClass, FieldType, RepositoryType> application) {
-        LOGGER.info("Starting i18n configuration validation (Collector-based)...");
-
         List<Locale> locales = translationService.getProvidedLocales();
         if (locales.isEmpty()) {
             LOGGER.warn("No supported locales found. Skipping i18n validation.");
@@ -36,8 +34,6 @@ public class ConfigurationI18nValidator {
         for (ResolvedI18nKey entry : keys) {
             validateKey(entry.key(), locales, entry.context());
         }
-
-        LOGGER.info("I18n configuration validation completed. Checked {} keys.", keys.size());
     }
 
     private void validateKey(String key, List<Locale> locales, String context) {
