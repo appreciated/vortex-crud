@@ -37,7 +37,8 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
         }
 
         List<SearchResult> allResults = new ArrayList<>();
-        Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = configService.configuration().routes();
+        @SuppressWarnings("unchecked")
+        Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = (Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>) (Map<?, ?>) configService.configuration().routes();
 
         routes.forEach((path, route) -> {
             if (route.dataStoreConfig() != null && route.filterField() != null) {
@@ -47,7 +48,7 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
                 }
 
                 @SuppressWarnings("unchecked")
-                VortexCrudDataStore<FieldType, ModelClass> dataStore = (VortexCrudDataStore<FieldType, ModelClass>) route.dataStoreConfig().dataStoreInstance();
+                VortexCrudDataStore<FieldType, ModelClass> dataStore = route.dataStoreConfig().dataStoreInstance();
 
                 if (dataStore != null) {
                     try {

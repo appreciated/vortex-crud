@@ -108,7 +108,8 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                 .filter(entry -> entry.getValue() instanceof SearchRoute)
                 .findFirst()
                 .ifPresent(entry -> {
-                    RouteRenderer<ModelClass, FieldType, RepositoryType> searchRoute = entry.getValue();
+                    @SuppressWarnings("unchecked")
+                    RouteRenderer searchRoute = entry.getValue();
 
                     if (permissionChecker == null || permissionChecker.hasUserReadAccessToRoute(searchRoute)) {
                         ComboBox<SearchResult> globalSearch = new ComboBox<>();

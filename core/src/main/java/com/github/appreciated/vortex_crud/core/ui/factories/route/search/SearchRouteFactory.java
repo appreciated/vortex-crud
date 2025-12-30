@@ -15,10 +15,11 @@ public class SearchRouteFactory<ModelClass, FieldType, RepositoryType> implement
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = routeResolver.getCurrentRoute();
+        @SuppressWarnings("unchecked")
+        RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeResolver.getCurrentRoute();
         return new SearchRouteView<>(context, routeRenderer);
     }
 
@@ -27,3 +28,6 @@ public class SearchRouteFactory<ModelClass, FieldType, RepositoryType> implement
         return false;
     }
 }
+
+
+
