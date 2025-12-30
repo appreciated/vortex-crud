@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
 
     private List<String> readOnlyForRoles;
 
+    @I18nKey
     private String label;
 
     private ViewFieldType type;

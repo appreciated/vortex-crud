@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.Map;
 @Getter
 public class Application<ModelClass, FieldType, RepositoryType> {
 
+    @I18nKey
     private String applicationName;
 
     private String i18nBundlePrefix;
