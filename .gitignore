@@ -1,4 +1,5 @@
-y/target/
+target/
+**/target/
 .idea/
 .vscode/
 .settings
