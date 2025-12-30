@@ -9,7 +9,7 @@
 - Create custom implementations like `UserDetailsService`
 
 ### DO:
-- **Use `VortexCrudDataStore` directly for ALL data access**
+- **Use `VortexCrudQueryDataStore` directly for ALL data access**
 - Look at existing implementations: `FormRouteFactory`, `FormDialogFactory`, `SignUpView`
 - **Use `RouteRenderer.dataStoreInstance()` or `DataStoreConfig.dataStoreInstance()` to get DataStores**
 - Use `ReflectionService` for field access, not direct field manipulation
@@ -20,7 +20,7 @@
 
 ```java
 // Get DataStore from configuration
-VortexCrudDataStore<FieldType, Object> dataStore = routeRenderer.dataStoreInstance();
+VortexCrudQueryDataStore<FieldType, Object> dataStore = routeRenderer.dataStoreInstance();
 
 // Create/save entities
 Object entity = dataStore.newInstance();
@@ -46,6 +46,6 @@ dataStore.insertRecord(entity);
 
 ## Task Completion Checklist
 
-1. ✅ Use VortexCrudDataStore (NOT custom repos/services)
+1. ✅ Use VortexCrudQueryDataStore (NOT custom repos/services)
 2. ✅ Update examples (jpa-sqlite-example AND jooq-sqlite-example) if adding features
 3. ✅ Update AGENTS.md if you learned something universally valuable

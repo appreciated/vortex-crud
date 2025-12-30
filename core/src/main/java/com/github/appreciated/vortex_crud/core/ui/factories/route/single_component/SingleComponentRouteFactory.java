@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.SingleComponentRoute;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.DataStoreDropdownMenuActionComponent;
@@ -69,7 +69,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             setSpacing(false);
 
             DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = route.dataStoreConfig();
-            VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
+            VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
             FieldType filterField = route.entityFilterField();
             Object filterValue = route.entityFilterValueProvider().get();
             java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
@@ -185,7 +185,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             try {
                 binder.writeBean(entity);
                 DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = route.dataStoreConfig();
-                VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
+                VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
                 
                 Object id = context.reflectionService().getId(entity);
                 if (id == null) {

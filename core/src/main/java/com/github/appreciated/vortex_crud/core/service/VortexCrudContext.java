@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.core.service;
 
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
     private final TranslationService translationService;
     private final FormCreator<ModelClass, FieldType, RepositoryType> formCreator;
     private final VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry;
@@ -29,8 +29,8 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     public VortexCrudContext(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             ReflectionService<FieldType> reflectionService,
-            VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver,
-            VortexCrudDataStoreUtilStrategy dataStoreUtil,
+            VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver,
+            VortexCrudQueryDataStoreUtilStrategy dataStoreUtil,
             TranslationService translationService,
             FormCreator<ModelClass, FieldType, RepositoryType> formCreator,
             VortexCrudListColumnCallbackRegistry<ModelClass, FieldType, RepositoryType> columnCallbackRegistry,
@@ -62,11 +62,11 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         return reflectionService;
     }
 
-    public VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver() {
+    public VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver() {
         return fieldNameResolver;
     }
 
-    public VortexCrudDataStoreUtilStrategy dataStoreUtil() {
+    public VortexCrudQueryDataStoreUtilStrategy dataStoreUtil() {
         return dataStoreUtil;
     }
 

@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

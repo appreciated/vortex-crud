@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.security.core.strategy;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutionStrategy<FieldType> {
 
     // For entity-specific roles
-    private final VortexCrudDataStore<FieldType, ?> joinDataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> joinDataStore;
     private final FieldType userRefField; // Field in JoinModel pointing to User
     private final FieldType targetRefField; // Field in JoinModel pointing to Target
     private final FieldType roleField; // Field in JoinModel storing the role
@@ -33,8 +33,8 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
     private final FieldType targetIdField; // Field in Target entity (ID)
 
     // For global roles
-    private final VortexCrudDataStore<FieldType, Object> userRolesDataStore;
-    private final VortexCrudDataStore<FieldType, Object> rolesDataStore;
+    private final VortexCrudQueryDataStore<FieldType, Object> userRolesDataStore;
+    private final VortexCrudQueryDataStore<FieldType, Object> rolesDataStore;
     private final FieldType userRolesUserIdField;
     private final FieldType userRolesRoleIdField;
     private final FieldType rolesNameField;
@@ -44,7 +44,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Use this when you need to resolve roles for a specific target entity.
      */
     public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, ?> joinDataStore,
+            VortexCrudQueryDataStore<FieldType, ?> joinDataStore,
             FieldType userRefField,
             FieldType targetRefField,
             FieldType roleField,
@@ -70,8 +70,8 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Use this when you need to resolve global roles from a USER_ROLES -> ROLES relationship.
      */
     public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, Object> userRolesDataStore,
-            VortexCrudDataStore<FieldType, Object> rolesDataStore,
+            VortexCrudQueryDataStore<FieldType, Object> userRolesDataStore,
+            VortexCrudQueryDataStore<FieldType, Object> rolesDataStore,
             FieldType userRolesUserIdField,
             FieldType userRolesRoleIdField,
             FieldType rolesNameField,

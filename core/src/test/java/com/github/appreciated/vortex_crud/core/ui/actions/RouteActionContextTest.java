@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.actions;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.vaadin.flow.component.Component;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,7 +13,7 @@ class RouteActionContextTest {
 
     @Test
     void testBuilderAndGetters() {
-        VortexCrudDataStore<String, Object> dataStore = Mockito.mock(VortexCrudDataStore.class);
+        VortexCrudQueryDataStore<String, Object> dataStore = Mockito.mock(VortexCrudQueryDataStore.class);
         Component viewComponent = Mockito.mock(Component.class);
         Runnable refreshCallback = () -> {};
         Object entity = new Object();

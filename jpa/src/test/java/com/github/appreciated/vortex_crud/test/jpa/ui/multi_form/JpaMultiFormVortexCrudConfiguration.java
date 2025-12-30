@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
@@ -40,7 +40,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var multiFormStore = new JpaRepositoryDataStore<>(multiFormRepository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(multiFormStore.getModelClass(), multiFormStore);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(multiFormStore.getModelClass(), multiFormStore);
 
         var multiFormConfig = JpaDataStoreConfig.builder(multiFormRepository, multiFormStore)
                 .withServices(fieldService, storeMap)

@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.demo.devplatform;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
@@ -716,8 +716,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 ),
                                 // Global role strategy
                                 new JoinTableRoleResolutionStrategy<>(
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                        (VortexCrudQueryDataStore<TableField<?, ?>, Object>) userRolesStore,
+                                        (VortexCrudQueryDataStore<TableField<?, ?>, Object>) rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

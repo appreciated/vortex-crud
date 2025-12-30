@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
@@ -25,8 +25,8 @@ public class JooqDataStoreConfig {
         }
 
         @SuppressWarnings("unchecked")
-        public TypeSafeBuilder dataStoreInstance(VortexCrudDataStore<?, ?> dataStore) {
-            builder.dataStoreInstance((VortexCrudDataStore<TableField<?, ?>, org.jooq.TableRecord<?>>) (Object) dataStore);
+        public TypeSafeBuilder dataStoreInstance(VortexCrudQueryDataStore<?, ?> dataStore) {
+            builder.dataStoreInstance((VortexCrudQueryDataStore<TableField<?, ?>, org.jooq.TableRecord<?>>) (Object) dataStore);
             return this;
         }
 

@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.actions;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.select.Select;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Component for rendering a DataStoreDropdownMenuAction as a Select dropdown.
- * This component fetches data from a VortexCrudDataStore and displays it in a dropdown.
+ * This component fetches data from a VortexCrudQueryDataStore and displays it in a dropdown.
  *
  * @param <ModelClass> The type of entity being displayed
  * @param <FieldType> The type used to identify fields
@@ -78,7 +78,7 @@ public class DataStoreDropdownMenuActionComponent<ModelClass, FieldType, Reposit
             return;
         }
 
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
         if (dataStore == null) {
             return;
         }

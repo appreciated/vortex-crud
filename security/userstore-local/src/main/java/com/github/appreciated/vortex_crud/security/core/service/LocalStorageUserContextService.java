@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -110,8 +110,8 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
         }
 
         try {
-            VortexCrudDataStore<FieldType, Object> dataStore =
-                    (VortexCrudDataStore<FieldType, Object>) iam.dataStoreInstance();
+            VortexCrudQueryDataStore<FieldType, Object> dataStore =
+                    (VortexCrudQueryDataStore<FieldType, Object>) iam.dataStoreInstance();
 
             FieldType usernameField = iam.username().field();
             List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);

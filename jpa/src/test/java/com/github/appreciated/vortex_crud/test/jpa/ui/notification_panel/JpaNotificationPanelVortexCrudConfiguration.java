@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
@@ -34,7 +34,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var notificationStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(notificationStore.getModelClass(), notificationStore);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(notificationStore.getModelClass(), notificationStore);
 
         var notificationConfig = JpaDataStoreConfig.builder(repository, notificationStore)
                 .withServices(fieldService, storeMap)

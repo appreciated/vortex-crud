@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.entity.reflection;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,17 +14,17 @@ class ReflectionServiceTest {
 
     // Custom class to avoid ambiguous method calls
     private static class TestReflectionService extends ReflectionService<String> {
-        public TestReflectionService(VortexCrudDataStoreFieldNameResolver<String> fieldNameResolver) {
+        public TestReflectionService(VortexCrudQueryDataStoreFieldNameResolver<String> fieldNameResolver) {
             super(fieldNameResolver);
         }
     }
 
     private TestReflectionService reflectionService;
-    private VortexCrudDataStoreFieldNameResolver<String> mockResolver;
+    private VortexCrudQueryDataStoreFieldNameResolver<String> mockResolver;
 
     @BeforeEach
     void setUp() {
-        mockResolver = Mockito.mock(VortexCrudDataStoreFieldNameResolver.class);
+        mockResolver = Mockito.mock(VortexCrudQueryDataStoreFieldNameResolver.class);
         reflectionService = new TestReflectionService(mockResolver);
 
         // Setup mock resolver to return the field name as is

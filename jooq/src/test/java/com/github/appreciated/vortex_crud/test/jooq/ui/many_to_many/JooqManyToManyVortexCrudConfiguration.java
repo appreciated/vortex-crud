@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -39,7 +39,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(MANY_TO_MANY_ITEM.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance((VortexCrudQueryDataStore) store)
                         .fields(Map.of(
                                 MANY_TO_MANY_ITEM.ID, JooqNumericIdField.builder().build(),
                                 MANY_TO_MANY_ITEM.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build())

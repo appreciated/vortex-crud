@@ -22,7 +22,7 @@ public interface ManyToManyPersistenceStrategy<ModelClass, FieldType, Repository
      * @return A list of records matching the criteria
      */
     java.util.Collection<ModelClass> resolveManyToMany(
-            VortexCrudDataStore<FieldType, ?> targetDataStore,
+            VortexCrudQueryDataStore<FieldType, ?> targetDataStore,
             ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany,
             Object sourceId
     );

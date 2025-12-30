@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
@@ -16,15 +16,15 @@ import com.vaadin.flow.shared.Registration;
 public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<Object> comboBox;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
     private Object currentValue;
 
-    public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
+    public EntityComboBoxWrapper(VortexCrudQueryDataStoreFieldNameResolver<FieldType> resolver,
                                  Field<ModelClass, FieldType, RepositoryType> dataStoreField,
                                  ReflectionService<FieldType> reflectionService
     ) {
         ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, ?>) refField.dataStore();
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator

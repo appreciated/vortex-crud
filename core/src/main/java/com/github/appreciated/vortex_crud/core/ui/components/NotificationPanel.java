@@ -24,7 +24,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 /**
- * A notification panel component that displays notifications from a custom VortexCrudDataStore.
+ * A notification panel component that displays notifications from a custom VortexCrudQueryDataStore.
  * Renders as a bell icon button with a popover containing notification lists.
  *
  * <p>The panel displays two tabs:</p>
@@ -35,7 +35,7 @@ import java.util.List;
  *
  * <p>Features:</p>
  * <ul>
- *   <li>Queries notifications from a configured VortexCrudDataStore</li>
+ *   <li>Queries notifications from a configured VortexCrudQueryDataStore</li>
  *   <li>Supports filtering by user or other criteria</li>
  *   <li>Displays user avatars and timestamps</li>
  *   <li>Mark all notifications as read functionality</li>

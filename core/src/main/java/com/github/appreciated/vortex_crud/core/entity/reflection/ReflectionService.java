@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.entity.reflection;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -15,9 +15,9 @@ import java.util.Collection;
 @Service
 public class ReflectionService<FieldType> {
 
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver;
 
-    public ReflectionService(VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver) {
+    public ReflectionService(VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver) {
         this.fieldNameResolver = fieldNameResolver;
     }
 

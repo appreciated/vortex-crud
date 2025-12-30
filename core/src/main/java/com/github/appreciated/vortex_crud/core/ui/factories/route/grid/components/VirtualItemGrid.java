@@ -2,9 +2,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
@@ -32,10 +32,10 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final  VortexCrudPathToRouteResolver pathVariables;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
+    private final VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> config;
     private int minWidth = 250;  // Minimum width in pixels
@@ -56,7 +56,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
 
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
 
         this.itemFactory = typedConfig.itemFactory();
         setSizeFull();

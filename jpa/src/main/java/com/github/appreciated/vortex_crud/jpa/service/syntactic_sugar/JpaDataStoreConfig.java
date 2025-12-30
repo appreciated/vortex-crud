@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +19,7 @@ public class JpaDataStoreConfig {
         private final JpaRepository<T, ?> repository;
         private final JpaRepositoryDataStore<T> store;
         private JpaFieldService fieldService;
-        private Map<Class<?>, VortexCrudDataStore> storeMap;
+        private Map<Class<?>, VortexCrudQueryDataStore> storeMap;
         private Map<String, Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> fields;
 
         public Builder(JpaRepository<T, ?> repository, JpaRepositoryDataStore<T> store) {
@@ -29,7 +29,7 @@ public class JpaDataStoreConfig {
 
         public Builder<T> withServices(
                 JpaFieldService fieldService,
-                Map<Class<?>, VortexCrudDataStore> storeMap) {
+                Map<Class<?>, VortexCrudQueryDataStore> storeMap) {
             this.fieldService = fieldService;
             this.storeMap = storeMap;
             return this;
@@ -53,7 +53,7 @@ public class JpaDataStoreConfig {
 
             return DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                     .factory(repository)
-                    .dataStoreInstance((VortexCrudDataStore) store)
+                    .dataStoreInstance((VortexCrudQueryDataStore) store)
                     .fields(finalFields)
                     .build();
         }

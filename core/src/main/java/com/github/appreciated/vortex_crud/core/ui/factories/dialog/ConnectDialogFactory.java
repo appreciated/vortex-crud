@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.ModalityMode;
@@ -44,14 +44,14 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
-                         VortexCrudDataStore<FieldType, ModelClass> dataStore,
+                         VortexCrudQueryDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                          OnStoreListener storeListener,
                          OnCancelListener cancelListener) {
 
         ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy = context.manyToManyPersistenceStrategy();
         ReflectionService<FieldType> reflectionService = context.reflectionService();
-        VortexCrudDataStoreUtilStrategy dataStoreUtilStrategy = context.dataStoreUtil();
+        VortexCrudQueryDataStoreUtilStrategy dataStoreUtilStrategy = context.dataStoreUtil();
 
         ManyToMany<ModelClass, FieldType, RepositoryType> manyToMany = collectionConfiguration.manyToMany();
         Dialog dialog = new Dialog();

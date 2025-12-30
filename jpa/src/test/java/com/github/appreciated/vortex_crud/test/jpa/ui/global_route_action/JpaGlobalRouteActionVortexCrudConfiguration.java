@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
@@ -57,7 +57,7 @@ public class JpaGlobalRouteActionVortexCrudConfiguration implements VortexCrudCo
 
 
         var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
 
         var taskConfig = JpaDataStoreConfig.builder(repository, taskStore)
                 .withServices(fieldService, storeMap)

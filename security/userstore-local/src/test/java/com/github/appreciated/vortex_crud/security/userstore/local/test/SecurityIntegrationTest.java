@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
@@ -28,11 +28,11 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @MockitoBean
     @Qualifier("userDataStore")
-    private VortexCrudDataStore<String, Object> userDataStore;
+    private VortexCrudQueryDataStore<String, Object> userDataStore;
 
     @MockitoBean
     @Qualifier("roleDataStore")
-    private VortexCrudDataStore<String, Object> roleDataStore;
+    private VortexCrudQueryDataStore<String, Object> roleDataStore;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

@@ -3,8 +3,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Grid<Object> {
 
     private final  VortexCrudPathToRouteResolver routeResolver;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
 
     public GenericEntityGrid( VortexCrudPathToRouteResolver routeResolver,
                              RouteRenderer<?, ?, ?> routeRenderer,
@@ -33,7 +33,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
                 (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = typedRouteRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
-        VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ?> dataStore = (VortexCrudQueryDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, typedRouteRenderer.filterField(), typedRouteRenderer.filters()).withConfigurableFilter();

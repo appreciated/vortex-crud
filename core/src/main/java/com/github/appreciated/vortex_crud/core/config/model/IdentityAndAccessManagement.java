@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.Component;
 
@@ -12,7 +12,7 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
     DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
 
     @Override
-    default VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
+    default VortexCrudQueryDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig() != null ? dataStoreConfig().dataStoreInstance() : null;
     }
 

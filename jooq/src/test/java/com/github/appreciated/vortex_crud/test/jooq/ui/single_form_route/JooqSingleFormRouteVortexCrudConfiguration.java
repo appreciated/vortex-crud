@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdFiel
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -49,7 +49,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
 
         JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance((VortexCrudQueryDataStore) store)
                 .fields(Map.of(
                         SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

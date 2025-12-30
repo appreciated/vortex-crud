@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.annotation.NoCoverage;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
@@ -16,7 +16,7 @@ public class MultiSelectFieldFactory<ModelClass, FieldType, RepositoryType> impl
 
     @Override
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        VortexCrudDataStoreFieldNameResolver<FieldType> resolver = context.fieldNameResolver();
+        VortexCrudQueryDataStoreFieldNameResolver<FieldType> resolver = context.fieldNameResolver();
         ReflectionService<FieldType> reflectionService = context.reflectionService();
         return new EntityMultiSelectComboBoxWrapper<>(resolver, dataStoreField, reflectionService);
     }

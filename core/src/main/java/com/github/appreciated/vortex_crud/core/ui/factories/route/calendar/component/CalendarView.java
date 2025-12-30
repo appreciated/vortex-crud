@@ -6,8 +6,8 @@ import com.github.appreciated.vortex_crud.core.config.model.CalendarRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
@@ -34,10 +34,10 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
 
     private final CalendarRoute<ModelClass, FieldType, RepositoryType> calendarRoute;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
-    private final VortexCrudDataStore<FieldType, Object> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, Object> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final ReflectionService<FieldType> reflectionService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudPathToRouteResolver routeResolver;
 
     private final ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
@@ -53,7 +53,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     ) {
         this.routeRenderer = (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
         this.context = context;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
@@ -211,7 +211,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     null,
                     singleChildRenderer.form(),
                     null,
-                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
+                    (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore,
                     context,
                     () -> {
                         Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
@@ -256,7 +256,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     null,
                     singleChildRenderer.form(),
                     null,
-                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
+                    (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore,
                     context,
                     () -> {
                         // Refresh

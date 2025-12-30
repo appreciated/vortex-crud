@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.security.userstore.local.test;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.security.core.strategy.FieldBasedRoleResolutionStrategy;
@@ -20,12 +20,12 @@ import java.util.Map;
 @Service
 public class SecurityIntegrationTestConfiguration implements VortexCrudConfigurationProvider<Object, String, String> {
 
-    private final VortexCrudDataStore<String, Object> userDataStore;
-    private final VortexCrudDataStore<String, Object> roleDataStore;
+    private final VortexCrudQueryDataStore<String, Object> userDataStore;
+    private final VortexCrudQueryDataStore<String, Object> roleDataStore;
 
     public SecurityIntegrationTestConfiguration(
-            @Qualifier("userDataStore") VortexCrudDataStore<String, Object> userDataStore,
-            @Qualifier("roleDataStore") VortexCrudDataStore<String, Object> roleDataStore
+            @Qualifier("userDataStore") VortexCrudQueryDataStore<String, Object> userDataStore,
+            @Qualifier("roleDataStore") VortexCrudQueryDataStore<String, Object> roleDataStore
     ) {
         this.userDataStore = userDataStore;
         this.roleDataStore = roleDataStore;

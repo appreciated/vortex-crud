@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
@@ -37,7 +37,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var store = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(repository, store)
                 .withServices(fieldService, storeMap)

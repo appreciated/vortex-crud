@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -11,10 +11,10 @@ import java.util.Map;
 public class DefaultVortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> implements VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
 
     public DefaultVortexCrudPermissionResolutionService(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
-                                                        VortexCrudDataStoreUtilStrategy dataStoreUtil) {
+                                                        VortexCrudQueryDataStoreUtilStrategy dataStoreUtil) {
         this.configService = configService;
         this.dataStoreUtil = dataStoreUtil;
     }

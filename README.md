@@ -448,7 +448,7 @@ public class User {
 
 ### Key Architectural Note
 
-`vortex-crud` uses its own `VortexCrudDataStore` abstraction for user management. **Do not** create traditional Spring Security components like `UserDetailsService` or custom repository methods. The framework handles data access through its own patterns - see `SignUpView.java` in the security module for a reference implementation.
+`vortex-crud` uses its own `VortexCrudQueryDataStore` abstraction for user management. **Do not** create traditional Spring Security components like `UserDetailsService` or custom repository methods. The framework handles data access through its own patterns - see `SignUpView.java` in the security module for a reference implementation.
 
 # <a name="core-concept">Database Modeling</a>
 `vortex-crud` does not impose its own database model. Instead, users define their own data model, and `vortex-crud` integrates seamlessly with it. The JPA implementation of `vortex-crud` ensures that the view representation is consistent with the provided model. However, certain system-defined tables are required, particularly those for auditing, user management, and role management:
@@ -787,7 +787,7 @@ While the `core` module handles the UI implementations and the generation of rou
 The framework is powered by several core services:
 
 - **Dynamic Routing**: `DynamicRouteGenerator` automatically builds and registers Vaadin routes based on your configuration.
-- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, allowing the core UI to be backend-agnostic.
+- **Data Store Abstraction**: `VortexCrudQueryDataStore` provides a unified API for data access, allowing the core UI to be backend-agnostic.
 - **Security**: `VortexCrudRbacPermissionChecker` ensures users only access routes and actions permitted by their roles.
 - **Internationalization**: `TranslationService` manages localization across the application.
 - **File Management**: `LocalFileResourceProvider` (and variants) handles the storage and retrieval of file assets.
@@ -811,15 +811,15 @@ classDiagram
 
 ## <a name="data-handling">Data Handling and Management</a>
 
-`vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudDataStore` service, and the validation of the data model is data store-specific to ensure that the schema matches the configuration. Custom `DataStore` implementations are also supported, requiring only the implementation of the relevant interface.
+`vortex-crud` uses an SQLite database during development. The database is accessed through the `VortexCrudQueryDataStore` service, and the validation of the data model is data store-specific to ensure that the schema matches the configuration. Custom `DataStore` implementations are also supported, requiring only the implementation of the relevant interface.
 
-### The VortexCrudDataStore Pattern
+### The VortexCrudQueryDataStore Pattern
 
 **Important:** `vortex-crud` uses its own data access abstraction instead of traditional Spring patterns. This is a core architectural decision that differentiates it from vanilla Spring Boot applications.
 
 #### Reference Implementations
 
-To understand how to work with `VortexCrudDataStore`, examine these existing implementations:
+To understand how to work with `VortexCrudQueryDataStore`, examine these existing implementations:
 - **`SignUpView.java`** - Shows how to create and save user entities with password hashing
 - **`FormRouteFactory`** - Demonstrates form-based entity editing
 - **`FormDialogFactory`** - Shows dialog-based entity creation/editing
@@ -886,7 +886,7 @@ classDiagram
 
 The following provides a simplified overview of how data renderers access data. As with other components, classes are not instantiated directly; instead, they are created based on the types specified in the configuration.
 
-**Note:** All route factories implement `VortexCrudRouteFactory` and use `VortexCrudDataStore` for data access.
+**Note:** All route factories implement `VortexCrudRouteFactory` and use `VortexCrudQueryDataStore` for data access.
 
 ```mermaid
 classDiagram

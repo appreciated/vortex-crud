@@ -26,7 +26,7 @@ The `core` module contains the building blocks of the framework. Important packa
 
 - `config` – Interfaces for declarative configuration (e.g., `VortexCrudConfigService`).
 - `service` – Services that orchestrate runtime behavior such as `DynamicRouteGenerator`.
-- `data_provider` – Defines the `VortexCrudDataStore` interface with CRUD and filtering methods.
+- `data_provider` – Defines the `VortexCrudQueryDataStore` interface with CRUD and filtering methods.
 - `ui` – Factories and renderers for dynamic UI generation, including `InternalDynamicRoute` that resolves the correct
   view based on URL paths.
 

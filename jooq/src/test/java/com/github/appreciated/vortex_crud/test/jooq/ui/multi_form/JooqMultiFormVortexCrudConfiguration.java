@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -42,7 +42,7 @@ public class JooqMultiFormVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(MULTI_FORM_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(MULTI_FORM_TEST)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance((VortexCrudQueryDataStore) store)
                         .fields(Map.of(
                                 MULTI_FORM_TEST.ID, JooqNumericIdField.builder().build(),
                                 MULTI_FORM_TEST.PROFILE_NAME, JooqTextField.builder()

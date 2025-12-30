@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
@@ -31,7 +31,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     private VortexCrudPathToRouteResolver pathVariables;
     private final Integer currentPathIndex;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private Component active;
 

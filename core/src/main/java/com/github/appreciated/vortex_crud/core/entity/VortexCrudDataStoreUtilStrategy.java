@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.entity;
 
-public interface VortexCrudDataStoreUtilStrategy {
+public interface VortexCrudQueryDataStoreUtilStrategy {
     String getId(Object record);
 
     boolean isNew(Object entity);

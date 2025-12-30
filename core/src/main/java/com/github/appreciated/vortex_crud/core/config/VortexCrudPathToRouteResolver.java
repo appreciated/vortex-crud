@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.config;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererMultipleChildren;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class VortexCrudPathToRouteResolver {
 
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
     private final String path;
     private String[] sections;
     private final Map<Integer, RouteRenderer<?, ?, ?>> pathRoutes;
@@ -22,7 +22,7 @@ public class VortexCrudPathToRouteResolver {
     // Constructor
     public VortexCrudPathToRouteResolver(String path,
                                          Map<String, RouteRenderer<?, ?, ?>> routesConfig,
-                                         VortexCrudDataStoreUtilStrategy dataStoreUtil
+                                         VortexCrudQueryDataStoreUtilStrategy dataStoreUtil
     ) {
         this.path = path;
         this.dataStoreUtil = dataStoreUtil;

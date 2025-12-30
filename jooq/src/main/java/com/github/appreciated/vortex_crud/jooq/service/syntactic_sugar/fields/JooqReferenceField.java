@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -20,8 +20,8 @@ public class JooqReferenceField {
         }
 
         @SuppressWarnings("unchecked")
-        public TypeSafeBuilder dataStore(VortexCrudDataStore<?, ?> dataStore) {
-            builder.dataStore((VortexCrudDataStore<TableField<?, ?>, TableRecord<?>>) (Object) dataStore);
+        public TypeSafeBuilder dataStore(VortexCrudQueryDataStore<?, ?> dataStore) {
+            builder.dataStore((VortexCrudQueryDataStore<TableField<?, ?>, TableRecord<?>>) (Object) dataStore);
             return this;
         }
 

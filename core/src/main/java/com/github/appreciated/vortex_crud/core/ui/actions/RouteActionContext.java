@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.actions;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -41,7 +41,7 @@ public class RouteActionContext<FieldType, ModelClass> implements Serializable {
     /**
      * The data store for performing CRUD operations
      */
-    private final VortexCrudDataStore<FieldType, ModelClass> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ModelClass> dataStore;
 
     /**
      * The currently selected entities (maybe empty)

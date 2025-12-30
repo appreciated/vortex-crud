@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.example.jooq.custom;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * Simple in-memory Map-based data store demonstrating custom storage backends.
- * Implements the full VortexCrudDataStore interface with filtering support.
+ * Implements the full VortexCrudQueryDataStore interface with filtering support.
  * <p>
  * This shows how you can plug in ANY storage backend:
  * - File systems
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * - NoSQL databases
  * - In-memory structures (like this example)
  */
-public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMapDataStore.Note> {
+public class SimpleMapDataStore implements VortexCrudQueryDataStore<String, SimpleMapDataStore.Note> {
 
     private final Map<Integer, Note> store = new HashMap<>();
     private final AtomicInteger idCounter = new AtomicInteger(1);

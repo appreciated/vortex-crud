@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
 import com.github.appreciated.vortex_crud.core.ui.actions.MultiEntityRouteAction;
@@ -67,7 +67,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
         var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
         var referencedStore = new JpaRepositoryDataStore<>(referencedRepository, annotationRegistryService, new DataStoreHooks<>());
 
-        Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = new HashMap<>();
         storeMap.put(taskStore.getModelClass(), taskStore);
         storeMap.put(referencedStore.getModelClass(), referencedStore);
 

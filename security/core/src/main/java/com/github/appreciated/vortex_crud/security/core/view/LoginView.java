@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.security.core.view;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
@@ -34,7 +34,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
     private static final Logger log = LoggerFactory.getLogger(LoginView.class);
     private final LoginForm login = new LoginForm();
     private final IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement;
-    private final VortexCrudDataStore<FieldType, Object> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, Object> dataStore;
     private final ReflectionService<FieldType> reflectionService;
     private final PasswordEncoder passwordEncoder;
 
@@ -52,7 +52,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
         Application<ModelClass, FieldType, RepositoryType> configuration = configService.configuration();
         userManagement = configuration.identityAndAccessManagement();
-        dataStore = userManagement != null ? (VortexCrudDataStore<FieldType, Object>) userManagement.dataStoreInstance() : null;
+        dataStore = userManagement != null ? (VortexCrudQueryDataStore<FieldType, Object>) userManagement.dataStoreInstance() : null;
         if (userManagement == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;

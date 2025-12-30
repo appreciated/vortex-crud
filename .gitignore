@@ -18,3 +18,5 @@ webpack.generated.js
 
 # SQLite database
 *.db
+target/
+node_modules/

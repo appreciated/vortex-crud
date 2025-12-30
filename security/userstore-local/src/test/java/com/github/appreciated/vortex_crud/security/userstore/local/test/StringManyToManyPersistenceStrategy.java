@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -14,16 +14,16 @@ import java.util.List;
 @Component
 public class StringManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy<Object, String, String> {
 
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
     private final ReflectionService<String> reflectionService;
 
-    public StringManyToManyPersistenceStrategy(@Qualifier("stringDataStoreUtilStrategy") VortexCrudDataStoreUtilStrategy dataStoreUtil, ReflectionService<String> reflectionService) {
+    public StringManyToManyPersistenceStrategy(@Qualifier("stringDataStoreUtilStrategy") VortexCrudQueryDataStoreUtilStrategy dataStoreUtil, ReflectionService<String> reflectionService) {
         this.dataStoreUtil = dataStoreUtil;
         this.reflectionService = reflectionService;
     }
 
     @Override
-    public java.util.Collection<Object> resolveManyToMany(VortexCrudDataStore<String, ?> targetDataStore, ManyToMany<Object, String, String> manyToMany, Object sourceId) {
+    public java.util.Collection<Object> resolveManyToMany(VortexCrudQueryDataStore<String, ?> targetDataStore, ManyToMany<Object, String, String> manyToMany, Object sourceId) {
         return List.of();
     }
 

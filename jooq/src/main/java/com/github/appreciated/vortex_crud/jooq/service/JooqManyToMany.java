@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -54,7 +54,7 @@ public class JooqManyToMany<RecordType extends TableRecord<?>, DataStoreId exten
     }
 
     @Override
-    public VortexCrudDataStore<TableField<?, ?>, RecordType> dataStoreInstance() {
+    public VortexCrudQueryDataStore<TableField<?, ?>, RecordType> dataStoreInstance() {
         return null;
     }
 

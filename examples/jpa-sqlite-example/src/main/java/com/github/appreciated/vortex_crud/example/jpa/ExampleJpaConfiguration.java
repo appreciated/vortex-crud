@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.example.jpa;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
@@ -108,7 +108,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         SimpleMapDataStore notesStore = new SimpleMapDataStore();
 
         // 2. Build map of Class -> DataStore
-        Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = new HashMap<>();
         storeMap.put(projectStore.getModelClass(), projectStore);
         storeMap.put(projectTagStore.getModelClass(), projectTagStore);
         storeMap.put(taskStore.getModelClass(), taskStore);
@@ -130,7 +130,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         var notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
-                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .dataStoreInstance((VortexCrudQueryDataStore) notesStore)
                 .fields(Map.of(
                         "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                         "content", TextAreaField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()

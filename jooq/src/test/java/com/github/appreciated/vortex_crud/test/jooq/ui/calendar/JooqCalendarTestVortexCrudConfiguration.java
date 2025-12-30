@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.calendar;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -36,7 +36,7 @@ public class JooqCalendarTestVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(CALENDAR_EVENTS.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(CALENDAR_EVENTS)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance((VortexCrudQueryDataStore) store)
                         .fields(Map.of(
                                 CALENDAR_EVENTS.ID, JooqNumericIdField.builder().build(),
                                 CALENDAR_EVENTS.TITLE, JooqTextField.builder().build(),

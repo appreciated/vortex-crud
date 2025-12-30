@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.select_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
@@ -37,7 +37,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         // Create the data store
         var store = new JpaRepositoryDataStore<>(selectFieldRepository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(selectFieldRepository, store)
                 .withServices(fieldService, storeMap)

@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -40,7 +40,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore parentStore = new JooqDataStore(ONE_TO_MANY_PARENT.getRecordType(), dsl, new DataStoreHooks<>());
         var parentConfig = JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
-                        .dataStoreInstance((VortexCrudDataStore) parentStore)
+                        .dataStoreInstance((VortexCrudQueryDataStore) parentStore)
                         .fields(Map.of(
                                 ONE_TO_MANY_PARENT.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 ONE_TO_MANY_PARENT.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
@@ -48,7 +48,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
 
         JooqDataStore childStore = new JooqDataStore(ONE_TO_MANY_CHILD.getRecordType(), dsl, new DataStoreHooks<>());
         var childConfig = JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
-                        .dataStoreInstance((VortexCrudDataStore) childStore)
+                        .dataStoreInstance((VortexCrudQueryDataStore) childStore)
                         .fields(Map.of(
                                 ONE_TO_MANY_CHILD.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 ONE_TO_MANY_CHILD.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()

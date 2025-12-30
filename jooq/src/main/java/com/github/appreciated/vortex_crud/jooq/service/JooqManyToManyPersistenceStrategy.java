@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import jakarta.validation.constraints.NotNull;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -20,15 +20,15 @@ import java.util.List;
 public class JooqManyToManyPersistenceStrategy implements ManyToManyPersistenceStrategy<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     private final DSLContext dslContext;
-    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final VortexCrudQueryDataStoreUtilStrategy dataStoreUtil;
 
-    public JooqManyToManyPersistenceStrategy(DSLContext dslContext, VortexCrudDataStoreUtilStrategy dataStoreUtil) {
+    public JooqManyToManyPersistenceStrategy(DSLContext dslContext, VortexCrudQueryDataStoreUtilStrategy dataStoreUtil) {
         this.dslContext = dslContext;
         this.dataStoreUtil = dataStoreUtil;
     }
 
     @Override
-    public List<TableRecord<?>> resolveManyToMany(VortexCrudDataStore<TableField<?, ?>, ?> targetDataStore,
+    public List<TableRecord<?>> resolveManyToMany(VortexCrudQueryDataStore<TableField<?, ?>, ?> targetDataStore,
                                                   ManyToMany<TableRecord<?>, TableField<?, ?>, TableImpl<?>> manyToMany,
                                                   Object sourceId) {
         TableField sourceIdField = manyToMany.associativeSourceIdField();

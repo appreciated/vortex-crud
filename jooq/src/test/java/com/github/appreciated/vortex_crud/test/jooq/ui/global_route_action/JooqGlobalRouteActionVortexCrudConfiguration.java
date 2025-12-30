@@ -9,7 +9,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdFiel
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
@@ -58,7 +58,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
 
         JooqDataStore store = new JooqDataStore(GLOBAL_ROUTE_ACTION_TEST.getRecordType(), dsl, new DataStoreHooks<>());
         var config = JooqDataStoreConfig.of(GLOBAL_ROUTE_ACTION_TEST)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance((VortexCrudQueryDataStore) store)
                 .fields(Map.of(
                         GLOBAL_ROUTE_ACTION_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         GLOBAL_ROUTE_ACTION_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

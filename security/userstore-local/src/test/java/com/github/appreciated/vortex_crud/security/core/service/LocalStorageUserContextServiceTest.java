@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.security.core.service;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -48,7 +48,7 @@ class LocalStorageUserContextServiceTest {
 
     @Mock
     @SuppressWarnings("rawtypes")
-    private VortexCrudDataStore dataStore;
+    private VortexCrudQueryDataStore dataStore;
 
     @Mock
     private InternalFormElement<String, String, String> usernameElement;

@@ -3,9 +3,9 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudQueryDataStoreUtilStrategy;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
@@ -32,12 +32,12 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
                          @Nullable FieldType foreignKeyField,
                          RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
-                         VortexCrudDataStore<FieldType, ModelClass> dataStore,
+                         VortexCrudQueryDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener) {
 
-        VortexCrudDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();
+        VortexCrudQueryDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();
         FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();
 
         Dialog dialog = instantiateDialog();
@@ -72,11 +72,11 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
     private void createFooter(Object foreignKeyValue, FieldType foreignKeyField, Binder<Object> binder, ModelClass entity, Dialog dialog,
                               OnStoreListener listener, OnCancelListener onCancelListener,
                               VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                              VortexCrudDataStore<FieldType, ModelClass> dataStore) {
+                              VortexCrudQueryDataStore<FieldType, ModelClass> dataStore) {
 
         VortexCrudForeignKeyResolutionStrategy<FieldType> foreignKeyResolutionStrategy = context.foreignKeyResolutionStrategy();
-        VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver = context.fieldNameResolver();
-        VortexCrudDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();
+        VortexCrudQueryDataStoreFieldNameResolver<FieldType> fieldNameResolver = context.fieldNameResolver();
+        VortexCrudQueryDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();
 
         Button cancelButton = new Button(dialog.getTranslation("button.cancel.title"), event -> {
             onCancelListener.onCancel();
@@ -86,7 +86,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
             try {
                 binder.writeBean(entity);
                 // Cast dataStore to handle object entity in foreignKeyStrategy?
-                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, (VortexCrudDataStore<FieldType, Object>)dataStore, fieldNameResolver);
+                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, (VortexCrudQueryDataStore<FieldType, Object>)dataStore, fieldNameResolver);
 
                 if (dataStoreUtil.isNew(entity)) {
                     dataStore.insertRecord(entity);

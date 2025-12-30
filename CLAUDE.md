@@ -41,14 +41,14 @@
 - ❌ Use direct field manipulation or reflection for entity field access
 
 ### **DO:**
-- ✅ Use `VortexCrudDataStore` directly for ALL data access
+- ✅ Use `VortexCrudQueryDataStore` directly for ALL data access
 - ✅ Look at existing implementations before creating new features:
   - `FormRouteFactory.java` - Form-based CRUD operations
   - `FormDialogFactory.java` - Dialog-based entity editing
   - `SignUpView.java` - User creation with password hashing
-- ✅ Use `VortexCrudDataStoreFactoryRegistry` to get DataStores
+- ✅ Use `VortexCrudQueryDataStoreFactoryRegistry` to get DataStores
 - ✅ Use `ReflectionService` for field access, NOT direct field manipulation
-- ✅ Implement logic directly in Views using the VortexCrudDataStore pattern
+- ✅ Implement logic directly in Views using the VortexCrudQueryDataStore pattern
 - ✅ Follow the declarative configuration approach
 
 ### Golden Rule for New Features
@@ -118,7 +118,7 @@ graph TD
     C --> D[RouteRenderer Factory]
     D --> E[VortexCrudRouteFactory]
     E --> F[Vaadin Component]
-    E --> G[VortexCrudDataStore]
+    E --> G[VortexCrudQueryDataStore]
     G --> H[(Database)]
 ```
 
@@ -202,7 +202,7 @@ core/src/main/java/com/github/appreciated/vortex_crud/core/
 │
 ├── entity/
 │   ├── data_store/
-│   │   └── VortexCrudDataStore.java # Core CRUD interface (NOT Spring Repo!)
+│   │   └── VortexCrudQueryDataStore.java # Core CRUD interface (NOT Spring Repo!)
 │   └── reflection/                  # Field access utilities
 │
 ├── ui/
@@ -229,16 +229,16 @@ core/src/main/java/com/github/appreciated/vortex_crud/core/
 
 ## Data Access Patterns
 
-### The VortexCrudDataStore Pattern
+### The VortexCrudQueryDataStore Pattern
 
 **CRITICAL**: This is the core data access abstraction. Do NOT use traditional Spring patterns.
 
 #### Interface Definition
 
-**Location**: `core/src/main/java/com/github/appreciated/vortex_crud/core/entity/data_store/VortexCrudDataStore.java`
+**Location**: `core/src/main/java/com/github/appreciated/vortex_crud/core/entity/data_store/VortexCrudQueryDataStore.java`
 
 ```java
-public interface VortexCrudDataStore<FieldType, ModelClass> {
+public interface VortexCrudQueryDataStore<FieldType, ModelClass> {
     // Create
     ModelClass newInstance();
     ModelClass insertRecord(ModelClass record);
@@ -269,7 +269,7 @@ public interface VortexCrudDataStore<FieldType, ModelClass> {
 
 ```java
 // Get DataStore from registry (NOT autowiring a repository!)
-VortexCrudDataStore<FieldType, Object> dataStore =
+VortexCrudQueryDataStore<FieldType, Object> dataStore =
     dataStoreFactoryRegistry.getDataStore(repositoryKey);
 
 // Create new entity
@@ -308,7 +308,7 @@ List<Object> results = dataStore.getRecordsFromTableWhereColumnEquals(
 
 **Location**: `jpa/src/main/java/com/github/appreciated/vortex_crud/jpa/service/config/JpaRepositoryDataStore.java`
 
-- Wraps Spring `JpaRepository` as `VortexCrudDataStore`
+- Wraps Spring `JpaRepository` as `VortexCrudQueryDataStore`
 - Field types defined via annotations on entities
 - Uses reflection to access entity fields
 
@@ -645,7 +645,7 @@ Routes support role restrictions:
 - ❌ Custom authentication providers
 - ❌ Custom repository methods for authentication
 
-**DO** use the VortexCrudDataStore pattern as shown in `SignUpView.java`.
+**DO** use the VortexCrudQueryDataStore pattern as shown in `SignUpView.java`.
 
 ---
 
@@ -876,11 +876,11 @@ public class UserService {  // Don't create service classes!
 }
 ```
 
-**Solution**: Use VortexCrudDataStore
+**Solution**: Use VortexCrudQueryDataStore
 
 ```java
 // ✅ CORRECT
-VortexCrudDataStore<String, Object> userStore =
+VortexCrudQueryDataStore<String, Object> userStore =
     dataStoreFactoryRegistry.getDataStore(userRepository);
 
 List<Object> users = userStore.getRecordsFromTableWhereColumnEquals(
@@ -997,7 +997,7 @@ VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>>
 | Interface | Location |
 |-----------|----------|
 | **VortexCrudConfigService** | `core/src/main/java/.../service/VortexCrudConfigService.java` |
-| **VortexCrudDataStore** | `core/src/main/java/.../entity/data_store/VortexCrudDataStore.java` |
+| **VortexCrudQueryDataStore** | `core/src/main/java/.../entity/data_store/VortexCrudQueryDataStore.java` |
 | **VortexCrudRouteFactory** | `core/src/main/java/.../ui/factories/route/VortexCrudRouteFactory.java` |
 
 ### Configuration Models
@@ -1038,14 +1038,14 @@ VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>>
 2. ✅ Read `/AGENTS.md` for critical anti-patterns
 3. ✅ Review reference implementations (FormRouteFactory, SignUpView)
 4. ✅ Check if similar functionality already exists
-5. ✅ Understand the VortexCrudDataStore pattern
+5. ✅ Understand the VortexCrudQueryDataStore pattern
 
 ### When Adding Features
 
 1. **Research First**: Look at existing implementations
 2. **Follow Patterns**: Use the same patterns as existing code
 3. **Avoid Spring Boilerplate**: No services, custom repos, or DAOs
-4. **Use VortexCrudDataStore**: For all data access
+4. **Use VortexCrudQueryDataStore**: For all data access
 5. **Test Both Implementations**: If adding core features, test with JPA and jOOQ
 6. **Update Examples**: Update example applications if relevant
 7. **i18n**: Use internationalization keys, not hardcoded strings
@@ -1115,7 +1115,7 @@ VortexCrudConfigurationProvider<
 
 **Get DataStore**:
 ```java
-VortexCrudDataStore<FieldType, Object> store =
+VortexCrudQueryDataStore<FieldType, Object> store =
     dataStoreFactoryRegistry.getDataStore(key);
 ```
 
@@ -1173,7 +1173,7 @@ JooqRouteRenderer.of(GridRouteFactory.class)
 
 **vortex-crud** is a powerful framework that requires understanding its unique patterns. The key to success is:
 
-1. **Abandon traditional Spring Boot patterns** - Use VortexCrudDataStore
+1. **Abandon traditional Spring Boot patterns** - Use VortexCrudQueryDataStore
 2. **Study reference implementations** - FormRouteFactory, SignUpView, etc.
 3. **Think declaratively** - Configure, don't code
 4. **Follow the builder pattern** - Use Lombok builders throughout

@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -49,7 +49,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
         var parentStore = new JpaRepositoryDataStore<>(parentRepository, annotationRegistryService, new DataStoreHooks<>());
         var childStore = new JpaRepositoryDataStore<>(childRepository, annotationRegistryService, new DataStoreHooks<>());
 
-        Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = new HashMap<>();
         storeMap.put(parentStore.getModelClass(), parentStore);
         storeMap.put(childStore.getModelClass(), childStore);
 

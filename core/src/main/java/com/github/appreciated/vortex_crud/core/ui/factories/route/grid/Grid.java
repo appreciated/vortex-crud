@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
@@ -40,7 +40,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
         // Render custom route actions if configured
         if (typedRouteRenderer.routeActions() != null && !typedRouteRenderer.routeActions().isEmpty()) {
-            VortexCrudDataStore<FieldType, ModelClass> dataStore = typedRouteRenderer.dataStoreInstance();
+            VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = typedRouteRenderer.dataStoreInstance();
 
             headerBar.renderActions(typedRouteRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
@@ -75,7 +75,7 @@ public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                       VortexCrudDataStore<FieldType, ModelClass> dataStore) {
+                       VortexCrudQueryDataStore<FieldType, ModelClass> dataStore) {
 
         if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
             Dialog dialog = routeRenderer.form().dialogFactory().create(

@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.many_to_many;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -43,7 +43,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var itemStore = new JpaRepositoryDataStore<>(itemRepository, annotationRegistryService, new DataStoreHooks<>());
-        Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(itemStore.getModelClass(), itemStore);
+        Map<Class<?>, VortexCrudQueryDataStore> storeMap = Map.of(itemStore.getModelClass(), itemStore);
 
         var itemConfig = JpaDataStoreConfig.builder(itemRepository, itemStore)
                 .withServices(fieldService, storeMap)

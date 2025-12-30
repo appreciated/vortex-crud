@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.dialog.Dialog;
 import jakarta.annotation.Nullable;
@@ -13,7 +13,7 @@ public interface VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> 
                   @Nullable FieldType foreignKeyField,
                   RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                   CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
-                  VortexCrudDataStore<FieldType, ModelClass> dataStore,
+                  VortexCrudQueryDataStore<FieldType, ModelClass> dataStore,
                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                   OnStoreListener storeListener,
                   OnCancelListener cancelListener);

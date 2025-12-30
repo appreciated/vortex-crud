@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeader;
@@ -39,7 +39,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
 
         // Render custom route actions if configured
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
-            VortexCrudDataStore<FieldType, ModelClass> vortexDataStore = routeRenderer.dataStoreInstance();
+            VortexCrudQueryDataStore<FieldType, ModelClass> vortexDataStore = routeRenderer.dataStoreInstance();
 
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
@@ -73,7 +73,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
     }
 
-    private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, VortexCrudDataStore<FieldType, ModelClass> dataStore) {
+    private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer, VortexCrudQueryDataStore<FieldType, ModelClass> dataStore) {
         if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
              Dialog dialog = routeRenderer.form().dialogFactory().create(
                 null,

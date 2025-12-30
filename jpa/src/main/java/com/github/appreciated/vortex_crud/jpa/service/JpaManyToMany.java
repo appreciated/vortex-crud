@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.jpa.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collections;
@@ -39,7 +39,7 @@ public record JpaManyToMany<ModelClass>(
     }
 
     @Override
-    public VortexCrudDataStore<String, ModelClass> dataStoreInstance() {
+    public VortexCrudQueryDataStore<String, ModelClass> dataStoreInstance() {
         return null;
     }
 
