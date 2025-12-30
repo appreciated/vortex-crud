@@ -183,23 +183,23 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of(
                         JpaFieldElement.builder("name", "route.projects.labels.name").build(),
                         JpaFieldElement.builder("description", "route.projects.labels.description").build(),
-                        JpaFieldElement.builder("budget", "Budget").build(),
-                        JpaFieldElement.builder("tagsMulti", "Tags (MultiSelect)").build(),
-                        JpaCollectionElement.builder("Tags (Collection)")
+                        JpaFieldElement.builder("budget", "route.projects.labels.budget").build(),
+                        JpaFieldElement.builder("tagsMulti", "route.projects.labels.tags_multi").build(),
+                        JpaCollectionElement.builder("route.projects.labels.tags_collection")
                                 .factory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectTagConfig)
                                 .oneToMany(new JpaOneToMany("project"))
                                 .children(List.of("tag"))
-                                .emptyMessage("No tags")
+                                .emptyMessage("route.projects.labels.no_tags")
                                 .form(JpaFormRoute.builder()
                                         .titleField("tag")
                                         .children(List.of(
-                                                JpaFieldElement.builder("tag", "Tag").build()
+                                                JpaFieldElement.builder("tag", "route.projects.labels.tag").build()
                                         ))
                                         .build())
                                 .build(),
-                        JpaFieldElement.builder("active", "Active").build(),
+                        JpaFieldElement.builder("active", "route.projects.labels.active").build(),
                         JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
                         JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
                 ))
@@ -380,21 +380,21 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("notes", JpaGridRoute.builder()
                 .dataStoreConfig(notesConfig)
                 .iconFactory(NOTEBOOK::create)
-                .title("Notes (Custom DataStore)")
+                .title("route.notes.title")
                 .titleField("title")
                 .descriptionField("content")
                 .form(JpaFormRoute.builder()
                         .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.builder("title", "Title").build(),
-                                JpaFieldElement.builder("content", "Content").build()
+                                JpaFieldElement.builder("title", "route.notes.labels.title").build(),
+                                JpaFieldElement.builder("content", "route.notes.labels.content").build()
                         ))
                         .build())
                 .build());
 
         routes.put("calendar", JpaCalendarRoute.builder()
-                .title("Calendar")
+                .title("route.calendar.title")
                 .iconFactory(CALENDAR::create)
                 .dataStoreConfig(projectConfig)
                 .titleField("name")
@@ -404,7 +404,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
 
         routes.put("custom", CustomRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .title("Custom Route")
+                .title("route.custom.title")
                 .iconFactory(CODE::create)
                 .componentClass(CustomView.class)
                 .build());
@@ -412,14 +412,14 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         routes.put("documents", JpaGridRoute.builder()
                 .dataStoreConfig(documentConfig)
                 .iconFactory(FILE::create)
-                .title("Documents")
+                .title("route.documents.title")
                 .titleField("title")
                 .form(JpaFormRoute.builder()
                         .dataStoreConfig(documentConfig)
                         .titleField("title")
                         .children(List.of(
-                                JpaFieldElement.builder("title", "Title").build(),
-                                JpaFieldElement.builder("pdf", "PDF").build()
+                                JpaFieldElement.builder("title", "route.documents.labels.title").build(),
+                                JpaFieldElement.builder("pdf", "route.documents.labels.pdf").build()
                         ))
                         .build())
                 .build());
@@ -431,9 +431,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         LinkedHashMap<String, String> projectTags = new LinkedHashMap<>();
-        projectTags.put("tag1", "Tag 1");
-        projectTags.put("tag2", "Tag 2");
-        projectTags.put("tag3", "Tag 3");
+        projectTags.put("tag1", "selects.project-tags.tag1");
+        projectTags.put("tag2", "selects.project-tags.tag2");
+        projectTags.put("tag3", "selects.project-tags.tag3");
 
         return JpaApplication.builder()
                 .applicationName("application.name")

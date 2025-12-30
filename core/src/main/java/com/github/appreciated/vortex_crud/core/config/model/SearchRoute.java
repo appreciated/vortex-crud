@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.search.SearchRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 public class SearchRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
+    @I18nKey
     private String title;
     private boolean isDefaultRoute;
     private boolean isHiddenInMenu;
