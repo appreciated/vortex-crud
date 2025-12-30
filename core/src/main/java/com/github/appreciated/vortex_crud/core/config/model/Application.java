@@ -1,8 +1,8 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
-import com.github.appreciated.vortex_crud.core.config.visitor.ConfigurationVisitor;
-import com.github.appreciated.vortex_crud.core.config.visitor.Visitable;
+import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
+import com.github.appreciated.vortex_crud.core.config.visitor.I18nVisitable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
-public class Application<ModelClass, FieldType, RepositoryType> implements Visitable {
+public class Application<ModelClass, FieldType, RepositoryType> implements I18nVisitable {
 
     @I18nKey
     private String applicationName;
@@ -49,13 +49,13 @@ public class Application<ModelClass, FieldType, RepositoryType> implements Visit
     private NotificationPanelConfiguration<ModelClass, FieldType, RepositoryType> notificationPanelConfiguration;
 
     @Override
-    public void accept(ConfigurationVisitor visitor) {
+    public void accept(I18nConfigurationVisitor visitor) {
         visitor.visit(this);
 
         if (routes != null) {
             routes.values().forEach(route -> {
-                if (route instanceof Visitable) {
-                    ((Visitable) route).accept(visitor);
+                if (route instanceof I18nVisitable) {
+                    ((I18nVisitable) route).accept(visitor);
                 } else {
                     visitor.visit(route);
                 }

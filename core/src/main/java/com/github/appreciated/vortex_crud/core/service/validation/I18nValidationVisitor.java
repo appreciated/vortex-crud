@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.service.validation;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.visitor.ConfigurationVisitor;
+import com.github.appreciated.vortex_crud.core.config.visitor.I18nConfigurationVisitor;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.*;
 
-public class I18nValidationVisitor implements ConfigurationVisitor {
+public class I18nValidationVisitor implements I18nConfigurationVisitor {
     private static final Logger LOGGER = LoggerFactory.getLogger(I18nValidationVisitor.class);
     private final TranslationService translationService;
     private final List<Locale> locales;
@@ -45,6 +45,11 @@ public class I18nValidationVisitor implements ConfigurationVisitor {
     @Override
     public void visit(InternalFormElement<?, ?, ?> internalFormElement) {
         validateFields(internalFormElement);
+    }
+
+    @Override
+    public void visit(com.github.appreciated.vortex_crud.core.config.model.Collection<?, ?, ?> collection) {
+        validateFields(collection);
     }
 
     @Override
