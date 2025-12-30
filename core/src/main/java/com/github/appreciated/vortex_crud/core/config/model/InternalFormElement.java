@@ -1,5 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.config.visitor.ConfigurationVisitor;
+import com.github.appreciated.vortex_crud.core.config.visitor.Visitable;
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.VortexCrudCollectionFactory;
 import lombok.Builder;
@@ -13,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Getter
-public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
+public class InternalFormElement<ModelClass, FieldType, RepositoryType> implements Visitable {
 
     private FieldType field;
 
@@ -54,6 +56,18 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> {
             this.span = 1;
         } else {
             this.span = span;
+        }
+    }
+
+    @Override
+    public void accept(ConfigurationVisitor visitor) {
+        visitor.visit(this);
+        if (configuration != null) {
+            if (configuration instanceof Visitable) {
+                ((Visitable) configuration).accept(visitor);
+            } else {
+                visitor.visit(configuration);
+            }
         }
     }
 }
