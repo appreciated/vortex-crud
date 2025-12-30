@@ -76,7 +76,8 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             }
         });
 
-        add(new H1(getTranslation(configuration.applicationName())), login);
+        String applicationName = configuration.applicationName();
+        add(new H1(applicationName != null ? getTranslation(applicationName) : ""), login);
 
         if (userManagement.isSignUpEnabled()) {
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));
