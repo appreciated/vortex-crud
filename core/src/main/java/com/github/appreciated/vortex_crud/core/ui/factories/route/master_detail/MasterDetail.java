@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.MasterDetailRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
@@ -33,7 +33,7 @@ import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CE
 public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLayout {
 
     private  VortexCrudPathToRouteResolver pathVariables;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final VirtualList<Object> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
@@ -62,7 +62,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
         this.itemFactory = routeRenderer.itemFactory();
         assert routeRenderer.form() != null;
 
@@ -84,7 +84,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
-                    .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
+                    .dataStore((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
                     .refreshCallback(() -> UI.getCurrent().getPage().reload())
                     .viewComponent(this)

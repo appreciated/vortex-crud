@@ -2,9 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.HasLabel;
@@ -20,28 +18,23 @@ import java.util.stream.Collectors;
 public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Set<Object>>, Set<Object>>, HasLabel {
 
     private final MultiSelectComboBox<Object> multiSelectComboBox;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
 
     public EntityMultiSelectComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                             Field<ModelClass, FieldType, RepositoryType> dataStoreField,
                                             ReflectionService<FieldType> reflectionService
     ) {
         MultiSelectField<ModelClass, FieldType, RepositoryType> multiSelectField = (MultiSelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) multiSelectField.dataStore();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, ?>) multiSelectField.dataStore();
         this.multiSelectComboBox = new MultiSelectComboBox<>();
 
         // Set up the MultiSelectComboBox with a data provider and label generator
-        VortexCrudQueryDataStore<FieldType, ?> queryDataStore =
-                (dataStore instanceof VortexCrudQueryDataStore)
-                        ? (VortexCrudQueryDataStore<FieldType, ?>) dataStore
-                        : new VortexCrudQueryDataStoreAdapter<>(dataStore);
-
         multiSelectComboBox.setDataProvider(
                 (filterValue, offset, limit) ->
-                        queryDataStore.getRecordsFromTableWhereColumnLike(multiSelectField.filterField(), filterValue, offset, limit)
+                        dataStore.getRecordsFromTableWhereColumnLike(multiSelectField.filterField(), filterValue, offset, limit)
                                 .stream()
                                 .map(obj -> (Object) obj),
-                filterValue -> queryDataStore.countWhereColumnLike(multiSelectField.filterField(), filterValue)
+                filterValue -> dataStore.countWhereColumnLike(multiSelectField.filterField(), filterValue)
         );
 
         multiSelectComboBox.setItemLabelGenerator(item -> multiSelectField.children().stream()

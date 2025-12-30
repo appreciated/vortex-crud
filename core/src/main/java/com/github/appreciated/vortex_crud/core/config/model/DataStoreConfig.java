@@ -1,9 +1,10 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -13,7 +14,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Getter
+@lombok.Getter
 public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass> {
 
     private RepositoryType factory;
@@ -23,4 +24,14 @@ public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements H
 
     @Builder.Default
     private DataStoreHooks<?> hooks = new DataStoreHooks<>();
+
+    @Override
+    public VortexCrudQueryDataStore<FieldType, ModelClass> dataStoreInstance() {
+        if (dataStoreInstance instanceof VortexCrudQueryDataStore) {
+            return (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStoreInstance;
+        } else if (dataStoreInstance != null) {
+            return new VortexCrudQueryDataStoreAdapter<>(dataStoreInstance);
+        }
+        return null;
+    }
 }

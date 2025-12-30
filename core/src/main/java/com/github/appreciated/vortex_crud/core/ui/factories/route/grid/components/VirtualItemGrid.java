@@ -3,9 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -37,7 +35,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> config;
     private int minWidth = 250;  // Minimum width in pixels
@@ -58,7 +56,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
 
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
 
         this.itemFactory = typedConfig.itemFactory();
         setSizeFull();
@@ -118,23 +116,18 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int limit = query.getLimit() * currentNumberOfColumns;
                     List<ModelClass> items;
 
-                    VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
-                            (dataStore instanceof VortexCrudQueryDataStore)
-                                    ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
-                                    : new VortexCrudQueryDataStoreAdapter<>((VortexCrudDataStore<FieldType, ModelClass>) dataStore);
-
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
                         } else {
-                            items = (List<ModelClass>) queryDataStore.getRecordsFromTable(offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
                         } else {
-                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
+                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
                         }
                     }
 
@@ -149,23 +142,18 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 // Providing the total number of records for correct pagination
                 query -> {
                     int count;
-                    VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
-                            (dataStore instanceof VortexCrudQueryDataStore)
-                                    ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
-                                    : new VortexCrudQueryDataStoreAdapter<>((VortexCrudDataStore<FieldType, ModelClass>) dataStore);
-
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = queryDataStore.countWhereFiltersEqual(config.filters());
+                            count = dataStore.countWhereFiltersEqual(config.filters());
                         } else {
-                            count = queryDataStore.count();
+                            count = dataStore.count();
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = queryDataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
+                            count = dataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
                         } else {
-                            count = queryDataStore.countWhereColumnLike(config.titleField(), filterText);
+                            count = dataStore.countWhereColumnLike(config.titleField(), filterText);
                         }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);

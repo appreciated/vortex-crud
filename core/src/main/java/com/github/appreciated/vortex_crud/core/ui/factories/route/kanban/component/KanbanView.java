@@ -6,9 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -44,7 +42,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private final KanbanRoute<ModelClass, FieldType, RepositoryType> kanbanRoute;
     private final ComponentRenderer<Component, Object> itemRenderer;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
-    private final VortexCrudDataStore<FieldType, Object> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, Object> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
@@ -68,7 +66,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
         this.routeRenderer = typedRouteRenderer;
         this.context = context;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) typedRouteRenderer.dataStoreInstance();
+        this.dataStore = (VortexCrudQueryDataStore<FieldType, Object>) typedRouteRenderer.dataStoreInstance();
         this.fieldNameResolver = context.fieldNameResolver();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
@@ -124,7 +122,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(context, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, (VortexCrudDataStore<FieldType, ModelClass>) dataStore),
+                event -> onAdd(context, (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer, (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore),
                 null,
                 null,
                 routeHeader);
@@ -133,7 +131,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         if (this.routeRenderer.routeActions() != null && !this.routeRenderer.routeActions().isEmpty()) {
             headerBar.renderActions(this.routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
-                    .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
+                    .dataStore((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
                     .refreshCallback(() -> UI.getCurrent().getPage().reload())
                     .viewComponent(this)
@@ -157,7 +155,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
     private void openDialog(
                             RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                            VortexCrudDataStore<FieldType, ?> dataStore,
+                            VortexCrudQueryDataStore<FieldType, ?> dataStore,
                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                              VortexCrudPathToRouteResolver routeResolver,
                             Object entity) {
@@ -169,7 +167,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     null,
                     routeRenderer.form(),
                     null,
-                    (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
+                    (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore,
                     context,
                     () -> {
                         Object recordById = dataStore.getRecordById(context.dataStoreUtil().getId(entity));
@@ -278,12 +276,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
             if (kanbanRoute.rowIndexField() != null) {
                 // Get fresh items in target column
-                VortexCrudQueryDataStore<FieldType, Object> queryDataStore =
-                        (dataStore instanceof VortexCrudQueryDataStore)
-                                ? (VortexCrudQueryDataStore<FieldType, Object>) dataStore
-                                : new VortexCrudQueryDataStoreAdapter<>(dataStore);
-
-                List<Object> targetColumnItems = queryDataStore.getRecordsFromTableWhereColumnEqualsOrdered(
+                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
                         kanbanRoute.columnField(),
                         columnDatabaseValue,
                         kanbanRoute.rowIndexField(),
@@ -360,7 +353,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
-                       VortexCrudDataStore<FieldType, ModelClass> dataStore) {
+                       VortexCrudQueryDataStore<FieldType, ModelClass> dataStore) {
         Object entity = new Object(); // This seems wrong? dataStore.newInstance()? But entity is not used in create...
         // Ah, previous code: Object entity = new Object();
         // create call:

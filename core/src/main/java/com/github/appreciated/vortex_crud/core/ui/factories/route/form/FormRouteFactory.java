@@ -3,9 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -82,7 +80,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
         ModelClass entity;
         if (creationMode) {
@@ -94,12 +92,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             FieldType filterField = singleFormRoute.entityFilterField();
             Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
-            VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
-                    (dataStore instanceof VortexCrudQueryDataStore)
-                            ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
-                            : new VortexCrudQueryDataStoreAdapter<>(dataStore);
-
-            java.util.List<ModelClass> results = queryDataStore.getRecordsFromTableWhereColumnEquals(
+            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
                 filterField, filterValue, 0, 1);
 
             if (results.isEmpty()) {

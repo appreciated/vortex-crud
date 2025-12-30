@@ -3,9 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.actions;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.select.Select;
 
@@ -80,7 +78,7 @@ public class DataStoreDropdownMenuActionComponent<ModelClass, FieldType, Reposit
             return;
         }
 
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
         if (dataStore == null) {
             return;
         }
@@ -90,12 +88,7 @@ public class DataStoreDropdownMenuActionComponent<ModelClass, FieldType, Reposit
 
             // Check if we need to filter
             if (action.filterField() != null && action.filterValue() != null) {
-                VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
-                        (dataStore instanceof VortexCrudQueryDataStore)
-                                ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
-                                : new VortexCrudQueryDataStoreAdapter<>(dataStore);
-
-                items = queryDataStore.getRecordsFromTableWhereColumnEquals(
+                items = dataStore.getRecordsFromTableWhereColumnEquals(
                     action.filterField(),
                     action.filterValue(),
                     0,
