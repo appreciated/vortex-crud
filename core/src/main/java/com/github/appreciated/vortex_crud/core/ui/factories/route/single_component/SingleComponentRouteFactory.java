@@ -120,7 +120,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             header.setPadding(true);
             header.setAlignItems(Alignment.CENTER);
             
-            H2 title = new H2(getTranslation(route.title()));
+            H2 title = new H2(route.title() != null ? getTranslation(route.title()) : "");
             header.add(title);
             header.expand(title);
 

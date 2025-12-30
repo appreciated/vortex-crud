@@ -61,7 +61,8 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         FormLayout form = new FormLayout();
         form.setMaxWidth("1000px");
         form.setResponsiveSteps(new FormLayout.ResponsiveStep("250px", 2, FormLayout.ResponsiveStep.LabelsPosition.TOP));
-        String prefix = !isWrapped ? layout.getTranslation(routeRenderer.title()) + " / " : "";
+        String title = routeRenderer.title();
+        String prefix = !isWrapped ? (title != null ? layout.getTranslation(title) : "") + " / " : "";
 
         ReflectionService<FieldType> reflectionService = context.reflectionService();
         FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();

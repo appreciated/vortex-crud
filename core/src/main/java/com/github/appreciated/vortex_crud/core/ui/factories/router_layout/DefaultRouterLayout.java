@@ -62,7 +62,8 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
 
         DrawerToggle toggle = new DrawerToggle();
 
-        H1 title = new H1(getTranslation(configService.applicationName()));
+        String applicationNameKey = configService.applicationName();
+        H1 title = new H1(applicationNameKey != null ? getTranslation(applicationNameKey) : "");
         title.getStyle().set("font-size", "var(--lumo-font-size-l)").set("margin", "0");
 
         SideNav nav = getSideNav();
@@ -157,7 +158,8 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         Map<String, RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
         routes.forEach((path, value) -> {
             if (!value.isHiddenInMenu()) {
-                String translation = getTranslation(value.title());
+                String title = value.title();
+                String translation = title != null ? getTranslation(title) : "";
                 Component icon = null;
                 if (value.iconFactory() != null) {
                     icon = value.iconFactory().get();

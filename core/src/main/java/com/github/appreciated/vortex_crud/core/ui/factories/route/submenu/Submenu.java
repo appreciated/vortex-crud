@@ -101,7 +101,8 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
                         .set("opacity", "0.5");
                 routeButton.setHeaderPrefix(icon);
             }
-            routeButton.setTitle(new H4(routeButton.getTranslation(value.title())));
+            String title = value.title();
+            routeButton.setTitle(new H4(title != null ? routeButton.getTranslation(title) : ""));
             routeButton.setWidthFull();
 
             if (hasActiveSubroute(currentPathIndex, routeResolver) && value == getActiveSubroute(currentPathIndex, routeResolver)) {
