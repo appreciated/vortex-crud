@@ -2,6 +2,8 @@ package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -113,8 +115,13 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
             VortexCrudDataStore<FieldType, Object> dataStore =
                     (VortexCrudDataStore<FieldType, Object>) iam.dataStoreInstance();
 
+            VortexCrudQueryDataStore<FieldType, Object> queryDataStore =
+                    (dataStore instanceof VortexCrudQueryDataStore)
+                            ? (VortexCrudQueryDataStore<FieldType, Object>) dataStore
+                            : new VortexCrudQueryDataStoreAdapter<>(dataStore);
+
             FieldType usernameField = iam.username().field();
-            List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);
+            List<Object> users = queryDataStore.getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);
 
             return users.isEmpty() ? null : users.getFirst();
         } catch (Exception e) {

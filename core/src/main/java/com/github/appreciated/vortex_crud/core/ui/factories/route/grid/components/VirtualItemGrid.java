@@ -4,6 +4,8 @@ import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResol
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -116,18 +118,23 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     int limit = query.getLimit() * currentNumberOfColumns;
                     List<ModelClass> items;
 
+                    VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
+                            (dataStore instanceof VortexCrudQueryDataStore)
+                                    ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
+                                    : new VortexCrudQueryDataStoreAdapter<>((VortexCrudDataStore<FieldType, ModelClass>) dataStore);
+
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
+                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereFiltersEqual(config.filters(), offset, limit);
                         } else {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTable(offset, limit);
+                            items = (List<ModelClass>) queryDataStore.getRecordsFromTable(offset, limit);
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
+                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters(), offset, limit);
                         } else {
-                            items = (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
+                            items = (List<ModelClass>) queryDataStore.getRecordsFromTableWhereColumnLike(config.titleField(), filterText, offset, limit);
                         }
                     }
 
@@ -142,18 +149,23 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                 // Providing the total number of records for correct pagination
                 query -> {
                     int count;
+                    VortexCrudQueryDataStore<FieldType, ModelClass> queryDataStore =
+                            (dataStore instanceof VortexCrudQueryDataStore)
+                                    ? (VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore
+                                    : new VortexCrudQueryDataStoreAdapter<>((VortexCrudDataStore<FieldType, ModelClass>) dataStore);
+
                     String filterText = query.getFilter().orElse("");
                     if (filterText.isEmpty()) {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereFiltersEqual(config.filters());
+                            count = queryDataStore.countWhereFiltersEqual(config.filters());
                         } else {
-                            count = dataStore.count();
+                            count = queryDataStore.count();
                         }
                     } else {
                         if (config.filters() != null && !config.filters().isEmpty()) {
-                            count = dataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
+                            count = queryDataStore.countWhereColumnLikeAndFiltersEqual(config.titleField(), filterText, config.filters());
                         } else {
-                            count = dataStore.countWhereColumnLike(config.titleField(), filterText);
+                            count = queryDataStore.countWhereColumnLike(config.titleField(), filterText);
                         }
                     }
                     return (int) Math.ceil((double) count / (double) currentNumberOfColumns);

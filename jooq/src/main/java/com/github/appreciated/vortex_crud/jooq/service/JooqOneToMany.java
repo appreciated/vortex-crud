@@ -3,6 +3,8 @@ package com.github.appreciated.vortex_crud.jooq.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
@@ -19,8 +21,14 @@ public class JooqOneToMany implements OneToMany<TableRecord<?>, TableField<?, ?>
 
     @Override
     public List<TableRecord<?>> getData(Object foreignKeyValue, VortexCrudDataStore<TableField<?, ?>, ?> dataStore, CollectionConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> collectionConfiguration) {
-        return foreignKeyValue == null ? List.of() :
-                (List<TableRecord<?>>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
+        if (foreignKeyValue == null) return List.of();
+
+        VortexCrudQueryDataStore<TableField<?, ?>, ?> queryDataStore =
+                (dataStore instanceof VortexCrudQueryDataStore)
+                        ? (VortexCrudQueryDataStore<TableField<?, ?>, ?>) dataStore
+                        : new VortexCrudQueryDataStoreAdapter<>(dataStore);
+
+        return (List<TableRecord<?>>) queryDataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
     }
 
     @Override

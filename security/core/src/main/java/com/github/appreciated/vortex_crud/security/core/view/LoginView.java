@@ -3,6 +3,8 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
@@ -86,7 +88,13 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
     private @Nullable UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String username, String password) {
         FieldType usernameField = userManagement.username().field();
-        List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
+
+        VortexCrudQueryDataStore<FieldType, Object> queryDataStore =
+                (dataStore instanceof VortexCrudQueryDataStore)
+                        ? (VortexCrudQueryDataStore<FieldType, Object>) dataStore
+                        : new VortexCrudQueryDataStoreAdapter<>(dataStore);
+
+        List<Object> users = queryDataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
 
         if (users.isEmpty()) {
             login.setError(true);

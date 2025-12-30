@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.security.core.strategy;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -122,7 +124,12 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
             }
 
             // Query USER_ROLES join table for this user
-            List<Object> userRoleRecords = userRolesDataStore.getRecordsFromTableWhereColumnEquals(
+            VortexCrudQueryDataStore<FieldType, Object> userRolesQueryDataStore =
+                    (userRolesDataStore instanceof VortexCrudQueryDataStore)
+                            ? (VortexCrudQueryDataStore<FieldType, Object>) userRolesDataStore
+                            : new VortexCrudQueryDataStoreAdapter<>(userRolesDataStore);
+
+            List<Object> userRoleRecords = userRolesQueryDataStore.getRecordsFromTableWhereColumnEquals(
                     userRolesUserIdField,
                     userId,
                     0,
@@ -170,7 +177,12 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
             }
 
             // Query Join Table by User ID
-            List<?> memberships = joinDataStore.getRecordsFromTableWhereColumnEquals(userRefField, userId, 0, 1000);
+            VortexCrudQueryDataStore<FieldType, ?> joinQueryDataStore =
+                    (joinDataStore instanceof VortexCrudQueryDataStore)
+                            ? (VortexCrudQueryDataStore<FieldType, ?>) joinDataStore
+                            : new VortexCrudQueryDataStoreAdapter<>(joinDataStore);
+
+            List<?> memberships = joinQueryDataStore.getRecordsFromTableWhereColumnEquals(userRefField, userId, 0, 1000);
 
             return memberships.stream()
                     .filter(membership -> {

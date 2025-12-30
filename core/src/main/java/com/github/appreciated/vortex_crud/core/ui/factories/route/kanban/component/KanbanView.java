@@ -7,6 +7,8 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStoreAdapter;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -276,7 +278,12 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
             if (kanbanRoute.rowIndexField() != null) {
                 // Get fresh items in target column
-                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
+                VortexCrudQueryDataStore<FieldType, Object> queryDataStore =
+                        (dataStore instanceof VortexCrudQueryDataStore)
+                                ? (VortexCrudQueryDataStore<FieldType, Object>) dataStore
+                                : new VortexCrudQueryDataStoreAdapter<>(dataStore);
+
+                List<Object> targetColumnItems = queryDataStore.getRecordsFromTableWhereColumnEqualsOrdered(
                         kanbanRoute.columnField(),
                         columnDatabaseValue,
                         kanbanRoute.rowIndexField(),
