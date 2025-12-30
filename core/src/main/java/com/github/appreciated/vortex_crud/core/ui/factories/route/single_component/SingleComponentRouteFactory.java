@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMen
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.SingleComponentRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.DataStoreDropdownMenuActionComponent;
@@ -72,7 +73,18 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             VortexCrudDataStore<FieldType, ModelClass> dataStore = dataStoreConfig.dataStoreInstance();
             FieldType filterField = route.entityFilterField();
             Object filterValue = route.entityFilterValueProvider().get();
-            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
+
+            java.util.List<ModelClass> results = java.util.Collections.emptyList();
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                results = ((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore)
+                        .getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
+            } else {
+                // If we can't query by column, we assume it's a new entity or handle differently.
+                // For SingleComponentRoute, filtering by column is usually required to find the specific singleton.
+                // But we can fallback to trying to create new if not found, or maybe just proceed.
+                log.warn("DataStore does not support VortexCrudQueryDataStore, cannot fetch by filter field.");
+            }
+
             if (results.isEmpty()) {
                 try {
                     entity = dataStore.newInstance();

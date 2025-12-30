@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -275,14 +276,22 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             reflectionService.setValue(draggedItem, kanbanRoute.columnField(), columnDatabaseValue);
 
             if (kanbanRoute.rowIndexField() != null) {
-                // Get fresh items in target column
-                List<Object> targetColumnItems = dataStore.getRecordsFromTableWhereColumnEqualsOrdered(
-                        kanbanRoute.columnField(),
-                        columnDatabaseValue,
-                        kanbanRoute.rowIndexField(),
-                        0,
-                        1000
-                );
+                List<Object> targetColumnItems;
+                if (dataStore instanceof VortexCrudQueryDataStore) {
+                    // Get fresh items in target column
+                    targetColumnItems = ((VortexCrudQueryDataStore<FieldType, Object>) dataStore).getRecordsFromTableWhereColumnEqualsOrdered(
+                            kanbanRoute.columnField(),
+                            columnDatabaseValue,
+                            kanbanRoute.rowIndexField(),
+                            0,
+                            1000
+                    );
+                } else {
+                     // Fallback: If sorting is not supported by store, we might not be able to reorder correctly using DB query.
+                     // For basic stores without query capability, we disable reordering logic by returning an empty list.
+                     // To support this, basic stores would need to implement efficient filtering which is not guaranteed.
+                     targetColumnItems = new ArrayList<>();
+                }
 
                 Integer newPosition;
 

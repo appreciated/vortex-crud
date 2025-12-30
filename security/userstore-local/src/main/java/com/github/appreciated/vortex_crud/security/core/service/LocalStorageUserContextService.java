@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.security.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.security.core.config.VortexCrudRoleProvider;
@@ -114,7 +115,25 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
                     (VortexCrudDataStore<FieldType, Object>) iam.dataStoreInstance();
 
             FieldType usernameField = iam.username().field();
-            List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);
+            List<Object> users;
+
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                 users = ((VortexCrudQueryDataStore<FieldType, Object>) dataStore).getRecordsFromTableWhereColumnEquals(usernameField, currentUsername, 0, 1);
+            } else {
+                 // Fallback: This is inefficient but without query capabilities, we must scan.
+                 // Assuming user table is not huge or the user is near start?
+                 // Actually for auth, a full scan is terrible.
+                 // But without a query store, what can we do?
+                 // Maybe we can iterate?
+                 // For now, let's assume we can't find user by username without query capability.
+                 // OR we can fetch all and filter.
+                 // Given this is local storage scenario, maybe data is small?
+                 List<Object> allUsers = dataStore.getRecordsFromTable(0, 10000); // arbitrary limit
+                 users = allUsers.stream()
+                         .filter(u -> currentUsername.equals(reflectionService.getValue(u, usernameField)))
+                         .limit(1)
+                         .toList();
+            }
 
             return users.isEmpty() ? null : users.getFirst();
         } catch (Exception e) {

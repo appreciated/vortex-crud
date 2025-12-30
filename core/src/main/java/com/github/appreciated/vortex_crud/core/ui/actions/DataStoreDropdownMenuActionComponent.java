@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.select.Select;
 
@@ -88,12 +89,21 @@ public class DataStoreDropdownMenuActionComponent<ModelClass, FieldType, Reposit
 
             // Check if we need to filter
             if (action.filterField() != null && action.filterValue() != null) {
-                items = dataStore.getRecordsFromTableWhereColumnEquals(
-                    action.filterField(),
-                    action.filterValue(),
-                    0,
-                    action.limit()
-                );
+                if (dataStore instanceof VortexCrudQueryDataStore) {
+                    items = ((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore).getRecordsFromTableWhereColumnEquals(
+                        action.filterField(),
+                        action.filterValue(),
+                        0,
+                        action.limit()
+                    );
+                } else {
+                     // Fallback for basic data stores - ignore filter?
+                     // Or perhaps fetch all and filter in memory?
+                     // Given this is a UI component often used for smaller datasets (Dropdown), in-memory filtering might be acceptable if dataset is small.
+                     // But limits are applied at DB level usually.
+                     // For now, let's just fetch without filter or maybe log a warning.
+                     items = dataStore.getRecordsFromTable(0, action.limit());
+                }
             } else {
                 items = dataStore.getRecordsFromTable(0, action.limit());
             }

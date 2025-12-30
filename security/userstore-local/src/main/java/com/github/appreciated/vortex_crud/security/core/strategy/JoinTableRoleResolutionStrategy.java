@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.core.strategy;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -122,12 +123,20 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
             }
 
             // Query USER_ROLES join table for this user
-            List<Object> userRoleRecords = userRolesDataStore.getRecordsFromTableWhereColumnEquals(
-                    userRolesUserIdField,
-                    userId,
-                    0,
-                    1000
-            );
+            List<Object> userRoleRecords;
+            if (userRolesDataStore instanceof VortexCrudQueryDataStore) {
+                userRoleRecords = ((VortexCrudQueryDataStore<FieldType, Object>)userRolesDataStore).getRecordsFromTableWhereColumnEquals(
+                        userRolesUserIdField,
+                        userId,
+                        0,
+                        1000
+                );
+            } else {
+                 // Fallback
+                userRoleRecords = userRolesDataStore.getRecordsFromTable(0, 1000).stream()
+                     .filter(record -> Objects.equals(reflectionService.getValue(record, userRolesUserIdField), userId))
+                     .toList();
+            }
 
             // Extract role IDs and fetch corresponding role names
             return userRoleRecords.stream()
@@ -170,7 +179,15 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
             }
 
             // Query Join Table by User ID
-            List<?> memberships = joinDataStore.getRecordsFromTableWhereColumnEquals(userRefField, userId, 0, 1000);
+            List<?> memberships;
+            if (joinDataStore instanceof VortexCrudQueryDataStore) {
+                 memberships = ((VortexCrudQueryDataStore<FieldType, ?>) joinDataStore).getRecordsFromTableWhereColumnEquals(userRefField, userId, 0, 1000);
+            } else {
+                 // Fallback
+                 memberships = ((VortexCrudDataStore<FieldType, ?>)joinDataStore).getRecordsFromTable(0, 1000).stream()
+                     .filter(record -> Objects.equals(reflectionService.getValue(record, userRefField), userId))
+                     .toList();
+            }
 
             return memberships.stream()
                     .filter(membership -> {

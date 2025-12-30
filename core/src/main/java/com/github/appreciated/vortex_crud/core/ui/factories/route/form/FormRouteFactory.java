@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -92,15 +93,19 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             FieldType filterField = singleFormRoute.entityFilterField();
             Object filterValue = singleFormRoute.entityFilterValueProvider().get();
 
-            java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(
-                filterField, filterValue, 0, 1);
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                java.util.List<ModelClass> results = ((VortexCrudQueryDataStore<FieldType, ModelClass>) dataStore)
+                        .getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
 
-            if (results.isEmpty()) {
-                throw new IllegalStateException(
-                    "No entity found for filter field: " + filterField +
-                    " with value: " + filterValue);
+                if (results.isEmpty()) {
+                    throw new IllegalStateException(
+                        "No entity found for filter field: " + filterField +
+                        " with value: " + filterValue);
+                }
+                entity = results.get(0);  // Take first result
+            } else {
+                 throw new IllegalStateException("SingleFormRoute requires a VortexCrudQueryDataStore to fetch by filter.");
             }
-            entity = results.get(0);  // Take first result
         } else {
             // Traditional mode: fetch by ID from URL path
             String lastSegment = routeResolver.getLastSegment();

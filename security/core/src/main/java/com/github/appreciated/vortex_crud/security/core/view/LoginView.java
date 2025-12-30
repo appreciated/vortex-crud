@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.AttachEvent;
@@ -86,7 +87,19 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
     private @Nullable UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String username, String password) {
         FieldType usernameField = userManagement.username().field();
-        List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
+        List<Object> users;
+
+        if (dataStore instanceof VortexCrudQueryDataStore) {
+             users = ((VortexCrudQueryDataStore<FieldType, Object>) dataStore).getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
+        } else {
+             // Fallback for login if query is not supported
+             // This is not ideal for production with large user bases but unavoidable without query support
+             // Fetch a reasonable amount of users and filter in memory
+             users = dataStore.getRecordsFromTable(0, 1000).stream()
+                     .filter(u -> username.equals(reflectionService.getValue(u, usernameField)))
+                     .limit(1)
+                     .toList();
+        }
 
         if (users.isEmpty()) {
             login.setError(true);

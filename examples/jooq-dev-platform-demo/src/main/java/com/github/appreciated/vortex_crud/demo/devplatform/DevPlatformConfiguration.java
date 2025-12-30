@@ -571,7 +571,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .handler(context -> {
                                     TableRecord<?> repo = context.getFirstSelectedEntity();
                                     String username = SecurityContextHolder.getContext().getAuthentication().getName();
-                                    var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                                    var users = ((JooqDataStore) usersStore).getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
                                     if (!users.isEmpty()) {
                                         var user = (TableRecord<?>) users.get(0);
                                         Integer userId = user.get(USERS.ID);

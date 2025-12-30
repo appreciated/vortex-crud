@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.jpa.service;
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
 import com.github.appreciated.vortex_crud.core.config.model.OneToMany;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,8 +18,18 @@ public class JpaOneToMany<ModelClass> implements OneToMany<ModelClass, String, J
 
     @Override
     public List<ModelClass> getData(Object foreignKeyValue, VortexCrudDataStore<String, ?> dataStore, CollectionConfiguration<ModelClass, String, JpaRepository<?, ?>> collectionConfiguration) {
-        return foreignKeyValue == null ? List.of() :
-                (List<ModelClass>) dataStore.getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
+        if (foreignKeyValue == null) return List.of();
+
+        if (dataStore instanceof VortexCrudQueryDataStore) {
+             return (List<ModelClass>) ((VortexCrudQueryDataStore<String, ?>)dataStore).getRecordsFromTableWhereColumnEquals(referenceField, foreignKeyValue, 0, Integer.MAX_VALUE);
+        } else {
+             // Fallback: This is OneToMany, we need to find children by parent ID (foreign key).
+             // Without query support, we can't efficiently find them unless we iterate all.
+             // Or we rely on JPA entity navigation if ModelClass was the parent? No, this is OneToMany, so we query Child table.
+             // We query Child table where child.parent_id = foreignKeyValue.
+             // If store is basic, we are stuck.
+             throw new UnsupportedOperationException("JpaOneToMany requires a VortexCrudQueryDataStore to fetch related records.");
+        }
     }
 
     @Override

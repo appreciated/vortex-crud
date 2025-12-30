@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.core.strategy;
 
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.mockito.Mockito.*;
 class JoinTableRoleResolutionStrategyTest {
 
     @Mock
-    private VortexCrudDataStore<String, Object> joinDataStore;
+    private VortexCrudQueryDataStore<String, Object> joinDataStore;
     @Mock
     private ReflectionService<String> reflectionService;
 
