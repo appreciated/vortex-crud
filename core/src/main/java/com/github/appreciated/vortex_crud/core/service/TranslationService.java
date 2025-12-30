@@ -138,4 +138,16 @@ public class TranslationService implements I18NProvider {
         return value;
     }
 
+    public boolean containsKey(String key, Locale locale) {
+        if (key == null) {
+            return false;
+        }
+        try {
+            final ResourceBundle bundle = ResourceBundle.getBundle(i18nBundlePrefix, locale);
+            return bundle.containsKey(key);
+        } catch (final MissingResourceException e) {
+            return false;
+        }
+    }
+
 }
