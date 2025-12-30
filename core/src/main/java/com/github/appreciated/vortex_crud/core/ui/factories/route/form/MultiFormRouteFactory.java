@@ -58,7 +58,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();
         VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker = context.rbacPermissionChecker();
 
-        String prefix = !isWrapped ? layout.getTranslation(routeRenderer.title()) + " / " : "";
+        String prefix = (!isWrapped && routeRenderer.title() != null) ? layout.getTranslation(routeRenderer.title()) + " / " : "";
 
         H2WithHasValue titleComponent = new H2WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
