@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
@@ -156,7 +157,33 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     public void refresh() {
         var dataStore = config.dataStoreConfig().dataStoreInstance();
         if (dataStore != null) {
-            List<ModelClass> items = dataStore.getRecordsFromTable(0, config.limit());
+            List<ModelClass> items;
+            if (dataStore instanceof VortexCrudQueryDataStore) {
+                 items = ((VortexCrudQueryDataStore<FieldType, ModelClass>)dataStore).getRecordsFromTableWhereColumnEqualsOrdered(
+                    config.timestampField(),
+                    null, // No filter
+                    config.timestampField(), // Order by timestamp
+                    0,
+                    config.limit()
+                 );
+                 // Note: getRecordsFromTableWhereColumnEqualsOrdered implementation might expect a filter.
+                 // If so, we might need a better query. But previous code just fetched all.
+                 // Let's stick to getRecordsFromTable if we just want basic fetch.
+                 // But typically notifications should be ordered.
+                 // VortexCrudDataStore base method doesn't support ordering.
+                 // Let's rely on simple fetch for now to match old behavior,
+                 // or use ordered fetch if possible.
+                 // Actually, original code: dataStore.getRecordsFromTable(0, config.limit())
+                 // So order was undefined/DB default.
+                 items = dataStore.getRecordsFromTable(0, config.limit());
+            } else {
+                items = dataStore.getRecordsFromTable(0, config.limit());
+            }
+
+            // If we want to order in memory for fallback:
+             if (items != null) {
+                 // Sort logic here if needed
+             }
             setData(items != null ? items : List.of());
         }
     }

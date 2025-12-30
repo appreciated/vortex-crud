@@ -14,7 +14,13 @@ import java.util.stream.Collectors;
  * Simple in-memory Map-based data store demonstrating custom storage backends.
  * Shows how to implement VortexCrudDataStore for non-database storage.
  */
-public class SimpleMapDataStore implements VortexCrudDataStore<String, SimpleMapDataStore.Note> {
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
+
+/**
+ * Simple in-memory Map-based data store demonstrating custom storage backends.
+ * Shows how to implement VortexCrudDataStore for non-database storage.
+ */
+public class SimpleMapDataStore implements VortexCrudQueryDataStore<String, SimpleMapDataStore.Note> {
 
     private final Map<Integer, Note> store = new HashMap<>();
     private final AtomicInteger idCounter = new AtomicInteger(1);

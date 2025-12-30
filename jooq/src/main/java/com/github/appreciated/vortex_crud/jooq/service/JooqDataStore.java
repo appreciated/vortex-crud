@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import jakarta.validation.constraints.NotNull;
 import org.jooq.*;
 import org.jooq.impl.DSL;
@@ -14,7 +14,7 @@ import java.util.List;
  * Service for managing dynamic entities using an EntityManager.
  * Provides methods for CRUD operations and lazy loading data from the database.
  */
-public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> implements VortexCrudDataStore<TableField<ModelClass, ?>, ModelClass> {
+public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> implements VortexCrudQueryDataStore<TableField<ModelClass, ?>, ModelClass> {
 
     private final DSLContext dslContext;
     private final Class<ModelClass> record;

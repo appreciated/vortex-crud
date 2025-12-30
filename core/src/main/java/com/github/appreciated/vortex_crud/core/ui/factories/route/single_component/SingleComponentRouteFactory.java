@@ -73,6 +73,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             FieldType filterField = route.entityFilterField();
             Object filterValue = route.entityFilterValueProvider().get();
             java.util.List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnEquals(filterField, filterValue, 0, 1);
+
             if (results.isEmpty()) {
                 try {
                     entity = dataStore.newInstance();
