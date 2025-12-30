@@ -28,7 +28,7 @@ public class Application<ModelClass, FieldType, RepositoryType> {
 
     private Auditing auditing;
 
-    private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
+    private Map<String, RouteRenderer<?, ?, ?>> routes;
 
     /**
      * Default menu actions that will be applied to all routes.

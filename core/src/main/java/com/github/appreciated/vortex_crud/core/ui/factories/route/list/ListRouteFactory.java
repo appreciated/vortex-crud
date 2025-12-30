@@ -13,7 +13,7 @@ public class ListRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+             VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting) {
         return new List<>(
                 currentPathIndex,

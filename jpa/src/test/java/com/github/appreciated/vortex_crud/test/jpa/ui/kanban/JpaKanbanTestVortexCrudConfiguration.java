@@ -56,7 +56,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
         enumOptions.put("b", "enums.option2");
         enumOptions.put("c", "enums.option3");
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("tasks", JpaKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreConfig(taskConfig)

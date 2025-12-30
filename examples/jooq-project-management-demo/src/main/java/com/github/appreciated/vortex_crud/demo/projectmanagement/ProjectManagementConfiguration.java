@@ -383,7 +383,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         // Routes Configuration
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         routes.put("projects", JooqGridRoute.builder()
                 .isDefaultRoute(true)
@@ -485,7 +485,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .username(JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build())
                         .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
                         .signUpFields(List.of())
-                        .rolesField(null)
                         .build())
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECT, TASK, MILESTONE, TASK_COMMENT)).build())

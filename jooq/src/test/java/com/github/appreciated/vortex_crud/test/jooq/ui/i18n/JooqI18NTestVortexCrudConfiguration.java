@@ -57,7 +57,7 @@ public class JooqI18NTestVortexCrudConfiguration
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("images-list", JooqListRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.images-list")

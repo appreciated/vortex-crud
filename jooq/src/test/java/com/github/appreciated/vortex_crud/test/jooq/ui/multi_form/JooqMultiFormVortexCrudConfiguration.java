@@ -84,7 +84,7 @@ public class JooqMultiFormVortexCrudConfiguration
                         .forms(List.of(basicInfoForm, additionalDetailsForm))
                         .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // Use the complete form config for the list (for dialog create/edit)
         routes.put("multi-form-test", JooqListRoute.builder()

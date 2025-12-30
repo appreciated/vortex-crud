@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.security.userstore.local.test;
 
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

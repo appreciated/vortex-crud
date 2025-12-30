@@ -52,7 +52,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("calendar", JpaCalendarRoute.builder()
                 .dataStoreConfig(config)
                 .title("Calendar")

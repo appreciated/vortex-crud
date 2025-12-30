@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.missing_features;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalFileResourceProvider;
+import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
@@ -67,10 +69,14 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                 .fields(Map.ofEntries(
                         Map.entry(MISSING_FEATURES_TEST.ID, JooqNumericIdField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.NAME, JooqTextField.builder().build()),
-                        Map.entry(MISSING_FEATURES_TEST.PDF_DOC, JooqFileField.builder().build()),
+                        Map.entry(MISSING_FEATURES_TEST.PDF_DOC, JooqFileField.builder()
+                                .resourceProvider(new LocalPdfResourceProvider())
+                                .build()),
                         Map.entry(MISSING_FEATURES_TEST.NOTES, JooqTextAreaField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, JooqMarkDownField.builder().build()),
-                        Map.entry(MISSING_FEATURES_TEST.FILE_ATTACHMENT, JooqFileField.builder().build()),
+                        Map.entry(MISSING_FEATURES_TEST.FILE_ATTACHMENT, JooqFileField.builder()
+                                .resourceProvider(new LocalFileResourceProvider())
+                                .build()),
                         Map.entry(MISSING_FEATURES_TEST.PRICE, JooqBigDecimalField.builder().build()),
                         Map.entry(MISSING_FEATURES_TEST.VIDEO_URL, JooqVideoField.builder()
                                 .resourceProvider(new LocalVideoResourceProvider())
@@ -114,7 +120,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route with Global, Single, Multi and Menu Actions
         routes.put("missing-features-test-new", JooqListRoute.builder()

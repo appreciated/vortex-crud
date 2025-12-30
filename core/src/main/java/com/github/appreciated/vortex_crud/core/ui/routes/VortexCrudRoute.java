@@ -22,7 +22,7 @@ import java.util.Map;
 
 public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> extends Div implements BeforeEnterObserver {
 
-    private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
+    private final VortexCrudContext context;
 
     public VortexCrudRoute(VortexCrudContextProvider contextProvider) {
         this.context = (VortexCrudContext<ModelClass, FieldType, RepositoryType>) contextProvider.getContext();
@@ -52,13 +52,13 @@ public abstract class VortexCrudRoute<ModelClass, FieldType, RepositoryType> ext
         if (routePattern.contains("/")) {
             throw new IllegalArgumentException("The routePattern must not contain a '/'");
         }
-        VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> pathRoutes = new VortexCrudPathToRouteResolver<>(
+         VortexCrudPathToRouteResolver pathRoutes = new VortexCrudPathToRouteResolver(
                 "%s%s".formatted(event.getLocation().getFirstSegment(), path),
                 Map.of(routePattern, configuration()),
                 context.dataStoreUtil()
         );
 
-        RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.getCurrentRoute();
+        RouteRenderer<?, ?, ?> currentRouteRenderer = pathRoutes.getCurrentRoute();
         Integer currentIndex = pathRoutes.determineActiveRouteIndex();
 
         Component component = currentRouteRenderer.factory()

@@ -15,6 +15,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Route("login")
@@ -33,21 +33,26 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
     private static final Logger log = LoggerFactory.getLogger(LoginView.class);
     private final LoginForm login = new LoginForm();
+    private final IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement;
+    private final VortexCrudDataStore<FieldType, Object> dataStore;
+    private final ReflectionService<FieldType> reflectionService;
+    private final PasswordEncoder passwordEncoder;
 
     public LoginView(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             ReflectionService<FieldType> reflectionService,
             PasswordEncoder passwordEncoder
     ) {
+        this.reflectionService = reflectionService;
+        this.passwordEncoder = passwordEncoder;
         addClassName("login-view");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
         Application<ModelClass, FieldType, RepositoryType> configuration = configService.configuration();
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement =
-                configuration.identityAndAccessManagement();
-
+        userManagement = configuration.identityAndAccessManagement();
+        dataStore = userManagement != null ? (VortexCrudDataStore<FieldType, Object>) userManagement.dataStoreInstance() : null;
         if (userManagement == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
             return;
@@ -60,32 +65,9 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
             try {
                 // Get user DataStore (vortex-crud pattern)
-                VortexCrudDataStore<FieldType, Object> dataStore =
-                        (VortexCrudDataStore<FieldType, Object>) userManagement.dataStoreInstance();
-
                 // Query for user by username field
-                FieldType usernameField = userManagement.username().field();
-                List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
-
-                if (users.isEmpty()) {
-                    login.setError(true);
-                    return;
-                }
-
-                Object userEntity = users.getFirst();
-
-                // Get password hash using ReflectionService
-                FieldType passwordField = userManagement.password().field();
-                Object passwordValue = reflectionService.getValue(userEntity, passwordField);
-
-                if (passwordValue == null || !passwordEncoder.matches(password, passwordValue.toString())) {
-                    login.setError(true);
-                    return;
-                }
-
-                // Authentication successful - create Spring Security session
-                List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) userManagement.resolveRolesForEntity(reflectionService, userEntity);
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, authorities);
+                UsernamePasswordAuthenticationToken authToken = getUsernamePasswordAuthenticationToken(username, password);
+                if (authToken == null) return;
                 setSecurityContextFor(authToken);
             } catch (Exception e) {
                 log.error("Login failed", e);
@@ -100,6 +82,32 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
             Button signUpButton = new Button("Sign Up", event -> UI.getCurrent().navigate(SignUpView.class));
             add(signUpButton);
         }
+    }
+
+    private @Nullable UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(String username, String password) {
+        FieldType usernameField = userManagement.username().field();
+        List<Object> users = dataStore.getRecordsFromTableWhereColumnEquals(usernameField, username, 0, 1);
+
+        if (users.isEmpty()) {
+            login.setError(true);
+            return null;
+        }
+
+        Object userEntity = users.getFirst();
+
+        // Get password hash using ReflectionService
+        FieldType passwordField = userManagement.password().field();
+        Object passwordValue = reflectionService.getValue(userEntity, passwordField);
+
+        if (passwordValue == null || !passwordEncoder.matches(password, passwordValue.toString())) {
+            login.setError(true);
+            return null;
+        }
+
+        // Authentication successful - create Spring Security session
+        List<SimpleGrantedAuthority> authorities = (List<SimpleGrantedAuthority>) userManagement.resolveRolesForEntity(reflectionService, userEntity);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, authorities);
+        return authToken;
     }
 
     private void setSecurityContextFor(Authentication userEntity) {
@@ -138,11 +146,6 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
         }
 
         //TODO Remove before release
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                "max@mustermann.de",
-                "password",
-                Collections.singletonList(new SimpleGrantedAuthority("admin"))
-        );
-        setSecurityContextFor(authToken);
+        setSecurityContextFor(getUsernamePasswordAuthenticationToken("max@mustermann.de", "password"));
     }
 }

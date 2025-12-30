@@ -14,10 +14,11 @@ public class GridRouteFactory<ModelClass, FieldType, RepositoryType> implements 
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+             VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting) {
 
-        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        RouteRendererSingleChild<?, ?, ?> routeRenderer =
+                (RouteRendererSingleChild<?, ?, ?>) routeResolver.getRouteForIndex(currentPathIndex);
 
         return new Grid<>(routeResolver,
                 routeRenderer,

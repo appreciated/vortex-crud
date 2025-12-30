@@ -20,12 +20,12 @@ public class DefaultVortexCrudPermissionResolutionService<ModelClass, FieldType,
     }
 
     @Override
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> resolveRouteForPath(String path) {
+    public RouteRenderer<?, ?, ?> resolveRouteForPath(String path) {
         if (configService.configuration() == null) {
             return null;
         }
-        Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = configService.configuration().routes();
-        var resolver = new VortexCrudPathToRouteResolver<>(path, routes, dataStoreUtil);
+        Map<String, RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
+        var resolver = new VortexCrudPathToRouteResolver(path, routes, dataStoreUtil);
         return resolver.getCurrentRoute();
     }
 }

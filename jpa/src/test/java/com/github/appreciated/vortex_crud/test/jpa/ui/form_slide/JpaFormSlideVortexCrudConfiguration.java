@@ -57,7 +57,7 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("images", JpaGridRoute.builder()
                 .dataStoreConfig(imageConfig)
                 .title("route.images-cards")

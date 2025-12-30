@@ -21,18 +21,18 @@ import java.util.Map;
 @Component
 public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, RepositoryType> implements VaadinServiceInitListener {
 
-    private final Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routeConfigs;
+    private final Map<String, RouteRenderer> routeConfigs;
 
     @Getter
-    private Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> defaultRouteEntry;
+    private Map.Entry<String, RouteRenderer> defaultRouteEntry;
 
-    public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService) {
+    public VortexCrudDefaultRouteRedirectConfiguration(VortexCrudConfigService configService) {
         this.routeConfigs = configService.configuration().routes();
     }
 
     @Override
     public void serviceInit(ServiceInitEvent event) {
-        List<? extends Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>> configuredDefaultRoutes = routeConfigs
+        List<? extends Map.Entry<String, RouteRenderer>> configuredDefaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
                 .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();

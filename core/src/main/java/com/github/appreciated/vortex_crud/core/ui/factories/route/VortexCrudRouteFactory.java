@@ -16,7 +16,7 @@ public interface VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
     Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     );
 

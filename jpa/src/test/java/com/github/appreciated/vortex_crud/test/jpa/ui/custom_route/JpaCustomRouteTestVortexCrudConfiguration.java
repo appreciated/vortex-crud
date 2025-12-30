@@ -19,11 +19,11 @@ public class JpaCustomRouteTestVortexCrudConfiguration implements VortexCrudConf
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        Map<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = Map.of(
+        Map<String, RouteRenderer<?, ?, ?>> routes = Map.of(
                 "dashboard", CustomRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                         .componentClass(CustomDashboardView.class)
                         .title("route.dashboard.title")
-                        .iconFactory(() -> VaadinIcon.DASHBOARD.create())
+                        .iconFactory(VaadinIcon.DASHBOARD::create)
                         .isDefaultRoute(true)
                         .build()
         );

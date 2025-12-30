@@ -15,5 +15,5 @@ public interface VortexCrudPermissionResolutionService<ModelClass, FieldType, Re
      * @param path The navigation path (e.g., "projects-cards/123")
      * @return The resolved route renderer, or null if the route cannot be resolved
      */
-    RouteRenderer<ModelClass, FieldType, RepositoryType> resolveRouteForPath(String path);
+    RouteRenderer<?, ?, ?> resolveRouteForPath(String path);
 }

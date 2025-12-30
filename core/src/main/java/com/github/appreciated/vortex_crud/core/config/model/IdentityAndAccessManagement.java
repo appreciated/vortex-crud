@@ -28,8 +28,6 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
 
     boolean isSignUpEnabled();
 
-    FieldType rolesField();
-
     Roles availableRoles();
 
     List<String> defaultReadRoles();

@@ -13,6 +13,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
+import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.button.Button;
@@ -80,7 +81,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route with Global Action
         routes.put("missing-features-test", JooqListRoute.builder()
@@ -92,7 +93,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
                   JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
             ))
             .routeActions(List.of(
-                 GlobalRouteAction.<TableField<?, ?>, TableImpl<?>>builder()
+                 GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
                     .handler(ctx -> {})
                     .build()

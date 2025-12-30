@@ -13,7 +13,7 @@ public class SubmenuRouteFactory<ModelClass, FieldType, RepositoryType> implemen
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting) {
         return new Submenu<>(currentPathIndex, routeResolver, context);
     }

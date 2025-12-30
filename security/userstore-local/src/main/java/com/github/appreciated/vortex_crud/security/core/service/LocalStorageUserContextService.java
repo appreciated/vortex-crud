@@ -49,19 +49,14 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
             return Collections.emptyList();
         }
 
-        FieldType rolesField = iam.rolesField();
-        if (rolesField == null) {
+        List<? extends java.io.Serializable> roles = iam.resolveRolesForEntity(reflectionService, userEntity);
+        if (roles == null) {
             return Collections.emptyList();
         }
 
-        List<VortexCrudRoleProvider> value = (List<VortexCrudRoleProvider>) reflectionService.getValue(userEntity, rolesField);
-        if (value == null) {
-            return Collections.emptyList();
-        }
-
-        return value.stream()
-                .map(VortexCrudRoleProvider::getRole)
-                .map(SimpleGrantedAuthority::new)
+        return roles.stream()
+                .filter(r -> r instanceof SimpleGrantedAuthority)
+                .map(r -> (SimpleGrantedAuthority) r)
                 .toList();
     }
 

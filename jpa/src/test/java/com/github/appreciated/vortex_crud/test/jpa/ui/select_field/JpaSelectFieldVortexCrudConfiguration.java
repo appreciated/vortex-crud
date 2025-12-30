@@ -59,7 +59,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
                 .build();
 
         // List Route
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("select-field-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
                 .title("Select Field List")

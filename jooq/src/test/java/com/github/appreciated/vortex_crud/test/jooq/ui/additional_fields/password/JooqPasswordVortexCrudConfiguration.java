@@ -42,7 +42,7 @@ public class JooqPasswordVortexCrudConfiguration
             return cachedApplication;
         }
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("password-test", createPasswordTestRoute());
 
         cachedApplication = JooqApplication.builder()

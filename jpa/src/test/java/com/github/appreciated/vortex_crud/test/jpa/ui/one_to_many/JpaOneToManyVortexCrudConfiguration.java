@@ -84,7 +84,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("one-to-many-test", JpaListRoute.builder()
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)

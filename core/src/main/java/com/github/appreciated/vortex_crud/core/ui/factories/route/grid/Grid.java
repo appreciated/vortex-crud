@@ -21,37 +21,41 @@ import java.util.Collections;
 public class Grid<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
     private final VirtualItemGrid<ModelClass, FieldType, RepositoryType> virtualGrid;
 
-    public Grid(VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
-                RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
+    public Grid(VortexCrudPathToRouteResolver routeResolver,
+                RouteRendererSingleChild<?, ?, ?> routeRenderer,
                 VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
-        RouteHeader routeHeader = new RouteHeader(routeRenderer);
+        VortexCrudPathToRouteResolver typedRouteResolver = routeResolver;
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
+                (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
+
+        RouteHeader routeHeader = new RouteHeader(typedRouteRenderer);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
                 null,
-                event -> onAdd(context, routeRenderer, routeRenderer.dataStoreInstance()),
+                event -> onAdd(context, typedRouteRenderer, typedRouteRenderer.dataStoreInstance()),
                 null,
                 null,
                 routeHeader);
 
         // Render custom route actions if configured
-        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
-            VortexCrudDataStore<FieldType, ModelClass> dataStore = routeRenderer.dataStoreInstance();
+        if (typedRouteRenderer.routeActions() != null && !typedRouteRenderer.routeActions().isEmpty()) {
+            VortexCrudDataStore<FieldType, ModelClass> dataStore = typedRouteRenderer.dataStoreInstance();
 
-            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+            headerBar.renderActions(typedRouteRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
-                    .dataStore(dataStore)
-                    .selectedEntities(Collections.emptyList())  // No selection support yet
-                    .refreshCallback(() -> UI.getCurrent().getPage().reload())
-                    .viewComponent(this)
-                    .build();
+                        .dataStore(dataStore)
+                        .selectedEntities(Collections.emptyList())  // No selection support yet
+                        .refreshCallback(() -> UI.getCurrent().getPage().reload())
+                        .viewComponent(this)
+                        .build();
                 contextConsumer.accept(actionContext);
             });
         }
 
         SearchField search = new SearchField(event -> applyFilter(event.getValue()));
-        virtualGrid = new VirtualItemGrid<>(routeResolver,
-                routeRenderer,
+        virtualGrid = new VirtualItemGrid<>(typedRouteResolver,
+                typedRouteRenderer,
                 context
         );
         add(headerBar, search, virtualGrid);

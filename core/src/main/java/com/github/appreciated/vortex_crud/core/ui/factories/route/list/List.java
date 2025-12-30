@@ -20,10 +20,14 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     private final GenericEntityGrid<ModelClass, FieldType, RepositoryType> entityGrid;
 
     public List(Integer currentPathIndex,
-                VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                 VortexCrudPathToRouteResolver routeResolver,
                 VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
-        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+         VortexCrudPathToRouteResolver typedRouteResolver =
+                routeResolver;
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer =
+                (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,
                 false,
@@ -49,7 +53,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         }
 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
-        entityGrid = new GenericEntityGrid<>(routeResolver, routeRenderer, context);
+        entityGrid = new GenericEntityGrid<>(typedRouteResolver, routeRenderer, context);
         add(headerBar);
         if (routeRenderer.filterField() != null) {
             add(textField);

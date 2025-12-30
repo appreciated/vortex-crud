@@ -11,17 +11,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> {
+public class VortexCrudPathToRouteResolver {
 
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final String path;
     private String[] sections;
-    private final Map<Integer, RouteRenderer<ModelClass, FieldType, RepositoryType>> pathRoutes;
-    private final Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routesConfig;
+    private final Map<Integer, RouteRenderer<?, ?, ?>> pathRoutes;
+    private final Map<String, RouteRenderer<?, ?, ?>> routesConfig;
 
     // Constructor
     public VortexCrudPathToRouteResolver(String path,
-                                         Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routesConfig,
+                                         Map<String, RouteRenderer<?, ?, ?>> routesConfig,
                                          VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         this.path = path;
@@ -40,7 +40,7 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         buildRouteMapForPathSection(0, routesConfig);
     }
 
-    private void buildRouteMapForPathSection(int sectionIndex, Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> currentRoutes) {
+    private void buildRouteMapForPathSection(int sectionIndex, Map<String, RouteRenderer<?, ?, ?>> currentRoutes) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
@@ -48,7 +48,7 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         String section = sections[sectionIndex];
 
         // Check if the current route exists
-        RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = currentRoutes.get(section);
+        RouteRenderer<?, ?, ?> currentRouteRenderer = currentRoutes.get(section);
 
         if (currentRouteRenderer == null && currentRoutes.containsKey(null)) {
             currentRouteRenderer = currentRoutes.get(null);
@@ -64,13 +64,14 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         pathRoutes.put(sectionIndex, currentRouteRenderer);
 
         // If this route has children, recurse into them
-        if (currentRouteRenderer instanceof RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> multi &&
+        if (currentRouteRenderer instanceof RouteRendererMultipleChildren multi &&
             multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
-            buildRouteMapForPathSection(sectionIndex + 1, multi.childrenMap());
-        } else if (currentRouteRenderer instanceof RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> single &&
+            Map<String, RouteRenderer<?,?,?>> stringRouteRendererMap = multi.childrenMap();
+            buildRouteMapForPathSection(sectionIndex + 1, stringRouteRendererMap);
+        } else if (currentRouteRenderer instanceof RouteRendererSingleChild<?, ?, ?> single &&
                    single.form() != null) {
             // For single child routes, create a map with the child as a wildcard (null key)
-            Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> singleChildMap = new HashMap<>();
+            Map<String, RouteRenderer<?, ?, ?>> singleChildMap = new HashMap<>();
             singleChildMap.put(null, single.form());
             buildRouteMapForPathSection(sectionIndex + 1, singleChildMap);
         } else {
@@ -79,14 +80,14 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         }
     }
 
-    public Map<Integer, RouteRenderer<ModelClass, FieldType, RepositoryType>> getPathRoutes() {
+    public Map<Integer, RouteRenderer<?, ?, ?>> getPathRoutes() {
         return pathRoutes;
     }
 
     /**
      * This returns the to be rendered route.
      */
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getCurrentRoute() {
+    public RouteRenderer<?, ?, ?> getCurrentRoute() {
         return pathRoutes.get(determineActiveRouteIndex());
     }
 
@@ -102,7 +103,7 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
         return buildPathUpToIndex(currentPathIndex, dataStoreUtil.getId(entity));
     }
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> getRouteForIndex(Integer currentPathIndex) {
+    public RouteRenderer<?, ?, ?> getRouteForIndex(Integer currentPathIndex) {
         return pathRoutes.get(currentPathIndex);
     }
 
@@ -113,11 +114,11 @@ public class VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType
             Integer currentKey = numbers.get(i);
             Integer nextKey = numbers.get(i + 1);
 
-            RouteRenderer<ModelClass, FieldType, RepositoryType> currentRouteRenderer = pathRoutes.get(currentKey);
-            RouteRenderer<ModelClass, FieldType, RepositoryType> nextRouteRenderer = pathRoutes.get(nextKey);
+            RouteRenderer<?, ?, ?> currentRouteRenderer = pathRoutes.get(currentKey);
+            RouteRenderer<?, ?, ?> nextRouteRenderer = pathRoutes.get(nextKey);
 
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> currentFactory = currentRouteRenderer.factory();
-            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> nextFactory = nextRouteRenderer.factory();
+            VortexCrudRouteFactory<?, ?, ?> currentFactory = currentRouteRenderer.factory();
+            VortexCrudRouteFactory<?, ?, ?> nextFactory = nextRouteRenderer.factory();
 
             if (currentFactory == null) {
                 throw new IllegalStateException("The route does not have a factory set");

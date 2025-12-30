@@ -13,10 +13,14 @@ public class MasterDetailRouteFactory<ModelClass, FieldType, RepositoryType> imp
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+             VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting) {
+        @SuppressWarnings("unchecked")
+         VortexCrudPathToRouteResolver typedRouteResolver =
+                routeResolver;
+
         return new MasterDetail<>(currentPathIndex,
-                routeResolver,
+                typedRouteResolver,
                 context
         );
     }

@@ -54,7 +54,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
             ))
             .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // List Route
         routes.put("id-test-list", JpaListRoute.builder()

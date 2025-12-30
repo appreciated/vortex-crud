@@ -48,7 +48,7 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
             return cachedApplication;
         }
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        Map<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("lifecycle-test", createLifecycleTestRoute());
 
         cachedApplication = JpaApplication.builder()

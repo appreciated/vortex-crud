@@ -57,7 +57,7 @@ public class JpaSingleFormRouteVortexCrudConfiguration implements VortexCrudConf
                 .withServices(fieldService, storeMap)
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // Single Form Route
         routes.put("single-form-test", JpaSingleFormRoute.builder()

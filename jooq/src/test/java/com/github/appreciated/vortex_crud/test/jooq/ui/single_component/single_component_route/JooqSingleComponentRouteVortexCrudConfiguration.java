@@ -45,7 +45,7 @@ public class JooqSingleComponentRouteVortexCrudConfiguration
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         // Single Component Route
         routes.put("single-component-test", JooqSingleComponentRoute.builder()

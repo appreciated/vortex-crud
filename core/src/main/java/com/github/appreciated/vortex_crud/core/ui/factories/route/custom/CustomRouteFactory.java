@@ -18,7 +18,7 @@ public class CustomRouteFactory<ModelClass, FieldType, RepositoryType>
     public Component renderRoute(
             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
             Integer currentPathIndex,
-            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+            VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
         Div error = new Div();

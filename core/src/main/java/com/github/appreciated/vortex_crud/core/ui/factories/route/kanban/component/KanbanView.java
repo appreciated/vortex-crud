@@ -47,7 +47,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver;
+    private final  VortexCrudPathToRouteResolver routeResolver;
     private final Map<Object, Grid<Object>> columns = new HashMap<>();
     private final Map<Object, ConfigurableFilterDataProvider<Object, Void, String>> columnProviders = new HashMap<>();
 
@@ -56,37 +56,39 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private Object draggedItem;
     private Grid<Object> dragSource;
 
-    public KanbanView(RepositoryType dataStoreIdentifier,
-                      RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+    public KanbanView(Object dataStoreIdentifier,
+                      RouteRenderer<?, ?, ?> routeRenderer,
                       VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                      VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                       VortexCrudPathToRouteResolver routeResolver,
                       DetailRouteSetting detailRouteSetting
     ) {
-        this.routeRenderer = routeRenderer;
+        RouteRenderer<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
+                (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        this.routeRenderer = typedRouteRenderer;
         this.context = context;
-        this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, Object>) typedRouteRenderer.dataStoreInstance();
         this.fieldNameResolver = context.fieldNameResolver();
         this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
         this.routeResolver = routeResolver;
 
         Selects selects = context.configService().configuration().selects();
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = routeRenderer.dataStoreConfig();
-        this.kanbanRoute = (KanbanRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> config = typedRouteRenderer.dataStoreConfig();
+        this.kanbanRoute = (KanbanRoute<ModelClass, FieldType, RepositoryType>) typedRouteRenderer;
         Field<ModelClass, FieldType, RepositoryType> dataStoreField = config.fields().get(kanbanRoute.columnField());
 
         this.itemFactory = kanbanRoute.itemFactory();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanRoute.filterField(), routeRenderer.filters());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanRoute.filterField(), typedRouteRenderer.filters());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
-            Div cardWrapper = new Div(itemFactory.renderItem(routeRenderer,
+            Div cardWrapper = new Div(itemFactory.renderItem(this.routeRenderer,
                     entity,
                     null,
                     context));
             cardWrapper.getStyle().set("margin", "5px 0");
             cardWrapper.addClickListener(event -> {
-                String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
+                String nextRoute = this.routeResolver.buildPathUpToIndex(this.routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
                 getUI().ifPresent(ui -> ui.navigate(nextRoute));
             });
             return cardWrapper;
@@ -126,8 +128,8 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 routeHeader);
 
         // Render custom route actions if configured
-        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
-            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+        if (this.routeRenderer.routeActions() != null && !this.routeRenderer.routeActions().isEmpty()) {
+            headerBar.renderActions(this.routeRenderer.routeActions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet
@@ -155,7 +157,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                             RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                             VortexCrudDataStore<FieldType, ?> dataStore,
                             VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                            VortexCrudPathToRouteResolver<ModelClass, FieldType, RepositoryType> routeResolver,
+                             VortexCrudPathToRouteResolver routeResolver,
                             Object entity) {
         // Navigate to the entity URL
         if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {

@@ -5,6 +5,8 @@ import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStr
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,7 +17,7 @@ public class StringManyToManyPersistenceStrategy implements ManyToManyPersistenc
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final ReflectionService<String> reflectionService;
 
-    public StringManyToManyPersistenceStrategy(VortexCrudDataStoreUtilStrategy dataStoreUtil, ReflectionService<String> reflectionService) {
+    public StringManyToManyPersistenceStrategy(@Qualifier("stringDataStoreUtilStrategy") VortexCrudDataStoreUtilStrategy dataStoreUtil, ReflectionService<String> reflectionService) {
         this.dataStoreUtil = dataStoreUtil;
         this.reflectionService = reflectionService;
     }

@@ -21,11 +21,11 @@ public class JooqCustomRouteTestVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // According to memory: When configuring CustomRoute, explicit type witnessing with three generics
         // (e.g., .<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()) is required to avoid type inference errors.
-        Map<String, RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>>> routes = Map.of(
+        Map<String, RouteRenderer<?, ?, ?>> routes = Map.of(
                 "dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .componentClass(CustomDashboardView.class)
                         .title("route.dashboard.title")
-                        .iconFactory(() -> VaadinIcon.DASHBOARD.create())
+                        .iconFactory(VaadinIcon.DASHBOARD::create)
                         .isDefaultRoute(true)
                         .build()
         );

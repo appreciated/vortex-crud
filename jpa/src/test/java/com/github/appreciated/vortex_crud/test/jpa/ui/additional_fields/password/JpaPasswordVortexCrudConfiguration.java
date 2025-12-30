@@ -48,7 +48,7 @@ public class JpaPasswordVortexCrudConfiguration implements VortexCrudConfigurati
             return cachedApplication;
         }
 
-        LinkedHashMap<String, RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> routes = new LinkedHashMap<>();
+        LinkedHashMap<String, RouteRenderer<?,?,?>> routes = new LinkedHashMap<>();
         routes.put("password-test", createPasswordTestRoute());
 
         cachedApplication = JpaApplication.builder()
