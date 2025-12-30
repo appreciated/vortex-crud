@@ -50,7 +50,7 @@ public class JooqSingleComponentRouteVortexCrudConfiguration
         // Single Component Route
         routes.put("single-component-test", JooqSingleComponentRoute.builder()
              .dataStoreConfig(config)
-             .title("Single Component")
+             .title("route.single-component.title")
              .entityFilterField(SINGLE_FORM_ROUTE_TEST.ID)
              .entityFilterValueProvider(() -> 1)
              .field(SINGLE_FORM_ROUTE_TEST.NOTES) // This is the single component field

@@ -49,7 +49,7 @@ public class JpaSingleComponentRouteVortexCrudConfiguration
         // Single Component Route
         routes.put("single-component-test", JpaSingleComponentRoute.builder()
              .dataStoreConfig(config)
-             .title("Single Component")
+             .title("route.single-component.title")
              .entityFilterField("id")
              .entityFilterValueProvider(() -> 1L)
              .field("notes") // This is the single component field

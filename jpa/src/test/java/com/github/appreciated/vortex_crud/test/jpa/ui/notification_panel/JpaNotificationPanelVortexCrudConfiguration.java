@@ -48,18 +48,19 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                         .readStatusField("read")
                         .readStatusValueForUnread(false)
                         .readStatusValueForRead(true)
+                        .ariaLabel("notifications.aria-label")
                         .build();
 
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("notifications", JpaGridRoute.builder()
                 .dataStoreConfig(notificationConfig)
-                .title("Notifications")
+                .title("route.notifications.title")
                 .isDefaultRoute(true)
                 .titleField("message")
                 .build());
 
         return JpaApplication.builder()
-                .applicationName("Notification Test App")
+                .applicationName("application.name.notification-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .notificationPanelConfiguration(notificationPanelConfig)

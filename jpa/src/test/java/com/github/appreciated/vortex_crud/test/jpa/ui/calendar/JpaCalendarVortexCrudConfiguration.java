@@ -43,12 +43,12 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> eventForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
-                .title("Event")
+                .title("route.calendar-test.event")
                 .titleField("title")
                 .children(List.of(
-                        JpaFieldElement.builder("title", "Title").build(),
-                        JpaFieldElement.builder("startDate", "Start").build(),
-                        JpaFieldElement.builder("endDate", "End").build()
+                        JpaFieldElement.builder("title", "calendar-test.labels.title").build(),
+                        JpaFieldElement.builder("startDate", "calendar-test.labels.start").build(),
+                        JpaFieldElement.builder("endDate", "calendar-test.labels.end").build()
                 ))
                 .build();
 
@@ -64,7 +64,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
                 .build());
 
         return JpaApplication.builder()
-                .applicationName("Calendar Test")
+                .applicationName("application.name.calendar-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(routes)
                 .build();
