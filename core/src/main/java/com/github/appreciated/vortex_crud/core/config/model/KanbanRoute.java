@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
@@ -26,6 +27,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
+    @I18nKey
     private String title;
 
     private boolean isDefaultRoute;

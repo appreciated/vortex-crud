@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,12 @@ import java.util.List;
 @Getter
 public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType> {
 
+    @I18nKey
     private String label;
 
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory;
 
+    @I18nKey
     private String emptyMessage;
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> form;

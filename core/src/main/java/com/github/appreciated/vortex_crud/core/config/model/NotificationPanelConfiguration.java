@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -86,6 +87,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.heading"
      */
     @Builder.Default
+    @I18nKey
     private String headingKey = "notifications.heading";
 
     /**
@@ -93,6 +95,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.unread"
      */
     @Builder.Default
+    @I18nKey
     private String unreadTabKey = "notifications.unread";
 
     /**
@@ -100,6 +103,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.all"
      */
     @Builder.Default
+    @I18nKey
     private String allTabKey = "notifications.all";
 
     /**
@@ -107,6 +111,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.mark_all_read"
      */
     @Builder.Default
+    @I18nKey
     private String markAllReadKey = "notifications.mark_all_read";
 
     /**
@@ -114,6 +119,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "notifications.no_new"
      */
     @Builder.Default
+    @I18nKey
     private String noNewNotificationsKey = "notifications.no_new";
 
     /**
@@ -121,5 +127,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
      * Default: "Notifications"
      */
     @Builder.Default
+    @I18nKey
     private String ariaLabel = "Notifications";
 }

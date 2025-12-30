@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +16,6 @@ import java.util.Map;
 @Builder
 @Getter
 public class Selects {
+    @I18nKey
     private Map<String, LinkedHashMap<?, String>> configs;
 }

@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.submenu.SubmenuRouteFactory;
@@ -23,6 +24,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
+    @I18nKey
     private String title;
 
     private boolean isDefaultRoute;
