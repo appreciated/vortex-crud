@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.models.Tables;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.SearchRouteTestRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqApplication;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqDataStoreConfig;
@@ -35,13 +37,12 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Create DataStore for the search route test entity
-        JooqDataStore store = new JooqDataStore(SEARCH_ROUTE_TEST.getRecordType(), dsl);
+        JooqDataStore<SearchRouteTestRecord> store = new JooqDataStore<>(SEARCH_ROUTE_TEST.getRecordType(), dsl);
 
         @SuppressWarnings("unchecked")
         DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> config =
-                (DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>>) (DataStoreConfig<?, ?, ?>)
                 JooqDataStoreConfig.of(SEARCH_ROUTE_TEST)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 SEARCH_ROUTE_TEST.ID, JooqNumericIdField.builder().build(),
                                 SEARCH_ROUTE_TEST.NAME, JooqTextField.builder().build()
