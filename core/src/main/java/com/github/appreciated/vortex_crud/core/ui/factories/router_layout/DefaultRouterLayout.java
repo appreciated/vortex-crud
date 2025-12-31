@@ -23,13 +23,11 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.data.provider.CallbackDataProvider;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.server.VaadinServletRequest;
 import jakarta.annotation.Nullable;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment.CENTER;
@@ -157,7 +155,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
         SideNav nav = new SideNav();
         Map<String, RouteRenderer<?, ?, ?>> routes = configService.configuration().routes();
         routes.forEach((path, value) -> {
-            if (!value.isHiddenInMenu()) {
+            if (!value.hiddenInMenu()) {
                 String title = value.title();
                 String translation = title != null ? getTranslation(title) : "";
                 Component icon = null;

@@ -44,6 +44,7 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
         // Create search route with explicit searchable routes
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> searchRoute = SearchRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .title("Search")
+                .defaultRoute(true)
                 .searchableRoutes(List.of(gridRoute))
                 .build();
 

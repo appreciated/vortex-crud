@@ -552,12 +552,12 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.dashboard.title")
-                .isDefaultRoute(true)
+                .defaultRoute(true)
                 .componentClass(DashboardView.class)
                 .build());
 
         routes.put("repositories", JooqGridRoute.builder()
-                .isDefaultRoute(false)
+                .defaultRoute(false)
                 .dataStoreConfig(repositoryConfig)
                 .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")

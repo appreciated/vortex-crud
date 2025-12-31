@@ -60,6 +60,7 @@ public class JooqMultiFormVortexCrudConfiguration
         // Individual form configurations for multi-form rendering
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> basicInfoForm =
                 JooqFormRoute.builder()
+                        .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.PROFILE_NAME)
                         .children(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
@@ -69,6 +70,7 @@ public class JooqMultiFormVortexCrudConfiguration
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalDetailsForm =
                 JooqFormRoute.builder()
+                        .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.DESCRIPTION)
                         .children(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),

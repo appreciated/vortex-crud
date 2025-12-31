@@ -24,7 +24,7 @@ public class JpaCustomRouteTestVortexCrudConfiguration implements VortexCrudConf
                         .componentClass(CustomDashboardView.class)
                         .title("route.dashboard.title")
                         .iconFactory(VaadinIcon.DASHBOARD::create)
-                        .isDefaultRoute(true)
+                        .defaultRoute(true)
                         .build()
         );
 

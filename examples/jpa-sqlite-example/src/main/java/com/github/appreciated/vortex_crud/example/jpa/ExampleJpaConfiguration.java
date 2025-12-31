@@ -237,7 +237,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaGridRoute.builder()
-                .isDefaultRoute(true)
+                .defaultRoute(true)
                 .dataStoreConfig(projectConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")

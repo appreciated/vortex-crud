@@ -32,7 +32,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CalendarFactory<>();
@@ -40,7 +40,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();

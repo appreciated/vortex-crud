@@ -36,7 +36,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
@@ -44,7 +44,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private final boolean isDeleteButtonHidden = true;
 

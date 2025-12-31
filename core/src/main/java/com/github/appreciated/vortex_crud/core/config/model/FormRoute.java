@@ -37,14 +37,14 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
 
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private final boolean isDeleteButtonHidden = false;
 

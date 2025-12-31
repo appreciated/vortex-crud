@@ -293,7 +293,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         // Routes map can accept any RouteRenderer type (jOOQ, JPA, or custom)
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqGridRoute.builder()
-                .isDefaultRoute(true)
+                .defaultRoute(true)
                 .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")

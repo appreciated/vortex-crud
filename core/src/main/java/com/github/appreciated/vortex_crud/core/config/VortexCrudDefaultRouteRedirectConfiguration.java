@@ -35,7 +35,7 @@ public class VortexCrudDefaultRouteRedirectConfiguration<ModelClass, FieldType, 
         List<? extends Map.Entry<String, RouteRenderer>> configuredDefaultRoutes = routeConfigs
                 .entrySet()
                 .stream()
-                .filter(configEntry -> configEntry.getValue().isDefaultRoute()).toList();
+                .filter(configEntry -> configEntry.getValue().defaultRoute()).toList();
 
 
         if (configuredDefaultRoutes.size() > 1) {

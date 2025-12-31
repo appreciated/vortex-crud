@@ -26,12 +26,12 @@ public class SingleComponentRoute<ModelClass, FieldType, RepositoryType> impleme
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new SingleComponentRouteFactory<>();
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private FieldType field;
 
