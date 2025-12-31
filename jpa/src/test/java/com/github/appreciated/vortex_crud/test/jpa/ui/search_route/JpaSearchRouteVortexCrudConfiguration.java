@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
+import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
@@ -20,19 +21,24 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
 
     private final JpaSearchRouteRepository repository;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldService fieldService;
 
     public JpaSearchRouteVortexCrudConfiguration(
             JpaSearchRouteRepository repository,
-            JpaFieldAnnotationRegistryService annotationRegistryService) {
+            JpaFieldAnnotationRegistryService annotationRegistryService,
+            JpaFieldService fieldService) {
         this.repository = repository;
         this.annotationRegistryService = annotationRegistryService;
+        this.fieldService = fieldService;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         // Create DataStore and Config for the search route test entity
         var dataStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
-        var config = JpaDataStoreConfig.builder(repository, dataStore).build();
+        var config = JpaDataStoreConfig.builder(repository, dataStore)
+                .withServices(fieldService, Map.of(JpaSearchRouteEntity.class, dataStore))
+                .build();
 
         // Create the grid route that will be searchable
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
