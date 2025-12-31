@@ -32,16 +32,29 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
+        FieldType filterColumn = refField.filterField();
+        if (filterColumn == null) {
+            filterColumn = refField.field();
+        }
+        final FieldType finalFilterColumn = filterColumn;
+
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
+                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(finalFilterColumn, filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(finalFilterColumn, filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> refField.children().stream()
-                .map(fieldId -> reflectionService.getString(item, fieldId))
-                .reduce((o, o2) -> o + ", " + o2)
-                .orElse("")
-        );
+        comboBox.setItemLabelGenerator(item -> {
+            if (refField.children() != null && !refField.children().isEmpty()) {
+                return refField.children().stream()
+                        .map(fieldId -> reflectionService.getString(item, fieldId))
+                        .reduce((o, o2) -> o + ", " + o2)
+                        .orElse("");
+            }
+            if (refField.field() != null) {
+                return reflectionService.getString(item, refField.field());
+            }
+            return "";
+        });
 
         // Add a value change listener to handle when a new value is selected
         comboBox.addValueChangeListener(event -> {
