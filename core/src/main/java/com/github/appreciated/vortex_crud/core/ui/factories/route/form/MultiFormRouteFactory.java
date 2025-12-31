@@ -4,7 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -83,7 +83,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
         ModelClass entity;
         if (creationMode) {

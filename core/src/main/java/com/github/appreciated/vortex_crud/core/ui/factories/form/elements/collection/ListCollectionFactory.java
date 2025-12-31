@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.item.DefaultCollectionItem;
@@ -58,7 +58,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         list.add(header);
         Collection<ModelClass, FieldType, RepositoryType> data = internalFormElement.configuration();
 
-        VortexCrudDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = data.dataStoreInstance();
 
         java.util.Collection<Object> records = (data.manyToMany() != null) ?
                 (java.util.Collection<Object>) manyToManyPersistenceStrategy.resolveManyToMany(dataStore, data.manyToMany(), foreignKeyValue) :
@@ -81,7 +81,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                                     VerticalLayout list,
                                     HorizontalLayout header,
                                     java.util.Collection<Object> records,
-                                    VortexCrudDataStore<FieldType, ?> dataStore,
+                                    VortexCrudQueryDataStore<FieldType, ?> dataStore,
                                     VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         ReflectionService<FieldType> reflectionService = context.reflectionService();
         VortexCrudDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();
@@ -107,7 +107,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                                    VerticalLayout list,
                                    HorizontalLayout header,
                                    java.util.Collection<Object> records,
-                                   VortexCrudDataStore<FieldType, ?> dataStore,
+                                   VortexCrudQueryDataStore<FieldType, ?> dataStore,
                                    VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         ReflectionService<FieldType> reflectionService = context.reflectionService();
         VortexCrudDataStoreUtilStrategy dataStoreUtil = context.dataStoreUtil();

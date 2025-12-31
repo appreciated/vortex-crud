@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.security.core.view;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.IdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -50,7 +50,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) config.dataStoreInstance();
+        VortexCrudQueryDataStore<FieldType, Object> dataStore = (VortexCrudQueryDataStore<FieldType, Object>) config.dataStoreInstance();
         Object entity = dataStore.newInstance();
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = config.dataStoreConfig();

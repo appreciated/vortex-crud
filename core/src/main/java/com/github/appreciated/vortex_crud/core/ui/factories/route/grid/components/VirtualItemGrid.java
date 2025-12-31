@@ -3,7 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.grid.componen
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -33,7 +33,7 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final  VortexCrudPathToRouteResolver pathVariables;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudQueryDataStore<FieldType, ?> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
     private final RouteRenderer<ModelClass, FieldType, RepositoryType> config;
     private int minWidth = 250;  // Minimum width in pixels

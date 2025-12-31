@@ -1,6 +1,6 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public interface ManyToMany<ModelClass, FieldType, RepositoryKey> {
     RepositoryKey datastore();
 
 
-    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance();
+    public VortexCrudQueryDataStore<FieldType, ModelClass> dataStoreInstance();
 
     OneToMany<ModelClass, FieldType, RepositoryKey> oneToMany();
 

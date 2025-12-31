@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model.fields;
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.MultiSelectFieldFactory;
 import com.vaadin.flow.data.binder.Validator;
@@ -31,7 +31,7 @@ public class MultiSelectField<ModelClass, FieldType, RepositoryType> implements 
     FieldType field;
     FieldType filterField;
     List<FieldType> children;
-    VortexCrudDataStore<FieldType, ?> dataStore;
+    VortexCrudQueryDataStore<FieldType, ?> dataStore;
 
     public FieldType field() {
         return field;
@@ -45,7 +45,7 @@ public class MultiSelectField<ModelClass, FieldType, RepositoryType> implements 
         return children;
     }
 
-    public VortexCrudDataStore<FieldType, ?> dataStore() {
+    public VortexCrudQueryDataStore<FieldType, ?> dataStore() {
         return dataStore;
     }
 }

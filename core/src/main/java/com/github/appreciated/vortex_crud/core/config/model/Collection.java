@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,7 +40,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
     private List<FieldType> children;
 
     @Override
-    public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
+    public VortexCrudQueryDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig.dataStoreInstance();
     }
 }

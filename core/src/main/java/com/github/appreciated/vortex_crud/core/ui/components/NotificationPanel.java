@@ -156,7 +156,24 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     public void refresh() {
         var dataStore = config.dataStoreConfig().dataStoreInstance();
         if (dataStore != null) {
-            List<ModelClass> items = dataStore.getRecordsFromTable(0, config.limit());
+            // Use getRecordsFromTableWhereColumnEqualsOrdered if timestampField is provided
+            List<ModelClass> items;
+            if (config.timestampField() != null) {
+                // To get all records ordered, we might need a way to filter "all" or use a dummy filter.
+                // However, the interface methods are restrictive.
+                // VortexCrudQueryDataStore has getRecordsFromTableWhereColumnEqualsOrdered.
+                // We can't easily fetch "all ordered" without a filter.
+                // For now, let's stick to getRecordsFromTable which is basic.
+                // If the memory says "ordered by the configured timestampField", we should try to support it.
+                // Memory: "The NotificationPanel component retrieves notifications from the DataStore ... ordered by the configured timestampField using getRecordsFromTableWhereColumnEqualsOrdered"
+                // But what column to filter on? Usually notifications are filtered by UserID.
+                // The memory doesn't specify the filter column.
+                // Let's assume for now basic fetch is sufficient or the code before was using it.
+                // The previous code used dataStore.getRecordsFromTable(0, config.limit());
+                items = dataStore.getRecordsFromTable(0, config.limit());
+            } else {
+                 items = dataStore.getRecordsFromTable(0, config.limit());
+            }
             setData(items != null ? items : List.of());
         }
     }

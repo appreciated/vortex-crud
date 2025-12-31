@@ -2,7 +2,7 @@ package com.github.appreciated.vortex_crud.core.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.SearchResult;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudQueryDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +95,7 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
             }
 
             @SuppressWarnings("unchecked")
-            VortexCrudDataStore<FieldType, ModelClass> dataStore = route.dataStoreConfig().dataStoreInstance();
+            VortexCrudQueryDataStore<FieldType, ModelClass> dataStore = route.dataStoreConfig().dataStoreInstance();
 
             if (dataStore != null) {
                 try {
