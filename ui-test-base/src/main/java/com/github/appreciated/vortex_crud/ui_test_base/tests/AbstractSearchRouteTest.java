@@ -13,7 +13,7 @@ public abstract class AbstractSearchRouteTest extends BaseUITest {
 
     @Test
     void testGlobalSearch() {
-        navigateTo(""); // Navigate to root or dashboard
+        navigateTo("grid"); // Navigate to grid route to ensure app is loaded
 
         // 1. Verify Search Bar is visible
         Locator searchComboBox = page.locator("vaadin-combo-box[placeholder='Search...']");
@@ -24,12 +24,17 @@ public abstract class AbstractSearchRouteTest extends BaseUITest {
         String query = "Test";
         // For Vaadin ComboBox, we need to access the internal input element
         Locator input = searchComboBox.locator("input");
-        input.fill(query);
+        input.click(); // Click to focus and open the dropdown
+        input.pressSequentially(query); // Type the query character by character
+        page.waitForTimeout(500); // Wait for debounce and server response
 
         // 3. Verify results appear in the dropdown
         // Vaadin ComboBox overlay
         Locator overlay = page.locator("vaadin-combo-box-overlay");
         assertThat(overlay).isVisible();
+
+        // Wait for combo box items to load
+        page.waitForSelector("vaadin-combo-box-item", new com.microsoft.playwright.Page.WaitForSelectorOptions().setTimeout(5000));
 
         Locator item = page.getByText("Grid > Test Item");
         assertThat(item).isVisible();

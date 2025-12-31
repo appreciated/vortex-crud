@@ -115,6 +115,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                         globalSearch.setPlaceholder("Search...");
                         globalSearch.setPrefixComponent(VaadinIcon.SEARCH.create());
                         globalSearch.setClearButtonVisible(true);
+                        globalSearch.setPageSize(10); // Enable lazy loading with page size
 
                         // Set Item Label Generator for selected value display
                         globalSearch.setItemLabelGenerator(result -> result.title() + " (" + result.routeTitle() + ")");
