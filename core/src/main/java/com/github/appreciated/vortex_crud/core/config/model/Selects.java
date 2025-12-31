@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Selects implements I18nKeyCollector {
+public class Selects implements ValidatableConfiguration {
     @I18nKey
     private Map<String, LinkedHashMap<?, String>> configs;
 }

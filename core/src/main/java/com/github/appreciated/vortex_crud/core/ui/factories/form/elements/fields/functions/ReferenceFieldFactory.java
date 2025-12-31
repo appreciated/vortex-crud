@@ -18,7 +18,7 @@ public class ReferenceFieldFactory<ModelClass, FieldType, RepositoryType> implem
     public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
         VortexCrudDataStoreFieldNameResolver<FieldType> resolver = context.fieldNameResolver();
         ReflectionService<FieldType> reflectionService = context.reflectionService();
-        return new EntityComboBoxWrapper<>(resolver, dataStoreField, reflectionService);
+        return new EntityComboBoxWrapper<>(resolver, dataStoreField, reflectionService, context.dataStoreUtil());
     }
 
     @NoCoverage

@@ -5,7 +5,7 @@ import com.vaadin.flow.data.binder.Validator;
 
 import java.util.List;
 
-public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled, I18nKeyCollector {
+public interface Field<ModelClass, FieldType, RepositoryType> extends AccessControlled, ValidatableConfiguration {
     VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory();
 
     /**

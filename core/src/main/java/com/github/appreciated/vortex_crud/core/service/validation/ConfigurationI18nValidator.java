@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.service.validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.I18nKeyCollector;
-import com.github.appreciated.vortex_crud.core.config.model.ResolvedI18nKey;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Validates i18n key configuration at application startup.
+ * Uses I18nValidationStrategy to check that all i18n keys exist in translation bundles.
+ */
 @Service
 public class ConfigurationI18nValidator {
 
@@ -28,22 +30,8 @@ public class ConfigurationI18nValidator {
             return;
         }
 
-        // Use the collector interface to get keys
-        List<ResolvedI18nKey> keys = application.collectI18nKeys();
-
-        for (ResolvedI18nKey entry : keys) {
-            validateKey(entry.key(), locales, entry.context());
-        }
-    }
-
-    private void validateKey(String key, List<Locale> locales, String context) {
-        if (key == null || key.trim().isEmpty()) {
-            return;
-        }
-        for (Locale locale : locales) {
-            if (!translationService.containsKey(key, locale)) {
-                LOGGER.warn("Missing i18n key '{}' for locale '{}' in context: {}", key, locale, context);
-            }
-        }
+        // Use the I18nValidationStrategy to validate i18n keys
+        I18nValidationStrategy strategy = new I18nValidationStrategy(translationService, locales);
+        application.validateWith(strategy);
     }
 }

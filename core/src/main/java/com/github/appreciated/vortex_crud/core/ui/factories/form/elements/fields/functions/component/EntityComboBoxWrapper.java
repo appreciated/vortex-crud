@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.field
 
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField;
+import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
@@ -17,14 +18,17 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
 
     private final ComboBox<Object> comboBox;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private Object currentValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                  Field<ModelClass, FieldType, RepositoryType> dataStoreField,
-                                 ReflectionService<FieldType> reflectionService
+                                 ReflectionService<FieldType> reflectionService,
+                                 VortexCrudDataStoreUtilStrategy dataStoreUtil
     ) {
         ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
+        this.dataStoreUtil = dataStoreUtil;
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
@@ -40,7 +44,30 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         );
 
         // Add a value change listener to handle when a new value is selected
-        comboBox.addValueChangeListener(event -> currentValue = event.getValue() != null ? event.getValue() : null);
+        comboBox.addValueChangeListener(event -> {
+            Object selectedEntity = event.getValue();
+            if (selectedEntity != null) {
+                // Extract the ID from the selected entity using the utility strategy
+                String idString = dataStoreUtil.getId(selectedEntity);
+                // Convert the ID string to the appropriate type (Integer, Long, etc.)
+                if (idString != null) {
+                    try {
+                        currentValue = Integer.valueOf(idString);
+                    } catch (NumberFormatException e) {
+                        // If it's not an integer, try other types or keep as string
+                        try {
+                            currentValue = Long.valueOf(idString);
+                        } catch (NumberFormatException ex) {
+                            currentValue = idString;
+                        }
+                    }
+                } else {
+                    currentValue = null;
+                }
+            } else {
+                currentValue = null;
+            }
+        });
         comboBox.setWidthFull();
         add(comboBox);
     }

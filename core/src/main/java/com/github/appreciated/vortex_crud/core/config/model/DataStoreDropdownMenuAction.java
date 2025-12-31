@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> implements I18nKeyCollector {
+public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> implements ValidatableConfiguration {
 
     /**
      * The data store config to use for fetching data

@@ -14,7 +14,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 @Getter
-public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass>, I18nKeyCollector {
+public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass>, ValidatableConfiguration {
 
     private RepositoryType factory;
     private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;

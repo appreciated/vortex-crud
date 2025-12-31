@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Base interface for all route renderers. Child navigation specifics are defined in specialized sub-interfaces.
  */
-public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType>, I18nKeyCollector {
+public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends AccessControlled, HasDataStore<FieldType, ModelClass>, ItemFactory<FieldType>, ValidatableConfiguration {
 
     DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig();
 
