@@ -28,10 +28,10 @@ import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
-import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -54,21 +54,21 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
     @Override
     public com.github.appreciated.vortex_crud.core.config.model.Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
-        JooqDataStore notificationStore = new JooqDataStore(NOTIFICATION.getRecordType(), dsl);
-        JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl);
-        JooqDataStore repositoryStarStore = new JooqDataStore(REPOSITORY_STAR.getRecordType(), dsl);
-        JooqDataStore wikiPageStore = new JooqDataStore(WIKI_PAGE.getRecordType(), dsl);
-        JooqDataStore gitCommitStore = new JooqDataStore(GIT_COMMIT.getRecordType(), dsl);
-        JooqDataStore gitBranchStore = new JooqDataStore(GIT_BRANCH.getRecordType(), dsl);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
+        JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
+        JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
+        JooqDataStore<RepositoryRecord> repositoryStore = new JooqDataStore<>(REPOSITORY.getRecordType(), dsl);
+        JooqDataStore<RepositoryStarRecord> repositoryStarStore = new JooqDataStore<>(REPOSITORY_STAR.getRecordType(), dsl);
+        JooqDataStore<WikiPageRecord> wikiPageStore = new JooqDataStore<>(WIKI_PAGE.getRecordType(), dsl);
+        JooqDataStore<GitCommitRecord> gitCommitStore = new JooqDataStore<>(GIT_COMMIT.getRecordType(), dsl);
+        JooqDataStore<GitBranchRecord> gitBranchStore = new JooqDataStore<>(GIT_BRANCH.getRecordType(), dsl);
 
         // Notification Hooks
-        DataStoreHooks<TableRecord<?>> issueHooks = DataStoreHooks.<TableRecord<?>>builder()
+        DataStoreHooks<IssueRecord> issueHooks = DataStoreHooks.<IssueRecord>builder()
                 .afterCreate(record -> {
                     try {
-                        String title = (String) record.get(ISSUE.TITLE);
+                        String title = record.get(ISSUE.TITLE);
                         Integer repoId = record.get(ISSUE.REPOSITORY_ID);
                         Integer assigneeId = record.get(ISSUE.ASSIGNEE_ID);
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
@@ -99,10 +99,10 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 })
                 .build();
 
-        DataStoreHooks<TableRecord<?>> prHooks = DataStoreHooks.<TableRecord<?>>builder()
+        DataStoreHooks<PullRequestRecord> prHooks = DataStoreHooks.<PullRequestRecord>builder()
                 .afterCreate(record -> {
                     try {
-                        String title = (String) record.get(PULL_REQUEST.TITLE);
+                        String title = record.get(PULL_REQUEST.TITLE);
                         Integer repoId = record.get(PULL_REQUEST.REPOSITORY_ID);
                         Integer assigneeId = record.get(PULL_REQUEST.ASSIGNEE_ID);
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
@@ -133,16 +133,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 })
                 .build();
 
-        JooqDataStore issueStore = new JooqDataStore(ISSUE.getRecordType(), dsl, issueHooks);
-        JooqDataStore pullRequestStore = new JooqDataStore(PULL_REQUEST.getRecordType(), dsl, prHooks);
-        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl);
-        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl);
-        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl);
-        JooqDataStore commentStore = new JooqDataStore(COMMENT.getRecordType(), dsl);
-        JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl);
-        JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl);
-        JooqDataStore organizationMemberStore = new JooqDataStore(ORGANIZATION_MEMBER.getRecordType(), dsl);
-        JooqDataStore repositoryCollaboratorStore = new JooqDataStore(REPOSITORY_COLLABORATOR.getRecordType(), dsl);
+        JooqDataStore<IssueRecord> issueStore = new JooqDataStore<>(ISSUE.getRecordType(), dsl, issueHooks);
+        JooqDataStore<PullRequestRecord> pullRequestStore = new JooqDataStore<>(PULL_REQUEST.getRecordType(), dsl, prHooks);
+        JooqDataStore<OrganizationRecord> organizationStore = new JooqDataStore<>(ORGANIZATION.getRecordType(), dsl);
+        JooqDataStore<MilestoneRecord> milestoneStore = new JooqDataStore<>(MILESTONE.getRecordType(), dsl);
+        JooqDataStore<LabelRecord> labelStore = new JooqDataStore<>(LABEL.getRecordType(), dsl);
+        JooqDataStore<CommentRecord> commentStore = new JooqDataStore<>(COMMENT.getRecordType(), dsl);
+        JooqDataStore<IssueLabelRecord> issueLabelStore = new JooqDataStore<>(ISSUE_LABEL.getRecordType(), dsl);
+        JooqDataStore<PullRequestLabelRecord> pullRequestLabelStore = new JooqDataStore<>(PULL_REQUEST_LABEL.getRecordType(), dsl);
+        JooqDataStore<OrganizationMemberRecord> organizationMemberStore = new JooqDataStore<>(ORGANIZATION_MEMBER.getRecordType(), dsl);
+        JooqDataStore<RepositoryCollaboratorRecord> repositoryCollaboratorStore = new JooqDataStore<>(REPOSITORY_COLLABORATOR.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -594,7 +594,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                             Integer count = repo.get(REPOSITORY.STAR_COUNT);
                                             repo.set(REPOSITORY.STAR_COUNT, count != null ? count + 1 : 1);
                                         }
-                                        repositoryStore.updateRecordById((UpdatableRecord) repo);
+                                        repositoryStore.updateRecordById((RepositoryRecord) repo);
                                     }
                                 })
                                 .build()
@@ -697,16 +697,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .dataStoreConfig(usersConfig)
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
-                                        REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<>(
-                                                repositoryCollaboratorStore,
+                                        REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                                (VortexCrudDataStore) repositoryCollaboratorStore,
                                                 REPOSITORY_COLLABORATOR.USER_ID,
                                                 REPOSITORY_COLLABORATOR.REPOSITORY_ID,
                                                 REPOSITORY_COLLABORATOR.PERMISSION,
                                                 USERS.ID,
                                                 REPOSITORY.ID
                                         ),
-                                        ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<>(
-                                                organizationMemberStore,
+                                        ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                                (VortexCrudDataStore) organizationMemberStore,
                                                 ORGANIZATION_MEMBER.USER_ID,
                                                 ORGANIZATION_MEMBER.ORGANIZATION_ID,
                                                 ORGANIZATION_MEMBER.ROLE,
@@ -715,9 +715,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         )
                                 ),
                                 // Global role strategy
-                                new JoinTableRoleResolutionStrategy<>(
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                        (VortexCrudDataStore) userRolesStore,
+                                        (VortexCrudDataStore) rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

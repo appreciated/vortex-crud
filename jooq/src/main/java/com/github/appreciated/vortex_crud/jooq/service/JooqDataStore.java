@@ -71,7 +71,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     public Object insertRecord(ModelClass entity) {
         // Execute before hooks
         hooks.beforeCreates().forEach(hook -> hook.execute(entity));
-        ModelClass dst = dslContext.newRecord((Table<ModelClass>) getTable());
+        ModelClass dst = dslContext.newRecord(getTable());
         dst.from(entity);
         dst.store();
 
@@ -269,7 +269,7 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     @NotNull
     private Table<ModelClass> getTable() {
         ModelClass modelInstance = newInstance();
-        return (Table<ModelClass>) modelInstance.getTable();
+        return modelInstance.getTable();
     }
 
     private TableField<?, ?> getPrimaryKeyField() {

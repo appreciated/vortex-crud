@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
@@ -36,7 +37,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
 
     @Override
     protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
-        JooqDataStore projectsStore = new JooqDataStore(PROJECTS.getRecordType(), dsl);
+        JooqDataStore<ProjectsRecord> projectsStore = new JooqDataStore<>(PROJECTS.getRecordType(), dsl);
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance(projectsStore)
                 .fields(Map.of(

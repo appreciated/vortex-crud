@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
@@ -74,8 +75,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl);
         JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl);
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
+        JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
 
         // Custom DataStore
         SimpleMapDataStore notesStore = new SimpleMapDataStore();
@@ -513,8 +514,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .dataStoreConfig(usersConfig)
                                 .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        userRolesStore,
-                                        rolesStore,
+                                        (VortexCrudDataStore) userRolesStore,
+                                        (VortexCrudDataStore) rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

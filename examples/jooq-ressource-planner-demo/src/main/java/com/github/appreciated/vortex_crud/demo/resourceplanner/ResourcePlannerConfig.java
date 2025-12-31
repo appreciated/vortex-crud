@@ -62,9 +62,9 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl);
         JooqDataStore<AppointmentRecord> appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
         appointmentBusinessService.setAppointmentStore(appointmentStore);
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
+        JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
+        JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
         JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl);
         JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl);
 
@@ -362,9 +362,9 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .i18nBundlePrefix("rp_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
-                        .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<>(
-                                (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
-                                (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                        .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                (VortexCrudDataStore) userRolesStore,
+                                (VortexCrudDataStore) rolesStore,
                                 USER_ROLES.USER_ID,
                                 USER_ROLES.ROLE_ID,
                                 ROLES.NAME,
