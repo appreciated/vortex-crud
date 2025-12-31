@@ -38,7 +38,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore parentStore = new JooqDataStore(ONE_TO_MANY_PARENT.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore parentStore = new JooqDataStore(ONE_TO_MANY_PARENT.getRecordType(), dsl);
         var parentConfig = JooqDataStoreConfig.of(ONE_TO_MANY_PARENT)
                         .dataStoreInstance((VortexCrudDataStore) parentStore)
                         .fields(Map.of(
@@ -46,7 +46,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                                 ONE_TO_MANY_PARENT.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                         )).build();
 
-        JooqDataStore childStore = new JooqDataStore(ONE_TO_MANY_CHILD.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore childStore = new JooqDataStore(ONE_TO_MANY_CHILD.getRecordType(), dsl);
         var childConfig = JooqDataStoreConfig.of(ONE_TO_MANY_CHILD)
                         .dataStoreInstance((VortexCrudDataStore) childStore)
                         .fields(Map.of(

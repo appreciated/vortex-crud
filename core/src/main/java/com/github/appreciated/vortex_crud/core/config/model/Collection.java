@@ -30,6 +30,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
 
     private FieldType titleField;
 
+    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     private OneToMany<ModelClass, FieldType, RepositoryType> oneToMany;
@@ -40,6 +41,6 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Collec
 
     @Override
     public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
-        return dataStoreConfig != null ? dataStoreConfig.dataStoreInstance() : null;
+        return dataStoreConfig.dataStoreInstance();
     }
 }

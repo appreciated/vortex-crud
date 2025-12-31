@@ -35,7 +35,7 @@ public class JooqSingleComponentRouteVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
                 .dataStoreInstance((VortexCrudDataStore) store)
                 .fields(Map.of(

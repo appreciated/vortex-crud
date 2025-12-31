@@ -35,7 +35,7 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(KANBAN_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(KANBAN_TASKS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(KANBAN_TASKS)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(

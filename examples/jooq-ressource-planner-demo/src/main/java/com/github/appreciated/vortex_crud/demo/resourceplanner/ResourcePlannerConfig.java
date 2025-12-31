@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -14,6 +15,7 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
@@ -52,17 +54,19 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         appointmentHooks.afterUpdates().add(appointmentBusinessService::sendEmailNotification);
 
         // Data Stores
-        JooqDataStore<RoomRecord> roomStore = new JooqDataStore<>(ROOM.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<PersonRecord> personStore = new JooqDataStore<>(PERSON.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<AppointmentTypeRecord> typeStore = new JooqDataStore<>(APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<PersonAppointmentTypeRecord> personTypeStore = new JooqDataStore<>(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<RoomRecord> roomStore = new JooqDataStore<>(ROOM.getRecordType(), dsl);
+        JooqDataStore<PersonRecord> personStore = new JooqDataStore<>(PERSON.getRecordType(), dsl);
+        JooqDataStore<AppointmentTypeRecord> typeStore = new JooqDataStore<>(APPOINTMENT_TYPE.getRecordType(), dsl);
+        JooqDataStore<PersonAppointmentTypeRecord> personTypeStore = new JooqDataStore<>(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl);
         //TODO UNUSED
-        JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl);
         JooqDataStore<AppointmentRecord> appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
         appointmentBusinessService.setAppointmentStore(appointmentStore);
-        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl);
+        JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -358,6 +362,14 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .i18nBundlePrefix("rp_i18n")
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
+                        .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<>(
+                                (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
+                                (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                USER_ROLES.USER_ID,
+                                USER_ROLES.ROLE_ID,
+                                ROLES.NAME,
+                                USERS.ID
+                        ))
                         .availableRoles(com.github.appreciated.vortex_crud.core.config.model.Roles.builder().roles(List.of("admin", "user")).build())
                         .defaultReadRoles(List.of("user"))
                         .defaultWriteRoles(List.of("admin"))

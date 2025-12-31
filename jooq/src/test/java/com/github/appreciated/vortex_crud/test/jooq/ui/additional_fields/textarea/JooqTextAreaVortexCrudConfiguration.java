@@ -55,7 +55,7 @@ public class JooqTextAreaVortexCrudConfiguration
     }
 
     private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createTextAreaTestRoute() {
-        JooqDataStore store = new JooqDataStore(TEXTAREA_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(TEXTAREA_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(TEXTAREA_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(

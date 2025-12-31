@@ -55,7 +55,7 @@ public class JooqPasswordVortexCrudConfiguration
     }
 
     private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createPasswordTestRoute() {
-        JooqDataStore store = new JooqDataStore(PASSWORD_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(PASSWORD_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(PASSWORD_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(

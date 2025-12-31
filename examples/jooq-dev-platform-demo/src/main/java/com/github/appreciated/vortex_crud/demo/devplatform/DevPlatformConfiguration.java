@@ -54,15 +54,15 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
     @Override
     public com.github.appreciated.vortex_crud.core.config.model.Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore notificationStore = new JooqDataStore(NOTIFICATION.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore repositoryStarStore = new JooqDataStore(REPOSITORY_STAR.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore wikiPageStore = new JooqDataStore(WIKI_PAGE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore gitCommitStore = new JooqDataStore(GIT_COMMIT.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore gitBranchStore = new JooqDataStore(GIT_BRANCH.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore notificationStore = new JooqDataStore(NOTIFICATION.getRecordType(), dsl);
+        JooqDataStore repositoryStore = new JooqDataStore(REPOSITORY.getRecordType(), dsl);
+        JooqDataStore repositoryStarStore = new JooqDataStore(REPOSITORY_STAR.getRecordType(), dsl);
+        JooqDataStore wikiPageStore = new JooqDataStore(WIKI_PAGE.getRecordType(), dsl);
+        JooqDataStore gitCommitStore = new JooqDataStore(GIT_COMMIT.getRecordType(), dsl);
+        JooqDataStore gitBranchStore = new JooqDataStore(GIT_BRANCH.getRecordType(), dsl);
 
         // Notification Hooks
         DataStoreHooks<TableRecord<?>> issueHooks = DataStoreHooks.<TableRecord<?>>builder()
@@ -135,14 +135,14 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         JooqDataStore issueStore = new JooqDataStore(ISSUE.getRecordType(), dsl, issueHooks);
         JooqDataStore pullRequestStore = new JooqDataStore(PULL_REQUEST.getRecordType(), dsl, prHooks);
-        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore commentStore = new JooqDataStore(COMMENT.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore organizationMemberStore = new JooqDataStore(ORGANIZATION_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore repositoryCollaboratorStore = new JooqDataStore(REPOSITORY_COLLABORATOR.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore organizationStore = new JooqDataStore(ORGANIZATION.getRecordType(), dsl);
+        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl);
+        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl);
+        JooqDataStore commentStore = new JooqDataStore(COMMENT.getRecordType(), dsl);
+        JooqDataStore issueLabelStore = new JooqDataStore(ISSUE_LABEL.getRecordType(), dsl);
+        JooqDataStore pullRequestLabelStore = new JooqDataStore(PULL_REQUEST_LABEL.getRecordType(), dsl);
+        JooqDataStore organizationMemberStore = new JooqDataStore(ORGANIZATION_MEMBER.getRecordType(), dsl);
+        JooqDataStore repositoryCollaboratorStore = new JooqDataStore(REPOSITORY_COLLABORATOR.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)

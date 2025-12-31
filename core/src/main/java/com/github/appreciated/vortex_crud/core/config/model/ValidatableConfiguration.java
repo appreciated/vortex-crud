@@ -27,7 +27,7 @@ public interface ValidatableConfiguration {
      * Internal method for recursive validation with cycle detection.
      *
      * @param strategy The validation strategy to apply
-     * @param visited Set of already visited objects to prevent infinite recursion
+     * @param visited  Set of already visited objects to prevent infinite recursion
      */
     default void validateWith(ValidationStrategy strategy, Set<Object> visited) {
         if (visited.contains(this)) {

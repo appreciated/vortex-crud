@@ -22,6 +22,7 @@ import java.util.Map;
 @Getter
 public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType> {
 
+    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey

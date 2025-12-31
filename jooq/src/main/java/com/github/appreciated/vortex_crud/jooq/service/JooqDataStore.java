@@ -21,6 +21,16 @@ public class JooqDataStore<ModelClass extends UpdatableRecord<ModelClass>> imple
     private final JooqVortexCrudDataStoreUtilStrategy utilStrategy;
     private final DataStoreHooks<ModelClass> hooks;
 
+    public JooqDataStore(Class<ModelClass> record, DSLContext dslContext) {
+        this.dslContext = dslContext;
+        if (record == null) {
+            throw new IllegalArgumentException("Table name cannot be null");
+        }
+        this.record = record;
+        this.hooks = new DataStoreHooks<>();
+        utilStrategy = new JooqVortexCrudDataStoreUtilStrategy();
+    }
+
     public JooqDataStore(Class<ModelClass> record, DSLContext dslContext, DataStoreHooks<ModelClass> hooks) {
         this.dslContext = dslContext;
         if (record == null) {

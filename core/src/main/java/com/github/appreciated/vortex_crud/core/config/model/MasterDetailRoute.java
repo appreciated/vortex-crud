@@ -25,6 +25,7 @@ import java.util.List;
 @Getter
 public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
+    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
@@ -74,7 +75,9 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     @lombok.Singular
     private List<RouteFilter<FieldType>> routeFilters;
 
-    public List<RouteFilter<FieldType>> filters() { return routeFilters; }
+    public List<RouteFilter<FieldType>> filters() {
+        return routeFilters;
+    }
 
     public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
         return form;

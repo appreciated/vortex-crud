@@ -37,7 +37,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(MANY_TO_MANY_ITEM.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(MANY_TO_MANY_ITEM.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(

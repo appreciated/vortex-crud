@@ -54,7 +54,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .build();
 
         // Referenced Store
-        var referencedStore = new JooqDataStore(MISSING_FEATURES_REFERENCED.getRecordType(), dsl, new DataStoreHooks<>());
+        var referencedStore = new JooqDataStore(MISSING_FEATURES_REFERENCED.getRecordType(), dsl);
         var referencedConfig = JooqDataStoreConfig.of(MISSING_FEATURES_REFERENCED)
                 .dataStoreInstance(referencedStore)
                 .fields(Map.of(
@@ -63,7 +63,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                 )).build();
 
         // Main Store
-        var taskStore = new JooqDataStore(MISSING_FEATURES_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        var taskStore = new JooqDataStore(MISSING_FEATURES_TEST.getRecordType(), dsl);
         var taskConfig = JooqDataStoreConfig.of(MISSING_FEATURES_TEST)
                 .dataStoreInstance(taskStore)
                 .fields(Map.ofEntries(

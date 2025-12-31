@@ -41,8 +41,8 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
      * By default delegates to global role resolution.
      *
      * @param reflectionService the reflection service
-     * @param userEntity the user entity
-     * @param targetEntity the target entity (context)
+     * @param userEntity        the user entity
+     * @param targetEntity      the target entity (context)
      * @return list of roles/authorities
      */
     default List<? extends Serializable> resolveRolesForTarget(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {

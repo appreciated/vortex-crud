@@ -57,7 +57,7 @@ public class JooqLifecycleVortexCrudConfiguration
     }
 
     private RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> createLifecycleTestRoute() {
-        JooqDataStore<LifecycleTestRecord> store = new JooqDataStore<>(LIFECYCLE_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<LifecycleTestRecord> store = new JooqDataStore<>(LIFECYCLE_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(LIFECYCLE_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(

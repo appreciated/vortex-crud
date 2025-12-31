@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * Configuration model for a data store dropdown menu action.
  * This allows adding dropdown components to route menus that fetch data from a VortexCrudDataStore.
  *
- * @param <FieldType> The type used to identify fields
+ * @param <FieldType>      The type used to identify fields
  * @param <RepositoryType> The type of repository key
  */
 @Accessors(fluent = true)
@@ -24,6 +24,7 @@ public class DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> 
     /**
      * The data store config to use for fetching data
      */
+    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     /**

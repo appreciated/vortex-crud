@@ -35,7 +35,7 @@ public class JooqFieldValidationVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(VALIDATION_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(VALIDATION_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(VALIDATION_TEST)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(

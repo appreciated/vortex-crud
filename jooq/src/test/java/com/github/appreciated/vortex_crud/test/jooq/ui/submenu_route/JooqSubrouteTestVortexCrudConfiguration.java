@@ -31,7 +31,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore<>(SUBROUTE_TASKS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore<>(SUBROUTE_TASKS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(SUBROUTE_TASKS)
                         .dataStoreInstance(store)
                         .fields(Map.of(

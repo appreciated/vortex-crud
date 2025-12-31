@@ -22,6 +22,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     /**
      * The data store config containing notification data
      */
+    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     /**

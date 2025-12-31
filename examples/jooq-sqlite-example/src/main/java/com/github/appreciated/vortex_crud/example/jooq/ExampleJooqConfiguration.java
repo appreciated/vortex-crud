@@ -65,17 +65,17 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore<ProjectsRecord> projectsStore = new JooqDataStore<>(PROJECTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<TasksRecord> tasksStore = new JooqDataStore<>(TASKS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<TaskHasTaskRecord> taskHasTaskStore = new JooqDataStore<>(TASK_HAS_TASK.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<TaskCommentsRecord> commentsStore = new JooqDataStore<>(TASK_COMMENTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<ImagesRecord> imagesStore = new JooqDataStore<>(IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<VideosRecord> videosStore = new JooqDataStore<>(VIDEOS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore<ProjectsRecord> projectsStore = new JooqDataStore<>(PROJECTS.getRecordType(), dsl);
+        JooqDataStore<TasksRecord> tasksStore = new JooqDataStore<>(TASKS.getRecordType(), dsl);
+        JooqDataStore<TaskHasTaskRecord> taskHasTaskStore = new JooqDataStore<>(TASK_HAS_TASK.getRecordType(), dsl);
+        JooqDataStore<TaskCommentsRecord> commentsStore = new JooqDataStore<>(TASK_COMMENTS.getRecordType(), dsl);
+        JooqDataStore<ImagesRecord> imagesStore = new JooqDataStore<>(IMAGES.getRecordType(), dsl);
+        JooqDataStore<VideosRecord> videosStore = new JooqDataStore<>(VIDEOS.getRecordType(), dsl);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
+        JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl);
+        JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl);
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
 
         // Custom DataStore
         SimpleMapDataStore notesStore = new SimpleMapDataStore();

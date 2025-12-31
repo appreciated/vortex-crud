@@ -35,7 +35,7 @@ public class JooqI18NTestVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(I18N_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(I18N_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(I18N_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(

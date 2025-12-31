@@ -36,7 +36,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
 
     @Override
     protected RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {
-        JooqDataStore projectsStore = new JooqDataStore(PROJECTS.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore projectsStore = new JooqDataStore(PROJECTS.getRecordType(), dsl);
         var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
                 .dataStoreInstance(projectsStore)
                 .fields(Map.of(

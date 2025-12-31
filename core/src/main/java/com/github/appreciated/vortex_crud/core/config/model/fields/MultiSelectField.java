@@ -32,8 +32,20 @@ public class MultiSelectField<ModelClass, FieldType, RepositoryType> implements 
     FieldType filterField;
     List<FieldType> children;
     VortexCrudDataStore<FieldType, ?> dataStore;
-    public FieldType field() { return field; }
-    public FieldType filterField() { return filterField; }
-    public List<FieldType> children() { return children; }
-    public VortexCrudDataStore<FieldType, ?> dataStore() { return dataStore; }
+
+    public FieldType field() {
+        return field;
+    }
+
+    public FieldType filterField() {
+        return filterField;
+    }
+
+    public List<FieldType> children() {
+        return children;
+    }
+
+    public VortexCrudDataStore<FieldType, ?> dataStore() {
+        return dataStore;
+    }
 }

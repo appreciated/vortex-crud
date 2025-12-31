@@ -52,18 +52,18 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
-        JooqDataStore projectStore = new JooqDataStore(PROJECT.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore taskStore = new JooqDataStore(TASK.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore taskCommentStore = new JooqDataStore(TASK_COMMENT.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore taskLabelStore = new JooqDataStore(TASK_LABEL.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore projectMemberStore = new JooqDataStore(PROJECT_MEMBER.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore timeEntryStore = new JooqDataStore(TIME_ENTRY.getRecordType(), dsl, new DataStoreHooks<>());
-        JooqDataStore attachmentStore = new JooqDataStore(ATTACHMENT.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore projectStore = new JooqDataStore(PROJECT.getRecordType(), dsl);
+        JooqDataStore taskStore = new JooqDataStore(TASK.getRecordType(), dsl);
+        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl);
+        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl);
+        JooqDataStore taskCommentStore = new JooqDataStore(TASK_COMMENT.getRecordType(), dsl);
+        JooqDataStore taskLabelStore = new JooqDataStore(TASK_LABEL.getRecordType(), dsl);
+        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
+        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
+        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore projectMemberStore = new JooqDataStore(PROJECT_MEMBER.getRecordType(), dsl);
+        JooqDataStore timeEntryStore = new JooqDataStore(TIME_ENTRY.getRecordType(), dsl);
+        JooqDataStore attachmentStore = new JooqDataStore(ATTACHMENT.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)

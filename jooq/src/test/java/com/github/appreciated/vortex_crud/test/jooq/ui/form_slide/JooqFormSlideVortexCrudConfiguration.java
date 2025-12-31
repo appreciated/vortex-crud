@@ -34,7 +34,7 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(FROM_SLIDE_IMAGES.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(FROM_SLIDE_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(FROM_SLIDE_IMAGES)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(

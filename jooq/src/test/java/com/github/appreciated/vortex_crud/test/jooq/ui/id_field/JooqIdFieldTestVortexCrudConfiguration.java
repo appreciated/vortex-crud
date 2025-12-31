@@ -33,7 +33,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl, new DataStoreHooks<>());
+        JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(
