@@ -42,7 +42,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(validationEntityRepository, annotationRegistryService, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(validationEntityRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(validationEntityRepository, store)

@@ -45,7 +45,7 @@ class JooqDataStoreTest {
 
     @BeforeEach
     void setUp() {
-        dataStore = new JooqDataStore<>(TestTableRecord.class, dslContext, new DataStoreHooks<>());
+        dataStore = new JooqDataStore<>(TestTableRecord.class, dslContext);
         // Create table for in-memory DB
         dslContext.execute("CREATE TABLE IF NOT EXISTS test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(255) NOT NULL, age INTEGER NOT NULL)");
         // Clear table

@@ -3,13 +3,11 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.single_compon
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreDropdownMenuAction;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.SingleComponentRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
-import com.github.appreciated.vortex_crud.core.ui.actions.DataStoreDropdownMenuActionComponent;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.VortexCrudFieldFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -27,8 +25,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Slf4j
 public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
@@ -123,16 +119,6 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             H2 title = new H2(route.title() != null ? getTranslation(route.title()) : "");
             header.add(title);
             header.expand(title);
-
-            // Menu Actions
-            List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions = route.menuActions();
-            if (menuActions != null) {
-                for (DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType> action : menuActions) {
-                     DataStoreDropdownMenuActionComponent<ModelClass, FieldType, RepositoryType> actionComponent = 
-                        new DataStoreDropdownMenuActionComponent<>(action, entity, context, route);
-                     header.add(actionComponent);
-                }
-            }
 
             // Roles Logic
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker = context.rbacPermissionChecker();

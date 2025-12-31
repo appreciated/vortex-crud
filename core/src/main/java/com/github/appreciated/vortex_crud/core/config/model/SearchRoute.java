@@ -27,17 +27,19 @@ public class SearchRoute<ModelClass, FieldType, RepositoryType> implements Route
     private boolean isHiddenInMenu;
     private SerializableSupplier<Component> iconFactory;
 
+    /**
+     * Optional list of specific routes to search within.
+     * If provided, only these routes will be searched.
+     * If null or empty, all routes with dataStoreConfig and filterField will be searched.
+     */
+    private List<RouteRenderer<ModelClass, FieldType, RepositoryType>> searchableRoutes;
+
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new SearchRouteFactory<>();
 
     @Override
     public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() {
         return null;
-    }
-
-    @Override
-    public List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions() {
-        return Collections.emptyList();
     }
 
     @Override

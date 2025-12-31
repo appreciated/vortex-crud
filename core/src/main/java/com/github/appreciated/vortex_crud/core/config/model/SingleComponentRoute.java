@@ -44,6 +44,4 @@ public class SingleComponentRoute<ModelClass, FieldType, RepositoryType> impleme
     private FieldType entityFilterField;
 
     private SerializableSupplier<Object> entityFilterValueProvider;
-
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 }

@@ -39,7 +39,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var multiFormStore = new JpaRepositoryDataStore<>(multiFormRepository, annotationRegistryService, new DataStoreHooks<>());
+        var multiFormStore = new JpaRepositoryDataStore<>(multiFormRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(multiFormStore.getModelClass(), multiFormStore);
 
         var multiFormConfig = JpaDataStoreConfig.builder(multiFormRepository, multiFormStore)

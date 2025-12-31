@@ -36,7 +36,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         // Create the data store
-        var store = new JpaRepositoryDataStore<>(selectFieldRepository, annotationRegistryService, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(selectFieldRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(selectFieldRepository, store)

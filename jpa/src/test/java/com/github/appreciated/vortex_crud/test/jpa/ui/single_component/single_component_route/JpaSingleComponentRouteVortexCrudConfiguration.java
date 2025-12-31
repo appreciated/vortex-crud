@@ -37,7 +37,7 @@ public class JpaSingleComponentRouteVortexCrudConfiguration
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(repository, registry, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(repository, registry);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(repository, store)

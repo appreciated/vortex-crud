@@ -81,8 +81,6 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular

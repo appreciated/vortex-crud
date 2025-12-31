@@ -31,7 +31,22 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
         this.permissionChecker = permissionChecker;
     }
 
+    /**
+     * Search across all routes with dataStoreConfig and filterField.
+     */
     public List<SearchResult> search(String query) {
+        return search(query, null);
+    }
+
+    /**
+     * Search within specific routes.
+     *
+     * @param query             The search query
+     * @param specificRoutes    Optional list of specific routes to search within.
+     *                          If null or empty, all routes will be searched.
+     * @return List of search results
+     */
+    public List<SearchResult> search(String query, List<RouteRenderer<ModelClass, FieldType, RepositoryType>> specificRoutes) {
         if (query == null || query.isBlank()) {
             return Collections.emptyList();
         }
@@ -40,41 +55,70 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
         @SuppressWarnings("unchecked")
         Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes = (Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>>) (Map<?, ?>) configService.configuration().routes();
 
-        routes.forEach((path, route) -> {
-            if (route.dataStoreConfig() != null && route.filterField() != null) {
-                // Check permissions
-                if (permissionChecker != null && !permissionChecker.hasUserReadAccessToRoute(route)) {
-                    return;
-                }
-
-                @SuppressWarnings("unchecked")
-                VortexCrudDataStore<FieldType, ModelClass> dataStore = route.dataStoreConfig().dataStoreInstance();
-
-                if (dataStore != null) {
-                    try {
-                        List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(
-                                route.filterField(),
-                                query,
-                                route.filters(),
-                                0,
-                                5 // Limit results per domain
-                        );
-
-                        for (ModelClass result : results) {
-                            String title = getRecordTitle(route, result);
-                            Object id = getRecordId(result);
-                            if (id != null) {
-                                allResults.add(new SearchResult(title, path, route.title(), id));
-                            }
-                        }
-                    } catch (Exception e) {
-                        log.error("Error performing search for route: " + route.title(), e);
-                    }
+        // If specific routes are provided, only search those
+        if (specificRoutes != null && !specificRoutes.isEmpty()) {
+            for (RouteRenderer<ModelClass, FieldType, RepositoryType> route : specificRoutes) {
+                // Find the path for this route
+                String routePath = findRoutePathInMap(routes, route);
+                if (routePath != null) {
+                    searchRoute(query, routePath, route, allResults);
                 }
             }
-        });
+        } else {
+            // Search all routes
+            routes.forEach((path, route) -> searchRoute(query, path, route, allResults));
+        }
 
         return allResults;
+    }
+
+    /**
+     * Find the path key for a given route in the routes map.
+     */
+    private String findRoutePathInMap(Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes, RouteRenderer<ModelClass, FieldType, RepositoryType> targetRoute) {
+        for (Map.Entry<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> entry : routes.entrySet()) {
+            if (entry.getValue() == targetRoute) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Search a single route and add results to the allResults list.
+     */
+    private void searchRoute(String query, String path, RouteRenderer<ModelClass, FieldType, RepositoryType> route, List<SearchResult> allResults) {
+        if (route.dataStoreConfig() != null && route.filterField() != null) {
+            // Check permissions
+            if (permissionChecker != null && !permissionChecker.hasUserReadAccessToRoute(route)) {
+                return;
+            }
+
+            @SuppressWarnings("unchecked")
+            VortexCrudDataStore<FieldType, ModelClass> dataStore = route.dataStoreConfig().dataStoreInstance();
+
+            if (dataStore != null) {
+                try {
+                    List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(
+                            route.filterField(),
+                            query,
+                            route.filters(),
+                            0,
+                            5 // Limit results per domain
+                    );
+
+                    for (ModelClass result : results) {
+                        String title = getRecordTitle(route, result);
+                        Object id = getRecordId(result);
+                        if (id != null) {
+                            allResults.add(new SearchResult(title, path, route.title(), id));
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("Error performing search for route: " + route.title(), e);
+                }
+            }
+        }
     }
 
     private String getRecordTitle(RouteRenderer<ModelClass, FieldType, RepositoryType> route, ModelClass result) {

@@ -46,8 +46,8 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var parentStore = new JpaRepositoryDataStore<>(parentRepository, annotationRegistryService, new DataStoreHooks<>());
-        var childStore = new JpaRepositoryDataStore<>(childRepository, annotationRegistryService, new DataStoreHooks<>());
+        var parentStore = new JpaRepositoryDataStore<>(parentRepository, annotationRegistryService);
+        var childStore = new JpaRepositoryDataStore<>(childRepository, annotationRegistryService);
 
         Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
         storeMap.put(parentStore.getModelClass(), parentStore);

@@ -30,6 +30,11 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
     private final DataStoreHooks<ModelClass> hooks;
 
     public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
+                                  JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService) {
+        this(repository,jpaFieldAnnotationRegistryService,new DataStoreHooks<>());
+    }
+
+    public JpaRepositoryDataStore(JpaRepository<ModelClass, ?> repository,
                                   JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService,
                                   DataStoreHooks<ModelClass> hooks) {
         this.repository = (JpaRepository<ModelClass, Object>) repository;

@@ -71,15 +71,6 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
 
     private List<String> readOnlyRoles;
 
-    // Duplicated children field removed/handled above.
-    // private List<? extends InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    /**
-     * List of menu actions for adding custom components to the menu.
-     * This can include dropdowns, filters, action buttons, etc.
-     */
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     /**
      * List of custom route actions with full access to data store and selected entities.
      * These actions will be rendered in the route header and automatically

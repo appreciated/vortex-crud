@@ -34,18 +34,8 @@ public class SingleEntityRouteAction<FieldType, ModelClass> implements RouteActi
     private final boolean visible = true;
 
     @Override
-    public SerializableSupplier<Component> componentFactory() {
-        return componentFactory;
-    }
-
-    @Override
     public void handle(RouteActionContext<FieldType, ModelClass> context) {
         handler.accept(context);
-    }
-
-    @Override
-    public boolean visible() {
-        return visible;
     }
 
     /**

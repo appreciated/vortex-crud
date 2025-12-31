@@ -91,7 +91,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
     }
 
     private <T> JpaRepositoryDataStore<T> createStore(JpaRepository<T, ?> repo) {
-        return new JpaRepositoryDataStore<>(repo, annotationRegistryService, new DataStoreHooks<>());
+        return new JpaRepositoryDataStore<>(repo, annotationRegistryService);
     }
 
     @Override

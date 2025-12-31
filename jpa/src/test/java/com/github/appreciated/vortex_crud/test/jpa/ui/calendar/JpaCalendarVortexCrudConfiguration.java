@@ -36,7 +36,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var dataStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
+        var dataStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
         var config = JpaDataStoreConfig.builder(repository, dataStore)
                         .withServices(fieldService, Map.of(JpaEventEntity.class, dataStore))
                         .build();

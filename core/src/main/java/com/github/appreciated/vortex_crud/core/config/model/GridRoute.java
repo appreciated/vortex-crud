@@ -70,8 +70,6 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
         return form;
     }
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular

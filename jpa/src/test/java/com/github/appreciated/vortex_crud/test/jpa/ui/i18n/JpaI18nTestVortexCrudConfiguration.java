@@ -36,7 +36,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService, new DataStoreHooks<>());
+        var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(imageStore.getModelClass(), imageStore);
 
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore)

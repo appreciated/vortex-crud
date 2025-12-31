@@ -70,8 +70,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private List<String> readOnlyRoles;
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @Builder.Default

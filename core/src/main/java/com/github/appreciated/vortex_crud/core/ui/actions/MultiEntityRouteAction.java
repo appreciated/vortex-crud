@@ -46,18 +46,8 @@ public class MultiEntityRouteAction<FieldType, ModelClass> implements RouteActio
     private final int maxSelectionCount = Integer.MAX_VALUE;
 
     @Override
-    public SerializableSupplier<Component> componentFactory() {
-        return componentFactory;
-    }
-
-    @Override
     public void handle(RouteActionContext<FieldType, ModelClass> context) {
         handler.accept(context);
-    }
-
-    @Override
-    public boolean visible() {
-        return visible;
     }
 
     /**

@@ -33,14 +33,6 @@ public class Application<ModelClass, FieldType, RepositoryType> implements Valid
     private Map<String, RouteRenderer<?, ?, ?>> routes;
 
     /**
-     * Default menu actions that will be applied to all routes.
-     * These can be overridden or supplemented by route-specific menu actions.
-     */
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> defaultMenuActions;
-
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
-    /**
      * Optional notification panel configuration.
      * When provided, a notification bell icon will be displayed in the application header.
      */

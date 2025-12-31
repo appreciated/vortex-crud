@@ -61,7 +61,7 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
     }
 
     private RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createLifecycleTestRoute() {
-        var store = new JpaRepositoryDataStore<>(lifecycleTestRepository, annotationRegistryService, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(lifecycleTestRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(lifecycleTestRepository, store)

@@ -61,7 +61,7 @@ public class JpaPasswordVortexCrudConfiguration implements VortexCrudConfigurati
     }
 
     private RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> createPasswordTestRoute() {
-        var store = new JpaRepositoryDataStore<>(passwordTestRepository, annotationRegistryService, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(passwordTestRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(passwordTestRepository, store)

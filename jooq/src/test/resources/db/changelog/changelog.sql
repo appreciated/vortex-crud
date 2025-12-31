@@ -325,3 +325,26 @@ CREATE TABLE textarea_test
     price       DECIMAL(10, 2),
     video_url   VARCHAR(255)
 );
+
+-- changeset Create search_route_test:34
+CREATE TABLE search_route_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL
+);
+
+-- changeset Create notification_panel_test:35
+CREATE TABLE notification_panel_test
+(
+    id          INTEGER PRIMARY KEY,
+    message     VARCHAR(255) NOT NULL,
+    timestamp   TIMESTAMP,
+    read        BOOLEAN
+);
+
+-- changeset Create datastore_dropdown_test:36
+CREATE TABLE datastore_dropdown_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL
+);

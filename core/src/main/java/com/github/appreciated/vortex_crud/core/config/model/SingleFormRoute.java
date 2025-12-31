@@ -87,8 +87,6 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
         return entityFilterValueProvider;
     }
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
 }

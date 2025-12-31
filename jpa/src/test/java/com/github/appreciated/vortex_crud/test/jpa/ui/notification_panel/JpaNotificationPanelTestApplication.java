@@ -8,13 +8,11 @@ import com.vaadin.flow.theme.aura.Aura;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @StyleSheet(Aura.STYLESHEET)
 @ColorScheme(ColorScheme.Value.DARK)
 @Push
-@EnableJpaRepositories(basePackageClasses = {JpaNotificationRepository.class})
 @Import({JpaNotificationPanelVortexCrudConfiguration.class})
 public class JpaNotificationPanelTestApplication implements AppShellConfigurator {
     public static void main(String[] args) {

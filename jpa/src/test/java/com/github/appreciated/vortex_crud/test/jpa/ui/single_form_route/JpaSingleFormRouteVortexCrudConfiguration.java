@@ -50,7 +50,7 @@ public class JpaSingleFormRouteVortexCrudConfiguration implements VortexCrudConf
             .build();
 
 
-        var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
+        var taskStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
 
         var taskConfig = JpaDataStoreConfig.builder(repository, taskStore)

@@ -36,7 +36,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(repository, annotationRegistryService, new DataStoreHooks<>());
+        var store = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
         var config = JpaDataStoreConfig.builder(repository, store)

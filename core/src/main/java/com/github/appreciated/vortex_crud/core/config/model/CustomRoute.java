@@ -22,7 +22,6 @@ import java.util.List;
 @Getter
 public class CustomRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
-    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
@@ -45,8 +44,6 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
-
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 

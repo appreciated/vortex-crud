@@ -70,8 +70,6 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     SerializableSupplier<Component> iconFactory();
 
-    List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions();
-
     default java.util.List<RouteFilter<FieldType>> filters() {
         return java.util.Collections.emptyList();
     }

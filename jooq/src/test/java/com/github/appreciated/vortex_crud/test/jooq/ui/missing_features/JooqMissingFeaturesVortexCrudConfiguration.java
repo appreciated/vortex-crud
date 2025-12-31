@@ -145,13 +145,6 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                     .handler(ctx -> Notification.show("Multi Action Executed"))
                     .build()
             ))
-            .menuActions(List.of(
-                DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                    .dataStoreConfig(referencedConfig)
-                    .label("missing-features.menu.referenced-filter")
-                    .labelField(MISSING_FEATURES_REFERENCED.NAME)
-                    .build()
-            ))
             .form(form)
             .build());
 

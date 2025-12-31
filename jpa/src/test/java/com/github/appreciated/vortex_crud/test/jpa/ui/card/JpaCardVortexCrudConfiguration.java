@@ -35,7 +35,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService, new DataStoreHooks<>());
+        var imageStore = new JpaRepositoryDataStore<>(imageRepository, annotationRegistryService);
         var imageConfig = JpaDataStoreConfig.builder(imageRepository, imageStore)
                         .fields(Map.of(
                                 "id", NumericIdField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),

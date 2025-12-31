@@ -42,7 +42,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var itemStore = new JpaRepositoryDataStore<>(itemRepository, annotationRegistryService, new DataStoreHooks<>());
+        var itemStore = new JpaRepositoryDataStore<>(itemRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(itemStore.getModelClass(), itemStore);
 
         var itemConfig = JpaDataStoreConfig.builder(itemRepository, itemStore)

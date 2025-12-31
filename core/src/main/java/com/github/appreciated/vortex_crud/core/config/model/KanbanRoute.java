@@ -74,8 +74,6 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
         return form;
     }
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular

@@ -46,8 +46,6 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap;
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     @Override
     public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() {
         return null;

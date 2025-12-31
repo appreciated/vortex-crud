@@ -72,8 +72,6 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns;
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular

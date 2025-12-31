@@ -38,7 +38,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var taskStore = new JpaRepositoryDataStore<>(taskRepository, annotationRegistryService, new DataStoreHooks<>());
+        var taskStore = new JpaRepositoryDataStore<>(taskRepository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(taskStore.getModelClass(), taskStore);
 
         var taskConfig = JpaDataStoreConfig.builder(taskRepository, taskStore)

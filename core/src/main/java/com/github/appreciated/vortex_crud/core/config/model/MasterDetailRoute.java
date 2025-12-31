@@ -68,25 +68,10 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
-    private List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions;
-
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular
     private List<RouteFilter<FieldType>> routeFilters;
-
-    public List<RouteFilter<FieldType>> filters() {
-        return routeFilters;
-    }
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
-
-    @Override
-    public VortexCrudItemFactory<FieldType> itemFactory() {
-        return itemFactory;
-    }
 
     @Override
     public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() {

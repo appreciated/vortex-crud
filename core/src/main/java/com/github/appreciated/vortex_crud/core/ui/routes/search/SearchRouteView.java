@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.core.ui.routes.search;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.SearchResult;
+import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
@@ -25,19 +26,19 @@ import java.util.Map;
 public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends VerticalLayout {
 
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
-    private final RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer;
+    private final SearchRoute<ModelClass, FieldType, RepositoryType> searchRoute;
     private final VerticalLayout resultsContainer;
     private final TextField searchField;
 
     public SearchRouteView(VortexCrudContext<ModelClass, FieldType, RepositoryType> context, RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer) {
         this.context = context;
-        this.routeRenderer = routeRenderer;
+        this.searchRoute = (SearchRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
         setPadding(true);
         setSpacing(true);
         setSizeFull();
 
-        add(new H2(routeRenderer.title()));
+        add(new H2(searchRoute.title()));
 
         searchField = new TextField();
         searchField.setPlaceholder("Search...");
@@ -85,7 +86,8 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
              UI.getCurrent().getPage().getHistory().replaceState(null, "?q=" + searchValue);
         }
 
-        List<SearchResult> results = context.globalSearchService().search(searchValue);
+        // Use searchableRoutes if provided, otherwise search all routes
+        List<SearchResult> results = context.globalSearchService().search(searchValue, searchRoute.searchableRoutes());
 
         if (results.isEmpty()) {
             resultsContainer.add(new Span("No results found."));

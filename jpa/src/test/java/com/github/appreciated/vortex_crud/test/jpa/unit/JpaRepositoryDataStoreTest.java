@@ -41,7 +41,7 @@ class JpaRepositoryDataStoreTest {
     @BeforeEach
     void setUp() {
         createTestTable();
-        dataStore = new JpaRepositoryDataStore(testRepository, jpaFieldAnnotationRegistryService, new DataStoreHooks<>());
+        dataStore = new JpaRepositoryDataStore(testRepository, jpaFieldAnnotationRegistryService);
     }
 
     @AfterEach
