@@ -69,7 +69,8 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    ui.access(this::onBrowserWindowResize);
+                    if (ui.isAttached())
+                        ui.access(this::onBrowserWindowResize);
                 }).start();
             }
         });
