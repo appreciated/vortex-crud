@@ -11,6 +11,8 @@ import com.github.appreciated.vortex_crud.jooq.models.tables.records.SearchRoute
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqApplication;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqDataStoreConfig;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFormRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
@@ -49,11 +51,23 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
                         ))
                         .build();
 
+        // Create a form route for editing items
+        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formRoute = JooqFormRoute.builder()
+                .dataStoreConfig(config)
+                .title("Edit Item")
+                .titleField(SEARCH_ROUTE_TEST.NAME)
+                .children(List.of(
+                        JooqFieldElement.of(SEARCH_ROUTE_TEST.NAME, "Name").build()
+                ))
+                .build();
+
         // Create the grid route that will be searchable
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> gridRoute = JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Grid")
+                .titleField(SEARCH_ROUTE_TEST.NAME)
                 .filterField(SEARCH_ROUTE_TEST.NAME)
+                .form(formRoute)
                 .build();
 
         // Create search route with explicit searchable routes
@@ -65,6 +79,7 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
 
         return JooqApplication.builder()
                 .applicationName("Search Test App")
+                .i18nBundlePrefix("ui_test_i18n")
                 .routes(Map.of(
                         "grid", gridRoute,
                         "search", searchRoute

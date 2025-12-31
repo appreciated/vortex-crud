@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.SearchResult;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
+import com.vaadin.flow.data.provider.AbstractDataProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
+public class GlobalSearchService<ModelClass, FieldType, RepositoryType> extends AbstractDataProvider<SearchResult, String> {
 
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
     private final ReflectionService<FieldType> reflectionService;
@@ -138,5 +139,36 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // DataProvider interface implementation
+
+    @Override
+    public java.util.stream.Stream<SearchResult> fetch(com.vaadin.flow.data.provider.Query<SearchResult, String> query) {
+        String filter = query.getFilter().orElse("");
+        if (filter.isBlank()) {
+            return java.util.stream.Stream.empty();
+        }
+        // Properly use query pagination parameters
+        int offset = query.getOffset();
+        int limit = query.getLimit();
+
+        return search(filter).stream()
+                .skip(offset)
+                .limit(limit);
+    }
+
+    @Override
+    public int size(com.vaadin.flow.data.provider.Query<SearchResult, String> query) {
+        String filter = query.getFilter().orElse("");
+        if (filter.isBlank()) {
+            return 0;
+        }
+        return search(filter).size();
+    }
+
+    @Override
+    public boolean isInMemory() {
+        return false;
     }
 }

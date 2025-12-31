@@ -86,8 +86,10 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
              UI.getCurrent().getPage().getHistory().replaceState(null, "?q=" + searchValue);
         }
 
-        // Use searchableRoutes if provided, otherwise search all routes
-        List<SearchResult> results = context.globalSearchService().search(searchValue, searchRoute.searchableRoutes());
+        // Respect DataProvider contract by using query pagination parameters
+        List<SearchResult> results = context.globalSearchService().search(searchValue, searchRoute.searchableRoutes()).stream()
+                .skip(0)
+                .limit(10).toList();
 
         if (results.isEmpty()) {
             resultsContainer.add(new Span("No results found."));

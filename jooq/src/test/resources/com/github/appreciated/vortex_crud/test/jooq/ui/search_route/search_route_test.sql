@@ -4,5 +4,5 @@ CREATE TABLE search_route_test (
     name VARCHAR(255)
 );
 
-INSERT INTO search_route_test (id, name) VALUES (1, 'Test Item 1');
+INSERT INTO search_route_test (id, name) VALUES (1, 'Test Item');
 INSERT INTO search_route_test (id, name) VALUES (2, 'Other Item');

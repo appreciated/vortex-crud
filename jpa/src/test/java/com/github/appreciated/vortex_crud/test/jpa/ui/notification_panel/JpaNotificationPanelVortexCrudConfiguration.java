@@ -3,16 +3,17 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.notification_panel;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collections;
 import java.util.Map;
 
 @Configuration
@@ -33,19 +34,27 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
         var dataStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
-        DataStoreConfig config = JpaDataStoreConfig.builder(repository, dataStore)
+        DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> config = JpaDataStoreConfig.builder(repository, dataStore)
                 .withServices(fieldService, Map.of(JpaNotificationPanelEntity.class, dataStore))
                 .build();
-        
+
+        // Add a simple grid route so the router layout renders
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
+                .dataStoreConfig(config)
+                .title("Home")
+                .defaultRoute(true)
+                .build();
+
         return JpaApplication.builder()
                 .applicationName("Notification Test App")
+                .i18nBundlePrefix("ui_test_i18n")
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                         .dataStoreConfig(config)
                         .messageField("message")
                         .timestampField("timestamp")
                         .readStatusField("read")
                         .build())
-                .routes(Collections.emptyMap())
+                .routes(Map.of("home", gridRoute))
                 .build();
     }
 }

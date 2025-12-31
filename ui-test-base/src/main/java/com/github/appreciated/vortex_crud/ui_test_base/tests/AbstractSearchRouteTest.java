@@ -22,16 +22,17 @@ public abstract class AbstractSearchRouteTest extends BaseUITest {
         // 2. Perform a search
         // We assume there is data seeded (e.g., "Test Item") that matches the query.
         String query = "Test";
-        searchComboBox.fill(query);
+        // For Vaadin ComboBox, we need to access the internal input element
+        Locator input = searchComboBox.locator("input");
+        input.fill(query);
 
         // 3. Verify results appear in the dropdown
         // Vaadin ComboBox overlay
         Locator overlay = page.locator("vaadin-combo-box-overlay");
         assertThat(overlay).isVisible();
 
-        Locator item = overlay.locator("vaadin-combo-box-item").first();
+        Locator item = page.getByText("Grid > Test Item");
         assertThat(item).isVisible();
-        assertThat(item).containsText(query);
 
         // 4. Select a result and verify navigation
         item.click();

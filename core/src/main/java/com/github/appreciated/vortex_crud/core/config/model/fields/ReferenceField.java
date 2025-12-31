@@ -29,7 +29,9 @@ public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Fi
     @Builder.Default
     private VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new ReferenceFieldFactory<>();
 
+    @lombok.NonNull
     private FieldType field;
+    @lombok.NonNull
     private FieldType filterField;
     private List<FieldType> children;
     private VortexCrudDataStore<FieldType, ?> dataStore;

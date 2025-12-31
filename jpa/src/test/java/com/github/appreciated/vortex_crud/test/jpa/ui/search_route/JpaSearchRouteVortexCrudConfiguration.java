@@ -9,6 +9,8 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,11 +42,23 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
                 .withServices(fieldService, Map.of(JpaSearchRouteEntity.class, dataStore))
                 .build();
 
+        // Create a form route for editing items
+        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> formRoute = JpaFormRoute.builder()
+                .dataStoreConfig(config)
+                .title("Edit Item")
+                .titleField("name")
+                .children(List.of(
+                        JpaFieldElement.builder("name", "Name").build()
+                ))
+                .build();
+
         // Create the grid route that will be searchable
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Grid")
+                .titleField("name")
                 .filterField("name")
+                .form(formRoute)
                 .build();
 
         // Create search route with explicit searchable routes
@@ -56,6 +70,7 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
 
         return JpaApplication.builder()
                 .applicationName("Search Test App")
+                .i18nBundlePrefix("ui_test_i18n")
                 .routes(Map.of(
                         "grid", gridRoute,
                         "search", searchRoute
