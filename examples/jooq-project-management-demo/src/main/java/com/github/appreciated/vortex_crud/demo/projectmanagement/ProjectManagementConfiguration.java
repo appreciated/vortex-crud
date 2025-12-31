@@ -33,6 +33,8 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
+import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,18 +54,18 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
-        JooqDataStore projectStore = new JooqDataStore(PROJECT.getRecordType(), dsl);
-        JooqDataStore taskStore = new JooqDataStore(TASK.getRecordType(), dsl);
-        JooqDataStore milestoneStore = new JooqDataStore(MILESTONE.getRecordType(), dsl);
-        JooqDataStore labelStore = new JooqDataStore(LABEL.getRecordType(), dsl);
-        JooqDataStore taskCommentStore = new JooqDataStore(TASK_COMMENT.getRecordType(), dsl);
-        JooqDataStore taskLabelStore = new JooqDataStore(TASK_LABEL.getRecordType(), dsl);
-        JooqDataStore usersStore = new JooqDataStore(USERS.getRecordType(), dsl);
-        JooqDataStore rolesStore = new JooqDataStore(ROLES.getRecordType(), dsl);
-        JooqDataStore userRolesStore = new JooqDataStore(USER_ROLES.getRecordType(), dsl);
-        JooqDataStore projectMemberStore = new JooqDataStore(PROJECT_MEMBER.getRecordType(), dsl);
-        JooqDataStore timeEntryStore = new JooqDataStore(TIME_ENTRY.getRecordType(), dsl);
-        JooqDataStore attachmentStore = new JooqDataStore(ATTACHMENT.getRecordType(), dsl);
+        JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
+        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl);
+        JooqDataStore<MilestoneRecord> milestoneStore = new JooqDataStore<>(MILESTONE.getRecordType(), dsl);
+        JooqDataStore<LabelRecord> labelStore = new JooqDataStore<>(LABEL.getRecordType(), dsl);
+        JooqDataStore<TaskCommentRecord> taskCommentStore = new JooqDataStore<>(TASK_COMMENT.getRecordType(), dsl);
+        JooqDataStore<TaskLabelRecord> taskLabelStore = new JooqDataStore<>(TASK_LABEL.getRecordType(), dsl);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
+        JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
+        JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
+        JooqDataStore<ProjectMemberRecord> projectMemberStore = new JooqDataStore<>(PROJECT_MEMBER.getRecordType(), dsl);
+        JooqDataStore<TimeEntryRecord> timeEntryStore = new JooqDataStore<>(TIME_ENTRY.getRecordType(), dsl);
+        JooqDataStore<AttachmentRecord> attachmentStore = new JooqDataStore<>(ATTACHMENT.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -479,8 +481,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .dataStoreConfig(usersConfig)
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
-                                        PROJECT.getRecordType(), new JoinTableRoleResolutionStrategy<>(
-                                                projectMemberStore,
+                                        PROJECT.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                                (VortexCrudDataStore) projectMemberStore,
                                                 PROJECT_MEMBER.USER_ID,
                                                 PROJECT_MEMBER.PROJECT_ID,
                                                 PROJECT_MEMBER.ROLE,
@@ -489,9 +491,9 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                         )
                                 ),
                                 // Global role strategy
-                                new JoinTableRoleResolutionStrategy<>(
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) userRolesStore,
-                                        (VortexCrudDataStore<TableField<?, ?>, Object>) rolesStore,
+                                new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
+                                        (VortexCrudDataStore) userRolesStore,
+                                        (VortexCrudDataStore) rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,
