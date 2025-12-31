@@ -31,7 +31,7 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MultiFormRouteFactory<>();
@@ -39,7 +39,7 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private final boolean isDeleteButtonHidden = false;
 

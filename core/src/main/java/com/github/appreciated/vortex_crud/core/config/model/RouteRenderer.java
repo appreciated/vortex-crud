@@ -26,7 +26,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
 
     String title();
 
-    boolean isDefaultRoute();
+    boolean defaultRoute();
 
     VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory();
 
@@ -34,7 +34,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
         return null;
     }
 
-    boolean isHiddenInMenu();
+    boolean hiddenInMenu();
 
     default VortexCrudItemFactory<FieldType> itemFactory() {
         return null;

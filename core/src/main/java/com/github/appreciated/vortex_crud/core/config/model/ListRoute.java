@@ -31,7 +31,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new ListRouteFactory<>();
@@ -39,7 +39,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();

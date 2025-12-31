@@ -31,7 +31,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new KanbanFactory<>();
@@ -39,7 +39,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();

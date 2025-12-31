@@ -294,7 +294,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         // Routes map can accept any RouteRenderer type (jOOQ, JPA, or custom)
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JooqGridRoute.builder()
-                .isDefaultRoute(true)
+                .defaultRoute(true)
                 .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
@@ -535,17 +535,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 ))
                                 .build()
                 )
-                // DataStoreDropdownMenuAction is disabled due to missing core dependency
-                /*
-                .menuActions(List.of(
-                        DataStoreDropdownMenuAction.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                                .dataStoreConfig(usersConfig)
-                                .labelField(USERS.USERNAME)
-                                .placeholder("Filter by user...")
-                                .label("Assigned User")
-                                .limit(50)
-                                .build()
-                ))*/
                 .routes(routes)
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECTS, TASKS, TASK_COMMENTS)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())

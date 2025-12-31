@@ -49,6 +49,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
         // Individual form configurations for multi-form rendering
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> basicInfoForm =
                 JpaFormRoute.builder()
+                        .dataStoreConfig(multiFormConfig)
                         .titleField("profileName")
                         .children(List.of(
                                 JpaFieldElement.builder("profileName", "multi_form.fields.profile_name").build(),
@@ -58,6 +59,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalDetailsForm =
                 JpaFormRoute.builder()
+                        .dataStoreConfig(multiFormConfig)
                         .titleField("description")
                         .children(List.of(
                                 JpaFieldElement.builder("description", "multi_form.fields.description").build(),

@@ -237,7 +237,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
         routes.put("projects-cards", JpaGridRoute.builder()
-                .isDefaultRoute(true)
+                .defaultRoute(true)
                 .dataStoreConfig(projectConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-cards")
@@ -456,15 +456,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 ))
                                 .build()
                 )
-                .menuActions(List.of(
-                        DataStoreDropdownMenuAction.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                                .dataStoreConfig(userConfig)
-                                .labelField("username")
-                                .placeholder("Filter by user...")
-                                .label("Assigned User")
-                                .limit(50)
-                                .build()
-                ))
                 .routes(routes)
                 .versioning(JpaVersioning.builder().dataStores(List.of(projectRepository, taskRepository, taskCommentRepository)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())

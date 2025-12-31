@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Collections;
 import java.util.List;
 
 @Accessors(fluent = true)
@@ -23,8 +22,8 @@ public class SearchRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     @I18nKey
     private String title;
-    private boolean isDefaultRoute;
-    private boolean isHiddenInMenu;
+    private boolean defaultRoute;
+    private boolean hiddenInMenu;
     private SerializableSupplier<Component> iconFactory;
 
     /**

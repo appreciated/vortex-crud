@@ -28,7 +28,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new SubmenuRouteFactory<>();
@@ -36,7 +36,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private SerializableSupplier<Component> iconFactory;
 

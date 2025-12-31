@@ -27,7 +27,7 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     @I18nKey
     private String title;
 
-    private boolean isDefaultRoute;
+    private boolean defaultRoute;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CustomRouteFactory<>();
@@ -35,7 +35,7 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
-    private boolean isHiddenInMenu;
+    private boolean hiddenInMenu;
 
     private SerializableSupplier<Component> iconFactory;
 
