@@ -119,10 +119,12 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             header.setWidthFull();
             header.setPadding(true);
             header.setAlignItems(Alignment.CENTER);
-            
-            H2 title = new H2(getTranslation(route.title()));
-            header.add(title);
-            header.expand(title);
+
+            if (route.title() != null) {
+                H2 title = new H2(getTranslation(route.title()));
+                header.add(title);
+                header.expand(title);
+            }
 
             // Menu Actions
             List<DataStoreDropdownMenuAction<ModelClass, FieldType, RepositoryType>> menuActions = route.menuActions();
