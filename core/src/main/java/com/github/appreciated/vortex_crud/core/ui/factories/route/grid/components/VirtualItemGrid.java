@@ -32,8 +32,6 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
 
     private final VortexCrudItemFactory<FieldType> itemFactory;
     private final  VortexCrudPathToRouteResolver pathVariables;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final VortexCrudContext<ModelClass, FieldType, RepositoryType> context;
@@ -52,11 +50,9 @@ public class VirtualItemGrid<ModelClass, FieldType, RepositoryType> extends Virt
         this.config = typedConfig;
         this.pathVariables = routeResolver;
         this.context = context;
-        this.fieldNameResolver = context.fieldNameResolver();
-        this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
 
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) typedConfig.dataStoreConfig().dataStoreInstance();
+        this.dataStore = typedConfig.dataStoreConfig().dataStoreInstance();
 
         this.itemFactory = typedConfig.itemFactory();
         setSizeFull();
