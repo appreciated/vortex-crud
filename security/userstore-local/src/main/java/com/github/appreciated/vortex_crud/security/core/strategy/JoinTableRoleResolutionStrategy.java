@@ -147,7 +147,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
+            // Silently ignore exceptions during role resolution
             return Collections.emptyList();
         }
     }
@@ -184,8 +184,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
                     .collect(Collectors.toList());
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.emptyList();
+            throw new RuntimeException(e);
         }
     }
 }

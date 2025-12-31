@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -124,8 +123,6 @@ class JoinTableRoleResolutionStrategyTest {
 
         when(reflectionService.getValue(user, USER_ID_FIELD)).thenThrow(new RuntimeException("Error"));
 
-        Collection<? extends GrantedAuthority> authorities = strategy.resolveRoles(reflectionService, user, target);
-
-        assertTrue(authorities.isEmpty());
+        assertThrows(RuntimeException.class, () -> strategy.resolveRoles(reflectionService, user, target));
     }
 }
