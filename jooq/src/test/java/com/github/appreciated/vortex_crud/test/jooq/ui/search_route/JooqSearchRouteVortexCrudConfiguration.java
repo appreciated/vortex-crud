@@ -66,6 +66,7 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
                 .dataStoreConfig(config)
                 .title("route.search-test.grid.title")
                 .titleField(SEARCH_ROUTE_TEST.NAME)
+                .descriptionField(SEARCH_ROUTE_TEST.NAME)
                 .filterField(SEARCH_ROUTE_TEST.NAME)
                 .form(formRoute)
                 .build();
