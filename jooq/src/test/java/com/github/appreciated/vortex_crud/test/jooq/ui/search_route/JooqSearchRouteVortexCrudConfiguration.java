@@ -54,17 +54,17 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
         // Create a form route for editing items
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formRoute = JooqFormRoute.builder()
                 .dataStoreConfig(config)
-                .title("Edit Item")
+                .title("route.search-test.edit.title")
                 .titleField(SEARCH_ROUTE_TEST.NAME)
                 .children(List.of(
-                        JooqFieldElement.of(SEARCH_ROUTE_TEST.NAME, "Name").build()
+                        JooqFieldElement.of(SEARCH_ROUTE_TEST.NAME, "search-test.labels.name").build()
                 ))
                 .build();
 
         // Create the grid route that will be searchable
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> gridRoute = JooqGridRoute.builder()
                 .dataStoreConfig(config)
-                .title("Grid")
+                .title("route.search-test.grid.title")
                 .titleField(SEARCH_ROUTE_TEST.NAME)
                 .filterField(SEARCH_ROUTE_TEST.NAME)
                 .form(formRoute)
@@ -72,13 +72,13 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
 
         // Create search route with explicit searchable routes
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> searchRoute = SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("Search")
+                .title("route.search-test.search.title")
                 .defaultRoute(true)
                 .searchableRoutes(List.of(gridRoute))
                 .build();
 
         return JooqApplication.builder()
-                .applicationName("Search Test App")
+                .applicationName("application.name.search-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(Map.of(
                         "grid", gridRoute,

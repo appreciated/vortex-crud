@@ -45,17 +45,17 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
         // Create a form route for editing items
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> formRoute = JpaFormRoute.builder()
                 .dataStoreConfig(config)
-                .title("Edit Item")
+                .title("route.search-test.edit.title")
                 .titleField("name")
                 .children(List.of(
-                        JpaFieldElement.builder("name", "Name").build()
+                        JpaFieldElement.builder("name", "search-test.labels.name").build()
                 ))
                 .build();
 
         // Create the grid route that will be searchable
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
                 .dataStoreConfig(config)
-                .title("Grid")
+                .title("route.search-test.grid.title")
                 .titleField("name")
                 .filterField("name")
                 .form(formRoute)
@@ -63,13 +63,13 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
 
         // Create search route with explicit searchable routes
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> searchRoute = SearchRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .title("Search")
+                .title("route.search-test.search.title")
                 .defaultRoute(true)
                 .searchableRoutes(List.of(gridRoute))
                 .build();
 
         return JpaApplication.builder()
-                .applicationName("Search Test App")
+                .applicationName("application.name.search-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .routes(Map.of(
                         "grid", gridRoute,
