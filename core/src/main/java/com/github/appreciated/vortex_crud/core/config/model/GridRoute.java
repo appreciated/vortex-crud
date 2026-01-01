@@ -44,8 +44,10 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
+    @lombok.NonNull
     private FieldType titleField;
 
+    @lombok.NonNull
     private FieldType descriptionField;
 
     private FieldType imageField;

@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractPasswordTes
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "password_test.sql")
-@SpringBootTest(classes = JpaPasswordTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql( "password_test.sql")
 public class JpaPasswordTest extends AbstractPasswordTest {
 }

@@ -5,6 +5,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @Sql("lifecycle_test.sql")
-@SpringBootTest(classes = JooqLifecycleTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class JooqLifecycleTest extends AbstractLifecycleTest {
 }

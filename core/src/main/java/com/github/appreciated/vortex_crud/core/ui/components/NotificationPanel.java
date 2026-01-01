@@ -123,8 +123,8 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     private MessageListItem mapToItem(ModelClass entity) {
         String msg = reflection.getString(entity, config.messageField());
         Object tsValue = reflection.getValue(entity, config.timestampField());
-        String user = reflection.getString(entity, config.userNameField());
-        String avatar = reflection.getString(entity, config.userAvatarField());
+        String user = config.userNameField() != null ? reflection.getString(entity, config.userNameField()) : null;
+        String avatar = config.userAvatarField() != null ? reflection.getString(entity, config.userAvatarField()) : null;
 
         return new MessageListItem(
                 msg != null ? msg : "",

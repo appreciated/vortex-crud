@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractLifecycleTe
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql(scripts = "lifecycle_test.sql")
-@SpringBootTest(classes = JpaLifecycleTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql( "lifecycle_test.sql")
 public class JpaLifecycleTest extends AbstractLifecycleTest {
 }

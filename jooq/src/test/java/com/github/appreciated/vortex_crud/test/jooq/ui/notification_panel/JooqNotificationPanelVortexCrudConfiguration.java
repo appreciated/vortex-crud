@@ -31,7 +31,7 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        var dataStore = new JooqDataStore(NOTIFICATION_PANEL_TEST.getRecordType(), dsl);
+        var dataStore = new JooqDataStore<>(NOTIFICATION_PANEL_TEST.getRecordType(), dsl);
 
         DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> config = JooqDataStoreConfig.of(NOTIFICATION_PANEL_TEST)
                 .dataStoreInstance(dataStore)
@@ -47,6 +47,8 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
         GridRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> gridRoute = JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Home")
+                .titleField(NOTIFICATION_PANEL_TEST.ID)
+                .descriptionField(NOTIFICATION_PANEL_TEST.MESSAGE)
                 .defaultRoute(true)
                 .build();
 
