@@ -44,6 +44,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
+    @lombok.NonNull
     private FieldType titleField;
 
     private FieldType descriptionField;
@@ -56,8 +57,10 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private FieldType filterField;
 
+    @lombok.NonNull
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
+    @lombok.NonNull
     private FieldType columnField;
 
     private FieldType rowIndexField;

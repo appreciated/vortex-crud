@@ -44,6 +44,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
 
     private List<String> readOnlyRoles;
 
+    @lombok.NonNull
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap;
 
     @Override

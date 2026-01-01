@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 public class InternalFormElement<ModelClass, FieldType, RepositoryType> implements ValidatableConfiguration {
 
+    @lombok.NonNull
     private FieldType field;
 
     private VortexCrudCollectionFactory<ModelClass, FieldType, RepositoryType> factory;
@@ -24,6 +25,7 @@ public class InternalFormElement<ModelClass, FieldType, RepositoryType> implemen
     private List<String> readOnlyForRoles;
 
     @I18nKey
+    @lombok.NonNull
     private String label;
 
     private ViewFieldType type;

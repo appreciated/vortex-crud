@@ -44,6 +44,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
+    @lombok.NonNull
     private FieldType titleField;
 
     private FieldType descriptionField;
@@ -56,6 +57,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private FieldType filterField;
 
+    @lombok.NonNull
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;

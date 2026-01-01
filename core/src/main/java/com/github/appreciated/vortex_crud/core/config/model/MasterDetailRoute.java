@@ -66,6 +66,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
+    @lombok.NonNull
     private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
