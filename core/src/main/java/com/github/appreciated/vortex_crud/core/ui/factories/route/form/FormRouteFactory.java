@@ -81,9 +81,13 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         }
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
-        if (tables == null) {
+        if (routeRenderer instanceof DataStoreInheritor) {
+            tables = parentDataStoreConfig;
+        } else if (tables == null) {
+            // Fallback for non-inheritors that might have missing config (though unlikely if model enforces it)
             tables = parentDataStoreConfig;
         }
+
         if (tables == null) {
             throw new IllegalStateException("No DataStoreConfig found for route: " + routeRenderer.getClass().getName() + " title: " + routeRenderer.title());
         }

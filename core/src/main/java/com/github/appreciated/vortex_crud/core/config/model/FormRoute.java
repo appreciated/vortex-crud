@@ -24,14 +24,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType>, DataStoreInheritor {
 
     public enum FormPresentationMode {
         DIALOG,
         SLIDE
     }
 
-    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
+    @Override
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() {
+        return null;
+    }
 
     @I18nKey
     private String title;
