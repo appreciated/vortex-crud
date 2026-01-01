@@ -24,8 +24,7 @@ public abstract class AbstractSearchRouteTest extends BaseUITest {
         String query = "Test";
         // For Vaadin ComboBox, we need to access the internal input element
         Locator input = searchComboBox.locator("input");
-        input.click(); // Click to focus and open the dropdown
-        input.pressSequentially(query); // Type the query character by character
+        input.fill(query); // Type the query character by character
         page.waitForTimeout(500); // Wait for debounce and server response
 
         // 3. Verify results appear in the dropdown
@@ -38,8 +37,6 @@ public abstract class AbstractSearchRouteTest extends BaseUITest {
 
         Locator item = page.getByText("Grid > Test Item");
         assertThat(item).isVisible();
-
-        // 4. Select a result and verify navigation
         item.click();
 
         // After selection, it should navigate to the item's detail view (e.g. form)

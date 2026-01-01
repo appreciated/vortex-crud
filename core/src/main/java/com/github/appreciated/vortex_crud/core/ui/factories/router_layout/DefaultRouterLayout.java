@@ -116,20 +116,15 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                         globalSearch.setPrefixComponent(VaadinIcon.SEARCH.create());
                         globalSearch.setClearButtonVisible(true);
                         globalSearch.setPageSize(10); // Enable lazy loading with page size
-
+                        globalSearch.setClearButtonVisible(true);
                         // Set Item Label Generator for selected value display
                         globalSearch.setItemLabelGenerator(result -> result.title() + " (" + result.routeTitle() + ")");
 
                         // Set Renderer for dropdown items (show Visual Path)
                         globalSearch.setRenderer(new TextRenderer<>(result -> result.routeTitle() + " > " + result.title()));
 
-                        globalSearch.setItems(query -> {
-                            String filter = query.getFilter().orElse("");
-                            if (filter.isBlank()) {
-                                return java.util.stream.Stream.empty();
-                            }
-                            return globalSearchService.search(filter).stream();
-                        });
+                        // Use GlobalSearchService as DataProvider with filter converter (identity function for String)
+                        globalSearch.setDataProvider(globalSearchService, filter -> filter);
 
                         globalSearch.addValueChangeListener(event -> {
                             SearchResult result = event.getValue();
@@ -138,12 +133,9 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                                 if (fullPath.startsWith("/")) {
                                     fullPath = fullPath.substring(1);
                                 }
-                                UI.getCurrent().navigate(
-                                    com.github.appreciated.vortex_crud.core.ui.routes.InternalDynamicRoute.class,
-                                    new RouteParameters("path", fullPath)
-                                );
-                                // Clear selection so it can be used again
-                                globalSearch.clear();
+                                // Navigate using String path instead of class reference
+                                String finalFullPath = fullPath;
+                                getUI().ifPresent(ui -> ui.navigate(finalFullPath));
                             }
                         });
 
