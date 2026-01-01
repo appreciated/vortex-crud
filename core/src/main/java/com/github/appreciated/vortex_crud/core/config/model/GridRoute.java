@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -57,20 +58,13 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private FieldType filterField;
 
-    @lombok.NonNull
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
+    private FormRoute<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 

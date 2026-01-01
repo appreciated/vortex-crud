@@ -45,7 +45,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(config)
                 .title("route.calendar-test.event")
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "calendar-test.labels.title").build(),
                         JpaFieldElement.builder("startDate", "calendar-test.labels.start").build(),
                         JpaFieldElement.builder("endDate", "calendar-test.labels.end").build()

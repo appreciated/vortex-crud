@@ -9,6 +9,8 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.models.tables.KanbanTasks;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.KanbanTasksRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -35,9 +37,9 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(KANBAN_TASKS.getRecordType(), dsl);
+        JooqDataStore<KanbanTasksRecord> store = new JooqDataStore<>(KANBAN_TASKS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(KANBAN_TASKS)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 KANBAN_TASKS.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 KANBAN_TASKS.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
@@ -45,10 +47,10 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                         ))
                         .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
+        JooqFormRoute taskForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .titleField(KANBAN_TASKS.TITLE)
-                .children(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
+                .fields(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();

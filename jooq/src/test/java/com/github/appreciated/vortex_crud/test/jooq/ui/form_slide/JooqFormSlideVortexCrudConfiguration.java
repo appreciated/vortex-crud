@@ -2,12 +2,15 @@ package com.github.appreciated.vortex_crud.test.jooq.ui.form_slide;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
+import com.github.appreciated.vortex_crud.jooq.models.Tables;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
@@ -46,11 +49,12 @@ public class JooqFormSlideVortexCrudConfiguration implements VortexCrudConfigura
                         ))
                         .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formSlideDialog = JooqFormSlideRoute.builder()
+        JooqFormRoute formSlideDialog = JooqFormRoute.builder()
                 .dataStoreConfig(config)
+                .dialogFactory(new FormSlideFactory<>())
                 .title("route.projects.title-cards")
                 .titleField(FROM_SLIDE_IMAGES.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(FROM_SLIDE_IMAGES.TITLE, "route.image.labels.title").build(),
                         JooqFieldElement.of(FROM_SLIDE_IMAGES.URL, "route.image.labels.image").build()
                 ))

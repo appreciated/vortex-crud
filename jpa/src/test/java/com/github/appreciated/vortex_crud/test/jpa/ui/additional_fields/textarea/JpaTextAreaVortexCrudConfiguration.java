@@ -72,7 +72,7 @@ public class JpaTextAreaVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(config)
                 .title("route.textarea-test.title")
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
                         JpaFieldElement.builder("description", "textarea-test.labels.content").build()
                 ))
@@ -83,7 +83,7 @@ public class JpaTextAreaVortexCrudConfiguration implements VortexCrudConfigurati
                 .iconFactory(COG::create)
                 .title("route.textarea-test.title-list")
                 .filterField("name")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("name", "textarea-test.labels.name").build(),
                         JpaFieldElement.builder("description", "textarea-test.labels.content").build()
                 ))

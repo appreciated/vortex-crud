@@ -68,7 +68,7 @@ public class JooqFieldTypesVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.missing.title")
             .titleField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .fields(List.of(
                 JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
                 JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
                 JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
@@ -82,7 +82,7 @@ public class JooqFieldTypesVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.missing.list")
             .filterField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .columns(List.of(
                   JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
             ))
             .form(form)

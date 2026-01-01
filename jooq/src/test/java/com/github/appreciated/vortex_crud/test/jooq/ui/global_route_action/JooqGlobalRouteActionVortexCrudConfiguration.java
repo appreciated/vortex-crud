@@ -74,7 +74,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.missing.title")
             .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-            .children(List.of(
+            .fields(List.of(
                 JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
                 JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
                 JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
@@ -89,7 +89,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .iconFactory(COG::create)
             .title("route.missing.list")
             .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
-            .children(List.of(
+            .columns(List.of(
                   JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
             ))
             .routeActions(List.of(

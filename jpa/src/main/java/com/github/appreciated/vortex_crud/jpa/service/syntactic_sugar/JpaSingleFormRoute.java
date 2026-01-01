@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaSingleFormRoute extends SingleFormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
     public static SingleFormRoute.SingleFormRouteBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return SingleFormRoute.builder();
+        return SingleFormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }

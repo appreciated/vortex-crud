@@ -48,7 +48,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .titleField("title")
-                .children(List.of(JpaFieldElement.builder("title", "route.tasks.labels.title").build()))
+                .fields(List.of(JpaFieldElement.builder("title", "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();
@@ -65,6 +65,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
                 .descriptionField("description")
                 .columnField("status")
                 .rowIndexField("rowIndex")
+                .titleField("title")
                 .filterField("title")
                 .form(taskForm)
                 .build()

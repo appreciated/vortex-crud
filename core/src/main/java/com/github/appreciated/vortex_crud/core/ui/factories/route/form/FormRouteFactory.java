@@ -55,7 +55,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                                   boolean isHeaderHidden,
                                   boolean creationMode,
                                   boolean isDeleteButtonHidden,
-                                  RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer) {
+                                  FormRouteProvider<ModelClass, FieldType, RepositoryType> routeRenderer) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -108,7 +108,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.children(), entity, context, tables, binder, form);
+        formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.fields(), entity, context, tables, binder, form);
         binder.setBean(entity);
 
         // Generic Save button

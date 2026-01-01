@@ -1,18 +1,18 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.many_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItemRelation;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.ManyToManyItemRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqTextField;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.CALENDAR_EVENTS;
 import static com.github.appreciated.vortex_crud.jooq.models.tables.ManyToManyItem.MANY_TO_MANY_ITEM;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
@@ -37,31 +38,32 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(MANY_TO_MANY_ITEM.getRecordType(), dsl);
+        JooqDataStore<ManyToManyItemRecord> store = new JooqDataStore<>(MANY_TO_MANY_ITEM.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(MANY_TO_MANY_ITEM)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 MANY_TO_MANY_ITEM.ID, JooqNumericIdField.builder().build(),
                                 MANY_TO_MANY_ITEM.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build())
                         ).build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> itemForm = JooqFormRoute.builder()
+        JooqFormRoute itemForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .titleField(MANY_TO_MANY_ITEM.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build(),
-                        JooqCollectionElement.of("relations.labels.related")
-                                .factory(new ListCollectionFactory())
-                                .dialogFactory(new ConnectDialogFactory())
+                        JooqCollection.builder()
+                                .field(MANY_TO_MANY_ITEM.NAME)
+                                .label("relations.labels.related")
+                                .listFactory(new ListCollectionFactory<>())
+                                .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(config)
-                                .manyToMany(new JooqManyToMany(
+                                .manyToMany(new JooqManyToMany<>(
                                         ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.ITEM_ID,
                                         ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION.RELATED_ITEM_ID,
                                         MANY_TO_MANY_ITEM.ID,
                                         ManyToManyItemRelation.MANY_TO_MANY_ITEM_RELATION))
                                 .children(List.of(MANY_TO_MANY_ITEM.NAME))
                                 .emptyMessage("relations.related.empty")
-                                .label(MANY_TO_MANY_ITEM.NAME.getName())
                                 .build()
                 ))
                 .build();
@@ -72,9 +74,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
                 .filterField(MANY_TO_MANY_ITEM.NAME)
-                .children(List.of(
-                        JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.labels.name").build()
-                ))
+                .columns(List.of( JooqFieldElement.of(MANY_TO_MANY_ITEM.NAME, "relations.tests.many-to-many.title").build()))
                 .form(itemForm)
                 .build());
 

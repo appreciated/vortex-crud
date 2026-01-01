@@ -47,7 +47,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "route.images.labels.title").build(),
                         JpaFieldElement.builder("url", "route.images.labels.image").build()
                 ))
@@ -59,7 +59,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 .title("route.images-list")
                 .inlineEdit(true)
                 .filterField("title")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("url", "route.projects.labels.description").build(),
                         JpaFieldElement.builder("title", "route.projects.labels.name").build()
                 ))

@@ -7,6 +7,6 @@ import org.jooq.impl.TableImpl;
 
 public class JooqCalendarRoute extends CalendarRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static CalendarRoute.CalendarRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return CalendarRoute.builder();
+        return CalendarRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
     }
 }

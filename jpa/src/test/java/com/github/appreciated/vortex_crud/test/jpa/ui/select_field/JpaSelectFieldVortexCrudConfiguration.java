@@ -53,7 +53,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreConfig(config)
                 .title("route.select-field.title")
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "select-field.labels.name").build()
                 ))
                 .build();
@@ -64,7 +64,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreConfig(config)
                 .title("route.select-field.title-list")
                 .filterField("name")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("name", "select-field.labels.name").build()
                 ))
                 .form(form)

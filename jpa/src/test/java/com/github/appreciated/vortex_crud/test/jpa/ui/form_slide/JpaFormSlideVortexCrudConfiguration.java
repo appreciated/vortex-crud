@@ -9,14 +9,11 @@ import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdFiel
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.CardFactory;
 import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistryService;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormSlideRoute;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +43,13 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         ))
                         .build();
 
-        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormSlideRoute.builder()
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
                 .dataStoreConfig(imageConfig)
+                .dialogFactory(new FormSlideFactory<>())
                 .title("route.projects.title-cards")
                 .itemFactory(new CardFactory<>())
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "route.images.labels.title").build(),
                         JpaFieldElement.builder("url", "route.images.labels.image").build()
                 ))

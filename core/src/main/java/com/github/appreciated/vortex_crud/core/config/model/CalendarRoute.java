@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -65,19 +66,13 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private FieldType filterField;
 
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
+    private FormRoute<ModelClass, FieldType, RepositoryType> form;
 
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 

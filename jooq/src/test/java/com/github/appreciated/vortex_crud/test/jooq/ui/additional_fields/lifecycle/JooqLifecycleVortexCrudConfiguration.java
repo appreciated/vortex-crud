@@ -70,7 +70,7 @@ public class JooqLifecycleVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.lifecycle-test.title")
                 .titleField(LIFECYCLE_TEST.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
                         JooqFieldElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
                 ))
@@ -81,7 +81,7 @@ public class JooqLifecycleVortexCrudConfiguration
                 .iconFactory(COG::create)
                 .title("route.lifecycle-test.title-list")
                 .filterField(LIFECYCLE_TEST.NAME)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
                         JooqFieldElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
                 ))

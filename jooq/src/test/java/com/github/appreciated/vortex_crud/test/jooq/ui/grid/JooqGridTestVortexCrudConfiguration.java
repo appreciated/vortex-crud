@@ -45,11 +45,11 @@ public class JooqGridTestVortexCrudConfiguration
                         ))
                         .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
+        JooqFormRoute imageForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .titleField(GRID_IMAGES.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
                         JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
                 ))

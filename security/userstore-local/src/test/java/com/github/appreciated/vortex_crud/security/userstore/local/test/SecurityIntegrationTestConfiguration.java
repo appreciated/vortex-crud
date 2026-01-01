@@ -59,7 +59,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .dataStoreConfig(userConfig)
                 .title("route.users.title")
                 .titleField("username")
-                .children(List.of(
+                .fields(List.of(
                         InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
                         InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
                         InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
@@ -87,8 +87,8 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .routes(routes)
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<Object, String, String>builder()
                         .dataStoreConfig(userConfig)
-                        .username(InternalFormElement.<Object, String, String>builder().field("username").build())
-                        .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").build())
+                        .username(InternalFormElement.<Object, String, String>builder().field("username").label("dummy").build())
+                        .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").label("dummy").build())
                         .roleResolutionStrategy(new FieldBasedRoleResolutionStrategy<>("roles"))
                         .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
                         .loginView(LoginView.class)

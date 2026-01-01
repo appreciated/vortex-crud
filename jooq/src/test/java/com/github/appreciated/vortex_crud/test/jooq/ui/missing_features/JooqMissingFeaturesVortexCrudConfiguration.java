@@ -95,14 +95,16 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .dataStoreConfig(taskConfig)
             .title("route.missing.title")
             .titleField(MISSING_FEATURES_TEST.NAME)
-            .children(List.of(
+            .fields(List.of(
                 JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.PDF_DOC, "PDF").build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.NOTES, "Notes").build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.REFERENCED_ID, "Referenced").build(),
                 // Multi Select (ManyToMany)
-                JooqCollectionElement.of("Multi Select")
-                    .factory(new ListCollectionFactory())
+                JooqCollection.builder()
+                                .field(MISSING_FEATURES_REFERENCED.NAME)
+                                .label("Multi Select")
+                    .listFactory(new ListCollectionFactory())
                     .dialogFactory(new ConnectDialogFactory())
                     .dataStoreConfig(referencedConfig)
                     .manyToMany(new JooqManyToMany<>(
@@ -112,7 +114,6 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                         MISSING_FEATURES_TEST_RELATIONS
                     ))
                     .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
-                    .label(MISSING_FEATURES_REFERENCED.NAME.getName())
                     .build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),
                 JooqFieldElement.of(MISSING_FEATURES_TEST.FILE_ATTACHMENT, "File").build(),
@@ -129,7 +130,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .iconFactory(COG::create)
             .title("route.missing.list")
             .filterField(MISSING_FEATURES_TEST.NAME)
-            .children(List.of(
+            .columns(List.of(
                   JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
             ))
             .routeActions(List.of(
@@ -156,7 +157,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
              .entityFilterField(MISSING_FEATURES_TEST.ID)
              .entityFilterValueProvider(() -> 1)
              .titleField(MISSING_FEATURES_TEST.NAME)
-             .children(List.of(
+             .fields(List.of(
                  JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
              ))
              .build());

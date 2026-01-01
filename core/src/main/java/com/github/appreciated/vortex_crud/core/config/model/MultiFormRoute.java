@@ -1,11 +1,9 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
-import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
-import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.vaadin.flow.component.Component;
@@ -23,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
@@ -31,7 +29,10 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
     @I18nKey
     private String title;
 
-    private boolean defaultRoute;
+    /**
+     * List of form routes to be rendered as multiple forms within this multi-form route.
+     */
+    private List<FormRoute<ModelClass, FieldType, RepositoryType>> forms;
 
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MultiFormRouteFactory<>();
@@ -39,42 +40,42 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Ro
     @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
-    private boolean hiddenInMenu;
-
-    private final boolean isDeleteButtonHidden = false;
-
-    private VortexCrudItemFactory<FieldType> itemFactory;
-
-    private FieldType titleField;
-
-    private FieldType descriptionField;
-
-    private FieldType imageField;
-
-    private VortexCrudResourceProvider resourceProvider;
-
-    private boolean inlineEdit;
-
-    private FieldType filterField;
-
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
-    private List<RouteRenderer<ModelClass, FieldType, RepositoryType>> forms;
-
-    public List<RouteRenderer<ModelClass, FieldType, RepositoryType>> forms() {
-        return forms;
+    @Override
+    public boolean defaultRoute() {
+        return false;
     }
 
-    private SerializableSupplier<Component> iconFactory;
+    @Override
+    public boolean hiddenInMenu() {
+        return false;
+    }
 
-    private List<String> writeRoles;
+    public FieldType titleField() {
+        return null;
+    }
 
-    private List<String> readOnlyRoles;
+    @Override
+    public SerializableSupplier<Component> iconFactory() {
+        return null;
+    }
 
-    /**
-     * List of custom route actions with full access to data store and selected entities.
-     * These actions will be rendered in the route header and automatically
-     * enabled/disabled based on selection state.
-     */
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    @Override
+    public boolean isDeleteButtonHidden() {
+        return false;
+    }
+
+    @Override
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+        return List.of();
+    }
+
+    @Override
+    public List<String> writeRoles() {
+        return List.of();
+    }
+
+    @Override
+    public List<String> readOnlyRoles() {
+        return List.of();
+    }
 }

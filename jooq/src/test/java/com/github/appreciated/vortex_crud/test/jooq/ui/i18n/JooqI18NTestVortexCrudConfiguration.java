@@ -47,11 +47,11 @@ public class JooqI18NTestVortexCrudConfiguration
                         ))
                         .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
+        JooqFormRoute imageForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .titleField(I18N_IMAGES.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),
                         JooqFieldElement.of(I18N_IMAGES.URL, "route.images.labels.image").build()
                 ))
@@ -63,7 +63,7 @@ public class JooqI18NTestVortexCrudConfiguration
                 .title("route.images-list")
                 .inlineEdit(true)
                 .filterField(I18N_IMAGES.TITLE)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
                         JooqFieldElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
                 ))

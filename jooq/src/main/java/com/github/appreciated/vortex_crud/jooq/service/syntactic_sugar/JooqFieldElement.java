@@ -7,7 +7,7 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
 public class JooqFieldElement {
-    public static InternalFormElement.InternalFormElementBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableField<?, ?> field, String label) {
+    public static InternalFormElement.InternalFormElementBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>, ?, ?> of(TableField<?, ?> field, String label) {
         return InternalFormElement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .field(field)
                 .label(label)

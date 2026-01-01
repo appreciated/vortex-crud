@@ -68,7 +68,7 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
             .dataStoreConfig(taskConfig)
             .title("route.missing.title")
             .titleField("name")
-            .children(List.of(
+            .fields(List.of(
                 JpaFieldElement.builder("name", "Name").build(),
                 JpaFieldElement.builder("tags", "Tags").build(),
                 JpaFieldElement.builder("pdfDoc", "PDF").build(),
@@ -84,7 +84,7 @@ public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigura
             .iconFactory(COG::create)
             .title("route.missing.list")
             .filterField("name")
-            .children(List.of(
+            .columns(List.of(
                   JpaFieldElement.builder("name", "Name").build()
             ))
             .routeActions(List.of(

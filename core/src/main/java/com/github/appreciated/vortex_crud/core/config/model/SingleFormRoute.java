@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -62,8 +63,6 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private FieldType filterField;
 
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
     private SerializableSupplier<Component> iconFactory;
 
     private List<String> writeRoles;
@@ -89,4 +88,6 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    @lombok.NonNull
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields;
 }

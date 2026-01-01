@@ -71,7 +71,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .dataStoreConfig(taskConfig)
             .title("route.missing.title")
             .titleField("name")
-            .children(List.of(
+            .fields(List.of(
                 JpaFieldElement.builder("name", "Name").build(),
                 JpaFieldElement.builder("tags", "Tags").build(),
                 JpaFieldElement.builder("pdfDoc", "PDF").build(),
@@ -93,7 +93,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .iconFactory(COG::create)
             .title("route.missing.list")
             .filterField("name")
-            .children(List.of(
+            .columns(List.of(
                   JpaFieldElement.builder("name", "Name").build()
             ))
             .routeActions(List.of(
@@ -120,7 +120,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
              .entityFilterField("id")
              .entityFilterValueProvider(() -> 1L)
              .titleField("name")
-             .children(List.of(
+             .fields(List.of(
                  JpaFieldElement.builder("name", "Name").build()
              ))
              .build());

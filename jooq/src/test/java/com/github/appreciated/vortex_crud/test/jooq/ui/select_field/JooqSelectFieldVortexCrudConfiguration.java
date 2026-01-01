@@ -58,7 +58,7 @@ public class JooqSelectFieldVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.select-field.title")
             .titleField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .fields(List.of(
                 JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "select-field.labels.name").build()
             ))
             .build();
@@ -70,7 +70,7 @@ public class JooqSelectFieldVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.select-field.title-list")
             .filterField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .columns(List.of(
                   JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "select-field.labels.name").build()
             ))
             .form(form)

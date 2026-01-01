@@ -48,7 +48,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .titleField(MASTER_DETAIL_TASKS.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
                         JooqFieldElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
                 ))

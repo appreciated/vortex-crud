@@ -48,7 +48,7 @@ public class JpaCardVortexCrudConfiguration implements VortexCrudConfigurationPr
                 .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "route.images.labels.title").build(),
                         JpaFieldElement.builder("url", "route.images.labels.image").build()
                 ))

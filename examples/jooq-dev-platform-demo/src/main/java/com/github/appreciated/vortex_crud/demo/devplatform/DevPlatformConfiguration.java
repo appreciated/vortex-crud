@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.IssueState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestState;
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
+import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.demo.devplatform.view.DashboardView;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
@@ -31,7 +32,6 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.*;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -349,7 +349,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
                 .dataStoreConfig(issueConfig)
                 .titleField(ISSUE.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ISSUE.TITLE, "route.issues.labels.title").build(),
                         JooqFieldElement.of(ISSUE.DESCRIPTION, "route.issues.labels.description").build(),
                         JooqFieldElement.of(ISSUE.STATE, "route.issues.labels.state").build(),
@@ -357,8 +357,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(ISSUE.PRIORITY, "route.issues.labels.priority").build(),
                         JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
                         JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
-                        JooqCollectionElement.of("route.issues.labels.labels")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.issues.labels.labels")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(labelConfig)
                                 .manyToMany(new JooqManyToMany(
@@ -376,7 +377,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
                 .dataStoreConfig(pullRequestConfig)
                 .titleField(PULL_REQUEST.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
                         JooqFieldElement.of(PULL_REQUEST.DESCRIPTION, "route.pull_requests.labels.description").build(),
                         JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
@@ -384,8 +385,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build(),
                         JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
                         JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
-                        JooqCollectionElement.of("route.pull_requests.labels.labels")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.pull_requests.labels.labels")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(labelConfig)
                                 .manyToMany(new JooqManyToMany(
@@ -400,11 +402,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         // Repository Form Configuration
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> repositoryForm = JooqFormRoute.builder()
+        JooqFormRoute repositoryForm = JooqFormRoute.builder()
                 .dataStoreConfig(repositoryConfig)
                 .title("route.repositories.title")
                 .titleField(REPOSITORY.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(REPOSITORY.NAME, "route.repositories.labels.name").build(),
                         JooqFieldElement.of(REPOSITORY.SLUG, "route.repositories.labels.slug").build(),
                         JooqFieldElement.of(REPOSITORY.DESCRIPTION, "route.repositories.labels.description").build(),
@@ -413,8 +415,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(REPOSITORY.LANGUAGE, "route.repositories.labels.language").build(),
                         JooqFieldElement.of(REPOSITORY.TOPICS, "route.repositories.labels.topics").build(),
                         JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build(),
-                        JooqCollectionElement.of("route.repositories.labels.collaborators")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.repositories.labels.collaborators")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(repositoryCollaboratorConfig)
                                 .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.REPOSITORY_ID))
@@ -422,14 +425,15 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(repositoryCollaboratorConfig)
                                         .titleField(REPOSITORY_COLLABORATOR.USER_ID)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.USER_ID, "route.repository_collaborators.labels.user").build(),
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
                                         ))
                                         .build())
                                 .build(),
-                        JooqCollectionElement.of("route.wiki.title")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.wiki.title")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(wikiPageConfig)
                                 .oneToMany(new JooqOneToMany(WIKI_PAGE.REPOSITORY_ID))
@@ -437,14 +441,15 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(wikiPageConfig)
                                         .titleField(WIKI_PAGE.TITLE)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(WIKI_PAGE.TITLE, "route.wiki.labels.title").build(),
                                                 JooqFieldElement.of(WIKI_PAGE.CONTENT, "route.wiki.labels.content").build()
                                         ))
                                         .build())
                                 .build(),
-                        JooqCollectionElement.of("route.commits.title")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.commits.title")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(gitCommitConfig)
                                 .oneToMany(new JooqOneToMany(GIT_COMMIT.REPOSITORY_ID))
@@ -452,15 +457,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(gitCommitConfig)
                                         .titleField(GIT_COMMIT.HASH)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(GIT_COMMIT.HASH, "route.commits.labels.hash").build(),
                                                 JooqFieldElement.of(GIT_COMMIT.MESSAGE, "route.commits.labels.message").build(),
                                                 JooqFieldElement.of(GIT_COMMIT.AUTHOR_NAME, "route.commits.labels.author").build()
                                         ))
                                         .build())
                                 .build(),
-                        JooqCollectionElement.of("route.branches.title")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.branches.title")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(gitBranchConfig)
                                 .oneToMany(new JooqOneToMany(GIT_BRANCH.REPOSITORY_ID))
@@ -468,7 +474,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(gitBranchConfig)
                                         .titleField(GIT_BRANCH.NAME)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(GIT_BRANCH.NAME, "route.branches.labels.name").build(),
                                                 JooqFieldElement.of(GIT_BRANCH.HEAD_COMMIT_ID, "route.branches.labels.head_commit").build()
                                         ))
@@ -477,17 +483,18 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         // Organization Form Configuration
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> organizationForm = JooqFormRoute.builder()
+        JooqFormRoute organizationForm = JooqFormRoute.builder()
                 .dataStoreConfig(organizationConfig)
                 .title("route.organizations.title")
                 .titleField(ORGANIZATION.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ORGANIZATION.NAME, "route.organizations.labels.name").build(),
                         JooqFieldElement.of(ORGANIZATION.DISPLAY_NAME, "route.organizations.labels.display_name").build(),
                         JooqFieldElement.of(ORGANIZATION.DESCRIPTION, "route.organizations.labels.description").build(),
                         JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build(),
-                        JooqCollectionElement.of("route.organizations.labels.members")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.organizations.labels.members")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(organizationMemberConfig)
                                 .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.ORGANIZATION_ID))
@@ -495,7 +502,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(organizationMemberConfig)
                                         .titleField(ORGANIZATION_MEMBER.USER_ID)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.USER_ID, "route.organization_members.labels.user").build(),
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
                                         ))
@@ -507,11 +514,12 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
                 .dataStoreConfig(usersConfig)
                 .titleField(USERS.USERNAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
                         JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
-                        JooqCollectionElement.of("route.users.labels.repositories")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.users.labels.repositories")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(repositoryCollaboratorConfig)
                                 .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.USER_ID))
@@ -519,14 +527,15 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(repositoryCollaboratorConfig)
                                         .titleField(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, "route.repository_collaborators.labels.repository").build(),
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.PERMISSION, "route.repository_collaborators.labels.permission").build()
                                         ))
                                         .build())
                                 .build(),
-                        JooqCollectionElement.of("route.users.labels.organizations")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .label("route.users.labels.organizations")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(organizationMemberConfig)
                                 .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.USER_ID))
@@ -534,7 +543,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .form(JooqFormRoute.builder()
                                         .dataStoreConfig(organizationMemberConfig)
                                         .titleField(ORGANIZATION_MEMBER.ORGANIZATION_ID)
-                                        .children(List.of(
+                                        .fields(List.of(
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, "route.organization_members.labels.organization").build(),
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.ROLE, "route.organization_members.labels.role").build()
                                         ))
@@ -543,11 +552,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         // Milestone Form Configuration
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> milestoneForm = JooqFormRoute.builder()
+        JooqFormRoute milestoneForm = JooqFormRoute.builder()
                 .dataStoreConfig(milestoneConfig)
                 .title("route.milestones.title")
                 .titleField(MILESTONE.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
                         JooqFieldElement.of(MILESTONE.DESCRIPTION, "route.milestones.labels.description").build(),
                         JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
@@ -615,6 +624,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .titleField(ISSUE.TITLE)
                 .descriptionField(ISSUE.DESCRIPTION)
                 .columnField(ISSUE.STATE)
+                .titleField(ISSUE.TITLE)
                 .filterField(ISSUE.TITLE)
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .form(issueForm)
@@ -625,7 +635,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.COMPILE::create)
                 .title("route.pull_requests.title")
                 .filterField(PULL_REQUEST.TITLE)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
                         JooqFieldElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
                         JooqFieldElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
@@ -649,7 +659,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
                 .filterField(MILESTONE.TITLE)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
                         JooqFieldElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
                         JooqFieldElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))

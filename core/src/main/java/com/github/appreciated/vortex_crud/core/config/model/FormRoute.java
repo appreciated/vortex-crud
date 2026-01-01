@@ -16,20 +16,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
-
-    public enum FormPresentationMode {
-        DIALOG,
-        SLIDE
-    }
 
     @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
@@ -42,7 +38,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
 
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
+    @Builder.Default
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
     private boolean hiddenInMenu;
 
@@ -63,7 +60,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private FieldType filterField;
 
     @lombok.NonNull
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
+    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -72,17 +69,4 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private List<String> readOnlyRoles;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
-
-    @Builder.Default
-    private FormPresentationMode presentationMode = FormPresentationMode.DIALOG;
-
-    public VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory() {
-        if (dialogFactory != null) {
-            return dialogFactory;
-        }
-        if (presentationMode == FormPresentationMode.SLIDE) {
-            return new FormSlideFactory<>();
-        }
-        return new FormDialogFactory<>();
-    }
 }

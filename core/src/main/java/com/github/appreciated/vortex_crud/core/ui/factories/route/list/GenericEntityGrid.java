@@ -23,14 +23,14 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
 
     public GenericEntityGrid( VortexCrudPathToRouteResolver routeResolver,
-                             RouteRenderer<?, ?, ?> routeRenderer,
+                             ListRoute<?, ?, ?> routeRenderer,
                              VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.routeResolver = routeResolver;
         this.dataStoreUtil = context.dataStoreUtil();
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
-        RouteRenderer<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
-                (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        ListRoute<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
+                (ListRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = typedRouteRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
         VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
@@ -41,7 +41,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : typedRouteRenderer.children()) {
+        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : typedRouteRenderer.columns()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
             context.columnCallbackRegistry().getCallback(typedRouteRenderer).addColumn(this, field, table, dataStoreField);

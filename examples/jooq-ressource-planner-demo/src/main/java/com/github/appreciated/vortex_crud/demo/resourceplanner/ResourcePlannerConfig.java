@@ -6,7 +6,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.ConnectDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.service.AppointmentBusinessService;
@@ -164,11 +163,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         // Forms
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> roomForm = JooqFormRoute.builder()
+        JooqFormRoute roomForm = JooqFormRoute.builder()
                 .dataStoreConfig(roomConfig)
                 .title("route.rooms.title")
                 .titleField(ROOM.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ROOM.NAME, "route.rooms.labels.name").build(),
                         JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").build(),
                         JooqFieldElement.of(ROOM.DESCRIPTION, "route.rooms.labels.description").build(),
@@ -176,15 +175,16 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         // Room Detail (for Resource View)
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> roomDetailForm = JooqFormRoute.builder()
+        JooqFormRoute roomDetailForm = JooqFormRoute.builder()
                 .dataStoreConfig(roomConfig)
                 .title("route.rooms.title")
                 .titleField(ROOM.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
                         JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
-                        JooqCollectionElement.of("route.rooms.labels.appointments")
-                                .factory(new ListCollectionFactory())
+                        JooqCollection.builder()
+                                .label("route.rooms.labels.appointments")
+                                .listFactory(new ListCollectionFactory())
                                 .dataStoreConfig(appointmentConfig)
                                 .oneToMany(new JooqOneToMany(APPOINTMENT.ROOM_ID))
                                 .children(List.of(APPOINTMENT.START_TIME, APPOINTMENT.END_TIME, APPOINTMENT.STATUS))
@@ -192,18 +192,18 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> personForm = JooqFormRoute.builder()
+        JooqFormRoute personForm = JooqFormRoute.builder()
                 .dataStoreConfig(personConfig)
                 .title("route.persons.title")
                 .titleField(PERSON.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
                         JooqFieldElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
                         JooqFieldElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
                         JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
-                        JooqCollectionElement.of("route.persons.labels.services")
-                                .factory(new ListCollectionFactory<>())
-                                .dialogFactory(new ConnectDialogFactory<>())
+                        JooqCollection.builder()
+                                .label("route.persons.labels.services")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dataStoreConfig(typeConfig)
                                 .manyToMany(new JooqManyToMany<>(
                                         PERSON_APPOINTMENT_TYPE.PERSON_ID,
@@ -216,11 +216,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> customerForm = JooqFormRoute.builder()
+        JooqFormRoute customerForm = JooqFormRoute.builder()
                 .dataStoreConfig(customerConfig)
                 .title("route.customers.title")
                 .titleField(CUSTOMER.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
                         JooqFieldElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
                         JooqFieldElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
@@ -228,11 +228,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> typeForm = JooqFormRoute.builder()
+        JooqFormRoute typeForm = JooqFormRoute.builder()
                 .dataStoreConfig(typeConfig)
                 .title("route.types.title")
                 .titleField(APPOINTMENT_TYPE.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(APPOINTMENT_TYPE.NAME, "route.types.labels.name").build(),
                         JooqFieldElement.of(APPOINTMENT_TYPE.DURATION_MINUTES, "route.types.labels.duration").build(),
                         JooqFieldElement.of(APPOINTMENT_TYPE.PRICE, "route.types.labels.price").build(),
@@ -240,11 +240,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(APPOINTMENT_TYPE.IS_ACTIVE, "route.types.labels.active").build()))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> appointmentForm = JooqFormRoute.builder()
+        JooqFormRoute appointmentForm = JooqFormRoute.builder()
                 .dataStoreConfig(appointmentConfig)
                 .title("route.appointments.title")
                 .titleField(APPOINTMENT.START_TIME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(APPOINTMENT.START_TIME, "route.appointments.labels.start").build(),
                         JooqFieldElement.of(APPOINTMENT.END_TIME, "route.appointments.labels.end").build(),
                         JooqFieldElement.of(APPOINTMENT.APPOINTMENT_TYPE_ID, "route.appointments.labels.type").build(),
@@ -259,11 +259,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 ))
                 .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> emailTemplatesForm = JooqFormRoute.builder()
+        JooqFormRoute emailTemplatesForm = JooqFormRoute.builder()
                 .dataStoreConfig(emailTemplatesConfig)
                 .title("route.email_templates.title")
                 .titleField(EMAIL_TEMPLATES.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(EMAIL_TEMPLATES.NAME, "route.email_templates.labels.name").build(),
                         JooqFieldElement.of(EMAIL_TEMPLATES.SUBJECT, "route.email_templates.labels.subject").build(),
                         JooqFieldElement.of(EMAIL_TEMPLATES.BODY, "route.email_templates.labels.body").build()))
@@ -345,7 +345,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.COG::create)
                 .title("route.settings.title")
                 .titleField(SETTINGS.ID)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(SETTINGS.USER_AGREEMENT_TEXT, "route.settings.labels.user_agreement_text").build(),
                         JooqFieldElement.of(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, "route.settings.labels.default_email_template").build()))
                 .build());

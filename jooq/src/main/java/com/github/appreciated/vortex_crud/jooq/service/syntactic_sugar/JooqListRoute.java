@@ -7,6 +7,7 @@ import org.jooq.impl.TableImpl;
 
 public class JooqListRoute extends ListRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static ListRoute.ListRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return ListRoute.builder();
+        return ListRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
     }
 }
+

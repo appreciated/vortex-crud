@@ -1,5 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.form;
 
+import com.github.appreciated.vortex_crud.core.config.model.Collection;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.config.model.InternalFormElement;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -39,11 +40,11 @@ public class FormBuilder<ModelClass, FieldType, RepositoryType> {
     }
 
     public void createAndAddCollectionToForm(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
-                                             InternalFormElement<ModelClass, FieldType, RepositoryType> element,
+                                             Collection<ModelClass, FieldType, RepositoryType> element,
                                              Object entity,
                                              VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                                              FormLayout form) {
-        Component collection = element.factory().createCollection(
+        Component collection = element.listFactory().createCollection(
                 context.reflectionService().getId(entity),
                 routeRenderer,
                 element,

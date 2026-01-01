@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
@@ -30,7 +28,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
     public Dialog create(@Nullable Object entityId,
                          @Nullable Object foreignKeyValue,
                          @Nullable FieldType foreignKeyField,
-                         RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
+                         FormRouteProvider<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
@@ -60,7 +58,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
 
-        formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, formRouteRenderer.children(), recordById,
+        formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, formRouteRenderer.fields(), recordById,
                 context, tables, binder, layout);
 
         dialog.add(layout);
@@ -85,8 +83,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         Button saveButton = new Button(dialog.getTranslation("button.save.title"), event -> {
             try {
                 binder.writeBean(entity);
-                // Cast dataStore to handle object entity in foreignKeyStrategy?
-                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, (VortexCrudDataStore<FieldType, Object>)dataStore, fieldNameResolver);
+                foreignKeyResolutionStrategy.resolveForeignKey(entity, foreignKeyField, foreignKeyValue, dataStore, fieldNameResolver);
 
                 if (dataStoreUtil.isNew(entity)) {
                     dataStore.insertRecord(entity);

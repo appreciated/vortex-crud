@@ -68,7 +68,7 @@ public class JooqPasswordVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.password-test.title")
                 .titleField(PASSWORD_TEST.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
                         JooqFieldElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
                 ))
@@ -79,7 +79,7 @@ public class JooqPasswordVortexCrudConfiguration
                 .iconFactory(COG::create)
                 .title("route.password-test.title-list")
                 .filterField(PASSWORD_TEST.NAME)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
                 ))
                 .form(passwordForm)

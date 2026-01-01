@@ -68,7 +68,7 @@ public class JooqTextAreaVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.textarea-test.title")
                 .titleField(TEXTAREA_TEST.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
                         JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
                 ))
@@ -79,7 +79,7 @@ public class JooqTextAreaVortexCrudConfiguration
                 .iconFactory(COG::create)
                 .title("route.textarea-test.title-list")
                 .filterField(TEXTAREA_TEST.NAME)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
                         JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
                 ))

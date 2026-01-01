@@ -44,6 +44,4 @@ public class PdfField<ModelClass, FieldType, RepositoryType> implements Field<Mo
     private boolean inlineEdit;
 
     private FieldType filterField;
-
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 }

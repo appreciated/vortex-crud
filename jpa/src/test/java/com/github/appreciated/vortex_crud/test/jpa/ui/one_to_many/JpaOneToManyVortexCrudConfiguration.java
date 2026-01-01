@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.one_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -13,7 +12,6 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaOneToMany;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollection;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollectionElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
@@ -64,16 +62,17 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> childForm = JpaFormRoute.builder()
                 .dataStoreConfig(childConfig)
                 .titleField("name")
-                .children(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
+                .fields(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
                 .build();
 
         FormRoute parentForm = JpaFormRoute.builder()
                 .dataStoreConfig(parentConfig)
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "relations.labels.name").build(),
                         JpaCollectionElement.builder("relations.labels.children")
-                                .factory(new ListCollectionFactory<>())
+                                .field("children")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(childConfig)
                                 .oneToMany(new JpaOneToMany("parent"))
@@ -90,7 +89,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
                 .filterField("name")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("name", "relations.labels.name").build()
                 ))
                 .form(parentForm)

@@ -51,7 +51,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 JpaFormRoute.builder()
                         .dataStoreConfig(multiFormConfig)
                         .titleField("profileName")
-                        .children(List.of(
+                        .fields(List.of(
                                 JpaFieldElement.builder("profileName", "multi_form.fields.profile_name").build(),
                                 JpaFieldElement.builder("email", "multi_form.fields.email").build()
                         ))
@@ -61,7 +61,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 JpaFormRoute.builder()
                         .dataStoreConfig(multiFormConfig)
                         .titleField("description")
-                        .children(List.of(
+                        .fields(List.of(
                                 JpaFieldElement.builder("description", "multi_form.fields.description").build(),
                                 JpaFieldElement.builder("age", "multi_form.fields.age").build()
                         ))
@@ -83,7 +83,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
                 .filterField("profileName")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("profileName", "relations.labels.name").build()
                 ))
                 .form(multiFormRoute)
