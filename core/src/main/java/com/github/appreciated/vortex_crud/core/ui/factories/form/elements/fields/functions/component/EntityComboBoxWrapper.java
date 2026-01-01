@@ -14,6 +14,8 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.shared.Registration;
 
+import java.util.List;
+
 public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extends HorizontalLayout implements HasValue<ValueChangeEvent<Object>, Object>, HasLabel {
 
     private final ComboBox<Object> comboBox;
@@ -37,8 +39,17 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
                 filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> refField.children().stream()
-                .map(fieldId -> reflectionService.getString(item, fieldId))
+        List<FieldType> labelFields = refField.children();
+        if (labelFields == null || labelFields.isEmpty()) {
+            labelFields = List.of(refField.filterField());
+        }
+
+        List<FieldType> finalLabelFields = labelFields;
+        comboBox.setItemLabelGenerator(item -> finalLabelFields.stream()
+                .map(fieldId -> {
+                    String string = reflectionService.getString(item, fieldId);
+                    return string == null ? "" : string;
+                })
                 .reduce((o, o2) -> o + ", " + o2)
                 .orElse("")
         );
