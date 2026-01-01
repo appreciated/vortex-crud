@@ -42,6 +42,8 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Home")
+                .titleField("message") // Satisfy @NonNull titleField
+                .children(java.util.Collections.emptyList()) // Satisfy @NonNull children
                 .defaultRoute(true)
                 .build();
 

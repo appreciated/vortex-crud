@@ -48,6 +48,7 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
                 .dataStoreConfig(config)
                 .title("Home")
                 .titleField(NOTIFICATION_PANEL_TEST.MESSAGE)
+                .children(java.util.Collections.emptyList()) // Satisfy @NonNull children
                 .defaultRoute(true)
                 .build();
 
