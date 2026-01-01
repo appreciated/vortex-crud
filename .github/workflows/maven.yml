@@ -31,7 +31,13 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: mvn --no-transfer-progress -B package --file pom.xml
+        run: mvn --no-transfer-progress -B verify --file pom.xml
+
+      - name: Print Coverage CSV
+        if: always()
+        run: |
+          echo "Printing jpa/target/site/jacoco-aggregate/jacoco.csv"
+          cat jpa/target/site/jacoco-aggregate/jacoco.csv
 
       - name: Upload Playwright Traces
         if: always()
