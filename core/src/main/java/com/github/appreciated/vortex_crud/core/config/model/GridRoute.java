@@ -47,7 +47,6 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @lombok.NonNull
     private FieldType titleField;
 
-    @lombok.NonNull
     private FieldType descriptionField;
 
     private FieldType imageField;

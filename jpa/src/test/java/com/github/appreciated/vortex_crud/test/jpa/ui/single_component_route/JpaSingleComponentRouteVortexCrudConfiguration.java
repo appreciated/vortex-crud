@@ -1,7 +1,6 @@
-package com.github.appreciated.vortex_crud.test.jpa.ui.single_component.single_component_route;
+package com.github.appreciated.vortex_crud.test.jpa.ui.single_component_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;

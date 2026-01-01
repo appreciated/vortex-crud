@@ -47,8 +47,7 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
         GridRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> gridRoute = JooqGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Home")
-                .titleField(NOTIFICATION_PANEL_TEST.ID)
-                .descriptionField(NOTIFICATION_PANEL_TEST.MESSAGE)
+                .titleField(NOTIFICATION_PANEL_TEST.MESSAGE)
                 .defaultRoute(true)
                 .build();
 
