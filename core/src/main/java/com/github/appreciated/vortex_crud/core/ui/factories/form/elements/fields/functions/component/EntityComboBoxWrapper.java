@@ -37,11 +37,19 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
                 filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
         );
 
-        comboBox.setItemLabelGenerator(item -> refField.children().stream()
-                .map(fieldId -> reflectionService.getString(item, fieldId))
-                .reduce((o, o2) -> o + ", " + o2)
-                .orElse("")
-        );
+        comboBox.setItemLabelGenerator(item -> {
+            java.util.List<FieldType> labelFields = refField.children();
+            if (labelFields == null || labelFields.isEmpty()) {
+                labelFields = java.util.Collections.singletonList(refField.filterField());
+            }
+            return labelFields.stream()
+                    .map(fieldId -> {
+                        String val = reflectionService.getString(item, fieldId);
+                        return val == null ? "" : val;
+                    })
+                    .reduce((o, o2) -> o + ", " + o2)
+                    .orElse("");
+        });
 
         // Add a value change listener to handle when a new value is selected
         comboBox.addValueChangeListener(event -> {
