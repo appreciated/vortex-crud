@@ -201,6 +201,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(commentsConfig)
                                         .titleField(TASK_COMMENTS.COMMENT_TEXT)
                                         .children(List.of(
                                                 JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
@@ -241,6 +242,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .children(List.of(PROJECT_TAGS.TAG))
                                 .emptyMessage("No tags")
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(projectTagsConfig)
                                         .titleField(PROJECT_TAGS.TAG)
                                         .children(List.of(JooqFieldElement.of(PROJECT_TAGS.TAG, "Tag").build()))
                                         .build())

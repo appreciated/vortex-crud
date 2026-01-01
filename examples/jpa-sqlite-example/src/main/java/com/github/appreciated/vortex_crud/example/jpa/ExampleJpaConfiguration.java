@@ -145,6 +145,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of("commentText"))
                 .emptyMessage("route.tasks.labels.comments-empty-message")
                 .form(JpaFormRoute.builder()
+                        .dataStoreConfig(commentConfig)
                         .titleField("name")
                         .children(List.of(
                                 JpaFieldElement.builder("commentText", "route.tasks.labels.comment").build()
@@ -193,6 +194,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .children(List.of("tag"))
                                 .emptyMessage("route.projects.labels.no_tags")
                                 .form(JpaFormRoute.builder()
+                                        .dataStoreConfig(projectTagConfig)
                                         .titleField("tag")
                                         .children(List.of(
                                                 JpaFieldElement.builder("tag", "route.projects.labels.tag").build()
