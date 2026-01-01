@@ -31,7 +31,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
         SLIDE
     }
 
-    @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey

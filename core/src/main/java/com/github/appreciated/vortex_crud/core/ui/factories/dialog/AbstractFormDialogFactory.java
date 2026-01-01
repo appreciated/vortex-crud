@@ -34,6 +34,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener) {
 
@@ -58,7 +59,7 @@ public abstract class AbstractFormDialogFactory<ModelClass, FieldType, Repositor
         createFooter(foreignKeyValue, foreignKeyField, binder, recordById, dialog, storeListener, onCancelListener, context, dataStore);
         FormLayout layout = new FormLayout();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = dataStoreConfig != null ? dataStoreConfig : formRouteRenderer.dataStoreConfig();
 
         formCreator.bindAndAddToLayout(tables.factory(), formRouteRenderer, formRouteRenderer.children(), recordById,
                 context, tables, binder, layout);

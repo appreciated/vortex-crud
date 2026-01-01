@@ -83,6 +83,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 null,
                 dataStore,
                 context,
+                routeRenderer.dataStoreConfig(),
                 () -> UI.getCurrent().getPage().reload(),
                 () -> {
                 }

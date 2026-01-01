@@ -151,6 +151,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
                 collectionData,
                 collectionData.dataStoreInstance(),
                 context,
+                collectionData.dataStoreConfig(),
                 () -> loadCollection(foreignKeyValue, internalFormElement, list, header, context),
                 () -> {
                 });

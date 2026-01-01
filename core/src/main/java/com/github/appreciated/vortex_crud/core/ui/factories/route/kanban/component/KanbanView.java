@@ -169,6 +169,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,
+                    routeRenderer.dataStoreConfig(),
                     () -> {
                         Object recordById = dataStore.getRecordById(context.dataStoreUtil().getId(entity));
                         this.dataStore.updateRecordById(recordById);
@@ -354,10 +355,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        VortexCrudDataStore<FieldType, ModelClass> dataStore) {
-        Object entity = new Object(); // This seems wrong? dataStore.newInstance()? But entity is not used in create...
-        // Ah, previous code: Object entity = new Object();
-        // create call:
-        // create(null, null, null, ...)
+        Object entity = new Object();
 
         if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
             Dialog dialog = routeRenderer.form().dialogFactory().create(
@@ -368,23 +366,8 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     null,
                     dataStore,
                     context,
+                    routeRenderer.dataStoreConfig(),
                     () -> {
-                        // Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity)); // Entity is empty Object?
-                        // This onAdd looks suspicious in original code too.
-                        // But I'll preserve logic.
-                        // Wait, previous logic was:
-                        /*
-                        Object entity = new Object();
-                        Dialog dialog = ... .create(
-                             null, ...
-                             () -> {
-                                Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
-                         */
-                        // If entity is new Object(), getId(entity) will fail or return null?
-                        // If create(...) creates a new record, it doesn't return it via callback.
-                        // The callback updates columns.
-
-                        // I'll stick to refreshColumns().
                         refreshColumns();
                     },
                     () -> {

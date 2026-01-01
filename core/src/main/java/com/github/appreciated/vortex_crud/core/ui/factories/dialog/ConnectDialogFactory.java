@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
@@ -34,6 +35,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
      * @param collectionConfiguration Configuration for the collection, including many-to-many relationship details.
      * @param dataStore               The key identifying the target data store.
      * @param context                 VortexCrudContext.
+     * @param dataStoreConfig         Configuration for the datastore (not used in this implementation but required by interface).
      * @param storeListener           Callback to be executed when changes are stored successfully.
      * @param cancelListener          Callback to be executed when the operation is cancelled.
      * @return A Dialog component allowing users to manage entity connections.
@@ -46,6 +48,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                          OnStoreListener storeListener,
                          OnCancelListener cancelListener) {
 

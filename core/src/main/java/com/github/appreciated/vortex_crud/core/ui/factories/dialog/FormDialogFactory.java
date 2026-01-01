@@ -30,6 +30,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                         DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                          OnStoreListener storeListener,
                          OnCancelListener onCancelListener) {
 
@@ -52,7 +53,7 @@ public class FormDialogFactory<ModelClass, FieldType, RepositoryType> implements
 
         Binder<Object> binder = new Binder<>(Object.class);
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = formRouteRenderer.dataStoreConfig();
+        DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = dataStoreConfig != null ? dataStoreConfig : formRouteRenderer.dataStoreConfig();
         RepositoryType dataStoreKey = tables.factory();
 
         com.vaadin.flow.component.Component formContent;

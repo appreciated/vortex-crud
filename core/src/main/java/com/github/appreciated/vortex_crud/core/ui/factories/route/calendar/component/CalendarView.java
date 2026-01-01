@@ -213,6 +213,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,
+                    singleChildRenderer.dataStoreConfig(),
                     () -> {
                         Object recordById = dataStore.getRecordById(dataStoreUtil.getId(entity));
                         this.dataStore.updateRecordById(recordById);
@@ -243,10 +244,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     }
 
     private void onAdd(LocalDateTime defaultStart) {
-        Object entity = new Object(); // Should be dataStore.newInstance() but keeping original logic if needed, but Dialog logic uses ID which requires entity.
-        // Actually, FormDialogFactory checks if entityId is provided. If null, creates new instance.
-        // So passing null as ID is correct for creation.
-
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> singleChildRenderer = (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
         if (singleChildRenderer.form() != null && singleChildRenderer.form().dialogFactory() != null) {
@@ -258,6 +255,7 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
                     null,
                     (VortexCrudDataStore<FieldType, ModelClass>) dataStore,
                     context,
+                    singleChildRenderer.dataStoreConfig(),
                     () -> {
                         // Refresh
                         refreshCalendar();

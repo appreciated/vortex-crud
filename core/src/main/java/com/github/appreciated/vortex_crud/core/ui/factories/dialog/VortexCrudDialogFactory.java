@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
 import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
+import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -15,6 +16,7 @@ public interface VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> 
                   CollectionConfiguration<ModelClass, FieldType, RepositoryType> config,
                   VortexCrudDataStore<FieldType, ModelClass> dataStore,
                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
+                  DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
                   OnStoreListener storeListener,
                   OnCancelListener cancelListener);
 }
