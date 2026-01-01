@@ -80,6 +80,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         }
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        if (tables == null) {
+            tables = (DataStoreConfig<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(routeResolver.determineActiveRouteIndex() - 1).dataStoreConfig();
+        }
         RepositoryType table = tables.factory();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
