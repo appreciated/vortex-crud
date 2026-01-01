@@ -7,11 +7,13 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.theme.aura.Aura;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @StyleSheet(Aura.STYLESHEET)
 @ColorScheme(ColorScheme.Value.DARK)
 @Push
+@Import({JooqMissingFeaturesVortexCrudConfiguration.class})
 public class JooqMissingFeaturesTestApplication implements AppShellConfigurator {
 
     public static void main(String[] args) {

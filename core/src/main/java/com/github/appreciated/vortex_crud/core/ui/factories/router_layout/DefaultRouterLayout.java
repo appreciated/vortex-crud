@@ -118,10 +118,10 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                         globalSearch.setPageSize(10); // Enable lazy loading with page size
                         globalSearch.setClearButtonVisible(true);
                         // Set Item Label Generator for selected value display
-                        globalSearch.setItemLabelGenerator(result -> result.title() + " (" + result.routeTitle() + ")");
+                        globalSearch.setItemLabelGenerator(result -> result.title() + " (" + getTranslation(result.routeTitle()) + ")");
 
                         // Set Renderer for dropdown items (show Visual Path)
-                        globalSearch.setRenderer(new TextRenderer<>(result -> result.routeTitle() + " > " + result.title()));
+                        globalSearch.setRenderer(new TextRenderer<>(result -> getTranslation(result.routeTitle()) + " > " + result.title()));
 
                         // Use GlobalSearchService as DataProvider with filter converter (identity function for String)
                         globalSearch.setDataProvider(globalSearchService, filter -> filter);

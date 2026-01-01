@@ -85,6 +85,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                         Map.entry(MISSING_FEATURES_TEST.REFERENCED_ID, JooqReferenceField.builder()
                                 .dataStore(referencedStore)
                                 .field(MISSING_FEATURES_REFERENCED.NAME)
+                                .filterField(MISSING_FEATURES_REFERENCED.ID)
                                 .build())
                 ))
                 .build();
