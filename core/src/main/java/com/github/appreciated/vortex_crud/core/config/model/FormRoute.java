@@ -62,6 +62,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private FieldType filterField;
 
+    @lombok.NonNull
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;

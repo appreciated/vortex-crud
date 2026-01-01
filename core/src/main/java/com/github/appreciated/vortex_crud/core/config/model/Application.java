@@ -30,6 +30,7 @@ public class Application<ModelClass, FieldType, RepositoryType> implements Valid
 
     private Auditing auditing;
 
+    @lombok.NonNull
     private Map<String, RouteRenderer<?, ?, ?>> routes;
 
     /**

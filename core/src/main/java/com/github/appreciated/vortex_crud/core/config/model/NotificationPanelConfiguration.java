@@ -28,11 +28,13 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     /**
      * Field containing the notification message/content
      */
+    @lombok.NonNull
     private FieldType messageField;
 
     /**
      * Field containing the timestamp when the notification was created
      */
+    @lombok.NonNull
     private FieldType timestampField;
 
     /**
@@ -48,6 +50,7 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     /**
      * Field indicating whether the notification has been read
      */
+    @lombok.NonNull
     private FieldType readStatusField;
 
     /**

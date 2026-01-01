@@ -56,6 +56,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private FieldType filterField;
 
+    @lombok.NonNull
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;

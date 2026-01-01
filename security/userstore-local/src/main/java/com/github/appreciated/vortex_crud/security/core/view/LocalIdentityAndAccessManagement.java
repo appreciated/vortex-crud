@@ -32,7 +32,9 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
     private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
     private RoleResolutionStrategy<FieldType> roleResolutionStrategy;
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
+    @lombok.NonNull
     private Class<? extends Component> loginView;
+    @lombok.NonNull
     private Class<? extends Component> signUpView;
     private Roles availableRoles;
     private List<String> defaultReadRoles;
