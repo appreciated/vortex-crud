@@ -420,6 +420,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.REPOSITORY_ID))
                                 .children(List.of(REPOSITORY_COLLABORATOR.USER_ID, REPOSITORY_COLLABORATOR.PERMISSION))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(repositoryCollaboratorConfig)
                                         .titleField(REPOSITORY_COLLABORATOR.USER_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.USER_ID, "route.repository_collaborators.labels.user").build(),
@@ -434,6 +435,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(WIKI_PAGE.REPOSITORY_ID))
                                 .children(List.of(WIKI_PAGE.TITLE, WIKI_PAGE.CREATED_AT))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(wikiPageConfig)
                                         .titleField(WIKI_PAGE.TITLE)
                                         .children(List.of(
                                                 JooqFieldElement.of(WIKI_PAGE.TITLE, "route.wiki.labels.title").build(),
@@ -448,6 +450,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(GIT_COMMIT.REPOSITORY_ID))
                                 .children(List.of(GIT_COMMIT.HASH, GIT_COMMIT.MESSAGE, GIT_COMMIT.AUTHOR_NAME, GIT_COMMIT.CREATED_AT))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(gitCommitConfig)
                                         .titleField(GIT_COMMIT.HASH)
                                         .children(List.of(
                                                 JooqFieldElement.of(GIT_COMMIT.HASH, "route.commits.labels.hash").build(),
@@ -463,6 +466,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(GIT_BRANCH.REPOSITORY_ID))
                                 .children(List.of(GIT_BRANCH.NAME))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(gitBranchConfig)
                                         .titleField(GIT_BRANCH.NAME)
                                         .children(List.of(
                                                 JooqFieldElement.of(GIT_BRANCH.NAME, "route.branches.labels.name").build(),
@@ -489,6 +493,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.ORGANIZATION_ID))
                                 .children(List.of(ORGANIZATION_MEMBER.USER_ID, ORGANIZATION_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(organizationMemberConfig)
                                         .titleField(ORGANIZATION_MEMBER.USER_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.USER_ID, "route.organization_members.labels.user").build(),
@@ -512,6 +517,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(REPOSITORY_COLLABORATOR.USER_ID))
                                 .children(List.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, REPOSITORY_COLLABORATOR.PERMISSION))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(repositoryCollaboratorConfig)
                                         .titleField(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(REPOSITORY_COLLABORATOR.REPOSITORY_ID, "route.repository_collaborators.labels.repository").build(),
@@ -526,6 +532,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .oneToMany(new JooqOneToMany(ORGANIZATION_MEMBER.USER_ID))
                                 .children(List.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, ORGANIZATION_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
+                                        .dataStoreConfig(organizationMemberConfig)
                                         .titleField(ORGANIZATION_MEMBER.ORGANIZATION_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(ORGANIZATION_MEMBER.ORGANIZATION_ID, "route.organization_members.labels.organization").build(),

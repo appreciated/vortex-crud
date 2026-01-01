@@ -36,12 +36,14 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
         var dataStore = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
         DataStoreConfig<JpaRepository<?, ?>, String, JpaRepository<?, ?>> config = JpaDataStoreConfig.builder(repository, dataStore)
                 .withServices(fieldService, Map.of(JpaNotificationPanelEntity.class, dataStore))
+                .fields(Map.of())
                 .build();
 
         // Add a simple grid route so the router layout renders
         RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> gridRoute = JpaGridRoute.builder()
                 .dataStoreConfig(config)
                 .title("Home")
+                .titleField("message")
                 .defaultRoute(true)
                 .build();
 
