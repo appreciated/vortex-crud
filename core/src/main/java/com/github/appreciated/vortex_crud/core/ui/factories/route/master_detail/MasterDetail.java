@@ -165,7 +165,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                     context,
                     creation ? currentPathIndex : currentPathIndex + 1,
                     routeResolver,
-                    new DetailRouteSetting(true, false, creation)
+                    new DetailRouteSetting(true, false, creation, routeRenderer.dataStoreConfig())
             );
             detailContainer.add(component);
         }

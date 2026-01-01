@@ -46,7 +46,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         VortexCrudPathToRouteResolver typedRouteResolver = routeResolver;
 
         assert detailRouteSetting != null;
-        return getForm(context, typedRouteResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
+        return getForm(context, typedRouteResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider, detailRouteSetting.dataStoreConfig());
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
@@ -55,7 +55,8 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                                   boolean isHeaderHidden,
                                   boolean creationMode,
                                   boolean isDeleteButtonHidden,
-                                  RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer) {
+                                  RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
+                                  DataStoreConfig<ModelClass, FieldType, RepositoryType> parentDataStoreConfig) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         FormLayout form = new FormLayout();
@@ -80,6 +81,12 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         }
 
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = routeRenderer.dataStoreConfig();
+        if (tables == null) {
+            tables = parentDataStoreConfig;
+        }
+        if (tables == null) {
+            throw new IllegalStateException("No DataStoreConfig found for route: " + routeRenderer.getClass().getName() + " title: " + routeRenderer.title());
+        }
         RepositoryType table = tables.factory();
         VortexCrudDataStore<FieldType, ModelClass> dataStore = tables.dataStoreInstance();
 
