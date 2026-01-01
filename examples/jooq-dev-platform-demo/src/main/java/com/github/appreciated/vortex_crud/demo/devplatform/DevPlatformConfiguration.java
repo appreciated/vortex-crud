@@ -347,7 +347,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Issue Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
-                .dataStoreConfig(issueConfig)
                 .titleField(ISSUE.TITLE)
                 .children(List.of(
                         JooqFieldElement.of(ISSUE.TITLE, "route.issues.labels.title").build(),
@@ -374,7 +373,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Pull Request Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
-                .dataStoreConfig(pullRequestConfig)
                 .titleField(PULL_REQUEST.TITLE)
                 .children(List.of(
                         JooqFieldElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
@@ -401,7 +399,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Repository Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> repositoryForm = JooqFormRoute.builder()
-                .dataStoreConfig(repositoryConfig)
                 .title("route.repositories.title")
                 .titleField(REPOSITORY.NAME)
                 .children(List.of(
@@ -474,7 +471,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Organization Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> organizationForm = JooqFormRoute.builder()
-                .dataStoreConfig(organizationConfig)
                 .title("route.organizations.title")
                 .titleField(ORGANIZATION.NAME)
                 .children(List.of(
@@ -500,7 +496,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // User Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
-                .dataStoreConfig(usersConfig)
                 .titleField(USERS.USERNAME)
                 .children(List.of(
                         JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
@@ -537,7 +532,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
         // Milestone Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> milestoneForm = JooqFormRoute.builder()
-                .dataStoreConfig(milestoneConfig)
                 .title("route.milestones.title")
                 .titleField(MILESTONE.TITLE)
                 .children(List.of(

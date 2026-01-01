@@ -31,8 +31,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
         SLIDE
     }
 
-    private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
-
     @I18nKey
     private String title;
 
@@ -82,5 +80,10 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
             return new FormSlideFactory<>();
         }
         return new FormDialogFactory<>();
+    }
+
+    @Override
+    public DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig() {
+        return null;
     }
 }

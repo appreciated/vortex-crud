@@ -185,7 +185,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(tasksConfig)
                 .titleField(TASKS.TITLE)
                 .children(List.of(
                         JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
@@ -224,7 +223,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
-                .dataStoreConfig(projectsConfig)
                 .title("route.projects.title-cards")
                 .titleField(PROJECTS.NAME)
                 .children(List.of(
@@ -251,7 +249,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
-                .dataStoreConfig(imagesConfig)
                 .title("route.projects.title-cards")
                 .titleField(IMAGES.TITLE)
                 .children(List.of(
@@ -261,7 +258,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> documentForm = JooqFormRoute.builder()
-                .dataStoreConfig(documentsConfig)
                 .title("Documents")
                 .titleField(DOCUMENTS.TITLE)
                 .children(List.of(
@@ -271,7 +267,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageSlideForm = JooqFormSlideRoute.builder()
-                .dataStoreConfig(imagesConfig)
                 .title("route.projects.title-cards")
                 .titleField(IMAGES.TITLE)
                 .children(List.of(
@@ -282,7 +277,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> videoForm = JooqFormRoute.builder()
-                .dataStoreConfig(videosConfig)
                 .title("route.videos.title-cards")
                 .titleField(VIDEOS.TITLE)
                 .children(List.of(
@@ -451,7 +445,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField("title")
                 .descriptionField("content")
                 .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                        .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .children(List.of(
                                 InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()

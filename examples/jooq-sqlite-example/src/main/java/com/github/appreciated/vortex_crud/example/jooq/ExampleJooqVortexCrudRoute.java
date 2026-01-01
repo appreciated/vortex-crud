@@ -58,7 +58,6 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
                 .descriptionField(PROJECTS.DESCRIPTION)
                 .writeRoles(List.of("manager", "admin"))
                 .form(JooqFormRoute.builder()
-                        .dataStoreConfig(projectsConfig)
                         .title("route.projects.title-cards")
                         .titleField(PROJECTS.NAME)
                         .children(List.of(

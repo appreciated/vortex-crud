@@ -165,7 +165,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
 
         // Forms
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> roomForm = JooqFormRoute.builder()
-                .dataStoreConfig(roomConfig)
                 .title("route.rooms.title")
                 .titleField(ROOM.NAME)
                 .children(List.of(
@@ -177,7 +176,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
 
         // Room Detail (for Resource View)
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> roomDetailForm = JooqFormRoute.builder()
-                .dataStoreConfig(roomConfig)
                 .title("route.rooms.title")
                 .titleField(ROOM.NAME)
                 .children(List.of(
@@ -193,7 +191,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> personForm = JooqFormRoute.builder()
-                .dataStoreConfig(personConfig)
                 .title("route.persons.title")
                 .titleField(PERSON.NAME)
                 .children(List.of(
@@ -217,7 +214,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> customerForm = JooqFormRoute.builder()
-                .dataStoreConfig(customerConfig)
                 .title("route.customers.title")
                 .titleField(CUSTOMER.NAME)
                 .children(List.of(
@@ -229,7 +225,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> typeForm = JooqFormRoute.builder()
-                .dataStoreConfig(typeConfig)
                 .title("route.types.title")
                 .titleField(APPOINTMENT_TYPE.NAME)
                 .children(List.of(
@@ -241,7 +236,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> appointmentForm = JooqFormRoute.builder()
-                .dataStoreConfig(appointmentConfig)
                 .title("route.appointments.title")
                 .titleField(APPOINTMENT.START_TIME)
                 .children(List.of(
@@ -260,7 +254,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build();
 
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> emailTemplatesForm = JooqFormRoute.builder()
-                .dataStoreConfig(emailTemplatesConfig)
                 .title("route.email_templates.title")
                 .titleField(EMAIL_TEMPLATES.NAME)
                 .children(List.of(

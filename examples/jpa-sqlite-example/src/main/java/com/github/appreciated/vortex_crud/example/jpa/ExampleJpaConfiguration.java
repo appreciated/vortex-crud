@@ -163,7 +163,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
-                .dataStoreConfig(taskConfig)
                 .titleField("title")
                 .children(List.of(
                         JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
@@ -177,7 +176,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
-                .dataStoreConfig(projectConfig)
                 .title("route.projects.title-cards")
                 .titleField("name")
                 .children(List.of(
@@ -206,7 +204,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
                 .children(List.of(
@@ -216,7 +213,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormSlideRoute.builder()
-                .dataStoreConfig(imageConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
                 .children(List.of(
@@ -226,7 +222,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
-                .dataStoreConfig(videoConfig)
                 .title("route.videos.title-cards")
                 .titleField("title")
                 .children(List.of(
@@ -384,7 +379,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .titleField("title")
                 .descriptionField("content")
                 .form(JpaFormRoute.builder()
-                        .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.notes.labels.title").build(),
@@ -415,7 +409,6 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .title("route.documents.title")
                 .titleField("title")
                 .form(JpaFormRoute.builder()
-                        .dataStoreConfig(documentConfig)
                         .titleField("title")
                         .children(List.of(
                                 JpaFieldElement.builder("title", "route.documents.labels.title").build(),

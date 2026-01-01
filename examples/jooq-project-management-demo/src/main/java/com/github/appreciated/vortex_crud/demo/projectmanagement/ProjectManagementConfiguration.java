@@ -197,7 +197,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         // Project Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> projectForm = JooqFormRoute.builder()
-                .dataStoreConfig(projectConfig)
                 .title("route.projects.title")
                 .titleField(PROJECT.NAME)
                 .children(List.of(
@@ -217,7 +216,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(PROJECT_MEMBER.PROJECT_ID))
                                 .children(List.of(PROJECT_MEMBER.USER_ID, PROJECT_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(projectMemberConfig)
                                         .titleField(PROJECT_MEMBER.USER_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
@@ -229,7 +227,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         // User Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> userForm = JooqFormRoute.builder()
-                .dataStoreConfig(usersConfig)
                 .titleField(USERS.USERNAME)
                 .children(List.of(
                         JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
@@ -241,7 +238,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(PROJECT_MEMBER.USER_ID))
                                 .children(List.of(PROJECT_MEMBER.PROJECT_ID, PROJECT_MEMBER.ROLE))
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(projectMemberConfig)
                                         .titleField(PROJECT_MEMBER.PROJECT_ID)
                                         .children(List.of(
                                                 JooqFieldElement.of(PROJECT_MEMBER.PROJECT_ID, "route.project_members.labels.project").build(),
@@ -253,7 +249,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         // Task Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(taskConfig)
                 .titleField(TASK.TITLE)
                 .routeActions(List.of(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
@@ -309,7 +304,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(TASK.PARENT_TASK_ID))
                                 .children(List.of(TASK.TASK_NUMBER, TASK.TITLE, TASK.STATUS))
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(taskConfig)
                                         .titleField(TASK.TITLE)
                                         .children(List.of(
                                                 JooqFieldElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
@@ -326,7 +320,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(TIME_ENTRY.TASK_ID))
                                 .children(List.of(TIME_ENTRY.USER_ID, TIME_ENTRY.HOURS_SPENT, TIME_ENTRY.ENTRY_DATE))
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(timeEntryConfig)
                                         .titleField(TIME_ENTRY.HOURS_SPENT)
                                         .children(List.of(
                                                 JooqFieldElement.of(TIME_ENTRY.HOURS_SPENT, "route.time_entries.labels.hours").build(),
@@ -343,7 +336,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .oneToMany(new JooqOneToMany(ATTACHMENT.TASK_ID))
                                 .children(List.of(ATTACHMENT.NAME, ATTACHMENT.UPLOADED_AT))
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(attachmentConfig)
                                         .titleField(ATTACHMENT.NAME)
                                         .children(List.of(
                                                 JooqFieldElement.of(ATTACHMENT.NAME, "route.attachments.labels.name").build(),
@@ -360,7 +352,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .children(List.of(TASK_COMMENT.CONTENT, TASK_COMMENT.CREATED_AT))
                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(taskCommentConfig)
                                         .titleField(TASK_COMMENT.CONTENT)
                                         .children(List.of(
                                                 JooqFieldElement.of(TASK_COMMENT.CONTENT, "route.tasks.labels.comment").build()))
@@ -383,7 +374,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         // Milestone Form Configuration
         RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> milestoneForm = JooqFormRoute.builder()
-                .dataStoreConfig(milestoneConfig)
                 .title("route.milestones.title")
                 .titleField(MILESTONE.TITLE)
                 .children(List.of(
