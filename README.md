@@ -114,6 +114,8 @@ Standard form view for creating and editing entities.
 - **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
 - **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
+- **Search**: Global search results view, aggregating results from configured routes (configured via `SearchRoute` model)
+- **Single Component**: Route displaying a single full-page input component, useful for document editing or specific single-field workflows (configured via `SingleComponentRoute` model)
 - **Custom**: Enables the integration of fully custom Vaadin components/views into the routing system (configured via `CustomRoute` model)
 
 ## <a name="ui-actions">UI Actions</a>
@@ -131,6 +133,7 @@ Reusable building blocks for a consistent user interface:
 - **Layouts**: `DefaultRouterLayout` provides the standard application shell with navigation.
 - **Factories**: `CardFactory` renders entities as cards in List and Kanban views.
 - **Search & Filtering**: `GenericFilterableDataProvider` and `SearchField` components enable data exploration.
+- **Notifications**: `NotificationPanel` component displays user notifications, supporting read/unread status and timestamps.
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
 <img width="600px" src="./img/screenshot-subroute-view.png">
@@ -930,3 +933,5 @@ To get started with development
     - Go to: `examples\jooq-sqlite-example\`
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
     - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
+
+For more detailed information on the project structure, modules, and testing infrastructure, please refer to [DEV_README.md](DEV_README.md).
