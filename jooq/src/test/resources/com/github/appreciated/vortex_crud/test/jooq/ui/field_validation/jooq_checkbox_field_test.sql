@@ -1,7 +1,7 @@
 -- Seed data for jpa field validation tests
-DROP TABLE IF EXISTS validation_test;
+DROP TABLE IF EXISTS validation_test_checkbox;
 
-CREATE TABLE validation_test
+CREATE TABLE validation_test_checkbox
 (
     id             INTEGER PRIMARY KEY,
     required_field VARCHAR(255) NOT NULL,
@@ -14,6 +14,6 @@ CREATE TABLE validation_test
     image_field    VARCHAR(255)
 );
 
-INSERT INTO validation_test (id, required_field, email_field, numeric_field, date_field, datetime_field, enum_field, checkbox_field, image_field)
+INSERT INTO validation_test_checkbox (id, required_field, email_field, numeric_field, date_field, datetime_field, enum_field, checkbox_field, image_field)
 VALUES (1, 'Test Value', 'test@example.com', 42, '2023-01-01 00:00:00.000', '2023-01-01 10:15:00.000', 'OPTION1', 1, './red.png'),
        (2, 'Another Value', 'user@domain.org', 100, '2023-02-15 00:00:00.000', '2023-02-15 11:20:00.000', 'OPTION2', 0, './green.png');

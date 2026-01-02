@@ -13,6 +13,7 @@ import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
+import com.github.appreciated.vortex_crud.jooq.models.tables.ValidationTest;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -23,46 +24,47 @@ import static com.github.appreciated.vortex_crud.jooq.models.Tables.VALIDATION_T
 import static com.github.appreciated.vortex_crud.test.jooq.ui.field_validation.JooqFieldValidationTestEnum.*;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
-@Service
-public class JooqFieldValidationVortexCrudConfiguration
+public abstract class BaseJooqFieldValidationVortexCrudConfiguration
         implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     private final DSLContext dsl;
+    private final ValidationTest table;
 
-    public JooqFieldValidationVortexCrudConfiguration(DSLContext dsl) {
+    public BaseJooqFieldValidationVortexCrudConfiguration(DSLContext dsl, ValidationTest table) {
         this.dsl = dsl;
+        this.table = table;
     }
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(VALIDATION_TEST.getRecordType(), dsl);
-        var config = JooqDataStoreConfig.of(VALIDATION_TEST)
+        JooqDataStore store = new JooqDataStore(table.getRecordType(), dsl);
+        var config = JooqDataStoreConfig.of(table)
                         .dataStoreInstance((VortexCrudDataStore) store)
                         .fields(Map.of(
-                                VALIDATION_TEST.ID, JooqNumericIdField.builder().build(),
-                                VALIDATION_TEST.REQUIRED_FIELD, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                                VALIDATION_TEST.EMAIL_FIELD, JooqEmailField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                                VALIDATION_TEST.NUMERIC_FIELD, JooqDoubleField.builder().validators(List.of(new DoubleRangeValidator("Value must be at least 1.0", 1.0, Double.MAX_VALUE))).build(),
-                                VALIDATION_TEST.DATE_FIELD, JooqDateField.builder().build(),
-                                VALIDATION_TEST.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
-                                VALIDATION_TEST.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
-                                VALIDATION_TEST.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
-                                VALIDATION_TEST.IMAGE_FIELD, JooqImageField.builder().resourceProvider(new LocalImageResourceProvider()).build()
+                                table.ID, JooqNumericIdField.builder().build(),
+                                table.REQUIRED_FIELD, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
+                                table.EMAIL_FIELD, JooqEmailField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
+                                table.NUMERIC_FIELD, JooqDoubleField.builder().validators(List.of(new DoubleRangeValidator("Value must be at least 1.0", 1.0, Double.MAX_VALUE))).build(),
+                                table.DATE_FIELD, JooqDateField.builder().build(),
+                                table.DATETIME_FIELD, JooqDateTimePickerField.builder().build(),
+                                table.ENUM_FIELD, JooqSelectField.builder().values("enum-options").build(),
+                                table.CHECKBOX_FIELD, JooqCheckboxField.builder().build(),
+                                table.IMAGE_FIELD, JooqImageField.builder().resourceProvider(new LocalImageResourceProvider()).build()
                         )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
-                .titleField(VALIDATION_TEST.REQUIRED_FIELD)
+                .titleField(table.REQUIRED_FIELD)
                 .fields(List.of(
-                        JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.DATE_FIELD, "validation.fields.date").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.DATETIME_FIELD, "validation.fields.datetime").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.CHECKBOX_FIELD, "validation.fields.checkbox").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.ENUM_FIELD, "validation.fields.enum").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.IMAGE_FIELD, "validation.fields.image").build()
+                        JooqFieldElement.of(table.REQUIRED_FIELD, "validation.fields.required").build(),
+                        JooqFieldElement.of(table.EMAIL_FIELD, "validation.fields.email").build(),
+                        JooqFieldElement.of(table.NUMERIC_FIELD, "validation.fields.numeric").build(),
+                        JooqFieldElement.of(table.DATE_FIELD, "validation.fields.date").build(),
+                        JooqFieldElement.of(table.DATETIME_FIELD, "validation.fields.datetime").build(),
+                        JooqFieldElement.of(table.CHECKBOX_FIELD, "validation.fields.checkbox").build(),
+                        JooqFieldElement.of(table.ENUM_FIELD, "validation.fields.enum").build(),
+                        JooqFieldElement.of(table.IMAGE_FIELD, "validation.fields.image").build()
                 ))
                 .build();
 
@@ -71,10 +73,10 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .filterField(VALIDATION_TEST.REQUIRED_FIELD)
+                .filterField(table.REQUIRED_FIELD)
                 .columns(List.of(
-                        JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),
-                        JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
+                        JooqFieldElement.of(table.REQUIRED_FIELD, "route.projects.labels.name").build(),
+                        JooqFieldElement.of(table.EMAIL_FIELD, "route.projects.labels.description").build()
                 ))
                 .form(validationForm)
                 .build());

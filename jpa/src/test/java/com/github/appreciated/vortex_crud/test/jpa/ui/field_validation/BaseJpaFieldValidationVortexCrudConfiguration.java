@@ -27,14 +27,13 @@ import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.Jp
 import static com.github.appreciated.vortex_crud.test.jpa.ui.field_validation.JpaFieldValidationEnum.OPTION3;
 import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 
-@Service
-public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
+public abstract class BaseJpaFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final JpaFieldValidationRepository validationEntityRepository;
+    private final JpaRepository validationEntityRepository;
     private final JpaFieldService fieldService;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
 
-    public JpaFieldValidationVortexCrudConfiguration(JpaFieldValidationRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
+    public BaseJpaFieldValidationVortexCrudConfiguration(JpaRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
         this.validationEntityRepository = validationEntityRepository;
         this.fieldService = fieldService;
         this.annotationRegistryService = annotationRegistryService;
