@@ -14,6 +14,6 @@ public abstract class AbstractSelectFieldTest extends BaseUITest {
         navigateTo(getValidationPath());
         waitForAnyElementContainingText("Test Value").click();
         waitForUrlToBe(getValidationPath() + "/1");
-        waitForElementWithTagAndValue("vaadin-select", "1");
+        waitForElementWithTagAndValue("vaadin-select", "OPTION1");
     }
 }

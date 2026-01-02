@@ -3,6 +3,10 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 import com.github.appreciated.vortex_crud.ui_test_base.tests.AbstractDateTimeFieldTest;
 import org.springframework.test.context.jdbc.Sql;
 
-@Sql( "field_validation_test.sql")
+@Sql("seed_datetime.sql")
 public class JpaDateTimeFieldTest extends AbstractDateTimeFieldTest {
+    @Override
+    public String getValidationPath() {
+        return "datetime-validation-test";
+    }
 }
