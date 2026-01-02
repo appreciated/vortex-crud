@@ -132,7 +132,9 @@
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.29.0</version>
                 <configuration>
-                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <!-- This allows the maven plugin and Spring boot to operate with the changelog file name-->
+                    <changeLogDirectory>src/main/resources/</changeLogDirectory>
+                    <changeLogFile>db/changelog/db.changelog-master.yaml</changeLogFile>
                     <url>jdbc:sqlite:${project.basedir}/project-management-demo.db</url>
                     <driver>org.sqlite.JDBC</driver>
                 </configuration>
