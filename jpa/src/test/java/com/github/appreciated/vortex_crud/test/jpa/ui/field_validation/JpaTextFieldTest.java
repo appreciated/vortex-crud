@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaTextFieldTest extends AbstractTextFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "text-field-test";
+    }
 }

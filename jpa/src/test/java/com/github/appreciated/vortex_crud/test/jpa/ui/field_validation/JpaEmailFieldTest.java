@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaEmailFieldTest extends AbstractEmailFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "email-field-test";
+    }
 }

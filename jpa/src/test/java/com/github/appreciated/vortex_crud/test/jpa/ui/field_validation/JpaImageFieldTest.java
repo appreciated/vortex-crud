@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaImageFieldTest extends AbstractImageFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "image-field-test";
+    }
 }

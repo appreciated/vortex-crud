@@ -10,9 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "validation_test")
-public class JpaFieldValidationEntity {
+@MappedSuperclass
+public abstract class AbstractFieldValidationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,10 +52,6 @@ public class JpaFieldValidationEntity {
     @Column(name = "checkbox_field")
     @CheckboxField
     private Boolean checkboxField;
-
-    // Default constructor
-    public JpaFieldValidationEntity() {
-    }
 
     // Getters and setters
     public Long getId() {

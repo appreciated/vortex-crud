@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaCheckboxFieldTest extends AbstractCheckboxFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "checkbox-field-test";
+    }
 }

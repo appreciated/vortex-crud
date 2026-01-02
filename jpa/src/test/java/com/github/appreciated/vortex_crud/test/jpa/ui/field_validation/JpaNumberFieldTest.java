@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaNumberFieldTest extends AbstractNumberFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "number-field-test";
+    }
 }

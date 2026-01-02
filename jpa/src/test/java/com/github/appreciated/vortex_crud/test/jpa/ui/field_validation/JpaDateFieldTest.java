@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaDateFieldTest extends AbstractDateFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "date-field-test";
+    }
 }

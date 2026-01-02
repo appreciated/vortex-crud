@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaFieldValidationLifecycleTest extends AbstractFieldValidationLifecycleTest {
+
+    @Override
+    public String getValidationPath() {
+        return "lifecycle-field-test";
+    }
 }

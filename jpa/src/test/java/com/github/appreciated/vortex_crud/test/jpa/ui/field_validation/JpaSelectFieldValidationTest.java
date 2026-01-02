@@ -5,4 +5,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 @Sql( "field_validation_test.sql")
 public class JpaSelectFieldValidationTest extends AbstractSelectFieldTest {
+
+    @Override
+    public String getValidationPath() {
+        return "select-field-test";
+    }
 }

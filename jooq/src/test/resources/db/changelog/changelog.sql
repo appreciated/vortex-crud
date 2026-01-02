@@ -348,3 +348,138 @@ CREATE TABLE datastore_dropdown_test
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL
 );
+
+-- changeset Create checkbox_field_test:370
+CREATE TABLE checkbox_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create date_field_test:371
+CREATE TABLE date_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create datetime_field_test:372
+CREATE TABLE datetime_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create email_field_test:373
+CREATE TABLE email_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create image_field_test:374
+CREATE TABLE image_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create number_field_test:375
+CREATE TABLE number_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create select_field_test:376
+CREATE TABLE select_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create text_field_test:377
+CREATE TABLE text_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+-- changeset Create lifecycle_field_test:378
+CREATE TABLE lifecycle_field_test
+(
+    id             INTEGER      NOT NULL,
+    required_field VARCHAR(255) NOT NULL,
+    email_field    VARCHAR(255),
+    numeric_field  DOUBLE PRECISION CHECK (numeric_field > 0),
+    date_field     DATE,
+    datetime_field TIMESTAMP,
+    enum_field     VARCHAR(20),
+    checkbox_field BOOLEAN,
+    image_field    VARCHAR(255),
+    PRIMARY KEY (id)
+);
