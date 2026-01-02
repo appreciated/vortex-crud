@@ -151,6 +151,7 @@ public abstract class AbstractMultiFormRouteTest extends BaseUITest {
         waitForButton("Delete").click();
 
         waitForUrlToBe(getMultiFormPath());
+        assertThat(page.getByText("Many To Many Label")).isVisible();
         List<Locator> elements = page.locator("//*[contains(text(), 'Max Mustermann')]").all();
         assertTrue(elements.stream().noneMatch(Locator::isVisible));
     }
