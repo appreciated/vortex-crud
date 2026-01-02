@@ -136,7 +136,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         Map.entry(APPOINTMENT.RECURRENCE_END_DATE, JooqDateTimePickerField.builder().build()),
                         Map.entry(APPOINTMENT.RECURRENCE_GROUP_ID, JooqIntegerField.builder().build()),
                         Map.entry(APPOINTMENT.CREATED_AT, JooqDateTimePickerField.builder().build()),
-                        Map.entry(APPOINTMENT.USER_AGREEMENT_ACCEPTED, JooqCheckboxField.builder().validators(List.of(new com.vaadin.flow.data.validator.RangeValidator<Boolean>("Must be accepted", java.util.Comparator.naturalOrder(), true, true))).build())
+                        Map.entry(APPOINTMENT.USER_AGREEMENT_ACCEPTED, JooqCheckboxField.builder().validators(List.of(new com.vaadin.flow.data.validator.RangeValidator<>("Must be accepted", java.util.Comparator.naturalOrder(), true, true))).build())
                 ))
                 .build();
 
