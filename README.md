@@ -151,6 +151,7 @@ A rich set of fields for data input and display, handling various data types and
     - `SelectField`: For static lists or Enum values.
     - `MultiSelectField` / `MultiSelectValueField`: For selecting multiple values or relations.
     - `ReferenceField`: For selecting a single related entity (Many-to-One).
+    - `Collection`: For managing One-to-Many or Many-to-Many relationships inline (e.g. subtasks, comments).
 - **Rich Media & Files**:
     - `ImageField`: For uploading and displaying images.
     - `VideoField`: For uploading and playing videos.
@@ -203,7 +204,7 @@ Real-world scenarios showcasing how to build specific types of applications.
 
 - **[Project Management Demo](examples/jooq-project-management-demo)** (`examples/jooq-project-management-demo`)
   A project management tool featuring Projects, Tasks, Milestones, and Labels. It demonstrates a **Custom Field System** where users can dynamically define new fields for entities, stored as JSON.
-  - **Key Features**: Time Tracking (TimeEntry), Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies.
+  - **Key Features**: Time Tracking (TimeEntry), Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies. It also showcases **Workflow Transitions** (e.g., Start Progress, Review, Done) implemented via `SingleEntityRouteAction`.
 
 - **[Developer Platform Demo](examples/jooq-dev-platform-demo)** (`examples/jooq-dev-platform-demo`)
   A platform similar to GitHub/GitLab, managing Repositories, Issues, Pull Requests, and Organizations. Like the Project Management demo, it utilizes the custom field system for extensibility.
@@ -950,5 +951,7 @@ To get started with development
     - Go to: `examples\jooq-sqlite-example\`
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
     - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
+
+The project also includes a shared test module `ui-test-base` which contains abstract tests for UI verification using Playwright.
 
 For more detailed information on the project structure, modules, and testing infrastructure, please refer to [DEV_README.md](DEV_README.md).
