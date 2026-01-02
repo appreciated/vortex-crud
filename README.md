@@ -110,7 +110,7 @@ Standard form view for creating and editing entities.
 
 - **Form Slide**: Form displayed in a slide-out side panel. This is configured by using a `FormRoute` (or `JooqFormRoute`/`JpaFormRoute`) and setting the dialog factory to `FormSlideFactory`.
 - **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured via `SingleFormRoute` model.
-- **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
+- **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows. Configured via `MultiFormRoute` model, which accepts a list of `FormRoute` instances.
 - **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory` or `KanbanRoute`)
 - **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory` or `CalendarRoute`)
 - **Submenu**: Creates nested menu structures for hierarchical navigation, allowing grouping of related routes (configured via `SubmenuRoute` model).
@@ -152,6 +152,11 @@ A rich set of fields for data input and display, handling various data types and
     - `MultiSelectField` / `MultiSelectValueField`: For selecting multiple values or relations.
     - `ReferenceField`: For selecting a single related entity (Many-to-One).
     - `Collection`: For managing One-to-Many or Many-to-Many relationships inline (e.g. subtasks, comments).
+        - Configured via `CollectionConfiguration` (or `Collection` model).
+        - **Key Properties**:
+            - `form`: Defines the `FormRoute` used to edit the child items.
+            - `oneToMany` / `manyToMany`: Defines the relationship type and target.
+            - `listFactory`: Custom factory for listing items (optional).
 - **Rich Media & Files**:
     - `ImageField`: For uploading and displaying images.
     - `VideoField`: For uploading and playing videos.
@@ -422,25 +427,34 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
 ### Configuration Example
 
-Configure authentication and user management in your application configuration:
+Configure authentication and user management in your application configuration. You can define granular permissions for routes and fields.
 
 ```java
 .identityAndAccessManagement(
     LocalIdentityAndAccessManagement.builder()
         .dataStoreConfig(userDataStoreConfig) // Assuming user data store config is created
         .availableRoles(Roles.builder().roles(List.of("manager", "admin")).build())
+        .defaultReadRoles(List.of("user")) // Default roles required to read data
+        .defaultWriteRoles(List.of("admin")) // Default roles required to write data
         .signUpEnabled(true)
         .loginView(LoginView.class)
         .signUpView(SignUpView.class)
         .username(JpaFieldElement.builder("username", "labels.username").build())
         .password(JpaFieldElement.builder("passwordHash", "labels.password").build())
         .signUpFields(List.of(
-            JpaFieldElement.builder("firstName", "labels.firstName").build(),
+            JpaFieldElement.builder("firstName", "labels.firstName")
+                .readOnlyForRoles(List.of("guest")) // Field-level permission
+                .build(),
             JpaFieldElement.builder("lastName", "labels.lastName").build()
         ))
         .build()
 )
 ```
+
+### Granular Permissions
+`vortex-crud` supports fine-grained access control:
+- **Route Level**: Use `.writeRoles(...)` and `.readOnlyRoles(...)` on any route configuration (e.g., `GridRoute`, `FormRoute`) to restrict access.
+- **Field Level**: Use `.readOnlyForRoles(...)` on form elements (like `JpaFieldElement` or `JooqFieldElement`) to make specific fields read-only for certain user roles.
 
 ### User Entity Example
 
@@ -955,6 +969,7 @@ To get started with development
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
     - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
 
-The project also includes a shared test module `ui-test-base` which contains abstract tests for UI verification using Playwright.
+## <a name="ui-testing">UI Testing</a>
+The project includes a shared test module `ui-test-base` which provides a robust infrastructure for UI verification using **Playwright**. This module contains abstract test classes (e.g., `AbstractGridTest`, `AbstractKanbanTest`) that can be extended to test your specific implementations, ensuring that your `vortex-crud` application works as expected across different backend implementations (JPA/jOOQ).
 
 For more detailed information on the project structure, modules, and testing infrastructure, please refer to [DEV_README.md](DEV_README.md).
