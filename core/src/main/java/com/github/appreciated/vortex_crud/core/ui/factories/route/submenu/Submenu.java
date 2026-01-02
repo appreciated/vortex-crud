@@ -55,7 +55,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         masterLayout.add(header);
 
         routeListLayout.setPadding(false);
-        routeListLayout.setSpacing(false);
+        routeListLayout.setSpacing(true);
         routeListLayout.setWidthFull();
         routeListLayout.setHeightFull();
 
