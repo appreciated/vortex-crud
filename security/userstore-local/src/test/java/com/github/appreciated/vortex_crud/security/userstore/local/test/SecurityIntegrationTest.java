@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForeignKeyResolutionStrategy;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.TranslationService;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldValueStrategy;
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
 import org.junit.jupiter.api.AfterEach;
@@ -39,6 +40,9 @@ public class SecurityIntegrationTest extends BaseUITest {
 
     @MockitoBean
     private ReflectionService reflectionService;
+
+    @MockitoBean
+    private ReferenceFieldValueStrategy referenceFieldValueStrategy;
 
     @MockitoBean
     private VortexCrudForeignKeyResolutionStrategy vortexCrudForeignKeyResolutionStrategy;
