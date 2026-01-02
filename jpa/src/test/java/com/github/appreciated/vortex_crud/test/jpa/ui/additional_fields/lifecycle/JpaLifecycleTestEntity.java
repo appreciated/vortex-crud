@@ -4,11 +4,17 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceP
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "lifecycle_test")
+@Getter
+@Setter
+@NoArgsConstructor
 public class JpaLifecycleTestEntity {
 
     @Id
@@ -37,56 +43,4 @@ public class JpaLifecycleTestEntity {
     @VideoField(LocalVideoResourceProvider.class)
     private String videoUrl;
 
-    // Default constructor
-    public JpaLifecycleTestEntity() {
-    }
-
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
 }

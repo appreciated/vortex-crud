@@ -46,9 +46,18 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
     }
 
     private Map<String, java.lang.reflect.Field> getModelFields() {
-        return Arrays.stream(repositoryModelClass.getDeclaredFields())
-                .filter(field -> jpaFieldAnnotationRegistryService.hasFieldAnnotation(field) || field.isAnnotationPresent(Id.class))
-                .collect(Collectors.toMap(java.lang.reflect.Field::getName, field -> field));
+        Map<String, java.lang.reflect.Field> fieldMap = new HashMap<>();
+        Class<?> currentClass = repositoryModelClass;
+        while (currentClass != null && currentClass != Object.class) {
+            for (java.lang.reflect.Field field : currentClass.getDeclaredFields()) {
+                if ((jpaFieldAnnotationRegistryService.hasFieldAnnotation(field) || field.isAnnotationPresent(Id.class))
+                    && !fieldMap.containsKey(field.getName())) {
+                    fieldMap.put(field.getName(), field);
+                }
+            }
+            currentClass = currentClass.getSuperclass();
+        }
+        return fieldMap;
     }
 
     public Class<ModelClass> getEntityClass(JpaRepository<?, ?> repository) {
@@ -434,10 +443,14 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
      * @return The ID field, or null if not found.
      */
     private java.lang.reflect.Field findIdField(Class<?> entityClass) {
-        for (java.lang.reflect.Field field : entityClass.getDeclaredFields()) {
-            if (field.isAnnotationPresent(Id.class)) {
-                return field;
+        Class<?> currentClass = entityClass;
+        while (currentClass != null && currentClass != Object.class) {
+            for (java.lang.reflect.Field field : currentClass.getDeclaredFields()) {
+                if (field.isAnnotationPresent(Id.class)) {
+                    return field;
+                }
             }
+            currentClass = currentClass.getSuperclass();
         }
         return null;
     }
