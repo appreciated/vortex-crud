@@ -75,8 +75,8 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 - **Lifecycle Hooks**: Intercept operations with before/after hooks for Create, Update, Delete, and Read operations
 - **Field Validation**: Use built-in Vaadin validators (email, URL, regex, range, string length) with support for custom validation logic
 - **Demo Applications**: Two production-ready demo apps showcasing real-world usage:
-  - **Project Management Platform** (16 tables with custom fields)
-  - **Development Platform** (22 tables, GitHub/GitLab-style)
+- **Project Management Demo** (Time Tracking, Subtasks, Workflow Transitions)
+- **Development Platform** (Dashboard, Wiki, Notifications, GitHub/GitLab-style)
 
 # <a name="supported-routes-inputs">Features in Detail</a>
 
@@ -204,14 +204,17 @@ Real-world scenarios showcasing how to build specific types of applications.
 
 - **[Project Management Demo](examples/jooq-project-management-demo)** (`examples/jooq-project-management-demo`)
   A project management tool featuring Projects, Tasks, Milestones, and Labels. It demonstrates a **Custom Field System** where users can dynamically define new fields for entities, stored as JSON.
-  - **Key Features**: Time Tracking (TimeEntry), Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies. It also showcases **Workflow Transitions** (e.g., Start Progress, Review, Done) implemented via `SingleEntityRouteAction`.
+  - **Key Features**: Time Tracking, Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies. It also showcases **Workflow Transitions** (e.g., Start Progress, Review, Done) implemented via `SingleEntityRouteAction`.
 
 - **[Developer Platform Demo](examples/jooq-dev-platform-demo)** (`examples/jooq-dev-platform-demo`)
   A platform similar to GitHub/GitLab, managing Repositories, Issues, Pull Requests, and Organizations. Like the Project Management demo, it utilizes the custom field system for extensibility.
+  - **Key Features**: Dashboard with analytics, Wiki/Git integration, Star/Watch repositories, and a Notification system.
 
 - **[Resource Planner Demo](examples/jooq-ressource-planner-demo)** (`examples/jooq-ressource-planner-demo`)
   An application for scheduling appointments and managing resources.
   - **Key Features**:
+    - **Customer Management**: Dedicated entity and view for customers.
+    - **Recurring Appointments**: Support for repeating events.
     - **Resource View**: A Master-Detail view for browsing Rooms and managing their appointments.
     - **Resource Board**: A Kanban board grouping appointments by Room.
     - **Availability Checking**: Implemented using **DataStore Hooks** to prevent double-booking.
