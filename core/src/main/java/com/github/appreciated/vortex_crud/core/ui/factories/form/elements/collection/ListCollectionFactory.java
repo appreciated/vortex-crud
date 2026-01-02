@@ -30,9 +30,8 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
 
         VerticalLayout list = new VerticalLayout();
         list.setPadding(false);
-        list.setSpacing(false);
-        list.getElement().setAttribute("theme", "spacing-s");
-        list.getStyle().setMarginTop("calc(var(--lumo-font-size-s) * 1.5)");
+        list.setSpacing(true);
+        list.getStyle().setMarginTop("calc(var(--lumo-font-size-s) * 1.5)").setGap("var(--vaadin-padding-s)");
         HorizontalLayout header = new HorizontalLayout();
         header.setAlignItems(FlexComponent.Alignment.CENTER);
         header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);

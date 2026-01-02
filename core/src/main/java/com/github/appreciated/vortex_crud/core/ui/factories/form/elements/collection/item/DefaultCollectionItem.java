@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.core.ui.factories.form.elements.colle
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.card.Card;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -18,6 +19,7 @@ public class DefaultCollectionItem extends Card {
         getStyle().set("--vaadin-card-padding", "var(--lumo-space-s)");
 
         contentLayout = new VerticalLayout();
+        contentLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         contentLayout.setPadding(false);
         actionsLayout = new VerticalLayout();
         actionsLayout.setPadding(false);
@@ -26,7 +28,9 @@ public class DefaultCollectionItem extends Card {
         contentLayout.addClassName("content");
         actionsLayout.addClassName("actions");
 
-        add(new HorizontalLayout(contentLayout, actionsLayout));
+        HorizontalLayout horizontalLayout = new HorizontalLayout(contentLayout, actionsLayout);
+        horizontalLayout.getStyle().setPaddingLeft("var(--vaadin-padding-s)");
+        add(horizontalLayout);
     }
 
     public void addContent(Component content) {

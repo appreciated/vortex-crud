@@ -195,6 +195,7 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                     null,
                     context);
             component.addClassNames("master");
+            component.getStyle().setMarginBottom("var(--vaadin-padding-s)");
             Div div = new Div(component);
             if (dataStoreUtil.equals(item, pathVariables.getLastSegment())) {
                 component.addClassName("active");
