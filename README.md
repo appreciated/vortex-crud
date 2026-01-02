@@ -236,7 +236,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .title("route.projects.title-cards")
                 .itemFactory(new CardFactory())
                 .titleField(PROJECTS.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build()
                         // ...
                 ))
@@ -358,7 +358,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .title("route.projects.title-cards")
                 .itemFactory(new CardFactory())
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "route.projects.labels.name").build(),
                         JpaFieldElement.builder("description", "route.projects.labels.description").build(),
                         JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
