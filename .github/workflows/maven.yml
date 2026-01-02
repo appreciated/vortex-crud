@@ -34,18 +34,17 @@ jobs:
         run: mvn --no-transfer-progress -B verify --file pom.xml
 
       - name: Print Coverage CSV
-        if: always()
+        if: success()
         run: |
           echo "Printing jpa/target/site/jacoco-aggregate/jacoco.csv"
           cat jpa/target/site/jacoco-aggregate/jacoco.csv
 
       - name: Upload Playwright Traces
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-traces
           path: |
-            ui-test-base/target/traces/*.zip
             jooq/target/traces/*.zip
             jpa/target/traces/*.zip
           if-no-files-found: ignore
