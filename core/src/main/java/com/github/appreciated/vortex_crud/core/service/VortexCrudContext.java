@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudForei
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldValueStrategy;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.VortexCrudListColumnCallbackRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     private final VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker;
     private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
+    private final ReferenceFieldValueStrategy referenceFieldValueStrategy;
 
     public VortexCrudContext(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -38,7 +40,8 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
             ManyToManyPersistenceStrategy<ModelClass, FieldType, RepositoryType> manyToManyPersistenceStrategy,
             @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService,
             @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker,
-            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService
+            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService,
+            ReferenceFieldValueStrategy referenceFieldValueStrategy
     ) {
         this.configService = configService;
         this.reflectionService = reflectionService;
@@ -52,6 +55,7 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         this.foreignKeyResolutionStrategy = foreignKeyResolutionStrategy;
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.globalSearchService = globalSearchService;
+        this.referenceFieldValueStrategy = referenceFieldValueStrategy;
     }
 
     public VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService() {
@@ -100,5 +104,9 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
 
     public GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService() {
         return globalSearchService;
+    }
+
+    public ReferenceFieldValueStrategy referenceFieldValueStrategy() {
+        return referenceFieldValueStrategy;
     }
 }

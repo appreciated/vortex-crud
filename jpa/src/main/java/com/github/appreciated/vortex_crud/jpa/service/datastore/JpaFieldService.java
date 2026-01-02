@@ -72,7 +72,10 @@ public class JpaFieldService {
                         if (store == null) {
                             throw new IllegalStateException("No store found for class " + targetEntityClass);
                         }
-                        List<String> children = Arrays.asList(referenceField.fields());
+                        // If fields() is not specified, use value() as a single child
+                        List<String> children = referenceField.fields().length > 0
+                                ? Arrays.asList(referenceField.fields())
+                                : (referenceField.value().isEmpty() ? List.of() : List.of(referenceField.value()));
                         String filterField = referenceField.value();
                         String fieldName = entityField.getName();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.ReferenceField
@@ -89,7 +92,10 @@ public class JpaFieldService {
                         if (store == null) {
                             throw new IllegalStateException("No store found for class " + targetEntityClass);
                         }
-                        List<String> children = Arrays.asList(multiSelectField.fields());
+                        // If fields() is not specified, use value() as a single child
+                        List<String> children = multiSelectField.fields().length > 0
+                                ? Arrays.asList(multiSelectField.fields())
+                                : (multiSelectField.value().isEmpty() ? List.of() : List.of(multiSelectField.value()));
                         String filterField = multiSelectField.value();
                         String fieldName = entityField.getName();
                         return (com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>) com.github.appreciated.vortex_crud.core.config.model.fields.MultiSelectField
