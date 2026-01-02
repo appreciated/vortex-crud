@@ -184,6 +184,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
                         JooqCollection.builder()
                                 .label("route.rooms.labels.appointments")
+                                .field(APPOINTMENT.START_TIME)
                                 .listFactory(new ListCollectionFactory())
                                 .dataStoreConfig(appointmentConfig)
                                 .oneToMany(new JooqOneToMany(APPOINTMENT.ROOM_ID))
@@ -203,6 +204,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                         JooqCollection.builder()
                                 .label("route.persons.labels.services")
+                                .field(APPOINTMENT_TYPE.NAME)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dataStoreConfig(typeConfig)
                                 .manyToMany(new JooqManyToMany<>(

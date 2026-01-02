@@ -212,6 +212,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(PROJECT.COLOR, "route.projects.labels.color").build(),
                         JooqCollection.builder()
                                 .label("route.projects.labels.members")
+                                .field(PROJECT_MEMBER.USER_ID)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectMemberConfig)
@@ -237,6 +238,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
                         JooqCollection.builder()
                                 .label("route.users.labels.projects")
+                                .field(PROJECT_MEMBER.PROJECT_ID)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectMemberConfig)
@@ -306,6 +308,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFieldElement.of(TASK.PARENT_TASK_ID, "route.tasks.labels.parent_task").build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.subtasks")
+                                .field(TASK.TITLE)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(taskConfig)
@@ -324,6 +327,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.time_entries")
+                                .field(TIME_ENTRY.HOURS_SPENT)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(timeEntryConfig)
@@ -342,6 +346,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.attachments")
+                                .field(ATTACHMENT.NAME)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(attachmentConfig)
@@ -359,6 +364,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.comments")
+                                .field(TASK_COMMENT.CONTENT)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(taskCommentConfig)
@@ -374,6 +380,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.labels")
+                                .field(LABEL.NAME)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(labelConfig)

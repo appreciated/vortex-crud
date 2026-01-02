@@ -139,6 +139,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
+                .field("comments")
                 .listFactory(new ListCollectionFactory<>())
                 .dialogFactory(new FormDialogFactory<>())
                 .dataStoreConfig(commentConfig)
@@ -155,6 +156,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         InternalFormElement build1 = JpaCollectionElement.builder("route.tasks.labels.related-tasks")
+                .field("relatedTasks")
                 .listFactory(new ListCollectionFactory<>())
                 .dialogFactory(new ConnectDialogFactory<>())
                 .dataStoreConfig(taskConfig)
@@ -188,6 +190,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         JpaFieldElement.builder("budget", "route.projects.labels.budget").build(),
                         JpaFieldElement.builder("tagsMulti", "route.projects.labels.tags_multi").build(),
                         JpaCollectionElement.builder("route.projects.labels.tags_collection")
+                                .field("projectTags")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectTagConfig)

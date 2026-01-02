@@ -196,6 +196,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.comments")
+                                .field(TASK_COMMENTS.COMMENT_TEXT)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(commentsConfig)
@@ -212,6 +213,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 ).build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.related-tasks")
+                                .field(TASKS.TITLE)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(tasksConfig)
@@ -239,6 +241,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(PROJECTS.ACTIVE, "Active").build(),
                         JooqCollection.builder()
                                 .label("Tags (Collection)")
+                                .field(PROJECT_TAGS.TAG)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectTagsConfig)

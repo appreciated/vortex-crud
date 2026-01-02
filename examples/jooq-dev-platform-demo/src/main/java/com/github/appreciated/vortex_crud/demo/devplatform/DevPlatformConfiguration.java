@@ -358,6 +358,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(ISSUE.ASSIGNEE_ID, "route.issues.labels.assignee").build(),
                         JooqFieldElement.of(ISSUE.MILESTONE_ID, "route.issues.labels.milestone").build(),
                         JooqCollection.builder()
+                                .field(LABEL.NAME)
                                 .label("route.issues.labels.labels")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
@@ -386,6 +387,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
                         JooqFieldElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
                         JooqCollection.builder()
+                                .field(LABEL.NAME)
                                 .label("route.pull_requests.labels.labels")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
@@ -416,6 +418,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(REPOSITORY.TOPICS, "route.repositories.labels.topics").build(),
                         JooqFieldElement.of(REPOSITORY.README_CONTENT, "route.repositories.labels.readme").build(),
                         JooqCollection.builder()
+                                .field(REPOSITORY_COLLABORATOR.USER_ID)
                                 .label("route.repositories.labels.collaborators")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -432,6 +435,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         .build())
                                 .build(),
                         JooqCollection.builder()
+                                .field(WIKI_PAGE.TITLE)
                                 .label("route.wiki.title")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -448,6 +452,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         .build())
                                 .build(),
                         JooqCollection.builder()
+                                .field(GIT_COMMIT.HASH)
                                 .label("route.commits.title")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -465,6 +470,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         .build())
                                 .build(),
                         JooqCollection.builder()
+                                .field(GIT_BRANCH.NAME)
                                 .label("route.branches.title")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -493,6 +499,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(ORGANIZATION.DESCRIPTION, "route.organizations.labels.description").build(),
                         JooqFieldElement.of(ORGANIZATION.WEBSITE, "route.organizations.labels.website").build(),
                         JooqCollection.builder()
+                                .field(ORGANIZATION_MEMBER.USER_ID)
                                 .label("route.organizations.labels.members")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -518,6 +525,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build(),
                         JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build(),
                         JooqCollection.builder()
+                                .field(REPOSITORY_COLLABORATOR.REPOSITORY_ID)
                                 .label("route.users.labels.repositories")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
@@ -534,6 +542,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         .build())
                                 .build(),
                         JooqCollection.builder()
+                                .field(ORGANIZATION_MEMBER.ORGANIZATION_ID)
                                 .label("route.users.labels.organizations")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
