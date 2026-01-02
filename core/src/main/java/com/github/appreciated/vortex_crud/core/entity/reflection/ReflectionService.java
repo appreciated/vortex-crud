@@ -141,8 +141,12 @@ public class ReflectionService<FieldType> {
             Method[] methods = entity.getClass().getMethods();
             for (Method method : methods) {
                 if (method.getName().equals(setterName) && method.getParameterCount() == 1) {
-                    method.invoke(entity, value);
-                    return true;
+                    try {
+                        method.invoke(entity, value);
+                        return true;
+                    } catch (IllegalArgumentException e) {
+                        // Argument mismatch, try next method
+                    }
                 }
             }
         } catch (Exception e) {
