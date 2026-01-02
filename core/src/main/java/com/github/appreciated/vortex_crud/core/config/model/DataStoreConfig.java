@@ -17,8 +17,10 @@ import java.util.Map;
 public class DataStoreConfig<ModelClass, FieldType, RepositoryType> implements HasDataStore<FieldType, ModelClass>, ValidatableConfiguration {
 
     private RepositoryType factory;
+    @lombok.NonNull
     private VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance;
 
+    @lombok.NonNull
     private Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fields;
 
     @Builder.Default

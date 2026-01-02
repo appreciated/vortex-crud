@@ -33,6 +33,7 @@ public class SingleComponentRoute<ModelClass, FieldType, RepositoryType> impleme
 
     private boolean hiddenInMenu;
 
+    @lombok.NonNull
     private FieldType field;
 
     private SerializableSupplier<Component> iconFactory;

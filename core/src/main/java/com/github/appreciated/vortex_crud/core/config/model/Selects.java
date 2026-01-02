@@ -17,5 +17,6 @@ import java.util.Map;
 @Getter
 public class Selects implements ValidatableConfiguration {
     @I18nKey
+    @lombok.NonNull
     private Map<String, LinkedHashMap<?, String>> configs;
 }

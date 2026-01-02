@@ -46,10 +46,12 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
+    @lombok.NonNull
     private FieldType titleField;
 
     private FieldType descriptionField;
 
+    @lombok.NonNull
     private FieldType startDateField;
 
     private FieldType endDateField;
