@@ -108,12 +108,12 @@ Standard form view for creating and editing entities.
 
 ### Additional Route Types
 
-- **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
-- **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured using `SingleFormRoute` model.
+- **Form Slide**: Form displayed in a slide-out side panel. This is configured by using a `FormRoute` (or `JooqFormRoute`/`JpaFormRoute`) and setting the dialog factory to `FormSlideFactory`.
+- **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured via `SingleFormRoute` model.
 - **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
-- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
-- **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory`)
-- **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
+- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory` or `KanbanRoute`)
+- **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory` or `CalendarRoute`)
+- **Submenu**: Creates nested menu structures for hierarchical navigation, allowing grouping of related routes (configured via `SubmenuRoute` model).
 - **Search**: Global search results view, aggregating results from configured routes (configured via `SearchRoute` model)
 - **Single Component**: Route displaying a single full-page input component, useful for document editing or specific single-field workflows (configured via `SingleComponentRoute` model)
 - **Custom**: Enables the integration of fully custom Vaadin components/views into the routing system (configured via `CustomRoute` model)
@@ -157,15 +157,27 @@ A rich set of fields for data input and display, handling various data types and
     - `PdfField`: For uploading and viewing PDF documents.
     - `FileField`: For generic file upload and download.
 - **Rich Content**: `MarkDownField` for rich text editing.
-- **System**: `IdField` for handling entity identifiers.
+- **System**: `IdField`, `NumericIdField`, `StringIdField` for handling entity identifiers.
 
 ## <a name="configuration-models">Configuration & Data Models</a>
 Models that define the application's structure and behavior:
 
 - **DataStoreConfig**: The central configuration for mapping data to views.
 - **IdentityAndAccessManagement (IAM)**: Configuration for Role-Based Access Control (RBAC), defining Roles and permissions.
+- **NotificationPanelConfiguration**: Configuration for the global notification panel (bell icon), including message sources, timestamps, and read status management.
 - **Relationships**: Configuration support for OneToMany and ManyToMany relationships.
 - **Auditing & Versioning**: Configuration models for tracking changes (implementation depends on the backend).
+
+### Lifecycle Hooks
+`vortex-crud` supports lifecycle hooks to intercept data operations. These are configured using the `DataStoreHooks` builder:
+
+```java
+DataStoreHooks<MyRecord> hooks = DataStoreHooks.<MyRecord>builder()
+    .beforeCreate(record -> validate(record))
+    .afterCreate(record -> sendNotification(record))
+    .beforeUpdate(record -> checkPermission(record))
+    .build();
+```
 
 # <a name="code-examples">Code Examples</a>
 
@@ -191,13 +203,18 @@ Real-world scenarios showcasing how to build specific types of applications.
 
 - **[Project Management Demo](examples/jooq-project-management-demo)** (`examples/jooq-project-management-demo`)
   A project management tool featuring Projects, Tasks, Milestones, and Labels. It demonstrates a **Custom Field System** where users can dynamically define new fields for entities, stored as JSON.
+  - **Key Features**: Time Tracking (TimeEntry), Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies.
 
 - **[Developer Platform Demo](examples/jooq-dev-platform-demo)** (`examples/jooq-dev-platform-demo`)
   A platform similar to GitHub/GitLab, managing Repositories, Issues, Pull Requests, and Organizations. Like the Project Management demo, it utilizes the custom field system for extensibility.
 
 - **[Resource Planner Demo](examples/jooq-ressource-planner-demo)** (`examples/jooq-ressource-planner-demo`)
   An application for scheduling appointments and managing resources.
-  - **Key Features**: Calendar views, availability checking using **DataStore Hooks**, and management of Rooms, Staff, and Appointment Types.
+  - **Key Features**:
+    - **Resource View**: A Master-Detail view for browsing Rooms and managing their appointments.
+    - **Resource Board**: A Kanban board grouping appointments by Room.
+    - **Availability Checking**: Implemented using **DataStore Hooks** to prevent double-booking.
+    - **Customer Management**: Dedicated entity and view for customers.
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
@@ -790,11 +807,11 @@ While the `core` module handles the UI implementations and the generation of rou
 The framework is powered by several core services:
 
 - **Dynamic Routing**: `DynamicRouteGenerator` automatically builds and registers Vaadin routes based on your configuration.
-- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, allowing the core UI to be backend-agnostic.
+- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, including complex filtering, sorting, and pagination, allowing the core UI to be backend-agnostic.
 - **Security**: `VortexCrudRbacPermissionChecker` ensures users only access routes and actions permitted by their roles.
 - **Internationalization**: `TranslationService` manages localization across the application.
 - **File Management**: `LocalFileResourceProvider` (and variants) handles the storage and retrieval of file assets.
-- **Context**: `VortexCrudContext` provides necessary services to stateless UI factories.
+- **Context**: `VortexCrudContext` aggregates application services and provides execution context to stateless UI factories.
 
 ## Basic Principles
 At its core, `vortex-crud` relies on dependency injection, with the `VortexCrudConfigService` as the entry point. The implementation of this service is provided by the user. Based on the configuration defined in `VortexCrudConfigService`, the `DynamicRouteGenerator` automatically registers the necessary routes.
