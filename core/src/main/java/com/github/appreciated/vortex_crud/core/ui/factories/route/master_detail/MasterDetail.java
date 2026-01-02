@@ -38,8 +38,6 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
     private final VirtualList<Object> virtualList = new VirtualList<>();
     private final Integer currentPathIndex;
     private final VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService;
-    private final VortexCrudDataStoreFieldNameResolver<FieldType> fieldNameResolver;
-    private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
     private final MasterDetailRoute<ModelClass, FieldType, RepositoryType> routeRenderer;
     private final VerticalLayout detailContainer;
@@ -55,16 +53,13 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         this.currentPathIndex = currentPathIndex;
         this.context = context;
         this.configService = context.configService();
-        this.fieldNameResolver = context.fieldNameResolver();
-        this.reflectionService = context.reflectionService();
         this.dataStoreUtil = context.dataStoreUtil();
 
         routeRenderer = (MasterDetailRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         this.pathVariables = routeResolver;
-        this.dataStore = (VortexCrudDataStore<FieldType, ?>) routeRenderer.dataStoreInstance();
+        this.dataStore = routeRenderer.dataStoreInstance();
         this.itemFactory = routeRenderer.itemFactory();
-        assert routeRenderer.form() != null;
 
         detailContainer = new VerticalLayout();
         detailContainer.setPadding(false);
@@ -126,32 +121,33 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
         addThemeVariants(SplitLayoutVariant.LUMO_SMALL);
 
         getElement().getClassList().add("vortex-responsive-master-detail");
-        String css = " @media (max-width: 800px) {\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"master\"] > [slot=\"primary\"] {\n" +
-                "        flex: 1 1 100% !important;\n" +
-                "        width: 100% !important;\n" +
-                "        min-width: 100% !important;\n" +
-                "        display: flex !important;\n" +
-                "    }\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"master\"] > [slot=\"secondary\"] {\n" +
-                "        display: none !important;\n" +
-                "    }\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] > [slot=\"primary\"] {\n" +
-                "        display: none !important;\n" +
-                "    }\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] > [slot=\"secondary\"] {\n" +
-                "        flex: 1 1 100% !important;\n" +
-                "        width: 100% !important;\n" +
-                "        min-width: 100% !important;\n" +
-                "        display: flex !important;\n" +
-                "    }\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail::part(splitter) {\n" +
-                "        display: none !important;\n" +
-                "    }\n" +
-                "    vaadin-split-layout.vortex-responsive-master-detail[state=\"detail\"] .mobile-back-button {\n" +
-                "        display: inline-flex !important;\n" +
-                "    }\n" +
-                "}";
+        String css = """
+                 @media (max-width: 800px) {
+                    vaadin-split-layout.vortex-responsive-master-detail[state="master"] > [slot="primary"] {
+                        flex: 1 1 100% !important;
+                        width: 100% !important;
+                        min-width: 100% !important;
+                        display: flex !important;
+                    }
+                    vaadin-split-layout.vortex-responsive-master-detail[state="master"] > [slot="secondary"] {
+                        display: none !important;
+                    }
+                    vaadin-split-layout.vortex-responsive-master-detail[state="detail"] > [slot="primary"] {
+                        display: none !important;
+                    }
+                    vaadin-split-layout.vortex-responsive-master-detail[state="detail"] > [slot="secondary"] {
+                        flex: 1 1 100% !important;
+                        width: 100% !important;
+                        min-width: 100% !important;
+                        display: flex !important;
+                    }
+                    vaadin-split-layout.vortex-responsive-master-detail::part(splitter) {
+                        display: none !important;
+                    }
+                    vaadin-split-layout.vortex-responsive-master-detail[state="detail"] .mobile-back-button {
+                        display: inline-flex !important;
+                    }
+                }""";
         getElement().appendChild(new Element("style").setText(css));
     }
 
