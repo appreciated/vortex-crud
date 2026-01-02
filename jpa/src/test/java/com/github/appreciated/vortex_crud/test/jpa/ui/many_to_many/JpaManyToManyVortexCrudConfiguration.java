@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.many_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -11,13 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistry
 import com.github.appreciated.vortex_crud.jpa.service.JpaManyToMany;
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollection;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollectionElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -49,13 +42,14 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .withServices(fieldService, storeMap)
                 .build();
 
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> itemForm = JpaFormRoute.builder()
+        JpaFormRoute itemForm = JpaFormRoute.builder()
                 .dataStoreConfig(itemConfig)
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "relations.labels.name").build(),
                         JpaCollectionElement.builder("relations.labels.related")
-                                .factory(new ListCollectionFactory<>())
+                                .field("relatedItems")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .manyToMany(new JpaManyToMany<>(itemRepository, "relatedItems"))
                                 .dataStoreConfig(itemConfig)
@@ -72,10 +66,8 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
                 .filterField("name")
-                .children(List.of(
-                        JpaFieldElement.builder("name", "relations.labels.name").build()
-                ))
                 .form(itemForm)
+                .columns(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
                 .build());
 
         return JpaApplication.builder()

@@ -49,7 +49,7 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .dataStoreConfig(taskConfig)
                 .title("route.projects.title-cards")
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
                         JpaFieldElement.builder("description", "route.tasks.labels.description").build()
                 ))

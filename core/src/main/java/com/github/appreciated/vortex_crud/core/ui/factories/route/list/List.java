@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.GridRoute;
+import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
@@ -25,8 +27,8 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
     ) {
          VortexCrudPathToRouteResolver typedRouteResolver =
                 routeResolver;
-        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer =
-                (RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        ListRoute<ModelClass, FieldType, RepositoryType> routeRenderer =
+                (ListRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         RouteHeader routeHeader = new RouteHeader(routeRenderer);
         RouteHeaderBarWithSaveDeleteBack headerBar = new RouteHeaderBarWithSaveDeleteBack(false,

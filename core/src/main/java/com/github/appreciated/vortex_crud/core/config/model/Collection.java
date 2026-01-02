@@ -3,30 +3,30 @@ package com.github.appreciated.vortex_crud.core.config.model;
 import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
-public class Collection<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType>, ValidatableConfiguration {
+public class Collection<ModelClass, FieldType, RepositoryType> extends InternalFormElement<ModelClass, FieldType, RepositoryType> implements CollectionConfiguration<ModelClass, FieldType, RepositoryType>, ValidatableConfiguration {
 
-    @I18nKey
-    private String label;
+    private ListCollectionFactory<ModelClass, FieldType, RepositoryType> listFactory;
 
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> factory;
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
     @I18nKey
     private String emptyMessage;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+    private FormRoute<ModelClass, FieldType, RepositoryType> form;
 
     private FieldType titleField;
 

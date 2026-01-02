@@ -72,7 +72,7 @@ public class JpaPasswordVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(config)
                 .title("route.password-test.title")
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "password-test.labels.name").build(),
                         JpaFieldElement.builder("password", "password-test.labels.password").build()
                 ))
@@ -83,7 +83,7 @@ public class JpaPasswordVortexCrudConfiguration implements VortexCrudConfigurati
                 .iconFactory(COG::create)
                 .title("route.password-test.title-list")
                 .filterField("name")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("name", "password-test.labels.name").build()
                 ))
                 .form(passwordForm)

@@ -95,11 +95,11 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         }
 
         Div Forms = new Div();
-        for (com.github.appreciated.vortex_crud.core.config.model.RouteRenderer<ModelClass, FieldType, RepositoryType> child : routeRenderer.forms()) {
+        for (com.github.appreciated.vortex_crud.core.config.model.FormRoute<ModelClass, FieldType, RepositoryType> child : routeRenderer.forms()) {
             com.vaadin.flow.component.formlayout.FormLayout childFormLayout = new com.vaadin.flow.component.formlayout.FormLayout();
             childFormLayout.setMaxWidth("1000px");
             childFormLayout.setResponsiveSteps(new com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep("250px", 2, com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep.LabelsPosition.TOP));
-            formCreator.bindAndAddToLayout(table, routeRenderer, child.children(), entity, context, tables, binder, childFormLayout);
+            formCreator.bindAndAddToLayout(table, routeRenderer, child.fields(), entity, context, tables, binder, childFormLayout);
             Forms.add(childFormLayout);
         }
 

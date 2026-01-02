@@ -39,6 +39,7 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private SerializableSupplier<Component> iconFactory;
 
+    @lombok.NonNull
     private Class<? extends Component> componentClass;
 
     private List<String> writeRoles;

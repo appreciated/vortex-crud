@@ -64,10 +64,6 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
         return null;
     }
 
-    default List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() {
-        return Collections.emptyList();
-    }
-
     SerializableSupplier<Component> iconFactory();
 
     default java.util.List<RouteFilter<FieldType>> filters() {

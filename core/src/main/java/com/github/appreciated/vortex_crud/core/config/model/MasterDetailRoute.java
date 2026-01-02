@@ -15,13 +15,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Getter
 public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
@@ -56,8 +57,6 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private FieldType filterField;
 
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
     private final boolean isDeleteButtonHidden = false;
 
     private SerializableSupplier<Component> iconFactory;
@@ -66,24 +65,13 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+    @lombok.NonNull
+    private FormRoute<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
     @lombok.Singular
     private List<RouteFilter<FieldType>> routeFilters;
-
-    @Override
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children() {
-        // Delegate to form's children if this route doesn't have its own children defined
-        if (children != null) {
-            return children;
-        }
-        if (form instanceof FormRouteProvider) {
-            return ((FormRouteProvider<ModelClass, FieldType, RepositoryType>) form).children();
-        }
-        return java.util.Collections.emptyList();
-    }
 
     @Override
     public FieldType titleField() {
@@ -97,4 +85,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         return null;
     }
 
+    @Override
+    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+        return form.fields();
+    }
 }

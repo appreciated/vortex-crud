@@ -7,6 +7,6 @@ import org.jooq.impl.TableImpl;
 
 public class JooqSubmenuRoute extends SubmenuRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
     public static SubmenuRoute.SubmenuRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return SubmenuRoute.builder();
+        return SubmenuRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
     }
 }

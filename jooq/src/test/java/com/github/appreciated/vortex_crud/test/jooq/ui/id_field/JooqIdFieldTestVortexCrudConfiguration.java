@@ -47,7 +47,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.id-field.title")
             .titleField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .fields(List.of(
                 JooqFieldElement.of(FIELD_TYPES_TEST.ID, "id-field.labels.id").build(),
                 JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
             ))
@@ -60,7 +60,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
             .dataStoreConfig(config)
             .title("route.id-field.title-list")
             .filterField(FIELD_TYPES_TEST.NAME)
-            .children(List.of(
+            .columns(List.of(
                   JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
              ))
             .form(form)

@@ -48,7 +48,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
             .dataStoreConfig(config)
             .title("route.id-field.title")
             .titleField("name")
-            .children(List.of(
+            .fields(List.of(
                 JpaFieldElement.builder("id", "id-field.labels.id").build(),
                 JpaFieldElement.builder("name", "id-field.labels.name").build()
             ))
@@ -61,7 +61,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
             .dataStoreConfig(config)
             .title("route.id-field.title-list")
             .filterField("name")
-            .children(List.of(
+            .columns(List.of(
                   JpaFieldElement.builder("name", "id-field.labels.name").build()
             ))
             .form(form)

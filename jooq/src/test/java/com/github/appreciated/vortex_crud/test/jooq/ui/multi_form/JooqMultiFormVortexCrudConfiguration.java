@@ -62,7 +62,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 JooqFormRoute.builder()
                         .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.PROFILE_NAME)
-                        .children(List.of(
+                        .fields(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
                                 JooqFieldElement.of(MULTI_FORM_TEST.EMAIL, "multi_form.fields.email").build()
                         ))
@@ -72,7 +72,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 JooqFormRoute.builder()
                         .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.DESCRIPTION)
-                        .children(List.of(
+                        .fields(List.of(
                                 JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
                                 JooqFieldElement.of(MULTI_FORM_TEST.AGE, "multi_form.fields.age").build()
                         ))
@@ -94,7 +94,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
                 .filterField(MULTI_FORM_TEST.PROFILE_NAME)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
                 ))
                 .form(multiFormRoute)

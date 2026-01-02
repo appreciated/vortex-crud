@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
+    @lombok.NonNull
     private FieldType titleField;
 
     private FieldType descriptionField;
@@ -56,8 +58,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private FieldType filterField;
 
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
-
+    @lombok.NonNull
     private FieldType columnField;
 
     private FieldType rowIndexField;
@@ -68,11 +69,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
-
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
+    private FormRoute<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 

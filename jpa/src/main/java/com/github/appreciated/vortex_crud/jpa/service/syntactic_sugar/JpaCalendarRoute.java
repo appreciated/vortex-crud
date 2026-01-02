@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaCalendarRoute extends CalendarRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
     public static CalendarRoute.CalendarRouteBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return CalendarRoute.builder();
+        return CalendarRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }

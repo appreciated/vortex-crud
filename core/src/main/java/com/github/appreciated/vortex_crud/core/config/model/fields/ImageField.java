@@ -44,6 +44,4 @@ public class ImageField<ModelClass, FieldType, RepositoryType> implements Field<
     private boolean inlineEdit;
 
     private FieldType filterField;
-
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 }

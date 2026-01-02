@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.one_to_many;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
@@ -57,7 +56,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
                 .dataStoreConfig(childConfig)
                 .titleField(ONE_TO_MANY_CHILD.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
                 ))
                 .build();
@@ -65,10 +64,12 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
                 .dataStoreConfig(parentConfig)
                 .titleField(ONE_TO_MANY_PARENT.NAME)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
-                        JooqCollectionElement.of("relations.labels.children")
-                                .factory(new ListCollectionFactory<>())
+                        JooqCollection.builder()
+                                .field(ONE_TO_MANY_CHILD.NAME)
+                                .label("relations.labels.children")
+                                .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(childConfig)
                                 .oneToMany(new JooqOneToMany(ONE_TO_MANY_CHILD.PARENT_ID))
@@ -85,7 +86,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
                 .filterField(ONE_TO_MANY_PARENT.NAME)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
                 ))
                 .form(parentForm)

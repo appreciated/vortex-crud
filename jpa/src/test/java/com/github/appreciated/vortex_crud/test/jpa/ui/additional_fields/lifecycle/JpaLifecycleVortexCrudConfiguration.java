@@ -72,7 +72,7 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(config)
                 .title("route.lifecycle-test.title")
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
                         JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
                 ))
@@ -83,7 +83,7 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
                 .iconFactory(COG::create)
                 .title("route.lifecycle-test.title-list")
                 .filterField("name")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
                         JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
                 ))

@@ -5,7 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.ViewFieldType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaFieldElement {
-    public static InternalFormElement.InternalFormElementBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder(String field, String label) {
+    public static InternalFormElement.InternalFormElementBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>, ?, ?> builder(String field, String label) {
         return InternalFormElement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .field(field)
                 .label(label)

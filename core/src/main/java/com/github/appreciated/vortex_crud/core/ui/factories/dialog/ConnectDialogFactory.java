@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.dialog;
 
-import com.github.appreciated.vortex_crud.core.config.model.CollectionConfiguration;
-import com.github.appreciated.vortex_crud.core.config.model.ManyToMany;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.ManyToManyPersistenceStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -42,7 +40,7 @@ public class ConnectDialogFactory<ModelClass, FieldType, RepositoryType> impleme
     public Dialog create(@Nullable Object entityId,
                          @Nullable Object foreignKeyValue,
                          @Nullable FieldType foreignKeyField,
-                         RouteRenderer<ModelClass, FieldType, RepositoryType> formRouteRenderer,
+                         FormRouteProvider<ModelClass, FieldType, RepositoryType> formRouteRenderer,
                          CollectionConfiguration<ModelClass, FieldType, RepositoryType> collectionConfiguration,
                          VortexCrudDataStore<FieldType, ModelClass> dataStore,
                          VortexCrudContext<ModelClass, FieldType, RepositoryType> context,

@@ -53,7 +53,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .titleField("requiredField")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("requiredField", "validation.fields.required").build(),
                         JpaFieldElement.builder("emailField", "validation.fields.email").build(),
                         JpaFieldElement.builder("numericField", "validation.fields.numeric").build(),
@@ -71,7 +71,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .filterField("requiredField")
-                .children(List.of(
+                .columns(List.of(
                         JpaFieldElement.builder("requiredField", "route.projects.labels.name").build(),
                         JpaFieldElement.builder("emailField", "route.projects.labels.description").build()
                 ))

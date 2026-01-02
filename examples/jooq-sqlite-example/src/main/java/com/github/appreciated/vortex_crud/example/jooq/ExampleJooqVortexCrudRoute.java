@@ -61,7 +61,7 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
                         .dataStoreConfig(projectsConfig)
                         .title("route.projects.title-cards")
                         .titleField(PROJECTS.NAME)
-                        .children(List.of(
+                        .fields(List.of(
                                 JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                                 JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
                                 JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),

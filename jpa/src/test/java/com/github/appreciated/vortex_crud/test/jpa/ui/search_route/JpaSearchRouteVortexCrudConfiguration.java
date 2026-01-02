@@ -43,11 +43,11 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
                 .build();
 
         // Create a form route for editing items
-        RouteRenderer<JpaRepository<?, ?>, String, JpaRepository<?, ?>> formRoute = JpaFormRoute.builder()
+        JpaFormRoute formRoute = JpaFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.search-test.edit.title")
                 .titleField("name")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("name", "search-test.labels.name").build()
                 ))
                 .build();

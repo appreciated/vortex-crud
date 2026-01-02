@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -44,19 +45,11 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     @Builder.Default
     private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
 
-    private FieldType titleField;
-
-    private FieldType descriptionField;
-
-    private FieldType imageField;
-
     private VortexCrudResourceProvider resourceProvider;
 
     private boolean inlineEdit;
 
     private FieldType filterField;
-
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -64,12 +57,9 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<String> readOnlyRoles;
 
-    private RouteRenderer<ModelClass, FieldType, RepositoryType> form;
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
-    public RouteRenderer<ModelClass, FieldType, RepositoryType> form() {
-        return form;
-    }
-
+    @lombok.NonNull
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;

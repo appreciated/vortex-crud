@@ -6,8 +6,8 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqCollectionConfiguration extends Collection<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
-    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> config) {
+public class JooqCollectionConfiguration {
+    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>, ?, ?> of(DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> config) {
         return Collection.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .dataStoreConfig(config);
     }

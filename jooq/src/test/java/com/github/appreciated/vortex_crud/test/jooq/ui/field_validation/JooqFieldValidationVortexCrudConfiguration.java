@@ -54,7 +54,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.projects.title-cards")
                 .titleField(VALIDATION_TEST.REQUIRED_FIELD)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "validation.fields.required").build(),
                         JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "validation.fields.email").build(),
                         JooqFieldElement.of(VALIDATION_TEST.NUMERIC_FIELD, "validation.fields.numeric").build(),
@@ -72,7 +72,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .filterField(VALIDATION_TEST.REQUIRED_FIELD)
-                .children(List.of(
+                .columns(List.of(
                         JooqFieldElement.of(VALIDATION_TEST.REQUIRED_FIELD, "route.projects.labels.name").build(),
                         JooqFieldElement.of(VALIDATION_TEST.EMAIL_FIELD, "route.projects.labels.description").build()
                 ))

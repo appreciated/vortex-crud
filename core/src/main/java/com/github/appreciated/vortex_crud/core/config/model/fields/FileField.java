@@ -44,6 +44,4 @@ public class FileField<ModelClass, FieldType, RepositoryType> implements Field<M
     private boolean inlineEdit;
 
     private FieldType filterField;
-
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> children;
 }

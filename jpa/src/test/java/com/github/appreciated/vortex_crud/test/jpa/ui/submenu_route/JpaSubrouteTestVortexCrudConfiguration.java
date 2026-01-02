@@ -51,7 +51,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .titleField("title")
-                .children(List.of(
+                .fields(List.of(
                         JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
                         JpaFieldElement.builder("url", "route.tasks.labels.image").build()
                 ))

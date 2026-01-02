@@ -45,11 +45,11 @@ public class JooqCalendarTestVortexCrudConfiguration
                         ))
                         .build();
 
-        RouteRenderer<TableRecord<?>, TableField<?, ?>, TableImpl<?>> eventForm = JooqFormRoute.builder()
+        JooqFormRoute eventForm = JooqFormRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.calendar-test.event")
                 .titleField(CALENDAR_EVENTS.TITLE)
-                .children(List.of(
+                .fields(List.of(
                         JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "calendar-test.labels.title").build(),
                         JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "calendar-test.labels.start").build(),
                         JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "calendar-test.labels.end").build()
