@@ -176,7 +176,7 @@
                                         com.github.appreciated.vortex_crud.test.jooq.ui.field_validation.JooqFieldValidationTestEnum
                                     </userType>
                                     <converter>org.jooq.impl.EnumConverter</converter>
-                                    <includeExpression>validation_test.enum_field</includeExpression>
+                                    <includeExpression>.*_validation_test\.enum_field</includeExpression>
                                     <includeTypes>VARCHAR</includeTypes>
                                 </forcedType>
                             </forcedTypes>
