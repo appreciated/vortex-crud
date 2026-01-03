@@ -33,9 +33,9 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
         String filterText = query.getFilter().orElse("");
         if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
             return dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((filterText.isEmpty() || filterField == null) && routeFilters != null && !routeFilters.isEmpty()) {
+        } else if (filterText.isEmpty() || filterField == null) {
             return dataStore.getRecordsFromTableWhereFiltersEqual(routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if ((!filterText.isEmpty() && filterField != null) && routeFilters != null && !routeFilters.isEmpty()) {
+        } else if (routeFilters != null && !routeFilters.isEmpty()) {
             return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         } else {
             return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
@@ -46,9 +46,9 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
         String filterText = query.getFilter().orElse("");
         if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
             return dataStore.count();
-        } else if ((filterText.isEmpty() || filterField == null) && routeFilters != null && !routeFilters.isEmpty()) {
+        } else if (filterText.isEmpty() || filterField == null) {
             return dataStore.countWhereFiltersEqual(routeFilters);
-        } else if ((!filterText.isEmpty() && filterField != null) && routeFilters != null && !routeFilters.isEmpty()) {
+        } else if (routeFilters != null && !routeFilters.isEmpty()) {
             return dataStore.countWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters);
         } else {
             return dataStore.countWhereColumnLike(filterField, filterText);
