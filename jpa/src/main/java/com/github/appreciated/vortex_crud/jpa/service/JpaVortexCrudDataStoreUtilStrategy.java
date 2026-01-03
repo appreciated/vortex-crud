@@ -13,12 +13,12 @@ public class JpaVortexCrudDataStoreUtilStrategy implements VortexCrudDataStoreUt
             return null;
         }
         try {
-            Field field = record.getClass().getDeclaredField("id");
+            Field field = record.getClass().getField("id");
             field.setAccessible(true);
             Object id = field.get(record);
             return id == null ? null : id.toString();
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 

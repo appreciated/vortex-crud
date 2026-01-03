@@ -58,7 +58,8 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
      * @param entity the clicked Object
      */
     private void onItemClick(Object entity) {
-        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), dataStoreUtil.getId(entity));
+        String id = dataStoreUtil.getId(entity);
+        String nextRoute = routeResolver.buildPathUpToIndex(routeResolver.determineActiveRouteIndex(), id);
         getUI().ifPresent(ui -> ui.navigate(nextRoute));
     }
 }
