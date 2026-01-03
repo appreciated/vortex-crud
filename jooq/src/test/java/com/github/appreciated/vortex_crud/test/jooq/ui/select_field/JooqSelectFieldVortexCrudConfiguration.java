@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.FIELD_TYPES_TEST;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.SELECT_FIELD_TEST;
 
 @Service
 public class JooqSelectFieldVortexCrudConfiguration
@@ -43,13 +43,13 @@ public class JooqSelectFieldVortexCrudConfiguration
             .configs(selectsConfig)
             .build();
 
-        JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl);
-        var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
+        JooqDataStore store = new JooqDataStore(SELECT_FIELD_TEST.getRecordType(), dsl);
+        var config = JooqDataStoreConfig.of(SELECT_FIELD_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(
-                        FIELD_TYPES_TEST.ID, JooqNumericIdField.builder().build(),
-                        FIELD_TYPES_TEST.NAME, JooqSelectField.builder().values("name-options").build(),
-                        FIELD_TYPES_TEST.NOTES, JooqTextField.builder().build() // Just to fill required fields if any
+                        SELECT_FIELD_TEST.ID, JooqNumericIdField.builder().build(),
+                        SELECT_FIELD_TEST.NAME, JooqSelectField.builder().values("name-options").build(),
+                        SELECT_FIELD_TEST.NOTES, JooqTextField.builder().build() // Just to fill required fields if any
                 ))
                 .build();
 
@@ -57,9 +57,9 @@ public class JooqSelectFieldVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("route.select-field.title")
-            .titleField(FIELD_TYPES_TEST.NAME)
+            .titleField(SELECT_FIELD_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "select-field.labels.name").build()
+                JooqFieldElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
             ))
             .build();
 
@@ -69,9 +69,9 @@ public class JooqSelectFieldVortexCrudConfiguration
         routes.put("select-field-test", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.select-field.title-list")
-            .filterField(FIELD_TYPES_TEST.NAME)
+            .filterField(SELECT_FIELD_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "select-field.labels.name").build()
+                  JooqFieldElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
             ))
             .form(form)
             .build());
