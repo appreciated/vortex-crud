@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractImageFieldTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "image-field-validation-test";
     }
 
     @Test

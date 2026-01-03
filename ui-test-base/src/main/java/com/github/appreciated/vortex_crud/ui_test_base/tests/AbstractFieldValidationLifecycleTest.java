@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractFieldValidationLifecycleTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "lifecycle-field-validation-test";
     }
 
     @Test

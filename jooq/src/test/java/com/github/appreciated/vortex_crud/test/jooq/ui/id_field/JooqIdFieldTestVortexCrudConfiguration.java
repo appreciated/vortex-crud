@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.appreciated.vortex_crud.jooq.models.Tables.FIELD_TYPES_TEST;
+import static com.github.appreciated.vortex_crud.jooq.models.Tables.ID_FIELD_TEST;
 
 @Service
 public class JooqIdFieldTestVortexCrudConfiguration
@@ -33,12 +33,12 @@ public class JooqIdFieldTestVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(FIELD_TYPES_TEST.getRecordType(), dsl);
-        var config = JooqDataStoreConfig.of(FIELD_TYPES_TEST)
+        JooqDataStore store = new JooqDataStore(ID_FIELD_TEST.getRecordType(), dsl);
+        var config = JooqDataStoreConfig.of(ID_FIELD_TEST)
                 .dataStoreInstance(store)
                 .fields(Map.of(
-                        FIELD_TYPES_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
-                        FIELD_TYPES_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
+                        ID_FIELD_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
+                        ID_FIELD_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build()
                 ))
                 .build();
 
@@ -46,10 +46,10 @@ public class JooqIdFieldTestVortexCrudConfiguration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
             .dataStoreConfig(config)
             .title("route.id-field.title")
-            .titleField(FIELD_TYPES_TEST.NAME)
+            .titleField(ID_FIELD_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(FIELD_TYPES_TEST.ID, "id-field.labels.id").build(),
-                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
+                JooqFieldElement.of(ID_FIELD_TEST.ID, "id-field.labels.id").build(),
+                JooqFieldElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
             ))
             .build();
 
@@ -59,9 +59,9 @@ public class JooqIdFieldTestVortexCrudConfiguration
         routes.put("id-test-list", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.id-field.title-list")
-            .filterField(FIELD_TYPES_TEST.NAME)
+            .filterField(ID_FIELD_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "id-field.labels.name").build()
+                  JooqFieldElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
              ))
             .form(form)
             .build());

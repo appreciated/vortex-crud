@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public abstract class AbstractSelectFieldTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "select-field-validation-test";
     }
 
     @Test

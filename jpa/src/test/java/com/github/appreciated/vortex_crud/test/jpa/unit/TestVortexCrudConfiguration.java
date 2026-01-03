@@ -6,6 +6,8 @@ import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplica
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class TestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
@@ -15,6 +17,7 @@ public class TestVortexCrudConfiguration implements VortexCrudConfigurationProvi
         return JpaApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("ui_test_i18n")
+                .routes(Map.of())
                 .build();
     }
 }

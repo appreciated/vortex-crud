@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public abstract class AbstractDateFieldTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "date-field-validation-test";
     }
 
     @Test

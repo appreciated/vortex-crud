@@ -75,8 +75,8 @@ The key difference to **Vaadin Flow** is that `vortex-crud` operates at a much h
 - **Lifecycle Hooks**: Intercept operations with before/after hooks for Create, Update, Delete, and Read operations
 - **Field Validation**: Use built-in Vaadin validators (email, URL, regex, range, string length) with support for custom validation logic
 - **Demo Applications**: Two production-ready demo apps showcasing real-world usage:
-  - **Project Management Platform** (16 tables with custom fields)
-  - **Development Platform** (22 tables, GitHub/GitLab-style)
+- **Project Management Demo** (Time Tracking, Subtasks, Workflow Transitions)
+- **Development Platform** (Dashboard, Wiki, Notifications, GitHub/GitLab-style)
 
 # <a name="supported-routes-inputs">Features in Detail</a>
 
@@ -108,12 +108,14 @@ Standard form view for creating and editing entities.
 
 ### Additional Route Types
 
-- **Form Slide**: Form displayed in a slide-out side panel (configured via `FormSlideRouteFactory`)
-- **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured using `SingleFormRoute` model.
-- **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows (configured via `MultiFormRoute` model)
-- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory`)
-- **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory`)
-- **Submenu**: Creates nested menu structures for hierarchical navigation (configured via `SubmenuRouteFactory`)
+- **Form Slide**: Form displayed in a slide-out side panel. This is configured by using a `FormRoute` (or `JooqFormRoute`/`JpaFormRoute`) and setting the dialog factory to `FormSlideFactory`.
+- **Single Form**: Allows form routes to function as root routes for editing a specific entity instance by ID (e.g., user profile editing). Configured via `SingleFormRoute` model.
+- **Multi-Form**: Handles multiple forms in a single route configuration, enabling complex multi-step or multi-entity editing workflows. Configured via `MultiFormRoute` model, which accepts a list of `FormRoute` instances.
+- **Kanban**: Kanban board with drag-and-drop columns (configured via `KanbanFactory` or `KanbanRoute`)
+- **Calendar**: Calendar and timeline views for date-based entities (configured via `CalendarFactory` or `CalendarRoute`)
+- **Submenu**: Creates nested menu structures for hierarchical navigation, allowing grouping of related routes (configured via `SubmenuRoute` model).
+- **Search**: Global search results view, aggregating results from configured routes (configured via `SearchRoute` model)
+- **Single Component**: Route displaying a single full-page input component, useful for document editing or specific single-field workflows (configured via `SingleComponentRoute` model)
 - **Custom**: Enables the integration of fully custom Vaadin components/views into the routing system (configured via `CustomRoute` model)
 
 ## <a name="ui-actions">UI Actions</a>
@@ -131,6 +133,7 @@ Reusable building blocks for a consistent user interface:
 - **Layouts**: `DefaultRouterLayout` provides the standard application shell with navigation.
 - **Factories**: `CardFactory` renders entities as cards in List and Kanban views.
 - **Search & Filtering**: `GenericFilterableDataProvider` and `SearchField` components enable data exploration.
+- **Notifications**: `NotificationPanel` component displays user notifications, supporting read/unread status and timestamps.
 
 ## <a name="nesting-routes-using-subroute">Nesting routes using Subroute</a>
 <img width="600px" src="./img/screenshot-subroute-view.png">
@@ -148,21 +151,39 @@ A rich set of fields for data input and display, handling various data types and
     - `SelectField`: For static lists or Enum values.
     - `MultiSelectField` / `MultiSelectValueField`: For selecting multiple values or relations.
     - `ReferenceField`: For selecting a single related entity (Many-to-One).
+    - `Collection`: For managing One-to-Many or Many-to-Many relationships inline (e.g. subtasks, comments).
+        - Configured via `CollectionConfiguration` (or `Collection` model).
+        - **Key Properties**:
+            - `form`: Defines the `FormRoute` used to edit the child items.
+            - `oneToMany` / `manyToMany`: Defines the relationship type and target.
+            - `listFactory`: Custom factory for listing items (optional).
 - **Rich Media & Files**:
     - `ImageField`: For uploading and displaying images.
     - `VideoField`: For uploading and playing videos.
     - `PdfField`: For uploading and viewing PDF documents.
     - `FileField`: For generic file upload and download.
 - **Rich Content**: `MarkDownField` for rich text editing.
-- **System**: `IdField` for handling entity identifiers.
+- **System**: `IdField`, `NumericIdField`, `StringIdField` for handling entity identifiers.
 
 ## <a name="configuration-models">Configuration & Data Models</a>
 Models that define the application's structure and behavior:
 
 - **DataStoreConfig**: The central configuration for mapping data to views.
 - **IdentityAndAccessManagement (IAM)**: Configuration for Role-Based Access Control (RBAC), defining Roles and permissions.
+- **NotificationPanelConfiguration**: Configuration for the global notification panel (bell icon), including message sources, timestamps, and read status management.
 - **Relationships**: Configuration support for OneToMany and ManyToMany relationships.
 - **Auditing & Versioning**: Configuration models for tracking changes (implementation depends on the backend).
+
+### Lifecycle Hooks
+`vortex-crud` supports lifecycle hooks to intercept data operations. These are configured using the `DataStoreHooks` builder:
+
+```java
+DataStoreHooks<MyRecord> hooks = DataStoreHooks.<MyRecord>builder()
+    .beforeCreate(record -> validate(record))
+    .afterCreate(record -> sendNotification(record))
+    .beforeUpdate(record -> checkPermission(record))
+    .build();
+```
 
 # <a name="code-examples">Code Examples</a>
 
@@ -188,13 +209,21 @@ Real-world scenarios showcasing how to build specific types of applications.
 
 - **[Project Management Demo](examples/jooq-project-management-demo)** (`examples/jooq-project-management-demo`)
   A project management tool featuring Projects, Tasks, Milestones, and Labels. It demonstrates a **Custom Field System** where users can dynamically define new fields for entities, stored as JSON.
+  - **Key Features**: Time Tracking, Subtasks, Comments, Attachments, and complex Role-Based Access Control using strategies. It also showcases **Workflow Transitions** (e.g., Start Progress, Review, Done) implemented via `SingleEntityRouteAction`.
 
 - **[Developer Platform Demo](examples/jooq-dev-platform-demo)** (`examples/jooq-dev-platform-demo`)
   A platform similar to GitHub/GitLab, managing Repositories, Issues, Pull Requests, and Organizations. Like the Project Management demo, it utilizes the custom field system for extensibility.
+  - **Key Features**: Dashboard with analytics, Wiki/Git integration, Star/Watch repositories, and a Notification system.
 
 - **[Resource Planner Demo](examples/jooq-ressource-planner-demo)** (`examples/jooq-ressource-planner-demo`)
   An application for scheduling appointments and managing resources.
-  - **Key Features**: Calendar views, availability checking using **DataStore Hooks**, and management of Rooms, Staff, and Appointment Types.
+  - **Key Features**:
+    - **Customer Management**: Dedicated entity and view for customers.
+    - **Recurring Appointments**: Support for repeating events.
+    - **Resource View**: A Master-Detail view for browsing Rooms and managing their appointments.
+    - **Resource Board**: A Kanban board grouping appointments by Room.
+    - **Availability Checking**: Implemented using **DataStore Hooks** to prevent double-booking.
+    - **Customer Management**: Dedicated entity and view for customers.
 
 ## <a name="configuration">Getting Started</a>
 `vortex-crud` currently supports only Java-based configuration to define routes and data stores. Below is a smaller example of how to configure a part of a project management application using jOOQ and JPA.
@@ -398,25 +427,34 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
 
 ### Configuration Example
 
-Configure authentication and user management in your application configuration:
+Configure authentication and user management in your application configuration. You can define granular permissions for routes and fields.
 
 ```java
 .identityAndAccessManagement(
     LocalIdentityAndAccessManagement.builder()
         .dataStoreConfig(userDataStoreConfig) // Assuming user data store config is created
         .availableRoles(Roles.builder().roles(List.of("manager", "admin")).build())
+        .defaultReadRoles(List.of("user")) // Default roles required to read data
+        .defaultWriteRoles(List.of("admin")) // Default roles required to write data
         .signUpEnabled(true)
         .loginView(LoginView.class)
         .signUpView(SignUpView.class)
         .username(JpaFieldElement.builder("username", "labels.username").build())
         .password(JpaFieldElement.builder("passwordHash", "labels.password").build())
         .signUpFields(List.of(
-            JpaFieldElement.builder("firstName", "labels.firstName").build(),
+            JpaFieldElement.builder("firstName", "labels.firstName")
+                .readOnlyForRoles(List.of("guest")) // Field-level permission
+                .build(),
             JpaFieldElement.builder("lastName", "labels.lastName").build()
         ))
         .build()
 )
 ```
+
+### Granular Permissions
+`vortex-crud` supports fine-grained access control:
+- **Route Level**: Use `.writeRoles(...)` and `.readOnlyRoles(...)` on any route configuration (e.g., `GridRoute`, `FormRoute`) to restrict access.
+- **Field Level**: Use `.readOnlyForRoles(...)` on form elements (like `JpaFieldElement` or `JooqFieldElement`) to make specific fields read-only for certain user roles.
 
 ### User Entity Example
 
@@ -787,11 +825,11 @@ While the `core` module handles the UI implementations and the generation of rou
 The framework is powered by several core services:
 
 - **Dynamic Routing**: `DynamicRouteGenerator` automatically builds and registers Vaadin routes based on your configuration.
-- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, allowing the core UI to be backend-agnostic.
+- **Data Store Abstraction**: `VortexCrudDataStore` provides a unified API for data access, including complex filtering, sorting, and pagination, allowing the core UI to be backend-agnostic.
 - **Security**: `VortexCrudRbacPermissionChecker` ensures users only access routes and actions permitted by their roles.
 - **Internationalization**: `TranslationService` manages localization across the application.
 - **File Management**: `LocalFileResourceProvider` (and variants) handles the storage and retrieval of file assets.
-- **Context**: `VortexCrudContext` provides necessary services to stateless UI factories.
+- **Context**: `VortexCrudContext` aggregates application services and provides execution context to stateless UI factories.
 
 ## Basic Principles
 At its core, `vortex-crud` relies on dependency injection, with the `VortexCrudConfigService` as the entry point. The implementation of this service is provided by the user. Based on the configuration defined in `VortexCrudConfigService`, the `DynamicRouteGenerator` automatically registers the necessary routes.
@@ -930,3 +968,8 @@ To get started with development
     - Go to: `examples\jooq-sqlite-example\`
     - Run `com.github.appreciated.vortex_crud.example.jooq.Application`
     - Make sure to set the working directory according to the Maven module `jooq-sqlite-example`
+
+## <a name="ui-testing">UI Testing</a>
+The project includes a shared test module `ui-test-base` which provides a robust infrastructure for UI verification using **Playwright**. This module contains abstract test classes (e.g., `AbstractGridTest`, `AbstractKanbanTest`) that can be extended to test your specific implementations, ensuring that your `vortex-crud` application works as expected across different backend implementations (JPA/jOOQ).
+
+For more detailed information on the project structure, modules, and testing infrastructure, please refer to [DEV_README.md](DEV_README.md).

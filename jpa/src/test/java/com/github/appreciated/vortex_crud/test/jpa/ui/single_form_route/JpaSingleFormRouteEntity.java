@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
-@Table(name = "missing_features_test")
+@Table(name = "single_form_route_test")
 public class JpaSingleFormRouteEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class JpaSingleFormRouteEntity {
     private String name;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "missing_features_test_tags", joinColumns = @JoinColumn(name = "entity_id"))
+    @CollectionTable(name = "single_form_route_test_tags", joinColumns = @JoinColumn(name = "entity_id"))
     @Column(name = "tag_value")
     @MultiSelectValueField("tags")
     private Set<String> tags;

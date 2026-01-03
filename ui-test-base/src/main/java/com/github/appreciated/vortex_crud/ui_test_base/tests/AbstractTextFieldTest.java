@@ -9,7 +9,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 public abstract class AbstractTextFieldTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "text-field-validation-test";
     }
 
     @Test

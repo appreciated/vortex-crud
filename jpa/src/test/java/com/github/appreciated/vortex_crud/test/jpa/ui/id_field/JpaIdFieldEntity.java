@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table(name = "field_types_test")
+@Table(name = "id_field_test")
 public class JpaIdFieldEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

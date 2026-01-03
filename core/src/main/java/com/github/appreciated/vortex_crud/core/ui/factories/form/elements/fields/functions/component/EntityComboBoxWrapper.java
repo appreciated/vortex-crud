@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStr
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.ReferenceFieldValueStrategy;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasLabel;
 import com.vaadin.flow.component.HasValue;
@@ -19,16 +20,20 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
     private final ComboBox<Object> comboBox;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final ReferenceFieldValueStrategy valueStrategy;
     private Object currentValue;
+    private Object currentEntityValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
                                  Field<ModelClass, FieldType, RepositoryType> dataStoreField,
                                  ReflectionService<FieldType> reflectionService,
-                                 VortexCrudDataStoreUtilStrategy dataStoreUtil
+                                 VortexCrudDataStoreUtilStrategy dataStoreUtil,
+                                 ReferenceFieldValueStrategy valueStrategy
     ) {
         ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
         this.dataStoreUtil = dataStoreUtil;
+        this.valueStrategy = valueStrategy;
         this.comboBox = new ComboBox<>();
 
         // Set up the ComboBox with a data provider and label generator
@@ -46,6 +51,7 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         // Add a value change listener to handle when a new value is selected
         comboBox.addValueChangeListener(event -> {
             Object selectedEntity = event.getValue();
+            currentEntityValue = selectedEntity;
             if (selectedEntity != null) {
                 // Extract the ID from the selected entity using the utility strategy
                 String idString = dataStoreUtil.getId(selectedEntity);
@@ -66,6 +72,7 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
                 }
             } else {
                 currentValue = null;
+                currentEntityValue = null;
             }
         });
         comboBox.setWidthFull();
@@ -77,10 +84,11 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         return comboBox;
     }
 
-    // Implementing getValue() to return the current ID
+    // Implementing getValue() to return either the entity object (JPA) or the ID (jOOQ)
     @Override
     public Object getValue() {
-        return currentValue;
+        // Use strategy to determine what to return
+        return valueStrategy.prepareValueForEntity(currentEntityValue, currentValue, dataStoreUtil);
     }
 
     @Override
@@ -88,19 +96,18 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
         return comboBox.addValueChangeListener(listener);
     }
 
-    // Implementing setValue() to load an entity based on the ID
+    // Implementing setValue() to load an entity based on the ID or entity object
     @Override
-    public void setValue(Object id) {
-        if (id != null) {
-            if (!(id instanceof Number)) {
-                comboBox.setValue(id);
-            } else {
-                Object entity = dataStore.getRecordById(id);
-                comboBox.setValue(entity);
-                currentValue = id;
-            }
+    public void setValue(Object value) {
+        if (value != null) {
+            // Use strategy to process the incoming value
+            ReferenceFieldValueStrategy.ValueHolder holder = valueStrategy.processIncomingValue(value, dataStore, dataStoreUtil);
+            currentEntityValue = holder.getEntityValue();
+            currentValue = holder.getIdValue();
+            comboBox.setValue(currentEntityValue);
         } else {
             comboBox.clear();
+            currentEntityValue = null;
             currentValue = null;
         }
     }

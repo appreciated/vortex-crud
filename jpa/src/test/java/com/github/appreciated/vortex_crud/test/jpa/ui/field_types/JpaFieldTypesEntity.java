@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
-@Table(name = "missing_features_test")
+@Table(name = "field_types_test")
 public class JpaFieldTypesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class JpaFieldTypesEntity {
     private String name;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "missing_features_test_tags", joinColumns = @JoinColumn(name = "entity_id"))
+    @CollectionTable(name = "field_types_test_tags", joinColumns = @JoinColumn(name = "entity_id"))
     @Column(name = "tag_value")
     @MultiSelectValueField("tags")
     private Set<String> tags;

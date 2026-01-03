@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 public abstract class AbstractCheckboxFieldTest extends BaseUITest {
 
     public String getValidationPath() {
-        return "field-validation-test";
+        return "checkbox-field-validation-test";
     }
 
     @Test

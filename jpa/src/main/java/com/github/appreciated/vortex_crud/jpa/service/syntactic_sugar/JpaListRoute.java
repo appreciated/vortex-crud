@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class JpaListRoute extends ListRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
     public static ListRoute.ListRouteBuilder<JpaRepository<?, ?>, String, JpaRepository<?, ?>> builder() {
-        return ListRoute.builder();
+        return ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder();
     }
 }

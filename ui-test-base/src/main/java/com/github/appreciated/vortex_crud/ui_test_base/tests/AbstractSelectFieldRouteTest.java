@@ -2,6 +2,7 @@ package com.github.appreciated.vortex_crud.ui_test_base.tests;
 
 import com.github.appreciated.vortex_crud.ui_test_base.BaseUITest;
 import com.microsoft.playwright.Locator;
+import com.microsoft.playwright.Page;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -11,7 +12,14 @@ public abstract class AbstractSelectFieldRouteTest extends BaseUITest {
     @Test
     void testSelectField() {
         navigateTo("select-field-test");
-        waitForAnyElementContainingText("Option 1").click(); // Click on item in list
+        // Wait for the grid to load
+        waitForElement("vaadin-grid");
+
+        // Click on item in list. Use a longer timeout for robustness in slow environments.
+        // We look for "Option 1" which might be the raw value or part of "Option 1 Label"
+        waitForAnyElementContainingText("Option 1", new Page.GetByTextOptions().setExact(false))
+                .click(new Locator.ClickOptions().setTimeout(30000));
+
         waitForUrlToBe("select-field-test/1");
 
         // Check that a vaadin-select exists

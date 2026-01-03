@@ -30,22 +30,76 @@ import static com.vaadin.flow.component.icon.VaadinIcon.FACTORY;
 @Service
 public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
-    private final JpaFieldValidationRepository validationEntityRepository;
     private final JpaFieldService fieldService;
     private final JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaEmailFieldValidationRepository emailRepository;
+    private final JpaDateFieldValidationRepository dateRepository;
+    private final JpaCheckboxFieldValidationRepository checkboxRepository;
+    private final JpaDateTimeFieldValidationRepository dateTimeRepository;
+    private final JpaImageFieldValidationRepository imageRepository;
+    private final JpaNumberFieldValidationRepository numberRepository;
+    private final JpaTextFieldValidationRepository textRepository;
+    private final JpaSelectFieldValidationRepository selectRepository;
+    private final JpaLifecycleFieldValidationRepository lifecycleRepository;
 
-    public JpaFieldValidationVortexCrudConfiguration(JpaFieldValidationRepository validationEntityRepository, JpaFieldService fieldService, JpaFieldAnnotationRegistryService annotationRegistryService) {
-        this.validationEntityRepository = validationEntityRepository;
+    public JpaFieldValidationVortexCrudConfiguration(
+            JpaFieldService fieldService,
+            JpaFieldAnnotationRegistryService annotationRegistryService,
+            JpaEmailFieldValidationRepository emailRepository,
+            JpaDateFieldValidationRepository dateRepository,
+            JpaCheckboxFieldValidationRepository checkboxRepository,
+            JpaDateTimeFieldValidationRepository dateTimeRepository,
+            JpaImageFieldValidationRepository imageRepository,
+            JpaNumberFieldValidationRepository numberRepository,
+            JpaTextFieldValidationRepository textRepository,
+            JpaSelectFieldValidationRepository selectRepository,
+            JpaLifecycleFieldValidationRepository lifecycleRepository
+    ) {
         this.fieldService = fieldService;
         this.annotationRegistryService = annotationRegistryService;
+        this.emailRepository = emailRepository;
+        this.dateRepository = dateRepository;
+        this.checkboxRepository = checkboxRepository;
+        this.dateTimeRepository = dateTimeRepository;
+        this.imageRepository = imageRepository;
+        this.numberRepository = numberRepository;
+        this.textRepository = textRepository;
+        this.selectRepository = selectRepository;
+        this.lifecycleRepository = lifecycleRepository;
     }
 
     @Override
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> get() {
-        var store = new JpaRepositoryDataStore<>(validationEntityRepository, annotationRegistryService);
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
+
+        addRoute(routes, "email-field-validation-test", emailRepository);
+        addRoute(routes, "date-field-validation-test", dateRepository);
+        addRoute(routes, "checkbox-field-validation-test", checkboxRepository);
+        addRoute(routes, "datetime-field-validation-test", dateTimeRepository);
+        addRoute(routes, "image-field-validation-test", imageRepository);
+        addRoute(routes, "number-field-validation-test", numberRepository);
+        addRoute(routes, "text-field-validation-test", textRepository);
+        addRoute(routes, "select-field-validation-test", selectRepository);
+        addRoute(routes, "lifecycle-field-validation-test", lifecycleRepository);
+
+        LinkedHashMap<JpaFieldValidationEnum, String> enumOptions = new LinkedHashMap<>();
+        enumOptions.put(OPTION1, "enums.option1");
+        enumOptions.put(OPTION2, "enums.option2");
+        enumOptions.put(OPTION3, "enums.option3");
+
+        return JpaApplication.builder()
+                .applicationName("application.name")
+                .i18nBundlePrefix("ui_test_i18n")
+                .routes(routes)
+                .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
+                .build();
+    }
+
+    private <T extends BaseJpaFieldValidationEntity> void addRoute(LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes, String path, JpaRepository<T, Long> repository) {
+        var store = new JpaRepositoryDataStore<>(repository, annotationRegistryService);
         Map<Class<?>, VortexCrudDataStore> storeMap = Map.of(store.getModelClass(), store);
 
-        var config = JpaDataStoreConfig.builder(validationEntityRepository, store)
+        var config = JpaDataStoreConfig.builder(repository, store)
                 .withServices(fieldService, storeMap)
                 .build();
 
@@ -65,8 +119,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 ))
                 .build();
 
-        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
-        routes.put("field-validation-test", JpaListRoute.builder()
+        routes.put(path, JpaListRoute.builder()
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
@@ -77,17 +130,5 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 ))
                 .form(validationForm)
                 .build());
-
-        LinkedHashMap<JpaFieldValidationEnum, String> enumOptions = new LinkedHashMap<>();
-        enumOptions.put(OPTION1, "enums.option1");
-        enumOptions.put(OPTION2, "enums.option2");
-        enumOptions.put(OPTION3, "enums.option3");
-
-        return JpaApplication.builder()
-                .applicationName("application.name")
-                .i18nBundlePrefix("ui_test_i18n")
-                .routes(routes)
-                .selects(Selects.builder().configs(Map.of("enum-options", enumOptions)).build())
-                .build();
     }
 }
