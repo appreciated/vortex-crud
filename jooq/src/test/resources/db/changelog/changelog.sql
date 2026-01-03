@@ -23,6 +23,24 @@ CREATE TABLE validation_test
     PRIMARY KEY (id)
 );
 
+-- changeset Create id_field_test table for testing id field:46
+CREATE TABLE id_field_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
+-- changeset Create select_field_test table for testing select field:47
+CREATE TABLE select_field_test
+(
+    id          INTEGER PRIMARY KEY,
+    name        VARCHAR(255) NOT NULL,
+    pdf_doc     VARCHAR(255),
+    notes       TEXT
+);
+
 -- changeset Create many_to_many_item:3
 CREATE TABLE many_to_many_item
 (

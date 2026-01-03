@@ -6,7 +6,7 @@ import com.github.appreciated.vortex_crud.jpa.service.annoations.TextAreaField;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "field_types_test")
+@Table(name = "select_field_test")
 public class JpaSelectFieldEntity {
 
     @Id
