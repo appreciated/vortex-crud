@@ -1,7 +1,6 @@
-DROP TABLE IF EXISTS field_types_test_tags;
-DROP TABLE IF EXISTS field_types_test;
+DROP TABLE IF EXISTS id_field_test;
 
-CREATE TABLE field_types_test
+CREATE TABLE id_field_test
 (
     id          INTEGER PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -9,4 +8,4 @@ CREATE TABLE field_types_test
     notes       TEXT
 );
 
-INSERT INTO field_types_test (id, name, pdf_doc, notes) VALUES (1, 'Test Entity 1', 'test.pdf', '## Header');
+INSERT INTO id_field_test (id, name, pdf_doc, notes) VALUES (1, 'Test Entity 1', 'test.pdf', '## Header');
