@@ -28,6 +28,14 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
         this.permissionChecker = permissionChecker;
     }
 
+    public FormBuilder<ModelClass, FieldType, RepositoryType> getFormBuilder() {
+        return formBuilder;
+    }
+
+    public DataBinder<ModelClass, FieldType, RepositoryType> getDataBinder() {
+        return dataBinder;
+    }
+
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
                                    FormRouteProvider<ModelClass, FieldType, RepositoryType> routeRenderer,
                                    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fieldsViewConfig,
