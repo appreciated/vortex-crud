@@ -44,7 +44,7 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                 (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         var parentRoute =
-                (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex - 1);
+                (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex - 1);
 
         routeProvider.title(parentRoute.title());
         routeProvider.dataStoreConfig(parentRoute.dataStoreConfig());
