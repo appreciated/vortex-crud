@@ -30,6 +30,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @lombok.NonNull
     private String title;
 
     private boolean defaultRoute;

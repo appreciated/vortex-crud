@@ -31,6 +31,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @lombok.NonNull
     private String title;
 
     private boolean defaultRoute;
