@@ -17,7 +17,7 @@ public class DefaultListColumnImplCallback<ModelClass, FieldType, RepositoryType
     }
 
     @Override
-    public void addColumn(Grid<Object> grid, InternalFormElement<ModelClass, FieldType, RepositoryType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
+    public void addColumn(Grid<Object> grid, InternalFormElement<FieldType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField) {
         if (dataStoreField instanceof ImageField<?, ?, ?>) {
             ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
             if (imageField.resourceProvider() == null) {

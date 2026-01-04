@@ -13,7 +13,7 @@ public interface FormRouteProvider<ModelClass, FieldType, RepositoryType> extend
 
     boolean isDeleteButtonHidden();
 
-    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields();
+    List<InternalFormElement<FieldType>> fields();
 
     FormRouteProvider<ModelClass, FieldType, RepositoryType> dataStoreConfig(DataStoreConfig<ModelClass, FieldType, RepositoryType> config);
 

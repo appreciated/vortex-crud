@@ -127,7 +127,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     }
 
     @Override
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+    public List<InternalFormElement<FieldType>> fields() {
         return form.fields();
     }
 }

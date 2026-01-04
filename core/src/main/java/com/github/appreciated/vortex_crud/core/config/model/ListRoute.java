@@ -56,7 +56,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
     @lombok.NonNull
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns;
+    private List<InternalFormElement<FieldType>> columns;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
@@ -78,7 +78,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
             List<String> writeRoles,
             List<String> readOnlyRoles,
             FormRouteProvider<ModelClass, FieldType, RepositoryType> form,
-            @lombok.NonNull List<InternalFormElement<ModelClass, FieldType, RepositoryType>> columns,
+            @lombok.NonNull List<InternalFormElement<FieldType>> columns,
             List<RouteAction<FieldType, ModelClass>> routeActions,
             @lombok.Singular List<RouteFilter<FieldType>> routeFilters
     ) {

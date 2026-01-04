@@ -64,7 +64,7 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Fo
     }
 
     @Override
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+    public List<InternalFormElement<FieldType>> fields() {
         return List.of();
     }
 

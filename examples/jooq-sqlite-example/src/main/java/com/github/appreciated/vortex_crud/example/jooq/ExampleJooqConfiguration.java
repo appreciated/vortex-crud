@@ -454,11 +454,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                         .titleField("title")
                         .fields(List.of(
-                                InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                                         .field("title")
                                         .label("Title")
                                         .build(),
-                                InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                                         .field("content")
                                         .label("Content")
                                         .build()

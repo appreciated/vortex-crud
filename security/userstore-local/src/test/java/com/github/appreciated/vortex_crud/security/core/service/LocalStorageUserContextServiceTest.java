@@ -51,7 +51,7 @@ class LocalStorageUserContextServiceTest {
     private VortexCrudDataStore dataStore;
 
     @Mock
-    private InternalFormElement<String, String, String> usernameElement;
+    private InternalFormElement<String> usernameElement;
 
     private LocalStorageUserContextService<String, String, String> userContextService;
 

@@ -138,7 +138,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 ))
                 .build();
 
-        InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
+        InternalFormElement<String> build = JpaCollectionElement.builder("route.tasks.labels.comments")
                 .field("comments")
                 .listFactory(new ListCollectionFactory<>())
                 .dialogFactory(new FormDialogFactory<>())

@@ -54,7 +54,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private FieldType filterField;
 
     @lombok.NonNull
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields;
+    private List<InternalFormElement<FieldType>> fields;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -77,7 +77,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
             FieldType filterField,
-            @lombok.NonNull List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields,
+            @lombok.NonNull List<InternalFormElement<FieldType>> fields,
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
