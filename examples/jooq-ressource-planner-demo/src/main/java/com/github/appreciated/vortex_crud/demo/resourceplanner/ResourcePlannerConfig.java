@@ -1,9 +1,6 @@
 package com.github.appreciated.vortex_crud.demo.resourceplanner;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
@@ -273,6 +270,11 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
 
         // Routes
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
+
+        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.search.title")
+                .iconFactory(VaadinIcon.SEARCH::create)
+                .build());
 
         routes.put("appointments", JooqCalendarRoute.builder()
                 .defaultRoute(true)
