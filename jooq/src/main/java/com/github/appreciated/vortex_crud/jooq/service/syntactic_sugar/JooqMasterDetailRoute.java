@@ -6,6 +6,9 @@ import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 
-@SuperBuilder
+
 public class JooqMasterDetailRoute extends MasterDetailRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
+    public static MasterDetailRoute.MasterDetailRouteBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
+        return MasterDetailRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
+    }
 }
