@@ -5,13 +5,13 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.ComponentEffect;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.shared.Registration;
+import com.vaadin.signals.SignalFactory;
+import com.vaadin.signals.ValueSignal;
 
 import java.util.Map;
 
@@ -25,9 +25,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
 
     private final VortexCrudPathToRouteResolver routeResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
-    private final SignalService signalService;
     private final VortexCrudDataStore<FieldType, ?> dataStore;
-    private Registration signalRegistration;
 
     public GenericEntityGrid(VortexCrudPathToRouteResolver routeResolver,
                              ListRoute<?, ?, ?> routeRenderer,
@@ -35,7 +33,6 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
     ) {
         this.routeResolver = routeResolver;
         this.dataStoreUtil = context.dataStoreUtil();
-        this.signalService = context.signalService();
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         ListRoute<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
                 (ListRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
@@ -63,19 +60,15 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        if (signalService != null && dataStore != null) {
+        if (dataStore != null) {
             String topic = "entity-change:" + dataStore.getModelClass().getName();
-            signalRegistration = signalService.subscribe(topic, signal -> {
-                getUI().ifPresent(ui -> ui.access(this.getDataProvider()::refreshAll));
+            ValueSignal<Long> signal = SignalFactory.IN_MEMORY_SHARED.value(topic, Long.class);
+            ComponentEffect.effect(this, () -> {
+                // Register dependency
+                signal.value();
+                // Refresh grid
+                this.getDataProvider().refreshAll();
             });
-        }
-    }
-
-    @Override
-    protected void onDetach(DetachEvent detachEvent) {
-        super.onDetach(detachEvent);
-        if (signalRegistration != null) {
-            signalRegistration.remove();
         }
     }
 

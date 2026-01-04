@@ -1,7 +1,9 @@
 package com.github.appreciated.vortex_crud.core.entity.data_store;
 
 import com.github.appreciated.vortex_crud.core.config.model.RouteFilter;
-import com.github.appreciated.vortex_crud.core.service.SignalService;
+import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.signals.SignalFactory;
+import com.vaadin.signals.ValueSignal;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -10,10 +12,19 @@ import java.util.List;
 public class SignalAwareDataStore<FieldType, ModelClass> implements VortexCrudDataStore<FieldType, ModelClass> {
 
     private final VortexCrudDataStore<FieldType, ModelClass> delegate;
-    private final SignalService signalService;
 
     private void emitChange() {
-        signalService.emit("entity-change:" + delegate.getModelClass().getName(), null);
+        try {
+            if (VaadinSession.getCurrent() != null) {
+                // We use IN_MEMORY_SHARED to broadcast to all users (since we want real-time updates across clients)
+                // However, Signals documentation says IN_MEMORY_SHARED returns the same signal instance for the same name within the same JVM.
+                // This fits perfectly.
+                ValueSignal<Long> signal = SignalFactory.IN_MEMORY_SHARED.value("entity-change:" + delegate.getModelClass().getName(), Long.class);
+                signal.value(System.currentTimeMillis());
+            }
+        } catch (Exception e) {
+            // Ignore if no session or signal issue, should not block data operation
+        }
     }
 
     @Override

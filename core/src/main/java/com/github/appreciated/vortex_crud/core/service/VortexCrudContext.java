@@ -27,7 +27,6 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker;
     private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
     private final ReferenceFieldValueStrategy referenceFieldValueStrategy;
-    private final SignalService signalService;
 
     public VortexCrudContext(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
@@ -42,8 +41,7 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
             @Autowired(required = false) VortexCrudPermissionResolutionService<ModelClass, FieldType, RepositoryType> permissionResolutionService,
             @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> rbacPermissionChecker,
             GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService,
-            ReferenceFieldValueStrategy referenceFieldValueStrategy,
-            SignalService signalService
+            ReferenceFieldValueStrategy referenceFieldValueStrategy
     ) {
         this.configService = configService;
         this.reflectionService = reflectionService;
@@ -58,7 +56,6 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         this.manyToManyPersistenceStrategy = manyToManyPersistenceStrategy;
         this.globalSearchService = globalSearchService;
         this.referenceFieldValueStrategy = referenceFieldValueStrategy;
-        this.signalService = signalService;
     }
 
     public VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService() {
@@ -113,7 +110,4 @@ public class VortexCrudContext<ModelClass, FieldType, RepositoryType> {
         return referenceFieldValueStrategy;
     }
 
-    public SignalService signalService() {
-        return signalService;
-    }
 }

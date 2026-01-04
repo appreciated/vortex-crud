@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.jooq.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.service.DataStoreWrappingUtil;
-import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import org.jooq.TableField;
@@ -17,10 +16,9 @@ public class JooqVortexCrudConfigService implements VortexCrudConfigService<Tabl
     private final Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration;
 
     @Autowired
-    public JooqVortexCrudConfigService(VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configurationProvider,
-                                       SignalService signalService) {
+    public JooqVortexCrudConfigService(VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configurationProvider) {
         this.configuration = configurationProvider.get();
-        DataStoreWrappingUtil.wrapDataStores(configuration, signalService);
+        DataStoreWrappingUtil.wrapDataStores(configuration);
     }
 
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> configuration() {

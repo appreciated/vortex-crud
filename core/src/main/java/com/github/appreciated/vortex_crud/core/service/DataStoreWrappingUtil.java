@@ -7,14 +7,12 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.SignalAwareData
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 public class DataStoreWrappingUtil {
 
     public static <ModelClass, FieldType, RepositoryType> void wrapDataStores(
-            Application<ModelClass, FieldType, RepositoryType> application,
-            SignalService signalService) {
+            Application<ModelClass, FieldType, RepositoryType> application) {
 
         if (application == null) {
             return;
@@ -22,7 +20,7 @@ public class DataStoreWrappingUtil {
 
         // Wrap NotificationPanel DataStore
         if (application.notificationPanelConfiguration() != null) {
-            wrapDataStoreConfig(application.notificationPanelConfiguration().dataStoreConfig(), signalService);
+            wrapDataStoreConfig(application.notificationPanelConfiguration().dataStoreConfig());
         }
 
         // Wrap Routes DataStores
@@ -30,18 +28,18 @@ public class DataStoreWrappingUtil {
         if (routes != null) {
             for (RouteRenderer<?, ?, ?> route : routes.values()) {
                 // We need to cast carefully or just use reflection since we know the structure
-                wrapRouteDataStore(route, signalService);
+                wrapRouteDataStore(route);
             }
         }
     }
 
-    private static void wrapRouteDataStore(RouteRenderer<?, ?, ?> route, SignalService signalService) {
+    private static void wrapRouteDataStore(RouteRenderer<?, ?, ?> route) {
         if (route.dataStoreConfig() != null) {
-            wrapDataStoreConfig(route.dataStoreConfig(), signalService);
+            wrapDataStoreConfig(route.dataStoreConfig());
         }
     }
 
-    private static void wrapDataStoreConfig(DataStoreConfig<?, ?, ?> config, SignalService signalService) {
+    private static void wrapDataStoreConfig(DataStoreConfig<?, ?, ?> config) {
         if (config == null || config.dataStoreInstance() == null) {
             return;
         }
@@ -57,7 +55,7 @@ public class DataStoreWrappingUtil {
         // But SignalAwareDataStore is generic.
         // We can cast because SignalAwareDataStore implements the same interface
         @SuppressWarnings("unchecked")
-        SignalAwareDataStore wrapped = new SignalAwareDataStore(original, signalService);
+        SignalAwareDataStore wrapped = new SignalAwareDataStore(original);
 
         // Now we need to set this wrapped instance back into the config.
         @SuppressWarnings("unchecked")

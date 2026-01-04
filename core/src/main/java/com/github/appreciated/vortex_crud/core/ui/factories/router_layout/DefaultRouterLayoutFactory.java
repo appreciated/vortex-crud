@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.GlobalSearchService;
-import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.vaadin.flow.component.applayout.AppLayout;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +17,22 @@ public class DefaultRouterLayoutFactory<ModelClass, FieldType, RepositoryType> i
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
     private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
-    private final SignalService signalService;
 
     public DefaultRouterLayoutFactory(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             @Autowired(required = false) VortexCrudLogoutService logoutService,
             ReflectionService<FieldType> reflectionService,
             @Autowired(required = false) VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
-            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService,
-            SignalService signalService) {
+            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService) {
         this.configService = configService;
         this.logoutService = logoutService;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
         this.globalSearchService = globalSearchService;
-        this.signalService = signalService;
     }
 
     @Override
     public AppLayout createAppLayout() {
-        return new DefaultRouterLayout<>(configService, logoutService, reflectionService, permissionChecker, globalSearchService, signalService);
+        return new DefaultRouterLayout<>(configService, logoutService, reflectionService, permissionChecker, globalSearchService);
     }
 }

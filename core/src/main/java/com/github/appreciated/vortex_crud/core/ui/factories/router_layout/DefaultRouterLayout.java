@@ -8,7 +8,6 @@ import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionServi
 import com.github.appreciated.vortex_crud.core.security.VortexCrudLogoutService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.GlobalSearchService;
-import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.ui.components.NotificationPanel;
 import com.vaadin.flow.component.AttachEvent;
@@ -41,21 +40,18 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
     private final ReflectionService<FieldType> reflectionService;
     private final VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker;
     private final GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService;
-    private final SignalService signalService;
 
     public DefaultRouterLayout(
             VortexCrudConfigService<ModelClass, FieldType, RepositoryType> configService,
             VortexCrudLogoutService logoutService,
             ReflectionService<FieldType> reflectionService,
             @Nullable VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker,
-            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService,
-            SignalService signalService) {
+            GlobalSearchService<ModelClass, FieldType, RepositoryType> globalSearchService) {
         this.configService = configService;
         this.logoutService = logoutService;
         this.reflectionService = reflectionService;
         this.permissionChecker = permissionChecker;
         this.globalSearchService = globalSearchService;
-        this.signalService = signalService;
     }
 
     @Override
@@ -87,7 +83,7 @@ public class DefaultRouterLayout<ModelClass, FieldType, RepositoryType> extends 
                 configService.configuration().notificationPanelConfiguration();
         if (notificationConfig != null) {
             NotificationPanel<ModelClass, FieldType> notificationPanel =
-                    new NotificationPanel<>(notificationConfig, reflectionService, signalService);
+                    new NotificationPanel<>(notificationConfig, reflectionService);
             actionButtons.add(notificationPanel);
         }
 
