@@ -66,6 +66,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<ProjectMemberRecord> projectMemberStore = new JooqDataStore<>(PROJECT_MEMBER.getRecordType(), dsl);
         JooqDataStore<TimeEntryRecord> timeEntryStore = new JooqDataStore<>(TIME_ENTRY.getRecordType(), dsl);
         JooqDataStore<AttachmentRecord> attachmentStore = new JooqDataStore<>(ATTACHMENT.getRecordType(), dsl);
+        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -193,6 +194,16 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         ATTACHMENT.NAME, JooqTextField.builder().required(true).build(),
                         ATTACHMENT.PATH, JooqFileField.builder().resourceProvider(new LocalFileResourceProvider("attachments")).required(true).build(),
                         ATTACHMENT.UPLOADED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance((VortexCrudDataStore) notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         // Project Form Configuration
@@ -540,6 +551,14 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "task-type", taskTypes,
                                 "priority", priorities,
                                 "project-roles", projectRoles))
+                        .build())
+                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(notificationConfig)
+                        .timestampField(NOTIFICATION.CREATED_AT)
+                        .messageField(NOTIFICATION.MESSAGE)
+                        .readStatusField(NOTIFICATION.IS_READ)
+                        .readStatusValueForRead(true)
+                        .readStatusValueForUnread(false)
                         .build())
                 .build();
     }

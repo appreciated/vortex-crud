@@ -11,3 +11,6 @@ databaseChangeLog:
   - include:
       file: database/V2.sql
       relativeToChangelogFile: true
+  - include:
+      file: database/V3.sql
+      relativeToChangelogFile: true
