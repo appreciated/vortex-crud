@@ -30,6 +30,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @lombok.NonNull
     private String title;
 
     private boolean defaultRoute;

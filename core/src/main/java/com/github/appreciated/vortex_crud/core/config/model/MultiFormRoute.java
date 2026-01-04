@@ -27,11 +27,13 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Fo
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @lombok.NonNull
     private String title;
 
     /**
      * List of form routes to be rendered as multiple forms within this multi-form route.
      */
+    @lombok.NonNull
     private List<FormRoute<ModelClass, FieldType, RepositoryType>> forms;
 
     @Builder.Default
