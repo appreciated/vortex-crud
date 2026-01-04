@@ -69,7 +69,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
-                .dataStoreInstance((VortexCrudDataStore) usersStore)
+                .dataStoreInstance(usersStore)
                 .fields(Map.of(
                         USERS.ID, JooqNumericIdField.builder().build(),
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
@@ -78,7 +78,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var projectMemberConfig = JooqDataStoreConfig.of(PROJECT_MEMBER)
-                .dataStoreInstance((VortexCrudDataStore) projectMemberStore)
+                .dataStoreInstance(projectMemberStore)
                 .fields(Map.of(
                         PROJECT_MEMBER.ID, JooqNumericIdField.builder().build(),
                         PROJECT_MEMBER.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(PROJECT_MEMBER.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
@@ -88,7 +88,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var projectConfig = JooqDataStoreConfig.of(PROJECT)
-                .dataStoreInstance((VortexCrudDataStore) projectStore)
+                .dataStoreInstance(projectStore)
                 .fields(Map.ofEntries(
                         Map.entry(PROJECT.ID, JooqNumericIdField.builder().build()),
                         Map.entry(PROJECT.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
@@ -108,7 +108,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
-                .dataStoreInstance((VortexCrudDataStore) milestoneStore)
+                .dataStoreInstance(milestoneStore)
                 .fields(Map.of(
                         MILESTONE.ID, JooqNumericIdField.builder().build(),
                         MILESTONE.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(MILESTONE.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
@@ -123,7 +123,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var taskConfig = JooqDataStoreConfig.of(TASK)
-                .dataStoreInstance((VortexCrudDataStore) taskStore)
+                .dataStoreInstance(taskStore)
                 .fields(Map.ofEntries(
                         Map.entry(TASK.ID, JooqNumericIdField.builder().build()),
                         Map.entry(TASK.PROJECT_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) projectStore).field(TASK.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
@@ -145,7 +145,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var labelConfig = JooqDataStoreConfig.of(LABEL)
-                .dataStoreInstance((VortexCrudDataStore) labelStore)
+                .dataStoreInstance(labelStore)
                 .fields(Map.of(
                         LABEL.ID, JooqNumericIdField.builder().build(),
                         LABEL.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
@@ -155,7 +155,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var taskCommentConfig = JooqDataStoreConfig.of(TASK_COMMENT)
-                .dataStoreInstance((VortexCrudDataStore) taskCommentStore)
+                .dataStoreInstance(taskCommentStore)
                 .fields(Map.of(
                         TASK_COMMENT.ID, JooqNumericIdField.builder().build(),
                         TASK_COMMENT.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK_COMMENT.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
@@ -165,7 +165,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var taskLabelConfig = JooqDataStoreConfig.of(TASK_LABEL)
-                .dataStoreInstance((VortexCrudDataStore) taskLabelStore)
+                .dataStoreInstance(taskLabelStore)
                 .fields(Map.of(
                         TASK_LABEL.ID, JooqNumericIdField.builder().build(),
                         TASK_LABEL.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TASK_LABEL.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
@@ -173,7 +173,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var timeEntryConfig = JooqDataStoreConfig.of(TIME_ENTRY)
-                .dataStoreInstance((VortexCrudDataStore) timeEntryStore)
+                .dataStoreInstance(timeEntryStore)
                 .fields(Map.of(
                         TIME_ENTRY.ID, JooqNumericIdField.builder().build(),
                         TIME_ENTRY.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(TIME_ENTRY.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
@@ -185,7 +185,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build();
 
         var attachmentConfig = JooqDataStoreConfig.of(ATTACHMENT)
-                .dataStoreInstance((VortexCrudDataStore) attachmentStore)
+                .dataStoreInstance(attachmentStore)
                 .fields(Map.of(
                         ATTACHMENT.ID, JooqNumericIdField.builder().build(),
                         ATTACHMENT.TASK_ID, JooqReferenceField.builder().dataStore((VortexCrudDataStore) taskStore).field(ATTACHMENT.TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build(),
@@ -502,7 +502,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
                                         PROJECT.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) projectMemberStore,
+                                                projectMemberStore,
                                                 PROJECT_MEMBER.USER_ID,
                                                 PROJECT_MEMBER.PROJECT_ID,
                                                 PROJECT_MEMBER.ROLE,
@@ -512,8 +512,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 ),
                                 // Global role strategy
                                 new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        (VortexCrudDataStore) userRolesStore,
-                                        (VortexCrudDataStore) rolesStore,
+                                        userRolesStore,
+                                        rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

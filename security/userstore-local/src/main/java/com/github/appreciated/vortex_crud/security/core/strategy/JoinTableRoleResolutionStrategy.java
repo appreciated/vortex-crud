@@ -43,14 +43,15 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Constructor for entity-specific roles (e.g., repository members).
      * Use this when you need to resolve roles for a specific target entity.
      */
-    public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, ?> joinDataStore,
-            FieldType userRefField,
-            FieldType targetRefField,
-            FieldType roleField,
+    @SuppressWarnings("unchecked")
+    public <S extends FieldType> JoinTableRoleResolutionStrategy(
+            VortexCrudDataStore<S, ?> joinDataStore,
+            S userRefField,
+            S targetRefField,
+            S roleField,
             FieldType userIdField,
             FieldType targetIdField) {
-        this.joinDataStore = joinDataStore;
+        this.joinDataStore = (VortexCrudDataStore<FieldType, ?>) joinDataStore;
         this.userRefField = userRefField;
         this.targetRefField = targetRefField;
         this.roleField = roleField;
@@ -69,15 +70,16 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Constructor for global roles (e.g., USER_ROLES join table).
      * Use this when you need to resolve global roles from a USER_ROLES -> ROLES relationship.
      */
-    public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, Object> userRolesDataStore,
-            VortexCrudDataStore<FieldType, Object> rolesDataStore,
-            FieldType userRolesUserIdField,
-            FieldType userRolesRoleIdField,
-            FieldType rolesNameField,
+    @SuppressWarnings("unchecked")
+    public <S1 extends FieldType, S2 extends FieldType> JoinTableRoleResolutionStrategy(
+            VortexCrudDataStore<S1, ?> userRolesDataStore,
+            VortexCrudDataStore<S2, ?> rolesDataStore,
+            S1 userRolesUserIdField,
+            S1 userRolesRoleIdField,
+            S2 rolesNameField,
             FieldType usersIdField) {
-        this.userRolesDataStore = userRolesDataStore;
-        this.rolesDataStore = rolesDataStore;
+        this.userRolesDataStore = (VortexCrudDataStore<FieldType, Object>) userRolesDataStore;
+        this.rolesDataStore = (VortexCrudDataStore<FieldType, Object>) rolesDataStore;
         this.userRolesUserIdField = userRolesUserIdField;
         this.userRolesRoleIdField = userRolesRoleIdField;
         this.rolesNameField = rolesNameField;
