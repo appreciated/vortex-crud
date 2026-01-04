@@ -6,8 +6,8 @@ import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.view.RecordViewProvider;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.view.ViewRouteFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.view.CustomViewFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.view.CustomViewFactoryRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 import lombok.AllArgsConstructor;
@@ -24,13 +24,13 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
-public class ViewRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @lombok.NonNull
-    private RecordViewProvider<ModelClass, FieldType, RepositoryType> viewProvider;
+    private CustomViewFactory<ModelClass> viewFactory;
 
     @I18nKey
     private String title;
@@ -38,10 +38,10 @@ public class ViewRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
     private boolean defaultRoute;
 
     @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new ViewRouteFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CustomViewFactoryRouteFactory<>();
 
     @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null; // Maybe default to null or some factory if needed
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
 
     private boolean hiddenInMenu;
 
@@ -67,7 +67,6 @@ public class ViewRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    // Additional fields needed for functionality similar to FormRoute
     private final boolean isDeleteButtonHidden = false;
 
     public boolean isDeleteButtonHidden() {

@@ -1,10 +1,10 @@
 package com.github.appreciated.vortex_crud.jooq.ui.routes;
 
+import com.github.appreciated.vortex_crud.core.config.model.CustomViewFactoryRoute;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
-import com.github.appreciated.vortex_crud.core.config.model.ViewRoute;
-import com.github.appreciated.vortex_crud.core.ui.factories.route.view.RecordViewProvider;
+import com.github.appreciated.vortex_crud.core.ui.factories.route.view.CustomViewFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
@@ -13,7 +13,7 @@ import org.jooq.impl.TableImpl;
 
 import java.util.Map;
 
-public class JooqViewRoute {
+public class JooqCustomViewFactoryRoute {
 
     public static <R extends UpdatableRecord<R>> Builder<R> builder(TableImpl<R> table, DSLContext dsl) {
         return new Builder<>(table, dsl);
@@ -25,15 +25,15 @@ public class JooqViewRoute {
         private DataStoreHooks<R> hooks = new DataStoreHooks<>();
         private Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields;
         private String title;
-        private RecordViewProvider<R, TableField<R, ?>, TableImpl<?>> viewProvider;
+        private CustomViewFactory<R> viewFactory;
 
         public Builder(TableImpl<R> table, DSLContext dsl) {
             this.table = table;
             this.dsl = dsl;
         }
 
-        public Builder<R> withView(RecordViewProvider<R, TableField<R, ?>, TableImpl<?>> viewProvider) {
-            this.viewProvider = viewProvider;
+        public Builder<R> withFactory(CustomViewFactory<R> viewFactory) {
+            this.viewFactory = viewFactory;
             return this;
         }
 
@@ -53,7 +53,7 @@ public class JooqViewRoute {
         }
 
         @SuppressWarnings("unchecked")
-        public ViewRoute<R, TableField<R, ?>, TableImpl<?>> build() {
+        public CustomViewFactoryRoute<R, TableField<R, ?>, TableImpl<?>> build() {
             JooqDataStore<R> store = new JooqDataStore<>((Class<R>) table.getRecordType(), dsl, hooks);
             DataStoreConfig<R, TableField<R, ?>, TableImpl<?>> dataStoreConfig = DataStoreConfig.<R, TableField<R, ?>, TableImpl<?>>builder()
                     .factory(table)
@@ -61,9 +61,9 @@ public class JooqViewRoute {
                     .fields(fields)
                     .build();
 
-            return ViewRoute.<R, TableField<R, ?>, TableImpl<?>>builder()
+            return CustomViewFactoryRoute.<R, TableField<R, ?>, TableImpl<?>>builder()
                     .dataStoreConfig(dataStoreConfig)
-                    .viewProvider(viewProvider)
+                    .viewFactory(viewFactory)
                     .title(title)
                     .build();
         }

@@ -2,8 +2,8 @@ package com.github.appreciated.vortex_crud.core.ui.factories.route.view;
 
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
+import com.github.appreciated.vortex_crud.core.config.model.CustomViewFactoryRoute;
 import com.github.appreciated.vortex_crud.core.config.model.DataStoreConfig;
-import com.github.appreciated.vortex_crud.core.config.model.ViewRoute;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
@@ -23,7 +23,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
-public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
+public class CustomViewFactoryRouteFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
     public Component renderRoute(
@@ -32,8 +32,8 @@ public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             VortexCrudPathToRouteResolver routeResolver,
             @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        ViewRoute<ModelClass, FieldType, RepositoryType> routeRenderer =
-                (ViewRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
+        CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> routeRenderer =
+                (CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         assert detailRouteSetting != null;
         return getView(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeRenderer.isDeleteButtonHidden(), routeRenderer);
@@ -45,7 +45,7 @@ public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                                   boolean isHeaderHidden,
                                   boolean creationMode,
                                   boolean isDeleteButtonHidden,
-                                  ViewRoute<ModelClass, FieldType, RepositoryType> routeRenderer) {
+                                  CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> routeRenderer) {
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         String title = routeRenderer.title();
@@ -77,16 +77,16 @@ public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        StoreAccessor<ModelClass, FieldType, RepositoryType> storeAccessor = new StoreAccessor<>(
-                tables, context, binder, entity
-        );
-
-        Component customView = routeRenderer.viewProvider().createView(entity, storeAccessor);
+        Component customView = routeRenderer.viewFactory().create(entity);
         binder.setBean(entity);
 
         // Generic Save button
         ComponentEventListener<ClickEvent<Button>> onSave = event -> {
             try {
+                // If the user's view manually bound fields, we hope they update the entity.
+                // Binder here is empty (except potentially the title component if bound? No titleComponent is bound above separately to binder.bindReadOnly)
+                // Actually binder.bindReadOnly returns a binding. But binder.setBean(entity) is called later.
+                // If titleComponent binding is the only one, writeBean might not do much.
                 binder.writeBean(entity);
                 if (!creationMode) {
                     dataStore.updateRecord(entity);
