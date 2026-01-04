@@ -5,9 +5,13 @@ import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.shared.Registration;
 
 import java.util.Map;
 
@@ -19,21 +23,25 @@ import java.util.Map;
 
 public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Grid<Object> {
 
-    private final  VortexCrudPathToRouteResolver routeResolver;
+    private final VortexCrudPathToRouteResolver routeResolver;
     private final VortexCrudDataStoreUtilStrategy dataStoreUtil;
+    private final SignalService signalService;
+    private final VortexCrudDataStore<FieldType, ?> dataStore;
+    private Registration signalRegistration;
 
-    public GenericEntityGrid( VortexCrudPathToRouteResolver routeResolver,
+    public GenericEntityGrid(VortexCrudPathToRouteResolver routeResolver,
                              ListRoute<?, ?, ?> routeRenderer,
                              VortexCrudContext<ModelClass, FieldType, RepositoryType> context
     ) {
         this.routeResolver = routeResolver;
         this.dataStoreUtil = context.dataStoreUtil();
+        this.signalService = context.signalService();
         addThemeVariants(GridVariant.LUMO_NO_BORDER);
         ListRoute<ModelClass, FieldType, RepositoryType> typedRouteRenderer =
                 (ListRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
         DataStoreConfig<ModelClass, FieldType, RepositoryType> tables = typedRouteRenderer.dataStoreConfig();
         RepositoryType table = tables.factory();
-        VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
+        this.dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
         com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, typedRouteRenderer.filterField(), typedRouteRenderer.filters()).withConfigurableFilter();
@@ -50,6 +58,25 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         setDataProvider(dataProvider);
         setSizeFull();
         addItemClickListener(event -> onItemClick(event.getItem()));
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        if (signalService != null && dataStore != null) {
+            String topic = "entity-change:" + dataStore.getModelClass().getName();
+            signalRegistration = signalService.subscribe(topic, signal -> {
+                getUI().ifPresent(ui -> ui.access(this.getDataProvider()::refreshAll));
+            });
+        }
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        if (signalRegistration != null) {
+            signalRegistration.remove();
+        }
     }
 
     /**

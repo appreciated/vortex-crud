@@ -1,6 +1,8 @@
 package com.github.appreciated.vortex_crud.jpa.service;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.service.DataStoreWrappingUtil;
+import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ public class JpaVortexCrudConfigService implements VortexCrudConfigService<JpaRe
     private final Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration;
 
     @Autowired
-    public JpaVortexCrudConfigService(VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configurationProvider) {
-        configuration =  configurationProvider.get();
+    public JpaVortexCrudConfigService(VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configurationProvider,
+                                      SignalService signalService) {
+        configuration = configurationProvider.get();
+        DataStoreWrappingUtil.wrapDataStores(configuration, signalService);
     }
 
     public Application<JpaRepository<?, ?>, String, JpaRepository<?, ?>> configuration() {

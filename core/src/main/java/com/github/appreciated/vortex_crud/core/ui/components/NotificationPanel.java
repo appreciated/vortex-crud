@@ -2,7 +2,10 @@ package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.github.appreciated.vortex_crud.core.config.model.NotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
+import com.github.appreciated.vortex_crud.core.service.SignalService;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
@@ -49,6 +52,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
 
     private final ReflectionService<FieldType> reflection;
     private final NotificationPanelConfiguration<ModelClass, FieldType, ?> config;
+    private final SignalService signalService;
 
     private final MessageList unreadList = new MessageList();
     private final MessageList allList = new MessageList();
@@ -56,9 +60,11 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     private final Popover popover = new Popover();
 
     public NotificationPanel(NotificationPanelConfiguration<ModelClass, FieldType, ?> config,
-                             ReflectionService<FieldType> reflection) {
+                             ReflectionService<FieldType> reflection,
+                             SignalService signalService) {
         this.config = config;
         this.reflection = reflection;
+        this.signalService = signalService;
         buildUI();
     }
 
@@ -151,6 +157,28 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         refresh();
+        subscribe();
+    }
+
+    private com.vaadin.flow.shared.Registration subscription;
+
+    private void subscribe() {
+        if (signalService == null || config.dataStoreConfig() == null || config.dataStoreConfig().dataStoreInstance() == null) {
+            return;
+        }
+        var dataStore = config.dataStoreConfig().dataStoreInstance();
+        String topic = "entity-change:" + dataStore.getModelClass().getName();
+        subscription = signalService.subscribe(topic, signal -> {
+            getUI().ifPresent(ui -> ui.access(this::refresh));
+        });
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        super.onDetach(detachEvent);
+        if (subscription != null) {
+            subscription.remove();
+        }
     }
 
     public void refresh() {
