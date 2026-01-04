@@ -71,4 +71,12 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
             }
         }
     }
+
+    public FormBuilder<ModelClass, FieldType, RepositoryType> formBuilder() {
+        return formBuilder;
+    }
+
+    public DataBinder<ModelClass, FieldType, RepositoryType> dataBinder() {
+        return dataBinder;
+    }
 }
