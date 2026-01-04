@@ -35,7 +35,7 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(MASTER_DETAIL_TASKS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(MASTER_DETAIL_TASKS)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 MASTER_DETAIL_TASKS.ID, JooqNumericIdField.builder().build(),
                                 MASTER_DETAIL_TASKS.TITLE, JooqTextField.builder().build(),

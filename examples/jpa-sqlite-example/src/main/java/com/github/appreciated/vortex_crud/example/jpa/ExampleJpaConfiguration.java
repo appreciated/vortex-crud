@@ -129,9 +129,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var userConfig = JpaDataStoreConfig.builder(userRepository, userStore).withServices(fieldService, storeMap).build();
         var documentConfig = JpaDataStoreConfig.builder(documentRepository, documentStore).withServices(fieldService, storeMap).build();
 
-        var notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+        var notesConfig = DataStoreConfig.<Object, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
-                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .dataStoreInstance(notesStore)
                 .fields(Map.of(
                         "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
                         "content", TextAreaField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()

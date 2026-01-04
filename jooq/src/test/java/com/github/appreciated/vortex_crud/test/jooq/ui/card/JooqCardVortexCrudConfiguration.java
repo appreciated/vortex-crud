@@ -37,7 +37,7 @@ public class JooqCardVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(CARD_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(CARD_IMAGES)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 CARD_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

@@ -81,7 +81,7 @@ public class JooqFieldValidationVortexCrudConfiguration
     ) {
         JooqDataStore store = new JooqDataStore(table.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(table)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance(store)
                 .fields(Map.of(
                         idField, JooqNumericIdField.builder().build(),
                         requiredField, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),

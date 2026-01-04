@@ -353,8 +353,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(usersConfig)
                         .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                (VortexCrudDataStore) userRolesStore,
-                                (VortexCrudDataStore) rolesStore,
+                                userRolesStore,
+                                rolesStore,
                                 USER_ROLES.USER_ID,
                                 USER_ROLES.ROLE_ID,
                                 ROLES.NAME,

@@ -36,7 +36,7 @@ public class JooqCalendarTestVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(CALENDAR_EVENTS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(CALENDAR_EVENTS)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 CALENDAR_EVENTS.ID, JooqNumericIdField.builder().build(),
                                 CALENDAR_EVENTS.TITLE, JooqTextField.builder().build(),

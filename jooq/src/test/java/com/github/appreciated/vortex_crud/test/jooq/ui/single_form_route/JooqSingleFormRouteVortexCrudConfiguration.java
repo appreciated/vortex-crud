@@ -49,7 +49,7 @@ public class JooqSingleFormRouteVortexCrudConfiguration
 
         JooqDataStore store = new JooqDataStore(SINGLE_FORM_ROUTE_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(SINGLE_FORM_ROUTE_TEST)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance(store)
                 .fields(Map.of(
                         SINGLE_FORM_ROUTE_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         SINGLE_FORM_ROUTE_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

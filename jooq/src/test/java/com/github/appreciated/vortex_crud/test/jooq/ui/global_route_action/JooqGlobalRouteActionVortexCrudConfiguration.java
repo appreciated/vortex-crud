@@ -56,7 +56,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
 
         JooqDataStore store = new JooqDataStore(GLOBAL_ROUTE_ACTION_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(GLOBAL_ROUTE_ACTION_TEST)
-                .dataStoreInstance((VortexCrudDataStore) store)
+                .dataStoreInstance(store)
                 .fields(Map.of(
                         GLOBAL_ROUTE_ACTION_TEST.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                         GLOBAL_ROUTE_ACTION_TEST.NAME, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),

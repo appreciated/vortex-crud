@@ -41,7 +41,7 @@ public class JooqMultiFormVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(MULTI_FORM_TEST.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(MULTI_FORM_TEST)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 MULTI_FORM_TEST.ID, JooqNumericIdField.builder().build(),
                                 MULTI_FORM_TEST.PROFILE_NAME, JooqTextField.builder()

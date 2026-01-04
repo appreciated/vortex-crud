@@ -10,10 +10,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -31,9 +28,10 @@ import java.util.List;
 @Builder
 public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    @lombok.NonNull
+    @Setter
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
+    @Setter
     @I18nKey
     private String title;
 

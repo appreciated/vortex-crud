@@ -1,5 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
+import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
+
 import java.util.List;
 
 /**
@@ -12,4 +14,8 @@ public interface FormRouteProvider<ModelClass, FieldType, RepositoryType> extend
     boolean isDeleteButtonHidden();
 
     List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields();
+
+    FormRouteProvider<ModelClass, FieldType, RepositoryType> dataStoreConfig(DataStoreConfig<ModelClass, FieldType, RepositoryType> config);
+
+    FormRouteProvider<ModelClass, FieldType, RepositoryType> title(String title);
 }

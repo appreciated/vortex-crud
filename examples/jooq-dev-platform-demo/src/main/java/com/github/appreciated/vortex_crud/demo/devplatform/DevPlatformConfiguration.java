@@ -713,7 +713,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
                                         REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) repositoryCollaboratorStore,
+                                                repositoryCollaboratorStore,
                                                 REPOSITORY_COLLABORATOR.USER_ID,
                                                 REPOSITORY_COLLABORATOR.REPOSITORY_ID,
                                                 REPOSITORY_COLLABORATOR.PERMISSION,
@@ -721,7 +721,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                                 REPOSITORY.ID
                                         ),
                                         ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) organizationMemberStore,
+                                                organizationMemberStore,
                                                 ORGANIZATION_MEMBER.USER_ID,
                                                 ORGANIZATION_MEMBER.ORGANIZATION_ID,
                                                 ORGANIZATION_MEMBER.ROLE,
@@ -731,8 +731,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 ),
                                 // Global role strategy
                                 new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        (VortexCrudDataStore) userRolesStore,
-                                        (VortexCrudDataStore) rolesStore,
+                                        userRolesStore,
+                                        rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,
