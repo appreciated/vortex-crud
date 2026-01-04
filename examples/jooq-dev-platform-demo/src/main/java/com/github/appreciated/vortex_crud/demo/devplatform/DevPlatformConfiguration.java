@@ -581,6 +581,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .componentClass(DashboardView.class)
                 .build());
 
+        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.search.title")
+                .iconFactory(VaadinIcon.SEARCH::create)
+                .build());
+
         routes.put("repositories", JooqGridRoute.builder()
                 .defaultRoute(false)
                 .dataStoreConfig(repositoryConfig)

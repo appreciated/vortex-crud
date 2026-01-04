@@ -410,6 +410,11 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
+        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.search.title")
+                .iconFactory(VaadinIcon.SEARCH::create)
+                .build());
+
         routes.put("projects", JooqGridRoute.builder()
                 .defaultRoute(true)
                 .dataStoreConfig(projectConfig)
