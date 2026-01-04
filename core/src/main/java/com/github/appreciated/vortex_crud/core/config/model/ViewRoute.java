@@ -59,7 +59,7 @@ public class ViewRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private FieldType filterField;
 
     @lombok.NonNull
-    private RecordViewProvider<ModelClass, FieldType, RepositoryType> viewProvider;
+    private RecordViewProvider<ModelClass> viewFactory;
 
     // Legacy fields that might be required by FormRouteProvider or UI logic, though unused in custom view
     private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields;

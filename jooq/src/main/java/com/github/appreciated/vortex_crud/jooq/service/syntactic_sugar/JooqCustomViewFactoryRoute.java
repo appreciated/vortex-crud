@@ -10,7 +10,7 @@ import org.jooq.TableField;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
 
-public class JooqViewRoute {
+public class JooqCustomViewFactoryRoute {
 
     public static <R extends UpdatableRecord<R>> Builder<R> builder(TableImpl<R> table, DSLContext dsl) {
         return new Builder<>(table, dsl);
@@ -20,23 +20,21 @@ public class JooqViewRoute {
         private final ViewRouteBuilder<R, TableField<R, ?>, TableImpl<?>, ?, ?> builder;
         private final JooqDataStoreConfig.Builder<R> dataStoreBuilder;
 
+        @SuppressWarnings("unchecked")
         public Builder(TableImpl<R> table, DSLContext dsl) {
-            this.builder = ViewRoute.builder();
+            // Using raw cast to ViewRouteBuilder to bypass complex generic type inference issues with Lombok SuperBuilder
+            this.builder = (ViewRouteBuilder) ViewRoute.builder();
             this.dataStoreBuilder = JooqDataStoreConfig.builder(table, dsl);
         }
 
-        public Builder<R> withView(RecordViewProvider<R, TableField<R, ?>, TableImpl<?>> viewProvider) {
-            builder.viewProvider(viewProvider);
+        public Builder<R> withFactory(RecordViewProvider<R> viewFactory) {
+            builder.viewFactory(viewFactory);
             return this;
         }
 
         public ViewRoute<R, TableField<R, ?>, TableImpl<?>> build() {
              DataStoreConfig<R, TableField<R, ?>, TableImpl<?>> config = dataStoreBuilder.build();
              builder.dataStoreConfig(config);
-             // fields are likely empty or derived from config in DataStoreConfig
-             // But FormRoute/ViewRoute might require fields list if it validates against them.
-             // ViewRouteFactory creates StoreAccessor which accesses config.fields().
-             // So config must be populated.
              return builder.build();
         }
 

@@ -18,7 +18,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationException;
 
 public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> extends FormRouteFactory<ModelClass, FieldType, RepositoryType> {
 
@@ -44,13 +43,8 @@ public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> extends For
             VortexCrudRbacPermissionChecker<ModelClass, FieldType, RepositoryType> permissionChecker = context.rbacPermissionChecker();
 
             H2WithHasValue titleComponent = new H2WithHasValue();
-            Binder<Object> binder = new Binder<>(Object.class);
-            if (!creationMode) {
-                binder.bindReadOnly(
-                        titleComponent,
-                        entity1 -> prefix + reflectionService.getString(entity1, routeRenderer.titleField())
-                );
-            } else {
+
+            if (creationMode) {
                 titleComponent.setText(titleComponent.getTranslation("button.create.title"));
             }
 
@@ -80,31 +74,24 @@ public class ViewRouteFactory<ModelClass, FieldType, RepositoryType> extends For
                 entity = dataStore.getRecordById(lastSegment);
             }
 
-            // Custom View Creation
-            StoreAccessor<ModelClass, FieldType, RepositoryType> accessor = new StoreAccessor<>(
-                    context,
-                    tables,
-                    binder,
-                    entity
-            );
-            Component customView = viewRoute.viewProvider().createView(entity, accessor);
-            binder.setBean(entity);
+            if (!creationMode && routeRenderer.titleField() != null) {
+                 String val = reflectionService.getString(entity, routeRenderer.titleField());
+                 titleComponent.setText(prefix + val);
+            }
 
-            // Generic Save button
+            Component customView = viewRoute.viewFactory().createView(entity);
+
             ComponentEventListener<ClickEvent<Button>> onSave = event -> {
                 try {
-                    binder.writeBean(entity);
                     if (!creationMode) {
                         dataStore.updateRecord(entity);
-                        binder.setBean(entity);
                     } else {
-                        Object o = dataStore.insertRecord(entity);
-                        binder.setBean(dataStore.getRecordById(o));
+                        dataStore.insertRecord(entity);
                     }
                     Notification notification = Notification.show(layout.getTranslation("form.notification.successfully-saved"));
                     notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                     UI.getCurrent().getPage().getHistory().back();
-                } catch (ValidationException e) {
+                } catch (Exception e) {
                     Notification notification = Notification.show(layout.getTranslation("form.notification.failed-to-save", e.getMessage()));
                     notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 }
