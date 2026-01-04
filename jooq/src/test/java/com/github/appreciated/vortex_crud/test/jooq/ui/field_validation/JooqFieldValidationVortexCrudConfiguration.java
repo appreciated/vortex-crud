@@ -95,18 +95,16 @@ public class JooqFieldValidationVortexCrudConfiguration
                 )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> validationForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
                 .titleField(requiredField)
                 .fields(List.of(
-                        JooqFieldElement.of(requiredField, "validation.fields.required").build(),
-                        JooqFieldElement.of(emailField, "validation.fields.email").build(),
-                        JooqFieldElement.of(numericField, "validation.fields.numeric").build(),
-                        JooqFieldElement.of(dateField, "validation.fields.date").build(),
-                        JooqFieldElement.of(dateTimeField, "validation.fields.datetime").build(),
-                        JooqFieldElement.of(checkboxField, "validation.fields.checkbox").build(),
-                        JooqFieldElement.of(enumField, "validation.fields.enum").build(),
-                        JooqFieldElement.of(imageField, "validation.fields.image").build()
+                        JooqFormElement.of(requiredField, "validation.fields.required").build(),
+                        JooqFormElement.of(emailField, "validation.fields.email").build(),
+                        JooqFormElement.of(numericField, "validation.fields.numeric").build(),
+                        JooqFormElement.of(dateField, "validation.fields.date").build(),
+                        JooqFormElement.of(dateTimeField, "validation.fields.datetime").build(),
+                        JooqFormElement.of(checkboxField, "validation.fields.checkbox").build(),
+                        JooqFormElement.of(enumField, "validation.fields.enum").build(),
+                        JooqFormElement.of(imageField, "validation.fields.image").build()
                 ))
                 .build();
 
@@ -116,8 +114,8 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .title("route.projects.title-list")
                 .filterField(requiredField)
                 .columns(List.of(
-                        JooqFieldElement.of(requiredField, "route.projects.labels.name").build(),
-                        JooqFieldElement.of(emailField, "route.projects.labels.description").build()
+                        JooqFormElement.of(requiredField, "route.projects.labels.name").build(),
+                        JooqFormElement.of(emailField, "route.projects.labels.description").build()
                 ))
                 .form(validationForm)
                 .build());

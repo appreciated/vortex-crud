@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
@@ -47,13 +47,11 @@ public class JooqI18NTestVortexCrudConfiguration
                         ))
                         .build();
 
-        JooqFormRoute imageForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .titleField(I18N_IMAGES.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),
-                        JooqFieldElement.of(I18N_IMAGES.URL, "route.images.labels.image").build()
+                        JooqFormElement.of(I18N_IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFormElement.of(I18N_IMAGES.URL, "route.images.labels.image").build()
                 ))
                 .build();
 
@@ -64,8 +62,8 @@ public class JooqI18NTestVortexCrudConfiguration
                 .inlineEdit(true)
                 .filterField(I18N_IMAGES.TITLE)
                 .columns(List.of(
-                        JooqFieldElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
-                        JooqFieldElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
+                        JooqFormElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
+                        JooqFormElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()
                 ))
                 .form(imageForm)
                 .build());

@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.multi_form;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
@@ -13,7 +12,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -49,21 +48,19 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
         // Individual form configurations for multi-form rendering
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> basicInfoForm =
                 JpaFormRoute.builder()
-                        .dataStoreConfig(multiFormConfig)
                         .titleField("profileName")
                         .fields(List.of(
-                                JpaFieldElement.builder("profileName", "multi_form.fields.profile_name").build(),
-                                JpaFieldElement.builder("email", "multi_form.fields.email").build()
+                                JpaFormElement.builder("profileName", "multi_form.fields.profile_name").build(),
+                                JpaFormElement.builder("email", "multi_form.fields.email").build()
                         ))
                         .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> additionalDetailsForm =
                 JpaFormRoute.builder()
-                        .dataStoreConfig(multiFormConfig)
                         .titleField("description")
                         .fields(List.of(
-                                JpaFieldElement.builder("description", "multi_form.fields.description").build(),
-                                JpaFieldElement.builder("age", "multi_form.fields.age").build()
+                                JpaFormElement.builder("description", "multi_form.fields.description").build(),
+                                JpaFormElement.builder("age", "multi_form.fields.age").build()
                         ))
                         .build();
 
@@ -84,7 +81,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .title("route.multi_form.title")
                 .filterField("profileName")
                 .columns(List.of(
-                        JpaFieldElement.builder("profileName", "relations.labels.name").build()
+                        JpaFormElement.builder("profileName", "relations.labels.name").build()
                 ))
                 .form(multiFormRoute)
                 .build());

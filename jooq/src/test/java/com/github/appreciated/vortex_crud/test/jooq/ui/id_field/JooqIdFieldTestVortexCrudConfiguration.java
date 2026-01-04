@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.id_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
@@ -44,12 +43,10 @@ public class JooqIdFieldTestVortexCrudConfiguration
 
         // Form Route with ID field
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-            .dataStoreConfig(config)
-            .title("route.id-field.title")
             .titleField(ID_FIELD_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(ID_FIELD_TEST.ID, "id-field.labels.id").build(),
-                JooqFieldElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
+                JooqFormElement.of(ID_FIELD_TEST.ID, "id-field.labels.id").build(),
+                JooqFormElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
             ))
             .build();
 
@@ -61,7 +58,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
             .title("route.id-field.title-list")
             .filterField(ID_FIELD_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
+                  JooqFormElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
              ))
             .form(form)
             .build());

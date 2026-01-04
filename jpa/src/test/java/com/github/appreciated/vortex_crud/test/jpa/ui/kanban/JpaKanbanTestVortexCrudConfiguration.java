@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.kanban;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
@@ -12,7 +11,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaKanbanRoute;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -46,9 +45,8 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
-                .dataStoreConfig(taskConfig)
                 .titleField("title")
-                .fields(List.of(JpaFieldElement.builder("title", "route.tasks.labels.title").build()))
+                .fields(List.of(JpaFormElement.builder("title", "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();

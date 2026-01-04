@@ -8,7 +8,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -50,11 +50,9 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
 
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.select-field.title")
                 .titleField("name")
                 .fields(List.of(
-                        JpaFieldElement.builder("name", "select-field.labels.name").build()
+                        JpaFormElement.builder("name", "select-field.labels.name").build()
                 ))
                 .build();
 
@@ -65,7 +63,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
                 .title("route.select-field.title-list")
                 .filterField("name")
                 .columns(List.of(
-                        JpaFieldElement.builder("name", "select-field.labels.name").build()
+                        JpaFormElement.builder("name", "select-field.labels.name").build()
                 ))
                 .form(form)
                 .build());

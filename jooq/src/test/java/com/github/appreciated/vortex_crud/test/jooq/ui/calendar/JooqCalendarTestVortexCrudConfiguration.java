@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.calendar;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -45,14 +45,12 @@ public class JooqCalendarTestVortexCrudConfiguration
                         ))
                         .build();
 
-        JooqFormRoute eventForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.calendar-test.event")
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> eventForm = JooqFormRoute.builder()
                 .titleField(CALENDAR_EVENTS.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(CALENDAR_EVENTS.TITLE, "calendar-test.labels.title").build(),
-                        JooqFieldElement.of(CALENDAR_EVENTS.START_DATE, "calendar-test.labels.start").build(),
-                        JooqFieldElement.of(CALENDAR_EVENTS.END_DATE, "calendar-test.labels.end").build()
+                        JooqFormElement.of(CALENDAR_EVENTS.TITLE, "calendar-test.labels.title").build(),
+                        JooqFormElement.of(CALENDAR_EVENTS.START_DATE, "calendar-test.labels.start").build(),
+                        JooqFormElement.of(CALENDAR_EVENTS.END_DATE, "calendar-test.labels.end").build()
                 ))
                 .build();
 

@@ -54,18 +54,16 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                         )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> childForm = JooqFormRoute.builder()
-                .dataStoreConfig(childConfig)
                 .titleField(ONE_TO_MANY_CHILD.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
+                        JooqFormElement.of(ONE_TO_MANY_CHILD.NAME, "relations.labels.name").build()
                 ))
                 .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> parentForm = JooqFormRoute.builder()
-                .dataStoreConfig(parentConfig)
                 .titleField(ONE_TO_MANY_PARENT.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
+                        JooqFormElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build(),
                         JooqCollection.builder()
                                 .field(ONE_TO_MANY_CHILD.NAME)
                                 .label("relations.labels.children")
@@ -87,7 +85,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .title("relations.tests.one-to-many.title")
                 .filterField(ONE_TO_MANY_PARENT.NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
+                        JooqFormElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
                 ))
                 .form(parentForm)
                 .build());

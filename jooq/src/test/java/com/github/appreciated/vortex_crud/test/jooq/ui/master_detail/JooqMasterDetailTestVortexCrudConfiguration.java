@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -45,12 +44,10 @@ public class JooqMasterDetailTestVortexCrudConfiguration implements VortexCrudCo
                         .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
                 .titleField(MASTER_DETAIL_TASKS.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
-                        JooqFieldElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
+                        JooqFormElement.of(MASTER_DETAIL_TASKS.TITLE, "route.tasks.labels.title").build(),
+                        JooqFormElement.of(MASTER_DETAIL_TASKS.DESCRIPTION, "route.tasks.labels.description").build()
                 ))
                 .build();
 

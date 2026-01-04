@@ -92,14 +92,12 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
 
         // Form Route
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-            .dataStoreConfig(taskConfig)
-            .title("route.missing.title")
             .titleField(MISSING_FEATURES_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.PDF_DOC, "PDF").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.NOTES, "Notes").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.REFERENCED_ID, "Referenced").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.NAME, "Name").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.PDF_DOC, "PDF").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.NOTES, "Notes").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.REFERENCED_ID, "Referenced").build(),
                 // Multi Select (ManyToMany)
                 JooqCollection.builder()
                                 .field(MISSING_FEATURES_REFERENCED.NAME)
@@ -115,10 +113,10 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                     ))
                     .children(List.of(MISSING_FEATURES_REFERENCED.NAME))
                     .build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.FILE_ATTACHMENT, "File").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.PRICE, "Price").build(),
-                JooqFieldElement.of(MISSING_FEATURES_TEST.VIDEO_URL, "Video").build()
+                JooqFormElement.of(MISSING_FEATURES_TEST.MARKDOWN_CONTENT, "Markdown").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.FILE_ATTACHMENT, "File").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.PRICE, "Price").build(),
+                JooqFormElement.of(MISSING_FEATURES_TEST.VIDEO_URL, "Video").build()
             ))
             .build();
 
@@ -131,7 +129,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .title("route.missing.list")
             .filterField(MISSING_FEATURES_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
+                  JooqFormElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
             ))
             .routeActions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
@@ -158,7 +156,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
              .entityFilterValueProvider(() -> 1)
              .titleField(MISSING_FEATURES_TEST.NAME)
              .fields(List.of(
-                 JooqFieldElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
+                 JooqFormElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
              ))
              .build());
 

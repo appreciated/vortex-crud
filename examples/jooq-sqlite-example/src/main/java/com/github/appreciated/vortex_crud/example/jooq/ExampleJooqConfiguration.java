@@ -185,15 +185,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 ))
                 .build();
 
-        JooqFormRoute taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(tasksConfig)
+        var taskForm = JooqFormRoute.builder()
                 .titleField(TASKS.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
-                        JooqFieldElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description").build(),
-                        JooqFieldElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
-                        JooqFieldElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
-                        JooqFieldElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
+                        JooqFormElement.of(TASKS.TITLE, "route.tasks.labels.title").build(),
+                        JooqFormElement.of(TASKS.DESCRIPTION, "route.tasks.labels.description").build(),
+                        JooqFormElement.of(TASKS.STATUS, "route.tasks.labels.status").build(),
+                        JooqFormElement.of(TASKS.DUE_DATE, "route.tasks.labels.due_date").build(),
+                        JooqFormElement.of(TASKS.ASSIGNED_TO, "route.tasks.labels.assigned_to").build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.comments")
                                 .field(TASK_COMMENTS.COMMENT_TEXT)
@@ -204,10 +203,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .children(List.of(TASK_COMMENTS.COMMENT_TEXT))
                                 .emptyMessage("route.tasks.labels.comments-empty-message")
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(commentsConfig)
                                         .titleField(TASK_COMMENTS.COMMENT_TEXT)
                                         .fields(List.of(
-                                                JooqFieldElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
+                                                JooqFormElement.of(TASK_COMMENTS.COMMENT_TEXT, "route.tasks.labels.comment").build()
                                         ))
                                         .build()
                                 ).build(),
@@ -229,16 +227,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 )
                 .build();
 
-        JooqFormRoute projectForm = JooqFormRoute.builder()
-                .dataStoreConfig(projectsConfig)
-                .title("route.projects.title-cards")
+        var projectForm = JooqFormRoute.builder()
                 .titleField(PROJECTS.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                        JooqFieldElement.of(PROJECTS.BUDGET, "Budget").build(),
-                        JooqFieldElement.of(PROJECTS.TAGS_MULTI, "Tags (MultiSelect)").build(),
-                        JooqFieldElement.of(PROJECTS.ACTIVE, "Active").build(),
+                        JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                        JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                        JooqFormElement.of(PROJECTS.BUDGET, "Budget").build(),
+                        JooqFormElement.of(PROJECTS.TAGS_MULTI, "Tags (MultiSelect)").build(),
+                        JooqFormElement.of(PROJECTS.ACTIVE, "Active").build(),
                         JooqCollection.builder()
                                 .label("Tags (Collection)")
                                 .field(PROJECT_TAGS.TAG)
@@ -249,55 +245,46 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .children(List.of(PROJECT_TAGS.TAG))
                                 .emptyMessage("No tags")
                                 .form(JooqFormRoute.builder()
-                                        .dataStoreConfig(projectTagsConfig)
                                         .titleField(PROJECT_TAGS.TAG)
-                                        .fields(List.of(JooqFieldElement.of(PROJECT_TAGS.TAG, "Tag").build()))
+                                        .fields(List.of(JooqFormElement.of(PROJECT_TAGS.TAG, "Tag").build()))
                                         .build())
                                 .build(),
-                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                        JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                        JooqFormElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
                 ))
                 .build();
 
-        JooqFormRoute imageForm = JooqFormRoute.builder()
-                .dataStoreConfig(imagesConfig)
-                .title("route.projects.title-cards")
+        var imageForm = JooqFormRoute.builder()
                 .titleField(IMAGES.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build(),
-                        JooqFieldElement.of(IMAGES.URL, "route.images.labels.image").build()
+                        JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build()
                 ))
                 .build();
 
-        JooqFormRoute documentForm = JooqFormRoute.builder()
-                .dataStoreConfig(documentsConfig)
-                .title("Documents")
+        var documentForm = JooqFormRoute.builder()
                 .titleField(DOCUMENTS.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(DOCUMENTS.TITLE, "Title").build(),
-                        JooqFieldElement.of(DOCUMENTS.PDF, "PDF").build()
+                        JooqFormElement.of(DOCUMENTS.TITLE, "Title").build(),
+                        JooqFormElement.of(DOCUMENTS.PDF, "PDF").build()
                 ))
                 .build();
 
-        JooqFormRoute imageSlideForm = JooqFormRoute.builder()
-                .dataStoreConfig(imagesConfig)
+        var imageSlideForm = JooqFormRoute.builder()
                 .dialogFactory(new FormSlideFactory<>())
-                .title("route.projects.title-cards")
                 .titleField(IMAGES.TITLE)
                 .fields(List.of(
-                                JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build(),
-                                JooqFieldElement.of(IMAGES.URL, "route.images.labels.image").build()
+                                JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build(),
+                                JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build()
                         )
                 )
                 .build();
 
-        JooqFormRoute videoForm = JooqFormRoute.builder()
-                .dataStoreConfig(videosConfig)
-                .title("route.videos.title-cards")
+        var videoForm = JooqFormRoute.builder()
                 .titleField(VIDEOS.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
-                        JooqFieldElement.of(VIDEOS.URL, "route.videos.labels.video").build()
+                        JooqFormElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
+                        JooqFormElement.of(VIDEOS.URL, "route.videos.labels.video").build()
                 ))
                 .build();
 
@@ -329,10 +316,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .title("route.projects.title-list")
                 .filterField(PROJECTS.NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                        JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                        JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                        JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                        JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                        JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                        JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                        JooqFormElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
                 ))
                 .writeRoles(List.of("admin", "manager", "editor"))
                 .form(projectForm)
@@ -375,8 +362,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .inlineEdit(true)
                 .filterField(IMAGES.TITLE)
                 .columns(List.of(
-                        JooqFieldElement.of(IMAGES.URL, "route.images.labels.image").build(),
-                        JooqFieldElement.of(IMAGES.TITLE, "route.images.labels.title").build()
+                        JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build(),
+                        JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build()
                 ))
                 .writeRoles(List.of("admin"))
                 .form(imageForm)
@@ -409,8 +396,8 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .inlineEdit(true)
                 .filterField(VIDEOS.TITLE)
                 .columns(List.of(
-                        JooqFieldElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
-                        JooqFieldElement.of(VIDEOS.URL, "route.videos.labels.video").build()
+                        JooqFormElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
+                        JooqFormElement.of(VIDEOS.URL, "route.videos.labels.video").build()
                 ))
                 .writeRoles(List.of("admin"))
                 .form(videoForm)
@@ -439,10 +426,10 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 })
                 .titleField(USERS.USERNAME)
                 .fields(List.of(
-                        JooqFieldElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
-                        JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
-                        JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
-                        JooqFieldElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
+                        JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                        JooqFormElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                        JooqFormElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
+                        JooqFormElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
                 ))
                 .build());
 
@@ -465,7 +452,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField("title")
                 .descriptionField("content")
                 .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                        .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .fields(List.of(
                                 InternalFormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
@@ -541,11 +527,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 .signUpEnabled(true)
                                 .loginView(LoginView.class)
                                 .signUpView(SignUpView.class)
-                                .username(JooqFieldElement.of(USERS.USERNAME, "route.projects.labels.name").build())
-                                .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
+                                .username(JooqFormElement.of(USERS.USERNAME, "route.projects.labels.name").build())
+                                .password(JooqFormElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
                                 .signUpFields(List.of(
-                                        JooqFieldElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
-                                        JooqFieldElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
+                                        JooqFormElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                        JooqFormElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()
                                 ))
                                 .build()
                 )

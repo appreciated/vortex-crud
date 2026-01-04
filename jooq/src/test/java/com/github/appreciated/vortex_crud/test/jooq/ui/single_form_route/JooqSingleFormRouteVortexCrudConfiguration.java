@@ -70,8 +70,8 @@ public class JooqSingleFormRouteVortexCrudConfiguration
              .entityFilterValueProvider(() -> 1)
              .titleField(SINGLE_FORM_ROUTE_TEST.NAME)
              .fields(List.of(
-                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
-                 JooqFieldElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
+                 JooqFormElement.of(SINGLE_FORM_ROUTE_TEST.NAME, "Name").build(),
+                 JooqFormElement.of(SINGLE_FORM_ROUTE_TEST.PDF_DOC, "PDF").build()
              ))
              .build());
 

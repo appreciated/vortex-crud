@@ -1,6 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.search_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.SearchRoute;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -9,7 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.context.annotation.Configuration;
@@ -43,12 +44,10 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
                 .build();
 
         // Create a form route for editing items
-        JpaFormRoute formRoute = JpaFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.search-test.edit.title")
+        FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> formRoute = JpaFormRoute.builder()
                 .titleField("name")
                 .fields(List.of(
-                        JpaFieldElement.builder("name", "search-test.labels.name").build()
+                        JpaFormElement.builder("name", "search-test.labels.name").build()
                 ))
                 .build();
 

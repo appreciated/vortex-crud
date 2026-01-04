@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.multi_form;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.MultiFormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -60,21 +59,19 @@ public class JooqMultiFormVortexCrudConfiguration
         // Individual form configurations for multi-form rendering
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> basicInfoForm =
                 JooqFormRoute.builder()
-                        .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.PROFILE_NAME)
                         .fields(List.of(
-                                JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
-                                JooqFieldElement.of(MULTI_FORM_TEST.EMAIL, "multi_form.fields.email").build()
+                                JooqFormElement.of(MULTI_FORM_TEST.PROFILE_NAME, "multi_form.fields.profile_name").build(),
+                                JooqFormElement.of(MULTI_FORM_TEST.EMAIL, "multi_form.fields.email").build()
                         ))
                         .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> additionalDetailsForm =
                 JooqFormRoute.builder()
-                        .dataStoreConfig(config)
                         .titleField(MULTI_FORM_TEST.DESCRIPTION)
                         .fields(List.of(
-                                JooqFieldElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
-                                JooqFieldElement.of(MULTI_FORM_TEST.AGE, "multi_form.fields.age").build()
+                                JooqFormElement.of(MULTI_FORM_TEST.DESCRIPTION, "multi_form.fields.description").build(),
+                                JooqFormElement.of(MULTI_FORM_TEST.AGE, "multi_form.fields.age").build()
                         ))
                         .build();
 
@@ -95,7 +92,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 .title("route.multi_form.title")
                 .filterField(MULTI_FORM_TEST.PROFILE_NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
+                        JooqFormElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
                 ))
                 .form(multiFormRoute)
                 .build());

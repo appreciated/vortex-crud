@@ -56,8 +56,6 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .build();
 
         FormRoute<Object, String, String> userForm = FormRoute.<Object, String, String>builder()
-                .dataStoreConfig(userConfig)
-                .title("route.users.title")
                 .titleField("username")
                 .fields(List.of(
                         InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
@@ -75,7 +73,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .defaultRoute(true)
                 .title("route.users-grid")
                 .titleField("username")
-                .itemFactory(new CardFactory())
+                .itemFactory(new CardFactory<>())
                 .form(userForm)
                 .writeRoles(List.of("ADMIN", "USER"))
                 .readOnlyRoles(List.of("VIEWER"))

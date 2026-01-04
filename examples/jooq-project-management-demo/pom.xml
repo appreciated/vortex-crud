@@ -199,6 +199,16 @@
                                     <includeExpression>.*\.priority</includeExpression>
                                     <includeTypes>VARCHAR</includeTypes>
                                 </forcedType>
+                                <!-- LocalDate fields (date-only columns) -->
+                                <forcedType>
+                                    <userType>java.time.LocalDate</userType>
+                                    <includeExpression>.*\.(start_date|end_date|due_date|entry_date)</includeExpression>
+                                </forcedType>
+                                <!-- LocalDateTime fields (timestamp columns) -->
+                                <forcedType>
+                                    <userType>java.time.LocalDateTime</userType>
+                                    <includeExpression>.*\.(created_at|updated_at|completed_at|joined_at|uploaded_at)</includeExpression>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <target>

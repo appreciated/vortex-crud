@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.global_route_action;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
@@ -13,7 +12,6 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.GlobalRouteAction;
-import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.vaadin.flow.component.button.Button;
@@ -71,13 +69,11 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
 
         // Form Route
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-            .dataStoreConfig(config)
-            .title("route.missing.title")
             .titleField(GLOBAL_ROUTE_ACTION_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
-                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
-                JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
+                JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build(),
+                JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.PDF_DOC, "PDF").build(),
+                JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.NOTES, "Notes").build()
             ))
             .build();
 
@@ -90,7 +86,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .title("route.missing.list")
             .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
+                  JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
             ))
             .routeActions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
