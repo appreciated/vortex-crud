@@ -52,6 +52,29 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Intern
 
     private List<FieldType> children;
 
+    /**
+     * Custom builder that injects the dataStoreConfig into the child form after building.
+     */
+    public static class CollectionBuilder<ModelClass, FieldType, RepositoryType> {
+        public Collection<ModelClass, FieldType, RepositoryType> build() {
+            Collection<ModelClass, FieldType, RepositoryType> instance = new Collection<>(
+                    field, readOnly, readOnlyForRoles, label, span,
+                    listFactory, dialogFactory, emptyMessage, form, titleField,
+                    dataStoreConfig, oneToMany, manyToMany, children
+            );
+
+            // Inject collection's dataStoreConfig into child form
+            if (instance.form != null && instance.dataStoreConfig != null) {
+                instance.form.dataStoreConfig(instance.dataStoreConfig);
+                if (instance.form.title() == null) {
+                    instance.form.title(instance.emptyMessage);
+                }
+            }
+
+            return instance;
+        }
+    }
+
     @Override
     public VortexCrudDataStore<FieldType, ModelClass> dataStoreInstance() {
         return dataStoreConfig.dataStoreInstance();
