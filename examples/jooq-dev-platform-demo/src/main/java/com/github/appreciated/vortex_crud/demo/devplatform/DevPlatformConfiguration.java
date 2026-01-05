@@ -35,10 +35,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
@@ -589,7 +586,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 .componentFactory(() -> new Button(VaadinIcon.STAR.create()))
                                 .handler(context -> {
                                     TableRecord<?> repo = context.getFirstSelectedEntity();
-                                    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                                    String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
                                     var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
                                     if (!users.isEmpty()) {
                                         var user = (TableRecord<?>) users.get(0);

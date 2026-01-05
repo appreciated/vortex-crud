@@ -116,7 +116,7 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> extends 
                         }
                     }
                 } catch (Exception e) {
-                    log.error("Error performing search for route: " + route.title(), e);
+                    log.error("Error performing search for route: {}", route.title(), e);
                 }
             }
         }

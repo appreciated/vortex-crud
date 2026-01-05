@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 
@@ -25,7 +26,7 @@ public class DashboardView extends VerticalLayout {
     public DashboardView(DSLContext dsl, TranslationService translationService) {
         add(new H2(translationService.getTranslation("route.dashboard.title", UI.getCurrent().getLocale())));
 
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
         if (username != null) {
             UsersRecord user = dsl.selectFrom(USERS).where(USERS.USERNAME.eq(username)).fetchOne();
 

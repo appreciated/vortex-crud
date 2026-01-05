@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
@@ -48,7 +45,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         // Pass null as targetEntity to get global roles only
         Collection<? extends GrantedAuthority> roles = roleResolutionStrategy.resolveRoles(reflectionService, userEntity, null);
         return roles.stream()
-                .map(ga -> new SimpleGrantedAuthority(ga.getAuthority()))
+                .map(ga -> new SimpleGrantedAuthority(Objects.requireNonNull(ga.getAuthority())))
                 .toList();
     }
 
@@ -64,7 +61,7 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         // If no targetEntity provided, return global roles only
         if (targetEntity == null) {
             return globalRoles.stream()
-                    .map(ga -> new SimpleGrantedAuthority(ga.getAuthority()))
+                    .map(ga -> new SimpleGrantedAuthority(Objects.requireNonNull(ga.getAuthority())))
                     .toList();
         }
 
@@ -74,10 +71,10 @@ public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryT
         // Combine global and entity-specific roles
         List<SimpleGrantedAuthority> combined = new ArrayList<>();
         for (GrantedAuthority ga : globalRoles) {
-            combined.add(new SimpleGrantedAuthority(ga.getAuthority()));
+            combined.add(new SimpleGrantedAuthority(Objects.requireNonNull(ga.getAuthority())));
         }
         for (GrantedAuthority ga : entityRoles) {
-            combined.add(new SimpleGrantedAuthority(ga.getAuthority()));
+            combined.add(new SimpleGrantedAuthority(Objects.requireNonNull(ga.getAuthority())));
         }
         return combined;
     }

@@ -18,6 +18,7 @@ import org.jooq.DSLContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.*;
 
@@ -89,7 +90,7 @@ public class BookingView extends VerticalLayout {
 
         // Set email after attach to ensure security context is available (though Constructor usually works in Vaadin Spring)
         // We'll set it in constructor
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
         emailField.setValue(username);
 
         form.add(typeSelect, personSelect, roomSelect, startPicker, endPicker, customerName, emailField);

@@ -8,10 +8,6 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 
 /**
  * Simple tests for a slide-in form dialog that uses a {@code CardFactory}.
- * <p>
- * The tests are intentionally lightweight and inspired by
- * {@link AbstractFieldValidationTest} while focusing on the slide variant
- * of the form dialog.
  */
 public abstract class AbstractFormSlideTest extends BaseUITest {
 

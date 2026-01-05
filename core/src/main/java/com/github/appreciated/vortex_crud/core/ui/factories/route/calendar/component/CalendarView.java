@@ -19,6 +19,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import jakarta.annotation.Nullable;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
@@ -41,17 +42,15 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
     private final VortexCrudPathToRouteResolver routeResolver;
 
     private final ConfigurableFilterDataProvider<Object, Void, String> dataProvider;
-    private final FullCalendar calendar;
     private final Map<String, Object> entryToEntityMap = new HashMap<>();
-    private final Map<String, Entry> entryMap = new HashMap<>();
     private final InMemoryEntryProvider<Entry> inMemoryData;
 
     public CalendarView(RouteRenderer<ModelClass, FieldType, RepositoryType> routeRenderer,
                         VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                         VortexCrudPathToRouteResolver routeResolver,
-                        DetailRouteSetting detailRouteSetting
+                        @Nullable DetailRouteSetting detailRouteSetting
     ) {
-        this.routeRenderer = (RouteRenderer<ModelClass, FieldType, RepositoryType>) routeRenderer;
+        this.routeRenderer = routeRenderer;
         this.context = context;
         this.dataStore = (VortexCrudDataStore<FieldType, Object>) routeRenderer.dataStoreInstance();
         this.reflectionService = context.reflectionService();
@@ -59,10 +58,10 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
         this.routeResolver = routeResolver;
         this.calendarRoute = (CalendarRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
 
-        dataProvider = new GenericFilterableDataProvider<FieldType>(this.dataStore, calendarRoute.filterField(), routeRenderer.filters()).withConfigurableFilter();
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, calendarRoute.filterField(), routeRenderer.filters()).withConfigurableFilter();
 
         // Create the FullCalendar instance
-        calendar = FullCalendarBuilder.create().build();
+        FullCalendar calendar = FullCalendarBuilder.create().build();
         calendar.setSizeFull();
         inMemoryData = new InMemoryEntryProvider<>();
         calendar.setEntryProvider(inMemoryData);
@@ -115,7 +114,6 @@ public class CalendarView<ModelClass, FieldType, RepositoryType> extends Vertica
             Entry entry = createEntryFromEntity(entity);
             if (entry != null) {
                 entryToEntityMap.put(entry.getId(), entity);
-                entryMap.put(entry.getId(), entry);
                 // Add entry to calendar
                 inMemoryData.addEntries(entry);
             }

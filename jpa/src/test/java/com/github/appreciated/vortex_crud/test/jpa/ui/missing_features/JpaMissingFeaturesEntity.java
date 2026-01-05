@@ -6,10 +6,16 @@ import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceP
 import com.github.appreciated.vortex_crud.jpa.service.annoations.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Set;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "missing_features_test")
 public class JpaMissingFeaturesEntity {
@@ -65,92 +71,4 @@ public class JpaMissingFeaturesEntity {
     @Column(name = "video_url")
     @VideoField(LocalVideoResourceProvider.class)
     private String videoUrl;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getPdfDoc() {
-        return pdfDoc;
-    }
-
-    public void setPdfDoc(String pdfDoc) {
-        this.pdfDoc = pdfDoc;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public JpaMissingFeaturesReferencedEntity getReferencedEntity() {
-        return referencedEntity;
-    }
-
-    public void setReferencedEntity(JpaMissingFeaturesReferencedEntity referencedEntity) {
-        this.referencedEntity = referencedEntity;
-    }
-
-    public Set<JpaMissingFeaturesReferencedEntity> getMultiSelectEntities() {
-        return multiSelectEntities;
-    }
-
-    public void setMultiSelectEntities(Set<JpaMissingFeaturesReferencedEntity> multiSelectEntities) {
-        this.multiSelectEntities = multiSelectEntities;
-    }
-
-    public String getMarkdownContent() {
-        return markdownContent;
-    }
-
-    public void setMarkdownContent(String markdownContent) {
-        this.markdownContent = markdownContent;
-    }
-
-    public String getFileAttachment() {
-        return fileAttachment;
-    }
-
-    public void setFileAttachment(String fileAttachment) {
-        this.fileAttachment = fileAttachment;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getVideoUrl() {
-        return videoUrl;
-    }
-
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
 }

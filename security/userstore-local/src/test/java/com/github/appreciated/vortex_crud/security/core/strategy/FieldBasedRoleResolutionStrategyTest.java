@@ -9,10 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,8 +46,8 @@ class FieldBasedRoleResolutionStrategyTest {
         Collection<? extends GrantedAuthority> authorities = strategy.resolveRoles(reflectionService, user, target);
 
         assertEquals(2, authorities.size());
-        assertTrue(authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
-        assertTrue(authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
+        assertTrue(authorities.stream().anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_ADMIN")));
+        assertTrue(authorities.stream().anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_USER")));
     }
 
     @Test

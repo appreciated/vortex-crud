@@ -14,11 +14,10 @@ import static com.vaadin.flow.spring.security.VaadinSecurityConfigurer.vaadin;
 
 @Configuration
 @EnableWebSecurity
-@SuppressWarnings("deprecation")
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/frontend/**").permitAll()
                 .requestMatchers("/VAADIN/**").permitAll()

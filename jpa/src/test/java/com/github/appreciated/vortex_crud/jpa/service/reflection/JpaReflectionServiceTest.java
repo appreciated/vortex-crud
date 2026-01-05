@@ -1,5 +1,8 @@
 package com.github.appreciated.vortex_crud.jpa.service.reflection;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,22 +10,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 class JpaReflectionServiceTest {
 
     private final JpaReflectionService service = new JpaReflectionService();
-
-    static class TestEntity {
-        private String id;
-        private String name;
-        private List<String> items;
-
-        public String getId() { return id; }
-        public void setId(String id) { this.id = id; }
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public List<String> getItems() { return items; }
-        public void setItems(List<String> items) { this.items = items; }
-    }
 
     @Test
     void testGetValue() {
@@ -55,7 +46,7 @@ class JpaReflectionServiceTest {
         assertTrue(entity.getItems().contains("A"));
 
         // RemoveAll
-        assertTrue(service.removeAll(entity, "items", Arrays.asList("A")));
+        assertTrue(service.removeAll(entity, "items", List.of("A")));
         assertEquals(1, entity.getItems().size());
         assertFalse(entity.getItems().contains("A"));
     }

@@ -2,10 +2,16 @@ package com.github.appreciated.vortex_crud.test.jpa.ui.one_to_many;
 
 import com.github.appreciated.vortex_crud.jpa.service.annoations.TextField;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "one_to_many_parent")
 public class JpaOneToManyParentEntity {
@@ -21,31 +27,4 @@ public class JpaOneToManyParentEntity {
     // Bidirectional for convenience (not required by tests)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<JpaOneToManyChildEntity> children = new ArrayList<>();
-
-    public JpaOneToManyParentEntity() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<JpaOneToManyChildEntity> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<JpaOneToManyChildEntity> children) {
-        this.children = children;
-    }
 }

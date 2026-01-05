@@ -25,7 +25,7 @@ public class PlaywrightTraceExtension implements TestWatcher {
             try {
                 String className = context.getRequiredTestClass().getSimpleName();
                 String methodName = context.getDisplayName().replaceAll("[()\\s]", "_");
-                logger.error("Test failed: " + className + "#" + methodName);
+                logger.error("Test failed: {}#{}", className, methodName);
                 if (base.getContext() != null) {
                     Path directory = Paths.get("target", "traces");
                     Files.createDirectories(directory);
@@ -35,7 +35,7 @@ public class PlaywrightTraceExtension implements TestWatcher {
                     try {
                         base.getContext().tracing().stop(new Tracing.StopOptions()
                                 .setPath(tracePath));
-                        logger.error("Trace saved to " + tracePath.toAbsolutePath());
+                        logger.error("Trace saved to {}", tracePath.toAbsolutePath());
                     } catch (Exception e) {
                         logger.error("Failed to stop tracing/save trace: ", e);
                     }

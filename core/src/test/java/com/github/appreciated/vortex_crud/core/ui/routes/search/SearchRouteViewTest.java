@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.internal.UIInternals;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
@@ -104,18 +105,18 @@ class SearchRouteViewTest {
     void testInitialization() {
         // Verify title
         Component titleComponent = view.getComponentAt(0);
-        assertTrue(titleComponent instanceof H2);
+        assertInstanceOf(H2.class, titleComponent);
         assertEquals("Search Title", ((H2) titleComponent).getText());
 
         // Verify Search Field
         Component searchFieldComponent = view.getComponentAt(1);
-        assertTrue(searchFieldComponent instanceof TextField);
+        assertInstanceOf(TextField.class, searchFieldComponent);
         TextField searchField = (TextField) searchFieldComponent;
         assertEquals("Search...", searchField.getPlaceholder());
 
         // Verify Results Container
         Component resultsContainer = view.getComponentAt(2);
-        assertTrue(resultsContainer instanceof VerticalLayout);
+        assertInstanceOf(VerticalLayout.class, resultsContainer);
     }
 
     @Test
@@ -141,7 +142,7 @@ class SearchRouteViewTest {
         // Verify results container has "No results found."
         assertEquals(1, resultsContainer.getComponentCount());
         Component message = resultsContainer.getComponentAt(0);
-        assertTrue(message instanceof Span);
+        assertInstanceOf(Span.class, message);
         assertEquals("No results found.", ((Span) message).getText());
 
         // Verify URL update
@@ -187,7 +188,7 @@ class SearchRouteViewTest {
         VerticalLayout group1 = (VerticalLayout) resultsContainer.getComponentAt(0);
         // Header + Item 1 + Item 2
         assertEquals(3, group1.getComponentCount());
-        assertTrue(group1.getComponentAt(0) instanceof com.vaadin.flow.component.html.H4);
+        assertInstanceOf(H4.class, group1.getComponentAt(0));
 
         VerticalLayout group2 = (VerticalLayout) resultsContainer.getComponentAt(1);
         // Header + Item 3

@@ -59,7 +59,7 @@ public class JpaFieldService {
      */
     public Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> getFieldsForDataStore(JpaRepositoryDataStore<?> dataStore, Map<Class<?>, VortexCrudDataStore> storeMap) {
         Collection<Field> fields = dataStore.getFields();
-        Map<String, com.github.appreciated.vortex_crud.core.config.model.Field<JpaRepository<?, ?>, String, JpaRepository<?, ?>>> collect = fields.stream()
+        return fields.stream()
                 .filter(jpaFieldAnnotationRegistryService::hasFieldAnnotation)
                 .collect(Collectors.toMap(Field::getName, entityField -> {
                     boolean isPrimary = entityField.isAnnotationPresent(Id.class);
@@ -209,7 +209,6 @@ public class JpaFieldService {
                                     .build()
                     )).orElseThrow();
                 }));
-        return collect;
     }
 
 }

@@ -45,7 +45,7 @@ class GenericFilterableDataProviderTest {
     @Test
     void fetch_shouldReturnFilteredRecords_whenFilterIsPresent() {
         String filterText = "test";
-        List<Object> records = Arrays.asList(new Object());
+        List<Object> records = List.of(new Object());
         when(dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, 0, 10)).thenReturn(records);
 
         Query<Object, String> query = new Query<>(0, 10, Collections.emptyList(), null, filterText);
