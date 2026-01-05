@@ -15,11 +15,9 @@ import org.jooq.DSLContext;
 public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
-    private final DSLContext dsl;
 
     public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
         this.repository = repository;
-        this.dsl = dsl;
 
         setSizeFull();
         setPadding(false);

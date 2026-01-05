@@ -18,10 +18,7 @@ import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Table
 @AnonymousAllowed
 public class CancellationView extends VerticalLayout {
 
-    private final DSLContext dsl;
-
     public CancellationView(DSLContext dsl) {
-        this.dsl = dsl;
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
