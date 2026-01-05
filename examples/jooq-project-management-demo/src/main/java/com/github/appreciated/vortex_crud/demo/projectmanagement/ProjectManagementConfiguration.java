@@ -502,7 +502,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
                                         PROJECT.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) projectMemberStore,
+                                                projectMemberStore,
                                                 PROJECT_MEMBER.USER_ID,
                                                 PROJECT_MEMBER.PROJECT_ID,
                                                 PROJECT_MEMBER.ROLE,
@@ -512,8 +512,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 ),
                                 // Global role strategy
                                 new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        (VortexCrudDataStore) userRolesStore,
-                                        (VortexCrudDataStore) rolesStore,
+                                        userRolesStore,
+                                        rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

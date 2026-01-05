@@ -33,8 +33,8 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
     private final FieldType targetIdField; // Field in Target entity (ID)
 
     // For global roles
-    private final VortexCrudDataStore<FieldType, Object> userRolesDataStore;
-    private final VortexCrudDataStore<FieldType, Object> rolesDataStore;
+    private final VortexCrudDataStore<FieldType, ?> userRolesDataStore;
+    private final VortexCrudDataStore<FieldType, ?> rolesDataStore;
     private final FieldType userRolesUserIdField;
     private final FieldType userRolesRoleIdField;
     private final FieldType rolesNameField;
@@ -43,14 +43,15 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Constructor for entity-specific roles (e.g., repository members).
      * Use this when you need to resolve roles for a specific target entity.
      */
-    public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, ?> joinDataStore,
-            FieldType userRefField,
-            FieldType targetRefField,
-            FieldType roleField,
+    @SuppressWarnings("unchecked")
+    public <S extends FieldType> JoinTableRoleResolutionStrategy(
+            VortexCrudDataStore<S, ?> joinDataStore,
+            S userRefField,
+            S targetRefField,
+            S roleField,
             FieldType userIdField,
             FieldType targetIdField) {
-        this.joinDataStore = joinDataStore;
+        this.joinDataStore = (VortexCrudDataStore<FieldType, ?>) joinDataStore;
         this.userRefField = userRefField;
         this.targetRefField = targetRefField;
         this.roleField = roleField;
@@ -69,15 +70,16 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
      * Constructor for global roles (e.g., USER_ROLES join table).
      * Use this when you need to resolve global roles from a USER_ROLES -> ROLES relationship.
      */
-    public JoinTableRoleResolutionStrategy(
-            VortexCrudDataStore<FieldType, Object> userRolesDataStore,
-            VortexCrudDataStore<FieldType, Object> rolesDataStore,
-            FieldType userRolesUserIdField,
-            FieldType userRolesRoleIdField,
-            FieldType rolesNameField,
+    @SuppressWarnings("unchecked")
+    public <S1 extends FieldType, S2 extends FieldType> JoinTableRoleResolutionStrategy(
+            VortexCrudDataStore<S1, ?> userRolesDataStore,
+            VortexCrudDataStore<S2, ?> rolesDataStore,
+            S1 userRolesUserIdField,
+            S1 userRolesRoleIdField,
+            S2 rolesNameField,
             FieldType usersIdField) {
-        this.userRolesDataStore = userRolesDataStore;
-        this.rolesDataStore = rolesDataStore;
+        this.userRolesDataStore = (VortexCrudDataStore<FieldType, ?>) userRolesDataStore;
+        this.rolesDataStore = (VortexCrudDataStore<FieldType, ?>) rolesDataStore;
         this.userRolesUserIdField = userRolesUserIdField;
         this.userRolesRoleIdField = userRolesRoleIdField;
         this.rolesNameField = rolesNameField;
@@ -122,7 +124,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
             }
 
             // Query USER_ROLES join table for this user
-            List<Object> userRoleRecords = userRolesDataStore.getRecordsFromTableWhereColumnEquals(
+            List<?> userRoleRecords = userRolesDataStore.getRecordsFromTableWhereColumnEquals(
                     userRolesUserIdField,
                     userId,
                     0,
