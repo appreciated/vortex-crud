@@ -1,8 +1,6 @@
 package com.github.appreciated.vortex_crud.example.jooq;
 
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContextProvider;
 import com.github.appreciated.vortex_crud.core.ui.routes.VortexCrudRoute;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.ProjectsRecord;
@@ -58,14 +56,12 @@ public class ExampleJooqVortexCrudRoute extends VortexCrudRoute<TableRecord<?>, 
                 .descriptionField(PROJECTS.DESCRIPTION)
                 .writeRoles(List.of("manager", "admin"))
                 .form(JooqFormRoute.builder()
-                        .dataStoreConfig(projectsConfig)
-                        .title("route.projects.title-cards")
                         .titleField(PROJECTS.NAME)
                         .fields(List.of(
-                                JooqFieldElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                                JooqFieldElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                                JooqFieldElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                                JooqFieldElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                                JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                                JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                                JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                                JooqFormElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
                         ))
                         .build())
                 .build();

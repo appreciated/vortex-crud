@@ -1,12 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields.lifecycle;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jooq.models.tables.LifecycleTest;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.LifecycleTestRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -67,12 +65,10 @@ public class JooqLifecycleVortexCrudConfiguration
                 )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> lifecycleForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.lifecycle-test.title")
                 .titleField(LIFECYCLE_TEST.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
-                        JooqFieldElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
+                        JooqFormElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
+                        JooqFormElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
                 ))
                 .build();
 
@@ -82,8 +78,8 @@ public class JooqLifecycleVortexCrudConfiguration
                 .title("route.lifecycle-test.title-list")
                 .filterField(LIFECYCLE_TEST.NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
-                        JooqFieldElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
+                        JooqFormElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
+                        JooqFormElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()
                 ))
                 .form(lifecycleForm)
                 .build();

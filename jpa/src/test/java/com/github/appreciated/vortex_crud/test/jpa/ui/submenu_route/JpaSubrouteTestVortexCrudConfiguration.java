@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.submenu_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
@@ -13,7 +12,7 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistry
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaMasterDetailRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSubmenuRoute;
@@ -49,11 +48,10 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
                         .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
-                .dataStoreConfig(taskConfig)
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.tasks.labels.image").build()
+                        JpaFormElement.builder("title", "route.tasks.labels.title").build(),
+                        JpaFormElement.builder("url", "route.tasks.labels.image").build()
                 ))
                 .build();
 

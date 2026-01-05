@@ -68,20 +68,18 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
 
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
-            .dataStoreConfig(taskConfig)
-            .title("route.missing.title")
             .titleField("name")
             .fields(List.of(
-                JpaFieldElement.builder("name", "Name").build(),
-                JpaFieldElement.builder("tags", "Tags").build(),
-                JpaFieldElement.builder("pdfDoc", "PDF").build(),
-                JpaFieldElement.builder("notes", "Notes").build(),
-                JpaFieldElement.builder("referencedEntity", "Referenced").build(),
-                JpaFieldElement.builder("multiSelectEntities", "Multi Select").build(),
-                JpaFieldElement.builder("markdownContent", "Markdown").build(),
-                JpaFieldElement.builder("fileAttachment", "File").build(),
-                JpaFieldElement.builder("price", "Price").build(),
-                JpaFieldElement.builder("videoUrl", "Video").build()
+                JpaFormElement.builder("name", "Name").build(),
+                JpaFormElement.builder("tags", "Tags").build(),
+                JpaFormElement.builder("pdfDoc", "PDF").build(),
+                JpaFormElement.builder("notes", "Notes").build(),
+                JpaFormElement.builder("referencedEntity", "Referenced").build(),
+                JpaFormElement.builder("multiSelectEntities", "Multi Select").build(),
+                JpaFormElement.builder("markdownContent", "Markdown").build(),
+                JpaFormElement.builder("fileAttachment", "File").build(),
+                JpaFormElement.builder("price", "Price").build(),
+                JpaFormElement.builder("videoUrl", "Video").build()
             ))
             .build();
 
@@ -94,7 +92,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .title("route.missing.list")
             .filterField("name")
             .columns(List.of(
-                  JpaFieldElement.builder("name", "Name").build()
+                  JpaFormElement.builder("name", "Name").build()
             ))
             .routeActions(List.of(
                  GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
@@ -121,7 +119,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
              .entityFilterValueProvider(() -> 1L)
              .titleField("name")
              .fields(List.of(
-                 JpaFieldElement.builder("name", "Name").build()
+                 JpaFormElement.builder("name", "Name").build()
              ))
              .build());
 

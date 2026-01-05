@@ -1,11 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.submenu_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
+import com.github.appreciated.vortex_crud.jooq.models.tables.records.SubrouteTasksRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import org.jooq.DSLContext;
@@ -31,7 +30,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore<>(SUBROUTE_TASKS.getRecordType(), dsl);
+        JooqDataStore<SubrouteTasksRecord> store = new JooqDataStore<>(SUBROUTE_TASKS.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(SUBROUTE_TASKS)
                         .dataStoreInstance(store)
                         .fields(Map.of(
@@ -42,9 +41,8 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
                         .build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
                 .titleField(SUBROUTE_TASKS.TITLE)
-                .fields(List.of(JooqFieldElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
+                .fields(List.of(JooqFormElement.of(SUBROUTE_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();

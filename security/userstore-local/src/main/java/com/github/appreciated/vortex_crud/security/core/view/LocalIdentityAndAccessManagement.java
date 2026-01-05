@@ -28,10 +28,10 @@ import java.util.List;
 public class LocalIdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> implements IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> {
 
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
-    private InternalFormElement<ModelClass, FieldType, RepositoryType> username;
-    private InternalFormElement<ModelClass, FieldType, RepositoryType> password;
+    private InternalFormElement<FieldType> username;
+    private InternalFormElement<FieldType> password;
     private RoleResolutionStrategy<FieldType> roleResolutionStrategy;
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields;
+    private List<InternalFormElement<FieldType>> signUpFields;
     private Class<? extends Component> loginView;
     private Class<? extends Component> signUpView;
     private Roles availableRoles;

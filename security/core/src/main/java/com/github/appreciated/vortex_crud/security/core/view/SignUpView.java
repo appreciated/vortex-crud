@@ -62,7 +62,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         formLayout.setMaxWidth("500px");
 
         // Add all sign-up fields
-        List<InternalFormElement<ModelClass, FieldType, RepositoryType>> allFields = new java.util.ArrayList<>();
+        List<InternalFormElement<FieldType>> allFields = new java.util.ArrayList<>();
 
         // Add username and password fields from config
         if (config.username() != null) {

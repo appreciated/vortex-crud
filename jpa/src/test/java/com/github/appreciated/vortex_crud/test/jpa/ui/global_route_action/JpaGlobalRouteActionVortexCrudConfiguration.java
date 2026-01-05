@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.global_route_action;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
@@ -13,7 +12,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import com.vaadin.flow.component.button.Button;
@@ -65,14 +64,12 @@ public class JpaGlobalRouteActionVortexCrudConfiguration implements VortexCrudCo
 
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
-            .dataStoreConfig(taskConfig)
-            .title("route.missing.title")
             .titleField("name")
             .fields(List.of(
-                JpaFieldElement.builder("name", "Name").build(),
-                JpaFieldElement.builder("tags", "Tags").build(),
-                JpaFieldElement.builder("pdfDoc", "PDF").build(),
-                JpaFieldElement.builder("notes", "Notes").build()
+                JpaFormElement.builder("name", "Name").build(),
+                JpaFormElement.builder("tags", "Tags").build(),
+                JpaFormElement.builder("pdfDoc", "PDF").build(),
+                JpaFormElement.builder("notes", "Notes").build()
             ))
             .build();
 
@@ -85,7 +82,7 @@ public class JpaGlobalRouteActionVortexCrudConfiguration implements VortexCrudCo
             .title("route.missing.list")
             .filterField("name")
             .columns(List.of(
-                  JpaFieldElement.builder("name", "Name").build()
+                  JpaFormElement.builder("name", "Name").build()
             ))
             .routeActions(List.of(
                  GlobalRouteAction.<String, JpaRepository<?, ?>>builder()

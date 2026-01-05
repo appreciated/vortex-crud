@@ -18,6 +18,7 @@ import java.util.Map;
 public class Application<ModelClass, FieldType, RepositoryType> implements ValidatableConfiguration {
 
     @I18nKey
+    @lombok.NonNull
     private String applicationName;
 
     private String i18nBundlePrefix;

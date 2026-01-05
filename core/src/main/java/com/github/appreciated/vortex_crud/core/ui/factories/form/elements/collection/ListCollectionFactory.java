@@ -113,7 +113,7 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, list, header, context));
             FormRoute<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.form();
-            for (InternalFormElement<ModelClass, FieldType, RepositoryType> child : childRoute.fields()) {
+            for (InternalFormElement<FieldType> child : childRoute.fields()) {
                 String textValue = reflectionService.getString(record, child.field());
                 item.addContent(new Text(textValue));
                 Button remove = new Button(VaadinIcon.TRASH.create());

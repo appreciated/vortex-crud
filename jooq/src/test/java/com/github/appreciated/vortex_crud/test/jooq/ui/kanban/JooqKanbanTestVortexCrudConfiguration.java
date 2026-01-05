@@ -1,15 +1,10 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.kanban;
 
-import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
-import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
-import com.github.appreciated.vortex_crud.core.config.model.Selects;
+import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.SelectField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jooq.models.tables.KanbanTasks;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.KanbanTasksRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -47,10 +42,9 @@ public class JooqKanbanTestVortexCrudConfiguration implements VortexCrudConfigur
                         ))
                         .build();
 
-        JooqFormRoute taskForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .titleField(KANBAN_TASKS.TITLE)
-                .fields(List.of(JooqFieldElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
+                .fields(List.of(JooqFormElement.of(KANBAN_TASKS.TITLE, "route.tasks.labels.title").build()))
                 .build();
 
         LinkedHashMap<String, String> enumOptions = new LinkedHashMap<>();

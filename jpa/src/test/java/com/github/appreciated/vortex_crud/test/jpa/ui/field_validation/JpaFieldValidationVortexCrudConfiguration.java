@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.field_validation;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
@@ -12,7 +11,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -104,18 +103,16 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> validationForm = JpaFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
                 .titleField("requiredField")
                 .fields(List.of(
-                        JpaFieldElement.builder("requiredField", "validation.fields.required").build(),
-                        JpaFieldElement.builder("emailField", "validation.fields.email").build(),
-                        JpaFieldElement.builder("numericField", "validation.fields.numeric").build(),
-                        JpaFieldElement.builder("dateField", "validation.fields.date").build(),
-                        JpaFieldElement.builder("dateTimeField", "validation.fields.datetime").build(),
-                        JpaFieldElement.builder("checkboxField", "validation.fields.checkbox").build(),
-                        JpaFieldElement.builder("enumField", "validation.fields.enum").build(),
-                        JpaFieldElement.builder("imageField", "validation.fields.image").build()
+                        JpaFormElement.builder("requiredField", "validation.fields.required").build(),
+                        JpaFormElement.builder("emailField", "validation.fields.email").build(),
+                        JpaFormElement.builder("numericField", "validation.fields.numeric").build(),
+                        JpaFormElement.builder("dateField", "validation.fields.date").build(),
+                        JpaFormElement.builder("dateTimeField", "validation.fields.datetime").build(),
+                        JpaFormElement.builder("checkboxField", "validation.fields.checkbox").build(),
+                        JpaFormElement.builder("enumField", "validation.fields.enum").build(),
+                        JpaFormElement.builder("imageField", "validation.fields.image").build()
                 ))
                 .build();
 
@@ -125,8 +122,8 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .title("route.projects.title-list")
                 .filterField("requiredField")
                 .columns(List.of(
-                        JpaFieldElement.builder("requiredField", "route.projects.labels.name").build(),
-                        JpaFieldElement.builder("emailField", "route.projects.labels.description").build()
+                        JpaFormElement.builder("requiredField", "route.projects.labels.name").build(),
+                        JpaFormElement.builder("emailField", "route.projects.labels.description").build()
                 ))
                 .form(validationForm)
                 .build());

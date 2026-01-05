@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.single_form_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -11,8 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaSingleFormRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -67,9 +65,9 @@ public class JpaSingleFormRouteVortexCrudConfiguration implements VortexCrudConf
              .entityFilterValueProvider(() -> 1L)
              .titleField("name")
              .fields(List.of(
-                 JpaFieldElement.builder("name", "Name").build(),
-                 JpaFieldElement.builder("tags", "Tags").build(),
-                 JpaFieldElement.builder("pdfDoc", "PDF").build()
+                 JpaFormElement.builder("name", "Name").build(),
+                 JpaFormElement.builder("tags", "Tags").build(),
+                 JpaFormElement.builder("pdfDoc", "PDF").build()
              ))
              .build());
 

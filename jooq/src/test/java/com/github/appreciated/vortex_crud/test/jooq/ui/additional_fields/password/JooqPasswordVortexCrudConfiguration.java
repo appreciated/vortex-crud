@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields.password;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -65,12 +64,10 @@ public class JooqPasswordVortexCrudConfiguration
                 )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> passwordForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.password-test.title")
                 .titleField(PASSWORD_TEST.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
-                        JooqFieldElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
+                        JooqFormElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build(),
+                        JooqFormElement.of(PASSWORD_TEST.PASSWORD, "password-test.labels.password").build()
                 ))
                 .build();
 
@@ -80,7 +77,7 @@ public class JooqPasswordVortexCrudConfiguration
                 .title("route.password-test.title-list")
                 .filterField(PASSWORD_TEST.NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
+                        JooqFormElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
                 ))
                 .form(passwordForm)
                 .build();

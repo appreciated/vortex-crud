@@ -24,7 +24,7 @@ public class FormBuilder<ModelClass, FieldType, RepositoryType> {
     }
 
     public void addComponentToForm(Component component,
-                                   InternalFormElement<ModelClass, FieldType, RepositoryType> element,
+                                   InternalFormElement<FieldType> element,
                                    FormLayout form) {
         if (component instanceof HasSize) {
             ((HasSize) component).setWidthFull();

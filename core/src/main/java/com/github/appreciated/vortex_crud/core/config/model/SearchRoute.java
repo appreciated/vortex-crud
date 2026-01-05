@@ -21,6 +21,7 @@ import java.util.List;
 public class SearchRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
 
     @I18nKey
+    @lombok.NonNull
     private String title;
     private boolean defaultRoute;
     private boolean hiddenInMenu;
