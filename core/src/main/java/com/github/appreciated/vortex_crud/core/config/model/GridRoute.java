@@ -21,8 +21,6 @@ import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
 
@@ -35,16 +33,13 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean defaultRoute;
 
-    @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new GridRouteFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory;
 
-    @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
     private boolean hiddenInMenu;
 
-    @Builder.Default
-    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+    private VortexCrudItemFactory<FieldType> itemFactory;
 
     @lombok.NonNull
     private FieldType titleField;
@@ -69,6 +64,54 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    @lombok.Singular
     private List<RouteFilter<FieldType>> filters;
+
+    @Builder
+    public GridRoute(
+            @lombok.NonNull DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
+            @lombok.NonNull String title,
+            boolean defaultRoute,
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory,
+            VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory,
+            boolean hiddenInMenu,
+            VortexCrudItemFactory<FieldType> itemFactory,
+            @lombok.NonNull FieldType titleField,
+            FieldType descriptionField,
+            FieldType imageField,
+            VortexCrudResourceProvider resourceProvider,
+            boolean inlineEdit,
+            FieldType filterField,
+            SerializableSupplier<Component> iconFactory,
+            List<String> writeRoles,
+            List<String> readOnlyRoles,
+            FormRoute<ModelClass, FieldType, RepositoryType> form,
+            List<RouteAction<FieldType, ModelClass>> routeActions,
+            @lombok.Singular List<RouteFilter<FieldType>> filters
+    ) {
+        this.dataStoreConfig = dataStoreConfig;
+        this.title = title;
+        this.defaultRoute = defaultRoute;
+        this.factory = factory != null ? factory : new GridRouteFactory<>();
+        this.dialogFactory = dialogFactory;
+        this.hiddenInMenu = hiddenInMenu;
+        this.itemFactory = itemFactory != null ? itemFactory : new CardFactory<>();
+        this.titleField = titleField;
+        this.descriptionField = descriptionField;
+        this.imageField = imageField;
+        this.resourceProvider = resourceProvider;
+        this.inlineEdit = inlineEdit;
+        this.filterField = filterField;
+        this.iconFactory = iconFactory;
+        this.writeRoles = writeRoles;
+        this.readOnlyRoles = readOnlyRoles;
+        this.routeActions = routeActions;
+        this.filters = filters;
+
+        // Inject parent's dataStoreConfig and title into child form
+        this.form = form;
+        if (this.form != null) {
+            this.form.dataStoreConfig(this.dataStoreConfig);
+            this.form.title(this.title);
+        }
+    }
 }

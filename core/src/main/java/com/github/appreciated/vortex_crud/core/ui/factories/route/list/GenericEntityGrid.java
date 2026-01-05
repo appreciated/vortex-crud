@@ -41,7 +41,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> field : typedRouteRenderer.columns()) {
+        for (InternalFormElement<FieldType> field : typedRouteRenderer.columns()) {
             FieldType fieldName = field.field();
             Field<ModelClass, FieldType, RepositoryType> dataStoreField = fieldsConfig.get(fieldName);
             context.columnCallbackRegistry().getCallback(typedRouteRenderer).addColumn(this, field, table, dataStoreField);

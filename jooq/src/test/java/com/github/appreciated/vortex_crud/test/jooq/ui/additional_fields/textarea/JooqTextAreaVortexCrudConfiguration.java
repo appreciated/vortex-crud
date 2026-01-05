@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.additional_fields.textarea;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -65,12 +64,10 @@ public class JooqTextAreaVortexCrudConfiguration
                 )).build();
 
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> textAreaForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.textarea-test.title")
                 .titleField(TEXTAREA_TEST.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
-                        JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
+                        JooqFormElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
+                        JooqFormElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
                 ))
                 .build();
 
@@ -80,8 +77,8 @@ public class JooqTextAreaVortexCrudConfiguration
                 .title("route.textarea-test.title-list")
                 .filterField(TEXTAREA_TEST.NAME)
                 .columns(List.of(
-                        JooqFieldElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
-                        JooqFieldElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
+                        JooqFormElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
+                        JooqFormElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()
                 ))
                 .form(textAreaForm)
                 .build();

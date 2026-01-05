@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.i18n;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -11,7 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -44,12 +43,10 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
-                .title("route.projects.title-cards")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                        JpaFormElement.builder("title", "route.images.labels.title").build(),
+                        JpaFormElement.builder("url", "route.images.labels.image").build()
                 ))
                 .build();
 
@@ -60,8 +57,8 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 .inlineEdit(true)
                 .filterField("title")
                 .columns(List.of(
-                        JpaFieldElement.builder("url", "route.projects.labels.description").build(),
-                        JpaFieldElement.builder("title", "route.projects.labels.name").build()
+                        JpaFormElement.builder("url", "route.projects.labels.description").build(),
+                        JpaFormElement.builder("title", "route.projects.labels.name").build()
                 ))
                 .form(imageForm)
                 .build());

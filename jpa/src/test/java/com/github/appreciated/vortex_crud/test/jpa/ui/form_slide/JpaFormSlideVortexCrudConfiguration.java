@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.form_slide;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
@@ -44,14 +43,12 @@ public class JpaFormSlideVortexCrudConfiguration implements VortexCrudConfigurat
                         .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
                 .dialogFactory(new FormSlideFactory<>())
-                .title("route.projects.title-cards")
                 .itemFactory(new CardFactory<>())
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                        JpaFormElement.builder("title", "route.images.labels.title").build(),
+                        JpaFormElement.builder("url", "route.images.labels.image").build()
                 ))
                 .build();
 

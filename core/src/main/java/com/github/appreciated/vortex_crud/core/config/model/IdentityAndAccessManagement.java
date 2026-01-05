@@ -16,15 +16,15 @@ public interface IdentityAndAccessManagement<ModelClass, FieldType, RepositoryTy
         return dataStoreConfig() != null ? dataStoreConfig().dataStoreInstance() : null;
     }
 
-    List<InternalFormElement<ModelClass, FieldType, RepositoryType>> signUpFields();
+    List<InternalFormElement<FieldType>> signUpFields();
 
     Class<? extends Component> loginView();
 
     Class<? extends Component> signUpView();
 
-    InternalFormElement<ModelClass, FieldType, RepositoryType> username();
+    InternalFormElement<FieldType> username();
 
-    InternalFormElement<ModelClass, FieldType, RepositoryType> password();
+    InternalFormElement<FieldType> password();
 
     boolean isSignUpEnabled();
 

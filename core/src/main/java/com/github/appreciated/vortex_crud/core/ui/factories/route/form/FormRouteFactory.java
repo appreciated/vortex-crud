@@ -42,11 +42,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
         @SuppressWarnings("unchecked")
         FormRouteProvider<ModelClass, FieldType, RepositoryType> routeProvider =
                 (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
-        @SuppressWarnings("unchecked")
-        VortexCrudPathToRouteResolver typedRouteResolver = routeResolver;
 
         assert detailRouteSetting != null;
-        return getForm(context, typedRouteResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
+        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,

@@ -56,14 +56,12 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .build();
 
         FormRoute<Object, String, String> userForm = FormRoute.<Object, String, String>builder()
-                .dataStoreConfig(userConfig)
-                .title("route.users.title")
                 .titleField("username")
                 .fields(List.of(
-                        InternalFormElement.<Object, String, String>builder().field("username").label("Username").build(),
-                        InternalFormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
-                        InternalFormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
-                        InternalFormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
+                        FormElement.<Object, String, String>builder().field("username").label("Username").build(),
+                        FormElement.<Object, String, String>builder().field("publicField").label("Public Field").build(),
+                        FormElement.<Object, String, String>builder().field("adminField").label("Admin Field").build(),
+                        FormElement.<Object, String, String>builder().field("secretField").label("Secret Field").build()
                 ))
                 .writeRoles(List.of("ADMIN", "USER"))
                 .readOnlyRoles(List.of("VIEWER"))
@@ -75,7 +73,7 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .defaultRoute(true)
                 .title("route.users-grid")
                 .titleField("username")
-                .itemFactory(new CardFactory())
+                .itemFactory(new CardFactory<>())
                 .form(userForm)
                 .writeRoles(List.of("ADMIN", "USER"))
                 .readOnlyRoles(List.of("VIEWER"))
@@ -87,8 +85,8 @@ public class SecurityIntegrationTestConfiguration implements VortexCrudConfigura
                 .routes(routes)
                 .identityAndAccessManagement(LocalIdentityAndAccessManagement.<Object, String, String>builder()
                         .dataStoreConfig(userConfig)
-                        .username(InternalFormElement.<Object, String, String>builder().field("username").label("dummy").build())
-                        .password(InternalFormElement.<Object, String, String>builder().field("passwordHash").label("dummy").build())
+                        .username(FormElement.<Object, String, String>builder().field("username").label("dummy").build())
+                        .password(FormElement.<Object, String, String>builder().field("passwordHash").label("dummy").build())
                         .roleResolutionStrategy(new FieldBasedRoleResolutionStrategy<>("roles"))
                         .availableRoles(new Roles(List.of("ADMIN", "USER", "VIEWER")))
                         .loginView(LoginView.class)

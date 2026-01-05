@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.grid;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
@@ -13,7 +12,7 @@ import com.github.appreciated.vortex_crud.jpa.service.JpaFieldAnnotationRegistry
 import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataStore;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,12 +45,10 @@ public class JpaGridVortexCrudConfiguration implements VortexCrudConfigurationPr
                         .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
-                .title("route.projects.title-cards")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                        JpaFormElement.builder("title", "route.images.labels.title").build(),
+                        JpaFormElement.builder("url", "route.images.labels.image").build()
                 ))
                 .build();
 

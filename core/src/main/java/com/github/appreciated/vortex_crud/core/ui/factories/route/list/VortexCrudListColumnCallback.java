@@ -10,5 +10,5 @@ import com.vaadin.flow.component.grid.Grid;
  */
 
 public interface VortexCrudListColumnCallback<ModelClass, FieldType, RepositoryType> {
-    void addColumn(Grid<Object> grid, InternalFormElement<ModelClass, FieldType, RepositoryType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField);
+    void addColumn(Grid<Object> grid, InternalFormElement<FieldType> field, Object table, Field<ModelClass, FieldType, RepositoryType> dataStoreField);
 }

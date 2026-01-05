@@ -129,7 +129,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var userConfig = JpaDataStoreConfig.builder(userRepository, userStore).withServices(fieldService, storeMap).build();
         var documentConfig = JpaDataStoreConfig.builder(documentRepository, documentStore).withServices(fieldService, storeMap).build();
 
-        var notesConfig = DataStoreConfig.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+        var notesConfig = DataStoreConfig.<Object, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
                 .dataStoreInstance((VortexCrudDataStore) notesStore)
                 .fields(Map.of(
@@ -138,7 +138,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 ))
                 .build();
 
-        InternalFormElement<JpaRepository<?, ?>, String, JpaRepository<?, ?>> build = JpaCollectionElement.builder("route.tasks.labels.comments")
+        InternalFormElement<String> build = JpaCollectionElement.builder("route.tasks.labels.comments")
                 .field("comments")
                 .listFactory(new ListCollectionFactory<>())
                 .dialogFactory(new FormDialogFactory<>())
@@ -147,10 +147,9 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .children(List.of("commentText"))
                 .emptyMessage("route.tasks.labels.comments-empty-message")
                 .form(JpaFormRoute.builder()
-                        .dataStoreConfig(commentConfig)
                         .titleField("name")
                         .fields(List.of(
-                                JpaFieldElement.builder("commentText", "route.tasks.labels.comment").build()
+                                JpaFormElement.builder("commentText", "route.tasks.labels.comment").build()
                         ))
                         .build())
                 .build();
@@ -167,28 +166,25 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
-                .dataStoreConfig(taskConfig)
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
-                        JpaFieldElement.builder("description", "route.tasks.labels.description").build(),
-                        JpaFieldElement.builder("status", "route.tasks.labels.status").build(),
-                        JpaFieldElement.builder("dueDate", "route.tasks.labels.due_date").build(),
-                        JpaFieldElement.builder("assignedTo", "route.tasks.labels.assigned_to").build(),
+                        JpaFormElement.builder("title", "route.tasks.labels.title").build(),
+                        JpaFormElement.builder("description", "route.tasks.labels.description").build(),
+                        JpaFormElement.builder("status", "route.tasks.labels.status").build(),
+                        JpaFormElement.builder("dueDate", "route.tasks.labels.due_date").build(),
+                        JpaFormElement.builder("assignedTo", "route.tasks.labels.assigned_to").build(),
                         build,
                         build1
                 ))
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> projectForm = JpaFormRoute.builder()
-                .dataStoreConfig(projectConfig)
-                .title("route.projects.title-cards")
                 .titleField("name")
                 .fields(List.of(
-                        JpaFieldElement.builder("name", "route.projects.labels.name").build(),
-                        JpaFieldElement.builder("description", "route.projects.labels.description").build(),
-                        JpaFieldElement.builder("budget", "route.projects.labels.budget").build(),
-                        JpaFieldElement.builder("tagsMulti", "route.projects.labels.tags_multi").build(),
+                        JpaFormElement.builder("name", "route.projects.labels.name").build(),
+                        JpaFormElement.builder("description", "route.projects.labels.description").build(),
+                        JpaFormElement.builder("budget", "route.projects.labels.budget").build(),
+                        JpaFormElement.builder("tagsMulti", "route.projects.labels.tags_multi").build(),
                         JpaCollectionElement.builder("route.projects.labels.tags_collection")
                                 .field("projectTags")
                                 .listFactory(new ListCollectionFactory<>())
@@ -198,47 +194,40 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .children(List.of("tag"))
                                 .emptyMessage("route.projects.labels.no_tags")
                                 .form(JpaFormRoute.builder()
-                                        .dataStoreConfig(projectTagConfig)
                                         .titleField("tag")
                                         .fields(List.of(
-                                                JpaFieldElement.builder("tag", "route.projects.labels.tag").build()
+                                                JpaFormElement.builder("tag", "route.projects.labels.tag").build()
                                         ))
                                         .build())
                                 .build(),
-                        JpaFieldElement.builder("active", "route.projects.labels.active").build(),
-                        JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
-                        JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
+                        JpaFormElement.builder("active", "route.projects.labels.active").build(),
+                        JpaFormElement.builder("startDate", "route.projects.labels.start_date").build(),
+                        JpaFormElement.builder("endDate", "route.projects.labels.end_date").build()
                 ))
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
-                .title("route.projects.title-cards")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                        JpaFormElement.builder("title", "route.images.labels.title").build(),
+                        JpaFormElement.builder("url", "route.images.labels.image").build()
                 ))
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> imageSlideForm = JpaFormRoute.builder()
-                .dataStoreConfig(imageConfig)
-                .title("route.projects.title-cards")
                 .titleField("title")
                 .dialogFactory(new FormSlideFactory<>())
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.images.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.images.labels.image").build()
+                        JpaFormElement.builder("title", "route.images.labels.title").build(),
+                        JpaFormElement.builder("url", "route.images.labels.image").build()
                 ))
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> videoForm = JpaFormRoute.builder()
-                .dataStoreConfig(videoConfig)
-                .title("route.videos.title-cards")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.videos.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.videos.labels.video").build()
+                        JpaFormElement.builder("title", "route.videos.labels.title").build(),
+                        JpaFormElement.builder("url", "route.videos.labels.video").build()
                 ))
                 .build();
 
@@ -270,10 +259,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .inlineEdit(true)
                 .filterField("name")
                 .columns(List.of(
-                        JpaFieldElement.builder("name", "route.projects.labels.name").build(),
-                        JpaFieldElement.builder("description", "route.projects.labels.description").build(),
-                        JpaFieldElement.builder("startDate", "route.projects.labels.start_date").build(),
-                        JpaFieldElement.builder("endDate", "route.projects.labels.end_date").build()
+                        JpaFormElement.builder("name", "route.projects.labels.name").build(),
+                        JpaFormElement.builder("description", "route.projects.labels.description").build(),
+                        JpaFormElement.builder("startDate", "route.projects.labels.start_date").build(),
+                        JpaFormElement.builder("endDate", "route.projects.labels.end_date").build()
                 ))
                 .writeRoles(List.of("admin", "manager", "editor"))
                 .form(projectForm)
@@ -317,8 +306,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .inlineEdit(true)
                 .filterField("title")
                 .columns(List.of(
-                        JpaFieldElement.builder("url", "route.images.labels.image").build(),
-                        JpaFieldElement.builder("title", "route.images.labels.title").build()
+                        JpaFormElement.builder("url", "route.images.labels.image").build(),
+                        JpaFormElement.builder("title", "route.images.labels.title").build()
                 ))
                 .writeRoles(List.of("admin"))
                 .form(imageForm)
@@ -351,8 +340,8 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .inlineEdit(true)
                 .filterField("title")
                 .columns(List.of(
-                        JpaFieldElement.builder("title", "route.videos.labels.title").build(),
-                        JpaFieldElement.builder("url", "route.videos.labels.video").build()
+                        JpaFormElement.builder("title", "route.videos.labels.title").build(),
+                        JpaFormElement.builder("url", "route.videos.labels.video").build()
                 ))
                 .writeRoles(List.of("admin"))
                 .form(videoForm)
@@ -381,10 +370,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 })
                 .titleField("username")
                 .fields(List.of(
-                        JpaFieldElement.builder("username", "route.profile.labels.username").build(),
-                        JpaFieldElement.builder("firstName", "route.profile.labels.first_name").build(),
-                        JpaFieldElement.builder("lastName", "route.profile.labels.last_name").build(),
-                        JpaFieldElement.builder("createdAt", "route.profile.labels.created_at").build()
+                        JpaFormElement.builder("username", "route.profile.labels.username").build(),
+                        JpaFormElement.builder("firstName", "route.profile.labels.first_name").build(),
+                        JpaFormElement.builder("lastName", "route.profile.labels.last_name").build(),
+                        JpaFormElement.builder("createdAt", "route.profile.labels.created_at").build()
                 ))
                 .build());
 
@@ -396,11 +385,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .titleField("title")
                 .descriptionField("content")
                 .form(JpaFormRoute.builder()
-                        .dataStoreConfig(notesConfig)
                         .titleField("title")
                         .fields(List.of(
-                                JpaFieldElement.builder("title", "route.notes.labels.title").build(),
-                                JpaFieldElement.builder("content", "route.notes.labels.content").build()
+                                JpaFormElement.builder("title", "route.notes.labels.title").build(),
+                                JpaFormElement.builder("content", "route.notes.labels.content").build()
                         ))
                         .build())
                 .build());
@@ -427,11 +415,10 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .title("route.documents.title")
                 .titleField("title")
                 .form(JpaFormRoute.builder()
-                        .dataStoreConfig(documentConfig)
                         .titleField("title")
                         .fields(List.of(
-                                JpaFieldElement.builder("title", "route.documents.labels.title").build(),
-                                JpaFieldElement.builder("pdf", "route.documents.labels.pdf").build()
+                                JpaFormElement.builder("title", "route.documents.labels.title").build(),
+                                JpaFormElement.builder("pdf", "route.documents.labels.pdf").build()
                         ))
                         .build())
                 .build());
@@ -460,11 +447,11 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                                 .signUpEnabled(true)
                                 .loginView(LoginView.class)
                                 .signUpView(SignUpView.class)
-                                .username(JpaFieldElement.builder("username", "route.projects.labels.name").build())
-                                .password(JpaFieldElement.builder("passwordHash", "route.projects.labels.password").build())
+                                .username(JpaFormElement.builder("username", "route.projects.labels.name").build())
+                                .password(JpaFormElement.builder("passwordHash", "route.projects.labels.password").build())
                                 .signUpFields(List.of(
-                                        JpaFieldElement.builder("firstName", "route.projects.labels.end_date").build(),
-                                        JpaFieldElement.builder("lastName", "route.projects.labels.end_date").build()
+                                        JpaFormElement.builder("firstName", "route.projects.labels.end_date").build(),
+                                        JpaFormElement.builder("lastName", "route.projects.labels.end_date").build()
                                 ))
                                 .build()
                 )

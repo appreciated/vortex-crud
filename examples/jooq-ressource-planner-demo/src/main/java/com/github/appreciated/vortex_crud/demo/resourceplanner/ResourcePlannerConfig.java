@@ -63,6 +63,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
         JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl);
         JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl);
+        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -159,26 +160,33 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance(notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.LINK, JooqTextField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
         // Forms
-        JooqFormRoute roomForm = JooqFormRoute.builder()
-                .dataStoreConfig(roomConfig)
-                .title("route.rooms.title")
+        var roomForm = JooqFormRoute.builder()
                 .titleField(ROOM.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(ROOM.NAME, "route.rooms.labels.name").build(),
-                        JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").build(),
-                        JooqFieldElement.of(ROOM.DESCRIPTION, "route.rooms.labels.description").build(),
-                        JooqFieldElement.of(ROOM.IS_ACTIVE, "route.rooms.labels.active").build()))
+                        JooqFormElement.of(ROOM.NAME, "route.rooms.labels.name").build(),
+                        JooqFormElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").build(),
+                        JooqFormElement.of(ROOM.DESCRIPTION, "route.rooms.labels.description").build(),
+                        JooqFormElement.of(ROOM.IS_ACTIVE, "route.rooms.labels.active").build()))
                 .build();
 
         // Room Detail (for Resource View)
-        JooqFormRoute roomDetailForm = JooqFormRoute.builder()
-                .dataStoreConfig(roomConfig)
-                .title("route.rooms.title")
+        var roomDetailForm = JooqFormRoute.builder()
                 .titleField(ROOM.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
-                        JooqFieldElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
+                        JooqFormElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
+                        JooqFormElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
                         JooqCollection.builder()
                                 .label("route.rooms.labels.appointments")
                                 .field(APPOINTMENT.START_TIME)
@@ -190,15 +198,13 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
-        JooqFormRoute personForm = JooqFormRoute.builder()
-                .dataStoreConfig(personConfig)
-                .title("route.persons.title")
+        var personForm = JooqFormRoute.builder()
                 .titleField(PERSON.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
-                        JooqFieldElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
-                        JooqFieldElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
-                        JooqFieldElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
+                        JooqFormElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
+                        JooqFormElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
+                        JooqFormElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
+                        JooqFormElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                         JooqCollection.builder()
                                 .label("route.persons.labels.services")
                                 .field(APPOINTMENT_TYPE.NAME)
@@ -215,57 +221,49 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .build()))
                 .build();
 
-        JooqFormRoute customerForm = JooqFormRoute.builder()
-                .dataStoreConfig(customerConfig)
-                .title("route.customers.title")
+        var customerForm = JooqFormRoute.builder()
                 .titleField(CUSTOMER.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
-                        JooqFieldElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
-                        JooqFieldElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
-                        JooqFieldElement.of(CUSTOMER.NOTES, "route.customers.labels.notes").build(),
-                        JooqFieldElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
+                        JooqFormElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
+                        JooqFormElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
+                        JooqFormElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
+                        JooqFormElement.of(CUSTOMER.NOTES, "route.customers.labels.notes").build(),
+                        JooqFormElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
                 .build();
 
-        JooqFormRoute typeForm = JooqFormRoute.builder()
-                .dataStoreConfig(typeConfig)
-                .title("route.types.title")
+        var typeForm = JooqFormRoute.builder()
                 .titleField(APPOINTMENT_TYPE.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(APPOINTMENT_TYPE.NAME, "route.types.labels.name").build(),
-                        JooqFieldElement.of(APPOINTMENT_TYPE.DURATION_MINUTES, "route.types.labels.duration").build(),
-                        JooqFieldElement.of(APPOINTMENT_TYPE.PRICE, "route.types.labels.price").build(),
-                        JooqFieldElement.of(APPOINTMENT_TYPE.REQUIRES_ROOM, "route.types.labels.requires_room").build(),
-                        JooqFieldElement.of(APPOINTMENT_TYPE.IS_ACTIVE, "route.types.labels.active").build()))
+                        JooqFormElement.of(APPOINTMENT_TYPE.NAME, "route.types.labels.name").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.DURATION_MINUTES, "route.types.labels.duration").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.PRICE, "route.types.labels.price").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.REQUIRES_ROOM, "route.types.labels.requires_room").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.IS_ACTIVE, "route.types.labels.active").build()))
                 .build();
 
-        JooqFormRoute appointmentForm = JooqFormRoute.builder()
-                .dataStoreConfig(appointmentConfig)
-                .title("route.appointments.title")
+        var appointmentForm = JooqFormRoute.builder()
                 .titleField(APPOINTMENT.START_TIME)
                 .fields(List.of(
-                        JooqFieldElement.of(APPOINTMENT.START_TIME, "route.appointments.labels.start").build(),
-                        JooqFieldElement.of(APPOINTMENT.END_TIME, "route.appointments.labels.end").build(),
-                        JooqFieldElement.of(APPOINTMENT.APPOINTMENT_TYPE_ID, "route.appointments.labels.type").build(),
-                        JooqFieldElement.of(APPOINTMENT.ROOM_ID, "route.appointments.labels.room").build(),
-                        JooqFieldElement.of(APPOINTMENT.PERSON_ID, "route.appointments.labels.person").build(),
-                        JooqFieldElement.of(APPOINTMENT.CUSTOMER_ID, "route.appointments.labels.customer_id").build(),
-                        JooqFieldElement.of(APPOINTMENT.STATUS, "route.appointments.labels.status").build(),
-                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_FREQUENCY, "route.appointments.labels.recurrence_frequency").build(),
-                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_INTERVAL, "route.appointments.labels.recurrence_interval").build(),
-                        JooqFieldElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build(),
-                        JooqFieldElement.of(APPOINTMENT.USER_AGREEMENT_ACCEPTED, "route.appointments.labels.user_agreement_accepted").build()
+                        JooqFormElement.of(APPOINTMENT.START_TIME, "route.appointments.labels.start").build(),
+                        JooqFormElement.of(APPOINTMENT.END_TIME, "route.appointments.labels.end").build(),
+                        JooqFormElement.of(APPOINTMENT.APPOINTMENT_TYPE_ID, "route.appointments.labels.type").build(),
+                        JooqFormElement.of(APPOINTMENT.ROOM_ID, "route.appointments.labels.room").build(),
+                        JooqFormElement.of(APPOINTMENT.PERSON_ID, "route.appointments.labels.person").build(),
+                        JooqFormElement.of(APPOINTMENT.CUSTOMER_ID, "route.appointments.labels.customer_id").build(),
+                        JooqFormElement.of(APPOINTMENT.STATUS, "route.appointments.labels.status").build(),
+                        JooqFormElement.of(APPOINTMENT.RECURRENCE_FREQUENCY, "route.appointments.labels.recurrence_frequency").build(),
+                        JooqFormElement.of(APPOINTMENT.RECURRENCE_INTERVAL, "route.appointments.labels.recurrence_interval").build(),
+                        JooqFormElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build(),
+                        JooqFormElement.of(APPOINTMENT.USER_AGREEMENT_ACCEPTED, "route.appointments.labels.user_agreement_accepted").build()
                 ))
                 .build();
 
-        JooqFormRoute emailTemplatesForm = JooqFormRoute.builder()
-                .dataStoreConfig(emailTemplatesConfig)
-                .title("route.email_templates.title")
+        var emailTemplatesForm = JooqFormRoute.builder()
                 .titleField(EMAIL_TEMPLATES.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(EMAIL_TEMPLATES.NAME, "route.email_templates.labels.name").build(),
-                        JooqFieldElement.of(EMAIL_TEMPLATES.SUBJECT, "route.email_templates.labels.subject").build(),
-                        JooqFieldElement.of(EMAIL_TEMPLATES.BODY, "route.email_templates.labels.body").build()))
+                        JooqFormElement.of(EMAIL_TEMPLATES.NAME, "route.email_templates.labels.name").build(),
+                        JooqFormElement.of(EMAIL_TEMPLATES.SUBJECT, "route.email_templates.labels.subject").build(),
+                        JooqFormElement.of(EMAIL_TEMPLATES.BODY, "route.email_templates.labels.body").build()))
                 .build();
 
         // Routes
@@ -350,8 +348,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .title("route.settings.title")
                 .titleField(SETTINGS.ID)
                 .fields(List.of(
-                        JooqFieldElement.of(SETTINGS.USER_AGREEMENT_TEXT, "route.settings.labels.user_agreement_text").build(),
-                        JooqFieldElement.of(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, "route.settings.labels.default_email_template").build()))
+                        JooqFormElement.of(SETTINGS.USER_AGREEMENT_TEXT, "route.settings.labels.user_agreement_text").build(),
+                        JooqFormElement.of(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, "route.settings.labels.default_email_template").build()))
                 .build());
 
         LinkedHashMap<String, String> recurrenceFrequencies = new LinkedHashMap<>();
@@ -380,13 +378,21 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         .signUpEnabled(true)
                         .loginView(LoginView.class)
                         .signUpView(SignUpView.class)
-                        .username(JooqFieldElement.of(USERS.USERNAME, "route.users.labels.username").build())
-                        .password(JooqFieldElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
+                        .username(JooqFormElement.of(USERS.USERNAME, "route.users.labels.username").build())
+                        .password(JooqFormElement.of(USERS.PASSWORD_HASH, "route.users.labels.password").build())
                         .signUpFields(List.of())
                         .build())
                 .routes(routes)
                 .selects(Selects.builder()
                         .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
+                        .build())
+                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(notificationConfig)
+                        .timestampField(NOTIFICATION.CREATED_AT)
+                        .messageField(NOTIFICATION.MESSAGE)
+                        .readStatusField(NOTIFICATION.IS_READ)
+                        .readStatusValueForRead(1)
+                        .readStatusValueForUnread(0)
                         .build())
                 .build();
     }

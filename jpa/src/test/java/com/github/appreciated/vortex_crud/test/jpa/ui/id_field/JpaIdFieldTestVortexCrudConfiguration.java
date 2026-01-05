@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.id_field;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -11,7 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,12 +44,10 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
 
         // Form Route
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> form = JpaFormRoute.builder()
-            .dataStoreConfig(config)
-            .title("route.id-field.title")
             .titleField("name")
             .fields(List.of(
-                JpaFieldElement.builder("id", "id-field.labels.id").build(),
-                JpaFieldElement.builder("name", "id-field.labels.name").build()
+                JpaFormElement.builder("id", "id-field.labels.id").build(),
+                JpaFormElement.builder("name", "id-field.labels.name").build()
             ))
             .build();
 
@@ -62,7 +59,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
             .title("route.id-field.title-list")
             .filterField("name")
             .columns(List.of(
-                  JpaFieldElement.builder("name", "id-field.labels.name").build()
+                  JpaFormElement.builder("name", "id-field.labels.name").build()
             ))
             .form(form)
             .build());

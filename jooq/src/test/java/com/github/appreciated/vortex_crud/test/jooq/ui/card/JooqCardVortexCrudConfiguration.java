@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.card;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
+import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.fields.ImageField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
@@ -37,7 +37,7 @@ public class JooqCardVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(CARD_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(CARD_IMAGES)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 CARD_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 CARD_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
@@ -47,13 +47,11 @@ public class JooqCardVortexCrudConfiguration
                         ))
                         .build();
 
-        JooqFormRoute imageForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .titleField(CARD_IMAGES.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(CARD_IMAGES.TITLE, "route.images.labels.title").build(),
-                        JooqFieldElement.of(CARD_IMAGES.URL, "route.images.labels.image").build()
+                        JooqFormElement.of(CARD_IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFormElement.of(CARD_IMAGES.URL, "route.images.labels.image").build()
                 ))
                 .build();
 

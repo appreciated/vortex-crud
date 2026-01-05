@@ -14,7 +14,7 @@ import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCollectionElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaListRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -60,16 +60,14 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> childForm = JpaFormRoute.builder()
-                .dataStoreConfig(childConfig)
                 .titleField("name")
-                .fields(List.of(JpaFieldElement.builder("name", "relations.labels.name").build()))
+                .fields(List.of(JpaFormElement.builder("name", "relations.labels.name").build()))
                 .build();
 
         FormRoute parentForm = JpaFormRoute.builder()
-                .dataStoreConfig(parentConfig)
                 .titleField("name")
                 .fields(List.of(
-                        JpaFieldElement.builder("name", "relations.labels.name").build(),
+                        JpaFormElement.builder("name", "relations.labels.name").build(),
                         JpaCollectionElement.builder("relations.labels.children")
                                 .field("children")
                                 .listFactory(new ListCollectionFactory<>())
@@ -90,7 +88,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .title("relations.tests.one-to-many.title")
                 .filterField("name")
                 .columns(List.of(
-                        JpaFieldElement.builder("name", "relations.labels.name").build()
+                        JpaFormElement.builder("name", "relations.labels.name").build()
                 ))
                 .form(parentForm)
                 .build());
