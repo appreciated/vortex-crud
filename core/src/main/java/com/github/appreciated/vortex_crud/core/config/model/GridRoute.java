@@ -60,7 +60,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private List<String> readOnlyRoles;
 
-    private FormRoute<ModelClass, FieldType, RepositoryType> form;
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
@@ -84,7 +84,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
-            FormRoute<ModelClass, FieldType, RepositoryType> form,
+            FormRouteProvider<ModelClass, FieldType, RepositoryType> form,
             List<RouteAction<FieldType, ModelClass>> routeActions,
             @lombok.Singular List<RouteFilter<FieldType>> filters
     ) {

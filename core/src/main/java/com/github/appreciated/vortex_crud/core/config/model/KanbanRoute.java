@@ -65,7 +65,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<String> readOnlyRoles;
 
-    private FormRoute<ModelClass, FieldType, RepositoryType> form;
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 

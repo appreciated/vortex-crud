@@ -6,13 +6,11 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.view.CustomVie
 import com.github.appreciated.vortex_crud.core.ui.factories.route.view.CustomViewFactoryRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Collections;
 import java.util.List;
 
 @Accessors(fluent = true)
@@ -20,14 +18,16 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
-public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements RouteRenderer<ModelClass, FieldType, RepositoryType> {
+public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
+    @Setter
     @lombok.NonNull
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @lombok.NonNull
     private CustomViewFactory<ModelClass> viewFactory;
 
+    @Setter
     @I18nKey
     private String title;
 
@@ -43,4 +43,30 @@ public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> imple
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
+
+    @Builder.Default
+    private boolean isDeleteButtonHidden = true;
+
+    @Override
+    public boolean isDeleteButtonHidden() {
+        return isDeleteButtonHidden;
+    }
+
+    @Override
+    public List<InternalFormElement<FieldType>> fields() {
+        // CustomViewFactoryRoute doesn't use fields, return empty list
+        return Collections.emptyList();
+    }
+
+    @Override
+    public FormRouteProvider<ModelClass, FieldType, RepositoryType> dataStoreConfig(DataStoreConfig<ModelClass, FieldType, RepositoryType> config) {
+        this.dataStoreConfig = config;
+        return this;
+    }
+
+    @Override
+    public FormRouteProvider<ModelClass, FieldType, RepositoryType> title(String title) {
+        this.title = title;
+        return this;
+    }
 }

@@ -70,7 +70,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<String> readOnlyRoles;
 
-    private FormRoute<ModelClass, FieldType, RepositoryType> form;
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 

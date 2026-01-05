@@ -39,7 +39,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Intern
     @I18nKey
     private String emptyMessage;
 
-    private FormRoute<ModelClass, FieldType, RepositoryType> form;
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
     private FieldType titleField;
 

@@ -13,6 +13,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestStat
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.demo.devplatform.view.DashboardView;
+import com.github.appreciated.vortex_crud.demo.devplatform.view.RepositoryDetailViewFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -578,7 +579,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .titleField(REPOSITORY.NAME)
                 .descriptionField(REPOSITORY.DESCRIPTION)
                 .writeRoles(List.of("admin", "write")) // Repo permission values
-                .form(repositoryForm)
+                .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(repositoryConfig)
+                        .viewFactory(new RepositoryDetailViewFactory(dsl))
+                        .title("route.repositories.title")
+                        .build())
                 .routeActions(Collections.singletonList(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                                 .componentFactory(() -> new Button(VaadinIcon.STAR.create()))
