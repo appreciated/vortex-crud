@@ -24,7 +24,7 @@ import java.util.Map;
 public class JpaSingleFormRouteVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaSingleFormRouteRepository repository;
-    private JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
     public JpaSingleFormRouteVortexCrudConfiguration(JpaSingleFormRouteRepository repository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {

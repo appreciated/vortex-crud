@@ -8,8 +8,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Base test for Calendar views.
@@ -51,7 +50,7 @@ public abstract class AbstractCalendarTest extends BaseUITest {
         // Check if there are events rendered in the calendar
         // Playwright locators pierce shadow DOM by default
         List<Locator> events = page.locator(".fc-view .fc-event").all();
-        assertTrue(events.size() > 0, "Calendar should have at least one event");
+        assertFalse(events.isEmpty(), "Calendar should have at least one event");
     }
 
     @Test

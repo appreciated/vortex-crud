@@ -31,7 +31,7 @@ import static com.vaadin.flow.component.icon.VaadinIcon.PRINT;
 public class JpaFieldTypesVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaFieldTypesRepository repository;
-    private JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
     public JpaFieldTypesVortexCrudConfiguration(JpaFieldTypesRepository repository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {

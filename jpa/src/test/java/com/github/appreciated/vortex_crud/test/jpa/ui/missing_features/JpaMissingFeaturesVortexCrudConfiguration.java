@@ -27,7 +27,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
 
     private final JpaMissingFeaturesRepository repository;
     private final JpaMissingFeaturesReferencedRepository referencedRepository;
-    private JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
     public JpaMissingFeaturesVortexCrudConfiguration(JpaMissingFeaturesRepository repository, JpaMissingFeaturesReferencedRepository referencedRepository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {

@@ -24,7 +24,7 @@ public class JpaRepositoryDataStore<ModelClass> implements VortexCrudDataStore<S
 
     private final JpaRepository<ModelClass, Object> repository;
     private final Class<ModelClass> repositoryModelClass;
-    private JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService;
+    private final JpaFieldAnnotationRegistryService jpaFieldAnnotationRegistryService;
     private final Map<String, java.lang.reflect.Field> fields;
     private final java.lang.reflect.Field idField;
     private final DataStoreHooks<ModelClass> hooks;

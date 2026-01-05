@@ -64,7 +64,7 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Intern
             );
 
             // Inject collection's dataStoreConfig into child form
-            if (instance.form != null && instance.dataStoreConfig != null) {
+            if (instance.form != null) {
                 instance.form.dataStoreConfig(instance.dataStoreConfig);
                 if (instance.form.title() == null) {
                     instance.form.title(instance.emptyMessage);

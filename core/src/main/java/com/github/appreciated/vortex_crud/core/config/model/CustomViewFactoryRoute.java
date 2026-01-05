@@ -57,16 +57,4 @@ public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> imple
         // CustomViewFactoryRoute doesn't use fields, return empty list
         return Collections.emptyList();
     }
-
-    @Override
-    public FormRouteProvider<ModelClass, FieldType, RepositoryType> dataStoreConfig(DataStoreConfig<ModelClass, FieldType, RepositoryType> config) {
-        this.dataStoreConfig = config;
-        return this;
-    }
-
-    @Override
-    public FormRouteProvider<ModelClass, FieldType, RepositoryType> title(String title) {
-        this.title = title;
-        return this;
-    }
 }

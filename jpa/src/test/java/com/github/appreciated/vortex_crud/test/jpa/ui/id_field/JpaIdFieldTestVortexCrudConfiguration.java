@@ -24,7 +24,7 @@ import java.util.Map;
 public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigurationProvider<JpaRepository<?, ?>, String, JpaRepository<?, ?>> {
 
     private final JpaIdFieldRepository repository;
-    private JpaFieldAnnotationRegistryService annotationRegistryService;
+    private final JpaFieldAnnotationRegistryService annotationRegistryService;
     private final JpaFieldService fieldService;
 
     public JpaIdFieldTestVortexCrudConfiguration(JpaIdFieldRepository repository, JpaFieldAnnotationRegistryService annotationRegistryService, JpaFieldService fieldService) {
