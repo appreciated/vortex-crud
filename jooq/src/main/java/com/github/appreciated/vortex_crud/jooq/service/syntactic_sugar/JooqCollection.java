@@ -8,7 +8,7 @@ import org.jooq.impl.TableImpl;
 
 
 public class JooqCollection {
-    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>, ?, ?> builder() {
+    public static Collection.CollectionBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
         return Collection.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder();
     }
 }

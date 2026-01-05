@@ -22,8 +22,6 @@ import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Getter
 public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> {
 
@@ -31,20 +29,18 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @lombok.NonNull
     private String title;
 
     private boolean defaultRoute;
 
-    @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CalendarFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory;
 
-    @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
     private boolean hiddenInMenu;
 
-    @Builder.Default
-    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+    private VortexCrudItemFactory<FieldType> itemFactory;
 
     @lombok.NonNull
     private FieldType titleField;
@@ -80,10 +76,68 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    @lombok.Singular
     private List<RouteFilter<FieldType>> routeFilters;
 
     public List<RouteFilter<FieldType>> filters() {
         return routeFilters;
+    }
+
+    @Builder
+    public CalendarRoute(
+            @lombok.NonNull DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
+            @lombok.NonNull String title,
+            boolean defaultRoute,
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory,
+            VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory,
+            boolean hiddenInMenu,
+            VortexCrudItemFactory<FieldType> itemFactory,
+            @lombok.NonNull FieldType titleField,
+            FieldType descriptionField,
+            @lombok.NonNull FieldType startDateField,
+            FieldType endDateField,
+            FieldType allDayField,
+            FieldType colorField,
+            FieldType imageField,
+            VortexCrudResourceProvider resourceProvider,
+            boolean inlineEdit,
+            FieldType filterField,
+            SerializableSupplier<Component> iconFactory,
+            List<String> writeRoles,
+            List<String> readOnlyRoles,
+            FormRoute<ModelClass, FieldType, RepositoryType> form,
+            List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories,
+            List<RouteAction<FieldType, ModelClass>> routeActions,
+            @lombok.Singular List<RouteFilter<FieldType>> routeFilters
+    ) {
+        this.dataStoreConfig = dataStoreConfig;
+        this.title = title;
+        this.defaultRoute = defaultRoute;
+        this.factory = factory != null ? factory : new CalendarFactory<>();
+        this.dialogFactory = dialogFactory;
+        this.hiddenInMenu = hiddenInMenu;
+        this.itemFactory = itemFactory != null ? itemFactory : new CardFactory<>();
+        this.titleField = titleField;
+        this.descriptionField = descriptionField;
+        this.startDateField = startDateField;
+        this.endDateField = endDateField;
+        this.allDayField = allDayField;
+        this.colorField = colorField;
+        this.imageField = imageField;
+        this.resourceProvider = resourceProvider;
+        this.inlineEdit = inlineEdit;
+        this.filterField = filterField;
+        this.iconFactory = iconFactory;
+        this.writeRoles = writeRoles;
+        this.readOnlyRoles = readOnlyRoles;
+        this.menuActionFactories = menuActionFactories;
+        this.routeActions = routeActions;
+        this.routeFilters = routeFilters;
+
+        // Inject parent's dataStoreConfig and title into child form
+        this.form = form;
+        if (this.form != null) {
+            this.form.dataStoreConfig(this.dataStoreConfig);
+            this.form.title(this.title);
+        }
     }
 }

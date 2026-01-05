@@ -1,14 +1,12 @@
 package com.github.appreciated.vortex_crud.test.jooq.ui.search_route;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
-import com.github.appreciated.vortex_crud.jooq.models.Tables;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.SearchRouteTestRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqApplication;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqDataStoreConfig;
-import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFieldElement;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFormElement;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqFormRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridRoute;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
@@ -49,12 +47,10 @@ public class JooqSearchRouteVortexCrudConfiguration implements VortexCrudConfigu
                         .build();
 
         // Create a form route for editing items
-        JooqFormRoute formRoute = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.search-test.edit.title")
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> formRoute = JooqFormRoute.builder()
                 .titleField(SEARCH_ROUTE_TEST.NAME)
                 .fields(List.of(
-                        JooqFieldElement.of(SEARCH_ROUTE_TEST.NAME, "search-test.labels.name").build()
+                        JooqFormElement.of(SEARCH_ROUTE_TEST.NAME, "search-test.labels.name").build()
                 ))
                 .build();
 

@@ -8,10 +8,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.MultiFormRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.List;
@@ -23,15 +20,17 @@ import java.util.List;
 @Getter
 public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    @lombok.NonNull
+    @Setter
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @Setter
     private String title;
 
     /**
      * List of form routes to be rendered as multiple forms within this multi-form route.
      */
+    @lombok.NonNull
     private List<FormRoute<ModelClass, FieldType, RepositoryType>> forms;
 
     @Builder.Default
@@ -65,7 +64,7 @@ public class MultiFormRoute<ModelClass, FieldType, RepositoryType> implements Fo
     }
 
     @Override
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+    public List<InternalFormElement<FieldType>> fields() {
         return List.of();
     }
 

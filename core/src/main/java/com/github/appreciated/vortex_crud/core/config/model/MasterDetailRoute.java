@@ -10,10 +10,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.master_detail.MasterDetailRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -21,29 +18,25 @@ import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
 @Getter
 public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>, FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    @lombok.NonNull
+    @Setter
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
     @I18nKey
+    @Setter
     private String title;
 
     private boolean defaultRoute;
 
-    @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new MasterDetailRouteFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory;
 
-    @Builder.Default
-    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = null;
+    private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory;
 
     private boolean hiddenInMenu;
 
-    @Builder.Default
-    private VortexCrudItemFactory<FieldType> itemFactory = new CardFactory<>();
+    private VortexCrudItemFactory<FieldType> itemFactory;
 
     private FieldType titleField;
 
@@ -70,8 +63,56 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
-    @lombok.Singular
     private List<RouteFilter<FieldType>> routeFilters;
+
+    @Builder
+    public MasterDetailRoute(
+            DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
+            String title,
+            boolean defaultRoute,
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory,
+            VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory,
+            boolean hiddenInMenu,
+            VortexCrudItemFactory<FieldType> itemFactory,
+            FieldType titleField,
+            FieldType descriptionField,
+            FieldType imageField,
+            VortexCrudResourceProvider resourceProvider,
+            boolean inlineEdit,
+            FieldType filterField,
+            SerializableSupplier<Component> iconFactory,
+            List<String> writeRoles,
+            List<String> readOnlyRoles,
+            @lombok.NonNull FormRoute<ModelClass, FieldType, RepositoryType> form,
+            List<RouteAction<FieldType, ModelClass>> routeActions,
+            @lombok.Singular List<RouteFilter<FieldType>> routeFilters
+    ) {
+        this.dataStoreConfig = dataStoreConfig;
+        this.title = title;
+        this.defaultRoute = defaultRoute;
+        this.factory = factory != null ? factory : new MasterDetailRouteFactory<>();
+        this.dialogFactory = dialogFactory;
+        this.hiddenInMenu = hiddenInMenu;
+        this.itemFactory = itemFactory != null ? itemFactory : new CardFactory<>();
+        this.titleField = titleField;
+        this.descriptionField = descriptionField;
+        this.imageField = imageField;
+        this.resourceProvider = resourceProvider;
+        this.inlineEdit = inlineEdit;
+        this.filterField = filterField;
+        this.iconFactory = iconFactory;
+        this.writeRoles = writeRoles;
+        this.readOnlyRoles = readOnlyRoles;
+        this.routeActions = routeActions;
+        this.routeFilters = routeFilters;
+
+        // Inject parent's dataStoreConfig and title into child form
+        this.form = form;
+        if (this.form != null) {
+            this.form.dataStoreConfig(this.dataStoreConfig);
+            this.form.title(this.title);
+        }
+    }
 
     @Override
     public FieldType titleField() {
@@ -86,7 +127,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     }
 
     @Override
-    public List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields() {
+    public List<InternalFormElement<FieldType>> fields() {
         return form.fields();
     }
 }

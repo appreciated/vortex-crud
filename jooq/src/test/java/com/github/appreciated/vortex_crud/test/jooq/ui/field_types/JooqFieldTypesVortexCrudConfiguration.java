@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.config.model.Selects;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.fields.NumericIdField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.PdfField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
@@ -65,13 +64,11 @@ public class JooqFieldTypesVortexCrudConfiguration
 
         // Form Route
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-            .dataStoreConfig(config)
-            .title("route.missing.title")
             .titleField(FIELD_TYPES_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
-                JooqFieldElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
-                JooqFieldElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
+                JooqFormElement.of(FIELD_TYPES_TEST.NAME, "Name").build(),
+                JooqFormElement.of(FIELD_TYPES_TEST.PDF_DOC, "PDF").build(),
+                JooqFormElement.of(FIELD_TYPES_TEST.NOTES, "Notes").build()
             ))
             .build();
 
@@ -83,7 +80,7 @@ public class JooqFieldTypesVortexCrudConfiguration
             .title("route.missing.list")
             .filterField(FIELD_TYPES_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
+                  JooqFormElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
             ))
             .form(form)
             .build());

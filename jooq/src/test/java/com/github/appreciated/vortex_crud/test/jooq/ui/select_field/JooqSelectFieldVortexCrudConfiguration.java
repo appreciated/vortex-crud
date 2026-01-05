@@ -55,11 +55,9 @@ public class JooqSelectFieldVortexCrudConfiguration
 
         // Form Route
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> form = JooqFormRoute.builder()
-            .dataStoreConfig(config)
-            .title("route.select-field.title")
             .titleField(SELECT_FIELD_TEST.NAME)
             .fields(List.of(
-                JooqFieldElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
+                JooqFormElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
             ))
             .build();
 
@@ -71,7 +69,7 @@ public class JooqSelectFieldVortexCrudConfiguration
             .title("route.select-field.title-list")
             .filterField(SELECT_FIELD_TEST.NAME)
             .columns(List.of(
-                  JooqFieldElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
+                  JooqFormElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
             ))
             .form(form)
             .build());

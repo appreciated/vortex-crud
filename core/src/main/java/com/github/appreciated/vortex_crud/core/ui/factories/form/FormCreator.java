@@ -30,7 +30,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
 
     public void bindAndAddToLayout(RepositoryType dataStoreKey,
                                    FormRouteProvider<ModelClass, FieldType, RepositoryType> routeRenderer,
-                                   List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fieldsViewConfig,
+                                   List<InternalFormElement<FieldType>> fieldsViewConfig,
                                    Object entity,
                                    VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                                    DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
@@ -39,7 +39,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
         Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
 
         // Iterate over the fields defined in the configuration
-        for (InternalFormElement<ModelClass, FieldType, RepositoryType> element : fieldsViewConfig) {
+        for (InternalFormElement<FieldType> element : fieldsViewConfig) {
             if (!(element instanceof Collection)) {
                 FieldType fieldName = element.field();
                 Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);

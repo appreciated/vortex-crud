@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.master_detail;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -11,7 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaMasterDetailRoute;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,12 +45,10 @@ public class JpaMasterDetailTestVortexCrudConfiguration implements VortexCrudCon
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> taskForm = JpaFormRoute.builder()
-                .dataStoreConfig(taskConfig)
-                .title("route.projects.title-cards")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "route.tasks.labels.title").build(),
-                        JpaFieldElement.builder("description", "route.tasks.labels.description").build()
+                        JpaFormElement.builder("title", "route.tasks.labels.title").build(),
+                        JpaFormElement.builder("description", "route.tasks.labels.description").build()
                 ))
                 .build();
 

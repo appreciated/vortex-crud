@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.calendar;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
@@ -11,7 +10,7 @@ import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaCalendarRoute;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,13 +41,11 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
                         .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> eventForm = FormRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
-                .dataStoreConfig(config)
-                .title("route.calendar-test.event")
                 .titleField("title")
                 .fields(List.of(
-                        JpaFieldElement.builder("title", "calendar-test.labels.title").build(),
-                        JpaFieldElement.builder("startDate", "calendar-test.labels.start").build(),
-                        JpaFieldElement.builder("endDate", "calendar-test.labels.end").build()
+                        JpaFormElement.builder("title", "calendar-test.labels.title").build(),
+                        JpaFormElement.builder("startDate", "calendar-test.labels.start").build(),
+                        JpaFormElement.builder("endDate", "calendar-test.labels.end").build()
                 ))
                 .build();
 

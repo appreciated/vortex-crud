@@ -35,7 +35,7 @@ public class JooqGridTestVortexCrudConfiguration
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         JooqDataStore store = new JooqDataStore(GRID_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(GRID_IMAGES)
-                        .dataStoreInstance((VortexCrudDataStore) store)
+                        .dataStoreInstance(store)
                         .fields(Map.of(
                                 GRID_IMAGES.ID, NumericIdField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
                                 GRID_IMAGES.TITLE, TextField.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder().build(),
@@ -45,13 +45,11 @@ public class JooqGridTestVortexCrudConfiguration
                         ))
                         .build();
 
-        JooqFormRoute imageForm = JooqFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.projects.title-cards")
+        FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> imageForm = JooqFormRoute.builder()
                 .titleField(GRID_IMAGES.TITLE)
                 .fields(List.of(
-                        JooqFieldElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
-                        JooqFieldElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
+                        JooqFormElement.of(GRID_IMAGES.TITLE, "route.images.labels.title").build(),
+                        JooqFormElement.of(GRID_IMAGES.URL, "route.images.labels.image").build()
                 ))
                 .build();
 

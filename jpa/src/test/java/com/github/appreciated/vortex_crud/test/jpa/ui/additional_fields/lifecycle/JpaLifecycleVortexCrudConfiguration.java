@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.test.jpa.ui.additional_fields.lifecycle;
 
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.FormRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
@@ -12,7 +11,7 @@ import com.github.appreciated.vortex_crud.jpa.service.config.JpaRepositoryDataSt
 import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
-import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFieldElement;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormElement;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaFormRoute;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -69,12 +68,10 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
                 .build();
 
         FormRoute<JpaRepository<?, ?>, String, JpaRepository<?, ?>> lifecycleForm = JpaFormRoute.builder()
-                .dataStoreConfig(config)
-                .title("route.lifecycle-test.title")
                 .titleField("name")
                 .fields(List.of(
-                        JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
-                        JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
+                        JpaFormElement.builder("name", "lifecycle-test.labels.name").build(),
+                        JpaFormElement.builder("description", "lifecycle-test.labels.description").build()
                 ))
                 .build();
 
@@ -84,8 +81,8 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
                 .title("route.lifecycle-test.title-list")
                 .filterField("name")
                 .columns(List.of(
-                        JpaFieldElement.builder("name", "lifecycle-test.labels.name").build(),
-                        JpaFieldElement.builder("description", "lifecycle-test.labels.description").build()
+                        JpaFormElement.builder("name", "lifecycle-test.labels.name").build(),
+                        JpaFormElement.builder("description", "lifecycle-test.labels.description").build()
                 ))
                 .form(lifecycleForm)
                 .build();

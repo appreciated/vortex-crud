@@ -11,34 +11,28 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.form.FormRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 @Getter
 public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
-    @lombok.NonNull
+    @Setter
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
 
+    @Setter
     @I18nKey
     private String title;
 
     private boolean defaultRoute;
 
-    @Builder.Default
     private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new FormRouteFactory<>();
 
-    @Builder.Default
     private VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory = new FormDialogFactory<>();
 
     private boolean hiddenInMenu;
@@ -60,7 +54,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private FieldType filterField;
 
     @lombok.NonNull
-    private List<InternalFormElement<ModelClass, FieldType, RepositoryType>> fields;
+    private List<InternalFormElement<FieldType>> fields;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -69,4 +63,41 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
     private List<String> readOnlyRoles;
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
+
+    @Builder
+    public FormRoute(
+            boolean defaultRoute,
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory,
+            VortexCrudDialogFactory<ModelClass, FieldType, RepositoryType> dialogFactory,
+            boolean hiddenInMenu,
+            VortexCrudItemFactory<FieldType> itemFactory,
+            FieldType titleField,
+            FieldType descriptionField,
+            FieldType imageField,
+            VortexCrudResourceProvider resourceProvider,
+            boolean inlineEdit,
+            FieldType filterField,
+            @lombok.NonNull List<InternalFormElement<FieldType>> fields,
+            SerializableSupplier<Component> iconFactory,
+            List<String> writeRoles,
+            List<String> readOnlyRoles,
+            List<RouteAction<FieldType, ModelClass>> routeActions
+    ) {
+        this.defaultRoute = defaultRoute;
+        this.factory = factory != null ? factory : new FormRouteFactory<>();
+        this.dialogFactory = dialogFactory != null ? dialogFactory : new FormDialogFactory<>();
+        this.hiddenInMenu = hiddenInMenu;
+        this.itemFactory = itemFactory;
+        this.titleField = titleField;
+        this.descriptionField = descriptionField;
+        this.imageField = imageField;
+        this.resourceProvider = resourceProvider;
+        this.inlineEdit = inlineEdit;
+        this.filterField = filterField;
+        this.fields = fields;
+        this.iconFactory = iconFactory;
+        this.writeRoles = writeRoles;
+        this.readOnlyRoles = readOnlyRoles;
+        this.routeActions = routeActions;
+    }
 }
