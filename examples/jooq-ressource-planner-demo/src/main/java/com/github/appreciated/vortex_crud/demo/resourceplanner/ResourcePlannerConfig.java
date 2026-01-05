@@ -63,6 +63,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
         JooqDataStore<EmailTemplatesRecord> emailTemplatesStore = new JooqDataStore<>(EMAIL_TEMPLATES.getRecordType(), dsl);
         JooqDataStore<SettingsRecord> settingsStore = new JooqDataStore<>(SETTINGS.getRecordType(), dsl);
+        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -157,6 +158,17 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                                 .filterField(EMAIL_TEMPLATES.NAME)
                                 .children(List.of(EMAIL_TEMPLATES.NAME, EMAIL_TEMPLATES.SUBJECT))
                                 .build()))
+                .build();
+
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance(notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.LINK, JooqTextField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         // Forms
@@ -373,6 +385,14 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .routes(routes)
                 .selects(Selects.builder()
                         .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
+                        .build())
+                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(notificationConfig)
+                        .timestampField(NOTIFICATION.CREATED_AT)
+                        .messageField(NOTIFICATION.MESSAGE)
+                        .readStatusField(NOTIFICATION.IS_READ)
+                        .readStatusValueForRead(1)
+                        .readStatusValueForUnread(0)
                         .build())
                 .build();
     }
