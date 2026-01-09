@@ -4,7 +4,6 @@ import com.github.appreciated.vortex_crud.core.annotation.I18nKey;
 import com.github.appreciated.vortex_crud.core.file_provider.VortexCrudResourceProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteAction;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFactory;
-import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormSlideFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.dialog.VortexCrudDialogFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.item.VortexCrudItemFactory;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
@@ -15,12 +14,15 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import java.util.Map;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class FormRoute<ModelClass, FieldType, RepositoryType> implements
+        RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType>,
+        FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     @Setter
     private DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig;
@@ -64,6 +66,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
 
     private List<RouteAction<FieldType, ModelClass>> routeActions;
 
+    private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
+
     @Builder
     public FormRoute(
             boolean defaultRoute,
@@ -81,7 +85,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
-            List<RouteAction<FieldType, ModelClass>> routeActions
+            List<RouteAction<FieldType, ModelClass>> routeActions,
+            Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes
     ) {
         this.defaultRoute = defaultRoute;
         this.factory = factory != null ? factory : new FormRouteFactory<>();
@@ -99,5 +104,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements FormRou
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
         this.routeActions = routeActions;
+        this.routes = routes;
     }
 }

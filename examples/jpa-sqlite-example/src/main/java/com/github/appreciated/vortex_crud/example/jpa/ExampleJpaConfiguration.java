@@ -351,7 +351,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(MENU::create)
                 .dataStoreConfig(projectConfig)
                 .title("route.submenu.title")
-                .childrenMap(Map.of(
+                .routes(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
                 .build());

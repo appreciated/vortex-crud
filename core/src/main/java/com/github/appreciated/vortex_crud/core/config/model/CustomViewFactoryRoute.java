@@ -18,7 +18,10 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
-public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements FormRouteProvider<ModelClass, FieldType, RepositoryType> {
+public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements
+        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>,
+        RouteRendererMultipleChildren<ModelClass, FieldType, RepositoryType>,
+        FormRouteProvider<ModelClass, FieldType, RepositoryType> {
 
     @Setter
     @lombok.NonNull
@@ -43,6 +46,12 @@ public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> imple
     private List<String> writeRoles;
 
     private List<String> readOnlyRoles;
+
+    // Single child support
+    private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
+
+    // Multiple children support
+    private java.util.Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     @Builder.Default
     private boolean isDeleteButtonHidden = true;

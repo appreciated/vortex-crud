@@ -59,7 +59,7 @@ public class JpaSubrouteTestVortexCrudConfiguration implements VortexCrudConfigu
         routes.put("tasks", JpaSubmenuRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.tasks.title")
-                .childrenMap(Map.of(
+                .routes(Map.of(
                         "open", JpaMasterDetailRoute.builder()
                                 .dataStoreConfig(taskConfig)
                                 .title("route.open-tasks.title")

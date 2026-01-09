@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     private List<String> readOnlyRoles;
 
     @lombok.NonNull
-    private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> childrenMap;
+    private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     @Override
     public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() {

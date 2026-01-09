@@ -65,8 +65,8 @@ public class VortexCrudPathToRouteResolver {
 
         // If this route has children, recurse into them
         if (currentRouteRenderer instanceof RouteRendererMultipleChildren multi &&
-            multi.childrenMap() != null && !multi.childrenMap().isEmpty()) {
-            Map<String, RouteRenderer<?,?,?>> stringRouteRendererMap = multi.childrenMap();
+            multi.routes() != null && !multi.routes().isEmpty()) {
+            Map<String, RouteRenderer<?,?,?>> stringRouteRendererMap = multi.routes();
             buildRouteMapForPathSection(sectionIndex + 1, stringRouteRendererMap);
         } else if (currentRouteRenderer instanceof RouteRendererSingleChild<?, ?, ?> single &&
                    single.form() != null) {

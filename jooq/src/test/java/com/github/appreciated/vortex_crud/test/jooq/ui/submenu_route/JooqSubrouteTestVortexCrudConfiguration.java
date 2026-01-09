@@ -49,7 +49,7 @@ public class JooqSubrouteTestVortexCrudConfiguration implements VortexCrudConfig
         routes.put("tasks", JooqSubmenuRoute.builder()
                 .dataStoreConfig(config)
                 .title("route.tasks.title")
-                .childrenMap(Map.of(
+                .routes(Map.of(
                         "open", JooqMasterDetailRoute.builder()
                                 .dataStoreConfig(config)
                                 .title("route.open-tasks.title")

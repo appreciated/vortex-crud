@@ -580,6 +580,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .dataStoreConfig(repositoryConfig)
                         .viewFactory(new RepositoryDetailViewFactory(dsl))
                         .title("route.repositories.title")
+                        .routes(Map.of("edit", repositoryForm))
                         .build())
                 .routeActions(Collections.singletonList(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()

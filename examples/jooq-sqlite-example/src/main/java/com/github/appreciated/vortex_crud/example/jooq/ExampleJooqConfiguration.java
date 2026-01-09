@@ -407,7 +407,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(MENU::create)
                 .dataStoreConfig(projectsConfig)
                 .title("route.submenu.title")
-                .childrenMap(Map.of(
+                .routes(Map.of(
                         "project-form", projectForm,
                         "image-form", imageForm))
                 .build());

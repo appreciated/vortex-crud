@@ -70,7 +70,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
         addToSecondary(detailLayout);
 
         setSizeFull();
-        initializeRouteList(routeRenderer.childrenMap(), currentPathIndex, routeResolver);
+        initializeRouteList(routeRenderer.routes(), currentPathIndex, routeResolver);
 
         if (hasActiveSubroute(currentPathIndex, routeResolver)) {
             showRouteDetail(getActiveSubroute(currentPathIndex, routeResolver), routeResolver);
@@ -86,7 +86,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
     }
 
     private RouteRenderer<ModelClass, FieldType, RepositoryType> getActiveSubroute(Integer currentPathIndex,  VortexCrudPathToRouteResolver routeResolver) {
-        return routeRenderer.childrenMap().get(routeResolver.getPathForIndex(currentPathIndex + 1));
+        return routeRenderer.routes().get(routeResolver.getPathForIndex(currentPathIndex + 1));
     }
 
     private void initializeRouteList(Map<String, ? extends RouteRenderer<ModelClass, FieldType, RepositoryType>> childRoutes, Integer currentPathIndex,  VortexCrudPathToRouteResolver routeResolver) {
@@ -117,7 +117,7 @@ public class Submenu<ModelClass, FieldType, RepositoryType> extends SplitLayout 
                 if (active != null) {
                     active.removeClassName("active");
                 }
-                showRouteDetail(routeRenderer.childrenMap().get(key), pathVariables);
+                showRouteDetail(routeRenderer.routes().get(key), pathVariables);
                 routeButton.addClassName("active");
                 active = routeButton;
             }));
