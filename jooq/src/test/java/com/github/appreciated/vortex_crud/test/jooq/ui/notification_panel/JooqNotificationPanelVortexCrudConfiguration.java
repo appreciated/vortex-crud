@@ -52,7 +52,7 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
                 .build();
 
         return JooqApplication.builder()
-                .applicationName("Notification Test App")
+                .applicationName("application.name.notification-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(config)

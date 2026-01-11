@@ -48,7 +48,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                 .build();
 
         return JpaApplication.builder()
-                .applicationName("Notification Test App")
+                .applicationName("application.name.notification-test")
                 .i18nBundlePrefix("ui_test_i18n")
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                         .dataStoreConfig(config)
