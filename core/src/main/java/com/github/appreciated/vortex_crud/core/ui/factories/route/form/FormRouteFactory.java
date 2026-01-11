@@ -21,6 +21,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.binder.Binder;
+import com.github.appreciated.vortex_crud.core.exception.BusinessValidationException;
 import com.vaadin.flow.data.binder.ValidationException;
 import jakarta.annotation.Nullable;
 
@@ -125,6 +126,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                 UI.getCurrent().getPage().getHistory().back();
             } catch (ValidationException e) {
                 Notification notification = Notification.show(layout.getTranslation("form.notification.failed-to-save", e.getMessage()));
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            } catch (BusinessValidationException e) {
+                Notification notification = Notification.show(e.getMessage());
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         };

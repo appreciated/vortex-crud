@@ -1,16 +1,23 @@
 package com.github.appreciated.vortex_crud.demo.resourceplanner.service;
 
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.AppointmentRecord;
+import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.PersonRecord;
+import com.github.appreciated.vortex_crud.core.exception.BusinessValidationException;
+import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.RoomRecord;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
-import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.APPOINTMENT;
-import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.CUSTOMER;
+import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.*;
 
 /**
  * Business logic service for appointment-related operations.
@@ -22,6 +29,9 @@ public class AppointmentBusinessService {
     private static final Logger log = LoggerFactory.getLogger(AppointmentBusinessService.class);
     private final DSLContext dsl;
     private JooqDataStore<AppointmentRecord> appointmentStore;
+
+    @Autowired(required = false)
+    private JavaMailSender emailSender;
 
     public AppointmentBusinessService(DSLContext dsl) {
         this.dsl = dsl;
@@ -56,6 +66,11 @@ public class AppointmentBusinessService {
 
         // Room Check
         if (record.getRoomId() != null) {
+            RoomRecord room = dsl.selectFrom(ROOM).where(ROOM.ID.eq(record.getRoomId())).fetchOne();
+            if (room != null) {
+                checkWorkingHours(start, end, room.getWorkingHoursStart(), room.getWorkingHoursEnd(), "Room");
+            }
+
             boolean roomBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
                     .where(APPOINTMENT.ROOM_ID.eq(record.getRoomId()))
                     .and(APPOINTMENT.START_TIME.lessThan(end))
@@ -64,12 +79,17 @@ public class AppointmentBusinessService {
                     .and(id != null ? APPOINTMENT.ID.ne(id) : org.jooq.impl.DSL.noCondition())
             );
             if (roomBusy) {
-                throw new RuntimeException("Room is not available for the selected time.");
+                throw new BusinessValidationException("Room is not available for the selected time.");
             }
         }
 
         // Person Check
         if (record.getPersonId() != null) {
+            PersonRecord person = dsl.selectFrom(PERSON).where(PERSON.ID.eq(record.getPersonId())).fetchOne();
+            if (person != null) {
+                checkWorkingHours(start, end, person.getWorkingHoursStart(), person.getWorkingHoursEnd(), "Person");
+            }
+
             boolean personBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
                     .where(APPOINTMENT.PERSON_ID.eq(record.getPersonId()))
                     .and(APPOINTMENT.START_TIME.lessThan(end))
@@ -78,7 +98,29 @@ public class AppointmentBusinessService {
                     .and(id != null ? APPOINTMENT.ID.ne(id) : org.jooq.impl.DSL.noCondition())
             );
             if (personBusy) {
-                throw new RuntimeException("Person is not available for the selected time.");
+                throw new BusinessValidationException("Person is not available for the selected time.");
+            }
+        }
+    }
+
+    private void checkWorkingHours(LocalDateTime start, LocalDateTime end, String startStr, String endStr, String entityName) {
+        if (startStr != null && endStr != null) {
+            try {
+                // Handle both HH:mm and HH:mm:ss formats
+                LocalTime whStart = LocalTime.parse(startStr, startStr.length() == 5 ? DateTimeFormatter.ofPattern("HH:mm") : DateTimeFormatter.ISO_LOCAL_TIME);
+                LocalTime whEnd = LocalTime.parse(endStr, endStr.length() == 5 ? DateTimeFormatter.ofPattern("HH:mm") : DateTimeFormatter.ISO_LOCAL_TIME);
+
+                LocalTime apptStart = start.toLocalTime();
+                LocalTime apptEnd = end.toLocalTime();
+
+                if (apptStart.isBefore(whStart) || apptEnd.isAfter(whEnd)) {
+                    throw new BusinessValidationException(entityName + " is only available between " + whStart + " and " + whEnd + ".");
+                }
+            } catch (Exception e) {
+                 if (e instanceof BusinessValidationException) {
+                     throw (BusinessValidationException) e;
+                 }
+                 log.error("Error parsing working hours for {}: {} - {}", entityName, startStr, endStr, e);
             }
         }
     }
@@ -164,7 +206,6 @@ public class AppointmentBusinessService {
 
     /**
      * Sends email notification to the customer about the appointment.
-     * Currently logs the notification instead of actually sending email.
      *
      * @param record the appointment record
      */
@@ -178,8 +219,23 @@ public class AppointmentBusinessService {
                 .fetchOneInto(String.class);
 
         if (email != null && !email.isBlank()) {
-            log.info("📧 EMAIL NOTIFICATION: To: {}, Subject: Appointment Update, Body: Your appointment on {} is {}.",
-                    email, record.getStartTime(), record.getStatus());
+            String subject = "Appointment Update";
+            String body = String.format("Your appointment on %s is %s.", record.getStartTime(), record.getStatus());
+
+            if (emailSender != null) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setTo(email);
+                    message.setSubject(subject);
+                    message.setText(body);
+                    emailSender.send(message);
+                    log.info("📧 Email sent to: {}", email);
+                } catch (Exception e) {
+                    log.error("Failed to send email to {}", email, e);
+                }
+            } else {
+                log.info("📧 EMAIL NOTIFICATION (Mock): To: {}, Subject: {}, Body: {}.", email, subject, body);
+            }
         }
     }
 }
