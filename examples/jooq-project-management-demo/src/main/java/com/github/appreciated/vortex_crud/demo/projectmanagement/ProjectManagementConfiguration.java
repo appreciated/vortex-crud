@@ -13,6 +13,7 @@ import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.ProjectStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskType;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.view.DashboardView;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -27,6 +28,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -35,6 +38,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +49,7 @@ import static com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.Tab
 @Service
 public class ProjectManagementConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
+    private static final Logger log = LoggerFactory.getLogger(ProjectManagementConfiguration.class);
     private final DSLContext dsl;
 
     public ProjectManagementConfiguration(DSLContext dsl) {
@@ -53,12 +58,62 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        // Notification Hooks
+        DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
+                .afterCreate(record -> {
+                    try {
+                        String title = record.get(TASK.TITLE);
+                        Integer projectId = record.get(TASK.PROJECT_ID);
+                        Integer assigneeId = record.get(TASK.ASSIGNEE_ID);
+                        var project = dsl.selectFrom(PROJECT).where(PROJECT.ID.eq(projectId)).fetchOne();
+                        if (project != null) {
+                            if (assigneeId != null) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(assigneeId);
+                                notif.setTitle("Assigned to Task: " + title);
+                                notif.setMessage("In project " + project.getName());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now());
+                                notif.store();
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.error("Failed to create notification for task creation", e);
+                    }
+                })
+                .build();
+
+        DataStoreHooks<TaskCommentRecord> commentHooks = DataStoreHooks.<TaskCommentRecord>builder()
+                .afterCreate(record -> {
+                    try {
+                        Integer taskId = record.get(TASK_COMMENT.TASK_ID);
+                        Integer authorId = record.get(TASK_COMMENT.AUTHOR_ID);
+                        var task = dsl.selectFrom(TASK).where(TASK.ID.eq(taskId)).fetchOne();
+
+                        if (task != null) {
+                            Integer assigneeId = task.get(TASK.ASSIGNEE_ID);
+                            if (assigneeId != null && !assigneeId.equals(authorId)) {
+                                var notif = dsl.newRecord(NOTIFICATION);
+                                notif.setUserId(assigneeId);
+                                notif.setTitle("New Comment on Task: " + task.getTitle());
+                                notif.setMessage(record.getContent());
+                                notif.setIsRead(0);
+                                notif.setCreatedAt(LocalDateTime.now());
+                                notif.store();
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.error("Failed to create notification for task comment", e);
+                    }
+                })
+                .build();
+
         // Data Stores
         JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
-        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl);
+        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl, taskHooks);
         JooqDataStore<MilestoneRecord> milestoneStore = new JooqDataStore<>(MILESTONE.getRecordType(), dsl);
         JooqDataStore<LabelRecord> labelStore = new JooqDataStore<>(LABEL.getRecordType(), dsl);
-        JooqDataStore<TaskCommentRecord> taskCommentStore = new JooqDataStore<>(TASK_COMMENT.getRecordType(), dsl);
+        JooqDataStore<TaskCommentRecord> taskCommentStore = new JooqDataStore<>(TASK_COMMENT.getRecordType(), dsl, commentHooks);
         JooqDataStore<TaskLabelRecord> taskLabelStore = new JooqDataStore<>(TASK_LABEL.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
@@ -410,13 +465,19 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
+        routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.dashboard.title")
+                .defaultRoute(true)
+                .componentClass(DashboardView.class)
+                .build());
+
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
                 .build());
 
         routes.put("projects", JooqGridRoute.builder()
-                .defaultRoute(true)
+                .defaultRoute(false)
                 .dataStoreConfig(projectConfig)
                 .iconFactory(VaadinIcon.RECORDS::create)
                 .title("route.projects.title")
