@@ -15,8 +15,6 @@ import java.util.List;
 
 @Accessors(fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@SuperBuilder
 @Getter
 public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> implements
         RouteRendererSingleChild<ModelClass, FieldType, RepositoryType>,
@@ -36,8 +34,7 @@ public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> imple
 
     private boolean defaultRoute;
 
-    @Builder.Default
-    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory = new CustomViewFactoryRouteFactory<>();
+    private VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory;
 
     private boolean hiddenInMenu;
 
@@ -53,8 +50,55 @@ public class CustomViewFactoryRoute<ModelClass, FieldType, RepositoryType> imple
     // Multiple children support
     private java.util.Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
-    @Builder.Default
-    private boolean isDeleteButtonHidden = true;
+    private boolean isDeleteButtonHidden;
+
+    @Builder
+    public CustomViewFactoryRoute(
+            @lombok.NonNull DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
+            @lombok.NonNull CustomViewFactory<ModelClass> viewFactory,
+            String title,
+            boolean defaultRoute,
+            VortexCrudRouteFactory<ModelClass, FieldType, RepositoryType> factory,
+            boolean hiddenInMenu,
+            SerializableSupplier<Component> iconFactory,
+            List<String> writeRoles,
+            List<String> readOnlyRoles,
+            FormRouteProvider<ModelClass, FieldType, RepositoryType> form,
+            java.util.Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes,
+            boolean isDeleteButtonHidden
+    ) {
+        this.dataStoreConfig = dataStoreConfig;
+        this.viewFactory = viewFactory;
+        this.title = title;
+        this.defaultRoute = defaultRoute;
+        this.factory = factory != null ? factory : new CustomViewFactoryRouteFactory<>();
+        this.hiddenInMenu = hiddenInMenu;
+        this.iconFactory = iconFactory;
+        this.writeRoles = writeRoles;
+        this.readOnlyRoles = readOnlyRoles;
+        this.isDeleteButtonHidden = isDeleteButtonHidden;
+
+        // Inject parent's dataStoreConfig into child form
+        this.form = form;
+        if (this.form != null && this.form.dataStoreConfig() == null) {
+            this.form.dataStoreConfig(this.dataStoreConfig);
+            this.form.title(this.title);
+        }
+
+        // Inject parent's dataStoreConfig into child routes
+        this.routes = routes;
+        if (this.routes != null) {
+            for (RouteRenderer<ModelClass, FieldType, RepositoryType> childRoute : this.routes.values()) {
+                if (childRoute.dataStoreConfig() == null && childRoute instanceof FormRouteProvider) {
+                    @SuppressWarnings("unchecked")
+                    FormRouteProvider<ModelClass, FieldType, RepositoryType> formRoute =
+                        (FormRouteProvider<ModelClass, FieldType, RepositoryType>) childRoute;
+                    formRoute.dataStoreConfig(this.dataStoreConfig);
+                    formRoute.title(this.title);
+                }
+            }
+        }
+    }
 
     @Override
     public boolean isDeleteButtonHidden() {
