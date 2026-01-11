@@ -33,7 +33,7 @@ public class LoginView<ModelClass, FieldType, RepositoryType> extends VerticalLa
 
     private static final Logger log = LoggerFactory.getLogger(LoginView.class);
     private final LoginForm login = new LoginForm();
-    private final IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement;
+    private final IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> userManagement;
     private final VortexCrudDataStore<FieldType, Object> dataStore;
     private final ReflectionService<FieldType> reflectionService;
     private final PasswordEncoder passwordEncoder;

@@ -24,7 +24,7 @@ public class ClassBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
     /**
      * Constructor with entity-specific strategies only (no global roles).
      */
-    public ClassBasedRoleResolutionStrategy(Map<Class<?>, RoleResolutionStrategy<FieldType>> strategies) {
+    public ClassBasedRoleResolutionStrategy(Map<Class<?>, ? extends RoleResolutionStrategy<? extends FieldType>> strategies) {
         this(strategies, null);
     }
 
@@ -34,10 +34,11 @@ public class ClassBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
      * @param strategies Map of entity class to role resolution strategy
      * @param globalStrategy Strategy for resolving global roles (used when targetEntity is null)
      */
+    @SuppressWarnings("unchecked")
     public ClassBasedRoleResolutionStrategy(
-            Map<Class<?>, RoleResolutionStrategy<FieldType>> strategies,
+            Map<Class<?>, ? extends RoleResolutionStrategy<? extends FieldType>> strategies,
             RoleResolutionStrategy<FieldType> globalStrategy) {
-        this.strategies = strategies;
+        this.strategies = (Map<Class<?>, RoleResolutionStrategy<FieldType>>) strategies;
         this.globalStrategy = globalStrategy;
     }
 

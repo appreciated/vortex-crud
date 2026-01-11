@@ -92,7 +92,7 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
         List<String> writeRoles = resource.writeRoles();
         if (writeRoles == null || writeRoles.isEmpty()) {
             // Use default write roles from IdentityAndAccessManagement
-            IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = null;
+            IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> iam = null;
             if (configService.configuration() != null) {
                 iam = configService.configuration().identityAndAccessManagement();
             }
@@ -126,7 +126,7 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
         List<String> writeRoles = resource.writeRoles();
         List<String> readOnlyRoles = resource.readOnlyRoles();
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = null;
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> iam = null;
         if (configService.configuration() != null) {
             iam = configService.configuration().identityAndAccessManagement();
         }

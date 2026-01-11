@@ -50,7 +50,7 @@ public class DynamicRouteGenerator implements VaadinServiceInitListener {
             }
         });
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> userManagement = application.identityAndAccessManagement();
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> userManagement = application.identityAndAccessManagement();
         if (userManagement != null) {
             configuration.setRoute("login", userManagement.loginView());
             configuration.setRoute("sign-up", userManagement.signUpView());

@@ -38,7 +38,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         FormCreator<ModelClass, FieldType, RepositoryType> formCreator = context.formCreator();
         ReflectionService<FieldType> reflectionService = context.reflectionService();
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> config = configService.configuration().identityAndAccessManagement();
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> config = configService.configuration().identityAndAccessManagement();
 
         if (config == null) {
             Notification.show("User management not configured").addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -53,7 +53,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
         VortexCrudDataStore<FieldType, Object> dataStore = (VortexCrudDataStore<FieldType, Object>) config.dataStoreInstance();
         Object entity = dataStore.newInstance();
 
-        DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig = config.dataStoreConfig();
+        DataStoreConfig<? extends ModelClass, FieldType, RepositoryType> dataStoreConfig = config.dataStoreConfig();
 
         Binder<Object> binder = new Binder<>(Object.class);
         binder.setBean(entity);
@@ -83,7 +83,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 allFields,
                 entity,
                 context,
-                dataStoreConfig,
+                (DataStoreConfig<ModelClass, FieldType, RepositoryType>) dataStoreConfig,
                 binder,
                 formLayout
         );

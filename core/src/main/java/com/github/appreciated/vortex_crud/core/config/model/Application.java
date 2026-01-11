@@ -23,7 +23,7 @@ public class Application<ModelClass, FieldType, RepositoryType> implements Valid
 
     private String i18nBundlePrefix;
 
-    private IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> identityAndAccessManagement;
+    private IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> identityAndAccessManagement;
 
     private Selects selects;
 

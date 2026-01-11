@@ -44,7 +44,7 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
             return Collections.emptyList();
         }
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
         if (iam == null) {
             return Collections.emptyList();
         }
@@ -72,7 +72,7 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
             return Collections.emptyList();
         }
 
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
         if (iam == null) {
             return Collections.emptyList();
         }
@@ -94,7 +94,7 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
      * @return The current user entity, or null if not authenticated
      */
     public Object currentUserEntity() {
-        IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
+        IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> iam = getIdentityAndAccessManagement();
         if (iam == null) {
             return null;
         }
@@ -139,7 +139,7 @@ public class LocalStorageUserContextService<ModelClass, FieldType, RepositoryTyp
                 .collect(Collectors.toSet());
     }
 
-    private IdentityAndAccessManagement<ModelClass, FieldType, RepositoryType> getIdentityAndAccessManagement() {
+    private IdentityAndAccessManagement<? extends ModelClass, FieldType, RepositoryType> getIdentityAndAccessManagement() {
         if (configService == null || configService.configuration() == null) {
             return null;
         }
