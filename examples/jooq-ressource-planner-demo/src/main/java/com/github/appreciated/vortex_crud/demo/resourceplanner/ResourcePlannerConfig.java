@@ -54,7 +54,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         JooqDataStore<PersonRecord> personStore = new JooqDataStore<>(PERSON.getRecordType(), dsl);
         JooqDataStore<AppointmentTypeRecord> typeStore = new JooqDataStore<>(APPOINTMENT_TYPE.getRecordType(), dsl);
         JooqDataStore<PersonAppointmentTypeRecord> personTypeStore = new JooqDataStore<>(PERSON_APPOINTMENT_TYPE.getRecordType(), dsl);
-        //TODO UNUSED
         JooqDataStore<CustomerRecord> customerStore = new JooqDataStore<>(CUSTOMER.getRecordType(), dsl);
         JooqDataStore<AppointmentRecord> appointmentStore = new JooqDataStore<>(APPOINTMENT.getRecordType(), dsl, appointmentHooks);
         appointmentBusinessService.setAppointmentStore(appointmentStore);
@@ -82,6 +81,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         ROOM.NAME, JooqTextField.builder().required(true).build(),
                         ROOM.CAPACITY, JooqIntegerField.builder().build(),
                         ROOM.DESCRIPTION, JooqTextAreaField.builder().build(),
+                        ROOM.WORKING_HOURS_START, JooqTextField.builder().build(),
+                        ROOM.WORKING_HOURS_END, JooqTextField.builder().build(),
                         ROOM.IS_ACTIVE, JooqCheckboxField.builder().build()))
                 .build();
 
@@ -92,6 +93,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         PERSON.NAME, JooqTextField.builder().required(true).build(),
                         PERSON.EMAIL, JooqEmailField.builder().build(),
                         PERSON.TITLE, JooqTextField.builder().build(),
+                        PERSON.WORKING_HOURS_START, JooqTextField.builder().build(),
+                        PERSON.WORKING_HOURS_END, JooqTextField.builder().build(),
                         PERSON.IS_ACTIVE, JooqCheckboxField.builder().build()))
                 .build();
 
@@ -178,6 +181,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFormElement.of(ROOM.NAME, "route.rooms.labels.name").build(),
                         JooqFormElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").build(),
                         JooqFormElement.of(ROOM.DESCRIPTION, "route.rooms.labels.description").build(),
+                        JooqFormElement.of(ROOM.WORKING_HOURS_START, "route.rooms.labels.working_hours_start").build(),
+                        JooqFormElement.of(ROOM.WORKING_HOURS_END, "route.rooms.labels.working_hours_end").build(),
                         JooqFormElement.of(ROOM.IS_ACTIVE, "route.rooms.labels.active").build()))
                 .build();
 
@@ -204,6 +209,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFormElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
                         JooqFormElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
                         JooqFormElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
+                        JooqFormElement.of(PERSON.WORKING_HOURS_START, "route.persons.labels.working_hours_start").build(),
+                        JooqFormElement.of(PERSON.WORKING_HOURS_END, "route.persons.labels.working_hours_end").build(),
                         JooqFormElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
                         JooqCollection.builder()
                                 .label("route.persons.labels.services")

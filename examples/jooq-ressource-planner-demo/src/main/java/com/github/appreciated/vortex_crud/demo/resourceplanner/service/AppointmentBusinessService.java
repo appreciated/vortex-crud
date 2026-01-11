@@ -5,12 +5,16 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
-import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.APPOINTMENT;
-import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.CUSTOMER;
+import static com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.Tables.*;
 
 /**
  * Business logic service for appointment-related operations.
@@ -22,6 +26,9 @@ public class AppointmentBusinessService {
     private static final Logger log = LoggerFactory.getLogger(AppointmentBusinessService.class);
     private final DSLContext dsl;
     private JooqDataStore<AppointmentRecord> appointmentStore;
+
+    @Autowired(required = false)
+    private JavaMailSender emailSender;
 
     public AppointmentBusinessService(DSLContext dsl) {
         this.dsl = dsl;
@@ -56,6 +63,15 @@ public class AppointmentBusinessService {
 
         // Room Check
         if (record.getRoomId() != null) {
+            var room = dsl.select(ROOM.WORKING_HOURS_START, ROOM.WORKING_HOURS_END)
+                    .from(ROOM)
+                    .where(ROOM.ID.eq(record.getRoomId()))
+                    .fetchOne();
+
+            if (room != null) {
+                checkWorkingHours(start, end, room.value1(), room.value2(), "Room");
+            }
+
             boolean roomBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
                     .where(APPOINTMENT.ROOM_ID.eq(record.getRoomId()))
                     .and(APPOINTMENT.START_TIME.lessThan(end))
@@ -70,6 +86,15 @@ public class AppointmentBusinessService {
 
         // Person Check
         if (record.getPersonId() != null) {
+            var person = dsl.select(PERSON.WORKING_HOURS_START, PERSON.WORKING_HOURS_END)
+                    .from(PERSON)
+                    .where(PERSON.ID.eq(record.getPersonId()))
+                    .fetchOne();
+
+            if (person != null) {
+                checkWorkingHours(start, end, person.value1(), person.value2(), "Person");
+            }
+
             boolean personBusy = dsl.fetchExists(dsl.selectFrom(APPOINTMENT)
                     .where(APPOINTMENT.PERSON_ID.eq(record.getPersonId()))
                     .and(APPOINTMENT.START_TIME.lessThan(end))
@@ -80,6 +105,23 @@ public class AppointmentBusinessService {
             if (personBusy) {
                 throw new RuntimeException("Person is not available for the selected time.");
             }
+        }
+    }
+
+    private void checkWorkingHours(LocalDateTime start, LocalDateTime end, String startStr, String endStr, String entityName) {
+        if (startStr == null || endStr == null) {
+            return;
+        }
+        try {
+            LocalTime workingStart = LocalTime.parse(startStr, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime workingEnd = LocalTime.parse(endStr, DateTimeFormatter.ofPattern("HH:mm"));
+
+            if (start.toLocalTime().isBefore(workingStart) || end.toLocalTime().isAfter(workingEnd)) {
+                throw new RuntimeException(entityName + " is not available during these hours (" + startStr + " - " + endStr + ").");
+            }
+        } catch (Exception e) {
+             // invalid format, ignore or log
+            log.warn("Invalid working hours format for {}: {} - {}", entityName, startStr, endStr);
         }
     }
 
@@ -178,8 +220,23 @@ public class AppointmentBusinessService {
                 .fetchOneInto(String.class);
 
         if (email != null && !email.isBlank()) {
-            log.info("📧 EMAIL NOTIFICATION: To: {}, Subject: Appointment Update, Body: Your appointment on {} is {}.",
-                    email, record.getStartTime(), record.getStatus());
+            String subject = "Appointment Update";
+            String body = String.format("Your appointment on %s is %s.", record.getStartTime(), record.getStatus());
+
+            if (emailSender != null) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setTo(email);
+                    message.setSubject(subject);
+                    message.setText(body);
+                    emailSender.send(message);
+                    log.info("📧 SENT EMAIL to: {}", email);
+                } catch (Exception e) {
+                    log.error("Failed to send email to {}", email, e);
+                }
+            } else {
+                log.info("📧 [MOCKED] EMAIL NOTIFICATION: To: {}, Subject: {}, Body: {}", email, subject, body);
+            }
         }
     }
 }
