@@ -25,12 +25,12 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
     private Object currentEntityValue;
 
     public EntityComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                                 Field<ModelClass, FieldType, RepositoryType> dataStoreField,
+                                 Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField,
                                  ReflectionService<FieldType> reflectionService,
                                  VortexCrudDataStoreUtilStrategy dataStoreUtil,
                                  ReferenceFieldValueStrategy valueStrategy
     ) {
-        ReferenceField<ModelClass, FieldType, RepositoryType> refField = (ReferenceField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+        ReferenceField<? extends ModelClass, FieldType, RepositoryType> refField = (ReferenceField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) refField.dataStore();
         this.dataStoreUtil = dataStoreUtil;
         this.valueStrategy = valueStrategy;

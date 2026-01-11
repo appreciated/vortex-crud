@@ -6,5 +6,5 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 public interface RoleResolutionStrategy<FieldType> {
-    Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity);
+    Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity, Object targetEntity);
 }

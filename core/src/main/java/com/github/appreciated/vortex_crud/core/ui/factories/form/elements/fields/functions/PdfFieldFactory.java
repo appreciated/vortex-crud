@@ -14,8 +14,8 @@ import java.util.List;
 public class PdfFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        PdfField<ModelClass, FieldType, RepositoryType> pdfField = (PdfField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
+        PdfField<? extends ModelClass, FieldType, RepositoryType> pdfField = (PdfField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         return new PdfHasValue(pdfField.resourceProvider());
     }
 

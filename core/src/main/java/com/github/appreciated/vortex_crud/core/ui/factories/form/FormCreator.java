@@ -33,16 +33,16 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                    List<InternalFormElement<FieldType>> fieldsViewConfig,
                                    Object entity,
                                    VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                                   DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
+                                   DataStoreConfig<? extends ModelClass, FieldType, RepositoryType> dataStoreConfig,
                                    Binder<Object> binder,
                                    FormLayout form) {
-        Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
+        Map<FieldType, ? extends Field<? extends ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<FieldType> element : fieldsViewConfig) {
             if (!(element instanceof Collection)) {
                 FieldType fieldName = element.field();
-                Field<ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
+                Field<? extends ModelClass, FieldType, RepositoryType> field = fieldsConfig.get(fieldName);
                 if (field == null) {
                     throw new IllegalStateException("Field '" + fieldName + "' not found in the config under table '" + dataStoreKey + "'");
                 }

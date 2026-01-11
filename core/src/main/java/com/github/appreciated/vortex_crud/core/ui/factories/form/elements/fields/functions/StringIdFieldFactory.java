@@ -16,7 +16,7 @@ import java.util.List;
 public class StringIdFieldFactory<ModelClass, FieldType, RepositoryType> extends TextFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
         TextField textField = new TextField();
         textField.setReadOnly(true);
         return textField;

@@ -161,7 +161,7 @@ public class LocalStorageVortexCrudRbacPermissionChecker<ModelClass, FieldType, 
     }
 
     @Override
-    public FieldAccessLevel getUserFieldAccess(AccessControlled route, Field<ModelClass, FieldType, RepositoryType> field) {
+    public FieldAccessLevel getUserFieldAccess(AccessControlled route, Field<? extends ModelClass, FieldType, RepositoryType> field) {
         if (route == null || field == null) {
             return FieldAccessLevel.NONE;
         }

@@ -14,11 +14,11 @@ import java.util.*;
 public class SelectFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
         Selects selects = context.configService().configuration().selects();
         Select<?> select = new Select<>();
 
-        SelectField<ModelClass, FieldType, RepositoryType> sf = (SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+        SelectField<? extends ModelClass, FieldType, RepositoryType> sf = (SelectField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         String selectName = sf.values();
         Map<?, String> selectConfig = selects.configs().get(selectName);
 

@@ -55,7 +55,7 @@ public interface VortexCrudRbacPermissionChecker<ModelClass, FieldType, Reposito
 
     boolean hasUserReadAccessToRoute(AccessControlled resource);
 
-    FieldAccessLevel getUserFieldAccess(AccessControlled resource, Field<ModelClass, FieldType, RepositoryType> field);
+    FieldAccessLevel getUserFieldAccess(AccessControlled resource, Field<? extends ModelClass, FieldType, RepositoryType> field);
 
     /**
      * Applies security settings to a UI component based on the access level.

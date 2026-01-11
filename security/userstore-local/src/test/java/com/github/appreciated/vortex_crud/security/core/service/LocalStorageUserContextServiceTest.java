@@ -25,6 +25,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -74,7 +75,6 @@ class LocalStorageUserContextServiceTest {
     // ========== resolveRolesForEntity() Tests ==========
 
     @Test
-    @SuppressWarnings("unchecked")
     void testResolveRolesForEntity_WithValidEntity() {
         // Setup
         Object userEntity = new Object();
@@ -89,7 +89,7 @@ class LocalStorageUserContextServiceTest {
         List<VortexCrudRoleProvider> roles = List.of(role1, role2);
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
 
         List<SimpleGrantedAuthority> expectedRoles = List.of(
                 new SimpleGrantedAuthority("ROLE_ADMIN"),
@@ -129,12 +129,11 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testResolveRolesForEntity_WithNoRoles() {
         // Setup
         Object userEntity = new Object();
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn(Collections.emptyList());
 
         // Execute
@@ -145,13 +144,12 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testResolveRolesForEntity_WithEmptyRolesList() {
         // Setup
         Object userEntity = new Object();
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.resolveRolesForEntity(any(), eq(userEntity))).thenReturn(Collections.emptyList());
 
         // Execute
@@ -181,7 +179,7 @@ class LocalStorageUserContextServiceTest {
         String usernameField = "username";
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
@@ -196,7 +194,6 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testCurrentUserEntity_WithNullAuthentication() {
         // Setup
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -204,7 +201,7 @@ class LocalStorageUserContextServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
 
         // Execute
         Object result = userContextService.currentUserEntity();
@@ -214,7 +211,6 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testCurrentUserEntity_WithAnonymousUser() {
         // Setup
         Authentication auth = new UsernamePasswordAuthenticationToken(
@@ -227,7 +223,7 @@ class LocalStorageUserContextServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
 
         // Execute
         Object result = userContextService.currentUserEntity();
@@ -253,7 +249,7 @@ class LocalStorageUserContextServiceTest {
         String usernameField = "username";
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
@@ -282,7 +278,7 @@ class LocalStorageUserContextServiceTest {
 
         // Setup mocks to throw exception
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.dataStoreInstance()).thenThrow(new RuntimeException("Test exception"));
 
         // Execute
@@ -317,7 +313,7 @@ class LocalStorageUserContextServiceTest {
         );
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
         when(identityAndAccessManagement.dataStoreInstance()).thenReturn(dataStore);
         when(identityAndAccessManagement.username()).thenReturn(usernameElement);
         when(usernameElement.field()).thenReturn(usernameField);
@@ -335,7 +331,6 @@ class LocalStorageUserContextServiceTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     void testCurrentUserRoles_WithNoAuthenticatedUser() {
         // Setup
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -343,7 +338,7 @@ class LocalStorageUserContextServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         when(configService.configuration()).thenReturn(application);
-        when((IdentityAndAccessManagement) application.identityAndAccessManagement()).thenReturn(identityAndAccessManagement);
+        doReturn(identityAndAccessManagement).when(application).identityAndAccessManagement();
 
         // Execute
         Set<String> result = userContextService.currentUserRoles();

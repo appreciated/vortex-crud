@@ -14,8 +14,8 @@ import java.util.List;
 public class VideoFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        VideoField<ModelClass, FieldType, RepositoryType> videoField = (VideoField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
+        VideoField<? extends ModelClass, FieldType, RepositoryType> videoField = (VideoField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         return new VideoHasValue(videoField.resourceProvider());
     }
 

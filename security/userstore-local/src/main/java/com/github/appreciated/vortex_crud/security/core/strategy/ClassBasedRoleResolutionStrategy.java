@@ -18,13 +18,13 @@ import java.util.Map;
  */
 public class ClassBasedRoleResolutionStrategy<FieldType> implements RoleResolutionStrategy<FieldType> {
 
-    private final Map<Class<?>, RoleResolutionStrategy<FieldType>> strategies;
+    private final Map<Class<?>, RoleResolutionStrategy<? extends FieldType>> strategies;
     private final RoleResolutionStrategy<FieldType> globalStrategy;
 
     /**
      * Constructor with entity-specific strategies only (no global roles).
      */
-    public ClassBasedRoleResolutionStrategy(Map<Class<?>, ? extends RoleResolutionStrategy<? extends FieldType>> strategies) {
+    public ClassBasedRoleResolutionStrategy(Map<Class<?>, RoleResolutionStrategy<? extends FieldType>> strategies) {
         this(strategies, null);
     }
 
@@ -34,16 +34,15 @@ public class ClassBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
      * @param strategies Map of entity class to role resolution strategy
      * @param globalStrategy Strategy for resolving global roles (used when targetEntity is null)
      */
-    @SuppressWarnings("unchecked")
     public ClassBasedRoleResolutionStrategy(
-            Map<Class<?>, ? extends RoleResolutionStrategy<? extends FieldType>> strategies,
+            Map<Class<?>, RoleResolutionStrategy<? extends FieldType>> strategies,
             RoleResolutionStrategy<FieldType> globalStrategy) {
-        this.strategies = (Map<Class<?>, RoleResolutionStrategy<FieldType>>) strategies;
+        this.strategies = strategies;
         this.globalStrategy = globalStrategy;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity, Object targetEntity) {
         // If no target entity, delegate to global strategy
         if (targetEntity == null) {
             if (globalStrategy != null) {
@@ -53,13 +52,13 @@ public class ClassBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
         }
 
         // Try exact match
-        RoleResolutionStrategy<FieldType> strategy = strategies.get(targetEntity.getClass());
+        RoleResolutionStrategy<? extends FieldType> strategy = strategies.get(targetEntity.getClass());
         if (strategy != null) {
             return strategy.resolveRoles(reflectionService, userEntity, targetEntity);
         }
 
         // Try assignable types
-        for (Map.Entry<Class<?>, RoleResolutionStrategy<FieldType>> entry : strategies.entrySet()) {
+        for (Map.Entry<Class<?>, RoleResolutionStrategy<? extends FieldType>> entry : strategies.entrySet()) {
              if (entry.getKey().isInstance(targetEntity)) {
                  return entry.getValue().resolveRoles(reflectionService, userEntity, targetEntity);
              }

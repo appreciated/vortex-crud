@@ -23,7 +23,7 @@ public class FieldBasedRoleResolutionStrategy<FieldType> implements RoleResoluti
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity, Object targetEntity) {
         if (userEntity == null) {
             return Collections.emptyList();
         }

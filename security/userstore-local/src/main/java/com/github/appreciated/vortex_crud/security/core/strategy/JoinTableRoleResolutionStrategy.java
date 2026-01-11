@@ -94,7 +94,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+    public Collection<? extends GrantedAuthority> resolveRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity, Object targetEntity) {
         if (userEntity == null) {
             return Collections.emptyList();
         }
@@ -111,7 +111,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
     /**
      * Resolves global user roles from USER_ROLES join table.
      */
-    private Collection<? extends GrantedAuthority> resolveGlobalRoles(ReflectionService<FieldType> reflectionService, Object userEntity) {
+    private Collection<? extends GrantedAuthority> resolveGlobalRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity) {
         if (userRolesDataStore == null || rolesDataStore == null) {
             return Collections.emptyList();
         }
@@ -157,7 +157,7 @@ public class JoinTableRoleResolutionStrategy<FieldType> implements RoleResolutio
     /**
      * Resolves entity-specific roles from a join table (e.g., REPOSITORY_MEMBERS).
      */
-    private Collection<? extends GrantedAuthority> resolveEntitySpecificRoles(ReflectionService<FieldType> reflectionService, Object userEntity, Object targetEntity) {
+    private Collection<? extends GrantedAuthority> resolveEntitySpecificRoles(ReflectionService<? super FieldType> reflectionService, Object userEntity, Object targetEntity) {
         if (joinDataStore == null) {
             return Collections.emptyList();
         }

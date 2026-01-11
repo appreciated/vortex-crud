@@ -21,10 +21,10 @@ public class EntityMultiSelectComboBoxWrapper<ModelClass, FieldType, RepositoryT
     private final VortexCrudDataStore<FieldType, ?> dataStore;
 
     public EntityMultiSelectComboBoxWrapper(VortexCrudDataStoreFieldNameResolver<FieldType> resolver,
-                                            Field<ModelClass, FieldType, RepositoryType> dataStoreField,
+                                            Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField,
                                             ReflectionService<FieldType> reflectionService
     ) {
-        MultiSelectField<ModelClass, FieldType, RepositoryType> multiSelectField = (MultiSelectField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+        MultiSelectField<? extends ModelClass, FieldType, RepositoryType> multiSelectField = (MultiSelectField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         this.dataStore = (VortexCrudDataStore<FieldType, ?>) multiSelectField.dataStore();
         this.multiSelectComboBox = new MultiSelectComboBox<>();
 

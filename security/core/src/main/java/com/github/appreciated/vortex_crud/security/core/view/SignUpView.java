@@ -83,7 +83,7 @@ public class SignUpView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 allFields,
                 entity,
                 context,
-                (DataStoreConfig<ModelClass, FieldType, RepositoryType>) dataStoreConfig,
+                dataStoreConfig,
                 binder,
                 formLayout
         );

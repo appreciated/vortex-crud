@@ -17,9 +17,16 @@ public class FormBuilder<ModelClass, FieldType, RepositoryType> {
 
     public Component createComponent(RepositoryType dataStoreKey,
                                      FieldType fieldName,
-                                     Field<ModelClass, FieldType, RepositoryType> field,
+                                     Field<? extends ModelClass, FieldType, RepositoryType> field,
                                      VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = field.factory();
+        return createComponentHelper(dataStoreKey, fieldName, field, context);
+    }
+
+    private <C extends ModelClass> Component createComponentHelper(RepositoryType dataStoreKey,
+                                                                   FieldType fieldName,
+                                                                   Field<C, FieldType, RepositoryType> field,
+                                                                   VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+        VortexCrudFieldFactory<C, FieldType, RepositoryType> factory = field.factory();
         return factory.createComponent(dataStoreKey, fieldName, field, context);
     }
 

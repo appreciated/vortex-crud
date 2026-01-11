@@ -18,7 +18,7 @@ public class DataBinder<ModelClass, FieldType, RepositoryType> {
     @SuppressWarnings("unchecked")
     public void bindComponent(Component component,
                               FieldType fieldName,
-                              Field<ModelClass, FieldType, RepositoryType> field,
+                              Field<? extends ModelClass, FieldType, RepositoryType> field,
                               Object entity,
                               Binder<Object> binder,
                               ReflectionService<FieldType> reflectionService) {

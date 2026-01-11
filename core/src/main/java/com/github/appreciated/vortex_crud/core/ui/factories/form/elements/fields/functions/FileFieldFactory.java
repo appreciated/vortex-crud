@@ -14,8 +14,8 @@ import java.util.List;
 public class FileFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        FileField<ModelClass, FieldType, RepositoryType> fileField = (FileField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
+        FileField<? extends ModelClass, FieldType, RepositoryType> fileField = (FileField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         return new FileHasValue(fileField.resourceProvider());
     }
 

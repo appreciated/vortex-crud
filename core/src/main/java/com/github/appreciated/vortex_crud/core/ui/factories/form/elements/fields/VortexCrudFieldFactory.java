@@ -8,7 +8,7 @@ import com.vaadin.flow.component.Component;
 import java.util.Collection;
 
 public interface VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
-    Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context);
+    Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context);
 
     @NoCoverage
     Collection<String> getValidDatabaseTypesForExpectedType();

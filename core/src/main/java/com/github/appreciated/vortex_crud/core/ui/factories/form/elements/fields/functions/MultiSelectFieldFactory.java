@@ -15,7 +15,7 @@ import java.util.List;
 public class MultiSelectFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
         VortexCrudDataStoreFieldNameResolver<FieldType> resolver = context.fieldNameResolver();
         ReflectionService<FieldType> reflectionService = context.reflectionService();
         return new EntityMultiSelectComboBoxWrapper<>(resolver, dataStoreField, reflectionService);

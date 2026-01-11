@@ -14,11 +14,11 @@ import java.util.*;
 public class MultiSelectValueFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
         Selects selects = context.configService().configuration().selects();
         CheckboxGroup<?> checkboxGroup = new CheckboxGroup<>();
 
-        MultiSelectValueField<ModelClass, FieldType, RepositoryType> msf = (MultiSelectValueField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+        MultiSelectValueField<? extends ModelClass, FieldType, RepositoryType> msf = (MultiSelectValueField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         String selectName = msf.values();
         Map<?, String> selectConfig = selects.configs().get(selectName);
 

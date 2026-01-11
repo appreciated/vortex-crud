@@ -14,8 +14,8 @@ import java.util.List;
 public class ImageFieldFactory<ModelClass, FieldType, RepositoryType> implements VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> {
 
     @Override
-    public Component createComponent(RepositoryType table, FieldType field, Field<ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<ModelClass, FieldType, RepositoryType> context) {
-        ImageField<ModelClass, FieldType, RepositoryType> imageField = (ImageField<ModelClass, FieldType, RepositoryType>) dataStoreField;
+    public Component createComponent(RepositoryType table, FieldType field, Field<? extends ModelClass, FieldType, RepositoryType> dataStoreField, VortexCrudContext<? super ModelClass, FieldType, RepositoryType> context) {
+        ImageField<? extends ModelClass, FieldType, RepositoryType> imageField = (ImageField<? extends ModelClass, FieldType, RepositoryType>) dataStoreField;
         return new ImageHasValue(imageField.resourceProvider());
     }
 
