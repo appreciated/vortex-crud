@@ -375,16 +375,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
                 .titleField(PULL_REQUEST.TITLE)
                 .fields(List.of(
-                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                        JooqFormElement.of(PULL_REQUEST.DESCRIPTION, "route.pull_requests.labels.description").build(),
-                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
-                        JooqFormElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
+                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
+                        JooqFormElement.of(PULL_REQUEST.DESCRIPTION, "route.pull-requests.labels.description").build(),
+                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
+                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull-requests.labels.assignee").build(),
+                        JooqFormElement.of(PULL_REQUEST.IS_DRAFT, "route.pull-requests.labels.is_draft").build(),
                         JooqCollection.builder()
                                 .field(LABEL.NAME)
-                                .label("route.pull_requests.labels.labels")
+                                .label("route.pull-requests.labels.labels")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(labelConfig)
@@ -394,7 +394,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         LABEL.ID,
                                         PULL_REQUEST_LABEL))
                                 .children(List.of(LABEL.NAME, LABEL.COLOR))
-                                .emptyMessage("route.pull_requests.labels.labels-empty-message")
+                                .emptyMessage("route.pull-requests.labels.labels-empty-message")
                                 .titleField(LABEL.NAME)
                                 .build()))
                 .build();
@@ -574,6 +574,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.STORAGE::create)
                 .title("route.repositories.title")
                 .titleField(REPOSITORY.NAME)
+                .filterField(REPOSITORY.NAME)
                 .descriptionField(REPOSITORY.DESCRIPTION)
                 .writeRoles(List.of("admin", "write")) // Repo permission values
                 .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
@@ -634,13 +635,13 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         routes.put("pull-requests", JooqListRoute.builder()
                 .dataStoreConfig(pullRequestConfig)
                 .iconFactory(VaadinIcon.COMPILE::create)
-                .title("route.pull_requests.title")
+                .title("route.pull-requests.title")
                 .filterField(PULL_REQUEST.TITLE)
                 .columns(List.of(
-                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build()))
+                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
+                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
+                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build()))
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .form(pullRequestForm)
                 .build());
@@ -650,6 +651,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.organizations.title")
                 .titleField(ORGANIZATION.NAME)
+                .filterField(ORGANIZATION.NAME)
                 .descriptionField(ORGANIZATION.DESCRIPTION)
                 .writeRoles(List.of("admin", "owner")) // Org role values
                 .form(organizationForm)
@@ -673,6 +675,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(VaadinIcon.USERS::create)
                 .title("route.users.title")
                 .titleField(USERS.USERNAME)
+                .filterField(USERS.USERNAME)
                 .writeRoles(List.of("admin"))
                 .form(userForm)
                 .build());

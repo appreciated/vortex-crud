@@ -1,23 +1,39 @@
 package com.github.appreciated.vortex_crud.demo.devplatform.view;
 
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.RepositoryRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.tabs.Tabs;
 import org.jooq.DSLContext;
+import org.jooq.TableRecord;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Objects;
+import java.util.List;
+
+import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 
 public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
+    private final DSLContext dsl;
+    private Span starCount;
+    private Button starButton;
 
     public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
         this.repository = repository;
+        this.dsl = dsl;
 
         setSizeFull();
         setPadding(false);
@@ -92,8 +108,10 @@ public class RepositoryDetailView extends VerticalLayout {
         HorizontalLayout actions = new HorizontalLayout();
         actions.setSpacing(true);
 
-        Button starButton = new Button("Star", new Icon(VaadinIcon.STAR));
+        starButton = new Button("Star", new Icon(VaadinIcon.STAR));
         starButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        updateStarButtonState();
+        starButton.addClickListener(e -> toggleStar());
 
         Button editButton = new Button(getTranslation("button.edit"), new Icon(VaadinIcon.EDIT));
         editButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
@@ -106,6 +124,66 @@ public class RepositoryDetailView extends VerticalLayout {
         return header;
     }
 
+    private void updateStarButtonState() {
+        String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+        var users = dsl.selectFrom(USERS).where(USERS.USERNAME.eq(username)).fetch();
+        if (!users.isEmpty()) {
+            var user = users.get(0);
+            var existingStar = dsl.selectFrom(REPOSITORY_STAR)
+                    .where(REPOSITORY_STAR.USER_ID.eq(user.getId()))
+                    .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repository.getId()))
+                    .fetchOne();
+
+            if (existingStar != null) {
+                starButton.setText("Unstar");
+                starButton.setIcon(new Icon(VaadinIcon.STAR));
+                starButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            } else {
+                starButton.setText("Star");
+                starButton.setIcon(new Icon(VaadinIcon.STAR_O));
+                starButton.removeThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            }
+        }
+    }
+
+    private void toggleStar() {
+        String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+        var users = dsl.selectFrom(USERS).where(USERS.USERNAME.eq(username)).fetch();
+        if (!users.isEmpty()) {
+            var user = users.get(0);
+            Integer userId = user.getId();
+            Integer repoId = repository.getId();
+
+            var existingStar = dsl.selectFrom(REPOSITORY_STAR)
+                    .where(REPOSITORY_STAR.USER_ID.eq(userId))
+                    .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
+                    .fetchOne();
+
+            int count = repository.getStarCount() != null ? repository.getStarCount() : 0;
+
+            if (existingStar != null) {
+                existingStar.delete();
+                count = Math.max(0, count - 1);
+            } else {
+                var newStar = dsl.newRecord(REPOSITORY_STAR);
+                newStar.set(REPOSITORY_STAR.USER_ID, userId);
+                newStar.set(REPOSITORY_STAR.REPOSITORY_ID, repoId);
+                newStar.store();
+                count++;
+            }
+
+            repository.setStarCount(count);
+            // We should ideally update the database record too, though it might be handled by the route action logic in real app
+            dsl.update(REPOSITORY).set(REPOSITORY.STAR_COUNT, count).where(REPOSITORY.ID.eq(repoId)).execute();
+
+            // Update UI
+            if (starCount != null) {
+                starCount.setText(String.valueOf(count));
+            }
+            updateStarButtonState();
+        }
+    }
+
     private HorizontalLayout createStatsLayout() {
         HorizontalLayout stats = new HorizontalLayout();
         stats.setSpacing(true);
@@ -114,7 +192,7 @@ public class RepositoryDetailView extends VerticalLayout {
         // Stars
         Span starIcon = new Span(new Icon(VaadinIcon.STAR));
         starIcon.getStyle().set("color", "var(--lumo-secondary-text-color)");
-        Span starCount = new Span(String.valueOf(repository.getStarCount() != null ? repository.getStarCount() : 0));
+        starCount = new Span(String.valueOf(repository.getStarCount() != null ? repository.getStarCount() : 0));
         starCount.getStyle().set("font-weight", "600");
         Span starLabel = new Span("stars");
         starLabel.getStyle().set("color", "var(--lumo-secondary-text-color)");
@@ -150,11 +228,44 @@ public class RepositoryDetailView extends VerticalLayout {
                 .set("border-radius", "var(--lumo-border-radius-m)")
                 .set("border", "1px solid var(--lumo-contrast-10pct)");
 
+        Tab overviewTab = new Tab("Overview");
+        Tab issuesTab = new Tab("Issues");
+        Tab prsTab = new Tab("Pull Requests");
+        Tab wikiTab = new Tab("Wiki");
+
+        Tabs tabs = new Tabs(overviewTab, issuesTab, prsTab, wikiTab);
+
+        VerticalLayout tabContent = new VerticalLayout();
+        tabContent.setPadding(false);
+        tabContent.setSpacing(true);
+
+        // Initial content
+        showOverview(tabContent);
+
+        tabs.addSelectedChangeListener(event -> {
+            tabContent.removeAll();
+            Tab selectedTab = event.getSelectedTab();
+            if (selectedTab.equals(overviewTab)) {
+                showOverview(tabContent);
+            } else if (selectedTab.equals(issuesTab)) {
+                showIssues(tabContent);
+            } else if (selectedTab.equals(prsTab)) {
+                showPullRequests(tabContent);
+            } else if (selectedTab.equals(wikiTab)) {
+                showWiki(tabContent);
+            }
+        });
+
+        content.add(tabs, tabContent);
+        return content;
+    }
+
+    private void showOverview(VerticalLayout container) {
         // README section
         if (repository.getReadmeContent() != null && !repository.getReadmeContent().isEmpty()) {
             H3 readmeHeader = new H3("README.md");
             readmeHeader.getStyle()
-                    .set("margin-top", "0")
+                    .set("margin-top", "var(--lumo-space-m)")
                     .set("padding-bottom", "var(--lumo-space-m)")
                     .set("border-bottom", "1px solid var(--lumo-contrast-10pct)");
 
@@ -166,14 +277,75 @@ public class RepositoryDetailView extends VerticalLayout {
                     .set("line-height", "1.6");
             readmeContent.setText(repository.getReadmeContent());
 
-            content.add(readmeHeader, readmeContent);
+            container.add(readmeHeader, readmeContent);
         } else {
             Paragraph noReadme = new Paragraph("No README available");
             noReadme.getStyle().set("color", "var(--lumo-secondary-text-color)");
-            content.add(noReadme);
+            noReadme.getStyle().set("padding", "var(--lumo-space-m)");
+            container.add(noReadme);
+        }
+    }
+
+    private void showIssues(VerticalLayout container) {
+        List<IssueRecord> issues = dsl.selectFrom(ISSUE)
+                .where(ISSUE.REPOSITORY_ID.eq(repository.getId()))
+                .fetch();
+
+        if (issues.isEmpty()) {
+             container.add(new Paragraph("No issues found."));
+             return;
         }
 
-        return content;
+        Grid<IssueRecord> grid = new Grid<>();
+        grid.addColumn(IssueRecord::getTitle).setHeader("Title");
+        grid.addColumn(IssueRecord::getState).setHeader("State");
+        grid.addColumn(IssueRecord::getPriority).setHeader("Priority");
+        grid.setItems(issues);
+        grid.addItemClickListener(e -> UI.getCurrent().navigate("issues/" + e.getItem().getId() + "/edit"));
+
+        container.add(grid);
+    }
+
+    private void showPullRequests(VerticalLayout container) {
+        List<PullRequestRecord> prs = dsl.selectFrom(PULL_REQUEST)
+                .where(PULL_REQUEST.REPOSITORY_ID.eq(repository.getId()))
+                .fetch();
+
+        if (prs.isEmpty()) {
+             container.add(new Paragraph("No pull requests found."));
+             return;
+        }
+
+        Grid<PullRequestRecord> grid = new Grid<>();
+        grid.addColumn(PullRequestRecord::getTitle).setHeader("Title");
+        grid.addColumn(PullRequestRecord::getState).setHeader("State");
+        grid.addColumn(PullRequestRecord::getSourceBranch).setHeader("Source");
+        grid.addColumn(PullRequestRecord::getTargetBranch).setHeader("Target");
+        grid.setItems(prs);
+        grid.addItemClickListener(e -> UI.getCurrent().navigate("pull-requests/" + e.getItem().getId() + "/edit"));
+
+        container.add(grid);
+    }
+
+    private void showWiki(VerticalLayout container) {
+         var wikiPages = dsl.selectFrom(WIKI_PAGE)
+                .where(WIKI_PAGE.REPOSITORY_ID.eq(repository.getId()))
+                .fetch();
+
+        if (wikiPages.isEmpty()) {
+             container.add(new Paragraph("No wiki pages found."));
+             return;
+        }
+
+        // Simple list for now
+        wikiPages.forEach(page -> {
+            VerticalLayout pageLayout = new VerticalLayout();
+            pageLayout.add(new H3(page.getTitle()));
+            Div content = new Div();
+            content.setText(page.getContent());
+            pageLayout.add(content);
+            container.add(pageLayout);
+        });
     }
 
     private VerticalLayout createSidebar() {
