@@ -375,16 +375,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> pullRequestForm = JooqFormRoute.builder()
                 .titleField(PULL_REQUEST.TITLE)
                 .fields(List.of(
-                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                        JooqFormElement.of(PULL_REQUEST.DESCRIPTION, "route.pull_requests.labels.description").build(),
-                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull_requests.labels.assignee").build(),
-                        JooqFormElement.of(PULL_REQUEST.IS_DRAFT, "route.pull_requests.labels.is_draft").build(),
+                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
+                        JooqFormElement.of(PULL_REQUEST.DESCRIPTION, "route.pull-requests.labels.description").build(),
+                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
+                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.ASSIGNEE_ID, "route.pull-requests.labels.assignee").build(),
+                        JooqFormElement.of(PULL_REQUEST.IS_DRAFT, "route.pull-requests.labels.is_draft").build(),
                         JooqCollection.builder()
                                 .field(LABEL.NAME)
-                                .label("route.pull_requests.labels.labels")
+                                .label("route.pull-requests.labels.labels")
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new ConnectDialogFactory<>())
                                 .dataStoreConfig(labelConfig)
@@ -394,7 +394,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         LABEL.ID,
                                         PULL_REQUEST_LABEL))
                                 .children(List.of(LABEL.NAME, LABEL.COLOR))
-                                .emptyMessage("route.pull_requests.labels.labels-empty-message")
+                                .emptyMessage("route.pull-requests.labels.labels-empty-message")
                                 .titleField(LABEL.NAME)
                                 .build()))
                 .build();
@@ -555,20 +555,13 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .build();
 
         // Routes Configuration
-        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
-
-        routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+        var dashboardRoute = CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.dashboard.title")
                 .defaultRoute(true)
                 .componentClass(DashboardView.class)
-                .build());
+                .build();
 
-        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("route.search.title")
-                .iconFactory(VaadinIcon.SEARCH::create)
-                .build());
-
-        routes.put("repositories", JooqGridRoute.builder()
+        var repositoriesRoute = JooqGridRoute.builder()
                 .defaultRoute(false)
                 .dataStoreConfig(repositoryConfig)
                 .iconFactory(VaadinIcon.STORAGE::create)
@@ -616,9 +609,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 })
                                 .build()
                 ))
-                .build());
+                .build();
 
-        routes.put("issues", JooqKanbanRoute.builder()
+        var issuesRoute = JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.BUG::create)
                 .dataStoreConfig(issueConfig)
                 .title("route.issues.title")
@@ -629,23 +622,23 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .filterField(ISSUE.TITLE)
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .form(issueForm)
-                .build());
+                .build();
 
-        routes.put("pull-requests", JooqListRoute.builder()
+        var pullRequestsRoute = JooqListRoute.builder()
                 .dataStoreConfig(pullRequestConfig)
                 .iconFactory(VaadinIcon.COMPILE::create)
-                .title("route.pull_requests.title")
+                .title("route.pull-requests.title")
                 .filterField(PULL_REQUEST.TITLE)
                 .columns(List.of(
-                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull_requests.labels.title").build(),
-                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull_requests.labels.state").build(),
-                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull_requests.labels.source_branch").build(),
-                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull_requests.labels.target_branch").build()))
+                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
+                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
+                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build()))
                 .writeRoles(List.of("admin", "developer", "contributor"))
                 .form(pullRequestForm)
-                .build());
+                .build();
 
-        routes.put("organizations", JooqGridRoute.builder()
+        var organizationsRoute = JooqGridRoute.builder()
                 .dataStoreConfig(organizationConfig)
                 .iconFactory(VaadinIcon.BUILDING::create)
                 .title("route.organizations.title")
@@ -653,9 +646,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .descriptionField(ORGANIZATION.DESCRIPTION)
                 .writeRoles(List.of("admin", "owner")) // Org role values
                 .form(organizationForm)
-                .build());
+                .build();
 
-        routes.put("milestones", JooqListRoute.builder()
+        var milestonesRoute = JooqListRoute.builder()
                 .dataStoreConfig(milestoneConfig)
                 .iconFactory(VaadinIcon.FLAG::create)
                 .title("route.milestones.title")
@@ -666,16 +659,39 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
                 .writeRoles(List.of("admin", "developer"))
                 .form(milestoneForm)
-                .build());
+                .build();
 
-        routes.put("users", JooqGridRoute.builder()
+        var usersRoute = JooqGridRoute.builder()
                 .dataStoreConfig(usersConfig)
                 .iconFactory(VaadinIcon.USERS::create)
                 .title("route.users.title")
                 .titleField(USERS.USERNAME)
                 .writeRoles(List.of("admin"))
                 .form(userForm)
-                .build());
+                .build();
+
+        var searchRoute = SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.search.title")
+                .iconFactory(VaadinIcon.SEARCH::create)
+                .searchableRoutes(List.of(
+                        repositoriesRoute,
+                        issuesRoute,
+                        pullRequestsRoute,
+                        organizationsRoute,
+                        milestonesRoute,
+                        usersRoute
+                ))
+                .build();
+
+        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
+        routes.put("dashboard", dashboardRoute);
+        routes.put("search", searchRoute);
+        routes.put("repositories", repositoriesRoute);
+        routes.put("issues", issuesRoute);
+        routes.put("pull-requests", pullRequestsRoute);
+        routes.put("organizations", organizationsRoute);
+        routes.put("milestones", milestonesRoute);
+        routes.put("users", usersRoute);
 
         // Select Options
         LinkedHashMap<RepositoryVisibility, String> repositoryVisibilities = new LinkedHashMap<>();
