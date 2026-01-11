@@ -44,6 +44,7 @@ public class DashboardView extends VerticalLayout {
                 issueGrid.addColumn(IssueRecord::getTitle).setHeader("Title");
                 issueGrid.addColumn(IssueRecord::getState).setHeader("State");
                 issueGrid.setItems(assignedIssues);
+                issueGrid.addItemClickListener(event -> UI.getCurrent().navigate("issues/" + event.getItem().getId() + "/edit"));
                 add(issueGrid);
 
                 // My Pull Requests
@@ -57,6 +58,7 @@ public class DashboardView extends VerticalLayout {
                 prGrid.addColumn(PullRequestRecord::getTitle).setHeader("Title");
                 prGrid.addColumn(PullRequestRecord::getState).setHeader("State");
                 prGrid.setItems(myPrs);
+                prGrid.addItemClickListener(event -> UI.getCurrent().navigate("pull-requests/" + event.getItem().getId() + "/edit"));
                 add(prGrid);
             }
         }
