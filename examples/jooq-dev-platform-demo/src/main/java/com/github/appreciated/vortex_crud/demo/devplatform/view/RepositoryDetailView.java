@@ -11,13 +11,21 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.jooq.DSLContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Objects;
+
+import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 
 public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
+    private final DSLContext dsl;
+    private Span starCount;
 
     public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
         this.repository = repository;
+        this.dsl = dsl;
 
         setSizeFull();
         setPadding(false);
@@ -94,6 +102,35 @@ public class RepositoryDetailView extends VerticalLayout {
 
         Button starButton = new Button("Star", new Icon(VaadinIcon.STAR));
         starButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
+        starButton.addClickListener(event -> {
+            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+            var users = dsl.selectFrom(USERS).where(USERS.USERNAME.eq(username)).limit(1).fetch();
+            if (!users.isEmpty()) {
+                var user = users.get(0);
+                Integer userId = user.get(USERS.ID);
+                Integer repoId = repository.get(REPOSITORY.ID);
+
+                var existingStar = dsl.selectFrom(REPOSITORY_STAR)
+                        .where(REPOSITORY_STAR.USER_ID.eq(userId))
+                        .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
+                        .fetchOne();
+
+                if (existingStar != null) {
+                    existingStar.delete();
+                    Integer count = repository.get(REPOSITORY.STAR_COUNT);
+                    repository.set(REPOSITORY.STAR_COUNT, count != null ? count - 1 : 0);
+                } else {
+                    var newStar = dsl.newRecord(REPOSITORY_STAR);
+                    newStar.set(REPOSITORY_STAR.USER_ID, userId);
+                    newStar.set(REPOSITORY_STAR.REPOSITORY_ID, repoId);
+                    newStar.store();
+                    Integer count = repository.get(REPOSITORY.STAR_COUNT);
+                    repository.set(REPOSITORY.STAR_COUNT, count != null ? count + 1 : 1);
+                }
+                repository.store();
+                starCount.setText(String.valueOf(repository.getStarCount()));
+            }
+        });
 
         Button editButton = new Button(getTranslation("button.edit"), new Icon(VaadinIcon.EDIT));
         editButton.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_PRIMARY);
@@ -114,7 +151,7 @@ public class RepositoryDetailView extends VerticalLayout {
         // Stars
         Span starIcon = new Span(new Icon(VaadinIcon.STAR));
         starIcon.getStyle().set("color", "var(--lumo-secondary-text-color)");
-        Span starCount = new Span(String.valueOf(repository.getStarCount() != null ? repository.getStarCount() : 0));
+        starCount = new Span(String.valueOf(repository.getStarCount() != null ? repository.getStarCount() : 0));
         starCount.getStyle().set("font-weight", "600");
         Span starLabel = new Span("stars");
         starLabel.getStyle().set("color", "var(--lumo-secondary-text-color)");

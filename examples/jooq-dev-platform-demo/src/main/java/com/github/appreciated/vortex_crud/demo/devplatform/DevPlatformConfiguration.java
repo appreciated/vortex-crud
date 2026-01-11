@@ -582,40 +582,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .title("route.repositories.title")
                         .routes(Map.of("edit", repositoryForm))
                         .build())
-                .routeActions(Collections.singletonList(
-                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
-                                .componentFactory(() -> new Button(VaadinIcon.STAR.create()))
-                                .handler(context -> {
-                                    TableRecord<?> repo = context.getFirstSelectedEntity();
-                                    String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-                                    var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
-                                    if (!users.isEmpty()) {
-                                        var user = (TableRecord<?>) users.get(0);
-                                        Integer userId = user.get(USERS.ID);
-                                        Integer repoId = repo.get(REPOSITORY.ID);
-
-                                        var existingStar = dsl.selectFrom(REPOSITORY_STAR)
-                                                .where(REPOSITORY_STAR.USER_ID.eq(userId))
-                                                .and(REPOSITORY_STAR.REPOSITORY_ID.eq(repoId))
-                                                .fetchOne();
-
-                                        if (existingStar != null) {
-                                            existingStar.delete();
-                                            Integer count = repo.get(REPOSITORY.STAR_COUNT);
-                                            repo.set(REPOSITORY.STAR_COUNT, count != null ? count - 1 : 0);
-                                        } else {
-                                            var newStar = dsl.newRecord(REPOSITORY_STAR);
-                                            newStar.set(REPOSITORY_STAR.USER_ID, userId);
-                                            newStar.set(REPOSITORY_STAR.REPOSITORY_ID, repoId);
-                                            newStar.store();
-                                            Integer count = repo.get(REPOSITORY.STAR_COUNT);
-                                            repo.set(REPOSITORY.STAR_COUNT, count != null ? count + 1 : 1);
-                                        }
-                                        repositoryStore.updateRecordById((RepositoryRecord) repo);
-                                    }
-                                })
-                                .build()
-                ))
                 .build());
 
         routes.put("issues", JooqKanbanRoute.builder()
