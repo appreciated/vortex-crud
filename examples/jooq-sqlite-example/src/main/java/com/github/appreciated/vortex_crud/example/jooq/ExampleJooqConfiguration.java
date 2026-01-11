@@ -434,7 +434,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("calendar", JooqCalendarRoute.builder()
-                .title("Calendar")
+                .title("route.calendar.title")
                 .iconFactory(CALENDAR::create)
                 .dataStoreConfig(projectsConfig)
                 .titleField(PROJECTS.NAME)
@@ -448,7 +448,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         routes.put("notes", GridRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                 .dataStoreConfig(notesConfig)
                 .iconFactory(NOTEBOOK::create)
-                .title("Notes (Custom DataStore)")
+                .title("route.notes.title")
                 .titleField("title")
                 .descriptionField("content")
                 .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
@@ -467,7 +467,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .build());
 
         routes.put("custom", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("Custom Route")
+                .title("route.custom.title")
                 .iconFactory(CODE::create)
                 .componentClass(CustomView.class)
                 .build());
@@ -475,7 +475,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         routes.put("documents", JooqGridRoute.builder()
                 .dataStoreConfig(documentsConfig)
                 .iconFactory(FILE::create)
-                .title("Documents")
+                .title("route.documents.title")
                 .titleField(DOCUMENTS.TITLE)
                 .form(documentForm)
                 .build());
@@ -483,7 +483,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         routes.put("filtered-grid", JooqGridRoute.builder()
                 .dataStoreConfig(imagesConfig)
                 .iconFactory(FILTER::create)
-                .title("Filtered Grid")
+                .title("route.filtered-grid.title")
                 .titleField(IMAGES.TITLE)
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
