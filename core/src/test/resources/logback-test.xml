@@ -1,4 +1,0 @@
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="com.github.appreciated.vortex_crud.core.service.TranslationService" level="ERROR"/>
-</configuration>
