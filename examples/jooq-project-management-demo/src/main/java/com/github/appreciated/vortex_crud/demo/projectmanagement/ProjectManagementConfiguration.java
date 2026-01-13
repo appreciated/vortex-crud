@@ -27,10 +27,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
@@ -38,6 +40,7 @@ import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.rec
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.github.appreciated.vortex_crud.core.config.model.AuditingAction.*;
 import static com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.Tables.*;
@@ -55,18 +58,42 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
         JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
-        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl);
+        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
+        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
+
+        // Notification Hooks
+        DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
+                .afterCreate(record -> {
+                    try {
+                        String title = record.get(TASK.TITLE);
+                        Integer projectId = record.get(TASK.PROJECT_ID);
+                        Integer assigneeId = record.get(TASK.ASSIGNEE_ID);
+                        var project = dsl.selectFrom(PROJECT).where(PROJECT.ID.eq(projectId)).fetchOne();
+                        if (project != null && assigneeId != null) {
+                            var notif = dsl.newRecord(NOTIFICATION);
+                            notif.setUserId(assigneeId);
+                            notif.setTitle("Assigned to Task: " + title);
+                            notif.setMessage("In project " + project.getName());
+                            notif.setIsRead(0);
+                            notif.setCreatedAt(java.time.LocalDateTime.now());
+                            notif.store();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .build();
+
+        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl, taskHooks);
         JooqDataStore<MilestoneRecord> milestoneStore = new JooqDataStore<>(MILESTONE.getRecordType(), dsl);
         JooqDataStore<LabelRecord> labelStore = new JooqDataStore<>(LABEL.getRecordType(), dsl);
         JooqDataStore<TaskCommentRecord> taskCommentStore = new JooqDataStore<>(TASK_COMMENT.getRecordType(), dsl);
         JooqDataStore<TaskLabelRecord> taskLabelStore = new JooqDataStore<>(TASK_LABEL.getRecordType(), dsl);
-        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
         JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
         JooqDataStore<ProjectMemberRecord> projectMemberStore = new JooqDataStore<>(PROJECT_MEMBER.getRecordType(), dsl);
         JooqDataStore<TimeEntryRecord> timeEntryStore = new JooqDataStore<>(TIME_ENTRY.getRecordType(), dsl);
         JooqDataStore<AttachmentRecord> attachmentStore = new JooqDataStore<>(ATTACHMENT.getRecordType(), dsl);
-        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -413,6 +440,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
+                .hiddenInMenu(true)  // Only accessible via search panel
                 .build());
 
         routes.put("projects", JooqGridRoute.builder()
@@ -426,6 +454,27 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(projectForm)
                 .build());
 
+        routes.put("my-projects", JooqListRoute.builder()
+                .dataStoreConfig(projectConfig)
+                .iconFactory(VaadinIcon.FOLDER::create)
+                .title("route.my-projects.title")
+                .filterField(PROJECT.NAME)
+                .columns(List.of(
+                        JooqFormElement.of(PROJECT.NAME, "route.projects.labels.name").build(),
+                        JooqFormElement.of(PROJECT.STATUS, "route.projects.labels.status").build(),
+                        JooqFormElement.of(PROJECT.PRIORITY, "route.projects.labels.priority").build(),
+                        JooqFormElement.of(PROJECT.END_DATE, "route.projects.labels.end_date").build()))
+                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                        .field(PROJECT.OWNER_ID)
+                        .valueProvider(() -> {
+                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
+                        })
+                        .build())
+                .form(projectForm)
+                .build());
+
         routes.put("tasks-kanban", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreConfig(taskConfig)
@@ -436,6 +485,25 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .titleField(TASK.TITLE)
                 .filterField(TASK.TITLE)
                 .writeRoles(List.of("admin", "manager", "developer"))
+                .form(taskForm)
+                .build());
+
+        routes.put("my-tasks", JooqKanbanRoute.builder()
+                .iconFactory(VaadinIcon.CLIPBOARD_USER::create)
+                .dataStoreConfig(taskConfig)
+                .title("route.my-tasks.title")
+                .titleField(TASK.TITLE)
+                .descriptionField(TASK.DESCRIPTION)
+                .columnField(TASK.STATUS)
+                .filterField(TASK.TITLE)
+                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                        .field(TASK.ASSIGNEE_ID)
+                        .valueProvider(() -> {
+                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
+                        })
+                        .build())
                 .form(taskForm)
                 .build());
 
@@ -454,8 +522,29 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .iconFactory(VaadinIcon.USERS::create)
                 .title("route.users.title")
                 .titleField(USERS.USERNAME)
+                .hiddenInMenu(true)  // Hidden from menu - only accessible by admins for managing user permissions
                 .writeRoles(List.of("admin"))
                 .form(userForm)
+                .build());
+
+        routes.put("profile", JooqSingleFormRoute.builder()
+                .iconFactory(VaadinIcon.USER::create)
+                .dataStoreConfig(usersConfig)
+                .title("route.profile.title")
+                .hiddenInMenu(true)  // Only accessible via global action (app bar)
+                .entityFilterField(USERS.USERNAME)
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .titleField(USERS.USERNAME)
+                .fields(List.of(
+                        JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").readOnly(true).build(),
+                        JooqFormElement.of(USERS.PASSWORD_HASH, "route.profile.labels.password").build(),
+                        JooqFormElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").readOnly(true).build()))
                 .build());
 
         // Select Options
