@@ -13,11 +13,18 @@ import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.ProjectStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskType;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.service.CommentNotificationDataStore;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.service.TaskNotificationDataStore;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.service.NotificationService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.service.syntactic_sugar.fields.JooqJsonCustomField;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.service.CustomFieldService;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.DashboardRouteRenderer;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.fields.JsonCustomFieldFactory;
 import com.github.appreciated.vortex_crud.security.core.strategy.ClassBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
@@ -46,19 +53,23 @@ import static com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.Tab
 public class ProjectManagementConfiguration implements VortexCrudConfigurationProvider<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     private final DSLContext dsl;
+    private final CustomFieldService customFieldService;
+    private final NotificationService notificationService;
 
-    public ProjectManagementConfiguration(DSLContext dsl) {
+    public ProjectManagementConfiguration(DSLContext dsl, CustomFieldService customFieldService, NotificationService notificationService) {
         this.dsl = dsl;
+        this.customFieldService = customFieldService;
+        this.notificationService = notificationService;
     }
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
         JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
-        JooqDataStore<TaskRecord> taskStore = new JooqDataStore<>(TASK.getRecordType(), dsl);
+        JooqDataStore<TaskRecord> taskStore = new TaskNotificationDataStore(TASK.getRecordType(), dsl, notificationService);
         JooqDataStore<MilestoneRecord> milestoneStore = new JooqDataStore<>(MILESTONE.getRecordType(), dsl);
         JooqDataStore<LabelRecord> labelStore = new JooqDataStore<>(LABEL.getRecordType(), dsl);
-        JooqDataStore<TaskCommentRecord> taskCommentStore = new JooqDataStore<>(TASK_COMMENT.getRecordType(), dsl);
+        JooqDataStore<TaskCommentRecord> taskCommentStore = new CommentNotificationDataStore(TASK_COMMENT.getRecordType(), dsl, notificationService);
         JooqDataStore<TaskLabelRecord> taskLabelStore = new JooqDataStore<>(TASK_LABEL.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
@@ -105,22 +116,22 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(PROJECT.IS_ARCHIVED, JooqCheckboxField.builder().build()),
                         Map.entry(PROJECT.CREATED_AT, JooqDateTimePickerField.builder().build()),
                         Map.entry(PROJECT.UPDATED_AT, JooqDateTimePickerField.builder().build()),
-                        Map.entry(PROJECT.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
+                        Map.entry(PROJECT.CUSTOM_FIELDS, JooqJsonCustomField.builder().factory(new JsonCustomFieldFactory(customFieldService, "project")).build())))
                 .build();
 
         var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
                 .dataStoreInstance(milestoneStore)
-                .fields(Map.of(
-                        MILESTONE.ID, JooqNumericIdField.builder().build(),
-                        MILESTONE.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(MILESTONE.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
-                        MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
-                        MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                        MILESTONE.DUE_DATE, JooqDateField.builder().build(),
-                        MILESTONE.STATUS, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build(),
-                        MILESTONE.COMPLETION_PERCENTAGE, JooqIntegerField.builder().build(),
-                        MILESTONE.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                        MILESTONE.COMPLETED_AT, JooqDateTimePickerField.builder().build(),
-                        MILESTONE.CUSTOM_FIELDS, JooqTextAreaField.builder().build()))
+                .fields(Map.ofEntries(
+                        Map.entry(MILESTONE.ID, JooqNumericIdField.builder().build()),
+                        Map.entry(MILESTONE.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(MILESTONE.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
+                        Map.entry(MILESTONE.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build()),
+                        Map.entry(MILESTONE.DESCRIPTION, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build()),
+                        Map.entry(MILESTONE.DUE_DATE, JooqDateField.builder().build()),
+                        Map.entry(MILESTONE.STATUS, JooqTextField.builder().validators(List.of(new StringLengthValidator("Maximum 50 characters", 0, 50))).build()),
+                        Map.entry(MILESTONE.COMPLETION_PERCENTAGE, JooqIntegerField.builder().build()),
+                        Map.entry(MILESTONE.CREATED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(MILESTONE.COMPLETED_AT, JooqDateTimePickerField.builder().build()),
+                        Map.entry(MILESTONE.CUSTOM_FIELDS, JooqJsonCustomField.builder().factory(new JsonCustomFieldFactory(customFieldService, "milestone")).build())))
                 .build();
 
         var taskConfig = JooqDataStoreConfig.of(TASK)
@@ -142,7 +153,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(TASK.DUE_DATE, JooqDateField.builder().build()),
                         Map.entry(TASK.CREATED_AT, JooqDateTimePickerField.builder().build()),
                         Map.entry(TASK.UPDATED_AT, JooqDateTimePickerField.builder().build()),
-                        Map.entry(TASK.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
+                        Map.entry(TASK.CUSTOM_FIELDS, JooqJsonCustomField.builder().factory(new JsonCustomFieldFactory(customFieldService, "task")).build())))
                 .build();
 
         var labelConfig = JooqDataStoreConfig.of(LABEL)
@@ -410,13 +421,15 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
+        routes.put("dashboard", new DashboardRouteRenderer(taskStore));
+
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
                 .build());
 
         routes.put("projects", JooqGridRoute.builder()
-                .defaultRoute(true)
+                .defaultRoute(false)
                 .dataStoreConfig(projectConfig)
                 .iconFactory(VaadinIcon.RECORDS::create)
                 .title("route.projects.title")
