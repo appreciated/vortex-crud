@@ -301,9 +301,14 @@ public class RepositoryDetailView extends VerticalLayout {
         grid.addColumn(IssueRecord::getState).setHeader("State");
         grid.addColumn(IssueRecord::getPriority).setHeader("Priority");
         grid.setItems(issues);
-        grid.addItemClickListener(e -> UI.getCurrent().navigate("issues/" + e.getItem().getId() + "/edit"));
+        grid.addItemClickListener(e -> UI.getCurrent().navigate("repositories/" + repository.getId() + "/issues/" + e.getItem().getId() + "/edit"));
 
-        container.add(grid);
+        // Add link to full issues view
+        Button viewAllIssues = new Button("View All Issues", new Icon(VaadinIcon.ARROW_RIGHT));
+        viewAllIssues.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        viewAllIssues.addClickListener(e -> UI.getCurrent().navigate("repositories/" + repository.getId() + "/issues"));
+
+        container.add(grid, viewAllIssues);
     }
 
     private void showPullRequests(VerticalLayout container) {
@@ -322,9 +327,14 @@ public class RepositoryDetailView extends VerticalLayout {
         grid.addColumn(PullRequestRecord::getSourceBranch).setHeader("Source");
         grid.addColumn(PullRequestRecord::getTargetBranch).setHeader("Target");
         grid.setItems(prs);
-        grid.addItemClickListener(e -> UI.getCurrent().navigate("pull-requests/" + e.getItem().getId() + "/edit"));
+        grid.addItemClickListener(e -> UI.getCurrent().navigate("repositories/" + repository.getId() + "/pull-requests/" + e.getItem().getId() + "/edit"));
 
-        container.add(grid);
+        // Add link to full pull requests view
+        Button viewAllPRs = new Button("View All Pull Requests", new Icon(VaadinIcon.ARROW_RIGHT));
+        viewAllPRs.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        viewAllPRs.addClickListener(e -> UI.getCurrent().navigate("repositories/" + repository.getId() + "/pull-requests"));
+
+        container.add(grid, viewAllPRs);
     }
 
     private void showWiki(VerticalLayout container) {

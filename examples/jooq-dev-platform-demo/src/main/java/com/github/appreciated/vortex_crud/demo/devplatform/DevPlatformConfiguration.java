@@ -27,6 +27,7 @@ import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
+import com.vaadin.flow.server.VaadinServletRequest;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -343,6 +344,15 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         PULL_REQUEST_LABEL.LABEL_ID, JooqReferenceField.builder().dataStore(labelStore).field(PULL_REQUEST_LABEL.LABEL_ID).filterField(LABEL.NAME).children(List.of(LABEL.NAME)).build()))
                 .build();
 
+        // Label Form Configuration
+        var labelForm = JooqFormRoute.builder()
+                .titleField(LABEL.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(LABEL.NAME, "route.labels.labels.name").build(),
+                        JooqFormElement.of(LABEL.COLOR, "route.labels.labels.color").build(),
+                        JooqFormElement.of(LABEL.DESCRIPTION, "route.labels.labels.description").build()))
+                .build();
+
         // Issue Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> issueForm = JooqFormRoute.builder()
                 .titleField(ISSUE.TITLE)
@@ -554,11 +564,59 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
                 .build();
 
+        // Repository Child Routes (project-scoped routes)
+        var repositoryIssuesRoute = JooqKanbanRoute.builder()
+                .dataStoreConfig(issueConfig)
+                .title("route.issues.title")
+                .titleField(ISSUE.TITLE)
+                .descriptionField(ISSUE.DESCRIPTION)
+                .columnField(ISSUE.STATE)
+                .filterField(ISSUE.TITLE)
+                .writeRoles(List.of("admin", "developer", "contributor"))
+                .form(issueForm)
+                .build();
+
+        var repositoryPullRequestsRoute = JooqListRoute.builder()
+                .dataStoreConfig(pullRequestConfig)
+                .title("route.pull-requests.title")
+                .filterField(PULL_REQUEST.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
+                        JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
+                        JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
+                        JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build()))
+                .writeRoles(List.of("admin", "developer", "contributor"))
+                .form(pullRequestForm)
+                .build();
+
+        var repositoryMilestonesRoute = JooqListRoute.builder()
+                .dataStoreConfig(milestoneConfig)
+                .title("route.milestones.title")
+                .filterField(MILESTONE.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFormElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
+                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
+                .writeRoles(List.of("admin", "developer"))
+                .form(milestoneForm)
+                .build();
+
+        var repositoryLabelsRoute = JooqGridRoute.builder()
+                .dataStoreConfig(labelConfig)
+                .title("route.labels.title")
+                .titleField(LABEL.NAME)
+                .filterField(LABEL.NAME)
+                .descriptionField(LABEL.DESCRIPTION)
+                .writeRoles(List.of("admin", "developer"))
+                .form(labelForm)
+                .build();
+
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
         routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.dashboard.title")
+                        .iconFactory(VaadinIcon.DASHBOARD::create)
                 .defaultRoute(true)
                 .componentClass(DashboardView.class)
                 .build());
@@ -566,6 +624,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
+                .hiddenInMenu(true)  // Only accessible via search panel
                 .build());
 
         routes.put("repositories", JooqGridRoute.builder()
@@ -581,7 +640,12 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .dataStoreConfig(repositoryConfig)
                         .viewFactory(new RepositoryDetailViewFactory(dsl))
                         .title("route.repositories.title")
-                        .routes(Map.of("edit", repositoryForm))
+                        .routes(Map.of(
+                                "issues", repositoryIssuesRoute,
+                                "pull-requests", repositoryPullRequestsRoute,
+                                "milestones", repositoryMilestonesRoute,
+                                "labels", repositoryLabelsRoute,
+                                "edit", repositoryForm))
                         .build())
                 .routeActions(Collections.singletonList(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
@@ -619,31 +683,56 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 ))
                 .build());
 
-        routes.put("issues", JooqKanbanRoute.builder()
-                .iconFactory(VaadinIcon.BUG::create)
+        routes.put("my-issues", JooqKanbanRoute.builder()
                 .dataStoreConfig(issueConfig)
-                .title("route.issues.title")
+                .iconFactory(VaadinIcon.BUG::create)
+                .title("route.my-issues.title")
                 .titleField(ISSUE.TITLE)
                 .descriptionField(ISSUE.DESCRIPTION)
                 .columnField(ISSUE.STATE)
-                .titleField(ISSUE.TITLE)
                 .filterField(ISSUE.TITLE)
-                .writeRoles(List.of("admin", "developer", "contributor"))
+                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                        .field(ISSUE.ASSIGNEE_ID)
+                        .valueProvider(() -> {
+                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
+                        })
+                        .build())
                 .form(issueForm)
                 .build());
 
-        routes.put("pull-requests", JooqListRoute.builder()
+        routes.put("my-pull-requests", JooqListRoute.builder()
                 .dataStoreConfig(pullRequestConfig)
                 .iconFactory(VaadinIcon.COMPILE::create)
-                .title("route.pull-requests.title")
+                .title("route.my-pull-requests.title")
                 .filterField(PULL_REQUEST.TITLE)
                 .columns(List.of(
                         JooqFormElement.of(PULL_REQUEST.TITLE, "route.pull-requests.labels.title").build(),
                         JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
                         JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
                         JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build()))
-                .writeRoles(List.of("admin", "developer", "contributor"))
+                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                        .field(PULL_REQUEST.AUTHOR_ID)
+                        .valueProvider(() -> {
+                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                            return !users.isEmpty() ? users.get(0).get(USERS.ID) : null;
+                        })
+                        .build())
                 .form(pullRequestForm)
+                .build());
+
+        routes.put("my-milestones", JooqListRoute.builder()
+                .dataStoreConfig(milestoneConfig)
+                .iconFactory(VaadinIcon.FLAG::create)
+                .title("route.my-milestones.title")
+                .filterField(MILESTONE.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFormElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
+                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
+                .form(milestoneForm)
                 .build());
 
         routes.put("organizations", JooqGridRoute.builder()
@@ -657,27 +746,35 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .form(organizationForm)
                 .build());
 
-        routes.put("milestones", JooqListRoute.builder()
-                .dataStoreConfig(milestoneConfig)
-                .iconFactory(VaadinIcon.FLAG::create)
-                .title("route.milestones.title")
-                .filterField(MILESTONE.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
-                        JooqFormElement.of(MILESTONE.STATE, "route.milestones.labels.state").build(),
-                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build()))
-                .writeRoles(List.of("admin", "developer"))
-                .form(milestoneForm)
-                .build());
-
         routes.put("users", JooqGridRoute.builder()
                 .dataStoreConfig(usersConfig)
                 .iconFactory(VaadinIcon.USERS::create)
                 .title("route.users.title")
                 .titleField(USERS.USERNAME)
                 .filterField(USERS.USERNAME)
-                .writeRoles(List.of("admin"))
+                .hiddenInMenu(true)  // Hidden from menu - only accessible by admins for managing user permissions
+                .writeRoles(List.of("admin"))  // Only global admins can manage users and assign permissions
                 .form(userForm)
+                .build());
+
+        routes.put("profile", JooqSingleFormRoute.builder()
+                .iconFactory(VaadinIcon.USER::create)
+                .dataStoreConfig(usersConfig)
+                .title("route.profile.title")
+                .hiddenInMenu(true)  // Only accessible via global action (app bar)
+                .entityFilterField(USERS.USERNAME)
+                .entityFilterValueProvider(() -> {
+                    // Get current user from security context
+                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                    return request != null && request.getUserPrincipal() != null
+                            ? request.getUserPrincipal().getName()
+                            : null;
+                })
+                .titleField(USERS.USERNAME)
+                .fields(List.of(
+                        JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").readOnly(true).build(),
+                        JooqFormElement.of(USERS.PASSWORD_HASH, "route.profile.labels.password").build(),
+                        JooqFormElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").readOnly(true).build()))
                 .build());
 
         // Select Options

@@ -1,17 +1,21 @@
 package com.github.appreciated.vortex_crud.core.config.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+/**
+ * Interface for filtering routes based on field values.
+ * Implementations can provide static or dynamic filter values.
+ *
+ * @param <FieldType> the type of field to filter on
+ */
+public interface RouteFilter<FieldType> {
+    /**
+     * Gets the field to filter on.
+     * @return the field
+     */
+    FieldType field();
 
-@Accessors(fluent = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-public class RouteFilter<FieldType> {
-    private FieldType field;
-    private Object value;
+    /**
+     * Gets the filter value to use for comparison.
+     * @return the filter value
+     */
+    Object value();
 }
