@@ -434,24 +434,56 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
                 .build();
 
+        // Project Child Routes
+        var projectTasksRoute = JooqKanbanRoute.builder()
+                .dataStoreConfig(taskConfig)
+                .title("route.tasks.title")
+                .titleField(TASK.TITLE)
+                .descriptionField(TASK.DESCRIPTION)
+                .columnField(TASK.STATUS)
+                .filterField(TASK.TITLE)
+                .writeRoles(List.of("admin", "manager", "developer"))
+                .form(taskForm)
+                .build();
+
+        var projectMilestonesRoute = JooqListRoute.builder()
+                .dataStoreConfig(milestoneConfig)
+                .title("route.milestones.title")
+                .filterField(MILESTONE.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
+                        JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
+                .form(milestoneForm)
+                .build();
+
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
+
+        routes.put("my-tasks", JooqKanbanRoute.builder()
+                .defaultRoute(true)
+                .iconFactory(VaadinIcon.CLIPBOARD_USER::create)
+                .dataStoreConfig(taskConfig)
+                .title("route.my-tasks.title")
+                .titleField(TASK.TITLE)
+                .descriptionField(TASK.DESCRIPTION)
+                .columnField(TASK.STATUS)
+                .filterField(TASK.TITLE)
+                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                        .field(TASK.ASSIGNEE_ID)
+                        .valueProvider(() -> {
+                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
+                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
+                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
+                        })
+                        .build())
+                .form(taskForm)
+                .build());
 
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
                 .hiddenInMenu(true)  // Only accessible via search panel
-                .build());
-
-        routes.put("projects", JooqGridRoute.builder()
-                .defaultRoute(true)
-                .dataStoreConfig(projectConfig)
-                .iconFactory(VaadinIcon.RECORDS::create)
-                .title("route.projects.title")
-                .titleField(PROJECT.NAME)
-                .descriptionField(PROJECT.DESCRIPTION)
-                .writeRoles(List.of("admin", "owner"))
-                .form(projectForm)
                 .build());
 
         routes.put("my-projects", JooqListRoute.builder()
@@ -475,6 +507,23 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(projectForm)
                 .build());
 
+        routes.put("projects", JooqGridRoute.builder()
+                .dataStoreConfig(projectConfig)
+                .iconFactory(VaadinIcon.RECORDS::create)
+                .title("route.projects.title")
+                .titleField(PROJECT.NAME)
+                .descriptionField(PROJECT.DESCRIPTION)
+                .writeRoles(List.of("admin", "owner"))
+                .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(projectConfig)
+                        .title("route.projects.title")
+                        .routes(Map.of(
+                                "tasks", projectTasksRoute,
+                                "milestones", projectMilestonesRoute,
+                                "edit", projectForm))
+                        .build())
+                .build());
+
         routes.put("tasks-kanban", JooqKanbanRoute.builder()
                 .iconFactory(VaadinIcon.TASKS::create)
                 .dataStoreConfig(taskConfig)
@@ -488,23 +537,16 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(taskForm)
                 .build());
 
-        routes.put("my-tasks", JooqKanbanRoute.builder()
-                .iconFactory(VaadinIcon.CLIPBOARD_USER::create)
-                .dataStoreConfig(taskConfig)
-                .title("route.my-tasks.title")
-                .titleField(TASK.TITLE)
-                .descriptionField(TASK.DESCRIPTION)
-                .columnField(TASK.STATUS)
-                .filterField(TASK.TITLE)
-                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
-                        .field(TASK.ASSIGNEE_ID)
-                        .valueProvider(() -> {
-                            String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
-                            var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
-                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
-                        })
-                        .build())
-                .form(taskForm)
+        routes.put("my-milestones", JooqListRoute.builder()
+                .dataStoreConfig(milestoneConfig)
+                .iconFactory(VaadinIcon.FLAG::create)
+                .title("route.my-milestones.title")
+                .filterField(MILESTONE.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
+                        JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
+                .form(milestoneForm)
                 .build());
 
         routes.put("milestones", JooqGridRoute.builder()
