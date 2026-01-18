@@ -7,7 +7,6 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
-import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
 
 import java.util.Collections;
@@ -15,7 +14,9 @@ import java.util.Collections;
 public class JooqNotificationPanelConfiguration extends NotificationPanelConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> {
 
     public static NotificationPanelConfiguration.NotificationPanelConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> builder() {
-        return NotificationPanelConfiguration.builder();
+        return NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .readStatusValueForRead(1)
+                .readStatusValueForUnread(0);
     }
 
     public static NotificationPanelConfiguration.NotificationPanelConfigurationBuilder<TableRecord<?>, TableField<?, ?>, TableImpl<?>> of(TableImpl<?> table, DSLContext dsl) {
@@ -34,8 +35,6 @@ public class JooqNotificationPanelConfiguration extends NotificationPanelConfigu
                 .build();
 
         return JooqNotificationPanelConfiguration.builder()
-                .dataStoreConfig(dsConfig)
-                .readStatusValueForRead(1)
-                .readStatusValueForUnread(0);
+                .dataStoreConfig(dsConfig);
     }
 }
