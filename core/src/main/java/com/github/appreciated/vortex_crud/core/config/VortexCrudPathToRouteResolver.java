@@ -85,18 +85,41 @@ public class VortexCrudPathToRouteResolver {
         pathRoutes.put(sectionIndex, currentRouteRenderer);
 
         // If this route has children, recurse into them
-        if (currentRouteRenderer instanceof RouteRendererMultipleChildren multi &&
-            multi.routes() != null && !multi.routes().isEmpty()) {
-            Map<String, RouteRenderer<?,?,?>> stringRouteRendererMap = multi.routes();
-            buildRouteMapForPathSection(sectionIndex + 1, stringRouteRendererMap, nextContext, nextRouteName);
-        } else if (currentRouteRenderer instanceof RouteRendererSingleChild<?, ?, ?> single &&
-                   single.form() != null) {
-            // For single child routes, create a map with the child as a wildcard (null key)
-            Map<String, RouteRenderer<?, ?, ?>> singleChildMap = new HashMap<>();
-            singleChildMap.put(null, single.form());
-            buildRouteMapForPathSection(sectionIndex + 1, singleChildMap, nextContext, nextRouteName);
-        } else {
-            // If no children, continue to the next segment
+        // Check RouteRendererMultipleChildren first
+        boolean hasChildren = false;
+        if (currentRouteRenderer instanceof RouteRendererMultipleChildren<?, ?, ?>) {
+            @SuppressWarnings("unchecked")
+            RouteRendererMultipleChildren<?, ?, ?> multi = (RouteRendererMultipleChildren<?, ?, ?>) currentRouteRenderer;
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, RouteRenderer<?,?,?>> childRoutes = (Map<String, RouteRenderer<?,?,?>>) multi.routes();
+
+                if (childRoutes != null && !childRoutes.isEmpty()) {
+                    buildRouteMapForPathSection(sectionIndex + 1, childRoutes, nextContext, nextRouteName);
+                    hasChildren = true;
+                }
+            } catch (ClassCastException e) {
+                // Type mismatch in routes - ignore and try single child
+                System.err.println("Warning: Type mismatch in routes for section: " + section);
+            }
+        }
+
+        // Check RouteRendererSingleChild if no multiple children were found
+        if (!hasChildren && currentRouteRenderer instanceof RouteRendererSingleChild<?, ?, ?>) {
+            @SuppressWarnings("unchecked")
+            RouteRendererSingleChild<?, ?, ?> single = (RouteRendererSingleChild<?, ?, ?>) currentRouteRenderer;
+
+            if (single.form() != null) {
+                // For single child routes, create a map with the child as a wildcard (null key)
+                Map<String, RouteRenderer<?, ?, ?>> singleChildMap = new HashMap<>();
+                singleChildMap.put(null, single.form());
+                buildRouteMapForPathSection(sectionIndex + 1, singleChildMap, nextContext, nextRouteName);
+                hasChildren = true;
+            }
+        }
+
+        // If no children at all, continue to the next segment
+        if (!hasChildren) {
             buildRouteMapForPathSection(sectionIndex + 1, currentRoutes, nextContext, nextRouteName);
         }
     }

@@ -720,7 +720,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .valueProvider(() -> {
                             String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
                             var users = usersStore.getRecordsFromTableWhereColumnEquals(USERS.USERNAME, username, 0, 1);
-                            return !users.isEmpty() ? users.get(0).get(USERS.ID) : null;
+                            return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
                         })
                         .build())
                 .form(pullRequestForm)
@@ -818,16 +818,16 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         .dataStoreConfig(usersConfig)
                         .roleResolutionStrategy(new ClassBasedRoleResolutionStrategy<>(
                                 Map.of(
-                                        REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) repositoryCollaboratorStore,
+                                        REPOSITORY.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                                repositoryCollaboratorStore,
                                                 REPOSITORY_COLLABORATOR.USER_ID,
                                                 REPOSITORY_COLLABORATOR.REPOSITORY_ID,
                                                 REPOSITORY_COLLABORATOR.PERMISSION,
                                                 USERS.ID,
                                                 REPOSITORY.ID
                                         ),
-                                        ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                                (VortexCrudDataStore) organizationMemberStore,
+                                        ORGANIZATION.getRecordType(), new JoinTableRoleResolutionStrategy<>(
+                                                organizationMemberStore,
                                                 ORGANIZATION_MEMBER.USER_ID,
                                                 ORGANIZATION_MEMBER.ORGANIZATION_ID,
                                                 ORGANIZATION_MEMBER.ROLE,
@@ -836,9 +836,9 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                         )
                                 ),
                                 // Global role strategy
-                                new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        (VortexCrudDataStore) userRolesStore,
-                                        (VortexCrudDataStore) rolesStore,
+                                new JoinTableRoleResolutionStrategy<>(
+                                        userRolesStore,
+                                        rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

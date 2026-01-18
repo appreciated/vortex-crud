@@ -106,7 +106,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var videoStore = createStore(videoRepository);
         var userStore = createStore(userRepository);
         var documentStore = createStore(documentRepository);
-        SimpleMapDataStore notesStore = new SimpleMapDataStore();
+        VortexCrudDataStore<String, SimpleMapDataStore.Note> notesStore = new SimpleMapDataStore();
 
         // 2. Build map of Class -> DataStore
         Map<Class<?>, VortexCrudDataStore> storeMap = new HashMap<>();
@@ -129,12 +129,12 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
         var userConfig = JpaDataStoreConfig.builder(userRepository, userStore).withServices(fieldService, storeMap).build();
         var documentConfig = JpaDataStoreConfig.builder(documentRepository, documentStore).withServices(fieldService, storeMap).build();
 
-        var notesConfig = DataStoreConfig.<Object, String, JpaRepository<?, ?>>builder()
+        var notesConfig = DataStoreConfig.<SimpleMapDataStore.Note, String, JpaRepository<?, ?>>builder()
                 .factory(NOTES_KEY)
-                .dataStoreInstance((VortexCrudDataStore) notesStore)
+                .dataStoreInstance(notesStore)
                 .fields(Map.of(
-                        "title", TextField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build(),
-                        "content", TextAreaField.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder().build()
+                        "title", TextField.<SimpleMapDataStore.Note, String, JpaRepository<?, ?>>builder().build(),
+                        "content", TextAreaField.<SimpleMapDataStore.Note, String, JpaRepository<?, ?>>builder().build()
                 ))
                 .build();
 

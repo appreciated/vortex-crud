@@ -487,7 +487,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField(IMAGES.TITLE)
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .filter(StaticRouteFilter.<TableField<?, ?>>builder()
+                .filter(StaticRouteFilter.<>builder()
                         .field(IMAGES.TITLE)
                         .filterValue("Red")
                         .build())
