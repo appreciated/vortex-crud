@@ -9,7 +9,11 @@ import org.vaadin.hugerte.HugeRte;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -336,7 +340,7 @@ public class RepositoryDetailView extends VerticalLayout {
         }
 
         String languageClass = "language-none";
-        if (!extension.isEmpty()) {
+        if (!extension.isEmpty() && extension.matches("^[a-zA-Z0-9]+$")) {
             languageClass = "language-" + extension;
         }
 
