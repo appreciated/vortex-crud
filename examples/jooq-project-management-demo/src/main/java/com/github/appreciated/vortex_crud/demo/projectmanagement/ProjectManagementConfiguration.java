@@ -10,6 +10,7 @@ import com.github.appreciated.vortex_crud.core.ui.factories.dialog.FormDialogFac
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.ProjectStatus;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.SprintStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskType;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
@@ -56,6 +57,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
         JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
+        JooqDataStore<SprintRecord> sprintStore = new JooqDataStore<>(SPRINT.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
@@ -133,6 +135,19 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(PROJECT.CUSTOM_FIELDS, JooqTextAreaField.builder().build())))
                 .build();
 
+        var sprintConfig = JooqDataStoreConfig.of(SPRINT)
+                .dataStoreInstance(sprintStore)
+                .fields(Map.of(
+                        SPRINT.ID, JooqNumericIdField.builder().build(),
+                        SPRINT.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(SPRINT.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build(),
+                        SPRINT.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 200 characters", 0, 200))).build(),
+                        SPRINT.GOAL, JooqTextAreaField.builder().validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
+                        SPRINT.START_DATE, JooqDateField.builder().build(),
+                        SPRINT.END_DATE, JooqDateField.builder().build(),
+                        SPRINT.STATUS, JooqSelectField.builder().values("sprint-status").build(),
+                        SPRINT.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
         var milestoneConfig = JooqDataStoreConfig.of(MILESTONE)
                 .dataStoreInstance(milestoneStore)
                 .fields(Map.of(
@@ -154,6 +169,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(TASK.ID, JooqNumericIdField.builder().build()),
                         Map.entry(TASK.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(TASK.PROJECT_ID).filterField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
                         Map.entry(TASK.MILESTONE_ID, JooqReferenceField.builder().dataStore(milestoneStore).field(TASK.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
+                        Map.entry(TASK.SPRINT_ID, JooqReferenceField.builder().dataStore(sprintStore).field(TASK.SPRINT_ID).filterField(SPRINT.NAME).children(List.of(SPRINT.NAME)).build()),
                         Map.entry(TASK.PARENT_TASK_ID, JooqReferenceField.builder().dataStore(taskStore).field(TASK.PARENT_TASK_ID).filterField(TASK.TITLE).children(List.of(TASK.TITLE)).build()),
                         Map.entry(TASK.TASK_NUMBER, JooqIntegerField.builder().required(true).build()),
                         Map.entry(TASK.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 300 characters", 0, 300))).build()),
@@ -337,6 +353,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(TASK.ESTIMATED_HOURS, "route.tasks.labels.estimated_hours").build(),
                         JooqFormElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build(),
                         JooqFormElement.of(TASK.PARENT_TASK_ID, "route.tasks.labels.parent_task").build(),
+                        JooqFormElement.of(TASK.SPRINT_ID, "route.tasks.labels.sprint").build(),
                         JooqCollection.builder()
                                 .label("route.tasks.labels.subtasks")
                                 .field(TASK.TITLE)
@@ -432,6 +449,17 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
                 .build();
 
+        // Sprint Form Configuration
+        var sprintForm = JooqFormRoute.builder()
+                .titleField(SPRINT.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(SPRINT.NAME, "route.sprints.labels.name").build(),
+                        JooqFormElement.of(SPRINT.GOAL, "route.sprints.labels.goal").build(),
+                        JooqFormElement.of(SPRINT.START_DATE, "route.sprints.labels.start_date").build(),
+                        JooqFormElement.of(SPRINT.END_DATE, "route.sprints.labels.end_date").build(),
+                        JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
+                .build();
+
         var projectTasksRoute = JooqKanbanRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.tasks.title")
@@ -441,6 +469,18 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .filterField(TASK.TITLE)
                 .writeRoles(List.of("admin", "manager", "developer"))
                 .form(taskForm)
+                .build();
+
+        var projectSprintsRoute = JooqListRoute.builder()
+                .dataStoreConfig(sprintConfig)
+                .title("route.sprints.title")
+                .filterField(SPRINT.NAME)
+                .columns(List.of(
+                        JooqFormElement.of(SPRINT.NAME, "route.sprints.labels.name").build(),
+                        JooqFormElement.of(SPRINT.START_DATE, "route.sprints.labels.start_date").build(),
+                        JooqFormElement.of(SPRINT.END_DATE, "route.sprints.labels.end_date").build(),
+                        JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
+                .form(sprintForm)
                 .build();
 
         var projectMilestonesRoute = JooqListRoute.builder()
@@ -513,9 +553,11 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .writeRoles(List.of("admin", "owner"))
                 .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(projectConfig)
+                        .viewFactory(record -> new com.vaadin.flow.component.html.Div())
                         .title("route.projects.title")
                         .routes(Map.of(
                                 "tasks", projectTasksRoute,
+                                "sprints", projectSprintsRoute,
                                 "milestones", projectMilestonesRoute,
                                 "edit", projectForm))
                         .build())
@@ -616,6 +658,12 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         priorities.put(Priority.HIGHEST, "selects.priority.highest");
         priorities.put(Priority.CRITICAL, "selects.priority.critical");
 
+        LinkedHashMap<SprintStatus, String> sprintStatuses = new LinkedHashMap<>();
+        sprintStatuses.put(SprintStatus.PLANNED, "selects.sprint-status.planned");
+        sprintStatuses.put(SprintStatus.ACTIVE, "selects.sprint-status.active");
+        sprintStatuses.put(SprintStatus.COMPLETED, "selects.sprint-status.completed");
+        sprintStatuses.put(SprintStatus.CANCELLED, "selects.sprint-status.cancelled");
+
         LinkedHashMap<String, String> projectRoles = new LinkedHashMap<>();
         projectRoles.put("owner", "selects.project-roles.owner");
         projectRoles.put("admin", "selects.project-roles.admin");
@@ -659,7 +707,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .signUpFields(List.of())
                         .build())
                 .routes(routes)
-                .versioning(JooqVersioning.builder().dataStores(List.of(PROJECT, TASK, MILESTONE, TASK_COMMENT)).build())
+                .versioning(JooqVersioning.builder().dataStores(List.of(PROJECT, TASK, MILESTONE, TASK_COMMENT, SPRINT)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(Selects.builder()
                         .configs(Map.of(
@@ -667,6 +715,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "task-status", taskStatuses,
                                 "task-type", taskTypes,
                                 "priority", priorities,
+                                "sprint-status", sprintStatuses,
                                 "project-roles", projectRoles))
                         .build())
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
