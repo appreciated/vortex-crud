@@ -59,7 +59,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
         JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
-        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
         JooqDataStore<RepositoryRecord> repositoryStore = new JooqDataStore<>(REPOSITORY.getRecordType(), dsl);
         JooqDataStore<RepositoryStarRecord> repositoryStarStore = new JooqDataStore<>(REPOSITORY_STAR.getRecordType(), dsl);
         JooqDataStore<WikiPageRecord> wikiPageStore = new JooqDataStore<>(WIKI_PAGE.getRecordType(), dsl);
@@ -154,17 +153,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
-                .dataStoreInstance(notificationStore)
-                .fields(Map.of(
-                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
-                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
-                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
-                        NOTIFICATION.LINK, JooqTextField.builder().build(),
-                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
-                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         var wikiPageConfig = JooqDataStoreConfig.of(WIKI_PAGE)
@@ -867,13 +855,10 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "repository-permissions", repositoryPermissions,
                                 "organization-roles", organizationRoles))
                         .build())
-                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
-                        .dataStoreConfig(notificationConfig)
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.of(NOTIFICATION, dsl)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)
                         .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
                         .build())
                 .build();
     }

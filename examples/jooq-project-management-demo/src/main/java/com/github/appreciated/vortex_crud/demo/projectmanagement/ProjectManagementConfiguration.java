@@ -57,7 +57,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Data Stores
         JooqDataStore<ProjectRecord> projectStore = new JooqDataStore<>(PROJECT.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
-        JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
         // Notification Hooks
         DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
@@ -219,17 +218,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         ATTACHMENT.NAME, JooqTextField.builder().required(true).build(),
                         ATTACHMENT.PATH, JooqFileField.builder().resourceProvider(new LocalFileResourceProvider("attachments")).required(true).build(),
                         ATTACHMENT.UPLOADED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
-                .dataStoreInstance(notificationStore)
-                .fields(Map.of(
-                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
-                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
-                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
-                        NOTIFICATION.LINK, JooqTextField.builder().build(),
-                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
-                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         // Project Form Configuration
@@ -669,13 +657,10 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "priority", priorities,
                                 "project-roles", projectRoles))
                         .build())
-                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
-                        .dataStoreConfig(notificationConfig)
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.of(NOTIFICATION, dsl)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)
                         .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
                         .build())
                 .build();
     }
