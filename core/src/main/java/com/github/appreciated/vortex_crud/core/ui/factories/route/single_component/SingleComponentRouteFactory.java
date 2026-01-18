@@ -15,6 +15,7 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -116,7 +117,7 @@ public class SingleComponentRouteFactory<ModelClass, FieldType, RepositoryType> 
             header.setPadding(true);
             header.setAlignItems(Alignment.CENTER);
             
-            H2 title = new H2(route.title() != null ? getTranslation(route.title()) : "");
+            H1 title = new H1(route.title() != null ? getTranslation(route.title()) : "");
             header.add(title);
             header.expand(title);
 

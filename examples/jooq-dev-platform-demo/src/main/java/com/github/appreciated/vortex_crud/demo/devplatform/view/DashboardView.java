@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.P
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.UsersRecord;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,7 +25,7 @@ import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 public class DashboardView extends VerticalLayout {
 
     public DashboardView(DSLContext dsl, TranslationService translationService) {
-        add(new H2(translationService.getTranslation("route.dashboard.title", UI.getCurrent().getLocale())));
+        add(new H1(translationService.getTranslation("route.dashboard.title", UI.getCurrent().getLocale())));
 
         String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
         if (username != null) {
@@ -34,7 +35,7 @@ public class DashboardView extends VerticalLayout {
                 Integer userId = user.getId();
 
                 // Assigned Issues
-                add(new H3(translationService.getTranslation("dashboard.assigned-to-me", UI.getCurrent().getLocale())));
+                add(new H2(translationService.getTranslation("dashboard.assigned-to-me", UI.getCurrent().getLocale())));
                 List<IssueRecord> assignedIssues = dsl.selectFrom(ISSUE)
                         .where(ISSUE.ASSIGNEE_ID.eq(userId))
                         .limit(10)
@@ -52,7 +53,7 @@ public class DashboardView extends VerticalLayout {
                 add(issueGrid);
 
                 // My Pull Requests
-                add(new H3(translationService.getTranslation("dashboard.my-pull-requests", UI.getCurrent().getLocale())));
+                add(new H2(translationService.getTranslation("dashboard.my-pull-requests", UI.getCurrent().getLocale())));
                 List<PullRequestRecord> myPrs = dsl.selectFrom(PULL_REQUEST)
                         .where(PULL_REQUEST.AUTHOR_ID.eq(userId))
                         .limit(10)

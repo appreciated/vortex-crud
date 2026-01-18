@@ -1,10 +1,10 @@
 package com.github.appreciated.vortex_crud.core.ui.components;
 
 import com.vaadin.flow.component.HasValue;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.shared.Registration;
 
-public class H2WithHasValue extends H2 implements HasValue<HasValue.ValueChangeEvent<String>, String> {
+public class H1WithHasValue extends H1 implements HasValue<HasValue.ValueChangeEvent<String>, String> {
 
     @Override
     public void setValue(String value) {

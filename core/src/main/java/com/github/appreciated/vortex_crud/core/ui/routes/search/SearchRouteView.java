@@ -7,6 +7,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.html.Span;
@@ -38,7 +39,7 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
         setSpacing(true);
         setSizeFull();
 
-        add(new H2(searchRoute.title()));
+        add(new H1(searchRoute.title()));
 
         searchField = new TextField();
         searchField.setPlaceholder("Search...");

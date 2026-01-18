@@ -336,7 +336,7 @@ public class RepositoryDetailView extends VerticalLayout {
     private void showOverview(VerticalLayout container) {
         // README section
         if (repository.getReadmeContent() != null && !repository.getReadmeContent().isEmpty()) {
-            H3 readmeHeader = new H3("README.md");
+            H2 readmeHeader = new H2("README.md");
             readmeHeader.getStyle()
                     .set("margin-top", "var(--lumo-space-m)")
                     .set("padding-bottom", "var(--lumo-space-m)")
@@ -423,7 +423,7 @@ public class RepositoryDetailView extends VerticalLayout {
         // Simple list for now
         wikiPages.forEach(page -> {
             VerticalLayout pageLayout = new VerticalLayout();
-            pageLayout.add(new H3(page.getTitle()));
+            pageLayout.add(new H2(page.getTitle()));
             Div content = new Div();
             content.setText(page.getContent());
             pageLayout.add(content);
@@ -445,7 +445,7 @@ public class RepositoryDetailView extends VerticalLayout {
                 .set("border-radius", "var(--lumo-border-radius-m)")
                 .set("border", "1px solid var(--lumo-contrast-10pct)");
 
-        H3 aboutHeader = new H3("About");
+        H2 aboutHeader = new H2("About");
         aboutHeader.getStyle().set("margin-top", "0").set("font-size", "var(--lumo-font-size-m)");
         aboutSection.add(aboutHeader);
 
@@ -485,7 +485,7 @@ public class RepositoryDetailView extends VerticalLayout {
                     .set("border-radius", "var(--lumo-border-radius-m)")
                     .set("border", "1px solid var(--lumo-contrast-10pct)");
 
-            H3 topicsHeader = new H3(getTranslation("route.repositories.labels.topics"));
+            H2 topicsHeader = new H2(getTranslation("route.repositories.labels.topics"));
             topicsHeader.getStyle().set("margin-top", "0").set("font-size", "var(--lumo-font-size-m)");
 
             HorizontalLayout topicTags = new HorizontalLayout();

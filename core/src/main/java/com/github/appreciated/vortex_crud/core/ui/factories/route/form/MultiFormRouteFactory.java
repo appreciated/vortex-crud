@@ -8,7 +8,7 @@ import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataS
 import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermissionChecker;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
-import com.github.appreciated.vortex_crud.core.ui.components.H2WithHasValue;
+import com.github.appreciated.vortex_crud.core.ui.components.H1WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
@@ -61,7 +61,7 @@ public class MultiFormRouteFactory<ModelClass, FieldType, RepositoryType> implem
         String title = routeRenderer.title();
         String prefix = !isWrapped ? (title != null ? layout.getTranslation(title) : "") + " / " : "";
 
-        H2WithHasValue titleComponent = new H2WithHasValue();
+        H1WithHasValue titleComponent = new H1WithHasValue();
         Binder<Object> binder = new Binder<>(Object.class);
 
         if (!creationMode) {
