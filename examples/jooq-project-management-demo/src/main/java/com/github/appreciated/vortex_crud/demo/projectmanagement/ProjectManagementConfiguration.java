@@ -669,7 +669,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "priority", priorities,
                                 "project-roles", projectRoles))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
                         .dataStoreConfig(notificationConfig)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)

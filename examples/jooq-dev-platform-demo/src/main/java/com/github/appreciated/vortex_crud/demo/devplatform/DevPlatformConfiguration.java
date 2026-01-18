@@ -867,7 +867,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "repository-permissions", repositoryPermissions,
                                 "organization-roles", organizationRoles))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
                         .dataStoreConfig(notificationConfig)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)

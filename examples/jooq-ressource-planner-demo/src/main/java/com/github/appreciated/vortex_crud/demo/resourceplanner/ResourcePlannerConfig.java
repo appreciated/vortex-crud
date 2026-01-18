@@ -393,7 +393,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .selects(Selects.builder()
                         .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
                         .dataStoreConfig(notificationConfig)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)
