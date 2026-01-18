@@ -110,6 +110,16 @@
             <artifactId>org.eclipse.jgit</artifactId>
             <version>6.9.0.202403050737-r</version>
         </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark</artifactId>
+            <version>0.24.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
+            <version>0.24.0</version>
+        </dependency>
     </dependencies>
 
     <build>

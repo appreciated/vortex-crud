@@ -4,6 +4,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.R
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.service.GitService;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.MarkdownService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -31,13 +32,15 @@ public class RepositoryDetailView extends VerticalLayout {
     private final RepositoryRecord repository;
     private final DSLContext dsl;
     private final GitService gitService;
+    private final MarkdownService markdownService;
     private Span starCount;
     private Button starButton;
 
-    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitService gitService) {
+    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitService gitService, MarkdownService markdownService) {
         this.repository = repository;
         this.dsl = dsl;
         this.gitService = gitService;
+        this.markdownService = markdownService;
 
         setSizeFull();
         setPadding(false);
@@ -322,15 +325,34 @@ public class RepositoryDetailView extends VerticalLayout {
 
         String content = gitService.getFileContent(repository.getSlug(), path);
 
-        Pre codeBlock = new Pre();
-        codeBlock.setText(content);
+        // Escape HTML
+        String escapedContent = content
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;");
+
+        String extension = "";
+        int i = path.lastIndexOf('.');
+        if (i > 0) {
+            extension = path.substring(i + 1);
+        }
+
+        String languageClass = "language-none";
+        if (!extension.isEmpty()) {
+            languageClass = "language-" + extension;
+        }
+
+        Div codeBlock = new Div();
         codeBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
         codeBlock.getStyle().set("padding", "var(--lumo-space-m)");
         codeBlock.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
         codeBlock.getStyle().set("overflow", "auto");
         codeBlock.setWidthFull();
 
+        codeBlock.getElement().setProperty("innerHTML", "<pre><code class=\"" + languageClass + "\">" + escapedContent + "</code></pre>");
+
         container.add(codeBlock);
+        UI.getCurrent().getPage().executeJs("Prism.highlightAll()");
     }
 
     private void showOverview(VerticalLayout container) {
@@ -345,10 +367,9 @@ public class RepositoryDetailView extends VerticalLayout {
             Div readmeContent = new Div();
             readmeContent.getStyle()
                     .set("padding", "var(--lumo-space-m)")
-                    .set("white-space", "pre-wrap")
                     .set("font-family", "var(--lumo-font-family)")
                     .set("line-height", "1.6");
-            readmeContent.setText(repository.getReadmeContent());
+            readmeContent.getElement().setProperty("innerHTML", markdownService.render(repository.getReadmeContent()));
 
             container.add(readmeHeader, readmeContent);
         } else {
@@ -425,7 +446,7 @@ public class RepositoryDetailView extends VerticalLayout {
             VerticalLayout pageLayout = new VerticalLayout();
             pageLayout.add(new H3(page.getTitle()));
             Div content = new Div();
-            content.setText(page.getContent());
+            content.getElement().setProperty("innerHTML", markdownService.render(page.getContent()));
             pageLayout.add(content);
             container.add(pageLayout);
         });

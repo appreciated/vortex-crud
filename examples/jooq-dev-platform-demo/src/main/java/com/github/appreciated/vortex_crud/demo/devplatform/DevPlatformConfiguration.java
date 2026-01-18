@@ -13,6 +13,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.enums.PullRequestStat
 import com.github.appreciated.vortex_crud.demo.devplatform.enums.RepositoryVisibility;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.demo.devplatform.service.GitService;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.MarkdownService;
 import com.github.appreciated.vortex_crud.demo.devplatform.view.DashboardView;
 import com.github.appreciated.vortex_crud.demo.devplatform.view.RepositoryDetailViewFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -47,10 +48,12 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
 
     private final DSLContext dsl;
     private final GitService gitService;
+    private final MarkdownService markdownService;
 
-    public DevPlatformConfiguration(DSLContext dsl, GitService gitService) {
+    public DevPlatformConfiguration(DSLContext dsl, GitService gitService, MarkdownService markdownService) {
         this.dsl = dsl;
         this.gitService = gitService;
+        this.markdownService = markdownService;
     }
 
     @Override
@@ -641,7 +644,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .writeRoles(List.of("admin", "write")) // Repo permission values
                 .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(repositoryConfig)
-                        .viewFactory(new RepositoryDetailViewFactory(dsl, gitService))
+                        .viewFactory(new RepositoryDetailViewFactory(dsl, gitService, markdownService))
                         .title("route.repositories.title")
                         .routes(Map.of(
                                 "issues", repositoryIssuesRoute,
