@@ -163,7 +163,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         NOTIFICATION.TITLE, JooqTextField.builder().build(),
                         NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
                         NOTIFICATION.LINK, JooqTextField.builder().build(),
-                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqSelectField.builder().values("yes-no").build(),
                         NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
@@ -300,7 +300,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         Map.entry(PULL_REQUEST.AUTHOR_ID, JooqReferenceField.builder().dataStore(usersStore).field(PULL_REQUEST.AUTHOR_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
                         Map.entry(PULL_REQUEST.ASSIGNEE_ID, JooqReferenceField.builder().dataStore(usersStore).field(PULL_REQUEST.ASSIGNEE_ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build()),
                         Map.entry(PULL_REQUEST.MILESTONE_ID, JooqReferenceField.builder().dataStore(milestoneStore).field(PULL_REQUEST.MILESTONE_ID).filterField(MILESTONE.TITLE).children(List.of(MILESTONE.TITLE)).build()),
-                        Map.entry(PULL_REQUEST.IS_DRAFT, JooqCheckboxField.builder().build()),
+                        Map.entry(PULL_REQUEST.IS_DRAFT, JooqSelectField.builder().values("yes-no").build()),
                         Map.entry(PULL_REQUEST.MERGED_AT, JooqDateTimePickerField.builder().build()),
                         Map.entry(PULL_REQUEST.CLOSED_AT, JooqDateTimePickerField.builder().build()),
                         Map.entry(PULL_REQUEST.CREATED_AT, JooqDateTimePickerField.builder().build()),
@@ -811,6 +811,10 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         organizationRoles.put("admin", "selects.organization-roles.admin");
         organizationRoles.put("member", "selects.organization-roles.member");
 
+        LinkedHashMap<Integer, String> yesNo = new LinkedHashMap<>();
+        yesNo.put(0, "selects.yes-no.no");
+        yesNo.put(1, "selects.yes-no.yes");
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("dev_i18n")
@@ -865,7 +869,8 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "pull-request-state", pullRequestStates,
                                 "priority", priorities,
                                 "repository-permissions", repositoryPermissions,
-                                "organization-roles", organizationRoles))
+                                "organization-roles", organizationRoles,
+                                "yes-no", yesNo))
                         .build())
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(notificationConfig)
