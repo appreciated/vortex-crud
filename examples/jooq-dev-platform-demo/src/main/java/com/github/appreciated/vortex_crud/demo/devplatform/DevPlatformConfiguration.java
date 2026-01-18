@@ -188,13 +188,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         GIT_COMMIT.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
-        var gitBranchConfig = JooqDataStoreConfig.of(GIT_BRANCH)
-                .dataStoreInstance(gitBranchStore)
-                .fields(Map.of(
-                        GIT_BRANCH.ID, JooqNumericIdField.builder().build(),
-                        GIT_BRANCH.REPOSITORY_ID, JooqReferenceField.builder().dataStore(repositoryStore).field(GIT_BRANCH.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build(),
-                        GIT_BRANCH.NAME, JooqTextField.builder().build(),
-                        GIT_BRANCH.HEAD_COMMIT_ID, JooqReferenceField.builder().dataStore(gitCommitStore).field(GIT_BRANCH.HEAD_COMMIT_ID).filterField(GIT_COMMIT.HASH).children(List.of(GIT_COMMIT.HASH)).build()))
+        var gitBranchConfig = JooqDataStoreConfig.builder(GIT_BRANCH, dsl)
+                .dataStore(gitBranchStore)
+                .autoFields()
+                .field(GIT_BRANCH.REPOSITORY_ID, (Field) JooqReferenceField.builder().dataStore(repositoryStore).field(GIT_BRANCH.REPOSITORY_ID).filterField(REPOSITORY.NAME).children(List.of(REPOSITORY.NAME)).build())
+                .field(GIT_BRANCH.HEAD_COMMIT_ID, (Field) JooqReferenceField.builder().dataStore(gitCommitStore).field(GIT_BRANCH.HEAD_COMMIT_ID).filterField(GIT_COMMIT.HASH).children(List.of(GIT_COMMIT.HASH)).build())
                 .build();
 
         var organizationMemberConfig = JooqDataStoreConfig.of(ORGANIZATION_MEMBER)
