@@ -8,6 +8,8 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import lombok.NonNull;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
 import org.jooq.TableRecord;
@@ -54,6 +56,8 @@ public class JooqDataStoreConfig {
         return new Builder<>(table, dsl);
     }
 
+    @Setter
+    @Accessors(fluent = true)
     public static class Builder<R extends UpdatableRecord<R>> {
         private final TableImpl<R> table;
         private final DSLContext dsl;
@@ -64,16 +68,6 @@ public class JooqDataStoreConfig {
         public Builder(TableImpl<R> table, DSLContext dsl) {
             this.table = table;
             this.dsl = dsl;
-        }
-
-        public Builder<R> dataStore(JooqDataStore<R> dataStore) {
-            this.dataStore = dataStore;
-            return this;
-        }
-
-        public Builder<R> fields(Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields) {
-            this.fields = fields;
-            return this;
         }
 
         public Builder<R> field(TableField<R, ?> key, Field<R, TableField<R, ?>, TableImpl<?>> field) {
@@ -129,11 +123,6 @@ public class JooqDataStoreConfig {
                     fields.put(field, mappedField);
                 }
             }
-            return this;
-        }
-
-        public Builder<R> withHooks(DataStoreHooks<R> hooks) {
-            this.hooks = hooks;
             return this;
         }
 
