@@ -75,7 +75,7 @@ public class JooqTextAreaVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.textarea-test.title-list")
-                .filterField(TEXTAREA_TEST.NAME)
+                .searchField(TEXTAREA_TEST.NAME)
                 .columns(List.of(
                         JooqFormElement.of(TEXTAREA_TEST.NAME, "textarea-test.labels.name").build(),
                         JooqFormElement.of(TEXTAREA_TEST.DESCRIPTION, "textarea-test.labels.content").build()

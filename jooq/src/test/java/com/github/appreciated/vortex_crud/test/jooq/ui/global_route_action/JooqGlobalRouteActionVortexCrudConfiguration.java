@@ -84,7 +84,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .dataStoreConfig(config)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .filterField(GLOBAL_ROUTE_ACTION_TEST.NAME)
+            .searchField(GLOBAL_ROUTE_ACTION_TEST.NAME)
             .columns(List.of(
                   JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
             ))

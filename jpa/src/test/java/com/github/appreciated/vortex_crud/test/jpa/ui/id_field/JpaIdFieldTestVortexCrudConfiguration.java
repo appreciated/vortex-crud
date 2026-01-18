@@ -57,7 +57,7 @@ public class JpaIdFieldTestVortexCrudConfiguration implements VortexCrudConfigur
         routes.put("id-test-list", JpaListRoute.builder()
             .dataStoreConfig(config)
             .title("route.id-field.title-list")
-            .filterField("name")
+            .searchField("name")
             .columns(List.of(
                   JpaFormElement.builder("name", "id-field.labels.name").build()
             ))

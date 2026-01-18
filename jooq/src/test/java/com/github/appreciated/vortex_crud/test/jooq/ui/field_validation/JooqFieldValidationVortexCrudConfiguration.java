@@ -112,7 +112,7 @@ public class JooqFieldValidationVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .filterField(requiredField)
+                .searchField(requiredField)
                 .columns(List.of(
                         JooqFormElement.of(requiredField, "route.projects.labels.name").build(),
                         JooqFormElement.of(emailField, "route.projects.labels.description").build()

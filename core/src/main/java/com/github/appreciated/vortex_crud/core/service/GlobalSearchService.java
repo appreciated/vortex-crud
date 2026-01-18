@@ -89,7 +89,7 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> extends 
      * Search a single route and add results to the allResults list.
      */
     private void searchRoute(String query, String path, RouteRenderer<ModelClass, FieldType, RepositoryType> route, List<SearchResult> allResults) {
-        if (route.dataStoreConfig() != null && route.filterField() != null) {
+        if (route.dataStoreConfig() != null && route.searchField() != null) {
             // Check permissions
             if (permissionChecker != null && !permissionChecker.hasUserReadAccessToRoute(route)) {
                 return;
@@ -101,7 +101,7 @@ public class GlobalSearchService<ModelClass, FieldType, RepositoryType> extends 
             if (dataStore != null) {
                 try {
                     List<ModelClass> results = dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(
-                            route.filterField(),
+                            route.searchField(),
                             query,
                             route.filters(),
                             0,

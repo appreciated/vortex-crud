@@ -56,7 +56,7 @@ public class JpaCalendarVortexCrudConfiguration implements VortexCrudConfigurati
                 .titleField("title")
                 .startDateField("startDate")
                 .endDateField("endDate")
-                .filterField("title")
+                .searchField("title")
                 .form(eventForm)
                 .build());
 

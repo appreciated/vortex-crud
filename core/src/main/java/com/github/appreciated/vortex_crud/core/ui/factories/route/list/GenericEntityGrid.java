@@ -36,7 +36,7 @@ public class GenericEntityGrid<ModelClass, FieldType, RepositoryType> extends Gr
         VortexCrudDataStore<FieldType, ?> dataStore = (VortexCrudDataStore<FieldType, ?>) tables.dataStoreInstance();
         // Set up the data provider with lazy loading and filtering
 
-        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, typedRouteRenderer.filterField(), typedRouteRenderer.filters()).withConfigurableFilter();
+        com.vaadin.flow.data.provider.DataProvider<Object, Void> dataProvider = new GenericFilterableDataProvider<>(dataStore, typedRouteRenderer.searchField(), typedRouteRenderer.filters()).withConfigurableFilter();
 
         Map<?, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = tables.fields();
 

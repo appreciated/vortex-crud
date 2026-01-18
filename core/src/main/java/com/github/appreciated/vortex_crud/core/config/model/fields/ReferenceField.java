@@ -32,7 +32,7 @@ public class ReferenceField<ModelClass, FieldType, RepositoryType> implements Fi
     @lombok.NonNull
     private FieldType field;
     @lombok.NonNull
-    private FieldType filterField;
+    private FieldType searchField;
     private List<FieldType> children;
     private VortexCrudDataStore<FieldType, ?> dataStore;
 }

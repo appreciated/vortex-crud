@@ -56,7 +56,7 @@ public class JpaSearchRouteVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreConfig(config)
                 .title("route.search-test.grid.title")
                 .titleField("name")
-                .filterField("name")
+                .searchField("name")
                 .form(formRoute)
                 .build();
 

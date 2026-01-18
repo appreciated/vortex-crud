@@ -61,7 +61,7 @@ public class JooqCalendarTestVortexCrudConfiguration
                 .titleField(CALENDAR_EVENTS.TITLE)
                 .startDateField(CALENDAR_EVENTS.START_DATE)
                 .endDateField(CALENDAR_EVENTS.END_DATE)
-                .filterField(CALENDAR_EVENTS.TITLE)
+                .searchField(CALENDAR_EVENTS.TITLE)
                 .form(eventForm)
                 .build());
 

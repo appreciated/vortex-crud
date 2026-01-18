@@ -115,7 +115,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         TASKS.ID, JooqNumericIdField.builder().build(),
                         TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
+                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(usersStore).field(TASKS.ID).searchField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
                         TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
                         TASKS.DUE_DATE, JooqDateField.builder().build(),
                         TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
@@ -314,7 +314,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .dataStoreConfig(projectsConfig)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .filterField(PROJECTS.NAME)
+                .searchField(PROJECTS.NAME)
                 .columns(List.of(
                         JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                         JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
@@ -332,7 +332,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .descriptionField(TASKS.DESCRIPTION)
                 .columnField(TASKS.STATUS)
                 .rowIndexField(TASKS.ROW_INDEX)
-                .filterField(TASKS.TITLE)
+                .searchField(TASKS.TITLE)
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
                 .form(taskForm)
                 .build());
@@ -360,7 +360,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(CAMERA::create)
                 .title("route.images-list")
                 .inlineEdit(true)
-                .filterField(IMAGES.TITLE)
+                .searchField(IMAGES.TITLE)
                 .columns(List.of(
                         JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build(),
                         JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build()
@@ -394,7 +394,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
                 .inlineEdit(true)
-                .filterField(VIDEOS.TITLE)
+                .searchField(VIDEOS.TITLE)
                 .columns(List.of(
                         JooqFormElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
                         JooqFormElement.of(VIDEOS.URL, "route.videos.labels.video").build()

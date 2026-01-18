@@ -82,7 +82,7 @@ public class JpaFieldService {
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .dataStore(store)
                                 .field(fieldName)
-                                .filterField(filterField)
+                                .searchField(filterField)
                                 .children(children)
                                 .required(required)
                                 .build();
@@ -102,7 +102,7 @@ public class JpaFieldService {
                                 .<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .dataStore(store)
                                 .field(fieldName)
-                                .filterField(filterField)
+                                .searchField(filterField)
                                 .children(children)
                                 .required(required)
                                 .build();

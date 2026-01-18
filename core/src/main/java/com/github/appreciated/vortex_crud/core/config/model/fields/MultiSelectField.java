@@ -29,23 +29,7 @@ public class MultiSelectField<ModelClass, FieldType, RepositoryType> implements 
     @Builder.Default
     VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MultiSelectFieldFactory<>();
     FieldType field;
-    FieldType filterField;
+    FieldType searchField;
     List<FieldType> children;
     VortexCrudDataStore<FieldType, ?> dataStore;
-
-    public FieldType field() {
-        return field;
-    }
-
-    public FieldType filterField() {
-        return filterField;
-    }
-
-    public List<FieldType> children() {
-        return children;
-    }
-
-    public VortexCrudDataStore<FieldType, ?> dataStore() {
-        return dataStore;
-    }
 }

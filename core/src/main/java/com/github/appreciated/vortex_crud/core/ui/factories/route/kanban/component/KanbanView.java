@@ -79,7 +79,7 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
         this.itemFactory = kanbanRoute.itemFactory();
 
-        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanRoute.filterField(), typedRouteRenderer.filters());
+        dataProvider = new GenericFilterableDataProvider<>(this.dataStore, kanbanRoute.searchField(), typedRouteRenderer.filters());
 
         itemRenderer = new ComponentRenderer<>(entity -> {
             Div cardWrapper = new Div(itemFactory.renderItem(this.routeRenderer,

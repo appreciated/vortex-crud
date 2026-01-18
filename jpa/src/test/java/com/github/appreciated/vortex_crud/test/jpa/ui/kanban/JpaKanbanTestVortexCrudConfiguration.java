@@ -64,7 +64,7 @@ public class JpaKanbanTestVortexCrudConfiguration implements VortexCrudConfigura
                 .columnField("status")
                 .rowIndexField("rowIndex")
                 .titleField("title")
-                .filterField("title")
+                .searchField("title")
                 .form(taskForm)
                 .build()
         );

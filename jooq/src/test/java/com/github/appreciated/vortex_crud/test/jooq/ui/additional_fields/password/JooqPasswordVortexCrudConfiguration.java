@@ -75,7 +75,7 @@ public class JooqPasswordVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.password-test.title-list")
-                .filterField(PASSWORD_TEST.NAME)
+                .searchField(PASSWORD_TEST.NAME)
                 .columns(List.of(
                         JooqFormElement.of(PASSWORD_TEST.NAME, "password-test.labels.name").build()
                 ))

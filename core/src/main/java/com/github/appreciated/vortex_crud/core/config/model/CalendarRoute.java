@@ -60,7 +60,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -94,7 +94,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
             FieldType imageField,
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
-            FieldType filterField,
+            FieldType searchField,
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
@@ -119,7 +119,7 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
         this.imageField = imageField;
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = filterField;
+        this.searchField = searchField;
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;

@@ -127,10 +127,10 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         Map.entry(APPOINTMENT.ID, JooqNumericIdField.builder().build()),
                         Map.entry(APPOINTMENT.START_TIME, JooqDateTimePickerField.builder().required(true).build()),
                         Map.entry(APPOINTMENT.END_TIME, JooqDateTimePickerField.builder().required(true).build()),
-                        Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore(typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).filterField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),
-                        Map.entry(APPOINTMENT.ROOM_ID, JooqReferenceField.builder().dataStore(roomStore).field(APPOINTMENT.ROOM_ID).filterField(ROOM.NAME).children(List.of(ROOM.NAME)).build()),
-                        Map.entry(APPOINTMENT.PERSON_ID, JooqReferenceField.builder().dataStore(personStore).field(APPOINTMENT.PERSON_ID).filterField(PERSON.NAME).children(List.of(PERSON.NAME)).build()),
-                        Map.entry(APPOINTMENT.CUSTOMER_ID, JooqReferenceField.builder().dataStore(customerStore).field(APPOINTMENT.CUSTOMER_ID).filterField(CUSTOMER.NAME).children(List.of(CUSTOMER.NAME)).build()),
+                        Map.entry(APPOINTMENT.APPOINTMENT_TYPE_ID, JooqReferenceField.builder().dataStore(typeStore).field(APPOINTMENT.APPOINTMENT_TYPE_ID).searchField(APPOINTMENT_TYPE.NAME).children(List.of(APPOINTMENT_TYPE.NAME)).required(true).build()),
+                        Map.entry(APPOINTMENT.ROOM_ID, JooqReferenceField.builder().dataStore(roomStore).field(APPOINTMENT.ROOM_ID).searchField(ROOM.NAME).children(List.of(ROOM.NAME)).build()),
+                        Map.entry(APPOINTMENT.PERSON_ID, JooqReferenceField.builder().dataStore(personStore).field(APPOINTMENT.PERSON_ID).searchField(PERSON.NAME).children(List.of(PERSON.NAME)).build()),
+                        Map.entry(APPOINTMENT.CUSTOMER_ID, JooqReferenceField.builder().dataStore(customerStore).field(APPOINTMENT.CUSTOMER_ID).searchField(CUSTOMER.NAME).children(List.of(CUSTOMER.NAME)).build()),
                         Map.entry(APPOINTMENT.STATUS, JooqTextField.builder().build()),
                         Map.entry(APPOINTMENT.RECURRENCE_FREQUENCY, JooqSelectField.builder().values("recurrence-frequency").build()),
                         Map.entry(APPOINTMENT.RECURRENCE_INTERVAL, JooqIntegerField.builder().build()),
@@ -158,7 +158,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, JooqReferenceField.builder()
                                 .dataStore(emailTemplatesStore)
                                 .field(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID)
-                                .filterField(EMAIL_TEMPLATES.NAME)
+                                .searchField(EMAIL_TEMPLATES.NAME)
                                 .children(List.of(EMAIL_TEMPLATES.NAME, EMAIL_TEMPLATES.SUBJECT))
                                 .build()))
                 .build();

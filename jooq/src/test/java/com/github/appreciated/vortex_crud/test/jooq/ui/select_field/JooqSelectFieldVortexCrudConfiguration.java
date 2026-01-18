@@ -67,7 +67,7 @@ public class JooqSelectFieldVortexCrudConfiguration
         routes.put("select-field-test", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.select-field.title-list")
-            .filterField(SELECT_FIELD_TEST.NAME)
+            .searchField(SELECT_FIELD_TEST.NAME)
             .columns(List.of(
                   JooqFormElement.of(SELECT_FIELD_TEST.NAME, "select-field.labels.name").build()
             ))

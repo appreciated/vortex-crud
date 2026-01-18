@@ -90,7 +90,7 @@ public class JooqMultiFormVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .filterField(MULTI_FORM_TEST.PROFILE_NAME)
+                .searchField(MULTI_FORM_TEST.PROFILE_NAME)
                 .columns(List.of(
                         JooqFormElement.of(MULTI_FORM_TEST.PROFILE_NAME, "relations.labels.name").build()
                 ))

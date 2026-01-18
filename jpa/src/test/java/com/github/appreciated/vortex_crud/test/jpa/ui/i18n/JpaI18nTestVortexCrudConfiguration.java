@@ -55,7 +55,7 @@ public class JpaI18nTestVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(imageConfig)
                 .title("route.images-list")
                 .inlineEdit(true)
-                .filterField("title")
+                .searchField("title")
                 .columns(List.of(
                         JpaFormElement.builder("url", "route.projects.labels.description").build(),
                         JpaFormElement.builder("title", "route.projects.labels.name").build()

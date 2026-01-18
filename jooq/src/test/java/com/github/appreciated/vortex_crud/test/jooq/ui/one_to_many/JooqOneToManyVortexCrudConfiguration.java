@@ -83,7 +83,7 @@ public class JooqOneToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
-                .filterField(ONE_TO_MANY_PARENT.NAME)
+                .searchField(ONE_TO_MANY_PARENT.NAME)
                 .columns(List.of(
                         JooqFormElement.of(ONE_TO_MANY_PARENT.NAME, "relations.labels.name").build()
                 ))

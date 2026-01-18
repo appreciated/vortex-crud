@@ -10,12 +10,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.kanban.KanbanFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -52,7 +50,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     @lombok.NonNull
     private FieldType columnField;
@@ -85,7 +83,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
             FieldType imageField,
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
-            FieldType filterField,
+            FieldType searchField,
             @lombok.NonNull FieldType columnField,
             FieldType rowIndexField,
             SerializableSupplier<Component> iconFactory,
@@ -107,7 +105,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
         this.imageField = imageField;
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = filterField;
+        this.searchField = searchField;
         this.columnField = columnField;
         this.rowIndexField = rowIndexField;
         this.iconFactory = iconFactory;

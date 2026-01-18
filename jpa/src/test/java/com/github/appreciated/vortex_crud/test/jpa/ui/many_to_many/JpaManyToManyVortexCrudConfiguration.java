@@ -65,7 +65,7 @@ public class JpaManyToManyVortexCrudConfiguration implements VortexCrudConfigura
                 .dataStoreConfig(itemConfig)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
-                .filterField("name")
+                .searchField("name")
                 .form(itemForm)
                 .columns(List.of(JpaFormElement.builder("name", "relations.labels.name").build()))
                 .build());

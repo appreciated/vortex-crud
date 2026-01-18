@@ -257,7 +257,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
                 .inlineEdit(true)
-                .filterField("name")
+                .searchField("name")
                 .columns(List.of(
                         JpaFormElement.builder("name", "route.projects.labels.name").build(),
                         JpaFormElement.builder("description", "route.projects.labels.description").build(),
@@ -276,7 +276,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .columnField("status")
                 .rowIndexField("rowIndex")
                 .titleField("title")
-                .filterField("title")
+                .searchField("title")
                 .writeRoles(List.of("admin", "manager", "editor", "viewer"))
                 .form(taskForm)
                 .build());
@@ -304,7 +304,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(CAMERA::create)
                 .title("route.images-list")
                 .inlineEdit(true)
-                .filterField("title")
+                .searchField("title")
                 .columns(List.of(
                         JpaFormElement.builder("url", "route.images.labels.image").build(),
                         JpaFormElement.builder("title", "route.images.labels.title").build()
@@ -338,7 +338,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .iconFactory(MOVIE::create)
                 .title("route.videos.title-list")
                 .inlineEdit(true)
-                .filterField("title")
+                .searchField("title")
                 .columns(List.of(
                         JpaFormElement.builder("title", "route.videos.labels.title").build(),
                         JpaFormElement.builder("url", "route.videos.labels.video").build()

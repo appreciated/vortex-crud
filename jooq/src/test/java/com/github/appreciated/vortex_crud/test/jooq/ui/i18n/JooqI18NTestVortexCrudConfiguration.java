@@ -60,7 +60,7 @@ public class JooqI18NTestVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .title("route.images-list")
                 .inlineEdit(true)
-                .filterField(I18N_IMAGES.TITLE)
+                .searchField(I18N_IMAGES.TITLE)
                 .columns(List.of(
                         JooqFormElement.of(I18N_IMAGES.URL, "route.projects.labels.description").build(),
                         JooqFormElement.of(I18N_IMAGES.TITLE, "route.projects.labels.name").build()

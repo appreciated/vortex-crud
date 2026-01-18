@@ -38,8 +38,8 @@ public class EntityComboBoxWrapper<ModelClass, FieldType, RepositoryType> extend
 
         // Set up the ComboBox with a data provider and label generator
         comboBox.setDataProvider(
-                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.filterField(), filterValue, i, i1).stream(),
-                filterValue -> dataStore.countWhereColumnLike(refField.filterField(), filterValue)
+                (filterValue, i, i1) -> (java.util.stream.Stream<Object>) dataStore.getRecordsFromTableWhereColumnLike(refField.searchField(), filterValue, i, i1).stream(),
+                filterValue -> dataStore.countWhereColumnLike(refField.searchField(), filterValue)
         );
 
         comboBox.setItemLabelGenerator(item -> refField.children().stream()

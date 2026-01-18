@@ -85,7 +85,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
                         Map.entry(MISSING_FEATURES_TEST.REFERENCED_ID, JooqReferenceField.builder()
                                 .dataStore(referencedStore)
                                 .field(MISSING_FEATURES_REFERENCED.NAME)
-                                .filterField(MISSING_FEATURES_REFERENCED.ID)
+                                .searchField(MISSING_FEATURES_REFERENCED.ID)
                                 .build())
                 ))
                 .build();
@@ -127,7 +127,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .filterField(MISSING_FEATURES_TEST.NAME)
+            .searchField(MISSING_FEATURES_TEST.NAME)
             .columns(List.of(
                   JooqFormElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
             ))

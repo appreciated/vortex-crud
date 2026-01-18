@@ -59,7 +59,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
         return false;
     }
 
-    default FieldType filterField() {
+    default FieldType searchField() {
         return null;
     }
 

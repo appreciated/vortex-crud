@@ -30,8 +30,8 @@ public class JooqReferenceField {
             return this;
         }
 
-        public <R extends org.jooq.Record> TypeSafeBuilder filterField(TableField<R, ?> filterField) {
-            builder.filterField(filterField);
+        public <R extends org.jooq.Record> TypeSafeBuilder searchField(TableField<R, ?> filterField) {
+            builder.searchField(filterField);
             return this;
         }
 

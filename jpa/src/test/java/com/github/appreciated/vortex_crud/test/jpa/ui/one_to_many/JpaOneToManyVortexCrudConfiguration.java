@@ -86,7 +86,7 @@ public class JpaOneToManyVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(parentConfig)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.one-to-many.title")
-                .filterField("name")
+                .searchField("name")
                 .columns(List.of(
                         JpaFormElement.builder("name", "relations.labels.name").build()
                 ))

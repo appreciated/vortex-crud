@@ -71,7 +71,7 @@ public class JooqManyToManyVortexCrudConfiguration implements VortexCrudConfigur
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("relations.tests.many-to-many.title")
-                .filterField(MANY_TO_MANY_ITEM.NAME)
+                .searchField(MANY_TO_MANY_ITEM.NAME)
                 .columns(List.of( JooqFormElement.of(MANY_TO_MANY_ITEM.NAME, "relations.tests.many-to-many.title").build()))
                 .form(itemForm)
                 .build());

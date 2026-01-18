@@ -120,7 +120,7 @@ public class JpaFieldValidationVortexCrudConfiguration implements VortexCrudConf
                 .dataStoreConfig(config)
                 .iconFactory(FACTORY::create)
                 .title("route.projects.title-list")
-                .filterField("requiredField")
+                .searchField("requiredField")
                 .columns(List.of(
                         JpaFormElement.builder("requiredField", "route.projects.labels.name").build(),
                         JpaFormElement.builder("emailField", "route.projects.labels.description").build()

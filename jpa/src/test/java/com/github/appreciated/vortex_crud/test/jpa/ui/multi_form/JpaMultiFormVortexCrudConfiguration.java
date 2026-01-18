@@ -79,7 +79,7 @@ public class JpaMultiFormVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(multiFormConfig)
                 .iconFactory(USER::create)
                 .title("route.multi_form.title")
-                .filterField("profileName")
+                .searchField("profileName")
                 .columns(List.of(
                         JpaFormElement.builder("profileName", "relations.labels.name").build()
                 ))

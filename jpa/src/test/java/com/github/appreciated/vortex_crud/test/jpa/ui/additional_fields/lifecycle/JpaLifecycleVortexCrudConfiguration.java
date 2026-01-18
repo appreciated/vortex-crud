@@ -79,7 +79,7 @@ public class JpaLifecycleVortexCrudConfiguration implements VortexCrudConfigurat
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.lifecycle-test.title-list")
-                .filterField("name")
+                .searchField("name")
                 .columns(List.of(
                         JpaFormElement.builder("name", "lifecycle-test.labels.name").build(),
                         JpaFormElement.builder("description", "lifecycle-test.labels.description").build()

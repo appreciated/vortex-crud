@@ -61,7 +61,7 @@ public class JpaSelectFieldVortexCrudConfiguration implements VortexCrudConfigur
         routes.put("select-field-test", ListRoute.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(config)
                 .title("route.select-field.title-list")
-                .filterField("name")
+                .searchField("name")
                 .columns(List.of(
                         JpaFormElement.builder("name", "select-field.labels.name").build()
                 ))

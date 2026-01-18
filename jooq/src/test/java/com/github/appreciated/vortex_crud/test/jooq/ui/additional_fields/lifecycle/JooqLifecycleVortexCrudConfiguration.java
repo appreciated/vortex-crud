@@ -76,7 +76,7 @@ public class JooqLifecycleVortexCrudConfiguration
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.lifecycle-test.title-list")
-                .filterField(LIFECYCLE_TEST.NAME)
+                .searchField(LIFECYCLE_TEST.NAME)
                 .columns(List.of(
                         JooqFormElement.of(LIFECYCLE_TEST.NAME, "lifecycle-test.labels.name").build(),
                         JooqFormElement.of(LIFECYCLE_TEST.DESCRIPTION, "lifecycle-test.labels.description").build()

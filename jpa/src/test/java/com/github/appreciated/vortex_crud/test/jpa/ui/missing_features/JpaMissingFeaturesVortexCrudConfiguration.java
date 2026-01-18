@@ -90,7 +90,7 @@ public class JpaMissingFeaturesVortexCrudConfiguration implements VortexCrudConf
             .dataStoreConfig(taskConfig)
             .iconFactory(COG::create)
             .title("route.missing.list")
-            .filterField("name")
+            .searchField("name")
             .columns(List.of(
                   JpaFormElement.builder("name", "Name").build()
             ))

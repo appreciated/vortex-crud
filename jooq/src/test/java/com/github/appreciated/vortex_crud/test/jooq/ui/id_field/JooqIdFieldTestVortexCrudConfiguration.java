@@ -56,7 +56,7 @@ public class JooqIdFieldTestVortexCrudConfiguration
         routes.put("id-test-list", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.id-field.title-list")
-            .filterField(ID_FIELD_TEST.NAME)
+            .searchField(ID_FIELD_TEST.NAME)
             .columns(List.of(
                   JooqFormElement.of(ID_FIELD_TEST.NAME, "id-field.labels.name").build()
              ))

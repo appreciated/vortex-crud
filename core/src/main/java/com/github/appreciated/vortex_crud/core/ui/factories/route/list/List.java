@@ -56,7 +56,7 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
         SearchField textField = new SearchField(event -> applyFilter(event.getValue()));
         entityGrid = new GenericEntityGrid<>(typedRouteResolver, routeRenderer, context);
         add(headerBar);
-        if (routeRenderer.filterField() != null) {
+        if (routeRenderer.searchField() != null) {
             add(textField);
         }
         add(entityGrid);

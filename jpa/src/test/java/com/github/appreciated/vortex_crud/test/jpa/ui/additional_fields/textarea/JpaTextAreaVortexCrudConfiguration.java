@@ -79,7 +79,7 @@ public class JpaTextAreaVortexCrudConfiguration implements VortexCrudConfigurati
                 .dataStoreConfig(config)
                 .iconFactory(COG::create)
                 .title("route.textarea-test.title-list")
-                .filterField("name")
+                .searchField("name")
                 .columns(List.of(
                         JpaFormElement.builder("name", "textarea-test.labels.name").build(),
                         JpaFormElement.builder("description", "textarea-test.labels.content").build()

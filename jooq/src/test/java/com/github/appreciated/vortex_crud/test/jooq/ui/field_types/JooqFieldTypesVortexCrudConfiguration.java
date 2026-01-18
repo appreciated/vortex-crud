@@ -78,7 +78,7 @@ public class JooqFieldTypesVortexCrudConfiguration
         routes.put("missing-features-test", JooqListRoute.builder()
             .dataStoreConfig(config)
             .title("route.missing.list")
-            .filterField(FIELD_TYPES_TEST.NAME)
+            .searchField(FIELD_TYPES_TEST.NAME)
             .columns(List.of(
                   JooqFormElement.of(FIELD_TYPES_TEST.NAME, "Name").build()
             ))

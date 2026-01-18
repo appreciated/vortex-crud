@@ -10,12 +10,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.list.ListRouteFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -45,7 +43,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -74,7 +72,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
             VortexCrudItemFactory<FieldType> itemFactory,
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
-            FieldType filterField,
+            FieldType searchField,
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
@@ -92,7 +90,7 @@ public class ListRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
         this.itemFactory = itemFactory != null ? itemFactory : new CardFactory<>();
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = filterField;
+        this.searchField = searchField;
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;

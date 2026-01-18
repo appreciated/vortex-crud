@@ -51,7 +51,7 @@ public class FieldValidationStrategy implements ValidationStrategy {
         }
 
         // Check if filterField is configured
-        if (refField.filterField() == null) {
+        if (refField.searchField() == null) {
             LOGGER.warn("ReferenceField '{}' has no filterField configured. This may cause issues with searching. Context: {}",
                     fieldName, fullContext);
         }
