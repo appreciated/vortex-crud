@@ -88,7 +88,7 @@ public class JooqGlobalRouteActionVortexCrudConfiguration
             .columns(List.of(
                   JooqFormElement.of(GLOBAL_ROUTE_ACTION_TEST.NAME, "Name").build()
             ))
-            .routeActions(List.of(
+            .actions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
                     .handler(ctx -> {})

@@ -650,7 +650,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "labels", repositoryLabelsRoute,
                                 "edit", repositoryForm))
                         .build())
-                .routeActions(Collections.singletonList(
+                .actions(Collections.singletonList(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                                 .componentFactory(() -> new Button(VaadinIcon.STAR.create()))
                                 .handler(context -> {
@@ -694,7 +694,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                 .descriptionField(ISSUE.DESCRIPTION)
                 .columnField(ISSUE.STATE)
                 .filterField(ISSUE.TITLE)
-                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                .filter(DynamicRouteFilter.<TableField<?, ?>>builder()
                         .field(ISSUE.ASSIGNEE_ID)
                         .valueProvider(() -> {
                             String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
@@ -715,7 +715,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         JooqFormElement.of(PULL_REQUEST.STATE, "route.pull-requests.labels.state").build(),
                         JooqFormElement.of(PULL_REQUEST.SOURCE_BRANCH, "route.pull-requests.labels.source_branch").build(),
                         JooqFormElement.of(PULL_REQUEST.TARGET_BRANCH, "route.pull-requests.labels.target_branch").build()))
-                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                .filter(DynamicRouteFilter.<TableField<?, ?>>builder()
                         .field(PULL_REQUEST.AUTHOR_ID)
                         .valueProvider(() -> {
                             String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();

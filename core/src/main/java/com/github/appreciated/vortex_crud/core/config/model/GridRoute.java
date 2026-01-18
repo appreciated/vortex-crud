@@ -62,7 +62,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
     private List<RouteFilter<FieldType>> filters;
 
@@ -85,7 +85,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
             List<String> writeRoles,
             List<String> readOnlyRoles,
             FormRouteProvider<ModelClass, FieldType, RepositoryType> form,
-            List<RouteAction<FieldType, ModelClass>> routeActions,
+            List<RouteAction<FieldType, ModelClass>> actions,
             @lombok.Singular List<RouteFilter<FieldType>> filters
     ) {
         this.dataStoreConfig = dataStoreConfig;
@@ -104,7 +104,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
-        this.routeActions = routeActions;
+        this.actions = actions;
         this.filters = filters;
 
         // Inject parent's dataStoreConfig and title into child form

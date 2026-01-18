@@ -67,13 +67,9 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
-    private List<RouteFilter<FieldType>> routeFilters;
-
-    public List<RouteFilter<FieldType>> filters() {
-        return routeFilters;
-    }
+    private List<RouteFilter<FieldType>> filters;
 
     @Builder
     public KanbanRoute(
@@ -96,8 +92,8 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
             List<String> writeRoles,
             List<String> readOnlyRoles,
             FormRoute<ModelClass, FieldType, RepositoryType> form,
-            List<RouteAction<FieldType, ModelClass>> routeActions,
-            @lombok.Singular List<RouteFilter<FieldType>> routeFilters
+            List<RouteAction<FieldType, ModelClass>> actions,
+            @lombok.Singular List<RouteFilter<FieldType>> filters
     ) {
         this.dataStoreConfig = dataStoreConfig;
         this.title = title;
@@ -117,8 +113,8 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
-        this.routeActions = routeActions;
-        this.routeFilters = routeFilters;
+        this.actions = actions;
+        this.filters = filters;
 
         // Inject parent's dataStoreConfig and title into child form
         this.form = form;

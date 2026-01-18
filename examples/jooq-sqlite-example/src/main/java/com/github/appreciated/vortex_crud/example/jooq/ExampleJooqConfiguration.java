@@ -302,7 +302,7 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField(PROJECTS.NAME)
                 .descriptionField(PROJECTS.DESCRIPTION)
                 .writeRoles(List.of("admin", "manager"))
-                .routeActions(List.of(
+                .actions(List.of(
                         GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                                 .componentFactory(() -> new Button("Global Action"))
                                 .handler((context) -> Notification.show("Global Action Clicked"))

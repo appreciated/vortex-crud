@@ -49,7 +49,7 @@ public class SubmenuRoute<ModelClass, FieldType, RepositoryType> implements Rout
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
     @Override
-    public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> routeActions() {
+    public List<com.github.appreciated.vortex_crud.core.ui.actions.RouteAction<FieldType, ModelClass>> actions() {
         return null;
     }
 }

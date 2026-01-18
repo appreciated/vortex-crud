@@ -244,7 +244,7 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .titleField("name")
                 .descriptionField("description")
                 .writeRoles(List.of("admin", "manager"))
-                .routeActions(List.of(
+                .actions(List.of(
                         GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
                                 .componentFactory(() -> new Button("Global Action"))
                                 .handler((context) -> Notification.show("Global Action Clicked"))

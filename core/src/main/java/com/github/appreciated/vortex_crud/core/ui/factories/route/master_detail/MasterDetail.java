@@ -7,8 +7,6 @@ import com.github.appreciated.vortex_crud.core.config.model.RouteRenderer;
 import com.github.appreciated.vortex_crud.core.data_provider.GenericFilterableDataProvider;
 import com.github.appreciated.vortex_crud.core.entity.VortexCrudDataStoreUtilStrategy;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStoreFieldNameResolver;
-import com.github.appreciated.vortex_crud.core.entity.reflection.ReflectionService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigService;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.actions.RouteActionContext;
@@ -76,8 +74,8 @@ public class MasterDetail<ModelClass, FieldType, RepositoryType> extends SplitLa
                 routeHeader);
 
         // Render custom route actions if configured
-        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
-            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+        if (routeRenderer.actions() != null && !routeRenderer.actions().isEmpty()) {
+            headerBar.renderActions(routeRenderer.actions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet

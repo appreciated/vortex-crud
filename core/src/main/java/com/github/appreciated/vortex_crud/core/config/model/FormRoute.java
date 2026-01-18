@@ -64,7 +64,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
 
     private List<String> readOnlyRoles;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
@@ -85,7 +85,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
-            List<RouteAction<FieldType, ModelClass>> routeActions,
+            List<RouteAction<FieldType, ModelClass>> actions,
             Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes
     ) {
         this.defaultRoute = defaultRoute;
@@ -103,7 +103,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
-        this.routeActions = routeActions;
+        this.actions = actions;
         this.routes = routes;
     }
 }

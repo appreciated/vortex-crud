@@ -46,6 +46,6 @@ public class CustomRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<String> readOnlyRoles;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
 }

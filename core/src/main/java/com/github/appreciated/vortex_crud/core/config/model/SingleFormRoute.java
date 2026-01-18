@@ -84,7 +84,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
         return entityFilterValueProvider;
     }
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
     @lombok.NonNull
     private List<InternalFormElement<FieldType>> fields;

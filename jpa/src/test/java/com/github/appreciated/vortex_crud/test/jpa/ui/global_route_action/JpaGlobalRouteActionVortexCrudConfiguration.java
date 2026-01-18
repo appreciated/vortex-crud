@@ -84,7 +84,7 @@ public class JpaGlobalRouteActionVortexCrudConfiguration implements VortexCrudCo
             .columns(List.of(
                   JpaFormElement.builder("name", "Name").build()
             ))
-            .routeActions(List.of(
+            .actions(List.of(
                  GlobalRouteAction.<String, JpaRepository<?, ?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
                     .handler(ctx -> {})

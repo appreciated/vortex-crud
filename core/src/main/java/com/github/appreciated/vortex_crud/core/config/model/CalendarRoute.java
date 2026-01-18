@@ -11,12 +11,10 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.github.appreciated.vortex_crud.core.ui.factories.route.calendar.CalendarFactory;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -74,13 +72,9 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
 
     private List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
-    private List<RouteFilter<FieldType>> routeFilters;
-
-    public List<RouteFilter<FieldType>> filters() {
-        return routeFilters;
-    }
+    private List<RouteFilter<FieldType>> filters;
 
     @Builder
     public CalendarRoute(
@@ -106,8 +100,8 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
             List<String> readOnlyRoles,
             FormRoute<ModelClass, FieldType, RepositoryType> form,
             List<MenuActionComponentFactory<ModelClass, FieldType, RepositoryType>> menuActionFactories,
-            List<RouteAction<FieldType, ModelClass>> routeActions,
-            @lombok.Singular List<RouteFilter<FieldType>> routeFilters
+            List<RouteAction<FieldType, ModelClass>> actions,
+            @lombok.Singular List<RouteFilter<FieldType>> filters
     ) {
         this.dataStoreConfig = dataStoreConfig;
         this.title = title;
@@ -130,8 +124,8 @@ public class CalendarRoute<ModelClass, FieldType, RepositoryType> implements Rou
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
         this.menuActionFactories = menuActionFactories;
-        this.routeActions = routeActions;
-        this.routeFilters = routeFilters;
+        this.actions = actions;
+        this.filters = filters;
 
         // Inject parent's dataStoreConfig and title into child form
         this.form = form;

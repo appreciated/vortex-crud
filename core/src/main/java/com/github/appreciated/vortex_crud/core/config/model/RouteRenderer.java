@@ -9,7 +9,6 @@ import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRout
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.function.SerializableSupplier;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -77,7 +76,7 @@ public interface RouteRenderer<ModelClass, FieldType, RepositoryType> extends Ac
      *
      * @return The list of route actions, or null if none
      */
-    default List<RouteAction<FieldType, ModelClass>> routeActions() {
+    default List<RouteAction<FieldType, ModelClass>> actions() {
         return null;
     }
 }

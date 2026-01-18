@@ -61,9 +61,9 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
     @lombok.NonNull
     private FormRouteProvider<ModelClass, FieldType, RepositoryType> form;
 
-    private List<RouteAction<FieldType, ModelClass>> routeActions;
+    private List<RouteAction<FieldType, ModelClass>> actions;
 
-    private List<RouteFilter<FieldType>> routeFilters;
+    private List<RouteFilter<FieldType>> filters;
 
     @Builder
     public MasterDetailRoute(
@@ -84,8 +84,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
             List<String> writeRoles,
             List<String> readOnlyRoles,
             @lombok.NonNull FormRoute<ModelClass, FieldType, RepositoryType> form,
-            List<RouteAction<FieldType, ModelClass>> routeActions,
-            @lombok.Singular List<RouteFilter<FieldType>> routeFilters
+            List<RouteAction<FieldType, ModelClass>> actions,
+            @lombok.Singular List<RouteFilter<FieldType>> filters
     ) {
         this.dataStoreConfig = dataStoreConfig;
         this.title = title;
@@ -103,8 +103,8 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;
-        this.routeActions = routeActions;
-        this.routeFilters = routeFilters;
+        this.actions = actions;
+        this.filters = filters;
 
         // Inject parent's dataStoreConfig and title into child form
         this.form = form;

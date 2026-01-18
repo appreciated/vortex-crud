@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.list;
 
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
-import com.github.appreciated.vortex_crud.core.config.model.GridRoute;
 import com.github.appreciated.vortex_crud.core.config.model.ListRoute;
 import com.github.appreciated.vortex_crud.core.config.model.RouteRendererSingleChild;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -40,10 +39,10 @@ public class List<ModelClass, FieldType, RepositoryType> extends VerticalLayout 
                 routeHeader);
 
         // Render custom route actions if configured
-        if (routeRenderer.routeActions() != null && !routeRenderer.routeActions().isEmpty()) {
+        if (routeRenderer.actions() != null && !routeRenderer.actions().isEmpty()) {
             VortexCrudDataStore<FieldType, ModelClass> vortexDataStore = routeRenderer.dataStoreInstance();
 
-            headerBar.renderActions(routeRenderer.routeActions(), contextConsumer -> {
+            headerBar.renderActions(routeRenderer.actions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore(vortexDataStore)
                     .selectedEntities(Collections.emptyList())  // No selection support yet

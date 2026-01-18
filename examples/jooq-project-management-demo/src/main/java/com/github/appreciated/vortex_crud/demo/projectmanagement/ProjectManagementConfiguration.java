@@ -306,7 +306,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Task Form Configuration
         FormRoute<TableRecord<?>, TableField<?, ?>, TableImpl<?>> taskForm = JooqFormRoute.builder()
                 .titleField(TASK.TITLE)
-                .routeActions(List.of(
+                .actions(List.of(
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                                 .componentFactory(() -> {
                                     Button button = new Button("Start Progress");
@@ -506,7 +506,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .descriptionField(TASK.DESCRIPTION)
                 .columnField(TASK.STATUS)
                 .filterField(TASK.TITLE)
-                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                .filter(DynamicRouteFilter.<TableField<?, ?>>builder()
                         .field(TASK.ASSIGNEE_ID)
                         .valueProvider(() -> {
                             String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
@@ -533,7 +533,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(PROJECT.STATUS, "route.projects.labels.status").build(),
                         JooqFormElement.of(PROJECT.PRIORITY, "route.projects.labels.priority").build(),
                         JooqFormElement.of(PROJECT.END_DATE, "route.projects.labels.end_date").build()))
-                .routeFilter(DynamicRouteFilter.<TableField<?, ?>>builder()
+                .filter(DynamicRouteFilter.<TableField<?, ?>>builder()
                         .field(PROJECT.OWNER_ID)
                         .valueProvider(() -> {
                             String username = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getName();
@@ -561,41 +561,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "milestones", projectMilestonesRoute,
                                 "edit", projectForm))
                         .build())
-                .build());
-
-        routes.put("tasks-kanban", JooqKanbanRoute.builder()
-                .iconFactory(VaadinIcon.TASKS::create)
-                .dataStoreConfig(taskConfig)
-                .title("route.tasks.title")
-                .titleField(TASK.TITLE)
-                .descriptionField(TASK.DESCRIPTION)
-                .columnField(TASK.STATUS)
-                .titleField(TASK.TITLE)
-                .filterField(TASK.TITLE)
-                .writeRoles(List.of("admin", "manager", "developer"))
-                .form(taskForm)
-                .build());
-
-        routes.put("my-milestones", JooqListRoute.builder()
-                .dataStoreConfig(milestoneConfig)
-                .iconFactory(VaadinIcon.FLAG::create)
-                .title("route.my-milestones.title")
-                .filterField(MILESTONE.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
-                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
-                        JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
-                .form(milestoneForm)
-                .build());
-
-        routes.put("milestones", JooqGridRoute.builder()
-                .dataStoreConfig(milestoneConfig)
-                .iconFactory(VaadinIcon.FLAG::create)
-                .title("route.milestones.title")
-                .titleField(MILESTONE.TITLE)
-                .descriptionField(MILESTONE.DESCRIPTION)
-                .writeRoles(List.of("admin", "manager"))
-                .form(milestoneForm)
                 .build());
 
         routes.put("users", JooqGridRoute.builder()

@@ -20,36 +20,36 @@ public class GenericFilterableDataProvider<FieldType> extends CallbackDataProvid
      *
      * @param dataStore      The data store to fetch data from.
      * @param filterField    The field to apply filtering on. If null, no filtering is applied.
-     * @param routeFilters The default filters to apply.
+     * @param filters The default filters to apply.
      */
-    public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> routeFilters) {
+    public GenericFilterableDataProvider(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> filters) {
         super(
-                query -> fetchFromDataStore(dataStore, filterField, routeFilters, query),
-                query -> countFromDataStore(dataStore, filterField, routeFilters, query)
+                query -> fetchFromDataStore(dataStore, filterField, filters, query),
+                query -> countFromDataStore(dataStore, filterField, filters, query)
         );
     }
 
-    private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> routeFilters, Query<Object, String> query) {
+    private static <FieldType> Stream<Object> fetchFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> filters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
+        if ((filterText.isEmpty() || filterField == null) && (filters == null || filters.isEmpty())) {
             return dataStore.getRecordsFromTable(query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         } else if (filterText.isEmpty() || filterField == null) {
-            return dataStore.getRecordsFromTableWhereFiltersEqual(routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
-        } else if (routeFilters != null && !routeFilters.isEmpty()) {
-            return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+            return dataStore.getRecordsFromTableWhereFiltersEqual(filters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
+        } else if (filters != null && !filters.isEmpty()) {
+            return dataStore.getRecordsFromTableWhereColumnLikeAndFiltersEqual(filterField, filterText, filters, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         } else {
             return dataStore.getRecordsFromTableWhereColumnLike(filterField, filterText, query.getOffset(), query.getLimit()).stream().map(obj -> (Object) obj);
         }
     }
 
-    private static <FieldType> int countFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> routeFilters, Query<Object, String> query) {
+    private static <FieldType> int countFromDataStore(VortexCrudDataStore<FieldType, ?> dataStore, FieldType filterField, java.util.List<RouteFilter<FieldType>> filters, Query<Object, String> query) {
         String filterText = query.getFilter().orElse("");
-        if ((filterText.isEmpty() || filterField == null) && (routeFilters == null || routeFilters.isEmpty())) {
+        if ((filterText.isEmpty() || filterField == null) && (filters == null || filters.isEmpty())) {
             return dataStore.count();
         } else if (filterText.isEmpty() || filterField == null) {
-            return dataStore.countWhereFiltersEqual(routeFilters);
-        } else if (routeFilters != null && !routeFilters.isEmpty()) {
-            return dataStore.countWhereColumnLikeAndFiltersEqual(filterField, filterText, routeFilters);
+            return dataStore.countWhereFiltersEqual(filters);
+        } else if (filters != null && !filters.isEmpty()) {
+            return dataStore.countWhereColumnLikeAndFiltersEqual(filterField, filterText, filters);
         } else {
             return dataStore.countWhereColumnLike(filterField, filterText);
         }

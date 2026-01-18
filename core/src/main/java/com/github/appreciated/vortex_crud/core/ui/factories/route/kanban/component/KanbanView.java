@@ -128,8 +128,8 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 routeHeader);
 
         // Render custom route actions if configured
-        if (this.routeRenderer.routeActions() != null && !this.routeRenderer.routeActions().isEmpty()) {
-            headerBar.renderActions(this.routeRenderer.routeActions(), contextConsumer -> {
+        if (this.routeRenderer.actions() != null && !this.routeRenderer.actions().isEmpty()) {
+            headerBar.renderActions(this.routeRenderer.actions(), contextConsumer -> {
                 RouteActionContext<FieldType, ModelClass> actionContext = RouteActionContext.<FieldType, ModelClass>builder()
                     .dataStore((VortexCrudDataStore<FieldType, ModelClass>) dataStore)
                     .selectedEntities(java.util.Collections.emptyList())  // No selection support yet

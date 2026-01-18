@@ -131,7 +131,7 @@ public class JooqMissingFeaturesVortexCrudConfiguration implements VortexCrudCon
             .columns(List.of(
                   JooqFormElement.of(MISSING_FEATURES_TEST.NAME, "Name").build()
             ))
-            .routeActions(List.of(
+            .actions(List.of(
                  GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                     .componentFactory(() -> new Button("Print", PRINT.create()))
                     .handler(ctx -> Notification.show("Global Action Executed"))
