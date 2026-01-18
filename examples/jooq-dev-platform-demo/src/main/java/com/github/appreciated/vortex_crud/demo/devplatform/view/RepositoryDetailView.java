@@ -1,8 +1,10 @@
 package com.github.appreciated.vortex_crud.demo.devplatform.view;
 
-import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.RepositoryRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.RepositoryRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.GitRepositoryService;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.GitRepositoryService.FileEntry;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -16,11 +18,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import org.jooq.DSLContext;
-import org.jooq.TableRecord;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.Objects;
 import java.util.List;
+import java.util.Objects;
 
 import static com.github.appreciated.vortex_crud.demo.devplatform.jooq.Tables.*;
 
@@ -28,12 +29,17 @@ public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
     private final DSLContext dsl;
+    private final GitRepositoryService gitService;
     private Span starCount;
     private Button starButton;
 
-    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
+    // Navigation state
+    private String currentPath = "";
+
+    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitRepositoryService gitService) {
         this.repository = repository;
         this.dsl = dsl;
+        this.gitService = gitService;
 
         setSizeFull();
         setPadding(false);
@@ -229,11 +235,12 @@ public class RepositoryDetailView extends VerticalLayout {
                 .set("border", "1px solid var(--lumo-contrast-10pct)");
 
         Tab overviewTab = new Tab("Overview");
+        Tab codeTab = new Tab("Code");
         Tab issuesTab = new Tab("Issues");
         Tab prsTab = new Tab("Pull Requests");
         Tab wikiTab = new Tab("Wiki");
 
-        Tabs tabs = new Tabs(overviewTab, issuesTab, prsTab, wikiTab);
+        Tabs tabs = new Tabs(overviewTab, codeTab, issuesTab, prsTab, wikiTab);
 
         VerticalLayout tabContent = new VerticalLayout();
         tabContent.setPadding(false);
@@ -247,6 +254,10 @@ public class RepositoryDetailView extends VerticalLayout {
             Tab selectedTab = event.getSelectedTab();
             if (selectedTab.equals(overviewTab)) {
                 showOverview(tabContent);
+            } else if (selectedTab.equals(codeTab)) {
+                // Reset path when tab is clicked
+                currentPath = "";
+                showCode(tabContent);
             } else if (selectedTab.equals(issuesTab)) {
                 showIssues(tabContent);
             } else if (selectedTab.equals(prsTab)) {
@@ -284,6 +295,131 @@ public class RepositoryDetailView extends VerticalLayout {
             noReadme.getStyle().set("padding", "var(--lumo-space-m)");
             container.add(noReadme);
         }
+    }
+
+    private void showCode(VerticalLayout container) {
+        container.removeAll();
+
+        // Init repo if not exists for demo
+        gitService.initRepository(repository.getSlug());
+
+        // Breadcrumbs
+        HorizontalLayout breadcrumbs = new HorizontalLayout();
+        breadcrumbs.setSpacing(true);
+        breadcrumbs.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        Button rootBtn = new Button(repository.getName(), e -> {
+            currentPath = "";
+            showCode(container);
+        });
+        rootBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        breadcrumbs.add(rootBtn);
+
+        if (!currentPath.isEmpty()) {
+            String[] parts = currentPath.split("/");
+            String accumulatedPath = "";
+            for (String part : parts) {
+                breadcrumbs.add(new Span("/"));
+                accumulatedPath = accumulatedPath.isEmpty() ? part : accumulatedPath + "/" + part;
+                String finalPath = accumulatedPath;
+                Button partBtn = new Button(part, e -> {
+                    currentPath = finalPath;
+                    showCode(container);
+                });
+                partBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                breadcrumbs.add(partBtn);
+            }
+        }
+
+        container.add(breadcrumbs);
+
+        // File Browser
+        List<FileEntry> files = gitService.listFilesAtRef(repository.getSlug(), "HEAD", currentPath);
+
+        if (files.isEmpty()) {
+            container.add(new Paragraph("No files found or empty repository."));
+            return;
+        }
+
+        Grid<FileEntry> grid = new Grid<>();
+        grid.addComponentColumn(entry -> {
+            Icon icon = entry.isDirectory() ? new Icon(VaadinIcon.FOLDER) : new Icon(VaadinIcon.FILE_CODE);
+            if (entry.isDirectory()) {
+                icon.setColor("var(--lumo-primary-text-color)");
+            } else {
+                icon.setColor("var(--lumo-secondary-text-color)");
+            }
+            icon.setSize("16px");
+            Span name = new Span(entry.name());
+            HorizontalLayout row = new HorizontalLayout(icon, name);
+            row.setAlignItems(FlexComponent.Alignment.CENTER);
+            return row;
+        }).setHeader("Name").setAutoWidth(true);
+
+        grid.setItems(files);
+
+        grid.addItemClickListener(e -> {
+            FileEntry entry = e.getItem();
+            if (entry.isDirectory()) {
+                currentPath = entry.path();
+                showCode(container);
+            } else {
+                showFileContent(container, entry);
+            }
+        });
+
+        container.add(grid);
+    }
+
+    private void showFileContent(VerticalLayout container, FileEntry entry) {
+        container.removeAll();
+
+        // Breadcrumbs (same as before but non-clickable for current file)
+        HorizontalLayout breadcrumbs = new HorizontalLayout();
+        breadcrumbs.setSpacing(true);
+        breadcrumbs.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        Button rootBtn = new Button(repository.getName(), e -> {
+            currentPath = "";
+            showCode(container);
+        });
+        rootBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+        breadcrumbs.add(rootBtn);
+
+        if (!currentPath.isEmpty()) {
+            String[] parts = currentPath.split("/");
+            String accumulatedPath = "";
+            for (String part : parts) {
+                breadcrumbs.add(new Span("/"));
+                accumulatedPath = accumulatedPath.isEmpty() ? part : accumulatedPath + "/" + part;
+                String finalPath = accumulatedPath;
+                Button partBtn = new Button(part, e -> {
+                    currentPath = finalPath;
+                    showCode(container);
+                });
+                partBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE);
+                breadcrumbs.add(partBtn);
+            }
+        }
+
+        breadcrumbs.add(new Span("/"));
+        breadcrumbs.add(new Span(entry.name()));
+
+        container.add(breadcrumbs);
+
+        // Content
+        String content = gitService.getFileContent(repository.getSlug(), "HEAD", entry.path());
+        Pre codeBlock = new Pre();
+        codeBlock.setText(content);
+        codeBlock.getStyle()
+                .set("background-color", "var(--lumo-contrast-5pct)")
+                .set("padding", "var(--lumo-space-m)")
+                .set("border-radius", "var(--lumo-border-radius-m)")
+                .set("overflow", "auto")
+                .set("font-family", "monospace")
+                .set("width", "100%");
+
+        container.add(codeBlock);
     }
 
     private void showIssues(VerticalLayout container) {
