@@ -378,13 +378,13 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                 .build());
 
         // Custom in-memory data store example
-        routes.put("notes", JpaGridRoute.builder()
+        routes.put("notes", GridRoute.<SimpleMapDataStore.Note, String, JpaRepository<?, ?>>builder()
                 .dataStoreConfig(notesConfig)
                 .iconFactory(NOTEBOOK::create)
                 .title("route.notes.title")
                 .titleField("title")
                 .descriptionField("content")
-                .form(JpaFormRoute.builder()
+                .form(FormRoute.<SimpleMapDataStore.Note, String, JpaRepository<?, ?>>builder()
                         .titleField("title")
                         .fields(List.of(
                                 JpaFormElement.builder("title", "route.notes.labels.title").build(),
