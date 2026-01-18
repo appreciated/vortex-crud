@@ -6,9 +6,12 @@ import com.vaadin.flow.component.page.ColorScheme;
 import com.vaadin.flow.component.page.Inline;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.AppShellSettings;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.GitService;
 import com.vaadin.flow.theme.aura.Aura;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 @StyleSheet(Aura.STYLESHEET)
@@ -18,6 +21,13 @@ public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner init(GitService gitService) {
+        return args -> {
+            gitService.initRepository("demo-repo");
+        };
     }
 
     @Override

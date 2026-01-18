@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.demo.devplatform.view;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.RepositoryRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.GitService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -19,6 +20,7 @@ import org.jooq.DSLContext;
 import org.jooq.TableRecord;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.File;
 import java.util.Objects;
 import java.util.List;
 
@@ -28,12 +30,14 @@ public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
     private final DSLContext dsl;
+    private final GitService gitService;
     private Span starCount;
     private Button starButton;
 
-    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
+    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitService gitService) {
         this.repository = repository;
         this.dsl = dsl;
+        this.gitService = gitService;
 
         setSizeFull();
         setPadding(false);
@@ -229,11 +233,12 @@ public class RepositoryDetailView extends VerticalLayout {
                 .set("border", "1px solid var(--lumo-contrast-10pct)");
 
         Tab overviewTab = new Tab("Overview");
+        Tab codeTab = new Tab("Code");
         Tab issuesTab = new Tab("Issues");
         Tab prsTab = new Tab("Pull Requests");
         Tab wikiTab = new Tab("Wiki");
 
-        Tabs tabs = new Tabs(overviewTab, issuesTab, prsTab, wikiTab);
+        Tabs tabs = new Tabs(overviewTab, codeTab, issuesTab, prsTab, wikiTab);
 
         VerticalLayout tabContent = new VerticalLayout();
         tabContent.setPadding(false);
@@ -247,6 +252,8 @@ public class RepositoryDetailView extends VerticalLayout {
             Tab selectedTab = event.getSelectedTab();
             if (selectedTab.equals(overviewTab)) {
                 showOverview(tabContent);
+            } else if (selectedTab.equals(codeTab)) {
+                showCode(tabContent, "");
             } else if (selectedTab.equals(issuesTab)) {
                 showIssues(tabContent);
             } else if (selectedTab.equals(prsTab)) {
@@ -258,6 +265,72 @@ public class RepositoryDetailView extends VerticalLayout {
 
         content.add(tabs, tabContent);
         return content;
+    }
+
+    private void showCode(VerticalLayout container, String path) {
+        if (path != null && !path.isEmpty()) {
+            Button backButton = new Button("..", e -> {
+                String parentPath = new File(path).getParent();
+                container.removeAll();
+                showCode(container, parentPath == null ? "" : parentPath);
+            });
+            backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            container.add(backButton);
+        }
+
+        List<GitService.FileEntry> files = gitService.listFiles(repository.getSlug(), path);
+        if (files.isEmpty()) {
+            container.add(new Paragraph("No files found."));
+            return;
+        }
+
+        Grid<GitService.FileEntry> grid = new Grid<>();
+        grid.addComponentColumn(entry -> {
+            Icon icon = new Icon(entry.isDirectory() ? VaadinIcon.FOLDER : VaadinIcon.FILE_CODE);
+            icon.setSize("16px");
+            icon.getStyle().set("color", entry.isDirectory() ? "var(--lumo-primary-text-color)" : "var(--lumo-secondary-text-color)");
+            Span name = new Span(entry.name());
+            HorizontalLayout row = new HorizontalLayout(icon, name);
+            row.setAlignItems(FlexComponent.Alignment.CENTER);
+            row.setSpacing(true);
+            return row;
+        }).setHeader("Name");
+
+        grid.addItemClickListener(e -> {
+            GitService.FileEntry entry = e.getItem();
+            if (entry.isDirectory()) {
+                container.removeAll();
+                showCode(container, entry.path());
+            } else {
+                showFileContent(container, entry.path());
+            }
+        });
+
+        grid.setItems(files);
+        container.add(grid);
+    }
+
+    private void showFileContent(VerticalLayout container, String path) {
+        container.removeAll();
+        Button backButton = new Button("Back to browsing", e -> {
+            container.removeAll();
+            String parentPath = new File(path).getParent();
+            showCode(container, parentPath == null ? "" : parentPath);
+        });
+        backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        container.add(backButton);
+
+        String content = gitService.getFileContent(repository.getSlug(), path);
+
+        Pre codeBlock = new Pre();
+        codeBlock.setText(content);
+        codeBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+        codeBlock.getStyle().set("padding", "var(--lumo-space-m)");
+        codeBlock.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
+        codeBlock.getStyle().set("overflow", "auto");
+        codeBlock.setWidthFull();
+
+        container.add(codeBlock);
     }
 
     private void showOverview(VerticalLayout container) {
