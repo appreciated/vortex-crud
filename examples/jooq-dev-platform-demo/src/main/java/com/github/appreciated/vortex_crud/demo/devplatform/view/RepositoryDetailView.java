@@ -3,6 +3,7 @@ package com.github.appreciated.vortex_crud.demo.devplatform.view;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.RepositoryRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
+import com.github.appreciated.vortex_crud.demo.devplatform.service.GitRepositoryService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -28,12 +29,15 @@ public class RepositoryDetailView extends VerticalLayout {
 
     private final RepositoryRecord repository;
     private final DSLContext dsl;
+    private final GitRepositoryService gitService;
     private Span starCount;
     private Button starButton;
+    private String currentPath = "";
 
-    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl) {
+    public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitRepositoryService gitService) {
         this.repository = repository;
         this.dsl = dsl;
+        this.gitService = gitService;
 
         setSizeFull();
         setPadding(false);
@@ -229,11 +233,12 @@ public class RepositoryDetailView extends VerticalLayout {
                 .set("border", "1px solid var(--lumo-contrast-10pct)");
 
         Tab overviewTab = new Tab("Overview");
+        Tab codeTab = new Tab("Code");
         Tab issuesTab = new Tab("Issues");
         Tab prsTab = new Tab("Pull Requests");
         Tab wikiTab = new Tab("Wiki");
 
-        Tabs tabs = new Tabs(overviewTab, issuesTab, prsTab, wikiTab);
+        Tabs tabs = new Tabs(overviewTab, codeTab, issuesTab, prsTab, wikiTab);
 
         VerticalLayout tabContent = new VerticalLayout();
         tabContent.setPadding(false);
@@ -247,6 +252,8 @@ public class RepositoryDetailView extends VerticalLayout {
             Tab selectedTab = event.getSelectedTab();
             if (selectedTab.equals(overviewTab)) {
                 showOverview(tabContent);
+            } else if (selectedTab.equals(codeTab)) {
+                showCode(tabContent);
             } else if (selectedTab.equals(issuesTab)) {
                 showIssues(tabContent);
             } else if (selectedTab.equals(prsTab)) {
@@ -284,6 +291,82 @@ public class RepositoryDetailView extends VerticalLayout {
             noReadme.getStyle().set("padding", "var(--lumo-space-m)");
             container.add(noReadme);
         }
+    }
+
+    private void showCode(VerticalLayout container) {
+        String slug = repository.getSlug();
+        List<GitRepositoryService.FileEntry> files = gitService.listFilesAtRef(slug, null, currentPath);
+
+        // Navigation
+        HorizontalLayout nav = new HorizontalLayout();
+        nav.setAlignItems(FlexComponent.Alignment.CENTER);
+        Button rootBtn = new Button(repository.getName(), e -> {
+            currentPath = "";
+            showCode(container);
+        });
+        rootBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        nav.add(rootBtn);
+
+        if (!currentPath.isEmpty()) {
+            String[] parts = currentPath.split("/");
+            String buildPath = "";
+            for (String part : parts) {
+                nav.add(new Span("/"));
+                buildPath = buildPath.isEmpty() ? part : buildPath + "/" + part;
+                String thisPath = buildPath;
+                Button partBtn = new Button(part, e -> {
+                    currentPath = thisPath;
+                    showCode(container);
+                });
+                partBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+                nav.add(partBtn);
+            }
+        }
+
+        container.removeAll();
+        container.add(nav);
+
+        if (files.isEmpty()) {
+             // Check if it's a file by trying to read content
+             String content = gitService.getFileContent(slug, null, currentPath);
+             // Simple heuristic to detect if it's a file content vs error
+             if (content != null && !content.startsWith("Error") && !content.equals("File not found") && !content.equals("Repository not found") && !content.equals("Commit not found")) {
+                 Pre codeBlock = new Pre();
+                 codeBlock.setText(content);
+                 codeBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+                 codeBlock.getStyle().set("padding", "var(--lumo-space-m)");
+                 codeBlock.getStyle().set("overflow", "auto");
+                 codeBlock.setWidthFull();
+                 container.add(codeBlock);
+                 return;
+             }
+
+             container.add(new Paragraph("No files found or empty directory."));
+             return;
+        }
+
+        Grid<GitRepositoryService.FileEntry> grid = new Grid<>();
+        grid.addComponentColumn(entry -> {
+            Icon icon = entry.isDirectory() ? VaadinIcon.FOLDER.create() : VaadinIcon.FILE_CODE.create();
+            icon.getStyle().set("margin-right", "var(--lumo-space-s)");
+            if (entry.isDirectory()) icon.setColor("var(--lumo-primary-color)");
+            return new HorizontalLayout(icon, new Span(entry.name()));
+        }).setHeader("Name");
+
+        grid.setItems(files);
+        grid.addItemClickListener(e -> {
+            GitRepositoryService.FileEntry entry = e.getItem();
+            if (entry.isDirectory()) {
+                currentPath = entry.path(); // path is full path
+                showCode(container);
+            } else {
+                // Show file content
+                currentPath = entry.path();
+                showCode(container);
+            }
+        });
+
+        container.add(grid);
     }
 
     private void showIssues(VerticalLayout container) {
