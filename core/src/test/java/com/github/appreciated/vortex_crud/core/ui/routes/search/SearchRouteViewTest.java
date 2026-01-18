@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.internal.UIInternals;
 import com.vaadin.flow.component.html.H2;
@@ -105,8 +106,8 @@ class SearchRouteViewTest {
     void testInitialization() {
         // Verify title
         Component titleComponent = view.getComponentAt(0);
-        assertInstanceOf(H2.class, titleComponent);
-        assertEquals("Search Title", ((H2) titleComponent).getText());
+        assertInstanceOf(H1.class, titleComponent);
+        assertEquals("Search Title", ((H1) titleComponent).getText());
 
         // Verify Search Field
         Component searchFieldComponent = view.getComponentAt(1);
