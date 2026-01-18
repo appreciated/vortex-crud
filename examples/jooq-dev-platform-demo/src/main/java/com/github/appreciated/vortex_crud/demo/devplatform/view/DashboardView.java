@@ -44,7 +44,11 @@ public class DashboardView extends VerticalLayout {
                 issueGrid.addColumn(IssueRecord::getTitle).setHeader("Title");
                 issueGrid.addColumn(IssueRecord::getState).setHeader("State");
                 issueGrid.setItems(assignedIssues);
-                issueGrid.addItemClickListener(event -> UI.getCurrent().navigate("issues/" + event.getItem().getId() + "/edit"));
+                issueGrid.addItemClickListener(event -> {
+                    Integer repoId = event.getItem().getRepositoryId();
+                    Integer issueId = event.getItem().getId();
+                    UI.getCurrent().navigate("repositories/" + repoId + "/issues/" + issueId + "/edit");
+                });
                 add(issueGrid);
 
                 // My Pull Requests
@@ -58,7 +62,11 @@ public class DashboardView extends VerticalLayout {
                 prGrid.addColumn(PullRequestRecord::getTitle).setHeader("Title");
                 prGrid.addColumn(PullRequestRecord::getState).setHeader("State");
                 prGrid.setItems(myPrs);
-                prGrid.addItemClickListener(event -> UI.getCurrent().navigate("pull-requests/" + event.getItem().getId() + "/edit"));
+                prGrid.addItemClickListener(event -> {
+                    Integer repoId = event.getItem().getRepositoryId();
+                    Integer prId = event.getItem().getId();
+                    UI.getCurrent().navigate("repositories/" + repoId + "/pull-requests/" + prId + "/edit");
+                });
                 add(prGrid);
             }
         }
