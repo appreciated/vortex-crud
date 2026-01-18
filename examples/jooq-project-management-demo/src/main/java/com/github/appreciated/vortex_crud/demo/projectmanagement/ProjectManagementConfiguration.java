@@ -23,7 +23,8 @@ import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.service.syntactic_sugar.fields.JooqJsonCustomField;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.service.CustomFieldService;
-import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.DashboardRouteRenderer;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.SupplierRouteFactory;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.view.DashboardView;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.ui.fields.JsonCustomFieldFactory;
 import com.github.appreciated.vortex_crud.security.core.strategy.ClassBasedRoleResolutionStrategy;
 import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleResolutionStrategy;
@@ -421,7 +422,13 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         // Routes Configuration
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
-        routes.put("dashboard", new DashboardRouteRenderer(taskStore));
+        routes.put("dashboard", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.dashboard.title")
+                .iconFactory(VaadinIcon.DASHBOARD::create)
+                .componentClass(DashboardView.class)
+                .factory(new SupplierRouteFactory(() -> new DashboardView(taskStore)))
+                .defaultRoute(true)
+                .build());
 
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
