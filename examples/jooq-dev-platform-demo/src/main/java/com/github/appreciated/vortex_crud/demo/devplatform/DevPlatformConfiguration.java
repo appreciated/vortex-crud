@@ -17,6 +17,7 @@ import com.github.appreciated.vortex_crud.demo.devplatform.view.DashboardView;
 import com.github.appreciated.vortex_crud.demo.devplatform.view.RepositoryDetailViewFactory;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqNotificationService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
@@ -66,6 +67,30 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
         JooqDataStore<GitCommitRecord> gitCommitStore = new JooqDataStore<>(GIT_COMMIT.getRecordType(), dsl);
         JooqDataStore<GitBranchRecord> gitBranchStore = new JooqDataStore<>(GIT_BRANCH.getRecordType(), dsl);
 
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance(notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.LINK, JooqTextField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        JooqNotificationService<NotificationRecord, String> notificationService = JooqNotificationService.<NotificationRecord, String>builder()
+                .dataStoreConfig(notificationConfig)
+                .messageField(NOTIFICATION.MESSAGE)
+                .timestampField(NOTIFICATION.CREATED_AT)
+                .readStatusField(NOTIFICATION.IS_READ)
+                .userIdField(NOTIFICATION.USER_ID)
+                .titleField(NOTIFICATION.TITLE)
+                .timestampSupplier(() -> LocalDateTime.now().toString())
+                .readStatusValueForRead(1)
+                .readStatusValueForUnread(0)
+                .build();
+
+
         // Notification Hooks
         DataStoreHooks<IssueRecord> issueHooks = DataStoreHooks.<IssueRecord>builder()
                 .afterCreate(record -> {
@@ -76,23 +101,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
                         if (repo != null) {
                             if (assigneeId != null) {
-                                var notif = dsl.newRecord(NOTIFICATION);
-                                notif.setUserId(assigneeId);
-                                notif.setTitle("Assigned to Issue: " + title);
-                                notif.setMessage("In repository " + repo.getName());
-                                notif.setIsRead(0);
-                                notif.setCreatedAt(LocalDateTime.now().toString());
-                                notif.store();
+                                notificationService.notify(assigneeId, "Assigned to Issue: " + title, "In repository " + repo.getName());
                             }
                             Integer ownerId = repo.getOwnerId();
                             if (ownerId != null && !ownerId.equals(assigneeId)) {
-                                var notif = dsl.newRecord(NOTIFICATION);
-                                notif.setUserId(ownerId);
-                                notif.setTitle("New Issue: " + title);
-                                notif.setMessage("In repository " + repo.getName());
-                                notif.setIsRead(0);
-                                notif.setCreatedAt(LocalDateTime.now().toString());
-                                notif.store();
+                                notificationService.notify(ownerId, "New Issue: " + title, "In repository " + repo.getName());
                             }
                         }
                     } catch (Exception e) {
@@ -110,23 +123,11 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         var repo = dsl.selectFrom(REPOSITORY).where(REPOSITORY.ID.eq(repoId)).fetchOne();
                         if (repo != null) {
                             if (assigneeId != null) {
-                                var notif = dsl.newRecord(NOTIFICATION);
-                                notif.setUserId(assigneeId);
-                                notif.setTitle("Assigned to PR: " + title);
-                                notif.setMessage("In repository " + repo.getName());
-                                notif.setIsRead(0);
-                                notif.setCreatedAt(LocalDateTime.now().toString());
-                                notif.store();
+                                notificationService.notify(assigneeId, "Assigned to PR: " + title, "In repository " + repo.getName());
                             }
                             Integer ownerId = repo.getOwnerId();
                             if (ownerId != null && !ownerId.equals(assigneeId)) {
-                                var notif = dsl.newRecord(NOTIFICATION);
-                                notif.setUserId(ownerId);
-                                notif.setTitle("New PR: " + title);
-                                notif.setMessage("In repository " + repo.getName());
-                                notif.setIsRead(0);
-                                notif.setCreatedAt(LocalDateTime.now().toString());
-                                notif.store();
+                                notificationService.notify(ownerId, "New PR: " + title, "In repository " + repo.getName());
                             }
                         }
                     } catch (Exception e) {
@@ -154,17 +155,6 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                         USERS.USERNAME, JooqEmailField.builder().required(true).build(),
                         USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
                         USERS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
-                .dataStoreInstance(notificationStore)
-                .fields(Map.of(
-                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
-                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
-                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
-                        NOTIFICATION.LINK, JooqTextField.builder().build(),
-                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
-                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
         var wikiPageConfig = JooqDataStoreConfig.of(WIKI_PAGE)
@@ -867,14 +857,7 @@ public class DevPlatformConfiguration implements VortexCrudConfigurationProvider
                                 "repository-permissions", repositoryPermissions,
                                 "organization-roles", organizationRoles))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreConfig(notificationConfig)
-                        .timestampField(NOTIFICATION.CREATED_AT)
-                        .messageField(NOTIFICATION.MESSAGE)
-                        .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
-                        .build())
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.from(notificationService).build())
                 .build();
     }
 }

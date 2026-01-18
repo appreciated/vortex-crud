@@ -11,6 +11,7 @@ import com.github.appreciated.vortex_crud.jpa.service.datastore.JpaFieldService;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaApplication;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaDataStoreConfig;
 import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaGridRoute;
+import com.github.appreciated.vortex_crud.jpa.service.syntactic_sugar.JpaNotificationPanelConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -50,7 +51,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
         return JpaApplication.builder()
                 .applicationName("application.name.notification-test")
                 .i18nBundlePrefix("ui_test_i18n")
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
+                .notificationPanelConfiguration(JpaNotificationPanelConfiguration.builder()
                         .dataStoreConfig(config)
                         .messageField("message")
                         .timestampField("timestamp")

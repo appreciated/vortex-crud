@@ -15,6 +15,7 @@ import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskType;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqNotificationService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
@@ -35,6 +36,7 @@ import org.jooq.impl.TableImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,29 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
 
+        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
+                .dataStoreInstance(notificationStore)
+                .fields(Map.of(
+                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
+                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
+                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
+                        NOTIFICATION.LINK, JooqTextField.builder().build(),
+                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
+                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        JooqNotificationService<NotificationRecord, LocalDateTime> notificationService = JooqNotificationService.<NotificationRecord, LocalDateTime>builder()
+                .dataStoreConfig(notificationConfig)
+                .messageField(NOTIFICATION.MESSAGE)
+                .timestampField(NOTIFICATION.CREATED_AT)
+                .readStatusField(NOTIFICATION.IS_READ)
+                .userIdField(NOTIFICATION.USER_ID)
+                .titleField(NOTIFICATION.TITLE)
+                .timestampSupplier(LocalDateTime::now)
+                .readStatusValueForRead(1)
+                .readStatusValueForUnread(0)
+                .build();
+
         // Notification Hooks
         DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
                 .afterCreate(record -> {
@@ -68,13 +93,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Integer assigneeId = record.get(TASK.ASSIGNEE_ID);
                         var project = dsl.selectFrom(PROJECT).where(PROJECT.ID.eq(projectId)).fetchOne();
                         if (project != null && assigneeId != null) {
-                            var notif = dsl.newRecord(NOTIFICATION);
-                            notif.setUserId(assigneeId);
-                            notif.setTitle("Assigned to Task: " + title);
-                            notif.setMessage("In project " + project.getName());
-                            notif.setIsRead(0);
-                            notif.setCreatedAt(java.time.LocalDateTime.now());
-                            notif.store();
+                            notificationService.notify(assigneeId, "Assigned to Task: " + title, "In project " + project.getName());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -221,16 +240,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         ATTACHMENT.UPLOADED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
-        var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
-                .dataStoreInstance(notificationStore)
-                .fields(Map.of(
-                        NOTIFICATION.ID, JooqNumericIdField.builder().build(),
-                        NOTIFICATION.TITLE, JooqTextField.builder().build(),
-                        NOTIFICATION.MESSAGE, JooqTextAreaField.builder().build(),
-                        NOTIFICATION.LINK, JooqTextField.builder().build(),
-                        NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
-                        NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
 
         // Project Form Configuration
         var projectForm = JooqFormRoute.builder()
@@ -669,14 +678,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "priority", priorities,
                                 "project-roles", projectRoles))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreConfig(notificationConfig)
-                        .timestampField(NOTIFICATION.CREATED_AT)
-                        .messageField(NOTIFICATION.MESSAGE)
-                        .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
-                        .build())
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.from(notificationService).build())
                 .build();
     }
 }

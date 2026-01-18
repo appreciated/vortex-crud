@@ -8,6 +8,7 @@ import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.recor
 import com.github.appreciated.vortex_crud.demo.resourceplanner.service.AppointmentBusinessService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
+import com.github.appreciated.vortex_crud.jooq.service.JooqNotificationService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.*;
@@ -23,6 +24,7 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -172,6 +174,18 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         NOTIFICATION.LINK, JooqTextField.builder().build(),
                         NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
                         NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        JooqNotificationService<NotificationRecord, LocalDateTime> notificationService = JooqNotificationService.<NotificationRecord, LocalDateTime>builder()
+                .dataStoreConfig(notificationConfig)
+                .messageField(NOTIFICATION.MESSAGE)
+                .timestampField(NOTIFICATION.CREATED_AT)
+                .readStatusField(NOTIFICATION.IS_READ)
+                .userIdField(null)
+                .titleField(NOTIFICATION.TITLE)
+                .timestampSupplier(LocalDateTime::now)
+                .readStatusValueForRead(1)
+                .readStatusValueForUnread(0)
                 .build();
 
         // Forms
@@ -393,14 +407,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .selects(Selects.builder()
                         .configs(Map.of("recurrence-frequency", recurrenceFrequencies))
                         .build())
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                        .dataStoreConfig(notificationConfig)
-                        .timestampField(NOTIFICATION.CREATED_AT)
-                        .messageField(NOTIFICATION.MESSAGE)
-                        .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
-                        .build())
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.from(notificationService).build())
                 .build();
     }
 }

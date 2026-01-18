@@ -6,6 +6,7 @@ import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqApplication;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqDataStoreConfig;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqGridRoute;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.JooqNotificationPanelConfiguration;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqCheckboxField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqDateTimePickerField;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
@@ -54,7 +55,7 @@ public class JooqNotificationPanelVortexCrudConfiguration implements VortexCrudC
         return JooqApplication.builder()
                 .applicationName("application.name.notification-test")
                 .i18nBundlePrefix("ui_test_i18n")
-                .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .notificationPanelConfiguration(JooqNotificationPanelConfiguration.builder()
                         .dataStoreConfig(config)
                         .messageField(NOTIFICATION_PANEL_TEST.MESSAGE)
                         .timestampField(NOTIFICATION_PANEL_TEST.TIMESTAMP)
