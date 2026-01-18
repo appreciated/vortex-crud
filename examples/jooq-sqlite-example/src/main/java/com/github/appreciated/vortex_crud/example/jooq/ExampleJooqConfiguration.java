@@ -1,10 +1,8 @@
 package com.github.appreciated.vortex_crud.example.jooq;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.config.model.Application;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextAreaField;
 import com.github.appreciated.vortex_crud.core.config.model.fields.TextField;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalImageResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalPdfResourceProvider;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalVideoResourceProvider;
@@ -17,7 +15,6 @@ import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collec
 import com.github.appreciated.vortex_crud.example.jooq.custom.SimpleMapDataStore;
 import com.github.appreciated.vortex_crud.example.jooq.view.CustomView;
 import com.github.appreciated.vortex_crud.jooq.models.tables.records.*;
-import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
 import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.*;
@@ -66,118 +63,70 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
     }
 
     @Override
-    public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore<ProjectsRecord> projectsStore = new JooqDataStore<>(PROJECTS.getRecordType(), dsl);
-        JooqDataStore<TasksRecord> tasksStore = new JooqDataStore<>(TASKS.getRecordType(), dsl);
-        JooqDataStore<TaskHasTaskRecord> taskHasTaskStore = new JooqDataStore<>(TASK_HAS_TASK.getRecordType(), dsl);
-        JooqDataStore<TaskCommentsRecord> commentsStore = new JooqDataStore<>(TASK_COMMENTS.getRecordType(), dsl);
-        JooqDataStore<ImagesRecord> imagesStore = new JooqDataStore<>(IMAGES.getRecordType(), dsl);
-        JooqDataStore<VideosRecord> videosStore = new JooqDataStore<>(VIDEOS.getRecordType(), dsl);
-        JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
-        JooqDataStore<DocumentsRecord> documentsStore = new JooqDataStore<>(DOCUMENTS.getRecordType(), dsl);
-        JooqDataStore<ProjectTagsRecord> projectTagsStore = new JooqDataStore<>(PROJECT_TAGS.getRecordType(), dsl);
-        JooqDataStore<RolesRecord> rolesStore = new JooqDataStore<>(ROLES.getRecordType(), dsl);
-        JooqDataStore<UserRolesRecord> userRolesStore = new JooqDataStore<>(USER_ROLES.getRecordType(), dsl);
+    public com.github.appreciated.vortex_crud.core.config.model.Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
+        // Data Stores & Configs
+        var usersConfig = JooqDataStoreConfig.builder(USERS, dsl)
+                .autoMapFields()
+                .withField(USERS.USERNAME, JooqEmailField.builder().build())
+                .withField(USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .build();
+        var usersStore = usersConfig.dataStoreInstance();
+
+        var projectsConfig = JooqDataStoreConfig.builder(PROJECTS, dsl)
+                .autoMapFields()
+                .withField(PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .withField(PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build())
+                .withField(PROJECTS.TAGS_MULTI, JooqMultiSelectValueField.builder().values("project-tags").build())
+                .build();
+
+        var tasksConfig = JooqDataStoreConfig.builder(TASKS, dsl)
+                .autoMapFields()
+                .withField(TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .withField(TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .withField(TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build())
+                .withField(TASKS.STATUS, JooqSelectField.builder().values("task-status").build())
+                .build();
+
+        var taskHasTaskConfig = JooqDataStoreConfig.builder(TASK_HAS_TASK, dsl)
+                .autoMapFields()
+                .build();
+
+        var commentsConfig = JooqDataStoreConfig.builder(TASK_COMMENTS, dsl)
+                .autoMapFields()
+                .withField(TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build())
+                .build();
+
+        var imagesConfig = JooqDataStoreConfig.builder(IMAGES, dsl)
+                .autoMapFields()
+                .withField(IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .withField(IMAGES.URL, JooqImageField.builder().resourceProvider(new LocalImageResourceProvider()).build())
+                .build();
+
+        var videosConfig = JooqDataStoreConfig.builder(VIDEOS, dsl)
+                .autoMapFields()
+                .withField(VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build())
+                .withField(VIDEOS.URL, JooqVideoField.builder().resourceProvider(new LocalVideoResourceProvider()).build())
+                .build();
+
+        var documentsConfig = JooqDataStoreConfig.builder(DOCUMENTS, dsl)
+                .autoMapFields()
+                .withField(DOCUMENTS.TITLE, JooqTextField.builder().required(true).build())
+                .withField(DOCUMENTS.PDF, JooqPdfField.builder().resourceProvider(new LocalPdfResourceProvider()).build())
+                .build();
+
+        var projectTagsConfig = JooqDataStoreConfig.builder(PROJECT_TAGS, dsl)
+                .autoMapFields()
+                .build();
+
+        var rolesConfig = JooqDataStoreConfig.builder(ROLES, dsl).autoMapFields().build();
+        var userRolesConfig = JooqDataStoreConfig.builder(USER_ROLES, dsl).autoMapFields().build();
 
         // Custom DataStore
         SimpleMapDataStore notesStore = new SimpleMapDataStore();
 
-        var projectsConfig = JooqDataStoreConfig.of(PROJECTS)
-                .dataStoreInstance(projectsStore)
-                .fields(Map.of(
-                        PROJECTS.ID, JooqNumericIdField.builder().build(),
-                        PROJECTS.NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        PROJECTS.DESCRIPTION, JooqMarkDownField.builder().validators(List.of(new StringLengthValidator("Maximum 500 characters", 0, 500))).build(),
-                        PROJECTS.BUDGET, JooqBigDecimalField.builder().build(),
-                        PROJECTS.TAGS_MULTI, JooqMultiSelectValueField.builder().values("project-tags").build(),
-                        PROJECTS.ACTIVE, JooqCheckboxField.builder().build(),
-                        PROJECTS.START_DATE, JooqDateField.builder().build(),
-                        PROJECTS.END_DATE, JooqDateField.builder().build(),
-                        PROJECTS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                        PROJECTS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var usersConfig = JooqDataStoreConfig.of(USERS)
-                .dataStoreInstance(usersStore)
-                .fields(Map.of(
-                        USERS.ID, JooqNumericIdField.builder().build(),
-                        USERS.USERNAME, JooqEmailField.builder().build(),
-                        USERS.PASSWORD_HASH, JooqPasswordField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        USERS.FIRST_NAME, JooqTextField.builder().build(),
-                        USERS.LAST_NAME, JooqTextField.builder().build(),
-                        USERS.CREATED_AT, JooqDateTimePickerField.builder().build()
-                ))
-                .build();
-
-        var tasksConfig = JooqDataStoreConfig.of(TASKS)
-                .dataStoreInstance(tasksStore)
-                .fields(Map.of(
-                        TASKS.ID, JooqNumericIdField.builder().build(),
-                        TASKS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        TASKS.DESCRIPTION, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        TASKS.ASSIGNED_TO, JooqReferenceField.builder().dataStore(usersStore).field(TASKS.ID).filterField(USERS.USERNAME).children(List.of(USERS.USERNAME)).build(),
-                        TASKS.STATUS, JooqSelectField.builder().values("task-status").build(),
-                        TASKS.DUE_DATE, JooqDateField.builder().build(),
-                        TASKS.ROW_INDEX, JooqIntegerField.builder().build(),
-                        TASKS.CREATED_AT, JooqDateTimePickerField.builder().build(),
-                        TASKS.UPDATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var taskHasTaskConfig = JooqDataStoreConfig.of(TASK_HAS_TASK)
-                .dataStoreInstance(taskHasTaskStore)
-                .fields(Map.of(
-                        TASK_HAS_TASK.TASK_ID, JooqNumericIdField.builder().build(),
-                        TASK_HAS_TASK.RELATED_TASK_ID, JooqNumericIdField.builder().build()))
-                .build();
-
-        var commentsConfig = JooqDataStoreConfig.of(TASK_COMMENTS)
-                .dataStoreInstance(commentsStore)
-                .fields(Map.of(
-                        TASK_COMMENTS.ID, JooqNumericIdField.builder().build(),
-                        TASK_COMMENTS.COMMENT_TEXT, JooqTextAreaField.builder().required(false).validators(List.of(new StringLengthValidator("Maximum 1000 characters", 0, 1000))).build(),
-                        TASK_COMMENTS.USER_ID, JooqDoubleField.builder().build(),
-                        TASK_COMMENTS.CREATED_AT, JooqDateTimePickerField.builder().build()))
-                .build();
-
-        var imagesConfig = JooqDataStoreConfig.of(IMAGES)
-                .dataStoreInstance(imagesStore)
-                .fields(Map.of(
-                        IMAGES.ID, JooqNumericIdField.builder().build(),
-                        IMAGES.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        IMAGES.URL, JooqImageField.builder().resourceProvider(new LocalImageResourceProvider()).build()
-                ))
-                .build();
-
-        var videosConfig = JooqDataStoreConfig.of(VIDEOS)
-                .dataStoreInstance(videosStore)
-                .fields(Map.of(
-                        VIDEOS.ID, JooqNumericIdField.builder().build(),
-                        VIDEOS.TITLE, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 255 characters", 0, 255))).build(),
-                        VIDEOS.URL, JooqVideoField.builder().resourceProvider(new LocalVideoResourceProvider()).build()
-                ))
-                .build();
-
-        var documentsConfig = JooqDataStoreConfig.of(DOCUMENTS)
-                .dataStoreInstance(documentsStore)
-                .fields(Map.of(
-                        DOCUMENTS.ID, JooqNumericIdField.builder().build(),
-                        DOCUMENTS.TITLE, JooqTextField.builder().required(true).build(),
-                        DOCUMENTS.PDF, JooqPdfField.builder().resourceProvider(new LocalPdfResourceProvider()).build()
-                ))
-                .build();
-
-        var projectTagsConfig = JooqDataStoreConfig.of(PROJECT_TAGS)
-                .dataStoreInstance(projectTagsStore)
-                .fields(Map.of(
-                        PROJECT_TAGS.ID, JooqNumericIdField.builder().build(),
-                        PROJECT_TAGS.PROJECT_ID, JooqIntegerField.builder().build(),
-                        PROJECT_TAGS.TAG, JooqTextField.builder().build()
-                )).build();
-
         // Custom in-memory data store configuration
-        // Using DataStoreConfig with String field names (same pattern as JPA!)
         var notesConfig = DataStoreConfig.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                .factory(notesStore)  // Use the datastore instance itself as the key!
+                .factory(notesStore)
                 .dataStoreInstance(notesStore)
                 .fields(Map.of(
                         "title", TextField.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder().build(),
@@ -288,213 +237,6 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 ))
                 .build();
 
-        // Routes map can accept any RouteRenderer type (jOOQ, JPA, or custom)
-        LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
-        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("route.search.title")
-                .iconFactory(SEARCH::create)
-                .build());
-        routes.put("projects-cards", JooqGridRoute.builder()
-                .defaultRoute(true)
-                .dataStoreConfig(projectsConfig)
-                .iconFactory(FACTORY::create)
-                .title("route.projects.title-cards")
-                .titleField(PROJECTS.NAME)
-                .descriptionField(PROJECTS.DESCRIPTION)
-                .writeRoles(List.of("admin", "manager"))
-                .routeActions(List.of(
-                        GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
-                                .componentFactory(() -> new Button("Global Action"))
-                                .handler((context) -> Notification.show("Global Action Clicked"))
-                                .build()
-                ))
-                .form(projectForm)
-                .build());
-        routes.put("projects-list", JooqListRoute.builder()
-                .dataStoreConfig(projectsConfig)
-                .iconFactory(FACTORY::create)
-                .title("route.projects.title-list")
-                .filterField(PROJECTS.NAME)
-                .columns(List.of(
-                        JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
-                        JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                        JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
-                        JooqFormElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
-                ))
-                .writeRoles(List.of("admin", "manager", "editor"))
-                .form(projectForm)
-                .build());
-        routes.put("open-tasks", JooqKanbanRoute.builder()
-                .iconFactory(VaadinIcon.TASKS::create)
-                .dataStoreConfig(tasksConfig)
-                .title("route.open-tasks.title")
-                .titleField(TASKS.TITLE)
-                .descriptionField(TASKS.DESCRIPTION)
-                .columnField(TASKS.STATUS)
-                .rowIndexField(TASKS.ROW_INDEX)
-                .filterField(TASKS.TITLE)
-                .writeRoles(List.of("admin", "manager", "editor", "viewer"))
-                .form(taskForm)
-                .build());
-        routes.put("done-tasks", JooqMasterDetailRoute.builder()
-                .iconFactory(CHECK_CIRCLE::create)
-                .dataStoreConfig(tasksConfig)
-                .title("route.done-tasks.title")
-                .titleField(TASKS.TITLE)
-                .descriptionField(TASKS.DESCRIPTION)
-                .writeRoles(List.of("admin", "manager"))
-                .form(taskForm)
-                .build());
-        routes.put("images-grid", JooqGridRoute.builder()
-                .dataStoreConfig(imagesConfig)
-                .iconFactory(CAMERA::create)
-                .title("route.images-cards")
-                .titleField(IMAGES.TITLE)
-                .imageField(IMAGES.URL)
-                .resourceProvider(new LocalImageResourceProvider())
-                .writeRoles(List.of("admin"))
-                .form(imageForm)
-                .build());
-        routes.put("images-list", JooqListRoute.builder()
-                .dataStoreConfig(imagesConfig)
-                .iconFactory(CAMERA::create)
-                .title("route.images-list")
-                .inlineEdit(true)
-                .filterField(IMAGES.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build(),
-                        JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build()
-                ))
-                .writeRoles(List.of("admin"))
-                .form(imageForm)
-                .build());
-
-        routes.put("images-slide", JooqGridRoute.builder()
-                .dataStoreConfig(imagesConfig)
-                .iconFactory(CAMERA::create)
-                .title("route.images-cards")
-                .titleField(IMAGES.TITLE)
-                .imageField(IMAGES.URL)
-                .resourceProvider(new LocalImageResourceProvider())
-                .writeRoles(List.of("admin"))
-                .form(imageSlideForm)
-                .build());
-
-        routes.put("videos-grid", JooqGridRoute.builder()
-                .dataStoreConfig(videosConfig)
-                .iconFactory(MOVIE::create)
-                .title("route.videos.title-cards")
-                .titleField(VIDEOS.TITLE)
-                .writeRoles(List.of("admin"))
-                .form(videoForm)
-                .build());
-
-        routes.put("videos-list", JooqListRoute.builder()
-                .dataStoreConfig(videosConfig)
-                .iconFactory(MOVIE::create)
-                .title("route.videos.title-list")
-                .inlineEdit(true)
-                .filterField(VIDEOS.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
-                        JooqFormElement.of(VIDEOS.URL, "route.videos.labels.video").build()
-                ))
-                .writeRoles(List.of("admin"))
-                .form(videoForm)
-                .build());
-
-        routes.put("submenu", JooqSubmenuRoute.builder()
-                .iconFactory(MENU::create)
-                .dataStoreConfig(projectsConfig)
-                .title("route.submenu.title")
-                .routes(Map.of(
-                        "project-form", projectForm,
-                        "image-form", imageForm))
-                .build());
-
-        routes.put("profile", JooqSingleFormRoute.builder()
-                .iconFactory(USER::create)
-                .dataStoreConfig(usersConfig)
-                .title("route.profile.title")
-                .entityFilterField(USERS.USERNAME)
-                .entityFilterValueProvider(() -> {
-                    // Get current user from security context
-                    VaadinServletRequest request = VaadinServletRequest.getCurrent();
-                    return request != null && request.getUserPrincipal() != null
-                            ? request.getUserPrincipal().getName()
-                            : null;
-                })
-                .titleField(USERS.USERNAME)
-                .fields(List.of(
-                        JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
-                        JooqFormElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
-                        JooqFormElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
-                        JooqFormElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
-                ))
-                .build());
-
-        routes.put("calendar", JooqCalendarRoute.builder()
-                .title("route.calendar.title")
-                .iconFactory(CALENDAR::create)
-                .dataStoreConfig(projectsConfig)
-                .titleField(PROJECTS.NAME)
-                .startDateField(PROJECTS.START_DATE)
-                .endDateField(PROJECTS.END_DATE)
-                .descriptionField(PROJECTS.DESCRIPTION)
-                .build());
-
-        // Custom in-memory data store route
-        // Uses String field names (simple and framework-agnostic!)
-        routes.put("notes", GridRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                .dataStoreConfig(notesConfig)
-                .iconFactory(NOTEBOOK::create)
-                .title("route.notes.title")
-                .titleField("title")
-                .descriptionField("content")
-                .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                        .titleField("title")
-                        .fields(List.of(
-                                FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                                        .field("title")
-                                        .label("Title")
-                                        .build(),
-                                FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
-                                        .field("content")
-                                        .label("Content")
-                                        .build()
-                        ))
-                        .build())
-                .build());
-
-        routes.put("custom", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("route.custom.title")
-                .iconFactory(CODE::create)
-                .componentClass(CustomView.class)
-                .build());
-
-        routes.put("documents", JooqGridRoute.builder()
-                .dataStoreConfig(documentsConfig)
-                .iconFactory(FILE::create)
-                .title("route.documents.title")
-                .titleField(DOCUMENTS.TITLE)
-                .form(documentForm)
-                .build());
-
-        routes.put("filtered-grid", JooqGridRoute.builder()
-                .dataStoreConfig(imagesConfig)
-                .iconFactory(FILTER::create)
-                .title("route.filtered-grid.title")
-                .titleField(IMAGES.TITLE)
-                .imageField(IMAGES.URL)
-                .resourceProvider(new LocalImageResourceProvider())
-                .filter(StaticRouteFilter.<TableField<?, ?>>builder()
-                        .field(IMAGES.TITLE)
-                        .filterValue("Red")
-                        .build())
-                .writeRoles(List.of("admin"))
-                .form(imageForm)
-                .build());
-
         LinkedHashMap<Status, String> taskStatuses = new LinkedHashMap<>();
         taskStatuses.put(TODO, "selects.task-status.todo");
         taskStatuses.put(OPEN, "selects.task-status.open");
@@ -506,16 +248,15 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         projectTags.put("tag2", "Tag 2");
         projectTags.put("tag3", "Tag 3");
 
-
-        return JooqApplication.builder()
+        return JooqApplication.jooqBuilder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("some_i18n")
                 .identityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .dataStoreConfig(usersConfig)
                                 .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<>(
-                                        userRolesStore,
-                                        rolesStore,
+                                        userRolesConfig.dataStoreInstance(),
+                                        rolesConfig.dataStoreInstance(),
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,
@@ -535,7 +276,198 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                 ))
                                 .build()
                 )
-                .routes(routes)
+                .route("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .title("route.search.title")
+                        .iconFactory(SEARCH::create)
+                        .build())
+                .route("projects-cards", JooqGridRoute.builder()
+                        .defaultRoute(true)
+                        .dataStoreConfig(projectsConfig)
+                        .iconFactory(FACTORY::create)
+                        .title("route.projects.title-cards")
+                        .titleField(PROJECTS.NAME)
+                        .descriptionField(PROJECTS.DESCRIPTION)
+                        .writeRoles(List.of("admin", "manager"))
+                        .routeActions(List.of(
+                                GlobalRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                        .componentFactory(() -> new Button("Global Action"))
+                                        .handler((context) -> Notification.show("Global Action Clicked"))
+                                        .build()
+                        ))
+                        .form(projectForm)
+                        .build())
+                .route("projects-list", JooqListRoute.builder()
+                        .dataStoreConfig(projectsConfig)
+                        .iconFactory(FACTORY::create)
+                        .title("route.projects.title-list")
+                        .filterField(PROJECTS.NAME)
+                        .columns(List.of(
+                                JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
+                                JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
+                                JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
+                                JooqFormElement.of(PROJECTS.END_DATE, "route.projects.labels.end_date").build()
+                        ))
+                        .writeRoles(List.of("admin", "manager", "editor"))
+                        .form(projectForm)
+                        .build())
+                .route("open-tasks", JooqKanbanRoute.builder()
+                        .iconFactory(VaadinIcon.TASKS::create)
+                        .dataStoreConfig(tasksConfig)
+                        .title("route.open-tasks.title")
+                        .titleField(TASKS.TITLE)
+                        .descriptionField(TASKS.DESCRIPTION)
+                        .columnField(TASKS.STATUS)
+                        .rowIndexField(TASKS.ROW_INDEX)
+                        .filterField(TASKS.TITLE)
+                        .writeRoles(List.of("admin", "manager", "editor", "viewer"))
+                        .form(taskForm)
+                        .build())
+                .route("done-tasks", JooqMasterDetailRoute.builder()
+                        .iconFactory(CHECK_CIRCLE::create)
+                        .dataStoreConfig(tasksConfig)
+                        .title("route.done-tasks.title")
+                        .titleField(TASKS.TITLE)
+                        .descriptionField(TASKS.DESCRIPTION)
+                        .writeRoles(List.of("admin", "manager"))
+                        .form(taskForm)
+                        .build())
+                .route("images-grid", JooqGridRoute.builder()
+                        .dataStoreConfig(imagesConfig)
+                        .iconFactory(CAMERA::create)
+                        .title("route.images-cards")
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .resourceProvider(new LocalImageResourceProvider())
+                        .writeRoles(List.of("admin"))
+                        .form(imageForm)
+                        .build())
+                .route("images-list", JooqListRoute.builder()
+                        .dataStoreConfig(imagesConfig)
+                        .iconFactory(CAMERA::create)
+                        .title("route.images-list")
+                        .inlineEdit(true)
+                        .filterField(IMAGES.TITLE)
+                        .columns(List.of(
+                                JooqFormElement.of(IMAGES.URL, "route.images.labels.image").build(),
+                                JooqFormElement.of(IMAGES.TITLE, "route.images.labels.title").build()
+                        ))
+                        .writeRoles(List.of("admin"))
+                        .form(imageForm)
+                        .build())
+                .route("images-slide", JooqGridRoute.builder()
+                        .dataStoreConfig(imagesConfig)
+                        .iconFactory(CAMERA::create)
+                        .title("route.images-cards")
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .resourceProvider(new LocalImageResourceProvider())
+                        .writeRoles(List.of("admin"))
+                        .form(imageSlideForm)
+                        .build())
+                .route("videos-grid", JooqGridRoute.builder()
+                        .dataStoreConfig(videosConfig)
+                        .iconFactory(MOVIE::create)
+                        .title("route.videos.title-cards")
+                        .titleField(VIDEOS.TITLE)
+                        .writeRoles(List.of("admin"))
+                        .form(videoForm)
+                        .build())
+                .route("videos-list", JooqListRoute.builder()
+                        .dataStoreConfig(videosConfig)
+                        .iconFactory(MOVIE::create)
+                        .title("route.videos.title-list")
+                        .inlineEdit(true)
+                        .filterField(VIDEOS.TITLE)
+                        .columns(List.of(
+                                JooqFormElement.of(VIDEOS.TITLE, "route.videos.labels.title").build(),
+                                JooqFormElement.of(VIDEOS.URL, "route.videos.labels.video").build()
+                        ))
+                        .writeRoles(List.of("admin"))
+                        .form(videoForm)
+                        .build())
+                .route("submenu", JooqSubmenuRoute.builder()
+                        .iconFactory(MENU::create)
+                        .dataStoreConfig(projectsConfig)
+                        .title("route.submenu.title")
+                        .routes(Map.of(
+                                "project-form", projectForm,
+                                "image-form", imageForm))
+                        .build())
+                .route("profile", JooqSingleFormRoute.builder()
+                        .iconFactory(USER::create)
+                        .dataStoreConfig(usersConfig)
+                        .title("route.profile.title")
+                        .entityFilterField(USERS.USERNAME)
+                        .entityFilterValueProvider(() -> {
+                            // Get current user from security context
+                            VaadinServletRequest request = VaadinServletRequest.getCurrent();
+                            return request != null && request.getUserPrincipal() != null
+                                    ? request.getUserPrincipal().getName()
+                                    : null;
+                        })
+                        .titleField(USERS.USERNAME)
+                        .fields(List.of(
+                                JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").build(),
+                                JooqFormElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
+                                JooqFormElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build(),
+                                JooqFormElement.of(USERS.CREATED_AT, "route.profile.labels.created_at").build()
+                        ))
+                        .build())
+                .route("calendar", JooqCalendarRoute.builder()
+                        .title("route.calendar.title")
+                        .iconFactory(CALENDAR::create)
+                        .dataStoreConfig(projectsConfig)
+                        .titleField(PROJECTS.NAME)
+                        .startDateField(PROJECTS.START_DATE)
+                        .endDateField(PROJECTS.END_DATE)
+                        .descriptionField(PROJECTS.DESCRIPTION)
+                        .build())
+                .route("notes", GridRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                        .dataStoreConfig(notesConfig)
+                        .iconFactory(NOTEBOOK::create)
+                        .title("route.notes.title")
+                        .titleField("title")
+                        .descriptionField("content")
+                        .form(FormRoute.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                .titleField("title")
+                                .fields(List.of(
+                                        FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                                .field("title")
+                                                .label("Title")
+                                                .build(),
+                                        FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
+                                                .field("content")
+                                                .label("Content")
+                                                .build()
+                                ))
+                                .build())
+                        .build())
+                .route("custom", CustomRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .title("route.custom.title")
+                        .iconFactory(CODE::create)
+                        .componentClass(CustomView.class)
+                        .build())
+                .route("documents", JooqGridRoute.builder()
+                        .dataStoreConfig(documentsConfig)
+                        .iconFactory(FILE::create)
+                        .title("route.documents.title")
+                        .titleField(DOCUMENTS.TITLE)
+                        .form(documentForm)
+                        .build())
+                .route("filtered-grid", JooqGridRoute.builder()
+                        .dataStoreConfig(imagesConfig)
+                        .iconFactory(FILTER::create)
+                        .title("route.filtered-grid.title")
+                        .titleField(IMAGES.TITLE)
+                        .imageField(IMAGES.URL)
+                        .resourceProvider(new LocalImageResourceProvider())
+                        .filter(StaticRouteFilter.<TableField<?, ?>>builder()
+                                .field(IMAGES.TITLE)
+                                .filterValue("Red")
+                                .build())
+                        .writeRoles(List.of("admin"))
+                        .form(imageForm)
+                        .build())
                 .versioning(JooqVersioning.builder().dataStores(List.of(PROJECTS, TASKS, TASK_COMMENTS)).build())
                 .auditing(Auditing.builder().actions(List.of(CREATE, UPDATE, DELETE, LOGIN, LOGOUT)).build())
                 .selects(Selects.builder()

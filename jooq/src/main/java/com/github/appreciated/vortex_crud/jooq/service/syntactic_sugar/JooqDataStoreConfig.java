@@ -5,6 +5,7 @@ import com.github.appreciated.vortex_crud.core.config.model.DataStoreHooks;
 import com.github.appreciated.vortex_crud.core.config.model.Field;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
+import com.github.appreciated.vortex_crud.jooq.service.syntactic_sugar.fields.JooqNumericIdField;
 import lombok.NonNull;
 import org.jooq.DSLContext;
 import org.jooq.TableField;
@@ -12,6 +13,7 @@ import org.jooq.TableRecord;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JooqDataStoreConfig {
@@ -51,7 +53,7 @@ public class JooqDataStoreConfig {
         private final TableImpl<R> table;
         private final DSLContext dsl;
         private DataStoreHooks<R> hooks = new DataStoreHooks<>();
-        private Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields;
+        private Map<TableField<R, ?>, Field<R, TableField<R, ?>, TableImpl<?>>> fields = new LinkedHashMap<>();
 
         public Builder(TableImpl<R> table, DSLContext dsl) {
             this.table = table;
@@ -63,15 +65,46 @@ public class JooqDataStoreConfig {
             return this;
         }
 
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public Builder<R> autoMapFields() {
+             for (org.jooq.Field<?> f : table.fields()) {
+                TableField<R, ?> field = (TableField<R, ?>) f;
+                if (fields.containsKey(field)) {
+                    continue; // Skip if already manually defined
+                }
+
+                // Handle PK
+                if (table.getPrimaryKey() != null && table.getPrimaryKey().getFields().contains(field)) {
+                     // Check type of PK?
+                     if (Number.class.isAssignableFrom(field.getType())) {
+                         fields.put(field, (Field) JooqNumericIdField.builder().build());
+                         continue;
+                     }
+                }
+
+                Field<TableRecord<?>, TableField<?, ?>, TableImpl<?>> mapped = JooqFieldMapper.map(field);
+                if (mapped != null) {
+                    fields.put(field, (Field) mapped);
+                }
+            }
+            return this;
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public Builder<R> withField(TableField<R, ?> field, Field<?, ?, ?> config) {
+            fields.put(field, (Field) config);
+            return this;
+        }
+
         public Builder<R> withHooks(DataStoreHooks<R> hooks) {
             this.hooks = hooks;
             return this;
         }
 
         @SuppressWarnings("unchecked")
-        public DataStoreConfig<R, TableField<R, ?>, TableImpl<?>> build() {
+        public DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> build() {
             JooqDataStore<R> store = new JooqDataStore<>((Class<R>) table.getRecordType(), dsl, hooks);
-            return DataStoreConfig.<R, TableField<R, ?>, TableImpl<?>>builder()
+            return (DataStoreConfig) DataStoreConfig.<R, TableField<R, ?>, TableImpl<?>>builder()
                     .factory(table)
                     .dataStoreInstance(store)
                     .fields(fields)
