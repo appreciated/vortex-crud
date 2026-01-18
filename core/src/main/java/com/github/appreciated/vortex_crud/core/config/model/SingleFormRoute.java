@@ -59,7 +59,7 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     private SerializableSupplier<Component> iconFactory;
 

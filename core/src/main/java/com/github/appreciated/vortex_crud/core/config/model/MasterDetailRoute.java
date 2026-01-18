@@ -48,7 +48,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     private final boolean isDeleteButtonHidden = false;
 
@@ -79,7 +79,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
             FieldType imageField,
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
-            FieldType filterField,
+            FieldType searchField,
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
             List<String> readOnlyRoles,
@@ -99,7 +99,7 @@ public class MasterDetailRoute<ModelClass, FieldType, RepositoryType> implements
         this.imageField = imageField;
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = filterField;
+        this.searchField = searchField;
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;

@@ -50,7 +50,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     private SerializableSupplier<Component> iconFactory;
 
@@ -98,7 +98,7 @@ public class GridRoute<ModelClass, FieldType, RepositoryType> implements RouteRe
         this.imageField = imageField;
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = searchField;
+        this.searchField = searchField;
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
         this.readOnlyRoles = readOnlyRoles;

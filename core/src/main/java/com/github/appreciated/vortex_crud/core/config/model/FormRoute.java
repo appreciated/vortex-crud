@@ -53,7 +53,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
 
     private boolean inlineEdit;
 
-    private FieldType filterField;
+    private FieldType searchField;
 
     @lombok.NonNull
     private List<InternalFormElement<FieldType>> fields;
@@ -80,7 +80,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
             FieldType imageField,
             VortexCrudResourceProvider resourceProvider,
             boolean inlineEdit,
-            FieldType filterField,
+            FieldType searchField,
             @lombok.NonNull List<InternalFormElement<FieldType>> fields,
             SerializableSupplier<Component> iconFactory,
             List<String> writeRoles,
@@ -98,7 +98,7 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
         this.imageField = imageField;
         this.resourceProvider = resourceProvider;
         this.inlineEdit = inlineEdit;
-        this.filterField = filterField;
+        this.searchField = searchField;
         this.fields = fields;
         this.iconFactory = iconFactory;
         this.writeRoles = writeRoles;
