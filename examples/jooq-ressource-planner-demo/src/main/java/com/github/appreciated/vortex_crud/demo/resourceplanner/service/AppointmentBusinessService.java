@@ -214,14 +214,34 @@ public class AppointmentBusinessService {
         Integer customerId = record.getCustomerId();
         if (customerId == null) return;
 
-        String email = dsl.select(CUSTOMER.EMAIL)
+        var customer = dsl.select(CUSTOMER.EMAIL, CUSTOMER.NAME)
                 .from(CUSTOMER)
                 .where(CUSTOMER.ID.eq(customerId))
-                .fetchOneInto(String.class);
+                .fetchOne();
+
+        if (customer == null) return;
+        String email = customer.value1();
+        String customerName = customer.value2();
 
         if (email != null && !email.isBlank()) {
             String subject = "Appointment Update";
             String body = String.format("Your appointment on %s is %s.", record.getStartTime(), record.getStatus());
+
+            var settings = dsl.selectFrom(SETTINGS).fetchOne();
+            if (settings != null && settings.getDefaultEmailTemplateId() != null) {
+                var template = dsl.selectFrom(EMAIL_TEMPLATES)
+                        .where(EMAIL_TEMPLATES.ID.eq(settings.getDefaultEmailTemplateId()))
+                        .fetchOne();
+
+                if (template != null) {
+                    if (template.getSubject() != null) {
+                        subject = replacePlaceholders(template.getSubject(), record, customerName);
+                    }
+                    if (template.getBody() != null) {
+                        body = replacePlaceholders(template.getBody(), record, customerName);
+                    }
+                }
+            }
 
             if (emailSender != null) {
                 try {
@@ -238,5 +258,11 @@ public class AppointmentBusinessService {
                 log.info("📧 [MOCKED] EMAIL NOTIFICATION: To: {}, Subject: {}, Body: {}", email, subject, body);
             }
         }
+    }
+
+    private String replacePlaceholders(String text, AppointmentRecord record, String customerName) {
+        return text.replace("{{startTime}}", String.valueOf(record.getStartTime()))
+                .replace("{{status}}", String.valueOf(record.getStatus()))
+                .replace("{{customerName}}", customerName != null ? customerName : "");
     }
 }

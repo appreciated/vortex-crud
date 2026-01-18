@@ -276,12 +276,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
         // Routes
         LinkedHashMap<String, RouteRenderer<?, ?, ?>> routes = new LinkedHashMap<>();
 
-        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
-                .title("route.search.title")
-                .iconFactory(VaadinIcon.SEARCH::create)
-                .build());
-
-        routes.put("appointments", JooqCalendarRoute.builder()
+        var appointmentsRoute = JooqCalendarRoute.builder()
                 .defaultRoute(true)
                 .dataStoreConfig(appointmentConfig)
                 .iconFactory(VaadinIcon.CALENDAR::create)
@@ -290,7 +285,31 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .startDateField(APPOINTMENT.START_TIME)
                 .endDateField(APPOINTMENT.END_TIME)
                 .form(appointmentForm)
+                .build();
+
+        var personsRoute = JooqGridRoute.builder()
+                .dataStoreConfig(personConfig)
+                .iconFactory(VaadinIcon.USER::create)
+                .title("route.persons.title")
+                .titleField(PERSON.NAME)
+                .form(personForm)
+                .build();
+
+        var customersRoute = JooqGridRoute.builder()
+                .dataStoreConfig(customerConfig)
+                .iconFactory(VaadinIcon.USERS::create)
+                .title("route.customers.title")
+                .titleField(CUSTOMER.NAME)
+                .form(customerForm)
+                .build();
+
+        routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .title("route.search.title")
+                .iconFactory(VaadinIcon.SEARCH::create)
+                .searchableRoutes(List.of(appointmentsRoute, personsRoute, customersRoute))
                 .build());
+
+        routes.put("appointments", appointmentsRoute);
 
         routes.put("resource-board", JooqKanbanRoute.builder()
                 .dataStoreConfig(appointmentConfig)
@@ -317,21 +336,9 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .form(roomForm)
                 .build());
 
-        routes.put("persons", JooqGridRoute.builder()
-                .dataStoreConfig(personConfig)
-                .iconFactory(VaadinIcon.USER::create)
-                .title("route.persons.title")
-                .titleField(PERSON.NAME)
-                .form(personForm)
-                .build());
+        routes.put("persons", personsRoute);
 
-        routes.put("customers", JooqGridRoute.builder()
-                .dataStoreConfig(customerConfig)
-                .iconFactory(VaadinIcon.USERS::create)
-                .title("route.customers.title")
-                .titleField(CUSTOMER.NAME)
-                .form(customerForm)
-                .build());
+        routes.put("customers", customersRoute);
 
         routes.put("types", JooqGridRoute.builder()
                 .dataStoreConfig(typeConfig)
