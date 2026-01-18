@@ -33,7 +33,7 @@ public class JooqGridTestVortexCrudConfiguration
 
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
-        JooqDataStore store = new JooqDataStore(GRID_IMAGES.getRecordType(), dsl);
+        var store = new JooqDataStore<>(GRID_IMAGES.getRecordType(), dsl);
         var config = JooqDataStoreConfig.of(GRID_IMAGES)
                         .dataStoreInstance(store)
                         .fields(Map.of(
@@ -69,13 +69,13 @@ public class JooqGridTestVortexCrudConfiguration
                 .titleField(GRID_IMAGES.TITLE)
                 .imageField(GRID_IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .filter(RouteFilter.<TableField<?, ?>>builder()
+                .filter(StaticRouteFilter.<TableField<?, ?>>builder()
                         .field(GRID_IMAGES.TITLE)
-                        .value("ItemOne")
+                        .filterValue("ItemOne")
                         .build())
-                .filter(RouteFilter.<TableField<?, ?>>builder()
+                .filter(StaticRouteFilter.<TableField<?, ?>>builder()
                         .field(GRID_IMAGES.URL)
-                        .value("./red.png")
+                        .filterValue("./red.png")
                         .build())
                 .form(imageForm)
                 .build());

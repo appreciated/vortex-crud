@@ -8,6 +8,8 @@ import lombok.experimental.Accessors;
 
 /**
  * A route filter with a static value.
+ * Unlike DynamicRouteFilter which computes the value dynamically,
+ * this filter holds a constant value set at construction time.
  *
  * @param <FieldType> the type of field to filter on
  */
@@ -18,5 +20,10 @@ import lombok.experimental.Accessors;
 @Getter
 public class StaticRouteFilter<FieldType> implements RouteFilter<FieldType> {
     private FieldType field;
-    private Object value;
+    private Object filterValue;
+
+    @Override
+    public Object value() {
+        return filterValue;
+    }
 }

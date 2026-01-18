@@ -487,9 +487,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .titleField(IMAGES.TITLE)
                 .imageField(IMAGES.URL)
                 .resourceProvider(new LocalImageResourceProvider())
-                .filter(RouteFilter.<TableField<?, ?>>builder()
+                .filter(StaticRouteFilter.<TableField<?, ?>>builder()
                         .field(IMAGES.TITLE)
-                        .value("Red")
+                        .filterValue("Red")
                         .build())
                 .writeRoles(List.of("admin"))
                 .form(imageForm)
@@ -513,9 +513,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .identityAndAccessManagement(
                         LocalIdentityAndAccessManagement.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                                 .dataStoreConfig(usersConfig)
-                                .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<TableField<?, ?>>(
-                                        (VortexCrudDataStore) userRolesStore,
-                                        (VortexCrudDataStore) rolesStore,
+                                .roleResolutionStrategy(new JoinTableRoleResolutionStrategy<>(
+                                        userRolesStore,
+                                        rolesStore,
                                         USER_ROLES.USER_ID,
                                         USER_ROLES.ROLE_ID,
                                         ROLES.NAME,

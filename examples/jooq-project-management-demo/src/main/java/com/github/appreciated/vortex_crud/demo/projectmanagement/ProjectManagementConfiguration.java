@@ -2,7 +2,6 @@ package com.github.appreciated.vortex_crud.demo.projectmanagement;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.config.model.Application;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.file_provider.LocalFileResourceProvider;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.actions.SingleEntityRouteAction;
@@ -13,6 +12,7 @@ import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.Priority;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.ProjectStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskStatus;
 import com.github.appreciated.vortex_crud.demo.projectmanagement.enums.TaskType;
+import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
 import com.github.appreciated.vortex_crud.jooq.service.JooqManyToMany;
 import com.github.appreciated.vortex_crud.jooq.service.JooqOneToMany;
@@ -34,8 +34,6 @@ import org.jooq.TableRecord;
 import org.jooq.impl.TableImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.tables.records.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -434,7 +432,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
                 .build();
 
-        // Project Child Routes
         var projectTasksRoute = JooqKanbanRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.tasks.title")

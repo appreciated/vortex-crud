@@ -18,6 +18,8 @@ public class VortexCrudPathToRouteResolver {
     private String[] sections;
     private final Map<Integer, RouteRenderer<?, ?, ?>> pathRoutes;
     private final Map<String, RouteRenderer<?, ?, ?>> routesConfig;
+    private final Map<Integer, String> indexToRouteName;  // Maps segment index to route name
+    private final Map<Integer, RouteIdContext> indexToContext;  // Maps segment index to accumulated context
 
     // Constructor
     public VortexCrudPathToRouteResolver(String path,
@@ -28,6 +30,8 @@ public class VortexCrudPathToRouteResolver {
         this.dataStoreUtil = dataStoreUtil;
         this.pathRoutes = new HashMap<>();
         this.routesConfig = routesConfig;
+        this.indexToRouteName = new HashMap<>();
+        this.indexToContext = new HashMap<>();
         splitPathAndInitializeRoutes();
     }
 
@@ -36,29 +40,46 @@ public class VortexCrudPathToRouteResolver {
         // Split path into sections
         this.sections = path.split("/");
 
-        // Start at root
-        buildRouteMapForPathSection(0, routesConfig);
+        // Start at root with empty context
+        buildRouteMapForPathSection(0, routesConfig, new RouteIdContext(), null);
     }
 
-    private void buildRouteMapForPathSection(int sectionIndex, Map<String, RouteRenderer<?, ?, ?>> currentRoutes) {
+    private void buildRouteMapForPathSection(int sectionIndex, Map<String, RouteRenderer<?, ?, ?>> currentRoutes, RouteIdContext currentContext, String lastRouteName) {
         if (sectionIndex >= sections.length) {
             return; // End of path segments
         }
 
         String section = sections[sectionIndex];
 
+        // Store the current context for this index
+        indexToContext.put(sectionIndex, currentContext);
+
         // Check if the current route exists
         RouteRenderer<?, ?, ?> currentRouteRenderer = currentRoutes.get(section);
+        String nextRouteName = lastRouteName;
+        RouteIdContext nextContext = currentContext;
 
         if (currentRouteRenderer == null && currentRoutes.containsKey(null)) {
+            // This is an ID segment (wildcard match)
             currentRouteRenderer = currentRoutes.get(null);
             pathRoutes.put(sectionIndex, currentRouteRenderer);
-        } else if (currentRouteRenderer != null && currentRouteRenderer.factory().isContainerRoute()) {
-            pathRoutes.put(sectionIndex, currentRouteRenderer);
+
+            // Add the ID to context using the last route name
+            if (lastRouteName != null) {
+                nextContext = currentContext.withRouteId(lastRouteName, section);
+            }
+        } else if (currentRouteRenderer != null) {
+            // This is a named route segment
+            nextRouteName = section;
+            indexToRouteName.put(sectionIndex, section);
+
+            if (currentRouteRenderer.factory().isContainerRoute()) {
+                pathRoutes.put(sectionIndex, currentRouteRenderer);
+            }
         }
 
         if (currentRouteRenderer == null) {
-            throw new IllegalStateException("Current route is null");
+            throw new IllegalStateException("Current route is null at section: " + section);
         }
 
         pathRoutes.put(sectionIndex, currentRouteRenderer);
@@ -67,16 +88,16 @@ public class VortexCrudPathToRouteResolver {
         if (currentRouteRenderer instanceof RouteRendererMultipleChildren multi &&
             multi.routes() != null && !multi.routes().isEmpty()) {
             Map<String, RouteRenderer<?,?,?>> stringRouteRendererMap = multi.routes();
-            buildRouteMapForPathSection(sectionIndex + 1, stringRouteRendererMap);
+            buildRouteMapForPathSection(sectionIndex + 1, stringRouteRendererMap, nextContext, nextRouteName);
         } else if (currentRouteRenderer instanceof RouteRendererSingleChild<?, ?, ?> single &&
                    single.form() != null) {
             // For single child routes, create a map with the child as a wildcard (null key)
             Map<String, RouteRenderer<?, ?, ?>> singleChildMap = new HashMap<>();
             singleChildMap.put(null, single.form());
-            buildRouteMapForPathSection(sectionIndex + 1, singleChildMap);
+            buildRouteMapForPathSection(sectionIndex + 1, singleChildMap, nextContext, nextRouteName);
         } else {
             // If no children, continue to the next segment
-            buildRouteMapForPathSection(sectionIndex + 1, currentRoutes);
+            buildRouteMapForPathSection(sectionIndex + 1, currentRoutes, nextContext, nextRouteName);
         }
     }
 
@@ -167,5 +188,26 @@ public class VortexCrudPathToRouteResolver {
 
     public String getPathForIndex(int i) {
         return sections[i];
+    }
+
+    /**
+     * Get the route ID context at a specific path index.
+     * This contains all parent entity IDs accumulated up to this point in the path.
+     *
+     * @param index the path segment index
+     * @return the RouteIdContext at that index, or empty context if not found
+     */
+    public RouteIdContext getRouteIdContext(int index) {
+        return indexToContext.getOrDefault(index, new RouteIdContext());
+    }
+
+    /**
+     * Get the route name at a specific path index.
+     *
+     * @param index the path segment index
+     * @return the route name, or null if this index is not a named route
+     */
+    public String getRouteNameForIndex(int index) {
+        return indexToRouteName.get(index);
     }
 }
