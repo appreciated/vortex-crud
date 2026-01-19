@@ -517,6 +517,22 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(taskForm)
                 .build());
 
+        routes.put("tasks-tree", JooqTreeGridRoute.builder()
+                .title("route.tasks.tree.title")
+                .dataStoreConfig(taskConfig)
+                .iconFactory(VaadinIcon.TREE_TABLE::create)
+                .parentField(TASK.PARENT_TASK_ID)
+                .titleField(TASK.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
+                        JooqFormElement.of(TASK.STATUS, "route.tasks.labels.status").build(),
+                        JooqFormElement.of(TASK.ASSIGNEE_ID, "route.tasks.labels.assignee").build(),
+                        JooqFormElement.of(TASK.PRIORITY, "route.tasks.labels.priority").build(),
+                        JooqFormElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build()
+                ))
+                .form(taskForm)
+                .build());
+
         routes.put("search", SearchRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                 .title("route.search.title")
                 .iconFactory(VaadinIcon.SEARCH::create)
