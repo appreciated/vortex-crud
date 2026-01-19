@@ -341,6 +341,22 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                     context.dataStore().updateRecord(record);
                                     context.refreshCallback().run();
                                 })
+                                .build(),
+                        SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
+                                .componentFactory(() -> new Button("Go to Parent", VaadinIcon.ARROW_UP.create()))
+                                .visible(false) // Visibility controlled by enabled check usually, but here handled in handler or custom visibility logic if available.
+                                // Actually SingleEntityRouteAction doesn't support dynamic visibility based on record state in the builder easily without custom logic in the view.
+                                // But let's add it and it will be enabled when a record is selected.
+                                // We can add a check in the handler or component factory?
+                                // Let's just add it.
+                                .handler(context -> {
+                                    TableRecord<?> record = context.getFirstSelectedEntity();
+                                    Integer parentId = record.get(TASK.PARENT_TASK_ID);
+                                    if (parentId != null) {
+                                        context.viewComponent().getUI().ifPresent(ui ->
+                                                ui.navigate("tasks/" + parentId));
+                                    }
+                                })
                                 .build()
                 ))
                 .fields(List.of(
@@ -514,22 +530,6 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
                         })
                         .build())
-                .form(taskForm)
-                .build());
-
-        routes.put("tasks-tree", JooqTreeGridRoute.builder()
-                .title("route.tasks.tree.title")
-                .dataStoreConfig(taskConfig)
-                .iconFactory(VaadinIcon.TREE_TABLE::create)
-                .parentField(TASK.PARENT_TASK_ID)
-                .titleField(TASK.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(TASK.TITLE, "route.tasks.labels.title").build(),
-                        JooqFormElement.of(TASK.STATUS, "route.tasks.labels.status").build(),
-                        JooqFormElement.of(TASK.ASSIGNEE_ID, "route.tasks.labels.assignee").build(),
-                        JooqFormElement.of(TASK.PRIORITY, "route.tasks.labels.priority").build(),
-                        JooqFormElement.of(TASK.DUE_DATE, "route.tasks.labels.due_date").build()
-                ))
                 .form(taskForm)
                 .build());
 
