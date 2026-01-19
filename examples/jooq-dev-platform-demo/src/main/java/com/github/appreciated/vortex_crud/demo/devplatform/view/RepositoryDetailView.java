@@ -4,22 +4,29 @@ import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.R
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.IssueRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.jooq.tables.records.PullRequestRecord;
 import com.github.appreciated.vortex_crud.demo.devplatform.service.GitService;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.server.StreamResource;
 import org.jooq.DSLContext;
-import org.jooq.TableRecord;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Objects;
 import java.util.List;
@@ -33,11 +40,17 @@ public class RepositoryDetailView extends VerticalLayout {
     private final GitService gitService;
     private Span starCount;
     private Button starButton;
+    private String currentRef = "HEAD";
+    private boolean showBlame = false;
 
     public RepositoryDetailView(RepositoryRecord repository, DSLContext dsl, GitService gitService) {
         this.repository = repository;
         this.dsl = dsl;
         this.gitService = gitService;
+
+        if (repository.getDefaultBranch() != null && !repository.getDefaultBranch().isEmpty()) {
+            this.currentRef = repository.getDefaultBranch();
+        }
 
         setSizeFull();
         setPadding(false);
@@ -234,11 +247,12 @@ public class RepositoryDetailView extends VerticalLayout {
 
         Tab overviewTab = new Tab("Overview");
         Tab codeTab = new Tab("Code");
+        Tab commitsTab = new Tab("Commits");
         Tab issuesTab = new Tab("Issues");
         Tab prsTab = new Tab("Pull Requests");
         Tab wikiTab = new Tab("Wiki");
 
-        Tabs tabs = new Tabs(overviewTab, codeTab, issuesTab, prsTab, wikiTab);
+        Tabs tabs = new Tabs(overviewTab, codeTab, commitsTab, issuesTab, prsTab, wikiTab);
 
         VerticalLayout tabContent = new VerticalLayout();
         tabContent.setPadding(false);
@@ -254,6 +268,8 @@ public class RepositoryDetailView extends VerticalLayout {
                 showOverview(tabContent);
             } else if (selectedTab.equals(codeTab)) {
                 showCode(tabContent, "");
+            } else if (selectedTab.equals(commitsTab)) {
+                showCommits(tabContent);
             } else if (selectedTab.equals(issuesTab)) {
                 showIssues(tabContent);
             } else if (selectedTab.equals(prsTab)) {
@@ -268,7 +284,37 @@ public class RepositoryDetailView extends VerticalLayout {
     }
 
     private void showCode(VerticalLayout container, String path) {
-        if (path != null && !path.isEmpty()) {
+        // Branch Controls
+        HorizontalLayout controls = new HorizontalLayout();
+        controls.setAlignItems(FlexComponent.Alignment.CENTER);
+        controls.setSpacing(true);
+
+        ComboBox<String> branchSelect = new ComboBox<>();
+        branchSelect.setPlaceholder("Branch");
+        branchSelect.setItems(gitService.listBranches(repository.getSlug()));
+        branchSelect.setValue(currentRef);
+        branchSelect.addValueChangeListener(e -> {
+            if (e.getValue() != null) {
+                currentRef = e.getValue();
+                container.removeAll();
+                showCode(container, "");
+            }
+        });
+
+        Button newBranchBtn = new Button("New Branch", new Icon(VaadinIcon.PLUS), e -> openNewBranchDialog(branchSelect));
+        newBranchBtn.addThemeVariants(ButtonVariant.LUMO_SMALL);
+
+        Button deleteBranchBtn = new Button("Delete Branch", new Icon(VaadinIcon.TRASH), e -> openDeleteBranchDialog(branchSelect));
+        deleteBranchBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR);
+
+        controls.add(branchSelect, newBranchBtn, deleteBranchBtn);
+        container.add(controls);
+
+        refreshCode(container, path);
+    }
+
+    private void refreshCode(VerticalLayout container, String path) {
+         if (path != null && !path.isEmpty()) {
             Button backButton = new Button("..", e -> {
                 String parentPath = new File(path).getParent();
                 container.removeAll();
@@ -278,7 +324,7 @@ public class RepositoryDetailView extends VerticalLayout {
             container.add(backButton);
         }
 
-        List<GitService.FileEntry> files = gitService.listFiles(repository.getSlug(), path);
+        List<GitService.FileEntry> files = gitService.listFiles(repository.getSlug(), path, currentRef);
         if (files.isEmpty()) {
             container.add(new Paragraph("No files found."));
             return;
@@ -310,6 +356,51 @@ public class RepositoryDetailView extends VerticalLayout {
         container.add(grid);
     }
 
+    private void openNewBranchDialog(ComboBox<String> branchSelect) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("New Branch");
+
+        TextField branchNameField = new TextField("Branch Name");
+        Button createBtn = new Button("Create", e -> {
+            try {
+                gitService.createBranch(repository.getSlug(), branchNameField.getValue(), currentRef);
+                branchSelect.setItems(gitService.listBranches(repository.getSlug()));
+                branchSelect.setValue(branchNameField.getValue());
+                Notification.show("Branch created");
+                dialog.close();
+            } catch (Exception ex) {
+                Notification.show("Error: " + ex.getMessage());
+            }
+        });
+        Button cancelBtn = new Button("Cancel", e -> dialog.close());
+
+        dialog.add(new VerticalLayout(branchNameField, new HorizontalLayout(createBtn, cancelBtn)));
+        dialog.open();
+    }
+
+    private void openDeleteBranchDialog(ComboBox<String> branchSelect) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Delete Branch");
+        dialog.add(new Text("Are you sure you want to delete branch " + currentRef + "?"));
+
+        Button confirmBtn = new Button("Delete", e -> {
+             try {
+                gitService.deleteBranch(repository.getSlug(), currentRef);
+                branchSelect.setItems(gitService.listBranches(repository.getSlug()));
+                branchSelect.setValue("HEAD");
+                Notification.show("Branch deleted");
+                dialog.close();
+            } catch (Exception ex) {
+                Notification.show("Error: " + ex.getMessage());
+            }
+        });
+        confirmBtn.addThemeVariants(ButtonVariant.LUMO_ERROR);
+        Button cancelBtn = new Button("Cancel", e -> dialog.close());
+
+        dialog.getFooter().add(confirmBtn, cancelBtn);
+        dialog.open();
+    }
+
     private void showFileContent(VerticalLayout container, String path) {
         container.removeAll();
         Button backButton = new Button("Back to browsing", e -> {
@@ -318,19 +409,124 @@ public class RepositoryDetailView extends VerticalLayout {
             showCode(container, parentPath == null ? "" : parentPath);
         });
         backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        container.add(backButton);
 
-        String content = gitService.getFileContent(repository.getSlug(), path);
+        // Toolbar for file
+        HorizontalLayout toolbar = new HorizontalLayout(backButton);
+        toolbar.setWidthFull();
+        toolbar.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
 
-        Pre codeBlock = new Pre();
-        codeBlock.setText(content);
-        codeBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
-        codeBlock.getStyle().set("padding", "var(--lumo-space-m)");
-        codeBlock.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
-        codeBlock.getStyle().set("overflow", "auto");
-        codeBlock.setWidthFull();
+        HorizontalLayout actions = new HorizontalLayout();
 
-        container.add(codeBlock);
+        Button rawBtn = new Button("Raw", new Icon(VaadinIcon.DOWNLOAD_ALT));
+        rawBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_TERTIARY);
+        // Create a StreamResource
+        String filename = new File(path).getName();
+        StreamResource resource = new StreamResource(filename, () -> {
+            byte[] content = gitService.getRawFileContent(repository.getSlug(), path, currentRef);
+            return new ByteArrayInputStream(content != null ? content : new byte[0]);
+        });
+        Anchor downloadLink = new Anchor(resource, "");
+        downloadLink.getElement().setAttribute("download", true);
+        downloadLink.add(rawBtn);
+
+        Button blameBtn = new Button("Blame", new Icon(VaadinIcon.EYE));
+        blameBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, showBlame ? ButtonVariant.LUMO_PRIMARY : ButtonVariant.LUMO_TERTIARY);
+        blameBtn.addClickListener(e -> {
+            showBlame = !showBlame;
+            showFileContent(container, path); // Refresh view
+        });
+
+        actions.add(downloadLink, blameBtn);
+        toolbar.add(actions);
+        container.add(toolbar);
+
+        if (showBlame) {
+            renderBlameView(container, path);
+        } else {
+            String content = gitService.getFileContent(repository.getSlug(), path, currentRef);
+            Pre codeBlock = new Pre();
+            codeBlock.setText(content);
+            codeBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+            codeBlock.getStyle().set("padding", "var(--lumo-space-m)");
+            codeBlock.getStyle().set("border-radius", "var(--lumo-border-radius-m)");
+            codeBlock.getStyle().set("overflow", "auto");
+            codeBlock.setWidthFull();
+            container.add(codeBlock);
+        }
+    }
+
+    private void renderBlameView(VerticalLayout container, String path) {
+        List<GitService.BlameInfo> blameInfos = gitService.blame(repository.getSlug(), currentRef, path);
+        String content = gitService.getFileContent(repository.getSlug(), path, currentRef);
+        String[] lines = content.split("\n");
+
+        Grid<BlameLine> grid = new Grid<>();
+        grid.setWidthFull();
+        grid.addColumn(BlameLine::commitShort).setHeader("Commit").setWidth("100px").setFlexGrow(0);
+        grid.addColumn(BlameLine::author).setHeader("Author").setWidth("150px").setFlexGrow(0);
+        grid.addColumn(BlameLine::date).setHeader("Date").setWidth("150px").setFlexGrow(0);
+        grid.addColumn(BlameLine::content).setHeader("Content").setAutoWidth(true);
+
+        List<BlameLine> blameLines = new java.util.ArrayList<>();
+        for (int i = 0; i < lines.length; i++) {
+            GitService.BlameInfo info = (i < blameInfos.size()) ? blameInfos.get(i) : null;
+            blameLines.add(new BlameLine(
+                info != null ? info.commitId().substring(0, 7) : "",
+                info != null ? info.author() : "",
+                info != null ? info.date().toLocalDate().toString() : "",
+                lines[i]
+            ));
+        }
+        grid.setItems(blameLines);
+        container.add(grid);
+    }
+
+    record BlameLine(String commitShort, String author, String date, String content) {}
+
+    private void showCommits(VerticalLayout container) {
+        List<GitService.CommitInfo> commits = gitService.getCommitHistory(repository.getSlug(), currentRef);
+
+        Grid<GitService.CommitInfo> grid = new Grid<>();
+        grid.addColumn(c -> c.id().substring(0, 7)).setHeader("SHA").setWidth("100px").setFlexGrow(0);
+        grid.addColumn(GitService.CommitInfo::shortMessage).setHeader("Message").setAutoWidth(true);
+        grid.addColumn(GitService.CommitInfo::author).setHeader("Author").setWidth("150px").setFlexGrow(0);
+        grid.addColumn(c -> c.date().toString()).setHeader("Date").setWidth("200px").setFlexGrow(0);
+
+        grid.addItemClickListener(e -> openCommitDialog(e.getItem()));
+
+        grid.setItems(commits);
+        container.add(grid);
+    }
+
+    private void openCommitDialog(GitService.CommitInfo commit) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Commit Details: " + commit.id().substring(0, 7));
+        dialog.setWidth("80vw");
+        dialog.setHeight("80vh");
+
+        VerticalLayout content = new VerticalLayout();
+        content.setSizeFull();
+
+        content.add(new H3(commit.shortMessage()));
+        content.add(new Paragraph(commit.fullMessage()));
+
+        // Show Diff
+        String diff = gitService.getDiff(repository.getSlug(), null, commit.id());
+        // Note: passing null as oldRef relies on getDiff logic to find parent
+
+        Pre diffBlock = new Pre();
+        diffBlock.setText(diff);
+        diffBlock.getStyle().set("background-color", "var(--lumo-contrast-5pct)");
+        diffBlock.getStyle().set("padding", "var(--lumo-space-m)");
+        diffBlock.getStyle().set("overflow", "auto");
+        diffBlock.setSizeFull();
+
+        content.add(diffBlock);
+        dialog.add(content);
+
+        Button closeBtn = new Button("Close", e -> dialog.close());
+        dialog.getFooter().add(closeBtn);
+        dialog.open();
     }
 
     private void showOverview(VerticalLayout container) {
