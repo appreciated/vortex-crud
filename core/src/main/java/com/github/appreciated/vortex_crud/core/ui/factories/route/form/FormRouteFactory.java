@@ -106,8 +106,15 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             entity = dataStore.getRecordById(lastSegment);
         }
 
-        formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.fields(), entity, context, tables, binder, form);
+        java.util.Map<FieldType, Component> components = formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.fields(), entity, context, tables, binder, form);
         binder.setBean(entity);
+
+        if (routeRenderer instanceof FormRoute) {
+            FormRoute<ModelClass, FieldType, RepositoryType> formRoute = (FormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+            if (formRoute.formLogic() != null) {
+                formRoute.formLogic().init(binder, components, entity, context);
+            }
+        }
 
         // Generic Save button
         ComponentEventListener<ClickEvent<Button>> onSave = event -> {

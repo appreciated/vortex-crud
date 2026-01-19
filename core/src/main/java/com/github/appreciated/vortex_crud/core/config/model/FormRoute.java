@@ -68,6 +68,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
 
     private Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes;
 
+    private FormLogic<ModelClass, FieldType, RepositoryType> formLogic;
+
     @Builder
     public FormRoute(
             boolean defaultRoute,
@@ -86,7 +88,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
             List<String> writeRoles,
             List<String> readOnlyRoles,
             List<RouteAction<FieldType, ModelClass>> actions,
-            Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes
+            Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes,
+            FormLogic<ModelClass, FieldType, RepositoryType> formLogic
     ) {
         this.defaultRoute = defaultRoute;
         this.factory = factory != null ? factory : new FormRouteFactory<>();
@@ -105,5 +108,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
         this.readOnlyRoles = readOnlyRoles;
         this.actions = actions;
         this.routes = routes;
+        this.formLogic = formLogic;
     }
 }
