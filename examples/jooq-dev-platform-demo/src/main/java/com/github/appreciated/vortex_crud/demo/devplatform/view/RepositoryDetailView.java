@@ -669,6 +669,27 @@ public class RepositoryDetailView extends VerticalLayout {
             aboutSection.add(languageRow);
         }
 
+        // Clone URL
+        String baseUrl = com.vaadin.flow.server.VaadinServlet.getCurrent().getServletContext().getContextPath();
+        String host = com.vaadin.flow.server.VaadinRequest.getCurrent().getHeader("host");
+        String scheme = "http"; // Default to http if cannot determine
+        if (com.vaadin.flow.server.VaadinRequest.getCurrent() instanceof com.vaadin.flow.server.VaadinServletRequest) {
+             scheme = ((com.vaadin.flow.server.VaadinServletRequest) com.vaadin.flow.server.VaadinRequest.getCurrent()).getScheme();
+        }
+        String cloneUrl = scheme + "://" + host + baseUrl + "/git/" + repository.getSlug();
+
+        TextField cloneUrlField = new TextField("Clone URL");
+        cloneUrlField.setValue(cloneUrl);
+        cloneUrlField.setReadOnly(true);
+        cloneUrlField.setWidthFull();
+        cloneUrlField.addThemeName("small");
+        cloneUrlField.setSuffixComponent(new Button(new Icon(VaadinIcon.COPY), e -> {
+            UI.getCurrent().getPage().executeJs("navigator.clipboard.writeText($0)", cloneUrl);
+            Notification.show("URL copied to clipboard");
+        }));
+
+        aboutSection.add(cloneUrlField);
+
         sidebar.add(aboutSection);
 
         // Topics section
