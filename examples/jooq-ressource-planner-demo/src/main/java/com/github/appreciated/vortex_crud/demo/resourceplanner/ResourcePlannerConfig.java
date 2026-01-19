@@ -15,6 +15,10 @@ import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleRe
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import org.jooq.DSLContext;
@@ -263,6 +267,70 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFormElement.of(APPOINTMENT.RECURRENCE_END_DATE, "route.appointments.labels.recurrence_end_date").build(),
                         JooqFormElement.of(APPOINTMENT.USER_AGREEMENT_ACCEPTED, "route.appointments.labels.user_agreement_accepted").build()
                 ))
+                .formLogic((binder, components, entity, context) -> {
+                    Component typeComponent = components.get(APPOINTMENT.APPOINTMENT_TYPE_ID);
+                    Component startComponent = components.get(APPOINTMENT.START_TIME);
+                    Component endComponent = components.get(APPOINTMENT.END_TIME);
+                    Component roomComponent = components.get(APPOINTMENT.ROOM_ID);
+                    Component personComponent = components.get(APPOINTMENT.PERSON_ID);
+
+                    // Auto-calculation Logic
+                    if (typeComponent instanceof EntityComboBoxWrapper && startComponent instanceof DateTimePicker && endComponent instanceof DateTimePicker) {
+                        EntityComboBoxWrapper typeWrapper = (EntityComboBoxWrapper) typeComponent;
+                        DateTimePicker startDatePicker = (DateTimePicker) startComponent;
+                        DateTimePicker endDatePicker = (DateTimePicker) endComponent;
+
+                        com.vaadin.flow.component.HasValue.ValueChangeListener listener = event -> {
+                            Integer typeId = (Integer) typeWrapper.getValue();
+                            java.time.LocalDateTime start = startDatePicker.getValue();
+                            if (typeId != null && start != null) {
+                                var typeRecord = typeStore.getRecordById(typeId);
+                                if (typeRecord != null && typeRecord.getDurationMinutes() != null) {
+                                    endDatePicker.setValue(start.plusMinutes(typeRecord.getDurationMinutes()));
+                                }
+                            }
+                        };
+
+                        typeWrapper.addValueChangeListener(listener);
+                        startDatePicker.addValueChangeListener(listener);
+                    }
+
+                    // Dynamic Filtering Logic
+                    if (roomComponent instanceof EntityComboBoxWrapper && personComponent instanceof EntityComboBoxWrapper && startComponent instanceof DateTimePicker && endComponent instanceof DateTimePicker) {
+                        EntityComboBoxWrapper roomWrapper = (EntityComboBoxWrapper) roomComponent;
+                        EntityComboBoxWrapper personWrapper = (EntityComboBoxWrapper) personComponent;
+                        DateTimePicker startDatePicker = (DateTimePicker) startComponent;
+                        DateTimePicker endDatePicker = (DateTimePicker) endComponent;
+                        ComboBox<Object> personComboBox = (ComboBox<Object>) personWrapper.getComponent();
+
+                        Runnable updatePersons = () -> {
+                            Integer roomId = (Integer) roomWrapper.getValue();
+                            java.time.LocalDateTime start = startDatePicker.getValue();
+                            java.time.LocalDateTime end = endDatePicker.getValue();
+
+                            if (roomId != null && start != null && end != null) {
+                                var busyPersons = dsl.select(APPOINTMENT.PERSON_ID)
+                                        .from(APPOINTMENT)
+                                        .where(APPOINTMENT.START_TIME.lessThan(end))
+                                        .and(APPOINTMENT.END_TIME.greaterThan(start))
+                                        .and(APPOINTMENT.STATUS.ne("CANCELLED"));
+
+                                var availablePersons = dsl.selectFrom(PERSON)
+                                        .where(PERSON.IS_ACTIVE.eq(true))
+                                        .and(PERSON.ID.notIn(busyPersons))
+                                        .fetch().stream();
+                                personComboBox.setItems(availablePersons);
+                            } else {
+                                java.util.stream.Stream<PersonRecord> personStream = dsl.selectFrom(PERSON).where(PERSON.IS_ACTIVE.eq(true)).fetch().stream();
+                                personComboBox.setItems(personStream);
+                            }
+                        };
+
+                        roomWrapper.addValueChangeListener(e -> updatePersons.run());
+                        startDatePicker.addValueChangeListener(e -> updatePersons.run());
+                        endDatePicker.addValueChangeListener(e -> updatePersons.run());
+                    }
+                })
                 .build();
 
         var emailTemplatesForm = JooqFormRoute.builder()

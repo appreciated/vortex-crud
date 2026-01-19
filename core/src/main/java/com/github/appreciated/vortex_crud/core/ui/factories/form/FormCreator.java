@@ -28,7 +28,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
         this.permissionChecker = permissionChecker;
     }
 
-    public void bindAndAddToLayout(RepositoryType dataStoreKey,
+    public Map<FieldType, Component> bindAndAddToLayout(RepositoryType dataStoreKey,
                                    FormRouteProvider<ModelClass, FieldType, RepositoryType> routeRenderer,
                                    List<InternalFormElement<FieldType>> fieldsViewConfig,
                                    Object entity,
@@ -37,6 +37,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                                    Binder<Object> binder,
                                    FormLayout form) {
         Map<FieldType, Field<ModelClass, FieldType, RepositoryType>> fieldsConfig = dataStoreConfig.fields();
+        Map<FieldType, Component> createdComponents = new java.util.HashMap<>();
 
         // Iterate over the fields defined in the configuration
         for (InternalFormElement<FieldType> element : fieldsViewConfig) {
@@ -57,6 +58,7 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 }
 
                 Component component = formBuilder.createComponent(dataStoreKey, fieldName, field, context);
+                createdComponents.put(fieldName, component);
 
                 dataBinder.bindComponent(component, fieldName, field, entity, binder, context.reflectionService());
 
@@ -70,5 +72,6 @@ public class FormCreator<ModelClass, FieldType, RepositoryType> {
                 formBuilder.createAndAddCollectionToForm(routeRenderer, (Collection<ModelClass, FieldType, RepositoryType>) element, entity, context, form);
             }
         }
+        return createdComponents;
     }
 }
