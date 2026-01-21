@@ -1,9 +1,9 @@
 package com.github.appreciated.vortex_crud.demo.resourceplanner;
 
 import com.github.appreciated.vortex_crud.core.config.model.*;
-import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
 import com.github.appreciated.vortex_crud.core.service.VortexCrudConfigurationProvider;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.collection.ListCollectionFactory;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.jooq.tables.records.*;
 import com.github.appreciated.vortex_crud.demo.resourceplanner.service.AppointmentBusinessService;
 import com.github.appreciated.vortex_crud.jooq.service.JooqDataStore;
@@ -15,7 +15,6 @@ import com.github.appreciated.vortex_crud.security.core.strategy.JoinTableRoleRe
 import com.github.appreciated.vortex_crud.security.core.view.LocalIdentityAndAccessManagement;
 import com.github.appreciated.vortex_crud.security.core.view.LoginView;
 import com.github.appreciated.vortex_crud.security.core.view.SignUpView;
-import com.github.appreciated.vortex_crud.core.ui.factories.form.elements.fields.functions.component.EntityComboBoxWrapper;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
@@ -190,68 +189,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         JooqFormElement.of(ROOM.IS_ACTIVE, "route.rooms.labels.active").build()))
                 .build();
 
-        // Room Detail (for Resource View)
-        var roomDetailForm = JooqFormRoute.builder()
-                .titleField(ROOM.NAME)
-                .fields(List.of(
-                        JooqFormElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
-                        JooqFormElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
-                        JooqCollection.builder()
-                                .label("route.rooms.labels.appointments")
-                                .field(APPOINTMENT.START_TIME)
-                                .listFactory(new ListCollectionFactory())
-                                .dataStoreConfig(appointmentConfig)
-                                .oneToMany(new JooqOneToMany(APPOINTMENT.ROOM_ID))
-                                .children(List.of(APPOINTMENT.START_TIME, APPOINTMENT.END_TIME, APPOINTMENT.STATUS))
-                                .titleField(APPOINTMENT.START_TIME)
-                                .build()))
-                .build();
-
-        var personForm = JooqFormRoute.builder()
-                .titleField(PERSON.NAME)
-                .fields(List.of(
-                        JooqFormElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
-                        JooqFormElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
-                        JooqFormElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
-                        JooqFormElement.of(PERSON.WORKING_HOURS_START, "route.persons.labels.working_hours_start").build(),
-                        JooqFormElement.of(PERSON.WORKING_HOURS_END, "route.persons.labels.working_hours_end").build(),
-                        JooqFormElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
-                        JooqCollection.builder()
-                                .label("route.persons.labels.services")
-                                .field(APPOINTMENT_TYPE.NAME)
-                                .listFactory(new ListCollectionFactory<>())
-                                .dataStoreConfig(typeConfig)
-                                .manyToMany(new JooqManyToMany<>(
-                                        PERSON_APPOINTMENT_TYPE.PERSON_ID,
-                                        PERSON_APPOINTMENT_TYPE.APPOINTMENT_TYPE_ID,
-                                        APPOINTMENT_TYPE.ID,
-                                        PERSON_APPOINTMENT_TYPE))
-                                .children(List.of(APPOINTMENT_TYPE.NAME, APPOINTMENT_TYPE.DURATION_MINUTES))
-                                .emptyMessage("route.persons.labels.services-empty")
-                                .titleField(APPOINTMENT_TYPE.NAME)
-                                .build()))
-                .build();
-
-        var customerForm = JooqFormRoute.builder()
-                .titleField(CUSTOMER.NAME)
-                .fields(List.of(
-                        JooqFormElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
-                        JooqFormElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
-                        JooqFormElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
-                        JooqFormElement.of(CUSTOMER.NOTES, "route.customers.labels.notes").build(),
-                        JooqFormElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
-                .build();
-
-        var typeForm = JooqFormRoute.builder()
-                .titleField(APPOINTMENT_TYPE.NAME)
-                .fields(List.of(
-                        JooqFormElement.of(APPOINTMENT_TYPE.NAME, "route.types.labels.name").build(),
-                        JooqFormElement.of(APPOINTMENT_TYPE.DURATION_MINUTES, "route.types.labels.duration").build(),
-                        JooqFormElement.of(APPOINTMENT_TYPE.PRICE, "route.types.labels.price").build(),
-                        JooqFormElement.of(APPOINTMENT_TYPE.REQUIRES_ROOM, "route.types.labels.requires_room").build(),
-                        JooqFormElement.of(APPOINTMENT_TYPE.IS_ACTIVE, "route.types.labels.active").build()))
-                .build();
-
         var appointmentForm = JooqFormRoute.builder()
                 .titleField(APPOINTMENT.START_TIME)
                 .fields(List.of(
@@ -332,6 +269,69 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                     }
                 })
                 .build();
+        // Room Detail (for Resource View)
+        var roomDetailForm = JooqFormRoute.builder()
+                .titleField(ROOM.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(ROOM.NAME, "route.rooms.labels.name").readOnly(true).build(),
+                        JooqFormElement.of(ROOM.CAPACITY, "route.rooms.labels.capacity").readOnly(true).build(),
+                        JooqCollection.builder()
+                                .label("route.rooms.labels.appointments")
+                                .field(APPOINTMENT.START_TIME)
+                                .listFactory(new ListCollectionFactory<>())
+                                .dataStoreConfig(appointmentConfig)
+                                .form(appointmentForm)
+                                .oneToMany(new JooqOneToMany(APPOINTMENT.ROOM_ID))
+                                .children(List.of(APPOINTMENT.START_TIME, APPOINTMENT.END_TIME, APPOINTMENT.STATUS))
+                                .titleField(APPOINTMENT.START_TIME)
+                                .build()))
+                .build();
+
+        var personForm = JooqFormRoute.builder()
+                .titleField(PERSON.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(PERSON.NAME, "route.persons.labels.name").readOnly(true).build(),
+                        JooqFormElement.of(PERSON.EMAIL, "route.persons.labels.email").build(),
+                        JooqFormElement.of(PERSON.TITLE, "route.persons.labels.title").build(),
+                        JooqFormElement.of(PERSON.WORKING_HOURS_START, "route.persons.labels.working_hours_start").build(),
+                        JooqFormElement.of(PERSON.WORKING_HOURS_END, "route.persons.labels.working_hours_end").build(),
+                        JooqFormElement.of(PERSON.IS_ACTIVE, "route.persons.labels.active").build(),
+                        JooqCollection.builder()
+                                .label("route.persons.labels.services")
+                                .field(APPOINTMENT_TYPE.NAME)
+                                .listFactory(new ListCollectionFactory<>())
+                                .dataStoreConfig(typeConfig)
+                                .manyToMany(new JooqManyToMany<>(
+                                        PERSON_APPOINTMENT_TYPE.PERSON_ID,
+                                        PERSON_APPOINTMENT_TYPE.APPOINTMENT_TYPE_ID,
+                                        APPOINTMENT_TYPE.ID,
+                                        PERSON_APPOINTMENT_TYPE))
+                                .children(List.of(APPOINTMENT_TYPE.NAME, APPOINTMENT_TYPE.DURATION_MINUTES))
+                                .emptyMessage("route.persons.labels.services-empty")
+                                .titleField(APPOINTMENT_TYPE.NAME)
+                                .build()))
+                .build();
+
+        var customerForm = JooqFormRoute.builder()
+                .titleField(CUSTOMER.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(CUSTOMER.NAME, "route.customers.labels.name").build(),
+                        JooqFormElement.of(CUSTOMER.EMAIL, "route.customers.labels.email").build(),
+                        JooqFormElement.of(CUSTOMER.PHONE, "route.customers.labels.phone").build(),
+                        JooqFormElement.of(CUSTOMER.NOTES, "route.customers.labels.notes").build(),
+                        JooqFormElement.of(CUSTOMER.CREATED_AT, "route.customers.labels.created_at").readOnly(true).build()))
+                .build();
+
+        var typeForm = JooqFormRoute.builder()
+                .titleField(APPOINTMENT_TYPE.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(APPOINTMENT_TYPE.NAME, "route.types.labels.name").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.DURATION_MINUTES, "route.types.labels.duration").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.PRICE, "route.types.labels.price").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.REQUIRES_ROOM, "route.types.labels.requires_room").build(),
+                        JooqFormElement.of(APPOINTMENT_TYPE.IS_ACTIVE, "route.types.labels.active").build()))
+                .build();
+
 
         var emailTemplatesForm = JooqFormRoute.builder()
                 .titleField(EMAIL_TEMPLATES.NAME)
@@ -378,15 +378,6 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .build());
 
         routes.put("appointments", appointmentsRoute);
-
-        routes.put("resource-board", JooqKanbanRoute.builder()
-                .dataStoreConfig(appointmentConfig)
-                .iconFactory(VaadinIcon.DASHBOARD::create)
-                .title("route.kanban.title")
-                .titleField(APPOINTMENT.START_TIME)
-                .columnField(APPOINTMENT.ROOM_ID)
-                .form(appointmentForm)
-                .build());
 
         routes.put("resource-view", JooqMasterDetailRoute.builder()
                 .dataStoreConfig(roomConfig)
