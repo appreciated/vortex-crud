@@ -112,18 +112,25 @@ public class ListCollectionFactory<ModelClass, FieldType, RepositoryType> implem
         for (Object record : records) {
             DefaultCollectionItem item = new DefaultCollectionItem();
             item.getContent().addClickListener(event -> openDialog(reflectionService.getId(record), foreignKeyValue, internalFormElement, list, header, context));
-            FormRouteProvider<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.form();
-            for (InternalFormElement<FieldType> child : childRoute.fields()) {
-                String textValue = reflectionService.getString(record, child.field());
-                item.addContent(new Text(textValue));
-                Button remove = new Button(VaadinIcon.TRASH.create());
-                remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
-                remove.addClickListener(event -> {
-                    dataStore.deleteRecordById(dataStoreUtil.getId(record));
-                    loadCollection(foreignKeyValue, internalFormElement, list, header, context);
-                });
-                item.addActions(remove);
+
+            List<FieldType> children = internalFormElement.children();
+            if (children != null && !children.isEmpty()) {
+                children.forEach(fieldId -> item.addContent(new Text(reflectionService.getString(record, fieldId))));
+            } else {
+                FormRouteProvider<ModelClass, FieldType, RepositoryType> childRoute = internalFormElement.form();
+                for (InternalFormElement<FieldType> child : childRoute.fields()) {
+                    String textValue = reflectionService.getString(record, child.field());
+                    item.addContent(new Text(textValue));
+                }
             }
+
+            Button remove = new Button(VaadinIcon.TRASH.create());
+            remove.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL, LUMO_ERROR);
+            remove.addClickListener(event -> {
+                dataStore.deleteRecordById(dataStoreUtil.getId(record));
+                loadCollection(foreignKeyValue, internalFormElement, list, header, context);
+            });
+            item.addActions(remove);
             list.add(item);
         }
     }
