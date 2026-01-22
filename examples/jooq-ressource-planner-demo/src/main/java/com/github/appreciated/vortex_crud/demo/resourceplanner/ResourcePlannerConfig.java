@@ -119,7 +119,7 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                         APPOINTMENT_TYPE.NAME, JooqTextField.builder().required(true).build(),
                         APPOINTMENT_TYPE.DESCRIPTION, JooqTextAreaField.builder().build(),
                         APPOINTMENT_TYPE.DURATION_MINUTES, JooqIntegerField.builder().build(),
-                        APPOINTMENT_TYPE.PRICE, JooqDoubleField.builder().build(),
+                        APPOINTMENT_TYPE.PRICE, JooqBigDecimalField.builder().build(),
                         APPOINTMENT_TYPE.REQUIRES_ROOM, JooqCheckboxField.builder().build(),
                         APPOINTMENT_TYPE.IS_ACTIVE, JooqCheckboxField.builder().build()))
                 .build();
@@ -420,6 +420,8 @@ public class ResourcePlannerConfig implements VortexCrudConfigurationProvider<Ta
                 .iconFactory(VaadinIcon.COG::create)
                 .title("route.settings.title")
                 .titleField(SETTINGS.ID)
+                .entityFilterField(SETTINGS.ID)
+                .entityFilterValueProvider(() -> 1)  // Always fetch the singleton settings record with ID 1
                 .fields(List.of(
                         JooqFormElement.of(SETTINGS.USER_AGREEMENT_TEXT, "route.settings.labels.user_agreement_text").build(),
                         JooqFormElement.of(SETTINGS.DEFAULT_EMAIL_TEMPLATE_ID, "route.settings.labels.default_email_template").build()))
