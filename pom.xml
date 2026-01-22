@@ -18,6 +18,13 @@
         <vaadin.version>25.0.2</vaadin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>gitblit-maven</id>
+            <url>https://gitblit-org.github.io/gitblit-maven/</url>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
