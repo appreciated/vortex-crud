@@ -23,6 +23,11 @@
 
     <repositories>
         <repository>
+            <id>packages.scm-manager.org</id>
+            <name>scm-manager public repository</name>
+            <url>https://packages.scm-manager.org/repository/public</url>
+        </repository>
+        <repository>
             <id>vaadin-prereleases</id>
             <url>
                 https://maven.vaadin.com/vaadin-prereleases/
@@ -106,9 +111,20 @@
             <version>2.11.0</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.9.0.202403050737-r</version>
+            <groupId>sonia.scm.clients</groupId>
+            <artifactId>scm-client-api</artifactId>
+            <version>1.60</version>
+        </dependency>
+        <dependency>
+            <groupId>sonia.scm.clients</groupId>
+            <artifactId>scm-client-impl</artifactId>
+            <version>1.60</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
