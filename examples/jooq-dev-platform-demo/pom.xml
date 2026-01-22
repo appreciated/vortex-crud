@@ -35,6 +35,10 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>gitblit-maven</id>
+            <url>https://gitblit-org.github.io/gitblit-maven/</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -106,9 +110,9 @@
             <version>2.11.0</version>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jgit</groupId>
-            <artifactId>org.eclipse.jgit</artifactId>
-            <version>6.9.0.202403050737-r</version>
+            <groupId>com.gitblit</groupId>
+            <artifactId>gitblit</artifactId>
+            <version>1.9.3</version>
         </dependency>
     </dependencies>
 

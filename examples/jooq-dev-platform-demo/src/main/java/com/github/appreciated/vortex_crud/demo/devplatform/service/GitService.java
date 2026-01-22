@@ -1,13 +1,10 @@
 package com.github.appreciated.vortex_crud.demo.devplatform.service;
 
+import com.gitblit.models.PathModel;
+import com.gitblit.utils.JGitUtils;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -59,39 +56,16 @@ public class GitService {
 
         try (Git git = Git.open(repoDir)) {
             Repository repository = git.getRepository();
-            ObjectId lastCommitId = repository.resolve("HEAD");
-            if (lastCommitId == null) return files;
+            RevCommit commit = JGitUtils.getCommit(repository, "HEAD");
+            if (commit == null) return files;
 
-            try (RevWalk revWalk = new RevWalk(repository)) {
-                RevCommit commit = revWalk.parseCommit(lastCommitId);
-                RevTree tree = commit.getTree();
-
-                if (path == null || path.isEmpty() || path.equals("/")) {
-                    try (TreeWalk treeWalk = new TreeWalk(repository)) {
-                        treeWalk.addTree(tree);
-                        treeWalk.setRecursive(false);
-                        while (treeWalk.next()) {
-                            files.add(new FileEntry(
-                                treeWalk.getNameString(),
-                                treeWalk.getPathString(),
-                                treeWalk.isSubtree()
-                            ));
-                        }
-                    }
-                } else {
-                    try (TreeWalk treeWalk = TreeWalk.forPath(repository, path, tree)) {
-                        if (treeWalk != null && treeWalk.isSubtree()) {
-                             treeWalk.enterSubtree();
-                             while (treeWalk.next()) {
-                                 files.add(new FileEntry(
-                                     treeWalk.getNameString(),
-                                     treeWalk.getPathString(),
-                                     treeWalk.isSubtree()
-                                 ));
-                             }
-                        }
-                    }
-                }
+            List<PathModel> paths = JGitUtils.getFilesInPath(repository, path, commit);
+            for (PathModel p : paths) {
+                files.add(new FileEntry(
+                    p.name,
+                    p.path,
+                    p.isTree()
+                ));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,22 +79,10 @@ public class GitService {
 
          try (Git git = Git.open(repoDir)) {
             Repository repository = git.getRepository();
-            ObjectId lastCommitId = repository.resolve("HEAD");
-            if (lastCommitId == null) return null;
+            RevCommit commit = JGitUtils.getCommit(repository, "HEAD");
+            if (commit == null) return null;
 
-            try (RevWalk revWalk = new RevWalk(repository)) {
-                RevCommit commit = revWalk.parseCommit(lastCommitId);
-                RevTree tree = commit.getTree();
-
-                try (TreeWalk treeWalk = TreeWalk.forPath(repository, path, tree)) {
-                    if (treeWalk == null) return null;
-
-                    ObjectId objectId = treeWalk.getObjectId(0);
-                    ObjectLoader loader = repository.open(objectId);
-
-                    return new String(loader.getBytes(), StandardCharsets.UTF_8);
-                }
-            }
+            return JGitUtils.getStringContent(repository, commit.getTree(), path, StandardCharsets.UTF_8.name());
          } catch (Exception e) {
              e.printStackTrace();
              return null;
