@@ -253,6 +253,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .dataStoreInstance(customFieldDefinitionStore)
                 .fields(Map.ofEntries(
                         Map.entry(CUSTOM_FIELD_DEFINITION.ID, JooqNumericIdField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(CUSTOM_FIELD_DEFINITION.PROJECT_ID).searchField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
                         Map.entry(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, JooqSelectField.builder().values("entity-types").required(true).build()),
                         Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
                         Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
@@ -294,6 +295,31 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                         .fields(List.of(
                                                 JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
                                                 JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollection.builder()
+                                .label("route.custom-fields.title")
+                                .field(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                                .listFactory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(customFieldDefinitionConfig)
+                                .oneToMany(new JooqOneToMany(CUSTOM_FIELD_DEFINITION.PROJECT_ID))
+                                .children(List.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, CUSTOM_FIELD_DEFINITION.FIELD_TYPE, CUSTOM_FIELD_DEFINITION.IS_REQUIRED))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                                        .fields(List.of(
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom-fields.labels.field_name").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom-fields.labels.field_order").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom-fields.labels.is_required").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "route.custom-fields.labels.default_value").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom-fields.labels.options").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "route.custom-fields.labels.validation_rules").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom-fields.labels.description").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()
                                         ))
                                         .build())
                                 .build()))
@@ -609,11 +635,14 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(userForm)
                 .build());
 
+        // Custom fields are now managed at the project level, not as a main route
+        // Kept for backwards compatibility but hidden from menu
         routes.put("custom-fields", JooqGridRoute.builder()
                 .dataStoreConfig(customFieldDefinitionConfig)
                 .iconFactory(VaadinIcon.TOOLS::create)
                 .title("route.custom-fields.title")
                 .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .hiddenInMenu(true)
                 .writeRoles(List.of("admin"))
                 .form(JooqFormRoute.builder()
                         .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
