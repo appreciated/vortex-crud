@@ -621,39 +621,10 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .build());
 
         // Sub-routes for my-projects detail view
-        var myProjectTasksRoute = JooqKanbanRoute.builder()
-                .dataStoreConfig(taskConfig)
-                .title("route.tasks.title")
-                .titleField(TASK.TITLE)
-                .descriptionField(TASK.DESCRIPTION)
-                .columnField(TASK.STATUS)
-                .searchField(TASK.TITLE)
-                .writeRoles(List.of("admin", "manager", "developer"))
-                .form(taskForm)
-                .build();
-
-        var myProjectSprintsRoute = JooqListRoute.builder()
-                .dataStoreConfig(sprintConfig)
-                .title("route.sprints.title")
-                .searchField(SPRINT.NAME)
-                .columns(List.of(
-                        JooqFormElement.of(SPRINT.NAME, "route.sprints.labels.name").build(),
-                        JooqFormElement.of(SPRINT.START_DATE, "route.sprints.labels.start_date").build(),
-                        JooqFormElement.of(SPRINT.END_DATE, "route.sprints.labels.end_date").build(),
-                        JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
-                .form(sprintForm)
-                .build();
-
-        var myProjectMilestonesRoute = JooqListRoute.builder()
-                .dataStoreConfig(milestoneConfig)
-                .title("route.milestones.title")
-                .searchField(MILESTONE.TITLE)
-                .columns(List.of(
-                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
-                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
-                        JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
-                .form(milestoneForm)
-                .build();
+        // Note: These routes are automatically filtered by parent project ID through RouteIdContext
+        var myProjectTasksRoute = projectTasksRoute;
+        var myProjectSprintsRoute = projectSprintsRoute;
+        var myProjectMilestonesRoute = projectMilestonesRoute;
 
         var myProjectMembersRoute = JooqListRoute.builder()
                 .dataStoreConfig(projectMemberConfig)

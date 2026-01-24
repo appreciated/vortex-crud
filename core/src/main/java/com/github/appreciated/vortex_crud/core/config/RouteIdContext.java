@@ -1,7 +1,7 @@
 package com.github.appreciated.vortex_crud.core.config;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -19,11 +19,11 @@ public class RouteIdContext {
     private final Map<String, Object> routeIdMap;
 
     public RouteIdContext() {
-        this.routeIdMap = new HashMap<>();
+        this.routeIdMap = new LinkedHashMap<>();
     }
 
     private RouteIdContext(Map<String, Object> routeIdMap) {
-        this.routeIdMap = new HashMap<>(routeIdMap);
+        this.routeIdMap = new LinkedHashMap<>(routeIdMap);
     }
 
     /**
@@ -69,6 +69,25 @@ public class RouteIdContext {
      */
     public boolean isEmpty() {
         return routeIdMap.isEmpty();
+    }
+
+    /**
+     * Get the immediate parent entity ID from the context.
+     * Returns the last (most recently added) non-null entity ID, which represents
+     * the immediate parent in the route hierarchy.
+     *
+     * For example, in context {projects: 123, tasks: 456}, returns 456 (the task ID).
+     *
+     * @return the last non-null entity ID found, or null if none exist
+     */
+    public Object getImmediateParentId() {
+        Object lastId = null;
+        for (Map.Entry<String, Object> entry : routeIdMap.entrySet()) {
+            if (entry.getValue() != null) {
+                lastId = entry.getValue();
+            }
+        }
+        return lastId;
     }
 
     @Override
