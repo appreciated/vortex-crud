@@ -8,3 +8,6 @@ tsconfig.json
 types.d.ts
 vite.config.ts
 vite.generated.ts
+repositories/
+*.ser
+*.db
