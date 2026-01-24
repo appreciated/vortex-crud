@@ -25,28 +25,48 @@ public class GitService {
         File repoDir = new File(REPO_ROOT, slug);
         if (!repoDir.exists()) {
             try {
-                Git.init().setDirectory(repoDir).call();
-                createDummyFiles(repoDir);
+                Git.init().setBare(true).setDirectory(repoDir).call();
+                createDummyFiles(repoDir, slug);
             } catch (Exception e) {
                 throw new RuntimeException("Failed to init repository", e);
             }
         }
     }
 
-    private void createDummyFiles(File repoDir) throws Exception {
-         try (Git git = Git.open(repoDir)) {
-            File readme = new File(repoDir, "README.md");
+    private void createDummyFiles(File repoDir, String slug) throws Exception {
+        File tempDir = Files.createTempDirectory("git-init-" + slug).toFile();
+        try (Git git = Git.cloneRepository()
+                .setURI(repoDir.getAbsolutePath())
+                .setDirectory(tempDir)
+                .call()) {
+
+            File readme = new File(tempDir, "README.md");
             Files.writeString(readme.toPath(), "# Demo Repository\n\nThis is a sample repository.");
             git.add().addFilepattern("README.md").call();
 
-            File srcDir = new File(repoDir, "src");
+            File srcDir = new File(tempDir, "src");
             srcDir.mkdirs();
             File main = new File(srcDir, "Main.java");
             Files.writeString(main.toPath(), "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}");
             git.add().addFilepattern("src/Main.java").call();
 
             git.commit().setMessage("Initial commit").call();
-         }
+            git.push().call();
+        } finally {
+            deleteDirectory(tempDir);
+        }
+    }
+
+    private void deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteDirectory(child);
+                }
+            }
+        }
+        dir.delete();
     }
 
     public List<FileEntry> listFiles(String slug, String path) {
