@@ -14,11 +14,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
-@SpringBootTest
+import com.github.appreciated.vortex_crud.demo.devplatform.service.ssh.SshServerService;
+
+@SpringBootTest(properties = "app.ssh.port=0")
 public class SshGitServerTest {
 
     @Autowired
     private GitService gitService;
+
+    @Autowired
+    private SshServerService sshServerService;
 
     @Autowired
     private DSLContext dsl;
@@ -62,7 +67,7 @@ public class SshGitServerTest {
             client.start();
             client.setKeyIdentityProvider(KeyIdentityProvider.wrapKeyPairs(keyPair));
 
-            try (org.apache.sshd.client.session.ClientSession session = client.connect(username, "localhost", 2222).verify(5000).getSession()) {
+            try (org.apache.sshd.client.session.ClientSession session = client.connect(username, "localhost", sshServerService.getPort()).verify(5000).getSession()) {
                 session.auth().verify(5000);
 
                 if (!session.isAuthenticated()) {
