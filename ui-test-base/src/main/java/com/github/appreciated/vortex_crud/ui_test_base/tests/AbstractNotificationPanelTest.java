@@ -18,7 +18,7 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         navigateTo(""); // Navigate to root or any page
 
         // 1. Verify Bell Icon is visible
-        Locator bellIcon = page.getByRole(AriaRole.BUTTON).nth(2);
+        Locator bellIcon = page.getByLabel("Notifications");
         assertThat(bellIcon).isVisible();
 
         // 2. Open the panel
