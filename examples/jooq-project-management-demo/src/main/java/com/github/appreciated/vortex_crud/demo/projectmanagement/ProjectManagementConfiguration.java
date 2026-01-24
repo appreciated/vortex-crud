@@ -53,6 +53,41 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         this.dsl = dsl;
     }
 
+    private com.vaadin.flow.component.Component createNavigationCard(String title, String description, VaadinIcon icon, String route) {
+        var card = new com.vaadin.flow.component.html.Div();
+        card.getStyle()
+                .set("border", "1px solid var(--lumo-contrast-10pct)")
+                .set("border-radius", "var(--lumo-border-radius-m)")
+                .set("padding", "var(--lumo-space-l)")
+                .set("cursor", "pointer")
+                .set("flex", "1")
+                .set("min-width", "150px")
+                .set("box-shadow", "var(--lumo-box-shadow-xs)")
+                .set("background", "var(--lumo-base-color)");
+
+        var iconElement = icon.create();
+        iconElement.setSize("48px");
+        iconElement.getStyle()
+                .set("color", "var(--lumo-primary-color)")
+                .set("margin-bottom", "var(--lumo-space-m)");
+
+        var titleElement = new com.vaadin.flow.component.html.H3(title);
+        titleElement.getStyle()
+                .set("margin", "0 0 var(--lumo-space-s) 0")
+                .set("font-size", "var(--lumo-font-size-l)");
+
+        var descriptionElement = new com.vaadin.flow.component.html.Span(description);
+        descriptionElement.getStyle()
+                .set("color", "var(--lumo-secondary-text-color)")
+                .set("font-size", "var(--lumo-font-size-s)");
+
+        card.add(iconElement, titleElement, descriptionElement);
+
+        card.addClickListener(e -> card.getUI().ifPresent(ui -> ui.navigate(route)));
+
+        return card;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
@@ -585,6 +620,57 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .hiddenInMenu(true)  // Only accessible via search panel
                 .build());
 
+        // Sub-routes for my-projects detail view
+        var myProjectTasksRoute = JooqKanbanRoute.builder()
+                .dataStoreConfig(taskConfig)
+                .title("route.tasks.title")
+                .titleField(TASK.TITLE)
+                .descriptionField(TASK.DESCRIPTION)
+                .columnField(TASK.STATUS)
+                .searchField(TASK.TITLE)
+                .writeRoles(List.of("admin", "manager", "developer"))
+                .form(taskForm)
+                .build();
+
+        var myProjectSprintsRoute = JooqListRoute.builder()
+                .dataStoreConfig(sprintConfig)
+                .title("route.sprints.title")
+                .searchField(SPRINT.NAME)
+                .columns(List.of(
+                        JooqFormElement.of(SPRINT.NAME, "route.sprints.labels.name").build(),
+                        JooqFormElement.of(SPRINT.START_DATE, "route.sprints.labels.start_date").build(),
+                        JooqFormElement.of(SPRINT.END_DATE, "route.sprints.labels.end_date").build(),
+                        JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
+                .form(sprintForm)
+                .build();
+
+        var myProjectMilestonesRoute = JooqListRoute.builder()
+                .dataStoreConfig(milestoneConfig)
+                .title("route.milestones.title")
+                .searchField(MILESTONE.TITLE)
+                .columns(List.of(
+                        JooqFormElement.of(MILESTONE.TITLE, "route.milestones.labels.title").build(),
+                        JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
+                        JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
+                .form(milestoneForm)
+                .build();
+
+        var myProjectMembersRoute = JooqListRoute.builder()
+                .dataStoreConfig(projectMemberConfig)
+                .title("route.project-members.title")
+                .searchField(PROJECT_MEMBER.USER_ID)
+                .columns(List.of(
+                        JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
+                        JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build(),
+                        JooqFormElement.of(PROJECT_MEMBER.JOINED_AT, "route.project_members.labels.joined_at").build()))
+                .form(JooqFormRoute.builder()
+                        .titleField(PROJECT_MEMBER.USER_ID)
+                        .fields(List.of(
+                                JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
+                                JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()))
+                        .build())
+                .build();
+
         routes.put("my-projects", JooqListRoute.builder()
                 .dataStoreConfig(projectConfig)
                 .iconFactory(VaadinIcon.FOLDER::create)
@@ -603,7 +689,79 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
                         })
                         .build())
-                .form(projectForm)
+                .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(projectConfig)
+                        .viewFactory(record -> {
+                            var layout = new com.vaadin.flow.component.orderedlayout.VerticalLayout();
+                            layout.setPadding(true);
+                            layout.setSpacing(true);
+
+                            // Get project ID from record
+                            Integer projectId = ((ProjectRecord) record).getId();
+                            String projectName = ((ProjectRecord) record).getName();
+
+                            // Project header
+                            var header = new com.vaadin.flow.component.html.H2("Project: " + projectName);
+                            layout.add(header);
+
+                            // Navigation cards
+                            var cardsLayout = new com.vaadin.flow.component.orderedlayout.HorizontalLayout();
+                            cardsLayout.setWidthFull();
+                            cardsLayout.setSpacing(true);
+
+                            // Boards card
+                            var boardsCard = createNavigationCard(
+                                "Boards",
+                                "Manage tasks in Kanban view",
+                                VaadinIcon.TASKS,
+                                "my-projects/" + projectId + "/boards"
+                            );
+
+                            // Sprints card
+                            var sprintsCard = createNavigationCard(
+                                "Sprints",
+                                "Manage project sprints",
+                                VaadinIcon.CALENDAR,
+                                "my-projects/" + projectId + "/sprints"
+                            );
+
+                            // Milestones card
+                            var milestonesCard = createNavigationCard(
+                                "Milestones",
+                                "Track project milestones",
+                                VaadinIcon.FLAG,
+                                "my-projects/" + projectId + "/milestones"
+                            );
+
+                            // Members card
+                            var membersCard = createNavigationCard(
+                                "Members",
+                                "Manage project members and permissions",
+                                VaadinIcon.USERS,
+                                "my-projects/" + projectId + "/members"
+                            );
+
+                            // Settings card
+                            var settingsCard = createNavigationCard(
+                                "Settings",
+                                "Edit project settings",
+                                VaadinIcon.COG,
+                                "my-projects/" + projectId + "/settings"
+                            );
+
+                            cardsLayout.add(boardsCard, sprintsCard, milestonesCard, membersCard, settingsCard);
+                            layout.add(cardsLayout);
+
+                            return layout;
+                        })
+                        .title("route.projects.title")
+                        .routes(Map.of(
+                                "boards", myProjectTasksRoute,
+                                "sprints", myProjectSprintsRoute,
+                                "milestones", myProjectMilestonesRoute,
+                                "members", myProjectMembersRoute,
+                                "settings", projectForm))
+                        .build())
                 .build());
 
         routes.put("projects", JooqGridRoute.builder()
