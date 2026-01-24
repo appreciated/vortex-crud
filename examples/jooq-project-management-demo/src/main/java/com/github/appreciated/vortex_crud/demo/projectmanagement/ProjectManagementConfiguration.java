@@ -612,23 +612,23 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         routes.put("custom-fields", JooqGridRoute.builder()
                 .dataStoreConfig(customFieldDefinitionConfig)
                 .iconFactory(VaadinIcon.TOOLS::create)
-                .title("Custom Fields")
+                .title("route.custom-fields.title")
                 .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
                 .writeRoles(List.of("admin"))
                 .form(JooqFormRoute.builder()
                         .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
                         .fields(List.of(
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "Entity Type").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "Field Name").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "Label").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "Type").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "Order").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "Required").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "Default Value").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "Options (JSON/List)").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "Validation Rules").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "Description").build(),
-                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "Active").build()
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom-fields.labels.field_name").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom-fields.labels.field_order").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom-fields.labels.is_required").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "route.custom-fields.labels.default_value").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom-fields.labels.options").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "route.custom-fields.labels.validation_rules").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom-fields.labels.description").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()
                         ))
                         .build())
                 .build());
@@ -696,19 +696,19 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         projectRoles.put("viewer", "selects.project-roles.viewer");
 
         LinkedHashMap<String, String> entityTypes = new LinkedHashMap<>();
-        entityTypes.put("project", "Project");
-        entityTypes.put("task", "Task");
-        entityTypes.put("milestone", "Milestone");
-        entityTypes.put("sprint", "Sprint");
+        entityTypes.put("project", "selects.entity-type.project");
+        entityTypes.put("task", "selects.entity-type.task");
+        entityTypes.put("milestone", "selects.entity-type.milestone");
+        entityTypes.put("sprint", "selects.entity-type.sprint");
 
         LinkedHashMap<String, String> fieldTypes = new LinkedHashMap<>();
-        fieldTypes.put("text", "Text");
-        fieldTypes.put("number", "Number");
-        fieldTypes.put("date", "Date");
-        fieldTypes.put("select", "Select");
-        fieldTypes.put("multiselect", "Multi-Select");
-        fieldTypes.put("checkbox", "Checkbox");
-        fieldTypes.put("textarea", "Text Area");
+        fieldTypes.put("text", "selects.field-type.text");
+        fieldTypes.put("number", "selects.field-type.number");
+        fieldTypes.put("date", "selects.field-type.date");
+        fieldTypes.put("select", "selects.field-type.select");
+        fieldTypes.put("multiselect", "selects.field-type.multi_select");
+        fieldTypes.put("checkbox", "selects.field-type.checkbox");
+        fieldTypes.put("textarea", "selects.field-type.text_area");
 
         return JooqApplication.builder()
                 .applicationName("application.name")
