@@ -60,6 +60,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<SprintRecord> sprintStore = new JooqDataStore<>(SPRINT.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
+        JooqDataStore<CustomFieldDefinitionRecord> customFieldDefinitionStore = new JooqDataStore<>(CUSTOM_FIELD_DEFINITION.getRecordType(), dsl);
 
         // Notification Hooks
         DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
@@ -246,6 +247,25 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         NOTIFICATION.LINK, JooqTextField.builder().build(),
                         NOTIFICATION.IS_READ, JooqCheckboxField.builder().build(),
                         NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
+                .build();
+
+        var customFieldDefinitionConfig = JooqDataStoreConfig.of(CUSTOM_FIELD_DEFINITION)
+                .dataStoreInstance(customFieldDefinitionStore)
+                .fields(Map.ofEntries(
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ID, JooqNumericIdField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, JooqSelectField.builder().values("entity-types").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, JooqSelectField.builder().values("field-types").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, JooqIntegerField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, JooqCheckboxField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, JooqTextField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.OPTIONS, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, JooqTextField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.DESCRIPTION, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, JooqCheckboxField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.CREATED_AT, JooqDateTimePickerField.builder().build())
+                ))
                 .build();
 
         // Project Form Configuration
@@ -589,6 +609,30 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(userForm)
                 .build());
 
+        routes.put("custom-fields", JooqGridRoute.builder()
+                .dataStoreConfig(customFieldDefinitionConfig)
+                .iconFactory(VaadinIcon.TOOLS::create)
+                .title("Custom Fields")
+                .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .writeRoles(List.of("admin"))
+                .form(JooqFormRoute.builder()
+                        .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                        .fields(List.of(
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "Entity Type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "Field Name").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "Label").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "Type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "Order").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "Required").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "Default Value").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "Options (JSON/List)").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "Validation Rules").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "Description").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "Active").build()
+                        ))
+                        .build())
+                .build());
+
         routes.put("profile", JooqSingleFormRoute.builder()
                 .iconFactory(VaadinIcon.USER::create)
                 .dataStoreConfig(usersConfig)
@@ -651,6 +695,21 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         projectRoles.put("member", "selects.project-roles.member");
         projectRoles.put("viewer", "selects.project-roles.viewer");
 
+        LinkedHashMap<String, String> entityTypes = new LinkedHashMap<>();
+        entityTypes.put("project", "Project");
+        entityTypes.put("task", "Task");
+        entityTypes.put("milestone", "Milestone");
+        entityTypes.put("sprint", "Sprint");
+
+        LinkedHashMap<String, String> fieldTypes = new LinkedHashMap<>();
+        fieldTypes.put("text", "Text");
+        fieldTypes.put("number", "Number");
+        fieldTypes.put("date", "Date");
+        fieldTypes.put("select", "Select");
+        fieldTypes.put("multiselect", "Multi-Select");
+        fieldTypes.put("checkbox", "Checkbox");
+        fieldTypes.put("textarea", "Text Area");
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("pm_i18n")
@@ -697,7 +756,9 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "task-type", taskTypes,
                                 "priority", priorities,
                                 "sprint-status", sprintStatuses,
-                                "project-roles", projectRoles))
+                                "project-roles", projectRoles,
+                                "entity-types", entityTypes,
+                                "field-types", fieldTypes))
                         .build())
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(notificationConfig)
