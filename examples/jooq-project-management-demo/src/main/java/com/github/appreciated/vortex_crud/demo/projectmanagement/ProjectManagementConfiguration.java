@@ -75,7 +75,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             notif.setUserId(assigneeId);
                             notif.setTitle("Assigned to Task: " + title);
                             notif.setMessage("In project " + project.getName());
-                            notif.setIsRead(0);
+                            notif.setIsRead(false);
                             notif.setCreatedAt(java.time.LocalDateTime.now());
                             notif.store();
                         }
@@ -765,8 +765,8 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)
                         .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
+                        .readStatusValueForRead(true)
+                        .readStatusValueForUnread(false)
                         .build())
                 .build();
     }
