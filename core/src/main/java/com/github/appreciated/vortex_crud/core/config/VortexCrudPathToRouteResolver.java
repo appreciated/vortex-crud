@@ -51,9 +51,6 @@ public class VortexCrudPathToRouteResolver {
 
         String section = sections[sectionIndex];
 
-        // Store the current context for this index
-        indexToContext.put(sectionIndex, currentContext);
-
         // Check if the current route exists
         RouteRenderer<?, ?, ?> currentRouteRenderer = currentRoutes.get(section);
         String nextRouteName = lastRouteName;
@@ -77,6 +74,10 @@ public class VortexCrudPathToRouteResolver {
                 pathRoutes.put(sectionIndex, currentRouteRenderer);
             }
         }
+
+        // Store the context for this index AFTER we've determined if it's an ID segment
+        // This ensures the context includes any ID that was just added
+        indexToContext.put(sectionIndex, nextContext);
 
         if (currentRouteRenderer == null) {
             throw new IllegalStateException("Current route is null at section: " + section);

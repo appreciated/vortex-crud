@@ -216,6 +216,13 @@
                                     <userType>java.time.LocalDateTime</userType>
                                     <includeExpression>.*\.(created_at|updated_at|completed_at|joined_at|uploaded_at)</includeExpression>
                                 </forcedType>
+                                <!-- Boolean fields (is_ prefix) -->
+                                <forcedType>
+                                    <userType>java.lang.Boolean</userType>
+                                    <converter>com.github.appreciated.vortex_crud.demo.projectmanagement.jooq.converter.IntegerBooleanConverter</converter>
+                                    <includeExpression>.*\.(is_active|is_required|is_archived|is_read)</includeExpression>
+                                    <includeTypes>INTEGER</includeTypes>
+                                </forcedType>
                             </forcedTypes>
                         </database>
                         <target>
