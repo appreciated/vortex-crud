@@ -53,6 +53,41 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         this.dsl = dsl;
     }
 
+    private com.vaadin.flow.component.Component createNavigationCard(String title, String description, VaadinIcon icon, String route) {
+        var card = new com.vaadin.flow.component.html.Div();
+        card.getStyle()
+                .set("border", "1px solid var(--lumo-contrast-10pct)")
+                .set("border-radius", "var(--lumo-border-radius-m)")
+                .set("padding", "var(--lumo-space-l)")
+                .set("cursor", "pointer")
+                .set("flex", "1")
+                .set("min-width", "150px")
+                .set("box-shadow", "var(--lumo-box-shadow-xs)")
+                .set("background", "var(--lumo-base-color)");
+
+        var iconElement = icon.create();
+        iconElement.setSize("48px");
+        iconElement.getStyle()
+                .set("color", "var(--lumo-primary-color)")
+                .set("margin-bottom", "var(--lumo-space-m)");
+
+        var titleElement = new com.vaadin.flow.component.html.H3(title);
+        titleElement.getStyle()
+                .set("margin", "0 0 var(--lumo-space-s) 0")
+                .set("font-size", "var(--lumo-font-size-l)");
+
+        var descriptionElement = new com.vaadin.flow.component.html.Span(description);
+        descriptionElement.getStyle()
+                .set("color", "var(--lumo-secondary-text-color)")
+                .set("font-size", "var(--lumo-font-size-s)");
+
+        card.add(iconElement, titleElement, descriptionElement);
+
+        card.addClickListener(e -> card.getUI().ifPresent(ui -> ui.navigate(route)));
+
+        return card;
+    }
+
     @Override
     public Application<TableRecord<?>, TableField<?, ?>, TableImpl<?>> get() {
         // Data Stores
@@ -60,6 +95,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<SprintRecord> sprintStore = new JooqDataStore<>(SPRINT.getRecordType(), dsl);
         JooqDataStore<UsersRecord> usersStore = new JooqDataStore<>(USERS.getRecordType(), dsl);
         JooqDataStore<NotificationRecord> notificationStore = new JooqDataStore<>(NOTIFICATION.getRecordType(), dsl);
+        JooqDataStore<CustomFieldDefinitionRecord> customFieldDefinitionStore = new JooqDataStore<>(CUSTOM_FIELD_DEFINITION.getRecordType(), dsl);
 
         // Notification Hooks
         DataStoreHooks<TaskRecord> taskHooks = DataStoreHooks.<TaskRecord>builder()
@@ -74,7 +110,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             notif.setUserId(assigneeId);
                             notif.setTitle("Assigned to Task: " + title);
                             notif.setMessage("In project " + project.getName());
-                            notif.setIsRead(0);
+                            notif.setIsRead(false);
                             notif.setCreatedAt(java.time.LocalDateTime.now());
                             notif.store();
                         }
@@ -248,6 +284,26 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         NOTIFICATION.CREATED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
+        var customFieldDefinitionConfig = JooqDataStoreConfig.of(CUSTOM_FIELD_DEFINITION)
+                .dataStoreInstance(customFieldDefinitionStore)
+                .fields(Map.ofEntries(
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ID, JooqNumericIdField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.PROJECT_ID, JooqReferenceField.builder().dataStore(projectStore).field(CUSTOM_FIELD_DEFINITION.PROJECT_ID).searchField(PROJECT.NAME).children(List.of(PROJECT.NAME)).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, JooqSelectField.builder().values("entity-types").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, JooqSelectField.builder().values("field-types").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, JooqIntegerField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, JooqCheckboxField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, JooqTextField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.OPTIONS, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, JooqTextField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.DESCRIPTION, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, JooqCheckboxField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.CREATED_AT, JooqDateTimePickerField.builder().build())
+                ))
+                .build();
+
         // Project Form Configuration
         var projectForm = JooqFormRoute.builder()
                 .titleField(PROJECT.NAME)
@@ -274,6 +330,31 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                         .fields(List.of(
                                                 JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
                                                 JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()
+                                        ))
+                                        .build())
+                                .build(),
+                        JooqCollection.builder()
+                                .label("route.custom-fields.title")
+                                .field(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                                .listFactory(new ListCollectionFactory<>())
+                                .dialogFactory(new FormDialogFactory<>())
+                                .dataStoreConfig(customFieldDefinitionConfig)
+                                .oneToMany(new JooqOneToMany(CUSTOM_FIELD_DEFINITION.PROJECT_ID))
+                                .children(List.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, CUSTOM_FIELD_DEFINITION.FIELD_TYPE, CUSTOM_FIELD_DEFINITION.IS_REQUIRED))
+                                .form(JooqFormRoute.builder()
+                                        .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                                        .fields(List.of(
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom-fields.labels.field_name").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom-fields.labels.field_order").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom-fields.labels.is_required").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "route.custom-fields.labels.default_value").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom-fields.labels.options").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "route.custom-fields.labels.validation_rules").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom-fields.labels.description").build(),
+                                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()
                                         ))
                                         .build())
                                 .build()))
@@ -539,6 +620,28 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .hiddenInMenu(true)  // Only accessible via search panel
                 .build());
 
+        // Sub-routes for my-projects detail view
+        // Note: These routes are automatically filtered by parent project ID through RouteIdContext
+        var myProjectTasksRoute = projectTasksRoute;
+        var myProjectSprintsRoute = projectSprintsRoute;
+        var myProjectMilestonesRoute = projectMilestonesRoute;
+
+        var myProjectMembersRoute = JooqListRoute.builder()
+                .dataStoreConfig(projectMemberConfig)
+                .title("route.project-members.title")
+                .searchField(PROJECT_MEMBER.USER_ID)
+                .columns(List.of(
+                        JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
+                        JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build(),
+                        JooqFormElement.of(PROJECT_MEMBER.JOINED_AT, "route.project_members.labels.joined_at").build()))
+                .form(JooqFormRoute.builder()
+                        .titleField(PROJECT_MEMBER.USER_ID)
+                        .fields(List.of(
+                                JooqFormElement.of(PROJECT_MEMBER.USER_ID, "route.project_members.labels.user").build(),
+                                JooqFormElement.of(PROJECT_MEMBER.ROLE, "route.project_members.labels.role").build()))
+                        .build())
+                .build();
+
         routes.put("my-projects", JooqListRoute.builder()
                 .dataStoreConfig(projectConfig)
                 .iconFactory(VaadinIcon.FOLDER::create)
@@ -557,7 +660,79 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
                         })
                         .build())
-                .form(projectForm)
+                .form(CustomViewFactoryRoute.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                        .dataStoreConfig(projectConfig)
+                        .viewFactory(record -> {
+                            var layout = new com.vaadin.flow.component.orderedlayout.VerticalLayout();
+                            layout.setPadding(true);
+                            layout.setSpacing(true);
+
+                            // Get project ID from record
+                            Integer projectId = ((ProjectRecord) record).getId();
+                            String projectName = ((ProjectRecord) record).getName();
+
+                            // Project header
+                            var header = new com.vaadin.flow.component.html.H2("Project: " + projectName);
+                            layout.add(header);
+
+                            // Navigation cards
+                            var cardsLayout = new com.vaadin.flow.component.orderedlayout.HorizontalLayout();
+                            cardsLayout.setWidthFull();
+                            cardsLayout.setSpacing(true);
+
+                            // Boards card
+                            var boardsCard = createNavigationCard(
+                                "Boards",
+                                "Manage tasks in Kanban view",
+                                VaadinIcon.TASKS,
+                                "my-projects/" + projectId + "/boards"
+                            );
+
+                            // Sprints card
+                            var sprintsCard = createNavigationCard(
+                                "Sprints",
+                                "Manage project sprints",
+                                VaadinIcon.CALENDAR,
+                                "my-projects/" + projectId + "/sprints"
+                            );
+
+                            // Milestones card
+                            var milestonesCard = createNavigationCard(
+                                "Milestones",
+                                "Track project milestones",
+                                VaadinIcon.FLAG,
+                                "my-projects/" + projectId + "/milestones"
+                            );
+
+                            // Members card
+                            var membersCard = createNavigationCard(
+                                "Members",
+                                "Manage project members and permissions",
+                                VaadinIcon.USERS,
+                                "my-projects/" + projectId + "/members"
+                            );
+
+                            // Settings card
+                            var settingsCard = createNavigationCard(
+                                "Settings",
+                                "Edit project settings",
+                                VaadinIcon.COG,
+                                "my-projects/" + projectId + "/settings"
+                            );
+
+                            cardsLayout.add(boardsCard, sprintsCard, milestonesCard, membersCard, settingsCard);
+                            layout.add(cardsLayout);
+
+                            return layout;
+                        })
+                        .title("route.projects.title")
+                        .routes(Map.of(
+                                "boards", myProjectTasksRoute,
+                                "sprints", myProjectSprintsRoute,
+                                "milestones", myProjectMilestonesRoute,
+                                "members", myProjectMembersRoute,
+                                "settings", projectForm))
+                        .build())
                 .build());
 
         routes.put("projects", JooqGridRoute.builder()
@@ -587,6 +762,33 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .hiddenInMenu(true)  // Hidden from menu - only accessible by admins for managing user permissions
                 .writeRoles(List.of("admin"))
                 .form(userForm)
+                .build());
+
+        // Custom fields are now managed at the project level, not as a main route
+        // Kept for backwards compatibility but hidden from menu
+        routes.put("custom-fields", JooqGridRoute.builder()
+                .dataStoreConfig(customFieldDefinitionConfig)
+                .iconFactory(VaadinIcon.TOOLS::create)
+                .title("route.custom-fields.title")
+                .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .hiddenInMenu(true)
+                .writeRoles(List.of("admin"))
+                .form(JooqFormRoute.builder()
+                        .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                        .fields(List.of(
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom-fields.labels.field_name").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom-fields.labels.field_order").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom-fields.labels.is_required").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DEFAULT_VALUE, "route.custom-fields.labels.default_value").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom-fields.labels.options").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.VALIDATION_RULES, "route.custom-fields.labels.validation_rules").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom-fields.labels.description").build(),
+                                JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()
+                        ))
+                        .build())
                 .build());
 
         routes.put("profile", JooqSingleFormRoute.builder()
@@ -651,6 +853,21 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         projectRoles.put("member", "selects.project-roles.member");
         projectRoles.put("viewer", "selects.project-roles.viewer");
 
+        LinkedHashMap<String, String> entityTypes = new LinkedHashMap<>();
+        entityTypes.put("project", "selects.entity-type.project");
+        entityTypes.put("task", "selects.entity-type.task");
+        entityTypes.put("milestone", "selects.entity-type.milestone");
+        entityTypes.put("sprint", "selects.entity-type.sprint");
+
+        LinkedHashMap<String, String> fieldTypes = new LinkedHashMap<>();
+        fieldTypes.put("text", "selects.field-type.text");
+        fieldTypes.put("number", "selects.field-type.number");
+        fieldTypes.put("date", "selects.field-type.date");
+        fieldTypes.put("select", "selects.field-type.select");
+        fieldTypes.put("multiselect", "selects.field-type.multi_select");
+        fieldTypes.put("checkbox", "selects.field-type.checkbox");
+        fieldTypes.put("textarea", "selects.field-type.text_area");
+
         return JooqApplication.builder()
                 .applicationName("application.name")
                 .i18nBundlePrefix("pm_i18n")
@@ -697,15 +914,17 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "task-type", taskTypes,
                                 "priority", priorities,
                                 "sprint-status", sprintStatuses,
-                                "project-roles", projectRoles))
+                                "project-roles", projectRoles,
+                                "entity-types", entityTypes,
+                                "field-types", fieldTypes))
                         .build())
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(notificationConfig)
                         .timestampField(NOTIFICATION.CREATED_AT)
                         .messageField(NOTIFICATION.MESSAGE)
                         .readStatusField(NOTIFICATION.IS_READ)
-                        .readStatusValueForRead(1)
-                        .readStatusValueForUnread(0)
+                        .readStatusValueForRead(true)
+                        .readStatusValueForUnread(false)
                         .build())
                 .build();
     }
