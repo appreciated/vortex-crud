@@ -54,6 +54,8 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     private final MessageList allList = new MessageList();
     private final Div unreadContent = new Div();
     private final Popover popover = new Popover();
+    private Button bellBtn;
+    private Button markReadBtn;
 
     public NotificationPanel(NotificationPanelConfiguration<ModelClass, FieldType, ?> config,
                              ReflectionService<FieldType> reflection) {
@@ -64,7 +66,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
 
     private void buildUI() {
         // Bell button with ARIA label for testing
-        Button bellBtn = new Button(VaadinIcon.BELL.create());
+        bellBtn = new Button(VaadinIcon.BELL.create());
         bellBtn.addThemeVariants(ButtonVariant.LUMO_ICON);
         bellBtn.getElement().setAttribute("aria-label", config.ariaLabel());
 
@@ -76,7 +78,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
         H4 title = new H4(getTranslation(config.headingKey()));
         title.getStyle().set("margin", "0");
 
-        Button markReadBtn = new Button(getTranslation(config.markAllReadKey()), e -> markAllRead());
+        markReadBtn = new Button(getTranslation(config.markAllReadKey()), e -> markAllRead());
         markReadBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_SMALL);
 
         HorizontalLayout header = new HorizontalLayout(title, markReadBtn);
@@ -91,6 +93,20 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
         tabs.add(getTranslation(config.allTabKey()), new Div(allList));
 
         popover.add(header, tabs);
+
+        if (config.showAllRoute() != null) {
+            Button showAllBtn = new Button(getTranslation("notifications.show_all"),
+                    e -> com.vaadin.flow.component.UI.getCurrent().navigate(config.showAllRoute()));
+            showAllBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+            showAllBtn.setWidthFull();
+
+            HorizontalLayout footer = new HorizontalLayout(showAllBtn);
+            footer.setWidthFull();
+            footer.setPadding(true);
+            footer.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            popover.add(footer);
+        }
+
         add(bellBtn, popover);
     }
 
@@ -104,6 +120,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
                 .map(this::mapToItem)
                 .toList();
 
+        markReadBtn.setEnabled(!unreadItems.isEmpty());
         updateUnreadTab(unreadItems);
     }
 

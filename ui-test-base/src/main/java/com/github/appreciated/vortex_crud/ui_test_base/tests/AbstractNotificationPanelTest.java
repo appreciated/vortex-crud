@@ -18,7 +18,7 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         navigateTo(""); // Navigate to root or any page
 
         // 1. Verify Bell Icon is visible
-        Locator bellIcon = page.getByRole(AriaRole.BUTTON).nth(2);
+        Locator bellIcon = page.getByLabel("Notifications");
         assertThat(bellIcon).isVisible();
 
         // 2. Open the panel
@@ -62,6 +62,9 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         // Re-open and check if unread is empty
         bellIcon.click();
         assertThat(locator).isVisible();
+
+        // Verify "Mark all as read" is disabled
+        assertThat(markReadBtn).isDisabled();
 
         // key "notification.panel.no.notifications" -> "No new notifications"
         // It has class "no-notifications-msg"

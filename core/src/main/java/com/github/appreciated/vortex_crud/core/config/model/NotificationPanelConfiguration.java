@@ -71,4 +71,6 @@ public class NotificationPanelConfiguration<ModelClass, FieldType, RepositoryTyp
     @Builder.Default
     @I18nKey
     private String ariaLabel = "Notifications";
+
+    private String showAllRoute;
 }
