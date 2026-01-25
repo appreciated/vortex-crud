@@ -72,7 +72,31 @@ class NotificationPanelTest {
         panel.setData(List.of(readEntity));
 
         Button bellBtn = findBellButton(panel);
-        assertFalse(bellBtn.isVisible(), "Bell button should be hidden when there are no unread items");
+        assertTrue(bellBtn.isVisible(), "Bell button should be visible even when there are no unread items");
+    }
+
+    @Test
+    void testMarkAllReadButtonState() {
+        panel = new TestNotificationPanel(config, reflection);
+
+        Object unreadEntity = new Object();
+        when(reflection.getValue(unreadEntity, "read")).thenReturn(false);
+        when(reflection.getString(unreadEntity, "message")).thenReturn("Unread");
+
+        Object readEntity = new Object();
+        when(reflection.getValue(readEntity, "read")).thenReturn(true);
+        when(reflection.getString(readEntity, "message")).thenReturn("Read");
+
+        // Case 1: Has Unread -> Enabled
+        panel.setData(List.of(unreadEntity));
+        Button markReadBtn = findMarkReadButton(panel);
+        assertTrue(markReadBtn.isEnabled(), "Mark Read button should be enabled when unread items exist");
+
+        // Case 2: No Unread -> Disabled
+        panel.setData(List.of(readEntity));
+        // Need to find it again? It's the same button instance, but let's be safe
+        markReadBtn = findMarkReadButton(panel);
+        assertFalse(markReadBtn.isEnabled(), "Mark Read button should be disabled when no unread items exist");
     }
 
     @Test
@@ -104,6 +128,24 @@ class NotificationPanelTest {
                 .filter(c -> c instanceof Button)
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Bell button not found"));
+    }
+
+    private Button findMarkReadButton(NotificationPanel panel) {
+        Popover popover = findPopover(panel);
+        List<Component> children = popover.getChildren().collect(Collectors.toList());
+        for (Component child : children) {
+            if (child instanceof HorizontalLayout) {
+                HorizontalLayout layout = (HorizontalLayout) child;
+                // Header: H4 and Button
+                if (layout.getChildren().anyMatch(c -> c instanceof H4)) {
+                   return (Button) layout.getChildren()
+                           .filter(c -> c instanceof Button)
+                           .findFirst()
+                           .orElseThrow(() -> new AssertionError("Mark Read button not found in header"));
+                }
+            }
+        }
+        throw new AssertionError("Header layout not found");
     }
 
     private Popover findPopover(NotificationPanel panel) {

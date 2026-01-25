@@ -1,7 +1,6 @@
 package com.github.appreciated.vortex_crud.core.ui.factories.route.form;
 
 import com.github.appreciated.vortex_crud.core.config.DetailRouteSetting;
-import com.github.appreciated.vortex_crud.core.config.RouteIdContext;
 import com.github.appreciated.vortex_crud.core.config.VortexCrudPathToRouteResolver;
 import com.github.appreciated.vortex_crud.core.config.model.*;
 import com.github.appreciated.vortex_crud.core.entity.data_store.VortexCrudDataStore;
@@ -45,11 +44,10 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
                 (FormRouteProvider<ModelClass, FieldType, RepositoryType>) routeResolver.getRouteForIndex(currentPathIndex);
 
         assert detailRouteSetting != null;
-        return getForm(context, currentPathIndex, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
+        return getForm(context, routeResolver, detailRouteSetting.isWrapped(), detailRouteSetting.isHeaderHidden(), detailRouteSetting.isCreationMode(), routeProvider.isDeleteButtonHidden(), routeProvider);
     }
 
     public VerticalLayout getForm(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
-                                  Integer currentPathIndex,
                                   VortexCrudPathToRouteResolver routeResolver,
                                   boolean isWrapped,
                                   boolean isHeaderHidden,
@@ -103,8 +101,9 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
             }
             entity = results.get(0);  // Take first result
         } else {
-            RouteIdContext routeIdContext = routeResolver.getRouteIdContext(currentPathIndex);
-            entity = dataStore.getRecordById(routeIdContext.getImmediateParentId());
+            // Traditional mode: fetch by ID from URL path
+            String lastSegment = routeResolver.getLastSegment();
+            entity = dataStore.getRecordById(lastSegment);
         }
 
         java.util.Map<FieldType, Component> components = formCreator.bindAndAddToLayout(table, routeRenderer, routeRenderer.fields(), entity, context, tables, binder, form);

@@ -55,6 +55,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
     private final Div unreadContent = new Div();
     private final Popover popover = new Popover();
     private Button bellBtn;
+    private Button markReadBtn;
 
     public NotificationPanel(NotificationPanelConfiguration<ModelClass, FieldType, ?> config,
                              ReflectionService<FieldType> reflection) {
@@ -77,7 +78,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
         H4 title = new H4(getTranslation(config.headingKey()));
         title.getStyle().set("margin", "0");
 
-        Button markReadBtn = new Button(getTranslation(config.markAllReadKey()), e -> markAllRead());
+        markReadBtn = new Button(getTranslation(config.markAllReadKey()), e -> markAllRead());
         markReadBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY_INLINE, ButtonVariant.LUMO_SMALL);
 
         HorizontalLayout header = new HorizontalLayout(title, markReadBtn);
@@ -119,7 +120,7 @@ public class NotificationPanel<ModelClass, FieldType> extends Div {
                 .map(this::mapToItem)
                 .toList();
 
-        bellBtn.setVisible(!unreadItems.isEmpty());
+        markReadBtn.setEnabled(!unreadItems.isEmpty());
         updateUnreadTab(unreadItems);
     }
 

@@ -63,6 +63,9 @@ public abstract class AbstractNotificationPanelTest extends BaseUITest {
         bellIcon.click();
         assertThat(locator).isVisible();
 
+        // Verify "Mark all as read" is disabled
+        assertThat(markReadBtn).isDisabled();
+
         // key "notification.panel.no.notifications" -> "No new notifications"
         // It has class "no-notifications-msg"
         page.getByRole(AriaRole.TAB, new Page.GetByRoleOptions().setName("Unread")).click();

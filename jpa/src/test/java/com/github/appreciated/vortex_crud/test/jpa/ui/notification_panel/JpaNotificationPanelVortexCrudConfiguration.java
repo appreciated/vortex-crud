@@ -54,7 +54,7 @@ public class JpaNotificationPanelVortexCrudConfiguration implements VortexCrudCo
                         .dataStoreConfig(config)
                         .messageField("message")
                         .timestampField("timestamp")
-                        .readStatusField("isRead")
+                        .readStatusField("read")
                         .build())
                 .routes(Map.of("home", gridRoute))
                 .build();

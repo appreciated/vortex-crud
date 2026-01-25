@@ -26,5 +26,5 @@ public class JpaNotificationPanelEntity {
     @DateTimePickerField
     private LocalDateTime timestamp;
     @CheckboxField
-    private boolean isRead;
+    private boolean read;
 }
