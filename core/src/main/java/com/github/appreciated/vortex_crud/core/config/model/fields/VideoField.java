@@ -24,12 +24,12 @@ import java.util.List;
 @Builder
 @Getter
 public class VideoField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-    List<Validator<?>> validators;
-    boolean required;
-    List<String> writeRoles;
-    List<String> readOnlyRoles;
+    private List<Validator<?>> validators;
+    private boolean required;
+    private List<String> writeRoles;
+    private List<String> readOnlyRoles;
     @Builder.Default
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new VideoFieldFactory<>();
+    private VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new VideoFieldFactory<>();
 
     private VortexCrudItemFactory<FieldType> itemFactory;
 

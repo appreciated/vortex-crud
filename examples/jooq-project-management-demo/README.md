@@ -1,26 +1,40 @@
 # Project Management Platform Demo
 
-A simplified project management platform demo built with Vortex CRUD and jOOQ, showcasing custom fields support.
+A simplified project management platform demo built with Vortex CRUD and jOOQ, showcasing dynamic (custom) fields and a database-defined kanban workflow.
 
 ## Features
 
 - **Projects**: Project tracking with progress, budget, timelines
 - **Tasks**: Task management with types (task, bug, story, epic, subtask)
 - **Milestones**: Delivery tracking
-- **Labels**: Flexible categorization
+- **Labels**: Flexible categorization, manageable via the `labels` route
 - **Comments**: Basic collaboration
-- **Custom Fields**: User-defined fields with JSON storage
+- **Dynamic (Custom) Fields**: User-defined fields with JSON storage, rendered as real typed form fields
+- **Kanban Workflow**: Jira-like status transition rules, defined in the database
 
-## Database Schema (10 tables)
+## Database Schema (11 tables)
 
-Core tables: `custom_field_definition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`, `time_entry`, `attachment`
+Core tables: `custom_field_definition`, `workflow_transition`, `project`, `project_member`, `milestone`, `label`, `task`, `task_label`, `task_comment`, `time_entry`, `attachment`
 
-## Custom Fields System
+## Dynamic (Custom) Fields
 
-Uses a meta table approach:
-- `custom_field_definition` - Stores field metadata (type, validation, options)
-- Entity tables have `custom_fields` JSON column for values
-- Supports: text, number, date, select, multiselect, checkbox
+Uses the core `DynamicFieldsConfiguration` feature (see `core/.../config/model/DynamicFieldsConfiguration.java`):
+
+- `custom_field_definition` stores the field metadata (entity type, name, label, type, options, order, required, active)
+- Entity tables (`project`, `task`, `milestone`) store the values in a `custom_fields` JSON column
+- At form render time each definition row is materialized into the framework's actual field model type
+  and bound with its actual Java value type (`String`, `Double`, `LocalDate`, `Boolean`, `Set<String>`)
+- Supported types: text, textarea, number, date, select, multiselect, checkbox
+- Definitions are manageable at runtime via the `custom-fields` route — no migration or redeploy needed
+
+Configured in `ProjectManagementConfiguration` via `JooqFormRoute.builder()...dynamicFields(...)`.
+
+## Kanban Workflow
+
+Uses the core `KanbanWorkflow` feature: the kanban boards only allow status transitions that are
+declared in the `workflow_transition` table (`DynamicKanbanWorkflow`). Invalid target columns don't
+accept drops, and rejected transitions show a notification. The flow is manageable at runtime via
+the `workflow` route. A `StaticKanbanWorkflow` variant exists for defining the flow in code.
 
 ## Technology
 
@@ -39,11 +53,6 @@ mvn spring-boot:run          # Run application
 ```
 
 Access: http://localhost:8081
-
-## Next Steps
-
-1. Implement `CustomFieldService.java` for dynamic field handling
-2. Add UI components for custom field management
 
 ## Missing Features in Core
 

@@ -21,11 +21,11 @@ import java.util.List;
 @Builder
 @Getter
 public class MultiSelectValueField<ModelClass, FieldType, RepositoryType> implements Field<ModelClass, FieldType, RepositoryType> {
-    List<Validator<?>> validators;
-    boolean required;
-    List<String> writeRoles;
-    List<String> readOnlyRoles;
+    private List<Validator<?>> validators;
+    private boolean required;
+    private List<String> writeRoles;
+    private List<String> readOnlyRoles;
     @Builder.Default
-    VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MultiSelectValueFieldFactory<>();
+    private VortexCrudFieldFactory<ModelClass, FieldType, RepositoryType> factory = new MultiSelectValueFieldFactory<>();
     String values;
 }

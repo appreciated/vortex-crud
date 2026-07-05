@@ -120,11 +120,16 @@ mvn spring-boot:run                         # Run application
 - **Spring Boot**
 - **Java 21**
 
-## Next Steps
+## Implementation Status
 
-1. Implement configuration provider (`ProjectManagementConfiguration.java` or `DevPlatformConfiguration.java`)
-2. Configure routes using Vortex CRUD builders (Grid, List, Form views)
-3. Implement `CustomFieldService` for dynamic field handling
-4. Add UI components for custom field management
+- Both demos have full configuration providers with routes for all entities.
+- The project management demo implements the custom fields system end-to-end using the core
+  **dynamic fields** feature (`DynamicFieldsConfiguration` on `FormRoute`): definitions are
+  managed at runtime via the `custom-fields` route and render as real typed form fields on
+  projects, tasks and milestones.
+- The project management demo additionally showcases a **database-defined kanban workflow**
+  (`DynamicKanbanWorkflow` + `workflow_transition` table, manageable via the `workflow` route).
+- The dev platform demo still exposes `custom_fields` as raw JSON; wiring it to
+  `DynamicFieldsConfiguration` works the same way as in the project management demo.
 
 See individual README files in each demo directory for details.

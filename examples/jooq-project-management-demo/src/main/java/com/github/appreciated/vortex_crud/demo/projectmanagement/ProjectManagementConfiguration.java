@@ -95,6 +95,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<TimeEntryRecord> timeEntryStore = new JooqDataStore<>(TIME_ENTRY.getRecordType(), dsl);
         JooqDataStore<AttachmentRecord> attachmentStore = new JooqDataStore<>(ATTACHMENT.getRecordType(), dsl);
         JooqDataStore<CustomFieldDefinitionRecord> customFieldDefinitionStore = new JooqDataStore<>(CUSTOM_FIELD_DEFINITION.getRecordType(), dsl);
+        JooqDataStore<WorkflowTransitionRecord> workflowTransitionStore = new JooqDataStore<>(WORKFLOW_TRANSITION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -251,6 +252,16 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         Map.entry(CUSTOM_FIELD_DEFINITION.OPTIONS, JooqTextAreaField.builder().build()),
                         Map.entry(CUSTOM_FIELD_DEFINITION.DESCRIPTION, JooqTextAreaField.builder().build()),
                         Map.entry(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, JooqCheckboxField.builder().build())))
+                .build();
+
+        var workflowTransitionConfig = JooqDataStoreConfig.of(WORKFLOW_TRANSITION)
+                .dataStoreInstance(workflowTransitionStore)
+                .fields(Map.of(
+                        WORKFLOW_TRANSITION.ID, JooqNumericIdField.builder().build(),
+                        WORKFLOW_TRANSITION.ENTITY_TYPE, JooqSelectField.builder().values("custom-field-entity-type").required(true).build(),
+                        WORKFLOW_TRANSITION.FROM_STATUS, JooqSelectField.builder().values("workflow-status").required(true).build(),
+                        WORKFLOW_TRANSITION.TO_STATUS, JooqSelectField.builder().values("workflow-status").required(true).build(),
+                        WORKFLOW_TRANSITION.DESCRIPTION, JooqTextAreaField.builder().build()))
                 .build();
 
         var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
@@ -519,13 +530,17 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
                 .build();
 
-        // Jira-like workflow: restricts which status transitions are allowed on the kanban boards
-        var taskWorkflow = KanbanWorkflow.builder()
-                .transition(TaskStatus.TODO, List.of(TaskStatus.IN_PROGRESS, TaskStatus.BLOCKED))
-                .transition(TaskStatus.IN_PROGRESS, List.of(TaskStatus.IN_REVIEW, TaskStatus.BLOCKED, TaskStatus.TODO))
-                .transition(TaskStatus.IN_REVIEW, List.of(TaskStatus.DONE, TaskStatus.IN_PROGRESS))
-                .transition(TaskStatus.BLOCKED, List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS))
-                .transition(TaskStatus.DONE, List.of(TaskStatus.TODO))
+        // Jira-like workflow: the allowed status transitions live in the workflow_transition
+        // table (manageable at runtime via the "workflow" route), not in this configuration
+        var taskWorkflow = DynamicKanbanWorkflow.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .definitionsDataStoreConfig(workflowTransitionConfig)
+                .entityTypeField(WORKFLOW_TRANSITION.ENTITY_TYPE)
+                .entityType("task")
+                .fromField(WORKFLOW_TRANSITION.FROM_STATUS)
+                .toField(WORKFLOW_TRANSITION.TO_STATUS)
+                .columnValueMapper(status -> status instanceof TaskStatus taskStatus
+                        ? taskStatus.getValue()
+                        : String.valueOf(status))
                 .build();
 
         var projectTasksRoute = JooqKanbanRoute.builder()
@@ -646,6 +661,27 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .form(labelForm)
                 .build());
 
+        routes.put("workflow", JooqListRoute.builder()
+                .dataStoreConfig(workflowTransitionConfig)
+                .iconFactory(VaadinIcon.CONNECT::create)
+                .title("route.workflow.title")
+                .searchField(WORKFLOW_TRANSITION.FROM_STATUS)
+                .columns(List.of(
+                        JooqFormElement.of(WORKFLOW_TRANSITION.ENTITY_TYPE, "route.workflow.labels.entity_type").build(),
+                        JooqFormElement.of(WORKFLOW_TRANSITION.FROM_STATUS, "route.workflow.labels.from_status").build(),
+                        JooqFormElement.of(WORKFLOW_TRANSITION.TO_STATUS, "route.workflow.labels.to_status").build(),
+                        JooqFormElement.of(WORKFLOW_TRANSITION.DESCRIPTION, "route.workflow.labels.description").build()))
+                .writeRoles(List.of("admin"))
+                .form(JooqFormRoute.builder()
+                        .titleField(WORKFLOW_TRANSITION.FROM_STATUS)
+                        .fields(List.of(
+                                JooqFormElement.of(WORKFLOW_TRANSITION.ENTITY_TYPE, "route.workflow.labels.entity_type").build(),
+                                JooqFormElement.of(WORKFLOW_TRANSITION.FROM_STATUS, "route.workflow.labels.from_status").build(),
+                                JooqFormElement.of(WORKFLOW_TRANSITION.TO_STATUS, "route.workflow.labels.to_status").build(),
+                                JooqFormElement.of(WORKFLOW_TRANSITION.DESCRIPTION, "route.workflow.labels.description").build()))
+                        .build())
+                .build());
+
         routes.put("custom-fields", JooqListRoute.builder()
                 .dataStoreConfig(customFieldDefinitionConfig)
                 .iconFactory(VaadinIcon.INPUT::create)
@@ -726,6 +762,13 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         sprintStatuses.put(SprintStatus.COMPLETED, "selects.sprint-status.completed");
         sprintStatuses.put(SprintStatus.CANCELLED, "selects.sprint-status.cancelled");
 
+        LinkedHashMap<String, String> workflowStatuses = new LinkedHashMap<>();
+        workflowStatuses.put("todo", "selects.task-status.todo");
+        workflowStatuses.put("in_progress", "selects.task-status.in_progress");
+        workflowStatuses.put("in_review", "selects.task-status.in_review");
+        workflowStatuses.put("done", "selects.task-status.done");
+        workflowStatuses.put("blocked", "selects.task-status.blocked");
+
         LinkedHashMap<String, String> customFieldEntityTypes = new LinkedHashMap<>();
         customFieldEntityTypes.put("project", "selects.custom-field-entity-type.project");
         customFieldEntityTypes.put("task", "selects.custom-field-entity-type.task");
@@ -791,7 +834,10 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "task-type", taskTypes,
                                 "priority", priorities,
                                 "sprint-status", sprintStatuses,
-                                "project-roles", projectRoles))
+                                "project-roles", projectRoles,
+                                "custom-field-entity-type", customFieldEntityTypes,
+                                "custom-field-type", customFieldTypes,
+                                "workflow-status", workflowStatuses))
                         .build())
                 .notificationPanelConfiguration(NotificationPanelConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
                         .dataStoreConfig(notificationConfig)

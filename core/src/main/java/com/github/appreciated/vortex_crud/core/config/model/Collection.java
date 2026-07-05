@@ -58,9 +58,9 @@ public class Collection<ModelClass, FieldType, RepositoryType> implements Intern
     public static class CollectionBuilder<ModelClass, FieldType, RepositoryType> {
         public Collection<ModelClass, FieldType, RepositoryType> build() {
             Collection<ModelClass, FieldType, RepositoryType> instance = new Collection<>(
-                    field, readOnly, readOnlyForRoles, label, span,
-                    listFactory, dialogFactory, emptyMessage, form, titleField,
-                    dataStoreConfig, oneToMany, manyToMany, children
+                    this.field, this.readOnly, this.readOnlyForRoles, this.label, this.span,
+                    this.listFactory, this.dialogFactory, this.emptyMessage, this.form, this.titleField,
+                    this.dataStoreConfig, this.oneToMany, this.manyToMany, this.children
             );
 
             // Inject collection's dataStoreConfig into child form

@@ -24,6 +24,11 @@ public class DynamicRouteFilter<FieldType> implements RouteFilter<FieldType> {
     private SerializableSupplier<Object> valueProvider;
 
     @Override
+    public FieldType field() {
+        return field;
+    }
+
+    @Override
     public Object value() {
         return valueProvider != null ? valueProvider.get() : null;
     }
