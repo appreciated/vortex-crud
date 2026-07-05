@@ -510,10 +510,69 @@ CREATE TABLE task_comments (...);
 
 # <a name="roadmap">Roadmap</a>
 
+## 🧱 Foundation Hardening
+
+Before growing the feature surface further, the existing core needs to earn the "solid foundation" claim. These items take priority over new features.
+
+### Reliability & Trust Pass
+**Impact**: Critical | **Effort**: Medium
+
+The codebase must hold up to the scrutiny of teams building their company tools on it:
+- Hard review pass over core: remove leftover exploratory comments, dead code, and unused classes
+- Unit test coverage for core behaviors (data binding, route resolution, RBAC checks, dynamic fields, kanban workflow) — not just Selenium smoke tests
+- Startup-time configuration validation with actionable error messages (unknown select keys, roles referenced in `writeRoles` but not declared/seeded, missing i18n keys, field/DB type mismatches)
+- CI enforcement: examples must compile and boot on every change
+
+**Value**: Trust is the product. A framework that asks teams to build on it gets judged on exactly this.
+
+### Honest Runtime Typing
+**Impact**: High | **Effort**: Medium
+
+The configuration API is type-safe by design — the generics are the deliberate price for that and stay. The runtime layer underneath (`Binder<Object>`, reflection-based access, raw casts) should be hardened and honestly documented:
+- Reduce raw/unchecked casts in core (KanbanView, form binding paths) where possible
+- Fail fast with descriptive errors where runtime types can mismatch (instead of `ClassCastException`)
+- Document precisely what is checked at compile time, at startup, and at runtime
+
+**Value**: Adopters know exactly what guarantees they get and when.
+
+### Scalable Data Paths
+**Impact**: High | **Effort**: Medium
+
+Current hot paths cap out early (kanban fetches up to 1000 rows per column and filters in memory; JSON-stored dynamic field values cannot be filtered or sorted):
+- Push kanban column filtering into the data store (one query per column, or one grouped query)
+- Query strategy for dynamic fields (JSON functions where the DB supports them, optional index/shadow columns)
+- Cache dynamic workflow/field definitions per request instead of querying per interaction
+- Define and document an honest scale envelope (target: 10k+ entities per board/grid)
+
+**Value**: "Internal Jira" means years of accumulated tasks. The data paths must survive that.
+
+### First-Class Escape Hatches
+**Impact**: High | **Effort**: Medium
+
+Every real internal tool needs at least one thing the framework doesn't provide. Today that means dropping to raw Vaadin in a `CustomRoute` and losing binding, RBAC, and i18n support:
+- Document `FormLogic` as stable, supported API with examples (auto-calculation, dynamic filtering)
+- Stable typed accessors for form components (no `instanceof` against internal wrapper types)
+- Helpers so `CustomRoute`/`CustomViewFactoryRoute` views can reuse data stores, permission checks, i18n, and navigation
+- Cookbook: "when you outgrow the declarative model" — the supported path from config to custom code
+
+**Value**: The escape hatch decides whether users stay on the framework or fork away from it.
+
+### Schema Evolution & Migration Workflow
+**Impact**: High | **Effort**: High
+
+Change is the hardest part of the current model: every schema change requires a hand-written Liquibase changeset, a jOOQ regeneration, and a matching configuration update — three artifacts that must stay in sync manually. This is the biggest source of friction for humans and the biggest failure mode for LLM agents:
+- Config-first migration drafting: diff the declared configuration/entities against the actual schema and generate Liquibase changeset drafts for review
+- One-command change workflow: apply changeset → regenerate jOOQ classes → surface the config locations that need updating
+- Extend startup schema validation (today JPA-only via Hibernate `validate`) to the jOOQ side with actionable mismatch errors
+- Lean on dynamic fields and dynamic workflows for the volatile parts of a domain — they exist precisely so that day-to-day change needs **no** migration; reserve real migrations for structural changes
+- Migration linting: catch destructive changes (dropped columns with data, type narrowing) before they run
+
+**Value**: A framework for evolving internal tools is judged by the cost of change, not the cost of the first version.
+
 ## 🎯 High Priority Features
 
 ### Bulk Operations & Multi-Select Actions
-**Status**: Planned | **Impact**: High | **Effort**: Medium
+**Impact**: High | **Effort**: Medium
 
 The most requested feature for production CRUD applications:
 - Multi-select checkboxes in Grid/List views
@@ -525,7 +584,7 @@ The most requested feature for production CRUD applications:
 **Value**: Every production application needs this. Enables efficient data management workflows.
 
 ### Export Features
-**Status**: Planned | **Impact**: High | **Effort**: Medium
+**Impact**: High | **Effort**: Medium
 
 Essential for business applications:
 - Export current view to CSV, Excel, PDF
@@ -538,7 +597,7 @@ Essential for business applications:
 **Value**: Critical business requirement. Enables reporting and data sharing.
 
 ### Advanced Filter Builder UI
-**Status**: Planned | **Impact**: High | **Effort**: Medium
+**Impact**: High | **Effort**: Medium
 
 Power user feature for complex data queries:
 - Visual filter builder with AND/OR conditions
@@ -551,7 +610,7 @@ Power user feature for complex data queries:
 **Value**: Dramatically improves usability for data-heavy applications.
 
 ### Inline Grid Editing
-**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+**Impact**: Medium | **Effort**: Medium
 
 Modern UX improvement for quick edits:
 - Double-click cell to edit in place
@@ -566,7 +625,7 @@ Modern UX improvement for quick edits:
 ## 🚀 New Route Types
 
 ### TreeRoute (Hierarchical Data)
-**Status**: Planned | **Impact**: High | **Effort**: Medium
+**Impact**: High | **Effort**: Medium
 
 For displaying hierarchical relationships:
 - Tree/accordion views for parent-child data
@@ -578,7 +637,7 @@ For displaying hierarchical relationships:
 **Use Cases**: Organization charts, category trees, file systems, comment threads, menu structures
 
 ### Dashboard Route
-**Status**: Planned | **Impact**: High | **Effort**: High
+**Impact**: High | **Effort**: High
 
 Configurable analytics and overview pages:
 - Widget-based layout system
@@ -591,7 +650,7 @@ Configurable analytics and overview pages:
 **Value**: High visibility feature. Great for demos and marketing.
 
 ### Report Route
-**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+**Impact**: Medium | **Effort**: Medium
 
 Dedicated reporting interface:
 - Parameter-based report generation
@@ -603,7 +662,7 @@ Dedicated reporting interface:
 ## 🔧 Enhanced Features
 
 ### Import Features
-**Status**: Planned | **Impact**: High | **Effort**: High
+**Impact**: High | **Effort**: High
 
 Complement to export functionality:
 - Bulk import from CSV, Excel, JSON
@@ -658,7 +717,7 @@ Complement to export functionality:
 ## 🔌 API & Integration
 
 ### REST API Generation
-**Status**: Planned | **Impact**: High | **Effort**: High
+**Impact**: High | **Effort**: High
 
 Auto-generate REST endpoints from data stores:
 - OpenAPI/Swagger documentation
@@ -670,7 +729,7 @@ Auto-generate REST endpoints from data stores:
 - Request/response transformers
 
 ### GraphQL API Support
-**Status**: Planned | **Impact**: Medium | **Effort**: High
+**Impact**: Medium | **Effort**: High
 
 Optional GraphQL endpoint generation:
 - Schema generation from data stores
@@ -680,7 +739,7 @@ Optional GraphQL endpoint generation:
 - GraphQL Playground integration
 
 ### Webhook Support
-**Status**: Planned | **Impact**: Medium | **Effort**: Medium
+**Impact**: Medium | **Effort**: Medium
 
 Trigger external systems on entity changes:
 - Configurable webhook endpoints
@@ -773,6 +832,7 @@ Routes that show filtered data subsets:
 - Sensible defaults to minimize configuration
 - Configuration templates (user management, blog, e-commerce)
 - Fluent API improvements
+- Complete the `Jooq*`/`Jpa*` syntactic-sugar layer so the three type parameters only surface where they add safety — the generics themselves are a deliberate design decision (they are what makes the configuration type-safe) and will not be removed
 
 ### Enhanced Documentation
 - Interactive tutorials
