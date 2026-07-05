@@ -21,3 +21,9 @@ INSERT INTO users (id, username, password_hash, first_name, last_name) VALUES (3
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 1); -- viewer admin for max@mustermann.de
 INSERT INTO user_roles (user_id, role_id) VALUES (2, 2); -- viewer role for erika@musterfrau.de
 INSERT INTO user_roles (user_id, role_id) VALUES (3, 3); -- editor guest for john@doe.com
+-- changeset jpa-sqlite-example-vortex-crud:8
+-- Add manager and editor roles referenced by route writeRoles
+INSERT INTO roles (id, name) VALUES (4, 'manager');
+INSERT INTO roles (id, name) VALUES (5, 'editor');
+INSERT INTO user_roles (user_id, role_id) VALUES (2, 4); -- manager role for erika@musterfrau.de
+INSERT INTO user_roles (user_id, role_id) VALUES (3, 5); -- editor role for john@doe.com

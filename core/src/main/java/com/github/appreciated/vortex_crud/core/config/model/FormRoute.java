@@ -70,6 +70,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
 
     private FormLogic<ModelClass, FieldType, RepositoryType> formLogic;
 
+    private DynamicFieldsConfiguration<ModelClass, FieldType, RepositoryType> dynamicFields;
+
     @Builder
     public FormRoute(
             boolean defaultRoute,
@@ -89,7 +91,8 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
             List<String> readOnlyRoles,
             List<RouteAction<FieldType, ModelClass>> actions,
             Map<String, RouteRenderer<ModelClass, FieldType, RepositoryType>> routes,
-            FormLogic<ModelClass, FieldType, RepositoryType> formLogic
+            FormLogic<ModelClass, FieldType, RepositoryType> formLogic,
+            DynamicFieldsConfiguration<ModelClass, FieldType, RepositoryType> dynamicFields
     ) {
         this.defaultRoute = defaultRoute;
         this.factory = factory != null ? factory : new FormRouteFactory<>();
@@ -109,5 +112,6 @@ public class FormRoute<ModelClass, FieldType, RepositoryType> implements
         this.actions = actions;
         this.routes = routes;
         this.formLogic = formLogic;
+        this.dynamicFields = dynamicFields;
     }
 }

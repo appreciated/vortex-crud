@@ -441,17 +441,17 @@ public class ExampleJpaConfiguration implements VortexCrudConfigurationProvider<
                         LocalIdentityAndAccessManagement.<JpaRepository<?, ?>, String, JpaRepository<?, ?>>builder()
                                 .dataStoreConfig(userConfig)
                                 .roleResolutionStrategy(new FieldBasedRoleResolutionStrategy<>("roles"))
-                                .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
+                                .availableRoles(Roles.builder().roles(List.of("admin", "manager", "editor", "viewer", "guest")).build())
                                 .defaultReadRoles(List.of("viewer"))
                                 .defaultWriteRoles(List.of("admin"))
                                 .signUpEnabled(true)
                                 .loginView(LoginView.class)
                                 .signUpView(SignUpView.class)
-                                .username(JpaFormElement.builder("username", "route.projects.labels.name").build())
-                                .password(JpaFormElement.builder("passwordHash", "route.projects.labels.password").build())
+                                .username(JpaFormElement.builder("username", "route.profile.labels.username").build())
+                                .password(JpaFormElement.builder("passwordHash", "route.profile.labels.password").build())
                                 .signUpFields(List.of(
-                                        JpaFormElement.builder("firstName", "route.projects.labels.end_date").build(),
-                                        JpaFormElement.builder("lastName", "route.projects.labels.end_date").build()
+                                        JpaFormElement.builder("firstName", "route.profile.labels.first_name").build(),
+                                        JpaFormElement.builder("lastName", "route.profile.labels.last_name").build()
                                 ))
                                 .build()
                 )

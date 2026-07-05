@@ -26,3 +26,9 @@ INSERT INTO users (id, username, password_hash, first_name, last_name) VALUES (3
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 1); -- viewer admin for max@mustermann.de
 INSERT INTO user_roles (user_id, role_id) VALUES (2, 2); -- viewer role for erika@musterfrau.de
 INSERT INTO user_roles (user_id, role_id) VALUES (3, 3); -- editor guest for john@doe.com
+-- changeset dev-platform-demo-vortex-crud:1
+-- Add developer and contributor roles referenced by route writeRoles
+INSERT INTO roles (id, name) VALUES (4, 'developer');
+INSERT INTO roles (id, name) VALUES (5, 'contributor');
+INSERT INTO user_roles (user_id, role_id) VALUES (2, 4); -- developer role for erika@musterfrau.de
+INSERT INTO user_roles (user_id, role_id) VALUES (3, 5); -- contributor role for john@doe.com

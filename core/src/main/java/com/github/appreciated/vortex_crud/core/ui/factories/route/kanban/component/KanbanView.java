@@ -25,6 +25,8 @@ import com.vaadin.flow.component.grid.dnd.GridDropLocation;
 import com.vaadin.flow.component.grid.dnd.GridDropMode;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
@@ -258,8 +260,11 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             }
             draggedItem = e.getDraggedItems().get(0);
             dragSource = grid;
-            // Allow dropping anywhere on the grid, including empty areas
-            columns.values().forEach(g -> g.setDropMode(GridDropMode.BETWEEN));
+            Object sourceColumnValue = reflectionService.getValue(draggedItem, kanbanRoute.columnField());
+            // Allow dropping anywhere on the grid, including empty areas — but only on
+            // columns the configured workflow permits as transition targets
+            columns.forEach((targetColumnValue, g) -> g.setDropMode(
+                    isTransitionAllowed(sourceColumnValue, targetColumnValue) ? GridDropMode.BETWEEN : null));
         });
 
 // Replace the grid.addDropListener implementation with this updated version
@@ -270,6 +275,13 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
 
             // Store original column value
             Object originalColumnValue = reflectionService.getValue(draggedItem, kanbanRoute.columnField());
+
+            // Enforce the configured workflow: reject transitions it does not permit
+            if (!isTransitionAllowed(originalColumnValue, columnDatabaseValue)) {
+                Notification notification = Notification.show(getTranslation("kanban.transition-not-allowed"));
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
 
             // Update column value
             reflectionService.setValue(draggedItem, kanbanRoute.columnField(), columnDatabaseValue);
@@ -349,6 +361,11 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
         titleLabel.getStyle().set("font-weight", "bold").set("margin-bottom", "10px");
         wrapper.add(titleLabel, grid);
         return wrapper;
+    }
+
+    private boolean isTransitionAllowed(Object sourceColumnValue, Object targetColumnValue) {
+        return kanbanRoute.workflow() == null
+                || kanbanRoute.workflow().isTransitionAllowed(sourceColumnValue, targetColumnValue, context);
     }
 
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,

@@ -232,21 +232,21 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                 .fields(List.of(
                         JooqFormElement.of(PROJECTS.NAME, "route.projects.labels.name").build(),
                         JooqFormElement.of(PROJECTS.DESCRIPTION, "route.projects.labels.description").build(),
-                        JooqFormElement.of(PROJECTS.BUDGET, "Budget").build(),
-                        JooqFormElement.of(PROJECTS.TAGS_MULTI, "Tags (MultiSelect)").build(),
-                        JooqFormElement.of(PROJECTS.ACTIVE, "Active").build(),
+                        JooqFormElement.of(PROJECTS.BUDGET, "route.projects.labels.budget").build(),
+                        JooqFormElement.of(PROJECTS.TAGS_MULTI, "route.projects.labels.tags_multi").build(),
+                        JooqFormElement.of(PROJECTS.ACTIVE, "route.projects.labels.active").build(),
                         JooqCollection.builder()
-                                .label("Tags (Collection)")
+                                .label("route.projects.labels.tags_collection")
                                 .field(PROJECT_TAGS.TAG)
                                 .listFactory(new ListCollectionFactory<>())
                                 .dialogFactory(new FormDialogFactory<>())
                                 .dataStoreConfig(projectTagsConfig)
                                 .oneToMany(new JooqOneToMany(PROJECT_TAGS.PROJECT_ID))
                                 .children(List.of(PROJECT_TAGS.TAG))
-                                .emptyMessage("No tags")
+                                .emptyMessage("route.projects.labels.no_tags")
                                 .form(JooqFormRoute.builder()
                                         .titleField(PROJECT_TAGS.TAG)
-                                        .fields(List.of(JooqFormElement.of(PROJECT_TAGS.TAG, "Tag").build()))
+                                        .fields(List.of(JooqFormElement.of(PROJECT_TAGS.TAG, "route.projects.labels.tag").build()))
                                         .build())
                                 .build(),
                         JooqFormElement.of(PROJECTS.START_DATE, "route.projects.labels.start_date").build(),
@@ -456,11 +456,11 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                         .fields(List.of(
                                 FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                                         .field("title")
-                                        .label("Title")
+                                        .label("route.notes.labels.title")
                                         .build(),
                                 FormElement.<SimpleMapDataStore.Note, String, SimpleMapDataStore>builder()
                                         .field("content")
-                                        .label("Content")
+                                        .label("route.notes.labels.content")
                                         .build()
                         ))
                         .build())
@@ -502,9 +502,9 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
         taskStatuses.put(CLOSED, "selects.task-status.closed");
 
         LinkedHashMap<String, String> projectTags = new LinkedHashMap<>();
-        projectTags.put("tag1", "Tag 1");
-        projectTags.put("tag2", "Tag 2");
-        projectTags.put("tag3", "Tag 3");
+        projectTags.put("tag1", "selects.project-tags.tag1");
+        projectTags.put("tag2", "selects.project-tags.tag2");
+        projectTags.put("tag3", "selects.project-tags.tag3");
 
 
         return JooqApplication.builder()
@@ -521,14 +521,14 @@ public class ExampleJooqConfiguration implements VortexCrudConfigurationProvider
                                         ROLES.NAME,
                                         USERS.ID
                                 ))
-                                .availableRoles(Roles.builder().roles(List.of("admin", "viewer", "guest")).build())
+                                .availableRoles(Roles.builder().roles(List.of("admin", "manager", "editor", "viewer", "guest")).build())
                                 .defaultReadRoles(List.of("viewer"))
                                 .defaultWriteRoles(List.of("admin"))
                                 .signUpEnabled(true)
                                 .loginView(LoginView.class)
                                 .signUpView(SignUpView.class)
-                                .username(JooqFormElement.of(USERS.USERNAME, "route.projects.labels.name").build())
-                                .password(JooqFormElement.of(USERS.PASSWORD_HASH, "route.projects.labels.password").build())
+                                .username(JooqFormElement.of(USERS.USERNAME, "route.profile.labels.username").build())
+                                .password(JooqFormElement.of(USERS.PASSWORD_HASH, "route.profile.labels.password").build())
                                 .signUpFields(List.of(
                                         JooqFormElement.of(USERS.FIRST_NAME, "route.profile.labels.first_name").build(),
                                         JooqFormElement.of(USERS.LAST_NAME, "route.profile.labels.last_name").build()

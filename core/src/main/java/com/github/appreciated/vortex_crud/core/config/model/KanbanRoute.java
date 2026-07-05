@@ -69,6 +69,8 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
 
     private List<RouteFilter<FieldType>> filters;
 
+    private KanbanWorkflow<ModelClass, FieldType, RepositoryType> workflow;
+
     @Builder
     public KanbanRoute(
             @lombok.NonNull DataStoreConfig<ModelClass, FieldType, RepositoryType> dataStoreConfig,
@@ -91,7 +93,8 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
             List<String> readOnlyRoles,
             FormRoute<ModelClass, FieldType, RepositoryType> form,
             List<RouteAction<FieldType, ModelClass>> actions,
-            @lombok.Singular List<RouteFilter<FieldType>> filters
+            @lombok.Singular List<RouteFilter<FieldType>> filters,
+            KanbanWorkflow<ModelClass, FieldType, RepositoryType> workflow
     ) {
         this.dataStoreConfig = dataStoreConfig;
         this.title = title;
@@ -113,6 +116,7 @@ public class KanbanRoute<ModelClass, FieldType, RepositoryType> implements Route
         this.readOnlyRoles = readOnlyRoles;
         this.actions = actions;
         this.filters = filters;
+        this.workflow = workflow;
 
         // Inject parent's dataStoreConfig and title into child form
         this.form = form;

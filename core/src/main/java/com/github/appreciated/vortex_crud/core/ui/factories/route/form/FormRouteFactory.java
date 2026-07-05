@@ -9,6 +9,7 @@ import com.github.appreciated.vortex_crud.core.security.VortexCrudRbacPermission
 import com.github.appreciated.vortex_crud.core.service.VortexCrudContext;
 import com.github.appreciated.vortex_crud.core.ui.components.H1WithHasValue;
 import com.github.appreciated.vortex_crud.core.ui.components.RouteHeaderBarWithSaveDeleteBack;
+import com.github.appreciated.vortex_crud.core.ui.factories.form.DynamicFieldsRenderer;
 import com.github.appreciated.vortex_crud.core.ui.factories.form.FormCreator;
 import com.github.appreciated.vortex_crud.core.ui.factories.route.VortexCrudRouteFactory;
 import com.vaadin.flow.component.ClickEvent;
@@ -111,6 +112,10 @@ public class FormRouteFactory<ModelClass, FieldType, RepositoryType> implements 
 
         if (routeRenderer instanceof FormRoute) {
             FormRoute<ModelClass, FieldType, RepositoryType> formRoute = (FormRoute<ModelClass, FieldType, RepositoryType>) routeRenderer;
+            if (formRoute.dynamicFields() != null) {
+                new DynamicFieldsRenderer<ModelClass, FieldType, RepositoryType>()
+                        .bindAndAddToLayout(formRoute.dynamicFields(), table, entity, context, binder, form);
+            }
             if (formRoute.formLogic() != null) {
                 formRoute.formLogic().init(binder, components, entity, context);
             }

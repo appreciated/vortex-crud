@@ -226,3 +226,15 @@ INSERT INTO attachment (task_id, uploader_id, name, media_type, size, path) VALU
 (16, 1, 'tech-stack-analysis.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 78456, '/uploads/attachments/tech-stack-analysis.docx'),
 (23, 1, 'crash-log.txt', 'text/plain', 12345, '/uploads/attachments/crash-log.txt'),
 (30, 1, 'ticket-flow-mockup.png', 'image/png', 456789, '/uploads/attachments/ticket-flow-mockup.png');
+
+-- changeset project-management-demo:16
+-- Complete the custom field definitions: options for the severity select and
+-- additional definitions showcasing every dynamic field type
+UPDATE custom_field_definition SET options = '["Trivial", "Minor", "Major", "Critical", "Blocker"]' WHERE entity_type = 'task' AND field_name = 'severity';
+
+INSERT INTO custom_field_definition (entity_type, field_name, field_label, field_type, field_order, is_required, options, description) VALUES
+('project', 'contract_value', 'Contract Value', 'number', 2, 0, NULL, 'Contract value in EUR'),
+('project', 'go_live_date', 'Go-Live Date', 'date', 3, 0, NULL, 'Planned go-live date'),
+('project', 'billable', 'Billable', 'checkbox', 4, 0, NULL, 'Whether the project is billable'),
+('task', 'affected_components', 'Affected Components', 'multiselect', 2, 0, '["Frontend", "Backend", "Database", "Infrastructure"]', 'Components affected by this task'),
+('milestone', 'sign_off_required', 'Sign-off Required', 'checkbox', 1, 0, NULL, 'Customer sign-off required');

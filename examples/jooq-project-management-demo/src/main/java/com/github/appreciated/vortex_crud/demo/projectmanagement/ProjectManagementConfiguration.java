@@ -94,6 +94,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         JooqDataStore<ProjectMemberRecord> projectMemberStore = new JooqDataStore<>(PROJECT_MEMBER.getRecordType(), dsl);
         JooqDataStore<TimeEntryRecord> timeEntryStore = new JooqDataStore<>(TIME_ENTRY.getRecordType(), dsl);
         JooqDataStore<AttachmentRecord> attachmentStore = new JooqDataStore<>(ATTACHMENT.getRecordType(), dsl);
+        JooqDataStore<CustomFieldDefinitionRecord> customFieldDefinitionStore = new JooqDataStore<>(CUSTOM_FIELD_DEFINITION.getRecordType(), dsl);
 
         // Configs
         var usersConfig = JooqDataStoreConfig.of(USERS)
@@ -237,6 +238,21 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         ATTACHMENT.UPLOADED_AT, JooqDateTimePickerField.builder().build()))
                 .build();
 
+        var customFieldDefinitionConfig = JooqDataStoreConfig.of(CUSTOM_FIELD_DEFINITION)
+                .dataStoreInstance(customFieldDefinitionStore)
+                .fields(Map.ofEntries(
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ID, JooqNumericIdField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, JooqSelectField.builder().values("custom-field-entity-type").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_NAME, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, JooqTextField.builder().required(true).validators(List.of(new StringLengthValidator("Maximum 100 characters", 0, 100))).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, JooqSelectField.builder().values("custom-field-type").required(true).build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, JooqIntegerField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, JooqCheckboxField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.OPTIONS, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.DESCRIPTION, JooqTextAreaField.builder().build()),
+                        Map.entry(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, JooqCheckboxField.builder().build())))
+                .build();
+
         var notificationConfig = JooqDataStoreConfig.of(NOTIFICATION)
                 .dataStoreInstance(notificationStore)
                 .fields(Map.of(
@@ -277,6 +293,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                         ))
                                         .build())
                                 .build()))
+                .dynamicFields(dynamicFields(customFieldDefinitionConfig, "project", PROJECT.CUSTOM_FIELDS))
                 .build();
 
         // User Form Configuration
@@ -453,6 +470,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .emptyMessage("route.tasks.labels.labels-empty-message")
                                 .titleField(LABEL.NAME)
                                 .build()))
+                .dynamicFields(dynamicFields(customFieldDefinitionConfig, "task", TASK.CUSTOM_FIELDS))
                 .build();
 
         // Milestone Form Configuration
@@ -463,6 +481,31 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(MILESTONE.DESCRIPTION, "route.milestones.labels.description").build(),
                         JooqFormElement.of(MILESTONE.DUE_DATE, "route.milestones.labels.due_date").build(),
                         JooqFormElement.of(MILESTONE.COMPLETION_PERCENTAGE, "route.milestones.labels.completion").build()))
+                .dynamicFields(dynamicFields(customFieldDefinitionConfig, "milestone", MILESTONE.CUSTOM_FIELDS))
+                .build();
+
+        // Label Form Configuration
+        var labelForm = JooqFormRoute.builder()
+                .titleField(LABEL.NAME)
+                .fields(List.of(
+                        JooqFormElement.of(LABEL.NAME, "route.labels.labels.name").build(),
+                        JooqFormElement.of(LABEL.COLOR, "route.labels.labels.color").build(),
+                        JooqFormElement.of(LABEL.DESCRIPTION, "route.labels.labels.description").build()))
+                .build();
+
+        // Custom Field Definition Form Configuration
+        var customFieldDefinitionForm = JooqFormRoute.builder()
+                .titleField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .fields(List.of(
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_NAME, "route.custom-fields.labels.field_name").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_ORDER, "route.custom-fields.labels.field_order").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_REQUIRED, "route.custom-fields.labels.is_required").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.OPTIONS, "route.custom-fields.labels.options").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.DESCRIPTION, "route.custom-fields.labels.description").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()))
                 .build();
 
         // Sprint Form Configuration
@@ -476,6 +519,15 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         JooqFormElement.of(SPRINT.STATUS, "route.sprints.labels.status").build()))
                 .build();
 
+        // Jira-like workflow: restricts which status transitions are allowed on the kanban boards
+        var taskWorkflow = KanbanWorkflow.builder()
+                .transition(TaskStatus.TODO, List.of(TaskStatus.IN_PROGRESS, TaskStatus.BLOCKED))
+                .transition(TaskStatus.IN_PROGRESS, List.of(TaskStatus.IN_REVIEW, TaskStatus.BLOCKED, TaskStatus.TODO))
+                .transition(TaskStatus.IN_REVIEW, List.of(TaskStatus.DONE, TaskStatus.IN_PROGRESS))
+                .transition(TaskStatus.BLOCKED, List.of(TaskStatus.TODO, TaskStatus.IN_PROGRESS))
+                .transition(TaskStatus.DONE, List.of(TaskStatus.TODO))
+                .build();
+
         var projectTasksRoute = JooqKanbanRoute.builder()
                 .dataStoreConfig(taskConfig)
                 .title("route.tasks.title")
@@ -484,6 +536,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                 .columnField(TASK.STATUS)
                 .searchField(TASK.TITLE)
                 .writeRoles(List.of("admin", "manager", "developer"))
+                .workflow(taskWorkflow)
                 .form(taskForm)
                 .build();
 
@@ -530,6 +583,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                             return !users.isEmpty() ? users.getFirst().get(USERS.ID) : null;
                         })
                         .build())
+                .workflow(taskWorkflow)
                 .form(taskForm)
                 .build());
 
@@ -577,6 +631,33 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 "milestones", projectMilestonesRoute,
                                 "edit", projectForm))
                         .build())
+                .build());
+
+        routes.put("labels", JooqListRoute.builder()
+                .dataStoreConfig(labelConfig)
+                .iconFactory(VaadinIcon.TAGS::create)
+                .title("route.labels.title")
+                .searchField(LABEL.NAME)
+                .columns(List.of(
+                        JooqFormElement.of(LABEL.NAME, "route.labels.labels.name").build(),
+                        JooqFormElement.of(LABEL.COLOR, "route.labels.labels.color").build(),
+                        JooqFormElement.of(LABEL.DESCRIPTION, "route.labels.labels.description").build()))
+                .writeRoles(List.of("admin", "manager"))
+                .form(labelForm)
+                .build());
+
+        routes.put("custom-fields", JooqListRoute.builder()
+                .dataStoreConfig(customFieldDefinitionConfig)
+                .iconFactory(VaadinIcon.INPUT::create)
+                .title("route.custom-fields.title")
+                .searchField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .columns(List.of(
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE, "route.custom-fields.labels.entity_type").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_LABEL, "route.custom-fields.labels.field_label").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.FIELD_TYPE, "route.custom-fields.labels.field_type").build(),
+                        JooqFormElement.of(CUSTOM_FIELD_DEFINITION.IS_ACTIVE, "route.custom-fields.labels.is_active").build()))
+                .writeRoles(List.of("admin"))
+                .form(customFieldDefinitionForm)
                 .build());
 
         routes.put("users", JooqGridRoute.builder()
@@ -645,6 +726,19 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
         sprintStatuses.put(SprintStatus.COMPLETED, "selects.sprint-status.completed");
         sprintStatuses.put(SprintStatus.CANCELLED, "selects.sprint-status.cancelled");
 
+        LinkedHashMap<String, String> customFieldEntityTypes = new LinkedHashMap<>();
+        customFieldEntityTypes.put("project", "selects.custom-field-entity-type.project");
+        customFieldEntityTypes.put("task", "selects.custom-field-entity-type.task");
+        customFieldEntityTypes.put("milestone", "selects.custom-field-entity-type.milestone");
+
+        LinkedHashMap<String, String> customFieldTypes = new LinkedHashMap<>();
+        customFieldTypes.put("text", "selects.custom-field-type.text");
+        customFieldTypes.put("number", "selects.custom-field-type.number");
+        customFieldTypes.put("date", "selects.custom-field-type.date");
+        customFieldTypes.put("select", "selects.custom-field-type.select");
+        customFieldTypes.put("multiselect", "selects.custom-field-type.multiselect");
+        customFieldTypes.put("checkbox", "selects.custom-field-type.checkbox");
+
         LinkedHashMap<String, String> projectRoles = new LinkedHashMap<>();
         projectRoles.put("owner", "selects.project-roles.owner");
         projectRoles.put("admin", "selects.project-roles.admin");
@@ -707,6 +801,30 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                         .readStatusValueForRead(1)
                         .readStatusValueForUnread(0)
                         .build())
+                .build();
+    }
+
+    /**
+     * Dynamic fields for one entity type: the field definitions live in the
+     * {@code custom_field_definition} table, values are stored in the entity's
+     * {@code custom_fields} JSON column.
+     */
+    private DynamicFieldsConfiguration<TableRecord<?>, TableField<?, ?>, TableImpl<?>> dynamicFields(
+            DataStoreConfig<TableRecord<?>, TableField<?, ?>, TableImpl<?>> definitionsConfig,
+            String entityType,
+            TableField<?, String> storageField) {
+        return DynamicFieldsConfiguration.<TableRecord<?>, TableField<?, ?>, TableImpl<?>>builder()
+                .definitionsDataStoreConfig(definitionsConfig)
+                .entityType(entityType)
+                .entityTypeField(CUSTOM_FIELD_DEFINITION.ENTITY_TYPE)
+                .fieldNameField(CUSTOM_FIELD_DEFINITION.FIELD_NAME)
+                .fieldLabelField(CUSTOM_FIELD_DEFINITION.FIELD_LABEL)
+                .fieldTypeField(CUSTOM_FIELD_DEFINITION.FIELD_TYPE)
+                .optionsField(CUSTOM_FIELD_DEFINITION.OPTIONS)
+                .requiredField(CUSTOM_FIELD_DEFINITION.IS_REQUIRED)
+                .orderField(CUSTOM_FIELD_DEFINITION.FIELD_ORDER)
+                .activeField(CUSTOM_FIELD_DEFINITION.IS_ACTIVE)
+                .storageField(storageField)
                 .build();
     }
 }
