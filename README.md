@@ -607,6 +607,17 @@ Power user feature for complex data queries:
 - Quick filters for common queries
 - Filter templates
 
+### Vega/Vega-Lite Charting Support
+**Impact**: Medium | **Effort**: Medium
+
+Integration with [Vega-Lite](https://vega.github.io/vega-lite/) for declarative charting:
+- **Research Phase**: Evaluate if Vega-Lite is a good fit for the framework's architecture and user needs
+- Declarative JSON/YAML-based chart configuration using the Vega-Lite grammar
+- Dynamic data binding from DataStores to Vega-Lite data sources
+- Support for complex visualizations (multi-view, interactive filtering, layering)
+- Reusable chart templates based on Vega-Lite specifications
+- Real-time chart preview in configuration
+
 **Value**: Dramatically improves usability for data-heavy applications.
 
 ### Inline Grid Editing
@@ -643,6 +654,7 @@ Configurable analytics and overview pages:
 - Widget-based layout system
 - Metric cards (counts, sums, averages)
 - Chart widgets (bar, line, pie, etc.)
+- **Vega-Lite Integration**: Support for the [Vega-Lite](https://vega.github.io/vega-lite/) grammar to configure complex ECharts-based or standalone visualizations (including a research phase to verify fit)
 - Recent activity feeds
 - Quick action buttons
 - Responsive grid layout
