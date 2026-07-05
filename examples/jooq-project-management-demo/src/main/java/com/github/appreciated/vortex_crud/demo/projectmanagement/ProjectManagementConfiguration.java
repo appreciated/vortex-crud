@@ -372,11 +372,7 @@ public class ProjectManagementConfiguration implements VortexCrudConfigurationPr
                                 .build(),
                         SingleEntityRouteAction.<TableField<?, ?>, TableRecord<?>>builder()
                                 .componentFactory(() -> new Button("Go to Parent", VaadinIcon.ARROW_UP.create()))
-                                .visible(false) // Visibility controlled by enabled check usually, but here handled in handler or custom visibility logic if available.
-                                // Actually SingleEntityRouteAction doesn't support dynamic visibility based on record state in the builder easily without custom logic in the view.
-                                // But let's add it and it will be enabled when a record is selected.
-                                // We can add a check in the handler or component factory?
-                                // Let's just add it.
+                                .visible(false)
                                 .handler(context -> {
                                     TableRecord<?> record = context.getFirstSelectedEntity();
                                     Integer parentId = record.get(TASK.PARENT_TASK_ID);

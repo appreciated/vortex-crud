@@ -67,8 +67,6 @@ public class SingleFormRoute<ModelClass, FieldType, RepositoryType> implements F
 
     private List<String> readOnlyRoles;
 
-    // private List<? extends InternalFormElement<FieldType>> children;
-
     private FieldType entityFilterField;
 
     /**

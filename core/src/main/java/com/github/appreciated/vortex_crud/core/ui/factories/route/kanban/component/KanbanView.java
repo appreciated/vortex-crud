@@ -96,13 +96,19 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
             return cardWrapper;
         });
 
-        // Assuming SelectField has a values() method or similar that was accessible directly.
-        // If SelectField was refactored, verify its method name.
-        Object selectName = ((SelectField<ModelClass, FieldType, RepositoryType>) dataStoreField).values();
+        if (!(dataStoreField instanceof SelectField<ModelClass, FieldType, RepositoryType> selectField)) {
+            throw new IllegalStateException("The columnField '" + kanbanRoute.columnField() + "' of kanban route '"
+                    + kanbanRoute.title() + "' must be configured as a SelectField in the DataStoreConfig fields map, but was "
+                    + (dataStoreField == null ? "not configured at all" : dataStoreField.getClass().getSimpleName())
+                    + " — the kanban columns are derived from the select's values");
+        }
+        String selectName = selectField.values();
         Map<?, String> selectConfig = selects.configs().get(selectName);
 
         if (selectConfig == null) {
-            throw new IllegalStateException("selectConfig must not be null");
+            throw new IllegalStateException("Kanban route '" + kanbanRoute.title() + "' uses select config '" + selectName
+                    + "' (via columnField '" + kanbanRoute.columnField() + "'), but no select with that key is registered"
+                    + " — register it via Application.selects(Selects.builder().configs(Map.of(\"" + selectName + "\", ...)))");
         }
 
         Set<?> strings = selectConfig.keySet();
@@ -301,37 +307,28 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 if (event.getDropTargetItem().isEmpty()) {
                     // Dropping at the end
                     Integer lastPosition = targetColumnItems.isEmpty() ? null :
-                            (Integer) reflectionService.getValue(targetColumnItems.get(targetColumnItems.size() - 1),
-                                    kanbanRoute.rowIndexField());
+                            rowIndexOf(targetColumnItems.get(targetColumnItems.size() - 1));
                     newPosition = generateKeyBetween(lastPosition, null);
                 } else {
                     Object targetItem = event.getDropTargetItem().get();
-                    Integer targetPosition = (Integer) reflectionService.getValue(targetItem,
-                            kanbanRoute.rowIndexField());
+                    Integer targetPosition = rowIndexOf(targetItem);
 
                     if (event.getDropLocation() == GridDropLocation.BELOW) {
                         // Find next item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer nextPosition = (targetIndex < targetColumnItems.size() - 1) ?
-                                (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex + 1),
-                                        kanbanRoute.rowIndexField()) : null;
+                                rowIndexOf(targetColumnItems.get(targetIndex + 1)) : null;
                         newPosition = generateKeyBetween(targetPosition, nextPosition);
                     } else {
                         // Find previous item's position
                         int targetIndex = targetColumnItems.indexOf(targetItem);
                         Integer prevPosition = (targetIndex > 0) ?
-                                (Integer) reflectionService.getValue(targetColumnItems.get(targetIndex - 1),
-                                        kanbanRoute.rowIndexField()) : null;
+                                rowIndexOf(targetColumnItems.get(targetIndex - 1)) : null;
                         newPosition = generateKeyBetween(prevPosition, targetPosition);
                     }
                 }
 
-                // Update the dragged item with new position
-                try {
-                    reflectionService.setValue(draggedItem, kanbanRoute.rowIndexField(), newPosition);
-                } catch (Exception e) {
-                    // Ignore exception if setting row index fails
-                }
+                reflectionService.setValue(draggedItem, kanbanRoute.rowIndexField(), newPosition);
             }
             dataStore.updateRecordById(draggedItem);
             refreshColumns();
@@ -368,14 +365,19 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                 || kanbanRoute.workflow().isTransitionAllowed(sourceColumnValue, targetColumnValue, context);
     }
 
+    private Integer rowIndexOf(Object item) {
+        Object value = reflectionService.getValue(item, kanbanRoute.rowIndexField());
+        if (value == null || value instanceof Integer) {
+            return (Integer) value;
+        }
+        throw new IllegalStateException("The rowIndexField '" + kanbanRoute.rowIndexField() + "' of kanban route '"
+                + kanbanRoute.title() + "' must contain Integer values but contained "
+                + value.getClass().getSimpleName() + " ('" + value + "') — configure an integer column for row ordering");
+    }
+
     private void onAdd(VortexCrudContext<ModelClass, FieldType, RepositoryType> context,
                        RouteRendererSingleChild<ModelClass, FieldType, RepositoryType> routeRenderer,
                        VortexCrudDataStore<FieldType, ModelClass> dataStore) {
-        Object entity = new Object(); // This seems wrong? dataStore.newInstance()? But entity is not used in create...
-        // Ah, previous code: Object entity = new Object();
-        // create call:
-        // create(null, null, null, ...)
-
         if (routeRenderer.form() != null && routeRenderer.form().dialogFactory() != null) {
             Dialog dialog = routeRenderer.form().dialogFactory().create(
                     null,
@@ -385,27 +387,8 @@ public class KanbanView<ModelClass, FieldType, RepositoryType> extends VerticalL
                     null,
                     dataStore,
                     context,
+                    this::refreshColumns,
                     () -> {
-                        // Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity)); // Entity is empty Object?
-                        // This onAdd looks suspicious in original code too.
-                        // But I'll preserve logic.
-                        // Wait, previous logic was:
-                        /*
-                        Object entity = new Object();
-                        Dialog dialog = ... .create(
-                             null, ...
-                             () -> {
-                                Object recordById = this.dataStore.getRecordById(dataStoreUtil.getId(entity));
-                         */
-                        // If entity is new Object(), getId(entity) will fail or return null?
-                        // If create(...) creates a new record, it doesn't return it via callback.
-                        // The callback updates columns.
-
-                        // I'll stick to refreshColumns().
-                        refreshColumns();
-                    },
-                    () -> {
-
                     });
             dialog.open();
         }

@@ -95,11 +95,7 @@ public class SearchRouteView<ModelClass, FieldType, RepositoryType> extends Vert
         if (results.isEmpty()) {
             resultsContainer.add(new Span("No results found."));
         } else {
-            // Group results by route title for display
-            // This requires a bit of logic to recreate the visual structure
-            // Or just iterate and check if title changed?
-            // The service returns a flat list.
-            // Let's group them.
+            // The service returns a flat list; group results by route title for display
 
             String currentRouteTitle = null;
             VerticalLayout currentRouteLayout = null;
